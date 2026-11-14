@@ -1040,3 +1040,46 @@
      expect(await fixture.snapshots()).toEqual(deleted)
      expect(deleted.procurement).toEqual(before.procurement)
      expect(deleted.planner).toEqual(before.planner)
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts
+@@ -124,7 +124,10 @@
+     },
+   }
+   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
+-  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
++  // This collaboration fixture composes no scenario-operation authority. Its
++  // selected cases must remain empty of alternatives, choices and prepared writes.
++  const verifyScenarioOperations = async (value: DecisionCase, context: TrustedDomainContext) => value.alternatives.length === 0 && value.choices.length === 0 && value.preparedChanges.length === 0 && await host.revalidate(context)
++  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations, evidence, createId: randomUUID, now: () => at })
+   const compose = () => createCollaborationHost({ reviewContexts: options.reviewContexts, prepareReviewThreadFence: options.prepareReviewThreadFence, authorizeReviewThreadContext: options.authorizeReviewThreadContext, reviewRecipientAuthority: options.reviewRecipientAuthority, reviewAnswerSource: options.reviewAnswerSource, host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
+     workSignals: async (_selection, period, context) => {
+       const issued = await createDashboardSourceIssuer({ host, scopedSources: base.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts b/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts
+@@ -1,4 +1,5 @@
+ import { randomUUID } from "node:crypto"
++import { object } from "../../../runtime/contract.ts"
+ import { createSfDomainAuthority } from "../../../product/integration/ui-authority.ts"
+ import { createSfExecutionBindingRegistry } from "../../../product/host-binding/execution-context.ts"
+ import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
+@@ -21,7 +22,18 @@
+   const historical = { allowed: false }
+   const archive = new Map<string, { ref: BusinessEvidenceRef; projection: DomainProjection }>()
+   const issue = createDashboardConfirmationIssuer({ host: fixture.host, scopedSources: fixture.persistence })
+-  const issueForActor: NonNullable<Parameters<typeof createCollaborationHost>[0]["issueForActor"]> = (target, context) => issue({ recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
++  const issueForActor: NonNullable<Parameters<typeof createCollaborationHost>[0]["issueForActor"]> = async (target, context) => {
++    if (target.surface === "dashboard" && target.recordType !== "dashboard-page" && target.period) {
++      // Scoped versions follow the original selector page. The real issuer still authenticates the current actor.
++      const page = await fixture.persistence.transaction("dashboard", async (snapshot) => {
++        const entries = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.incarnation === target.incarnation && entry.scope.recordType === target.recordType && entry.scope.recordId === target.recordId)
++        return { commit: false, value: entries.length === 1 ? object(entries[0]!.scope.selector).page : undefined }
++      })
++      if (typeof page !== "string" || !page) return { status: "unavailable", reason: "history-source-selector-unavailable" }
++      return fixture.records.issue({ page, recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
++    }
++    return issue({ recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
++  }
+   const refresh = createWorkSourceRefresh({ host: fixture.host, issueForActor, authorize: (ref, context) => fixture.authority.sources([ref], context) })
+   const currentForHistory = (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => options.currentTarget ? issueForActor(options.currentTarget(structuredClone(ref), fixture.clock.at), context) : refresh(ref, context)
+   const source = createDashboardConfirmationObserver({ host: fixture.host, scopedSources: fixture.persistence, readProjection: (selection, context) => fixture.records.read(selection.reference, context) })

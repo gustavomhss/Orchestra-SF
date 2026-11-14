@@ -1,0 +1,71 @@
+{
+  "id": "E-M48-BOUNDARY-01",
+  "run": 43654508667,
+  "job": 132629975340,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654508667",
+  "W": "9647675e5a08f86393d478602897657a3b8d478a",
+  "W_tree": "72640c57978f09a34830c1a912834b7d7fd95472",
+  "S": "071aab991a79134f9aadbfe5e65c7e750d8e4e04",
+  "S_tree": "f9cba1036e48bd71a69b4fea5360b2090b17b349",
+  "source": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "Sucafinav1/test/product/wp08/thread-actors.test.ts",
+      "Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+      "Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "4f8301f37e3e17073ddf37a4b53b85c601d16e16bc4d021da60e18d983cda4d6",
+  "conclusion": "failure",
+  "pass": 75,
+  "fail": 3,
+  "total": 78,
+  "selected_files": [
+    "Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+    "Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+    "Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+    "Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+    "Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+    "Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+    "Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+    "Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+    "Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+    "Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+    "Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+    "Sucafinav1/test/product/wp08/thread-actors.test.ts"
+  ],
+  "failures": [
+    "2026-11-14T23:43:34.2594306Z (fail) review-closure admission unavailability is not converted to authorization loss [252.86ms]",
+    "2026-11-14T23:43:59.9308524Z (fail) authorized historical messages keep their original basis and a new answer reuses the same stale thread [4123.71ms]",
+    "2026-11-14T23:44:38.5292345Z (fail) a selected viewer with a homonym replies across scoped incarnations and current access revisions without gaining domain authority [134.03ms]",
+    "2026-11-14T23:44:38.5301334Z (fail) review-closure admission unavailability is not converted to authorization loss [252.86ms]",
+    "2026-11-14T23:44:38.5302763Z (fail) authorized historical messages keep their original basis and a new answer reuses the same stale thread [4123.71ms]",
+    "2026-11-14T23:44:38.5303865Z (fail) a selected viewer with a homonym replies across scoped incarnations and current access revisions without gaining domain authority [134.03ms]"
+  ],
+  "omni": {
+    "nonce": "21e75661f239f22a3fff7ea17b2954af",
+    "verdict": "2026-11-14T23:44:38.5300084Z omni positive control [21e75661f239f22a3fff7ea17b2954af]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  },
+  "duration_seconds": 70.72,
+  "expect_calls": 703,
+  "log": "evidence/boundary-01.log",
+  "scope": "Actual hosted tests; NOT_ACCEPTED because three assertions/preconditions failed."
+}
