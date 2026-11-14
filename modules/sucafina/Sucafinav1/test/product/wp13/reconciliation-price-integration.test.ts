@@ -59,7 +59,8 @@ test("a real 45000 to 70000 quote on the same source changes its portfolio condi
     const saved = await before.results.write({ kind: "portfolio", result: evaluated.value, caseRef: before.caseRef, requestDigest: digestSfValue(request), sourceRefs: evaluated.value.evidenceRefs, idempotencyKey: "wp13-original-price-portfolio" }, fixture.context)
     if (saved.status !== "ok" || saved.value.kind !== "portfolio") throw new Error(`Original portfolio C08 unavailable: ${JSON.stringify(saved)}`)
     const stored = saved.value
-    const combination = stored.result.combinations[0]!
+    const combination = stored.result.combinations[0]
+    if (!combination || (combination.eligibility !== "eligible-complete" && combination.eligibility !== "conditioned")) throw new Error("Original portfolio has no selectable combination")
     const bindingBody = { schema: "sf-portfolio-binding-v1" as const, caseRef: before.caseRef, resultRef: stored.resultRef, resultDigest: stored.resultDigest, request, requestDigest: stored.requestDigest, proof: { candidates: [{ ref: candidate.ref, digest: digestSfValue(candidate) }], selectionDigest: digestSfValue({ caseRef: before.caseRef, candidateRefs: request.candidateRefs, criteria: request.constraints }) }, createdAt: stored.createdAt }
     // The private selection admission is controlled; all selected numeric payloads above are real producer/C08 outputs.
     const binding: PortfolioBinding = { ...bindingBody, bindingDigest: digestSfValue(bindingBody) }
@@ -97,7 +98,8 @@ test("a real 45000 to 70000 quote on the same source changes its portfolio condi
       cases: { read: async (caseRequest, context) => {
         const decision = await history.readCase()
         if (caseRequest.caseRef !== encodeCaseRef(decision) || !await revision.authorizeCase(decision, context)) return { status: "denied", reason: "case-unavailable" }
-        const projection: AuthorizedCaseProjection = { context: { kind: "ui", installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion }, case: decision, events: decision.ledger, evidenceRefs: uniqueRefs([...decision.sourceRefs, ...chosen.choice.evidenceRefs, ...chosen.choice.result.sourceRefs, ...chosen.choice.costCoverage.evaluatedSourceRefs]), checkedAt: now() }
+        if (decision.preparedChanges.length || decision.receipts.length) throw new Error("A price observation must not create prepared changes or execution receipts")
+        const projection: AuthorizedCaseProjection = { context: { kind: "ui", installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion }, case: { ...decision, preparedChanges: [], receipts: [] }, events: decision.ledger, evidenceRefs: uniqueRefs([...decision.sourceRefs, ...chosen.choice.evidenceRefs, ...chosen.choice.result.sourceRefs, ...chosen.choice.costCoverage.evaluatedSourceRefs]), checkedAt: now() }
         return { status: "ok", value: projection }
       } },
       readPortfolio: async (query, context) => {
