@@ -1,0 +1,553 @@
+{
+  "schema": "sf2-final-static-validation-v1",
+  "workflow_sha256": "cd2c4ec908967a745101dc0b41689eb323a822c75a775f7ac263e9c020bb1ed8",
+  "python": "3.12.14",
+  "node": "v24.22.1",
+  "yaml_parser": "PyYAML 6.0.3",
+  "status": "PASS",
+  "counts": {
+    "bash-syntax": 62,
+    "node-file-syntax": 2,
+    "node-heredoc-syntax": 2,
+    "node-inline-syntax": 5,
+    "python-syntax": 2,
+    "workflow-structure": 1
+  },
+  "checks": [
+    {
+      "kind": "bash-syntax",
+      "job": "plan",
+      "step": "Record qualification scope",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "plan",
+      "step": "Plan the shards",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas-scope",
+      "step": "Detect Atlas-relevant changes",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Install Atlas dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Typecheck Atlas",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Set Atlas EARS baseline",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Run Atlas guards",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Test Own snapshot materializer",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Test Atlas historical source roots",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Test Own snapshot gate",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Test atlas-genesis scripts",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Detect Atlas product changes",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "atlas",
+      "step": "Test Atlas product suite",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Linux sandbox dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Linux Electron dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Rust toolchain (rust-toolchain.toml)",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Configure git identity",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Check generated Atlas boundary",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Fetch target branch for godfile",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Test godfile gate",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Test guards",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run godfile gate",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run spawn-import gate",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run module-boundary gate",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run ripgrep pin gate",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run unit tests",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Check generated client",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run HttpApi exerciser gates",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run hosted sandbox proofs",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Run hosted process query proof",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Install Relay test dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Test Relay",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "unit-rest",
+      "step": "Real AppProcess default and legacy backend selection",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "e2e",
+      "step": "Linux sandbox dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "e2e",
+      "step": "Read Playwright version",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-inline-syntax",
+      "job": "e2e",
+      "step": "Read Playwright version",
+      "snippet": 0,
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "e2e",
+      "step": "Install Playwright system dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "e2e",
+      "step": "Install Playwright browsers",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "e2e",
+      "step": "Run app e2e tests",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Materialize validated recipe request",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-inline-syntax",
+      "job": "recipe",
+      "step": "Materialize validated recipe request",
+      "snippet": 0,
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Assert Linux ARM64",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Assert macOS arm64",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Read request",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-heredoc-syntax",
+      "job": "recipe",
+      "step": "Read request",
+      "snippet": 0,
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Fetch source history for Script fixtures",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Install Chromium",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Linux sandbox dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Install Python test dependencies",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Configure git identity",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Export requested environment",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Rust toolchain (rust-toolchain.toml)",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Omni control nonce",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-inline-syntax",
+      "job": "recipe",
+      "step": "Omni control nonce",
+      "snippet": 0,
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "recipe",
+      "step": "Run tests",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-heredoc-syntax",
+      "job": "recipe",
+      "step": "Run tests",
+      "snippet": 0,
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Verify generated Atlas before generation",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Generate Atlas and verify unchanged",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Typecheck Atlas",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Typecheck Sucafina",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Typecheck Core",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Typecheck CLI",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Typecheck app",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Fetch guard base",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Guardrails at C",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-inline-syntax",
+      "job": "sf-static",
+      "step": "Guardrails at C",
+      "snippet": 0,
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "sf-static",
+      "step": "Spawn import gate",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "bash-syntax",
+      "job": "bundle-result",
+      "step": "Require all gates on this run",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-inline-syntax",
+      "job": "bundle-result",
+      "step": "Require all gates on this run",
+      "snippet": 0,
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "python-syntax",
+      "path": "script/sf2h/final-bundle/build-artifact.py",
+      "exit_status": 0
+    },
+    {
+      "kind": "python-syntax",
+      "path": "script/sf2h/final-bundle/verify-bun-report.py",
+      "exit_status": 0
+    },
+    {
+      "kind": "node-file-syntax",
+      "path": "script/sf2h/final-bundle/validate-requests.mjs",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "node-file-syntax",
+      "path": "script/sf2h/final-bundle/verify-runtime.mjs",
+      "exit_status": 0,
+      "stderr": ""
+    },
+    {
+      "kind": "workflow-structure",
+      "exit_status": 0,
+      "unchanged_jobs": [
+        "plan",
+        "atlas-scope",
+        "atlas",
+        "omni",
+        "unit-rest",
+        "e2e",
+        "sf-static",
+        "bundle-result"
+      ],
+      "eight_recipe_matrix_unchanged": true,
+      "trigger_and_permissions_unchanged": true
+    }
+  ],
+  "product_tests": "NOT_RUN",
+  "actionlint": "NOT_RUN: executable unavailable",
+  "typechecks": "NOT_RUN: Bun unavailable and hosted execution forbidden",
+  "guards": "NOT_RUN: Bun unavailable and hosted execution forbidden",
+  "ci_dispatched": false,
+  "examined_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+  "scope_note": "Sources retrieved at immutable SHA; static preparation only; no product execution."
+}

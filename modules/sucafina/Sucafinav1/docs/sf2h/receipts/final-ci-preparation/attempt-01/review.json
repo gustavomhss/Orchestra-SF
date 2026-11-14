@@ -1,0 +1,126 @@
+{
+  "schema": "sf2-final-ci-static-review-v1",
+  "examined_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+  "workflow_sha256": "cd2c4ec908967a745101dc0b41689eb323a822c75a775f7ac263e9c020bb1ed8",
+  "reviewers": [
+    {
+      "actor": "/root/audit_contracts",
+      "scope": "Full S0-C pack, three mandatory appendices, selection contract, candidate/delivery policy, source and ownership audit",
+      "role": "read-only preparation audit",
+      "product_authorship": false
+    },
+    {
+      "actor": "/root/audit_workflow",
+      "scope": "Inherited workflow/source drift and final script integration review",
+      "role": "Playwright helper author and bundle peer reviewer",
+      "independent_of_entire_bundle": false
+    },
+    {
+      "actor": "/root/audit_builder",
+      "scope": "Original builder reproducibility, source interfaces, JUnit format and static data checks",
+      "role": "Bun report helper author",
+      "independent_of_entire_bundle": false
+    }
+  ],
+  "outcome": "APPROVED_FOR_STATIC_PREPARATION_PUBLICATION",
+  "independent_final_product_review": false,
+  "full_pack_read": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "reader": "/root/audit_contracts",
+    "mandatory_appendices": [
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md",
+      "specs/atlas-packaging.md"
+    ]
+  },
+  "findings": [
+    {
+      "id": "FINAL-CI-01",
+      "issue": "Builder depended on a personal /Users path and unpublished local plan/ci-recipes.json",
+      "disposition": "RESOLVED_IN_SOURCE_STATICALLY_CHECKED",
+      "evidence": "Portable builder reproduced original 50332-byte workflow exactly, then regenerated revised workflow; --check PASS"
+    },
+    {
+      "id": "FINAL-CI-02",
+      "issue": "Playwright list nonempty and exit0 did not verify actual execution or the runtime report",
+      "disposition": "RESOLVED_IN_SOURCE_STATICALLY_CHECKED",
+      "evidence": "Runtime report required; canonical selection and listed/runtime identities checked; zero executed file, absent report, errors/retries rejected; hosted execution NOT_RUN"
+    },
+    {
+      "id": "FINAL-CI-03",
+      "issue": "Bun declared scope can be not applicable without proving positive executed test count",
+      "disposition": "RESOLVED_IN_SOURCE_STATICALLY_CHECKED",
+      "evidence": "JUnit reporting added without changing selectors; report required, aggregate counts checked and at least one non-skipped non-control case required; Omni checks retained; hosted execution NOT_RUN"
+    },
+    {
+      "id": "FINAL-CI-04",
+      "issue": "Three final production specs absent in examined composition",
+      "disposition": "OPEN_COMPOSITION_DEPENDENCY",
+      "evidence": "Canonical validateRequest locally rejected precisely CI-UI-OPERATIONS/DECISIONS/REPORTS against immutable input copies; no substitute specs created"
+    },
+    {
+      "id": "FINAL-CI-05",
+      "issue": "Final preparation evidence path is outside the allowed D envelope",
+      "disposition": "DOCUMENTED",
+      "evidence": "README and HANDOFF require preparation files before C; final run/review evidence in admitted WP paths or exact preallocated control paths; G8 external"
+    }
+  ],
+  "static_data_validation": [
+    {
+      "actor": "/root/audit_workflow",
+      "artifact": "script/sf2h/final-bundle/verify-runtime.mjs",
+      "cases": 12,
+      "status": "PASS_REPORTED_BY_EXECUTING_AGENT",
+      "scope": "In-memory JSON report data only; no Playwright/product execution",
+      "coverage": [
+        "pass with individual skip",
+        "all-skipped",
+        "missing test",
+        "changed identity",
+        "unexpected status",
+        "timeout",
+        "interrupted",
+        "global error",
+        "retry",
+        "changed root",
+        "duplicate identity",
+        "location fallback"
+      ]
+    },
+    {
+      "actor": "/root/audit_builder",
+      "artifact": "script/sf2h/final-bundle/verify-bun-report.py",
+      "cases": 15,
+      "status": "PASS_REPORTED_BY_EXECUTING_AGENT",
+      "scope": "Synthetic XML data only; no Bun/product execution",
+      "coverage": [
+        "nested suites",
+        "passed with skip/TODO",
+        "all skipped",
+        "TODO only",
+        "empty",
+        "failure/error",
+        "wrong/invalid counts",
+        "malformed XML",
+        "DOCTYPE",
+        "orphan testcase",
+        "hook only",
+        "Omni only",
+        "XML namespace",
+        "inherited file identity"
+      ]
+    }
+  ],
+  "root_checks": "static-validation.json and request-preflight.json contain directly executed root checks",
+  "final_gates": {
+    "CI": "NOT_RUN",
+    "AM01_AM06": "NOT_RUN",
+    "R1_R2_R3": "NOT_RUN",
+    "C_G7": "NOT_RUN",
+    "D_G8": "NOT_RUN"
+  },
+  "ci_dispatched": false,
+  "global_release": false
+}
