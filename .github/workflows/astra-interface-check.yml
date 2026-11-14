@@ -1,0 +1,41 @@
+name: astra-interface-check
+
+on:
+  push:
+    branches: [astra-check-interface]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact product
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Record product and guard base
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev
+          {
+            echo "Product commit: $(git rev-parse HEAD)"
+            echo "Product tree: $(git rev-parse 'HEAD^{tree}')"
+            echo "Guard base origin/dev: $(git rev-parse origin/dev)"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+      - name: Typecheck Sucafina package
+        working-directory: modules/sucafina
+        run: bun typecheck
+      - name: Check guards against origin/dev
+        if: always() && steps.setup.outcome == 'success'
+        run: bun run check:guards --base origin/dev
