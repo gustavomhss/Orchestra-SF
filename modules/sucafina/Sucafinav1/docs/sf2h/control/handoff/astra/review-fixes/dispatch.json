@@ -1,0 +1,261 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "user_resume": "vamos em frente, ja sabe o que fazer, fatiar bem pra delegarmos",
+  "controller": "same root; no native worker restarted; browser startup is manual by user",
+  "native_handles": "pr_integrator and all listed Luna handles observed completed through collaboration.list_agents",
+  "native_goal": "prior paused; active/resume not claimed",
+  "state": "PREPARED_MANUAL_ASTRA_HANDOFFS",
+  "sources": [
+    {
+      "pr": 51,
+      "branch": "review-contracts",
+      "head": "fa520193f5df9d6585d5f4c40d071215efb42923"
+    },
+    {
+      "pr": 50,
+      "branch": "review-finance",
+      "head": "7155f90a6492597a3dd79cfcfda9330fef8be2a2"
+    },
+    {
+      "pr": 49,
+      "branch": "review-operations",
+      "head": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9"
+    },
+    {
+      "pr": 42,
+      "branch": "finance-resume",
+      "head": "3ea9dc2efe0de8d283f9625774697e431f55a0d7"
+    },
+    {
+      "pr": 39,
+      "branch": "astra-wp12",
+      "head": "ba27411a7cda9301aa162680a94153a5e643be4d"
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4"
+    },
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "head": "ab8fb4f29d078d179742a77679ef85e5c549b114"
+    }
+  ],
+  "lanes": [
+    {
+      "name": "sourcing-money",
+      "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "target": "astra-operations",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+        "modules/sucafina/Sucafinav1/test/product/review-fixes/sourcing-money/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/sourcing-money/"
+      ],
+      "epoch": 1,
+      "state": "PREPARED_NOT_OBSERVED_STARTED"
+    },
+    {
+      "name": "procurement-apply",
+      "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "target": "astra-operations",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/procurement-apply/"
+      ],
+      "epoch": 1,
+      "state": "PREPARED_NOT_OBSERVED_STARTED"
+    },
+    {
+      "name": "import-recovery",
+      "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "target": "astra-operations",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+        "modules/sucafina/Sucafinav1/product/imports/host.ts",
+        "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/"
+      ],
+      "epoch": 1,
+      "state": "PREPARED_NOT_OBSERVED_STARTED"
+    },
+    {
+      "name": "finance-journey",
+      "base": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "target": "finance-resume",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/finance-journey/"
+      ],
+      "epoch": 1,
+      "state": "PREPARED_NOT_OBSERVED_STARTED"
+    }
+  ],
+  "followups": {
+    "operations_fixes": {
+      "branch": "operations-fixes",
+      "observed_head": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+      "mode": "existing-owner-only",
+      "add": [
+        {
+          "id": "OPS-REV-03",
+          "title": "Limite documental antes de autorização e deduplicação oculta fontes autorizadas",
+          "severity": "P2",
+          "classification": "STATIC_DEFECT",
+          "execution": "NEEDS_EVIDENCE",
+          "owner": "WP06.T05 / documentos",
+          "provenance": "slice(0,100) e limitations pré-ACL aparecem como código preexistente no patch. Defeito presente na entrega; não atribuído como regressão introduzida pela PR #34.",
+          "primary": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+            "startLine": 155,
+            "endLine": 192,
+            "kind": "code",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/capabilities.ts#L155-L192"
+          },
+          "support": [
+            {
+              "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+              "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+              "startLine": 41,
+              "endLine": 95,
+              "kind": "code",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/capabilities.ts#L41-L95"
+            },
+            {
+              "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+              "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+              "startLine": 13,
+              "endLine": 13,
+              "kind": "code",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/schemas.ts#L13"
+            },
+            {
+              "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+              "path": "modules/sucafina/Sucafinav1/product/documents/index.ts",
+              "startLine": 21,
+              "endLine": 38,
+              "kind": "code",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/index.ts#L21-L38"
+            },
+            {
+              "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+              "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+              "startLine": 21,
+              "endLine": 31,
+              "kind": "code",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts#L21-L31"
+            },
+            {
+              "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+              "path": "modules/sucafina/Sucafinav1/product/documents/host.ts",
+              "startLine": 69,
+              "endLine": 69,
+              "kind": "code",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/host.ts#L69"
+            },
+            {
+              "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+              "path": "apps/cli/src/sucafina-product/document-services.ts",
+              "startLine": 23,
+              "endLine": 51,
+              "kind": "code",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/apps/cli/src/sucafina-product/document-services.ts#L23-L51"
+            }
+          ],
+          "preconditions": [
+            "Duas fontes A e B correntes e autorizadas; A foi admitida e extraída antes de B.",
+            "A tem 100 campos válidos; B contém token exclusivo NEEDLE_B."
+          ],
+          "scenario": [
+            "Admitir A e extrair 100 campos; o produtor persiste um sf-document-v1 por campo, além do índice.",
+            "Admitir B depois e buscar NEEDLE_B com limit=10, sem documentRefs ou com [A,B].",
+            "Repetir a análise com registros antigos/inacessíveis de A antes de B, mantendo o corpus autorizado de B."
+          ],
+          "staticResult": [
+            "Object.values dos registros do namespace é filtrado por schema/ref, mas recebe slice(0,100) antes do filtro de instalação/projeto, reader/autorização e deduplicação.",
+            "Os registros repetidos de A consomem o orçamento; B não é lido apesar de haver apenas dois documentos autorizados.",
+            "Registros inacessíveis também consomem orçamento; document-scan-limited depende de records.length anterior à ACL."
+          ],
+          "consequence": "Resultado incompleto por contar candidatos/registros em vez de fontes pesquisáveis. Revogação e estoque de outros escopos podem suprimir resultados legítimos e influenciar metadata.",
+          "inference": "O limiar document-scan-limited pode funcionar como canal de observação de cardinalidade inacessível. Demonstrou-se a dependência estática, não exploração em execução.",
+          "notDemonstrated": [
+            "Vazamento de texto privado ou recuperação de conteúdo de documento revogado.",
+            "Execução do cenário >100 pelos revisores."
+          ],
+          "criteria": [
+            "WP06.T05.CMP.19",
+            "WP06.T05.QLT.18"
+          ],
+          "relatedCriteria": [
+            "CAMP.INV.04",
+            "CAMP.CMP.02",
+            "C17"
+          ],
+          "existingEvidence": [
+            {
+              "source": {
+                "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+                "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+                "startLine": 115,
+                "endLine": 132,
+                "kind": "test-source",
+                "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts#L115-L132"
+              },
+              "limit": "T256/R18/F082 revalida duas fontes e o egress; não cobre prefixo de 100 candidatos ou registros inacessíveis."
+            },
+            {
+              "authorTestId": "T259/R18/F079",
+              "limit": "Índice sem candidato não distingue cem registros de cem fontes."
+            }
+          ],
+          "expectedCorrection": "Autorizar fontes correntes e deduplicá-las antes de consumir o orçamento; calcular limites/metadata no conjunto autorizado. Preservar as revalidações de saída; adotar paginação autorizada se necessária.",
+          "expectedEvidence": "Duas fontes, A com 100 campos e B com token único; busca deve alcançar B. Repetir com fontes revogadas e outro principal/escopo antes de B, verificando resultados e metadata.",
+          "normativeTexts": [
+            {
+              "id": "WP06.T05.CMP.19",
+              "text": "Cobrir PDF digital, DOCX, texto, sem camada textual, fonte revogada, revisão trocada, busca lexical e digests diferentes."
+            },
+            {
+              "id": "WP06.T05.QLT.18",
+              "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP."
+            },
+            {
+              "id": "CAMP.INV.04",
+              "text": "Nenhum conteúdo restrito reaparece em busca, contagem, comparação, gráfico, comentário, snapshot, exportação, prompt ou resultado de rotina. Ler ou aplicar revalida acesso atual."
+            },
+            {
+              "id": "CAMP.CMP.02",
+              "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+            }
+          ]
+        }
+      ],
+      "mission": "Adicionar busca documental autorizada/deduplicada antes do orçamento, mantendo D-OPS-01 e I-OPS-02 já atribuídos. Não criar nova sessão escritora de capabilities.ts. Recheck duas fontes A com100campos/Btokenúnico,100fontes revogadas/foraescopo antes de B, metadata sem vazar contagens não autorizadas."
+    },
+    "wp10": {
+      "branch": "astra-wp10",
+      "observed_head": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "mode": "existing-owner-only",
+      "unresolved": "FIN-IND-002: createSfAtlasBusiness ainda chama createSfCaseEventSourceAccess com state sem cases; reconciliar contrato do produtor atual e leitor C09 instalado, manter autorização/CAS/continuidade.",
+      "already_corrected_static": [
+        "FIN-IND-001 verifyScenarioOperations presente no caller",
+        "FIN-IND-003 sf:portfolio:campaign: incluído no filtro privado",
+        "CR-C11-001 wrapper já recebe/captura/encaminha observation"
+      ],
+      "mission": "Não reimplementar os três deltas existentes. Mapear SHAs de origem e provas/rechecks existentes; corrigir apenas o resolver ainda incompatível, com testes cirúrgicos C09→evento→C17 e negativos. Sem repetir A27/X27 demorados nem alterar engines."
+    },
+    "no_new_forecast_writer": {
+      "finding": "FIN-IND-004",
+      "observed_source": "astra-wp12@ba27411a7cda9301aa162680a94153a5e643be4d",
+      "observation": "scenario e intent têm type=submit; forecast aceita tipo implícito no seletor. Correção estática posterior ao pin da revisão; preservar para composição/recheck DOM. Não é aprovação final nem nova execução."
+    }
+  },
+  "GLOBAL_RELEASE": false
+}

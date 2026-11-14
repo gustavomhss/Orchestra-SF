@@ -1,0 +1,72 @@
+{
+  "name": "finance-journey",
+  "base": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+  "target": "finance-resume",
+  "pack": "WP11",
+  "actor": "S4-A/S4-C",
+  "finding": [
+    {
+      "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "status": "OPEN",
+      "implementation_by_reviewer": false,
+      "id": "FIN-IND-005",
+      "classification": "NEEDS_EVIDENCE",
+      "severity": "P1",
+      "title": "Jornada do mesmo caso/escolha até a fronteira 15000/15001 não concluiu a prova",
+      "owner": "WP13 + WP11; WP03 fornece prova canônica; WP10/S0 compõem e qualificam",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "start_line": 124,
+          "end_line": 188,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts#L124-L188"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "start_line": 169,
+          "end_line": 186,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts#L169-L186"
+        }
+      ],
+      "input_scenario": "AI-RENEWAL-OMITTED-CATEGORY: renovação USD240000, custo conhecido USD210000 e mínimo USD20000; escolher com treinamento omitido, confirmar training=40000 no mesmo caso e preservar a escolha histórica enquanto a análise atual passa a total250000, diferença−10000 e teto 15000.",
+      "observation": {
+        "basis": "OBSERVED_FAILED_SELECTED_RUN_WITH_RELEVANT_CODE_UNCHANGED",
+        "observed": "Run 43620619049, snapshot c7a0956f850525a03ccd28b26cb8d90808f4d83f, parent R4: 0 pass / 1 fail / 10 expects. A execução não conclui createRenewalChoiceHistory; o último checkpoint observado é transition-confirmed:complete. O erro WP11_FIXTURE_DEADLINE_EXCEEDED registra 180000 ms antes das assertions de teto15000 e preservação da escolha. R4→pin altera somente dois outros arquivos de teste e dois recibos.",
+        "inferred": "A seleção não fornece a evidência requerida para essa jornada no pin. A invariância dos arquivos relevantes conserva a lacuna, sem afirmar nova execução no pin.",
+        "not_claimed": "Timeout não demonstra fórmula errada, nem permite concluir que a jornada sempre falhará. Greens de handoff/BI e solver isolado não fecham o critério integrado."
+      },
+      "expected": "Evidência concluída liga o mesmo caso, encarnação e escolha às versões antigas/novas: omissão permanece pending; confirmação gera250000/−10000;15000 atende mínimo20000 e15001 falha, com histórico e reavaliação atuais preservados.",
+      "criteria": [
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20",
+        "WP13.T02.CHK.20",
+        "WP13.T03.CHK.20",
+        "C10",
+        "CAMP.QLT.06",
+        "CAMP.CMP.04"
+      ],
+      "consequence": "Não é possível qualificar a decisão financeira integrada ou sua retomada apenas com os verdes parciais disponíveis.",
+      "evidence_run_ids": [
+        43620619049,
+        43619812123,
+        43615428441
+      ],
+      "known_issue_relation": {
+        "prior": "Timeouts e limitações de jornada já existiam; não são recontados como novos BUGs.",
+        "added_information": "Seleção exata pós-reconciliação R4, fase precisa do deadline, parent/tree e diferença até o pin conferidos independentemente; as assertions finais não foram alcançadas."
+      },
+      "required_recheck": "Recheck dirigido em novo SHA declarado deve demonstrar a jornada completa e, separadamente, persistência/reabertura real e replay autorizado. Não qualificar aumento de timeout, skip ou reconstrução de serviços no mesmo store como equivalentes."
+    }
+  ],
+  "paths": [
+    "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/finance-journey/"
+  ],
+  "mission": "Fechar evidência FIN-IND-005, não presumir fórmula defeituosa. Percorrer AI-RENEWAL-OMITTED-CATEGORY no mesmo caso/encarnação/escolha: receita240000, custo conhecido210000, mínimo20000; treinamento omitido pending; confirmar40000 gera total250000 e diferença−10000; teto15000 atende mínimo20000,15001 falha. Preservar escolha histórica e reavaliação atual; persistência/reabertura real e replay autorizado. Primeiro ler run43620619049 e diagnóstico já publicado de diagnose-calculation/diagnose-memory; não duplicar seus escopos evaluate-store e memory same-request-new-proof. Instrumentar a fase posterior a transition-confirmed:complete/createRenewalChoiceHistory e só disparar seleção que discrimine hipótese nova, sem simples aumento de timeout. Escrita apenas testes/recibos próprios; correção de produtor, se descoberta, em patch NOT_APPLIED com preimage e owner. Não falsificar perfis/provider/output nativos para fechar AM.",
+  "test_prefix": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/finance-journey/",
+  "lease_epoch": 1,
+  "state": "PREPARED_NOT_OBSERVED_STARTED"
+}

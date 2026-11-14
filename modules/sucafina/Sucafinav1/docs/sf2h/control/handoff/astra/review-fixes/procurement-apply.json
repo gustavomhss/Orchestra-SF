@@ -1,0 +1,175 @@
+{
+  "name": "procurement-apply",
+  "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "target": "astra-operations",
+  "pack": "WP04",
+  "actor": "S2-A",
+  "finding": [
+    {
+      "id": "OPS-REV-02",
+      "title": "C12 registra applied para uma substituição ignorada pelo domínio",
+      "severity": "P2",
+      "classification": "STATIC_DEFECT",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP04 produtor; WP11/C12 e WP10 na revisão, Apply e recibo",
+      "provenance": "prepared.ts e scenario-preparation.ts preexistiam; não se atribui a origem do defeito à clonagem ou ao delta da PR #34.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "startLine": 39,
+        "endLine": 77,
+        "kind": "code",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/prepared.ts#L39-L77"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "startLine": 16,
+          "endLine": 41,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts#L16-L41"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "startLine": 484,
+          "endLine": 525,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/runtime/procurement.ts#L484-L525"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "startLine": 595,
+          "endLine": 654,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/runtime/procurement.ts#L595-L654"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "startLine": 26,
+          "endLine": 36,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts#L26-L36"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+          "startLine": 34,
+          "endLine": 46,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts#L34-L46"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "startLine": 48,
+          "endLine": 68,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts#L48-L68"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "startLine": 94,
+          "endLine": 107,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts#L94-L107"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "startLine": 58,
+          "endLine": 66,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts#L58-L66"
+        }
+      ],
+      "preconditions": [
+        "Pedido canônico em po_draft, salvo legitimamente pelo mesmo buyer, com buyerId, linhas, endereços e demais normalizações estáveis; pr.estAmount=100.",
+        "Escolha persistida/autorizada com replace para 150, moeda/período/fontes válidos; versão e autoridade permanecem vigentes."
+      ],
+      "scenario": [
+        "Preparar a escolha C12 que pretende substituir o valor por 150.",
+        "Ler decision-review pelo endpoint Procurement autorizado e obter o reviewDigest retornado, ainda que fields=[].",
+        "Enviar explicitamente decision-apply com esse digest, por contexto humano autorizado e chave idempotente válida.",
+        "Comparar o PR persistido, evento Saved, CAS e recibo."
+      ],
+      "staticResult": [
+        "scenario-preparation traduz a operação para save com values.pr.estAmount=150 sem limitar a etapa de PR.",
+        "O domínio permite save de PO em po_draft mas só prEdit aplica values.pr; o valor fica 100. Mesmo assim produz ok, Saved e incremento de CAS.",
+        "A preparação confere campos intocados e histórico, porém não exige que os campos solicitados tenham o valor pretendido.",
+        "A revisão produz fields=[] e digest válido; Apply aceita commit:true/status applied e o HTTP expõe outcome=applied."
+      ],
+      "consequence": "A escolha fica aplicada no caso/recibo sem realizar a substituição prometida; a trilha idempotente pode reconciliar a tentativa como concluída.",
+      "inference": null,
+      "notDemonstrated": [
+        "Caminho normal pelo botão da UI: decision-apply.ts:58 bloqueia fields=[]. O finding é backend/HTTP autorizado.",
+        "Elevação de autoridade ou edição proibida de PR: a política do domínio continua impedindo a edição.",
+        "Regressão introduzida especificamente pelo clone ou execução pelos revisores."
+      ],
+      "criteria": [
+        "WP04.QLT.10"
+      ],
+      "relatedCriteria": [
+        "WP04.DOD.02",
+        "C03",
+        "C12",
+        "CAMP.QLT.03",
+        "sf2h-integral-20261112.QLT.07",
+        "CAMP.CMP.02"
+      ],
+      "existingEvidence": [
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+            "startLine": 58,
+            "endLine": 66,
+            "kind": "code",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts#L58-L66"
+          },
+          "limit": "A barreira de UI não é uma validação do endpoint/serviço. Os caminhos positivos em draft não discriminam o comando ignorado em po_draft."
+        }
+      ],
+      "expectedCorrection": "Recusar preparo de alteração de PR na etapa incompatível e verificar a pós-condição da intenção executada. Se houver no-op legítimo, representá-lo explicitamente sem afirmar realizada a substituição por 150; não ampliar as permissões de PR.",
+      "expectedEvidence": "Exercitar preparação/review/Apply reais em po_draft e em uma etapa editável, mantendo autoria, moeda, fontes e CAS válidos; provar recusa/estado fiel no primeiro e mutação exata no segundo.",
+      "normativeTexts": [
+        {
+          "id": "WP04.QLT.10",
+          "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos."
+        },
+        {
+          "id": "WP04.DOD.02",
+          "text": "Fila, pedido guiado, comparação, resumos por etapa e fornecedores estão demonstrados com os mesmos registros e versões, sem um store paralelo de demonstração."
+        },
+        {
+          "id": "CAMP.QLT.03",
+          "text": "Salvar, cancelar, validar, recusar, carregar, ficar sem dados e conflitar possuem resposta compreensível. Falha ou conflito conserva a entrada local e oferece próximo passo útil."
+        },
+        {
+          "id": "sf2h-integral-20261112.QLT.07",
+          "text": "O produto continua utilizável se a análise de IA demorar, falhar ou for cancelada. Resposta rápida de cálculos, erro junto ao campo, foco preservado e confirmação de gravação efetiva."
+        },
+        {
+          "id": "CAMP.CMP.02",
+          "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+        }
+      ]
+    }
+  ],
+  "paths": [
+    "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+    "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/procurement-apply/"
+  ],
+  "mission": "Corrigir C12 para não registrar applied de substituição de PR ignorada pelo domínio em po_draft. Recusar preparo incompatível e verificar pós-condição da intenção. Provar po_draft recusado/estado fiel e etapa editável aplicando valor exato. Preservar autoria, moeda, fontes, CAS, idempotência e não ampliar permissões de edição. Runtime Procurement e UI decision-apply são somente leitura; operations-fixes já é responsável por esta UI e recuperação H05. Proponha patch externo se necessário; não duplique I-OPS-02.",
+  "test_prefix": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/procurement-apply/",
+  "lease_epoch": 1,
+  "state": "PREPARED_NOT_OBSERVED_STARTED"
+}
