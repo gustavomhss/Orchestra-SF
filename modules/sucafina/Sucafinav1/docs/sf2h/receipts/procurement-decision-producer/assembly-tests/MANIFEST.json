@@ -3,7 +3,7 @@
   "consumer": "session42",
   "originalConsumer": "session33",
   "proofExecutor": "S0",
-  "implementationCommit": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "implementationCommit": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
   "baseCommit": "e7e97591edfc15f230856a035e32951f2f700c2f",
   "observedConsumerHead": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
   "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/assembled-capability.test.ts",
@@ -27,8 +27,8 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
-      "gitBlob": "9d13396a7eed76a9cc32378e9afcb17fd37c1c89",
-      "sha256": "325b8d7eedcf3672036c859a43e99fa523ece4ac0c51e662a113e3ac95752edb"
+      "gitBlob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "sha256": "438b6fa051bad9895247b3317abed21cbe60013574bc37d92970bafa2a1ea120"
     }
   ],
   "validationState": "NOT_RUN_REQUIRES_ASSEMBLY_AND_S0_ACTIONS",
@@ -38,5 +38,8 @@
     "Input clone survives caller mutation after first await; no implicit persist capability is required.",
     "Stale source returns denial and admission receipt only, without a result, outputRef or writes."
   ],
-  "applicationRule": "Successor42 creates the test only with the full owner assembly and exact dependencies, acknowledges commit/tree; S0 schedules the existing surgical Actions dispatcher. No local test, typecheck, suite, skips or budget increase."
+  "applicationRule": "Successor42 creates the test only with the full owner assembly and exact dependencies, acknowledges commit/tree; S0 schedules the existing surgical Actions dispatcher. No local test, typecheck, suite, skips or budget increase.",
+  "sourceContinuation": "../TYPE-ONLY-FIX.json",
+  "fixtureCommit": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "functionalQualificationCommit": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650"
 }

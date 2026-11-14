@@ -1,8 +1,8 @@
 {
   "schema": "sf2-mission37-owned-code-v1",
   "initial_head": "ce0ee1553d50408c433aa41255601018ba6e02f3",
-  "implementation_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
-  "implementation_tree": "2361ca558a7bc96341ff5b364e33e9753132a934",
+  "implementation_head": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "implementation_tree": "7200dc460b64f7ba58265f61352a1074c46a2481",
   "production_files": 6,
   "test_and_fixture_files": 5,
   "files": [
@@ -82,9 +82,9 @@
       "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
       "mode": "100644",
       "preimage_at_initial_head": null,
-      "git_blob": "9d13396a7eed76a9cc32378e9afcb17fd37c1c89",
-      "sha256": "325b8d7eedcf3672036c859a43e99fa523ece4ac0c51e662a113e3ac95752edb",
-      "bytes": 7220,
+      "git_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "sha256": "438b6fa051bad9895247b3317abed21cbe60013574bc37d92970bafa2a1ea120",
+      "bytes": 7323,
       "kind": "test"
     },
     {
@@ -107,5 +107,7 @@
     }
   ],
   "consumer_rule": "Select only these exact released own paths, then the complete primary assembly manifest and its two test patches. Do not cherry-pick the whole old PR/source tree. Readonly shared/C12 paths are not replaced by this source release.",
-  "unchanged_allowed_path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
+  "unchanged_allowed_path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+  "functional_test_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "type_only_continuation": "TYPE-ONLY-FIX.json"
 }

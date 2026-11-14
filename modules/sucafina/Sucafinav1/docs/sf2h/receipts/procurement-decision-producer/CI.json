@@ -1,7 +1,7 @@
 {
   "schema": "sf2-mission37-ci-v1",
-  "product_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
-  "product_tree": "2361ca558a7bc96341ff5b364e33e9753132a934",
+  "product_head": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "product_tree": "7200dc460b64f7ba58265f61352a1074c46a2481",
   "protocol": "Existing test-ci envelope and validators through GitHub MCP; no local product execution.",
   "runs": [
     {
@@ -249,6 +249,111 @@
           "head_sha": "2616cd9c3e97ec0a48d632edbbccf28678a83bba"
         }
       }
+    },
+    {
+      "run": 43649223124,
+      "job": 132613732622,
+      "W": "c088011cc3bc749eca605d3227888be257d78902",
+      "treeW": "12b95fa35ef0e42a615b6621f6e540fee6e09e9c",
+      "S": null,
+      "mechanism": "Existing exact-product push workflow on astra-check-wp04; no test envelope",
+      "generation": "PASS",
+      "typecheck": "FAIL_2_OWN_FIXTURE_TS7006",
+      "guards": {
+        "rules": 78,
+        "paths": 785,
+        "gate": 0,
+        "warn": 11,
+        "error": 0,
+        "ownWarnings": 0,
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "diagnostics": [
+        "##[error]test/product/procurement-decision-producer/fixture.ts(33,80): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+        "##[error]test/product/procurement-decision-producer/fixture.ts(33,90): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+      ],
+      "artifact": {
+        "id": 14135825737,
+        "name": "astra-wp04-checks",
+        "size_in_bytes": 15120,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135825737",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135825737/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:40:52Z",
+        "expires_at": "2027-02-12T22:39:23Z",
+        "updated_at": "2026-11-14T22:40:52Z",
+        "digest": "sha256:906f55773390fa434832d26fcf7bd488afd5755f9a24d28e40afe9f31bb3cbfc",
+        "workflow_run": {
+          "id": 43649223124,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp04",
+          "head_sha": "c088011cc3bc749eca605d3227888be257d78902"
+        }
+      },
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649223124"
+    },
+    {
+      "run": 43649465036,
+      "job": 132614476237,
+      "W": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+      "treeW": "7200dc460b64f7ba58265f61352a1074c46a2481",
+      "S": null,
+      "mechanism": "Existing exact-product push workflow on astra-check-wp04; no test envelope",
+      "workflow_blob": "dab8d29f69d78ba304325333e03fb8d729fe026e",
+      "generation": "PASS",
+      "typecheck": "PASS",
+      "typecheck_package": "modules/sucafina (includes the new CLI adapter through own test imports)",
+      "guards": {
+        "rules": 78,
+        "paths": 785,
+        "gate": 0,
+        "warn": 11,
+        "error": 0,
+        "ownWarnings": 0,
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "warnings": [
+          "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+        ],
+        "unchanged_from_previous": true
+      },
+      "artifact": {
+        "id": 14134844642,
+        "name": "astra-wp04-checks",
+        "size_in_bytes": 15011,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134844642",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134844642/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:44:07Z",
+        "expires_at": "2027-02-12T22:42:11Z",
+        "updated_at": "2026-11-14T22:44:07Z",
+        "digest": "sha256:e63e3f39809da912643a3db32e64d4be0afe262d6d727c9d0badccef4b255107",
+        "workflow_run": {
+          "id": 43649465036,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp04",
+          "head_sha": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc"
+        }
+      },
+      "dedup": {
+        "equivalent_runs_before_dispatch": 0,
+        "prior_run_terminal": true,
+        "reason": "Two concrete TS7006 diagnostics fixed only with explicit type annotations; mandatory compiler/guards requalification, no functional rerun."
+      },
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649465036"
     }
   ],
   "qualification": {
@@ -268,8 +373,17 @@
       "reason": "W2 to W3 changes only the new fixture, its literal expected status and a comment in the new UI script. None changes the inputs of these seven tests."
     },
     "does_not_sum_repeat_observations": true,
-    "full_source_gate": "FINAL_CHECK_PENDING",
-    "composed_gate": "NOT_RUN_REQUIRES_SESSION42_ASSEMBLY_AND_S0_ACTIONS"
+    "full_source_gate": "PASS_RUN_43649465036_ON_EXACT_W4",
+    "composed_gate": "NOT_RUN_REQUIRES_SESSION42_ASSEMBLY_AND_S0_ACTIONS",
+    "final_source_continuation": {
+      "W": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+      "runtime_delta": false,
+      "only_code_change": "Two explicit callback parameter annotations and type-only imports in fixture.ts",
+      "proof": "TYPE-ONLY-FIX.json",
+      "functional_tests_repeated": false,
+      "reason": "No runtime expression or assertion changed; repeat only mandatory typecheck and guards for the concrete TS7006 failure."
+    },
+    "checks_scope": "Sucafina package, including imported new CLI adapter; full CLI/E2E package typechecks not claimed."
   },
   "equality": {
     "A1": {
@@ -306,6 +420,9 @@
     "omni_proved": false,
     "native_or_AM_proved": false,
     "browser_proved": false,
-    "financial_apply_proved": false
-  }
+    "financial_apply_proved": false,
+    "checks_final_commit_runtime_identical_to_A2": true
+  },
+  "functional_test_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "terminal_publication": "Receipt-only continuation of checked W4; no new functional or guard execution of terminal documents is claimed."
 }
