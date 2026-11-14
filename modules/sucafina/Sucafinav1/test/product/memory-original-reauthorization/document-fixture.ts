@@ -69,7 +69,7 @@ async function createFixture(app: Awaited<ReturnType<typeof createWp06Runtime>>,
   const atlas = createSfAtlasBusiness({ host, authority: authority.authority, state: authority.state, cases: business.cases, authorizeCase,
     dashboard: business.dashboard, dashboardIssue: createDashboardSourceIssuer({ host, scopedSources: app.store }),
     dashboardRecords: createDashboardRecordEvidenceHost({ host, scopedSources: app.store, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: app.store }) }),
-    procurement: business.procurement, procurementResolve: business.resolveProcurement, documentRead: documents.documents.reader,
+    procurement: business.procurement, procurementResolve: { resolve: business.resolveProcurement }, documentRead: documents.documents.reader,
     scanner: scannerPin, now: () => app.at,
     caseForEvidence: async (digest, call) => {
       const ref = selected.caseRef
@@ -119,7 +119,7 @@ async function createFixture(app: Awaited<ReturnType<typeof createWp06Runtime>>,
     snapshot.data.store = { suppliers: definitions.map((item) => ({ id: item.supplierId, name: `Document supplier ${item.assetId}` })), settings: { uploadCap: 100_000 } }
     return { commit: true, value: undefined }
   })
-  const upload = async (item: typeof definitions[number]) => {
+  const upload = async (item: Pick<DocumentSource, "assetId" | "supplierId" | "bytes">) => {
     const result = await app.store.transaction("procurement", async (snapshot, blobs) => {
       const actor = await app.runtime.authenticate(app.request("procurement"), { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
       if (!actor || actor.id !== app.principal.id) throw new Error("Actual supplier principal unavailable")

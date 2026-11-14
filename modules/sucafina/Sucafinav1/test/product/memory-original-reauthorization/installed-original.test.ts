@@ -126,7 +126,8 @@ test("Installed original and exact replay retain committed event A while later e
       // capture and its exact receipt have their own current authorization gate.
       expect((await f.atlas.memory.recall(f.caseRef, call)).status).toBe("unavailable")
       expect(await f.atlas.memory.readOriginal(f.caseRef, f.original.refDigest, call)).toEqual(f.original)
-      expect(await f.business.context.emitFromLedger(f.eventRef, call)).toEqual({ ...object(committed), status: "already-committed" })
+      const replay = await f.business.context.emitFromLedger(f.eventRef, call)
+      expect(digestSfValue(replay)).toBe(digestSfValue({ ...object(committed), status: "already-committed" }))
       expect(await f.atlas.memory.readOriginal(f.caseRef, pendingRef.refDigest, call)).toBeUndefined()
       expect(await audit(f)).toEqual(withPending)
       console.info("SF_MEMORY_ORIGINAL_INSTALLED_PROOF", JSON.stringify({ scenario: "committed-A-pending-B",
