@@ -49,6 +49,10 @@ test("a canonical human choice creates a reviewed Planner proposal and only a se
   const contexts: TrustedUiContext[] = []
   let finish: ((context: TrustedUiContext) => void) | undefined
   try {
+    // C08 is stored on Dashboard, and reviewed apply spans the product and Planner snapshots.
+    // Initialize each source registry through the same canonical lifecycle used by the host.
+    await fixture.persistence.initializeSources("dashboard")
+    await fixture.persistence.initializeSources("procurement")
     const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operationId: string }>()
     const payloads = new WeakMap<TrustedUiContext, { action: SfHumanAction; payload: unknown }>()
     const authorize = async (request: Request) => fixture.access.allowed && intents.has(request) && request.headers.get("authorization") === "finance"

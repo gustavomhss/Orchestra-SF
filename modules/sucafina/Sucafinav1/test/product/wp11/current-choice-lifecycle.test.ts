@@ -135,19 +135,34 @@ test("a current quote replays the same historical choice, requires a separate hu
       },
       verifySnapshot: (snapshot, record) => sourceFence(snapshot) && digestSfValue(record.basis) === digestSfValue(basis),
     })
+    const previewTrace: { phase: string; status?: string; error?: { name: string; message: string; stack?: string } } = { phase: "not-started" }
+    const tracePreview = async <T>(phase: string, work: () => Promise<T>): Promise<T> => {
+      previewTrace.phase = `${phase}:start`
+      try {
+        const value = await work()
+        previewTrace.phase = `${phase}:complete`
+        if (value && typeof value === "object" && "status" in value) previewTrace.status = String(value.status)
+        return value
+      } catch (error) {
+        previewTrace.phase = `${phase}:threw`
+        previewTrace.error = error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : { name: typeof error, message: String(error) }
+        throw error
+      }
+    }
     const sources = {
-      resolveForecastCoverage: async (reference: string, context: TrustedDomainContext) => reference === "current-training-inventory"
+      resolveForecastCoverage: (reference: string, context: TrustedDomainContext) => tracePreview("coverage-baseline", async () => reference === "current-training-inventory"
         ? await sourceCurrent() ? { status: "ok" as const, value: { coverageRef: reference, basis, assessment: coverage.assessment } } : { status: "unavailable" as const, reason: "current-coverage-unavailable" }
-        : registry.resolveForecastCoverage(reference, context),
+        : registry.resolveForecastCoverage(reference, context)),
     }
     let observedCoverage: { scenario: ScenarioResult; baseline: CostCoverageAssessment } | undefined
     let coverageDiagnostic: unknown
     const preview = createCurrentChoicePreview({
-      state, host: fixture.host, sources, results, authorizeCase, resimulate, writes,
+      state, host: fixture.host, sources, results, authorizeCase, resimulate: (request, context) => tracePreview("resimulate", () => resimulate(request, context)), writes,
       authorizePreview: async () => human.preview,
       registerCoverage: registry.registerProposalCoverage,
       coverageEvidence: {
         entries: async (scenario, baseline) => {
+          previewTrace.phase = "coverage-entries:start"
           observedCoverage = { scenario: structuredClone(scenario), baseline: structuredClone(baseline) }
           coverageDiagnostic = { basisVersions: { selected: basis.version, baseline: baseline.basisVersion, scenario: scenario.costCoverage.basisVersion }, coverageError: "resolution-not-observed" }
           return { status: "ok", value: coverage.entries }
@@ -208,7 +223,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     expect((await preview.prepare({ ...previewRequest, alternativeRef: { id: "selected", version: 9 } }, fixture.context)).status).toBe("stale")
     const firstPrepared = await preview.prepare(previewRequest, fixture.context)
     if (firstPrepared.status !== "ok") {
-      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify(coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" }))
+      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" } }))
       throw new Error(`Current choice preview: ${JSON.stringify(firstPrepared)}`)
     }
     const previewResult = await results.read({ kind: "scenario", resultRef: firstPrepared.value.promotion.resultRef }, fixture.context)
@@ -239,7 +254,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     human.round = 2
     const prepared = await preview.prepare({ ...previewRequest, caseRef: { ...recorded.value.caseRef, version: 3 } }, fixture.context)
     if (prepared.status !== "ok") {
-      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify(coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" }))
+      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" } }))
       throw new Error(`Refreshed choice preview: ${JSON.stringify(prepared)}`)
     }
     const promoted = await promotion(prepared.value.promotion, fixture.context)
