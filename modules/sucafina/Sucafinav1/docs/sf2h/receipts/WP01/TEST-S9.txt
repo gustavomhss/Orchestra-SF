@@ -1,0 +1,628 @@
+WP01 TEST EVIDENCE — S9
+
+Observed result: completed / failure. 140 pass, 1 fail; 141 tests across 21 files; 2693 expect calls.
+Only failure: B10 — retained real full-host boot fails with invalid-resident-profiles (HTTP 500 instead of 200).
+The delayed-current-value revocation case passed. Full-host failure is retained; this is not an overall CI pass.
+
+Work commit W8: 61348f2279d301a5f9f8e28c562208ce3b8160ee
+Work tree: b48e6066ac4bedeb27933f38a5fb32445650e0aa
+Snapshot S9: 19814d764b5fe325aaafde914543a3d2f925215c
+Snapshot tree: 2a85fc75b479feb1fd10e3ffddd107f4b6ea5e17
+Run: 43537953955
+URL: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537953955
+Test job: 132271412866
+Cleanup job: 132273008552
+Request SHA256: d7bebaae838e8f5ef0b0f2ef3d67191f60d748b629f9f3602dd54657b98a33b6
+Test log SHA256: 3a88219008e879756528b5d298c65b985e964ed325f808d421ec8fc98fc5b89c
+Cleanup log SHA256: a11a0171c789edcb3498792d35f6d0aa2df62f7ec400399bd8869a1f1f224710
+Run metadata SHA256: e8082dd8eecabfd2e9ad403efe617fa4a036e4e3aac82ff70eceffa02ec6b078
+Raw jobs metadata SHA256: cc0691d7c8378b7c93ef7ab70c29b417c1d8e4bdc135fe7129e02e843d7be8f2
+Summary SHA256: 510c282ada3550f44aec12820bf5e9081d315e91bc10f7a3af1fea9dcb0c9118
+
+REQUEST AND RESOLVED COMMAND
+{"package":"sucafina","directory":"modules/sucafina","packageSelector":"packages/sucafina","runner":"bun","args":["./Sucafinav1/test/product/wp01/preview-browser.test.ts","./Sucafinav1/test/product/wp01/bi-browser.test.ts","./Sucafinav1/test/product/wp01/components.test.ts","./Sucafinav1/test/product/wp01/http.test.ts","./Sucafinav1/test/product/wp01/import-receipt-browser.test.ts","./Sucafinav1/test/product/wp01/personal-views.test.ts","./Sucafinav1/test/product/wp01/planner-monthly.test.ts","./Sucafinav1/test/product/wp01/workbench-analysis.test.ts","./Sucafinav1/test/product/wp01/component-coverage.test.ts","./Sucafinav1/test/product/wp01/edit-recovery.test.ts","./Sucafinav1/test/product/wp01/record-search.test.ts","./Sucafinav1/test/product/wp01/shell-state.test.ts","./Sucafinav1/test/product/wp01/view-recovery.test.ts","./Sucafinav1/test/form-layout.test.ts","./Sucafinav1/test/screen.test.ts","./Sucafinav1/test/visual-layout.test.ts","./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts","./Sucafinav1/test/product/wp01/contextual-decision.test.ts","./Sucafinav1/test/product/wp01/decision-mutations.test.ts","./Sucafinav1/test/product/wp01/portfolio-recovery.test.ts","./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts","--timeout","120000"],"env":{}}
+CWD: modules/sucafina
+GITHUB_ACTIONS=false bun test ./Sucafinav1/test/product/wp01/preview-browser.test.ts ./Sucafinav1/test/product/wp01/bi-browser.test.ts ./Sucafinav1/test/product/wp01/components.test.ts ./Sucafinav1/test/product/wp01/http.test.ts ./Sucafinav1/test/product/wp01/import-receipt-browser.test.ts ./Sucafinav1/test/product/wp01/personal-views.test.ts ./Sucafinav1/test/product/wp01/planner-monthly.test.ts ./Sucafinav1/test/product/wp01/workbench-analysis.test.ts ./Sucafinav1/test/product/wp01/component-coverage.test.ts ./Sucafinav1/test/product/wp01/edit-recovery.test.ts ./Sucafinav1/test/product/wp01/record-search.test.ts ./Sucafinav1/test/product/wp01/shell-state.test.ts ./Sucafinav1/test/product/wp01/view-recovery.test.ts ./Sucafinav1/test/form-layout.test.ts ./Sucafinav1/test/screen.test.ts ./Sucafinav1/test/visual-layout.test.ts ./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts ./Sucafinav1/test/product/wp01/contextual-decision.test.ts ./Sucafinav1/test/product/wp01/decision-mutations.test.ts ./Sucafinav1/test/product/wp01/portfolio-recovery.test.ts ./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts --timeout 120000
+
+OBSERVED CONTROL / NONCE / OMNI
+2026-11-14T01:02:59.5921104Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-14T01:02:59.5921863Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-14T01:02:59.6314307Z omni control nonce: 2016c1ab13a8a903e398e84208da40f9
+2026-11-14T01:02:59.6475572Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-14T01:02:59.6476366Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-14T01:02:59.6476975Z   ORCHESTRA_OMNI_CONTROL_NONCE: 2016c1ab13a8a903e398e84208da40f9
+2026-11-14T01:02:59.6477970Z   ORCHESTRA_OMNI_CONTROL: declared
+2026-11-14T01:02:59.6589883Z bun test v1.3.14 (0d9b296a)
+2026-11-14T01:05:26.7206735Z omni positive control [2016c1ab13a8a903e398e84208da40f9]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+
+ALL OBSERVED TEST RESULTS (source log ordering; repeated final fail summary excluded)
+001. PASS | Sucafinav1/test/product/wp01/preview-browser.test.ts | dashboard groups retain every canonical destination and its original index | 9.07 ms | source line 829
+002. PASS | Sucafinav1/test/product/wp01/preview-browser.test.ts | field errors identify the input and preserve the draft | 1838.05 ms | source line 882
+003. PASS | Sucafinav1/test/product/wp01/preview-browser.test.ts | procurement submission carries edits from its record's editor | 380.96 ms | source line 894
+004. PASS | Sucafinav1/test/product/wp01/preview-browser.test.ts | edits made while an apply is in flight remain unsaved in the real shell | 404.14 ms | source line 906
+005. PASS | Sucafinav1/test/product/wp01/bi-browser.test.ts | authenticated BI renders, filters and fails closed after session revocation | 2341.99 ms | source line 920
+006. PASS | Sucafinav1/test/product/wp01/components.test.ts | conditioned scenario shows known subtotal and missing category without a total | 1.23 ms | source line 923
+007. PASS | Sucafinav1/test/product/wp01/components.test.ts | status messages escape user-supplied details | 0.10 ms | source line 924
+008. PASS | Sucafinav1/test/product/wp01/components.test.ts | work list displays only supplied authorized items and handles an empty selection | 0.16 ms | source line 925
+009. PASS | Sucafinav1/test/product/wp01/components.test.ts | routine status does not claim admission for a pending request | 0.15 ms | source line 926
+010. PASS | Sucafinav1/test/product/wp01/components.test.ts | contribution renders a persisted question and retains explicit stale state | 1.24 ms | source line 927
+011. PASS | Sucafinav1/test/product/wp01/http.test.ts | workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF | 1279.89 ms | source line 941
+012. PASS | Sucafinav1/test/product/wp01/import-receipt-browser.test.ts | import reports the persisted unchanged outcome after an uncertain response | 456.97 ms | source line 955
+013. PASS | Sucafinav1/test/product/wp01/personal-views.test.ts | personal views isolate authenticated principals and reconcile exact retries | 844.09 ms | source line 969
+014. PASS | Sucafinav1/test/product/wp01/planner-monthly.test.ts | Planner boundary rejects unpublished operations and invalid monthly context before host admission | 3.03 ms | source line 972
+015. PASS | Sucafinav1/test/product/wp01/planner-monthly.test.ts | Planner grid previews pasted values and preserves a conflicting draft | 594.14 ms | source line 984
+016. FAIL | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Workbench analysis HTTP enforces human authority and hides forged run references | 2353.77 ms | source line 1021
+017. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Workbench analysis returns unavailable when its host services are absent | 0.58 ms | source line 1022
+018. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer projects the actual ScenarioComparison from its supplied ports and rereads both sources | 19.57 ms | source line 1023
+019. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer projects the actual FinancialAnalysis comparison from its supplied ports and rereads both sources | 17.23 ms | source line 1024
+020. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses read-denied through the existing read grants and saved-author checks | 14.07 ms | source line 1025
+021. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses wrong-case through the existing read grants and saved-author checks | 14.16 ms | source line 1026
+022. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses wrong-digest through the existing read grants and saved-author checks | 5.66 ms | source line 1027
+023. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses wrong-provenance through the existing read grants and saved-author checks | 13.77 ms | source line 1028
+024. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses missing-native through the existing read grants and saved-author checks | 13.78 ms | source line 1029
+025. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses case-changed through the existing read grants and saved-author checks | 6.06 ms | source line 1030
+026. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses author-changed through the existing read grants and saved-author checks | 15.19 ms | source line 1031
+027. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer refuses revoked through the existing read grants and saved-author checks | 14.99 ms | source line 1032
+028. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | Reviewer consumer rejects a supplied comparison, evidence or nonreviewer profile before reading ports | 13.43 ms | source line 1033
+029. PASS | Sucafinav1/test/product/wp01/workbench-analysis.test.ts | analysis output returns a denial when access changes during optional review discovery | 14.35 ms | source line 1034
+030. PASS | Sucafinav1/test/product/wp01/component-coverage.test.ts | coverage references and the derived omitted category accompany conditioned amounts | 7.57 ms | source line 1037
+031. PASS | Sucafinav1/test/product/wp01/component-coverage.test.ts | unavailable values remain unavailable and a pending question supplies the next step | 0.36 ms | source line 1038
+032. PASS | Sucafinav1/test/product/wp01/component-coverage.test.ts | a confirmed zero and a later nonzero cost are consumed without UI arithmetic | 0.22 ms | source line 1039
+033. PASS | Sucafinav1/test/product/wp01/component-coverage.test.ts | choice history retains its original conditional result after reevaluation | 0.31 ms | source line 1040
+034. PASS | Sucafinav1/test/product/wp01/component-coverage.test.ts | coverage metadata is escaped and complete comparison does not mask conditioned source | 0.12 ms | source line 1041
+035. PASS | Sucafinav1/test/product/wp01/component-coverage.test.ts | work context displays the authorized record scope and does not manufacture records | 0.22 ms | source line 1042
+036. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | monthly apply freezes its draft and replays the exact admitted request after a lost response | 586.65 ms | source line 1050
+037. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | the live monthly grid exposes only the published draft contract and preserves the existing record form | 339.18 ms | source line 1051
+038. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | monthly apply times out while reading an unfinished response body and retries the identical request | 10961.54 ms | source line 1052
+039. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | scenario analysis retries the prepared input and admission key without preparing another run | 433.01 ms | source line 1053
+040. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | decision framing retries its exact prepared input and start key without preparing again | 501.12 ms | source line 1054
+041. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | scenario 401 revokes its options and configuration and prevents another start | 436.67 ms | source line 1055
+042. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | scenario 403 revokes its options and configuration and prevents another start | 447.21 ms | source line 1056
+043. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | forecast start recovers an uncertain admission without changing its model or payload | 483.60 ms | source line 1057
+044. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | choice freezes the comparison and reason and retries the exact serialized intention after a lost response | 603.64 ms | source line 1058
+045. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | an unverifiable choice acknowledgement followed by a conflict remains frozen for reconciliation | 554.11 ms | source line 1059
+046. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | choice 401 removes the comparison, reason and context and blocks another submission | 460.86 ms | source line 1060
+047. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | choice 403 removes the comparison, reason and context and blocks another submission | 466.82 ms | source line 1061
+048. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | a comparison read finishing after access revocation cannot restore private choice data | 459.44 ms | source line 1062
+049. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | choice deadline includes a stalled response body and preserves its exact request for retry | 10509.97 ms | source line 1063
+050. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | an initially rejected choice preserves editable entries and uses a new intention after correction | 590.43 ms | source line 1064
+051. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | a sensitivity conflict preserves its request and a known result is reread without evaluating again | 738.34 ms | source line 1065
+052. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | independent review freezes the original author and replays its prepared request after a lost start response | 522.47 ms | source line 1066
+053. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | independent review does not replace an uncertain author request after a conflict | 463.00 ms | source line 1067
+054. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | a delayed review preparation cannot start or restore data after analysis access is revoked | 488.56 ms | source line 1068
+055. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | an opened result without an available reviewer offers no fabricated review action | 356.91 ms | source line 1069
+056. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | history preserves a reason on transient failure, then removes restricted output on revocation | 431.60 ms | source line 1070
+057. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | a stale analysis preserves the reason but disables acceptance and removes its old result | 437.58 ms | source line 1071
+058. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | conversation refresh asks before discarding an unsent reply and preserves it when reading fails | 529.94 ms | source line 1072
+059. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | reply retry preserves the exact thread mutation after an uncertain write | 484.62 ms | source line 1073
+060. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | an unknown monthly write followed by a row conflict remains unresolved and locked | 547.31 ms | source line 1074
+061. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | a definitive rejected analysis start unlocks input without treating it as an uncertain admission | 371.60 ms | source line 1075
+062. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | a queued history refresh observes a new run after an older empty list finishes | 335.16 ms | source line 1076
+063. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | an earlier authorized list cannot repopulate results after an output revocation | 920.36 ms | source line 1077
+064. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | answer confirmation preflight failure restores the reply and conversation controls | 439.28 ms | source line 1078
+065. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | question 401 clears the draft and context and fences an older recipient response | 535.98 ms | source line 1079
+066. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | question 403 clears the draft and context and fences an older recipient response | 529.16 ms | source line 1080
+067. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | transient question recipient and preflight failures preserve the selected recipient and editable draft | 464.25 ms | source line 1081
+068. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | question creation replays its frozen request after uncertainty and retries attachment without creating another thread | 659.79 ms | source line 1082
+069. PASS | Sucafinav1/test/product/wp01/edit-recovery.test.ts | an initial definite question rejection permits correction with a new request identity | 481.98 ms | source line 1083
+070. PASS | Sucafinav1/test/product/wp01/record-search.test.ts | record search opens an actual authorized project with year, canonical anchor and focus, restores back and clears after logout | 1313.54 ms | source line 1097
+071. PASS | Sucafinav1/test/product/wp01/record-search.test.ts | record search queries only the real viewer navigation and exposes no title or count for a forbidden collection | 797.45 ms | source line 1098
+072. PASS | Sucafinav1/test/product/wp01/record-search.test.ts | a role reduction during final search revalidation clears earlier authorized results even without an access revision header | 768.43 ms | source line 1099
+073. PASS | Sucafinav1/test/product/wp01/record-search.test.ts | Planner record search pins the effective default plan from authorized HTML when the starting URL omits version | 823.34 ms | source line 1100
+074. PASS | Sucafinav1/test/product/wp01/record-search.test.ts | Procurement search opens the actual request and supplier details through their canonical selectors | 1120.27 ms | source line 1101
+075. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | refresh 401 removes the old authorized view even with unsaved edits | 427.65 ms | source line 1115
+076. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | refresh 403 removes the old authorized view even with unsaved edits | 373.80 ms | source line 1116
+077. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | access revision change fails closed even when refresh returns HTTP 200 | 398.19 ms | source line 1117
+078. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | an expired session rendered as a sign-in document cannot retain the dirty authorized view | 349.06 ms | source line 1118
+079. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | transient refresh failure and fresh data preserve a dirty form and its expected version | 471.73 ms | source line 1119
+080. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | edits typed during an ordinary save remain pending after its receipt | 393.56 ms | source line 1120
+081. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | HTTP conflict preserves the attempt and shows the server value without a duplicated body status | 426.50 ms | source line 1121
+082. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | navigation keeps scoped Dashboard periods and Planner version without sharing filters | 381.11 ms | source line 1122
+083. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | back from a detail restores the same query and scroll position after server revalidation | 485.92 ms | source line 1123
+084. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | real shell detail supports keyboard, focus return and confined overflow at 320 px | 454.02 ms | source line 1124
+085. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | real shell detail supports keyboard, focus return and confined overflow at 768 px | 443.15 ms | source line 1125
+086. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | real shell detail supports keyboard, focus return and confined overflow at 1440 px | 463.76 ms | source line 1126
+087. PASS | Sucafinav1/test/product/wp01/shell-state.test.ts | canonical destinations retain identifiers and invalid years cannot enter navigation state | 0.72 ms | source line 1127
+088. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | creation freezes its request after a lost outcome and retains uncertainty on a subsequent 409 | 694.95 ms | source line 1141
+089. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | creation freezes its request after a stale outcome and retains uncertainty on a subsequent 409 | 660.78 ms | source line 1142
+090. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | a confirmed creation rejection unlocks correction and creates a new intention | 618.07 ms | source line 1143
+091. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | creation 401 removes its inputs and does not echo the denied payload | 511.10 ms | source line 1144
+092. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | creation 403 removes its inputs and does not echo the denied payload | 538.65 ms | source line 1145
+093. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | save-503 view mutation freezes density, version, payload and idempotency key until reconciliation | 607.48 ms | source line 1146
+094. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | save-409 view mutation freezes density, version, payload and idempotency key until reconciliation | 581.21 ms | source line 1147
+095. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | preferred-503 view mutation freezes density, version, payload and idempotency key until reconciliation | 497.82 ms | source line 1148
+096. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | preferred-409 view mutation freezes density, version, payload and idempotency key until reconciliation | 535.75 ms | source line 1149
+097. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | remove-503 view mutation freezes density, version, payload and idempotency key until reconciliation | 518.64 ms | source line 1150
+098. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | remove-409 view mutation freezes density, version, payload and idempotency key until reconciliation | 520.97 ms | source line 1151
+099. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | a confirmed saved-view rejection permits an edited payload with a new key | 492.10 ms | source line 1152
+100. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | saved-view 401 clears old titles and fences a late earlier read | 536.44 ms | source line 1153
+101. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | saved-view 403 clears old titles and fences a late earlier read | 520.01 ms | source line 1154
+102. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | opening an authorized saved view requires an explicit decision to discard current edits | 533.96 ms | source line 1155
+103. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | a newer authorized list cannot be repopulated by an older filtered read | 488.10 ms | source line 1156
+104. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | an older open response cannot replace the user's newer destination choice | 485.41 ms | source line 1157
+105. PASS | Sucafinav1/test/product/wp01/view-recovery.test.ts | an arriving saved density cannot overwrite edits made while its authorized read was pending | 406.42 ms | source line 1158
+106. PASS | Sucafinav1/test/form-layout.test.ts | All editor screens keep readable field widths and ordered configuration sections | 25170.69 ms | source line 1178
+107. PASS | Sucafinav1/test/screen.test.ts | the screen draws the server list, the footer is not a page, and a refused write is not saved | 11.84 ms | source line 1181
+108. PASS | Sucafinav1/test/screen.test.ts | planner and procurement screens do not add a page and do not carry another surface | 1.58 ms | source line 1182
+109. PASS | Sucafinav1/test/visual-layout.test.ts | Executive metrics align, fill the content area and fit desktop and mobile viewports | 21722.45 ms | source line 1211
+110. PASS | Sucafinav1/test/product/wp10/integration/ui-authority.test.ts | UI lease pins the private Request and consumes once across concurrent dispatches | 7.74 ms | source line 1214
+111. PASS | Sucafinav1/test/product/wp10/integration/ui-authority.test.ts | serializing UI context never recovers authority, and selectors cannot change its operation | 0.38 ms | source line 1215
+112. PASS | Sucafinav1/test/product/wp10/integration/ui-authority.test.ts | revocation and changed access revision dispose UI admission before disclosure | 0.32 ms | source line 1216
+113. PASS | Sucafinav1/test/product/wp10/integration/ui-authority.test.ts | expired UI context and invalid operation cannot acquire a Request or receipt | 0.28 ms | source line 1217
+114. PASS | Sucafinav1/test/product/wp10/integration/ui-authority.test.ts | a transport readmission has a new call identity and preserves the host command intention | 0.29 ms | source line 1218
+115. PASS | Sucafinav1/test/product/wp01/contextual-decision.test.ts | contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation | 1833.18 ms | source line 1232
+116. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | decision edit replays its frozen request after uncertainty and confirmed | 541.41 ms | source line 1240
+117. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | decision edit replays its frozen request after uncertainty and conflict | 553.35 ms | source line 1241
+118. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | a definite edit conflict compares current values without discarding the user's draft or enabling a restricted field | 396.04 ms | source line 1242
+119. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | decision edit 401 scrubs its fields, source context and future submissions | 479.64 ms | source line 1243
+120. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | decision edit 403 scrubs its fields, source context and future submissions | 481.95 ms | source line 1244
+121. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | a delayed current-value read cannot restore an edit after access revocation | 458.30 ms | source line 1245
+122. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | prepared application retains its reviewed request after uncertainty and confirmed | 627.88 ms | source line 1246
+123. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | prepared application retains its reviewed request after uncertainty and conflict | 624.02 ms | source line 1247
+124. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | prepared application 401 clears its former review and blocks another write | 446.10 ms | source line 1248
+125. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | prepared application 403 clears its former review and blocks another write | 502.00 ms | source line 1249
+126. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | a late prepared-change review cannot repopulate the revoked entry | 429.26 ms | source line 1250
+127. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | a malformed edit acknowledgement cannot unlock the unconfirmed intention or report a saved decision | 430.81 ms | source line 1251
+128. PASS | Sucafinav1/test/product/wp01/decision-mutations.test.ts | an initial apply conflict after domain receipt observation remains unconfirmed and replays the same intention | 490.34 ms | source line 1252
+129. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio evaluation freezes body and key after a lost response and a subsequent conflict | 984.66 ms | source line 1266
+130. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio promotion freezes body and key after a lost response and a subsequent conflict | 1122.78 ms | source line 1267
+131. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio preparation freezes body and key after a lost response and a subsequent conflict | 1070.54 ms | source line 1268
+132. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | an initial portfolio stale response retains the same evaluation intention | 981.72 ms | source line 1269
+133. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | an initial portfolio conflict response retains the same evaluation intention | 835.31 ms | source line 1270
+134. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | a published pre-dispatch portfolio rejection permits correction with a new intention | 1037.78 ms | source line 1271
+135. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio promotion does not confirm an incomplete successful acknowledgement | 947.70 ms | source line 1272
+136. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio preparation does not confirm an incomplete successful acknowledgement | 941.50 ms | source line 1273
+137. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | a closed portfolio page exposes a reload state without retaining its old context | 1184.54 ms | source line 1274
+138. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio 401 clears context and fences a late successful mutation | 815.56 ms | source line 1275
+139. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio 403 clears context and fences a late successful mutation | 838.37 ms | source line 1276
+140. PASS | Sucafinav1/test/product/wp01/portfolio-recovery.test.ts | portfolio evaluation times out while reading a body and replays the exact request | 11138.95 ms | source line 1277
+141. PASS | Sucafinav1/test/product/wp01/browser-lifecycle.test.ts | WP01 shares one Chromium across files, releases every lease, and proves final process exit | 67.93 ms | source line 1303
+
+COMPLETE FAILURE DIAGNOSTIC AND STACK
+FAIL: Workbench analysis HTTP enforces human authority and hides forged run references
+FILE: Sucafinav1/test/product/wp01/workbench-analysis.test.ts
+SOURCE: job-132271412866.log:1004-1021
+SOURCE SHA256: 3a88219008e879756528b5d298c65b985e964ed325f808d421ec8fc98fc5b89c
+2026-11-14T01:03:11.8855971Z [01:03:11.885] ERROR (#584): location services failed to boot {
+2026-11-14T01:03:11.8856789Z   directory: "/tmp/sf-analysis-http-S5amNv",
+2026-11-14T01:03:11.8857938Z   cause: "Error: {\"code\":\"invalid-manifest\",\"reason\":\"invalid-resident-profiles\"}",
+2026-11-14T01:03:11.8858722Z }
+2026-11-14T01:03:11.9322724Z 60 |     web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
+2026-11-14T01:03:11.9324861Z 61 |       .pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true, memoMap: Layer.makeMemoMapUnsafe() })
+2026-11-14T01:03:11.9325920Z 62 | 
+2026-11-14T01:03:11.9326650Z 63 |     const ready = new URL("/api/agent", origin)
+2026-11-14T01:03:11.9327189Z 64 |     ready.searchParams.set("location[directory]", directory)
+2026-11-14T01:03:11.9327966Z 65 |     expect((await fetch(ready)).status).toBe(200)
+2026-11-14T01:03:11.9328347Z                                              ^
+2026-11-14T01:03:11.9328721Z error: expect(received).toBe(expected)
+2026-11-14T01:03:11.9328919Z 
+2026-11-14T01:03:11.9329019Z Expected: 200
+2026-11-14T01:03:11.9329221Z Received: 500
+2026-11-14T01:03:11.9329339Z 
+2026-11-14T01:03:11.9329896Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts:65:41)
+2026-11-14T01:03:11.9416434Z (fail) Workbench analysis HTTP enforces human authority and hides forged run references [2353.77ms]
+
+ALL BROWSER PREFLIGHT / LIFECYCLE EVENTS
+SOURCE job-132271412866.log:830-857
+2026-11-14T01:02:59.7027364Z WP01 browser explicit selection admitted {
+2026-11-14T01:02:59.7028203Z   executable: "bun",
+2026-11-14T01:02:59.7028612Z   command: "test",
+2026-11-14T01:02:59.7028978Z   files: [
+2026-11-14T01:02:59.7029994Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+2026-11-14T01:02:59.7031580Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+2026-11-14T01:02:59.7033296Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+2026-11-14T01:02:59.7034786Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+2026-11-14T01:02:59.7036355Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+2026-11-14T01:02:59.7038236Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+2026-11-14T01:02:59.7039826Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+2026-11-14T01:02:59.7041455Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+2026-11-14T01:02:59.7043103Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+2026-11-14T01:02:59.7044733Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+2026-11-14T01:02:59.7045926Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+2026-11-14T01:02:59.7047850Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+2026-11-14T01:02:59.7049261Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+2026-11-14T01:02:59.7050097Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+2026-11-14T01:02:59.7051529Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/screen.test.ts",
+2026-11-14T01:02:59.7052368Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+2026-11-14T01:02:59.7054101Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+2026-11-14T01:02:59.7056230Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+2026-11-14T01:02:59.7058184Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+2026-11-14T01:02:59.7059937Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+2026-11-14T01:02:59.7061632Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+2026-11-14T01:02:59.7062648Z   ],
+2026-11-14T01:02:59.7063753Z   finalizer: "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+2026-11-14T01:02:59.7064844Z }
+
+SOURCE job-132271412866.log:858-860
+2026-11-14T01:02:59.7065223Z WP01 browser launch phase {
+2026-11-14T01:02:59.7065744Z   phase: "load public Playwright API",
+2026-11-14T01:02:59.7066219Z }
+
+SOURCE job-132271412866.log:861-863
+2026-11-14T01:03:00.1390267Z WP01 browser launch phase {
+2026-11-14T01:03:00.1391355Z   phase: "chromium.launch",
+2026-11-14T01:03:00.1391814Z }
+
+SOURCE job-132271412866.log:864-866
+2026-11-14T01:03:01.0037798Z WP01 browser launch phase {
+2026-11-14T01:03:01.0038756Z   phase: "read actual browser PID through CDP",
+2026-11-14T01:03:01.0039297Z }
+
+SOURCE job-132271412866.log:867-870
+2026-11-14T01:03:01.0189633Z WP01 browser launch complete {
+2026-11-14T01:03:01.0190161Z   pid: 4330,
+2026-11-14T01:03:01.0190511Z   launches: 1,
+2026-11-14T01:03:01.0190807Z }
+
+SOURCE job-132271412866.log:871-875
+2026-11-14T01:03:01.0191036Z WP01 browser lease acquired {
+2026-11-14T01:03:01.0191294Z   pid: 4330,
+2026-11-14T01:03:01.0191492Z   lease: 1,
+2026-11-14T01:03:01.0191697Z   acquisitions: 1,
+2026-11-14T01:03:01.0191939Z }
+
+SOURCE job-132271412866.log:876-881
+2026-11-14T01:03:01.5204682Z WP01 browser lease released {
+2026-11-14T01:03:01.5205489Z   pid: 4330,
+2026-11-14T01:03:01.5205840Z   lease: 1,
+2026-11-14T01:03:01.5206164Z   releases: 1,
+2026-11-14T01:03:01.5206524Z   contexts: 0,
+2026-11-14T01:03:01.5206840Z }
+
+SOURCE job-132271412866.log:883-887
+2026-11-14T01:03:01.5383470Z WP01 browser lease acquired {
+2026-11-14T01:03:01.5383949Z   pid: 4330,
+2026-11-14T01:03:01.5384297Z   lease: 2,
+2026-11-14T01:03:01.5384624Z   acquisitions: 2,
+2026-11-14T01:03:01.5384967Z }
+
+SOURCE job-132271412866.log:888-893
+2026-11-14T01:03:01.9033693Z WP01 browser lease released {
+2026-11-14T01:03:01.9034316Z   pid: 4330,
+2026-11-14T01:03:01.9034827Z   lease: 2,
+2026-11-14T01:03:01.9035155Z   releases: 2,
+2026-11-14T01:03:01.9035484Z   contexts: 0,
+2026-11-14T01:03:01.9035797Z }
+
+SOURCE job-132271412866.log:895-899
+2026-11-14T01:03:01.9183402Z WP01 browser lease acquired {
+2026-11-14T01:03:01.9183891Z   pid: 4330,
+2026-11-14T01:03:01.9184189Z   lease: 3,
+2026-11-14T01:03:01.9184394Z   acquisitions: 3,
+2026-11-14T01:03:01.9184769Z }
+
+SOURCE job-132271412866.log:900-905
+2026-11-14T01:03:02.3067549Z WP01 browser lease released {
+2026-11-14T01:03:02.3068593Z   pid: 4330,
+2026-11-14T01:03:02.3071263Z   lease: 3,
+2026-11-14T01:03:02.3071822Z   releases: 3,
+2026-11-14T01:03:02.3072380Z   contexts: 0,
+2026-11-14T01:03:02.3072861Z }
+
+SOURCE job-132271412866.log:909-913
+2026-11-14T01:03:02.4125662Z WP01 browser lease acquired {
+2026-11-14T01:03:02.4126463Z   pid: 4330,
+2026-11-14T01:03:02.4126837Z   lease: 4,
+2026-11-14T01:03:02.4127186Z   acquisitions: 4,
+2026-11-14T01:03:02.4127518Z }
+
+SOURCE job-132271412866.log:914-919
+2026-11-14T01:03:04.7127188Z WP01 browser lease released {
+2026-11-14T01:03:04.7128143Z   pid: 4330,
+2026-11-14T01:03:04.7129442Z   lease: 4,
+2026-11-14T01:03:04.7130234Z   releases: 4,
+2026-11-14T01:03:04.7130576Z   contexts: 0,
+2026-11-14T01:03:04.7130886Z }
+
+SOURCE job-132271412866.log:930-934
+2026-11-14T01:03:05.2073650Z WP01 browser lease acquired {
+2026-11-14T01:03:05.2074004Z   pid: 4330,
+2026-11-14T01:03:05.2074217Z   lease: 5,
+2026-11-14T01:03:05.2074426Z   acquisitions: 5,
+2026-11-14T01:03:05.2074638Z }
+
+SOURCE job-132271412866.log:935-940
+2026-11-14T01:03:06.3790295Z WP01 browser lease released {
+2026-11-14T01:03:06.3816630Z   pid: 4330,
+2026-11-14T01:03:06.3838833Z   lease: 5,
+2026-11-14T01:03:06.3861286Z   releases: 5,
+2026-11-14T01:03:06.3861764Z   contexts: 0,
+2026-11-14T01:03:06.3862174Z }
+
+SOURCE job-132271412866.log:942-948
+2026-11-14T01:03:06.3948621Z WP01 browser lease acquired {
+2026-11-14T01:03:06.3949099Z 
+2026-11-14T01:03:06.3949271Z   pid: 4330,
+2026-11-14T01:03:06.3949919Z Sucafinav1/test/product/wp01/import-receipt-browser.test.ts:
+2026-11-14T01:03:06.3950471Z   lease: 6,
+2026-11-14T01:03:06.3950891Z   acquisitions: 6,
+2026-11-14T01:03:06.3951302Z }
+
+SOURCE job-132271412866.log:949-954
+2026-11-14T01:03:06.8452291Z WP01 browser lease released {
+2026-11-14T01:03:06.8452913Z   pid: 4330,
+2026-11-14T01:03:06.8453319Z   lease: 6,
+2026-11-14T01:03:06.8453684Z   releases: 6,
+2026-11-14T01:03:06.8454067Z   contexts: 0,
+2026-11-14T01:03:06.8454384Z }
+
+SOURCE job-132271412866.log:958-962
+2026-11-14T01:03:07.0175986Z WP01 browser lease acquired {
+2026-11-14T01:03:07.0176449Z   pid: 4330,
+2026-11-14T01:03:07.0176681Z   lease: 7,
+2026-11-14T01:03:07.0176905Z   acquisitions: 7,
+2026-11-14T01:03:07.0177133Z }
+
+SOURCE job-132271412866.log:963-968
+2026-11-14T01:03:07.6870868Z WP01 browser lease released {
+2026-11-14T01:03:07.6871480Z   pid: 4330,
+2026-11-14T01:03:07.6898444Z   lease: 7,
+2026-11-14T01:03:07.6904012Z   releases: 7,
+2026-11-14T01:03:07.6911839Z   contexts: 0,
+2026-11-14T01:03:07.6912852Z }
+
+SOURCE job-132271412866.log:973-977
+2026-11-14T01:03:07.7213648Z WP01 browser lease acquired {
+2026-11-14T01:03:07.7213993Z   pid: 4330,
+2026-11-14T01:03:07.7214240Z   lease: 8,
+2026-11-14T01:03:07.7214464Z   acquisitions: 8,
+2026-11-14T01:03:07.7214690Z }
+
+SOURCE job-132271412866.log:978-983
+2026-11-14T01:03:08.2935994Z WP01 browser lease released {
+2026-11-14T01:03:08.2936598Z   pid: 4330,
+2026-11-14T01:03:08.2936994Z   lease: 8,
+2026-11-14T01:03:08.2937416Z   releases: 8,
+2026-11-14T01:03:08.2937972Z   contexts: 0,
+2026-11-14T01:03:08.2938263Z }
+
+SOURCE job-132271412866.log:1045-1049
+2026-11-14T01:03:12.1548059Z WP01 browser lease acquired {
+2026-11-14T01:03:12.1548503Z   pid: 4330,
+2026-11-14T01:03:12.1549210Z   lease: 9,
+2026-11-14T01:03:12.1549463Z   acquisitions: 9,
+2026-11-14T01:03:12.1549720Z }
+
+SOURCE job-132271412866.log:1084-1089
+2026-11-14T01:03:49.7278084Z WP01 browser lease released {
+2026-11-14T01:03:49.7278532Z   pid: 4330,
+2026-11-14T01:03:49.7278855Z   lease: 9,
+2026-11-14T01:03:49.7279176Z   releases: 9,
+2026-11-14T01:03:49.7279500Z   contexts: 0,
+2026-11-14T01:03:49.7279821Z }
+
+SOURCE job-132271412866.log:1092-1096
+2026-11-14T01:03:49.7357748Z WP01 browser lease acquired {
+2026-11-14T01:03:49.7358478Z   pid: 4330,
+2026-11-14T01:03:49.7358745Z   lease: 10,
+2026-11-14T01:03:49.7358994Z   acquisitions: 10,
+2026-11-14T01:03:49.7359251Z }
+
+SOURCE job-132271412866.log:1102-1109
+2026-11-14T01:03:54.5591802Z WP01 browser lease released {
+2026-11-14T01:03:54.5592208Z   pid: 4330,
+2026-11-14T01:03:54.5592540Z   lease: 10,
+2026-11-14T01:03:54.5592735Z 
+2026-11-14T01:03:54.5592971Z Sucafinav1/test/product/wp01/shell-state.test.ts:
+2026-11-14T01:03:54.5593532Z   releases: 10,
+2026-11-14T01:03:54.5593860Z   contexts: 0,
+2026-11-14T01:03:54.5594190Z }
+
+SOURCE job-132271412866.log:1110-1114
+2026-11-14T01:03:54.5902911Z WP01 browser lease acquired {
+2026-11-14T01:03:54.5903386Z   pid: 4330,
+2026-11-14T01:03:54.5903677Z   lease: 11,
+2026-11-14T01:03:54.5903899Z   acquisitions: 11,
+2026-11-14T01:03:54.5904127Z }
+
+SOURCE job-132271412866.log:1128-1133
+2026-11-14T01:03:59.6599557Z WP01 browser lease released {
+2026-11-14T01:03:59.6600009Z   pid: 4330,
+2026-11-14T01:03:59.6600348Z   lease: 11,
+2026-11-14T01:03:59.6600712Z   releases: 11,
+2026-11-14T01:03:59.6601049Z   contexts: 0,
+2026-11-14T01:03:59.6601258Z }
+
+SOURCE job-132271412866.log:1136-1140
+2026-11-14T01:03:59.6750794Z WP01 browser lease acquired {
+2026-11-14T01:03:59.6751258Z   pid: 4330,
+2026-11-14T01:03:59.6751523Z   lease: 12,
+2026-11-14T01:03:59.6751738Z   acquisitions: 12,
+2026-11-14T01:03:59.6751947Z }
+
+SOURCE job-132271412866.log:1159-1164
+2026-11-14T01:04:09.4235755Z WP01 browser lease released {
+2026-11-14T01:04:09.4236185Z   pid: 4330,
+2026-11-14T01:04:09.4236498Z   lease: 12,
+2026-11-14T01:04:09.4236813Z   releases: 12,
+2026-11-14T01:04:09.4237148Z   contexts: 0,
+2026-11-14T01:04:09.4237475Z }
+
+SOURCE job-132271412866.log:1167-1171
+2026-11-14T01:04:09.5225825Z WP01 browser lease acquired {
+2026-11-14T01:04:09.5226363Z   pid: 4330,
+2026-11-14T01:04:09.5226743Z   lease: 13,
+2026-11-14T01:04:09.5227130Z   acquisitions: 13,
+2026-11-14T01:04:09.5227467Z }
+
+SOURCE job-132271412866.log:1172-1177
+2026-11-14T01:04:34.6099813Z WP01 browser lease released {
+2026-11-14T01:04:34.6100401Z   pid: 4330,
+2026-11-14T01:04:34.6100766Z   lease: 13,
+2026-11-14T01:04:34.6101087Z   releases: 13,
+2026-11-14T01:04:34.6101457Z   contexts: 0,
+2026-11-14T01:04:34.6101786Z }
+
+SOURCE job-132271412866.log:1185-1189
+2026-11-14T01:04:34.7295424Z WP01 browser lease acquired {
+2026-11-14T01:04:34.7295797Z   pid: 4330,
+2026-11-14T01:04:34.7296012Z   lease: 14,
+2026-11-14T01:04:34.7296222Z   acquisitions: 14,
+2026-11-14T01:04:34.7296438Z }
+
+SOURCE job-132271412866.log:1205-1210
+2026-11-14T01:04:56.3736259Z WP01 browser lease released {
+2026-11-14T01:04:56.3736794Z   pid: 4330,
+2026-11-14T01:04:56.3737130Z   lease: 14,
+2026-11-14T01:04:56.3737454Z   releases: 14,
+2026-11-14T01:04:56.3738021Z   contexts: 0,
+2026-11-14T01:04:56.3738349Z }
+
+SOURCE job-132271412866.log:1221-1225
+2026-11-14T01:04:56.5130349Z WP01 browser lease acquired {
+2026-11-14T01:04:56.5130885Z   pid: 4330,
+2026-11-14T01:04:56.5131226Z   lease: 15,
+2026-11-14T01:04:56.5131559Z   acquisitions: 15,
+2026-11-14T01:04:56.5131909Z }
+
+SOURCE job-132271412866.log:1226-1231
+2026-11-14T01:04:58.2339512Z WP01 browser lease released {
+2026-11-14T01:04:58.2374912Z   pid: 4330,
+2026-11-14T01:04:58.2380172Z   lease: 15,
+2026-11-14T01:04:58.2380638Z   releases: 15,
+2026-11-14T01:04:58.2383294Z   contexts: 0,
+2026-11-14T01:04:58.2384119Z }
+
+SOURCE job-132271412866.log:1235-1239
+2026-11-14T01:04:58.2662230Z WP01 browser lease acquired {
+2026-11-14T01:04:58.2662992Z   pid: 4330,
+2026-11-14T01:04:58.2663219Z   lease: 16,
+2026-11-14T01:04:58.2663472Z   acquisitions: 16,
+2026-11-14T01:04:58.2663695Z }
+
+SOURCE job-132271412866.log:1253-1258
+2026-11-14T01:05:04.7278773Z WP01 browser lease released {
+2026-11-14T01:05:04.7279218Z   pid: 4330,
+2026-11-14T01:05:04.7279525Z   lease: 16,
+2026-11-14T01:05:04.7279843Z   releases: 16,
+2026-11-14T01:05:04.7280158Z   contexts: 0,
+2026-11-14T01:05:04.7280504Z }
+
+SOURCE job-132271412866.log:1261-1265
+2026-11-14T01:05:04.7449045Z WP01 browser lease acquired {
+2026-11-14T01:05:04.7449474Z   pid: 4330,
+2026-11-14T01:05:04.7449738Z   lease: 17,
+2026-11-14T01:05:04.7450006Z   acquisitions: 17,
+2026-11-14T01:05:04.7450274Z }
+
+SOURCE job-132271412866.log:1278-1283
+2026-11-14T01:05:26.6449472Z WP01 browser lease released {
+2026-11-14T01:05:26.6449899Z   pid: 4330,
+2026-11-14T01:05:26.6450219Z   lease: 17,
+2026-11-14T01:05:26.6450929Z   releases: 17,
+2026-11-14T01:05:26.6451262Z   contexts: 0,
+2026-11-14T01:05:26.6451593Z }
+
+SOURCE job-132271412866.log:1286-1289
+2026-11-14T01:05:26.6523887Z WP01 browser final close starting {
+2026-11-14T01:05:26.6524396Z   pid: 4330,
+2026-11-14T01:05:26.6524739Z   connected: true,
+2026-11-14T01:05:26.6525075Z }
+
+SOURCE job-132271412866.log:1290-1293
+2026-11-14T01:05:26.6785341Z WP01 browser disconnected {
+2026-11-14T01:05:26.6786510Z   pid: 4330,
+2026-11-14T01:05:26.6787137Z   expected: true,
+2026-11-14T01:05:26.6788037Z }
+
+SOURCE job-132271412866.log:1294-1299
+2026-11-14T01:05:26.7197034Z WP01 browser final close observed {
+2026-11-14T01:05:26.7197569Z   pid: 4330,
+2026-11-14T01:05:26.7198165Z   disconnected: true,
+2026-11-14T01:05:26.7198464Z   connected: false,
+2026-11-14T01:05:26.7198705Z   processExited: true,
+2026-11-14T01:05:26.7198934Z }
+
+SOURCE job-132271412866.log:1300-1310
+2026-11-14T01:05:26.7199192Z WP01 browser lifecycle final evidence {
+2026-11-14T01:05:26.7199472Z   launches: 1,
+2026-11-14T01:05:26.7199694Z   acquisitions: 17,
+2026-11-14T01:05:26.7200272Z (pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [67.93ms]
+2026-11-14T01:05:26.7200770Z   releases: 17,
+2026-11-14T01:05:26.7200971Z   pid: 4330,
+2026-11-14T01:05:26.7201172Z   activeLease: false,
+2026-11-14T01:05:26.7201389Z   contexts: 0,
+2026-11-14T01:05:26.7201597Z   disconnected: true,
+2026-11-14T01:05:26.7201821Z   processExited: true,
+2026-11-14T01:05:26.7202050Z }
+
+BUN SUMMARY
+2026-11-14T01:05:26.7204073Z  140 pass
+2026-11-14T01:05:26.7204288Z  1 fail
+2026-11-14T01:05:26.7204498Z  2693 expect() calls
+2026-11-14T01:05:26.7205020Z Ran 141 tests across 21 files. [147.06s]
+
+CLEANUP JOB COMPLETE LOG
+﻿2026-11-14T01:05:31.2094306Z Current runner version: '2.338.2'
+2026-11-14T01:05:31.2128622Z ##[group]Runner Image Provisioner
+2026-11-14T01:05:31.2130078Z Hosted Compute Agent
+2026-11-14T01:05:31.2131107Z Version: 20261103.629
+2026-11-14T01:05:31.2132340Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T01:05:31.2133579Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T01:05:31.2134764Z Worker ID: {6546439f-6fe5-4649-ac5b-9adc147ac7e4}
+2026-11-14T01:05:31.2136410Z Region: eastus
+2026-11-14T01:05:31.2137273Z Cloud: Azure
+2026-11-14T01:05:31.2138159Z ##[endgroup]
+2026-11-14T01:05:31.2140461Z ##[group]Operating System
+2026-11-14T01:05:31.2141518Z Ubuntu
+2026-11-14T01:05:31.2142551Z 24.04.5
+2026-11-14T01:05:31.2143351Z LTS
+2026-11-14T01:05:31.2144137Z ##[endgroup]
+2026-11-14T01:05:31.2145271Z ##[group]Runner Image
+2026-11-14T01:05:31.2146522Z Image: ubuntu-24.04
+2026-11-14T01:05:31.2148058Z Version: 20261111.370.1
+2026-11-14T01:05:31.2150182Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T01:05:31.2152988Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+2026-11-14T01:05:31.2154658Z ##[endgroup]
+2026-11-14T01:05:31.2157185Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T01:05:31.2160098Z Contents: write
+2026-11-14T01:05:31.2161141Z Metadata: read
+2026-11-14T01:05:31.2162065Z ##[endgroup]
+2026-11-14T01:05:31.2165178Z Secret source: Actions
+2026-11-14T01:05:31.2166999Z Cache mode: write
+2026-11-14T01:05:31.2168479Z Prepare workflow directory
+2026-11-14T01:05:31.2641608Z Prepare all required actions
+2026-11-14T01:05:31.2795411Z Complete job name: cleanup
+2026-11-14T01:05:31.4027443Z ##[group]Run gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
+2026-11-14T01:05:31.4028790Z [36;1mgh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true[0m
+2026-11-14T01:05:31.4282006Z shell: /usr/bin/bash -e {0}
+2026-11-14T01:05:31.4283226Z env:
+2026-11-14T01:05:31.4287765Z   GH_TOKEN: ***
+2026-11-14T01:05:31.4288505Z   REPO: gustavomhss/Orchestra-SF
+2026-11-14T01:05:31.4289268Z   BRANCH: ci-run-linux-astra-wp01-61348f22-d7bebaae-9
+2026-11-14T01:05:31.4290195Z ##[endgroup]
+2026-11-14T01:05:32.0606621Z Cleaning up orphan processes
+
+ARTIFACTS API
+{
+  "artifacts": []
+}
+UPLOAD STEPS
+[
+  {
+    "name": "Upload Lean dashboard previews (extension)",
+    "status": "completed",
+    "conclusion": "skipped",
+    "started_at": "2026-11-14T01:05:26Z",
+    "completed_at": "2026-11-14T01:05:26Z"
+  },
+  {
+    "name": "Upload Playwright evidence",
+    "status": "completed",
+    "conclusion": "skipped",
+    "started_at": "2026-11-14T01:05:26Z",
+    "completed_at": "2026-11-14T01:05:26Z"
+  }
+]
+
+TIMESTAMPS
+Workflow created: 2026-11-14T01:01:24Z
+Workflow run_started_at: 2026-11-14T01:01:24Z
+Workflow updated_at: 2026-11-14T01:05:33Z
+Test job: 2026-11-14T01:01:26Z to 2026-11-14T01:05:28Z
+Run tests: 2026-11-14T01:02:59Z to 2026-11-14T01:05:26Z
+Cleanup job: 2026-11-14T01:05:30Z to 2026-11-14T01:05:32Z
+
+LIMITS AND REDACTION
+S9 remains failed: the sole failure is B10, the retained real full-host composition test (invalid-resident-profiles). All 141 tests ran; 140 passed. The corrected delayed-current-value revocation test passed. This exact preview-first Linux selection observed one public launch, 17 acquisitions/releases and physical PID exit, with no runner orphan termination. Consumer fixtures and lifecycle observations do not prove native AI execution or qualify the whole WP01 pack.
+Transient /auth/local?code values are replaced with [REDACTED] if present in included excerpts. Setup noise and giant HTML dumps are omitted; original downloaded logs remain hash-bound. No local tests or remote mutations were performed by this evidence agent. No Actions orphan termination appears in the test log. The temporal S9 discovery history and exact S9/S10 overlap are recorded separately in ci-test-review-9/workflow-overlap.json.
