@@ -27,7 +27,14 @@ test("real product authority prepares the canonical current Planner result, bind
     const planner = createPlannerProduct({ host: fixture.product.host, scopedSources: fixture.persistence,
       coverageFor: (reference, context) => fixture.registry.resolveForecastCoverage(reference === fixture.currentSource.refId ? fixture.promotion.coverageRef : reference, context),
     })
-    const continuity = createPlannerConfirmationObserver({ host: fixture.product.host, issueSource: planner.issueSource, planner: planner.planner })
+    // Source continuity observes physical identity, current scope and projection.
+    // Its canonical observer uses the same authority/store without a case-scoped
+    // cost claim: promotion advances the case beyond the original coverage record.
+    // The producer and preview below still require the actual coverage registry.
+    const sourceObserver = createPlannerProduct({ host: fixture.product.host, scopedSources: fixture.persistence,
+      coverageFor: async () => ({ status: "unavailable", reason: "source-continuity-does-not-classify-cost" }),
+    })
+    const continuity = createPlannerConfirmationObserver({ host: fixture.product.host, issueSource: sourceObserver.issueSource, planner: sourceObserver.planner })
     const proofs = new WeakMap<TrustedDomainContext, (snapshot: Snapshot) => boolean>()
     const verifyContinuity = async (original: RecordEvidence, current: RecordEvidence, context: TrustedDomainContext) => {
       if (digestSfValue(original) !== digestSfValue(fixture.originalSource) || digestSfValue(current) !== digestSfValue(fixture.currentSource)) return { status: "unavailable", reason: "unexpected-source-lineage" } as const
@@ -98,6 +105,7 @@ test("real product authority prepares the canonical current Planner result, bind
     expect(prepared.value.promotion.scenario).toEqual({ ...fixture.choice.scenario, baseRef: fixture.currentSource.refId })
     const bound = await preview.read(prepared.value.promotion, admitted.value)
     if (bound.status !== "ok") throw new Error(`New canonical binding unavailable: ${JSON.stringify(bound)}`)
+    if (!bound.value.coverageDigest) throw new Error("New canonical binding has no coverage digest")
     expect(digestSfValue(bound.value)).toBe(prepared.value.bindingDigest)
     expect(bound.value.producerResultRef).not.toBe(fixture.binding.producerResultRef)
     expect(bound.value.originalSource).toEqual(fixture.originalSource)
