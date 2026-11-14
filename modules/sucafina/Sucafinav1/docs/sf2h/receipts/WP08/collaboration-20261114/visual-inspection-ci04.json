@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h-visual-inspection-v1",
+  "product_sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+  "product_tree": "8535b4ffdbbeee8549bc8820fec2551fa6cf9d09",
+  "workflow_sha": "c03b06bea510e0ed8ec8df105c269304d388317f",
+  "run_id": 43584357490,
+  "job_id": 132415569882,
+  "artifact_id": 14109394432,
+  "artifact_sha256": "4171ac4d5a5ffd7d415acf6c30c3b7e98f91fa306d36f3bf78c37b8f703105dc",
+  "scope": "two full-page desktop Chromium captures at width1440",
+  "images": [
+    {
+      "path": "wp07-browser-ui.png",
+      "sha256": "5900c1cf3234e5873cef8be6da74cfeb661fa1bff58edc781312354b4cbcca57",
+      "dimensions": [
+        1440,
+        7462
+      ],
+      "inspection": "Every 1200px vertical tile visually inspected by root, including final lower tile."
+    },
+    {
+      "path": "wp07-current-conversation.png",
+      "sha256": "b36cb59c4e73d5b6cd0046bc544ab15440a30163f072548d0f3705e8b32eace0",
+      "dimensions": [
+        1440,
+        3236
+      ],
+      "inspection": "Every 1200px vertical tile visually inspected by root, including final lower tile."
+    }
+  ],
+  "inspected_tiles": 10,
+  "findings": [
+    "Preserved review displays the selected second/first forecast order and all January\u2013December captured rows, with the retained agenda note and captured author/time/version1 comment at the bottom.",
+    "Unavailable actual values remain explicit unavailable values rather than zero.",
+    "The current-conversation capture preserves forecast:v1:3 captured values and clearly presents the preserved comment and current C06 conversation separately; the current message body and source/navigation controls are visible in the bottom tile.",
+    "All displayed text in these captures is readable, without horizontal clipping or overlapping elements; the raw annual tables require a long vertical scroll."
+  ],
+  "limits": [
+    "These two phases show version1 comment data; do not claim literal message v3/v4 differences from the screenshots. That assertion belongs to the separate comment-continuity test.",
+    "No visual evidence for mobile or the final integrated general UI.",
+    "Controlled C06 producer and historical evidence with real review/Planner/HTTP/browser/SQLite are not native Relay/Session/SkillLoadReceipt execution.",
+    "The entire run failed two separate test files. Browser screenshots do not override that run result.",
+    "Subsequent UI-egress changes require their own hosted regression; these images remain evidence for this exact product SHA."
+  ]
+}

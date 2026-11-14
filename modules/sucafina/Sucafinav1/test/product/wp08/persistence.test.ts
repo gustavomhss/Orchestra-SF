@@ -22,7 +22,7 @@ test("relations and contextual threads persist, retry and hide after access revo
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc-A" }), authorize: async () => ({ principalRef: "person-A", policyVersion: "policy", accessRevision: "access" }) })
     const host = { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }
-    const common = { state, host, mutationFence: createCollaborationMutationFence({ persistence: store }), human: { authorize: async () => access.allowed }, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" }
+    const common = { state, host, mutationFence: createCollaborationMutationFence({ persistence: store }), human: { authorize: async () => access.allowed }, checkRecipientAtCommit: () => access.allowed, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" }
     return { store, relations: createRelationPort({ ...common, handoffPermit: Symbol("test"), authorizePair: async () => access.allowed, creationTarget: { ref: "line-A", incarnation: "inc-A" } }), threads: createThreadPort({ ...common, creationTarget: { ref: "line-A", incarnation: "inc-A" }, authorize: async () => access.allowed }) }
   }
   try {
@@ -141,3 +141,4 @@ test("versioned relations keep immutable identity and cannot reuse a retired id"
     await rm(directory, { recursive: true, force: true })
   }
 })
+

@@ -1,0 +1,471 @@
+{
+  "schema": "wp08-hosted-validation.v2",
+  "acceptance_status": "DRAFT_BLOCKED",
+  "pull_request": {
+    "number": 28,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/28",
+    "head_branch": "astra-wp08",
+    "base_branch": "sf2-stack",
+    "base_sha_observed": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "draft": true
+  },
+  "final_product": {
+    "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+    "product_tree": "548d9e07d5e2fe189adbaa11f931fbbbedf114d2",
+    "parent_sha": "09df93d48c0f4ef441c7f394db5ced086e8140c6",
+    "snapshot_sha": "b55254b4da225f3ad874b27885d4792c69f047ac",
+    "snapshot_tree": "32ed1ae4e1cf3eae03c2b0c6fe64740e7bbdbcf6",
+    "request_blob": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc",
+    "request_sha256": "23ce64a53d923c581663869acc786799bfdea3566a4bebcfa28f5e0368433538",
+    "test_branch": "ci-run-linux-astra-wp08-156f074d-23ce64a5-06",
+    "branch": "astra-wp08",
+    "checks_branch": "astra-check-wp08",
+    "selected_files": 34,
+    "request_path": "context/request-06.json",
+    "snapshot_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/156f074d15c9787a9fc1b6430e632504ee3a69e6...b55254b4da225f3ad874b27885d4792c69f047ac",
+    "snapshot_delta": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "sha": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc"
+      }
+    ],
+    "parent_delta": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+        "status": "modified",
+        "sha": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+      }
+    ],
+    "test_run_id": 43533574980,
+    "checks_run_id": 43533577577,
+    "test_job_id": 132256977328,
+    "checks_job_id": 132256985545,
+    "test_result": {
+      "run_id": 43533574980,
+      "job_id": 132256977328,
+      "conclusion": "FAILURE",
+      "pass": 64,
+      "fail": 2,
+      "tests": 66,
+      "files": 34,
+      "expects": 640,
+      "omni_control": "not applicable",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533574980"
+    },
+    "checks_result": {
+      "run_id": 43533577577,
+      "job_id": 132256985545,
+      "typecheck": "FAILURE",
+      "diagnostics": 128,
+      "wp08_diagnostics": 0,
+      "outside_wp08_diagnostics": 128,
+      "guards": "PASS",
+      "rules": 78,
+      "changed_paths": 590,
+      "gates": 0,
+      "warnings": 11,
+      "errors": 0,
+      "artifact_id": 14087843500,
+      "artifact_sha256": "5484acb917040125ce8034c807e3a7906ac63fee0db2f2aee0c7e21bb3ad4269",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533577577",
+      "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533577577/artifacts/14087843500",
+      "guard_base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "guard_merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+    }
+  },
+  "snapshot_equivalence": {
+    "status": "VERIFIED_REMOTE_COMPARE",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/compare/156f074d15c9787a9fc1b6430e632504ee3a69e6...b55254b4da225f3ad874b27885d4792c69f047ac",
+    "only_difference": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "sha": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc"
+      }
+    ],
+    "product_tests_config_fixtures_identical": true,
+    "snapshot_branch_cleaned_by_workflow": true,
+    "cleanup_job_id": 132257733690
+  },
+  "canonical_request": {
+    "file": "ci-request.json",
+    "git_blob": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc",
+    "sha256": "23ce64a53d923c581663869acc786799bfdea3566a4bebcfa28f5e0368433538",
+    "runner": "bun",
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "explicit_test_files": 34,
+    "env": {},
+    "timeout_ms": 120000,
+    "validation": "Canonical validateRequest and locateTestPackage metadata validation, with all selected files present; request revalidated in hosted test-ci. No local product test was executed."
+  },
+  "omni_positive_control": {
+    "verdict": "not applicable",
+    "nonce": "7bf29e67413c037a7f297974b89b40f4",
+    "line": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "proved_omni_execution": false
+  },
+  "test_artifacts": {
+    "items": [],
+    "mandatory_for_this_selection": false,
+    "explanation": "No artifact declared mandatory by test-ci for this Bun selection. Playwright/Lean artifact steps were skipped. Logs are the test execution evidence."
+  },
+  "checks_artifact": {
+    "id": 14087843500,
+    "name": "astra-wp08-check-156f074d15c9787a9fc1b6430e632504ee3a69e6-1",
+    "sha256": "5484acb917040125ce8034c807e3a7906ac63fee0db2f2aee0c7e21bb3ad4269",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533577577/artifacts/14087843500",
+    "expires_on": "2026-11-28"
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "cwd": ".",
+    "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "result": "PASS",
+    "rules": 78,
+    "changed_paths": 590,
+    "gates": 0,
+    "warnings": 11,
+    "errors": 0,
+    "waivers_or_approval_labels": []
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "result": "FAILURE",
+    "diagnostics": 128,
+    "wp08_diagnostics": 0,
+    "outside_wp08_diagnostics": 128,
+    "distinct_outside_paths": 41,
+    "details": "typecheck-diagnostics.json",
+    "attribution_limit": "These are located outside WP08 when marked outside_wp08. No standalone seed typecheck baseline was run, so they are not asserted to be all pre-existing or causally unrelated merely because of their path."
+  },
+  "history": [
+    {
+      "label": "W01",
+      "product_sha": "62a5552020fe97b5445a8e24f6a8f09eed4f2791",
+      "product_tree": "f1b4857876b7e408730e6695b4f2a198e1831baf",
+      "snapshot_sha": "1cbf96a1679733f7acd40c8fcd7e64f9dae58945",
+      "test": {
+        "run_id": 43524300920,
+        "job_id": 132226105522,
+        "conclusion": "FAILURE",
+        "pass": 46,
+        "fail": 4,
+        "errors": 1,
+        "tests": 50,
+        "files": 28,
+        "expects": 319,
+        "omni_control": "not applicable",
+        "artifact_requirement": "No artifact declared mandatory for this Bun selection by test-ci.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524300920"
+      },
+      "checks": {
+        "run_id": 43524302288,
+        "job_id": 132226110619,
+        "typecheck": "FAILURE",
+        "guards": "FAILURE",
+        "finding_summary": "Own test syntax; two continue-on-error workflow gates; two untracked log-file gates. Corrected in W02.",
+        "artifact_id": 14084023974,
+        "artifact_sha256": "57e2be088601e03c456deca512d3a3d3b795daf0600cc7dd702b990386562a84",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524302288",
+        "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524302288/artifacts/14084023974"
+      },
+      "resolution": "Own parser error, observation-receipt fixture and workflow guard violations corrected in subsequent published commits; two Procurement scope failures retained.",
+      "snapshot_tree": "3efa2a286c584bf9dc636df572e3ac7b9d39c7e5",
+      "request_blob": "63b3adfc40a3b1787b3958233558232a214a9000",
+      "request_sha256": "46efa4ad60efcf8551e1ff4d31daa1219f59534c36499c918d3408beb2d3650b",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "sha": "63b3adfc40a3b1787b3958233558232a214a9000",
+          "status": "added"
+        }
+      ]
+    },
+    {
+      "label": "W02",
+      "product_sha": "e8ff441d358243a541a0f7613d4ef2bc72795848",
+      "product_tree": "4faeb785c56394a33eab5a5e7783b4f6b7f50131",
+      "test": null,
+      "checks": {
+        "run_id": 43524970497,
+        "job_id": 132228343971,
+        "typecheck": "FAILURE",
+        "diagnostics": 153,
+        "wp08_diagnostics": 25,
+        "outside_wp08_diagnostics": 128,
+        "guards": "PASS",
+        "rules": 78,
+        "changed_paths": 578,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "artifact_id": 14084712642,
+        "artifact_sha256": "8a635c7411af3b2c1b618fc8e3b64f57bce125881560389c205c3a74db947f0e",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524970497",
+        "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524970497/artifacts/14084712642"
+      },
+      "resolution": "25 own type diagnostics corrected in W03; no tests claimed for W02."
+    },
+    {
+      "label": "W03",
+      "product_sha": "4f2d123aba282a533e467cd144c59a23bb544f05",
+      "product_tree": "de574fc8def71ac0d4d1321449b89e64528aac73",
+      "snapshot_sha": "62844de89f7820ff36cda795614961dd3e3091c4",
+      "test": {
+        "run_id": 43525601321,
+        "job_id": 132230445437,
+        "conclusion": "FAILURE",
+        "pass": 54,
+        "fail": 2,
+        "errors": 0,
+        "tests": 56,
+        "files": 29,
+        "expects": 386,
+        "omni_control": "not applicable",
+        "artifact_requirement": "No artifact declared mandatory for this Bun selection by test-ci.",
+        "failed_paths": [
+          "modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525601321"
+      },
+      "checks": {
+        "run_id": 43525604136,
+        "job_id": 132230454390,
+        "typecheck": "FAILURE",
+        "diagnostics": 128,
+        "wp08_diagnostics": 0,
+        "outside_wp08_diagnostics": 128,
+        "guards": "PASS",
+        "rules": 78,
+        "changed_paths": 580,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "artifact_id": 14085390710,
+        "artifact_sha256": "2720431189c92164821d171cdebea90dc44959f7cb6e9662050ceeed0c9fc6e4",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525604136",
+        "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43525604136/artifacts/14085390710"
+      },
+      "snapshot_tree": "2ca31c9d340ab41860f3b610e2ffb257cbbce322",
+      "request_blob": "bfff5bdc088ddc8977bf6a23885cf73e1390fe3d",
+      "request_sha256": "8b11e8ebc35fe2cd07ccd0c06d317020a6ccc5da833027d0dba3e50be6ebf6b1",
+      "resolution": "Criterion audit identified missing source-refresh and answer-work consumers; W04 implemented and exercised them."
+    },
+    {
+      "label": "W04",
+      "product_sha": "f9aaef0a82dd6ae2a2c6cfe05c97ca97df970be1",
+      "product_tree": "5101c3f0e4d85d0e8183174ec9a6291dd9e8cd8f",
+      "snapshot_sha": "a88bc12622301832b63ad79f7dbfe9f4069c078e",
+      "test": {
+        "run_id": 43528322218,
+        "job_id": 132239468939,
+        "conclusion": "FAILURE",
+        "pass": 58,
+        "fail": 3,
+        "tests": 61,
+        "files": 33,
+        "expects": 540,
+        "omni_control": "not applicable",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528322218"
+      },
+      "checks": {
+        "run_id": 43528324254,
+        "job_id": 132239476054,
+        "typecheck": "FAILURE",
+        "diagnostics": 129,
+        "wp08_diagnostics": 1,
+        "outside_wp08_diagnostics": 128,
+        "guards": "PASS",
+        "rules": 78,
+        "changed_paths": 587,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "artifact_id": 14086382014,
+        "artifact_sha256": "107d1deb1e0f969e582beda234304650cf8543373d5d3e5dec082ff00fc9bf33",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528324254",
+        "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528324254/artifacts/14086382014"
+      },
+      "snapshot_tree": "0294d6983cd084aaeac5e002b96de2254fbeefa9",
+      "request_blob": "cb820b98712e4a9162146cab9cd903b4f27fa3a7",
+      "request_sha256": "aa3b8a4a2c7026015c53f448ed75edd53972167f85aa44620e241bcafe4ead7f",
+      "snapshot_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/f9aaef0a82dd6ae2a2c6cfe05c97ca97df970be1...a88bc12622301832b63ad79f7dbfe9f4069c078e",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "sha": "cb820b98712e4a9162146cab9cd903b4f27fa3a7",
+          "status": "added"
+        }
+      ],
+      "resolution": "W05 corrects only annual work-horizon fixture and explicit string fixture ID type; January material scope and product code unchanged."
+    },
+    {
+      "label": "W05",
+      "product_sha": "216257bb1c237ab1643e4af7c5f02d074c1f6a47",
+      "product_tree": "aa9f0962ac17ff5356012bf9a9425119b47ea2a1",
+      "snapshot_sha": "5c2ce83a5ac70d06b3748b382eaf2d496ebc94cc",
+      "test": {
+        "run_id": 43529052094,
+        "job_id": 132241902664,
+        "conclusion": "FAILURE",
+        "pass": 59,
+        "fail": 2,
+        "tests": 61,
+        "files": 33,
+        "expects": 572,
+        "omni_control": "not applicable",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43529052094"
+      },
+      "checks": {
+        "run_id": 43529054620,
+        "job_id": 132241911414,
+        "typecheck": "FAILURE",
+        "diagnostics": 128,
+        "wp08_diagnostics": 0,
+        "outside_wp08_diagnostics": 128,
+        "guards": "PASS",
+        "rules": 78,
+        "changed_paths": 587,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "artifact_id": 14085834338,
+        "artifact_sha256": "e979addc0782ce9f8b934e80635e530a4a4d66d650e9e70ae48bf7727c73b37c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43529054620",
+        "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43529054620/artifacts/14085834338"
+      },
+      "snapshot_tree": "fb9d0595c0a1e57983a2d09a997b07ff74464900",
+      "request_blob": "cb820b98712e4a9162146cab9cd903b4f27fa3a7",
+      "request_sha256": "aa3b8a4a2c7026015c53f448ed75edd53972167f85aa44620e241bcafe4ead7f",
+      "snapshot_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/216257bb1c237ab1643e4af7c5f02d074c1f6a47...5c2ce83a5ac70d06b3748b382eaf2d496ebc94cc",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "sha": "cb820b98712e4a9162146cab9cd903b4f27fa3a7"
+        }
+      ],
+      "resolution": "All W05 scoped cases except two B01 consumers passed, with zero own type diagnostics. Final review found the missing proposal-to-contribution consumer, implemented after W05."
+    },
+    {
+      "label": "W06",
+      "product_sha": "09df93d48c0f4ef441c7f394db5ced086e8140c6",
+      "product_tree": "9c085ed5654cad5372a1c0dec45974c76c7dddac",
+      "snapshot_sha": "12040e8605328002b0ca5258329f3e63412a4b3d",
+      "snapshot_tree": "8c120789d2929966d57d5501bc1c29d3e25e85c3",
+      "request_blob": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc",
+      "request_sha256": "23ce64a53d923c581663869acc786799bfdea3566a4bebcfa28f5e0368433538",
+      "snapshot_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/09df93d48c0f4ef441c7f394db5ced086e8140c6...12040e8605328002b0ca5258329f3e63412a4b3d",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "sha": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc"
+        }
+      ],
+      "test": {
+        "run_id": 43532842452,
+        "job_id": 132254534424,
+        "conclusion": "FAILURE",
+        "pass": 59,
+        "fail": 7,
+        "tests": 66,
+        "files": 34,
+        "expects": 576,
+        "omni_control": "not applicable",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43532842452"
+      },
+      "checks": {
+        "run_id": 43532844870,
+        "job_id": 132254542134,
+        "typecheck": "FAILURE",
+        "diagnostics": 128,
+        "wp08_diagnostics": 0,
+        "outside_wp08_diagnostics": 128,
+        "guards": "PASS",
+        "rules": 78,
+        "changed_paths": 590,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "artifact_id": 14087799010,
+        "artifact_sha256": "d7678f9f6e35d0618e37a5e742f6cf240708811fbb560a49c45c409e91913d89",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43532844870",
+        "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43532844870/artifacts/14087799010",
+        "guard_base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "guard_merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+      },
+      "resolution": "The five new question-consumer tests fail during canonical project issuance: the fixture requests January for a project without month, while the canonical projector requires the complete year. No new consumer assertions are claimed passed. The next revision corrects only the owned fixture to an annual positive scope, preserving narrow-case horizon rejection."
+    },
+    {
+      "label": "W07",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "product_tree": "548d9e07d5e2fe189adbaa11f931fbbbedf114d2",
+      "snapshot_sha": "b55254b4da225f3ad874b27885d4792c69f047ac",
+      "test": {
+        "run_id": 43533574980,
+        "job_id": 132256977328,
+        "conclusion": "FAILURE",
+        "pass": 64,
+        "fail": 2,
+        "tests": 66,
+        "files": 34,
+        "expects": 640,
+        "omni_control": "not applicable",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533574980"
+      },
+      "checks": {
+        "run_id": 43533577577,
+        "job_id": 132256985545,
+        "typecheck": "FAILURE",
+        "diagnostics": 128,
+        "wp08_diagnostics": 0,
+        "outside_wp08_diagnostics": 128,
+        "guards": "PASS",
+        "rules": 78,
+        "changed_paths": 590,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "artifact_id": 14087843500,
+        "artifact_sha256": "5484acb917040125ce8034c807e3a7906ac63fee0db2f2aee0c7e21bb3ad4269",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533577577",
+        "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533577577/artifacts/14087843500",
+        "guard_base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "guard_merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+      },
+      "snapshot_tree": "32ed1ae4e1cf3eae03c2b0c6fe64740e7bbdbcf6",
+      "request_blob": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc",
+      "request_sha256": "23ce64a53d923c581663869acc786799bfdea3566a4bebcfa28f5e0368433538",
+      "snapshot_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/156f074d15c9787a9fc1b6430e632504ee3a69e6...b55254b4da225f3ad874b27885d4792c69f047ac",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "sha": "59a06c32fbe8c3157828a3f74ceccf3ca670c7bc"
+        }
+      ],
+      "resolution": "The canonical annual project fixture exercises all five new question-consumer cases successfully. Only two external Procurement B01 tests fail. Guards pass; 128 identical diagnostics remain outside WP08 with zero own diagnostics."
+    }
+  ],
+  "raw_log_sha256": {
+    "final_test_job": "378da11ce1940ea66e6f6cec1e5488924c157542bd94163e724aaa031e89f18f",
+    "final_checks_job": "aab1dfe5f50fdf41891d00933f0abfaaddfa505631b09a3d767fe4eae9d07a43"
+  },
+  "receipt_commit_policy": "This receipt is added after W07 as documentation only. Final PR metadata records the exact receipt head/tree and its remote comparison to W07. Product/test/config/fixture identity permits reuse of W07/S06 tests; guards on the final documentation head are reported in the PR without a recursive receipt rewrite.",
+  "not_executed": [
+    "Local product tests",
+    "Local package typecheck",
+    "Epic/full-suite",
+    "Mounted browser UI journey",
+    "Resident native SessionV2/SkillLoadReceipt/MCP parity",
+    "WP09 routine campaign",
+    "Global C/G7, D/G8, AM01-AM06 and eight final integrated selections"
+  ],
+  "merge_or_deploy_performed": false
+}

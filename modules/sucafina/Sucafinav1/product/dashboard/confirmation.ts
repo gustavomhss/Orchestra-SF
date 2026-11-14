@@ -12,10 +12,15 @@ import { dashboardSourceSelector } from "./sources.ts"
 import { createDashboardConfirmationIssuer } from "./confirmation-issuer.ts"
 import { dashboardConfirmationManifest } from "./confirmation-manifest.ts"
 import { projectSfSourceScope } from "../integration/source-projections.ts"
+import { createDashboardRecordSourceIssuer } from "../integration/dashboard-sources.ts"
+import { createDashboardRecordEvidenceHost } from "./sources.ts"
 
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Identity = Pick<SourceRef, "surface" | "type" | "id" | "incarnation">
 type ScopedExpected = { scope: SfSourceScope; incarnation: string; version: number; inputDigest: string; original: Identity; fields: readonly string[]; period: ConfirmationScope["period"]; physicalFingerprint: string; observedAt: string }
+type ScopedContinuityResult =
+  | { state: "same"; index: number; fingerprints: readonly string[]; physicalIncarnations: readonly string[] }
+  | { state: "replaced" | "unavailable"; index: number; fingerprints: readonly string[] }
 export type DashboardConfirmationObservation =
   | { state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: RecordEvidence; projection: DomainProjection }
   | { state: "access-unavailable" | "dependency-unavailable" | "replaced"; sourceVersion: number }
@@ -39,7 +44,7 @@ export function createDashboardConfirmationObserver(input: {
     const selector = object(scope.selector)
     return digestSfValue(selector.actor) === digestSfValue(actor) && digestSfValue(selector.fields) === digestSfValue([...fields].sort()) && digestSfValue(selector.period) === digestSfValue(period)
   }
-  const continuity = (snapshot: Snapshot, original: Identity, fields: readonly string[], period: ConfirmationScope["period"], active: ScopedExpected, context: TrustedDomainContext) => {
+  const continuity = (snapshot: Snapshot, original: Identity, fields: readonly string[], period: ConfirmationScope["period"], active: ScopedExpected, context: TrustedDomainContext, comparisonPeriod = period) => {
     const entries = Object.values(snapshot.sfSources?.scopes ?? {})
     const originalEntries = entries.filter((entry) => entry.incarnation === original.incarnation && entry.scope.recordType === original.type && entry.scope.recordId === original.id)
     const activeEntries = entries.filter((entry) => entry.alive && entry.incarnation === active.incarnation && entry.scope.principalRef === context.binding.principalRef && entry.scope.accessRevision === context.binding.accessRevision && entry.scope.policyVersion === context.binding.policyVersion && entry.scope.recordType === original.type && entry.scope.recordId === original.id)
@@ -52,7 +57,7 @@ export function createDashboardConfirmationObserver(input: {
     // A narrower current viewer must not learn that hidden material changed.
     const originalSelector = object(old.scope.selector)
     const originalActor = object(originalSelector.actor)
-    const originalScope = { ...old.scope, selector: { ...originalSelector, roleMapDigest: digestSfValue(roleMap(snapshot, "dashboard")) } }
+    const originalScope = { ...old.scope, selector: { ...originalSelector, period: comparisonPeriod, roleMapDigest: digestSfValue(roleMap(snapshot, "dashboard")) } }
     const comparison = structuredClone(snapshot)
     const access = object(comparison.data.access)
     comparison.data.access = { ...access, [old.scope.principalRef]: { ...object(access[old.scope.principalRef]), assigned: originalActor.assigned, domains: originalActor.domains } }
@@ -63,7 +68,7 @@ export function createDashboardConfirmationObserver(input: {
   const manifestFor = (scope: ConfirmationScope) => {
     if (!scope || !scope.sourceRef || scope.sourceRef.surface !== "dashboard" || !Array.isArray(scope.fields) || !Array.isArray(scope.materialDependencies) || !isSfPeriod(scope.period)) return undefined
     const manifest = dashboardConfirmationManifest(scope.sourceRef.type, scope.fields)
-    if (!manifest || scope.scopeDefinitionVersion !== manifest.version || scope.materialDependencies.some((reference) => !reference || reference.surface !== "dashboard" || typeof reference.type !== "string" || !reference.type || typeof reference.id !== "string" || !reference.id || typeof reference.incarnation !== "string" || !reference.incarnation || !isSfPeriod(reference.period) || !Array.isArray(reference.fields) || !reference.fields.length || reference.fields.some((field) => typeof field !== "string" || !field) || new Set(reference.fields).size !== reference.fields.length)) return undefined
+    if (!manifest || scope.scopeDefinitionVersion !== manifest.version || scope.materialDependencies.some((reference) => !reference || reference.surface !== "dashboard" || typeof reference.type !== "string" || !reference.type || typeof reference.id !== "string" || !reference.id || typeof reference.incarnation !== "string" || !reference.incarnation || !isSfPeriod(reference.period) || !Array.isArray(reference.fields) || !reference.fields.length || reference.fields.some((field: unknown) => typeof field !== "string" || !field) || new Set(reference.fields).size !== reference.fields.length)) return undefined
     return manifest
   }
   const verifyManifest = async (scope: ConfirmationScope, context: TrustedDomainContext) => !!manifestFor(scope) && !!input.host.requestFor(context) && await input.host.revalidate(context)
@@ -101,7 +106,7 @@ export function createDashboardConfirmationObserver(input: {
     const check = input.scopedSources.checkScopedSource
     const transactionAll = input.host.persistence.transactionAll
     if (!check || !transactionAll) return unavailable
-    const stable = await transactionAll(async (snapshots) => {
+    const stable = await transactionAll<ScopedContinuityResult>(async (snapshots) => {
       const fingerprints: string[] = []
       const physicalIncarnations: string[] = []
       for (const [index, entry] of expected.entries()) {
@@ -150,7 +155,41 @@ export function createDashboardConfirmationObserver(input: {
     if (observation.state !== "available" || observation.evidence.refDigest !== current.refDigest || digestSfValue(observation.evidence.target) !== digestSfValue(current.target)) return { status: "unavailable", reason: "material-scope-unavailable" }
     return { status: "ok", value: { fence: () => fence(scope, observation, context) } }
   }
-  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope }
+  /** Reauthorize a historical identity against today's view; the host owns the protected capture receipt. */
+  const prepareHistoricalReissue = async (original: RecordEvidence, context: TrustedDomainContext): Promise<PortResult<{ fence: () => Promise<boolean> }>> => {
+    const request = input.host.requestFor(context)
+    if (!request || request.signal.aborted || !await input.host.revalidate(context) || !original || original.kind !== "record" || original.refDigest !== digestSfEvidenceRef(original) || original.installationId !== context.binding.installationId || original.projectId !== context.binding.projectId || original.target.surface !== "dashboard" || !isSfPeriod(original.target.period) || !dashboardConfirmationManifest(original.target.recordType, original.target.fields)) return { status: "unavailable", reason: "historical-source-unavailable" }
+    const environment = await input.host.environment(request)
+    if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "historical-source-unavailable" }
+    const day = new Date(environment.at).toISOString().slice(0, 10)
+    // Current-state records need today's observation window; dated records retain their competence.
+    const currentFields = ["executive", "members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "itperf-item", "signals", "hotTopics", "secActions", "secIncidents", "secPhishing"]
+    const currentState = original.target.recordType === "dashboard-page" ? original.target.fields.some((field) => currentFields.includes(field)) : currentFields.includes(original.target.recordType)
+    const period = original.target.recordType === "hotTopics" ? { start: day, end: day } : currentState ? { start: `${day.slice(0, 4)}-01-01`, end: `${day.slice(0, 4)}-12-31` } : { ...original.target.period }
+    const originalPage = await input.host.persistence.transaction("dashboard", async (snapshot) => {
+      const entries = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.incarnation === original.target.incarnation && entry.scope.recordType === original.target.recordType && entry.scope.recordId === original.target.recordId)
+      const page = entries.length === 1 ? object(entries[0]!.scope.selector).page : undefined
+      return { commit: false, value: typeof page === "string" ? page : undefined }
+    }).catch(() => undefined)
+    if (!originalPage) return { status: "unavailable", reason: "historical-source-unavailable" }
+    const issued = original.target.recordType === "dashboard-page" ? await issueForActor({ recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period }, context).catch(() => undefined) : await createDashboardRecordEvidenceHost({ ...input, issueRecord: createDashboardRecordSourceIssuer(input) }).issue({ page: originalPage, recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period }, context).catch(() => undefined)
+    if (!issued || issued.status !== "ok") return { status: "unavailable", reason: "historical-source-unavailable" }
+    const reference = { surface: "dashboard" as const, type: original.target.recordType, id: original.target.recordId, incarnation: original.target.incarnation }
+    const source = await input.scopedSources.resolveScopedSource("dashboard", issued.value.target.incarnation, authorize(request, context, reference, original.target.fields, period)).catch(() => undefined)
+    if (!source || source.inputDigest !== issued.value.target.projectionDigest || source.version !== issued.value.target.version || !input.scopedSources.checkScopedSource || !input.host.persistence.transactionAll) return { status: "unavailable", reason: "historical-source-unavailable" }
+    const expected: ScopedExpected = { scope: source.scope, incarnation: source.incarnation, version: source.version, inputDigest: source.inputDigest, original: reference, fields: [...original.target.fields], period, physicalFingerprint: "", observedAt: new Date(environment.at).toISOString() }
+    const originalPeriod = { ...original.target.period }
+    const validate = async (snapshot: Snapshot) => {
+      const same = continuity(snapshot, reference, expected.fields, originalPeriod, expected, context, period)
+      if (same.state !== "same") return false
+      const allowed = authorize(request, context, reference, expected.fields, period)
+      return await input.scopedSources.checkScopedSource!("dashboard", expected.scope, (current) => allowed(current, expected.scope), expected)
+    }
+    const stable = await input.host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: await validate(snapshots.dashboard) })).catch(() => false)
+    if (!stable || !await input.host.revalidate(context)) return { status: "unavailable", reason: "historical-source-unavailable" }
+    return { status: "ok", value: { fence: async () => { const snapshot = input.host.persistence.currentSnapshots?.()?.dashboard; return !!snapshot && !request.signal.aborted && await validate(snapshot) } } }
+  }
+  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareHistoricalReissue }
 }
 
 /** Baselines come from a protected displayed-observation receipt, never from a model. */
@@ -160,3 +199,4 @@ export function classifyDashboardConfirmationChange(current: Pick<Extract<Dashbo
   if (current.dependencyFingerprint !== baseline.dependencyFingerprint) return "dependency-change" as const
   return "material-change" as const
 }
+

@@ -1,0 +1,1354 @@
+{
+  "schema": "sf2h.wp09.ci-evidence.v1",
+  "status": "DRAFT/BLOCKED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp09",
+  "baseBranch": "sf2-stack",
+  "baseSha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "seedSha": "f18d5819bec7848664772c77d7501e7c25d578bf",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "handoffSha": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "productCandidate": {
+    "sha": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+    "tree": "4805908207a293db75173a240b9d208ee5c56ee6",
+    "mainRun": 43540247856,
+    "checkRun": 43540252662,
+    "isolatedConsumerRun": 43540684025
+  },
+  "delivery": {
+    "relation": "A receipt-only child commit of productCandidate. Its final SHA/tree and the W-to-delivery comparison are recorded in the PR description and final handback; including the commit's own SHA inside its tree would be self-referential.",
+    "allowedDeltaPrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/"
+  },
+  "executionPolicy": {
+    "hostedOnly": true,
+    "localProductTestsOrTypecheckRun": false,
+    "localActions": "Static file reads/edits/hashes/JSON processing and canonical CI request normalization only.",
+    "epicOrFullSuiteRun": false,
+    "githubPublicationAndCiViaMcp": true,
+    "engineFilesChanged": false,
+    "mergeOrDeploy": false,
+    "otherWorkPackageBranchesWritten": false,
+    "foreignProducerBlobsEdited": false
+  },
+  "criterionSummary": {
+    "total": 112,
+    "verified_surgical": 53,
+    "partial": 19,
+    "blocked_external": 40,
+    "fullAcceptance": false
+  },
+  "products": {
+    "W1": {
+      "productSha": "115326b1337b73c5e275624a8d401b41e8ed1c9e",
+      "productTree": "0dbbcb57128174ab5dd1b7dde9cc68b124030e76",
+      "tests": "not_dispatched"
+    },
+    "W2": {
+      "productSha": "3b746ab9d6ae3b860bb7f97a3b5bc22e92179255",
+      "productTree": "6f45a314388d7329fe9987ee31494bf4d0b42477",
+      "testSha": "f2728cf44d5691d4178e8c6922bce059266cdb5f",
+      "testTree": "d705b6a3bdd0d436ef9272bf42b7f980525415a9",
+      "testBranch": "ci-run-linux-astra-wp09-3b746ab9-3fe0bd8b-1",
+      "checkSha": "6b33fba5aeaeace4adbe92f1a59269b3464a9773",
+      "checkTree": "c3c8f6b5dd091a334dce56f0c06e3ea59d09cccb"
+    },
+    "W3": {
+      "productSha": "11ba110159301eb843103e6c60b12e7b1491ec86",
+      "productTree": "22c33bb3238f551cf5d6eb727b46ca7079f7d1e4",
+      "checkSha": "baae3275e18363964904edbf46e2dfcd44b9849d",
+      "checkTree": "b73618e80550dda238fa13680935a9d4e6b23d70"
+    },
+    "W4": {
+      "productSha": "2af0762c6c0c0b08cbb548a6b4318753e97342da",
+      "productTree": "bc870d9b80f630195a06742118fbc76d63d77884"
+    },
+    "W5": {
+      "productSha": "ed9a1da0420a0575e16c48118c6ce52edac6ae50",
+      "productTree": "356221634f257e43d95c1ac910af1f822a434340",
+      "testSha": "5fbdb55cc56ef0935471b8d674b811995c0385a9",
+      "testTree": "f3f77cccfbd3f240cec876f91dd5b3ecdcd474a4",
+      "testBranch": "ci-run-linux-astra-wp09-ed9a1da0-b1f1b1bc-1",
+      "checkSha": "5b0733e27bd31fa9a1c36bf5e9e139422f738536",
+      "checkTree": "ba7751ec0476bcf86c0ecab72b201c534e248ba7"
+    },
+    "W6": {
+      "productSha": "b22873489b8937b0d830fbe259d32939317118e0",
+      "productTree": "37a451f9ce84b1a2fd3f8a6ca69aee5a0d6e8364",
+      "testSha": "978ff40767cf87242e9f993527155f8b373b9300",
+      "testTree": "02af67f0b924a6c36177fdc56df1e6a52f660d30",
+      "testBranch": "ci-run-linux-astra-wp09-b2287348-dc696f0b-1",
+      "checkSha": "1fa3571040d58e0a0bac2f74a0d4720770626f8a",
+      "checkTree": "1f77acbcf2118967523fc389d4d6b59cde80470e"
+    },
+    "W7": {
+      "productSha": "f361a9316debfa2ff2fc3af7d5169f781b6b8334",
+      "productTree": "eea1e3c8bf6f36286491f7afb419ca542d7d87d5",
+      "testSha": "684e7f31ab6088622cff8f9be496072f98f2d67f",
+      "testTree": "c5703327ab491dc14b0535184ca9da3a20ec8d42",
+      "testBranch": "ci-run-linux-astra-wp09-f361a931-b1f1b1bc-1",
+      "checkSha": "cd60418307bf532038b1b6bddc266f267aa67fd6",
+      "checkTree": "e081d1b0cebb7fc65c092c984f6500acbbad0404"
+    },
+    "W8": {
+      "productSha": "e9345a939faba3be306c9069a5a7606cb2d14869",
+      "productTree": "c1728e16c1f3af95b924b4a954e0ab9c48b2af7e",
+      "checkSha": "91e2b9feb65acc03969fa94c29c7065016b40c67",
+      "checkTree": "20931225f756997ae82436902f08e486ec1a7633"
+    },
+    "W9": {
+      "productSha": "c4e332cb2e1c6ee9b2432ce6ff19a70efc2014a9",
+      "productTree": "882d8b02e1db4cdd95abeb0ea2f36fbb40f7f7f1",
+      "testSha": "05cb35cea050bcd767c12704d0d021d0d9134708",
+      "testTree": "2184550cdfb60aca62884d9bd1973712f5023089",
+      "testBranch": "ci-run-linux-astra-wp09-c4e332cb-b1f1b1bc-1",
+      "checkSha": "62655e195efa94f1ade61d90b2ee0785c5e0ef2f",
+      "checkTree": "802879eaa7a8e46389268a33606e9a7195b102c0"
+    },
+    "W10": {
+      "productSha": "cb8b79b4695127c1fe846c041b9c1d53c63ac238",
+      "productTree": "d17f03597fa9a1d5d0d78fefe6b7fc889b2ca63f",
+      "testSha": "3adf14054b2828fe1c028f06fb16877089193c6a",
+      "testTree": "4090a243ef935d51dccf7b77806fdbb79eeb85d7",
+      "testBranch": "ci-run-linux-astra-wp09-cb8b79b4-fec5b4fe-1",
+      "checkSha": "8ef1163c3597845c95bb41de89e98e635ef44b3b",
+      "checkTree": "acdd33b61854af461be96d983b55d6d3627baeb8"
+    },
+    "W11": {
+      "productSha": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+      "productTree": "4805908207a293db75173a240b9d208ee5c56ee6",
+      "testSha": "000761d8604faf642c918c2df2435bf24a2e0297",
+      "testTree": "9154605f93bcf72e034b40b5a9362eac429f78d3",
+      "testBranch": "ci-run-linux-astra-wp09-a3dcbb62-fec5b4fe-1",
+      "checkSha": "16a58925e65f410c95e2096778ea24f912919427",
+      "checkTree": "20efc924527dc2508948ad228370a428b3d4f248"
+    }
+  },
+  "runs": [
+    {
+      "candidate": "W2",
+      "kind": "check",
+      "product_sha": "3b746ab9d6ae3b860bb7f97a3b5bc22e92179255",
+      "product_tree": "6f45a314388d7329fe9987ee31494bf4d0b42477",
+      "snapshot_sha": "6b33fba5aeaeace4adbe92f1a59269b3464a9773",
+      "snapshot_tree": "c3c8f6b5dd091a334dce56f0c06e3ea59d09cccb",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43536554841,
+      "job_id": 132266874681,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536554841",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536554841/job/132266874681",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 158,
+        "own_product_and_test_diagnostics": 47
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 633,
+        "gate": 0,
+        "warnings": 11,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14090730119,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 8289,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090730119",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090730119/zip",
+          "expired": false,
+          "created_at": "2026-11-14T00:49:29Z",
+          "expires_at": "2026-11-28T00:49:28Z",
+          "updated_at": "2026-11-14T00:49:29Z",
+          "digest": "sha256:ecad35841639d4323e193e464f733752030a2ad925a1ceeb92eaf30b36fd45c3",
+          "workflow_run": {
+            "id": 43536554841,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "6b33fba5aeaeace4adbe92f1a59269b3464a9773"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/3b746ab9d6ae3b860bb7f97a3b5bc22e92179255...6b33fba5aeaeace4adbe92f1a59269b3464a9773",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W2",
+      "kind": "test",
+      "product_sha": "3b746ab9d6ae3b860bb7f97a3b5bc22e92179255",
+      "product_tree": "6f45a314388d7329fe9987ee31494bf4d0b42477",
+      "snapshot_sha": "f2728cf44d5691d4178e8c6922bce059266cdb5f",
+      "snapshot_tree": "d705b6a3bdd0d436ef9272bf42b7f980525415a9",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43536732467,
+      "job_id": 132267453606,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536732467",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536732467/job/132267453606",
+      "conclusion": "failure",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp09/actions.test.ts",
+          "Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+          "Sucafinav1/test/product/wp09/capabilities.test.ts",
+          "Sucafinav1/test/product/wp09/confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/decision.test.ts",
+          "Sucafinav1/test/product/wp09/discovery.test.ts",
+          "Sucafinav1/test/product/wp09/dossier.test.ts",
+          "Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast.test.ts",
+          "Sucafinav1/test/product/wp09/handoff.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+          "Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+          "Sucafinav1/test/product/wp09/publication.test.ts",
+          "Sucafinav1/test/product/wp09/recipes.test.ts",
+          "Sucafinav1/test/product/wp09/request-dossier.test.ts",
+          "Sucafinav1/test/product/wp09/result-access.test.ts",
+          "Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/review.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+          "Sucafinav1/test/product/wp09/schedule.test.ts",
+          "Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+          "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+          "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "3fe0bd8b66157b624e250a6b42f4e8ffa4c882673daefc9a63c5e93f0b53c1b5",
+      "counts": {
+        "pass": 122,
+        "fail": 10,
+        "errors": 4,
+        "tests": 132,
+        "files": 30
+      },
+      "artifact_metadata": [],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log read and request verified.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/3b746ab9d6ae3b860bb7f97a3b5bc22e92179255...f2728cf44d5691d4178e8c6922bce059266cdb5f",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    },
+    {
+      "candidate": "W3",
+      "kind": "check",
+      "product_sha": "11ba110159301eb843103e6c60b12e7b1491ec86",
+      "product_tree": "22c33bb3238f551cf5d6eb727b46ca7079f7d1e4",
+      "snapshot_sha": "baae3275e18363964904edbf46e2dfcd44b9849d",
+      "snapshot_tree": "b73618e80550dda238fa13680935a9d4e6b23d70",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43537200918,
+      "job_id": 132268955027,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537200918",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537200918/job/132268955027",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 83,
+        "own_product_and_test_diagnostics": 0
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 639,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14090047381,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5781,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090047381",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090047381/zip",
+          "expired": false,
+          "created_at": "2026-11-14T00:55:06Z",
+          "expires_at": "2026-11-28T00:55:05Z",
+          "updated_at": "2026-11-14T00:55:06Z",
+          "digest": "sha256:de2400807d7a01c9be9ea53efcfa6a08f50baa99069592e5edb519aa50b0d6cd",
+          "workflow_run": {
+            "id": 43537200918,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "baae3275e18363964904edbf46e2dfcd44b9849d"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/11ba110159301eb843103e6c60b12e7b1491ec86...baae3275e18363964904edbf46e2dfcd44b9849d",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W5",
+      "kind": "check",
+      "product_sha": "ed9a1da0420a0575e16c48118c6ce52edac6ae50",
+      "product_tree": "356221634f257e43d95c1ac910af1f822a434340",
+      "snapshot_sha": "5b0733e27bd31fa9a1c36bf5e9e139422f738536",
+      "snapshot_tree": "ba7751ec0476bcf86c0ecab72b201c534e248ba7",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43537802605,
+      "job_id": 132270928577,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537802605",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537802605/job/132270928577",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 101,
+        "own_product_and_test_diagnostics": 22
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 640,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14089623234,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5866,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14089623234",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14089623234/zip",
+          "expired": false,
+          "created_at": "2026-11-14T01:01:53Z",
+          "expires_at": "2026-11-28T01:01:52Z",
+          "updated_at": "2026-11-14T01:01:53Z",
+          "digest": "sha256:21356c16ce2b53aca9ea840052cd795a719aa4f6605c42198e604dfd754fa812",
+          "workflow_run": {
+            "id": 43537802605,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "5b0733e27bd31fa9a1c36bf5e9e139422f738536"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/ed9a1da0420a0575e16c48118c6ce52edac6ae50...5b0733e27bd31fa9a1c36bf5e9e139422f738536",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W5",
+      "kind": "test",
+      "product_sha": "ed9a1da0420a0575e16c48118c6ce52edac6ae50",
+      "product_tree": "356221634f257e43d95c1ac910af1f822a434340",
+      "snapshot_sha": "5fbdb55cc56ef0935471b8d674b811995c0385a9",
+      "snapshot_tree": "f3f77cccfbd3f240cec876f91dd5b3ecdcd474a4",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43537797828,
+      "job_id": 132270915451,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537797828",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537797828/job/132270915451",
+      "conclusion": "success",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp09/actions.test.ts",
+          "Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+          "Sucafinav1/test/product/wp09/capabilities.test.ts",
+          "Sucafinav1/test/product/wp09/confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/decision.test.ts",
+          "Sucafinav1/test/product/wp09/discovery.test.ts",
+          "Sucafinav1/test/product/wp09/dossier.test.ts",
+          "Sucafinav1/test/product/wp09/export-matrix.test.ts",
+          "Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast.test.ts",
+          "Sucafinav1/test/product/wp09/handoff.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+          "Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+          "Sucafinav1/test/product/wp09/publication.test.ts",
+          "Sucafinav1/test/product/wp09/recipes.test.ts",
+          "Sucafinav1/test/product/wp09/request-dossier.test.ts",
+          "Sucafinav1/test/product/wp09/result-access.test.ts",
+          "Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/review.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+          "Sucafinav1/test/product/wp09/schedule.test.ts",
+          "Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+          "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "b1f1b1bc5a8209fa50aa320fcb6b10b28b8a6e387282fad663eb476966e6f6f8",
+      "counts": {
+        "pass": 172,
+        "fail": 0,
+        "errors": 0,
+        "tests": 172,
+        "files": 30
+      },
+      "artifact_metadata": [],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log read and request verified.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/ed9a1da0420a0575e16c48118c6ce52edac6ae50...5fbdb55cc56ef0935471b8d674b811995c0385a9",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    },
+    {
+      "candidate": "W6",
+      "kind": "check",
+      "product_sha": "b22873489b8937b0d830fbe259d32939317118e0",
+      "product_tree": "37a451f9ce84b1a2fd3f8a6ca69aee5a0d6e8364",
+      "snapshot_sha": "1fa3571040d58e0a0bac2f74a0d4720770626f8a",
+      "snapshot_tree": "1f77acbcf2118967523fc389d4d6b59cde80470e",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43538323374,
+      "job_id": 132272655438,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538323374",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538323374/job/132272655438",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 79,
+        "own_product_and_test_diagnostics": 0
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 640,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14090932448,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5516,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090932448",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090932448/zip",
+          "expired": false,
+          "created_at": "2026-11-14T01:05:42Z",
+          "expires_at": "2026-11-28T01:05:41Z",
+          "updated_at": "2026-11-14T01:05:42Z",
+          "digest": "sha256:4ba977ebf450dbc4ecb2cc56a7c387ded4d5b19741cf86ecc3554417cf8055d5",
+          "workflow_run": {
+            "id": 43538323374,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "1fa3571040d58e0a0bac2f74a0d4720770626f8a"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/b22873489b8937b0d830fbe259d32939317118e0...1fa3571040d58e0a0bac2f74a0d4720770626f8a",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W6",
+      "kind": "test",
+      "product_sha": "b22873489b8937b0d830fbe259d32939317118e0",
+      "product_tree": "37a451f9ce84b1a2fd3f8a6ca69aee5a0d6e8364",
+      "snapshot_sha": "978ff40767cf87242e9f993527155f8b373b9300",
+      "snapshot_tree": "02af67f0b924a6c36177fdc56df1e6a52f660d30",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43538319016,
+      "job_id": 132272638592,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538319016",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538319016/job/132272638592",
+      "conclusion": "success",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp09/export-matrix.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "dc696f0bb18fc9fc283c9f6b8296bfaa56c3c11a0356342530085522f759e047",
+      "counts": {
+        "pass": 36,
+        "fail": 0,
+        "errors": 0,
+        "tests": 36,
+        "files": 1
+      },
+      "artifact_metadata": [],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log read and request verified.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/b22873489b8937b0d830fbe259d32939317118e0...978ff40767cf87242e9f993527155f8b373b9300",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    },
+    {
+      "candidate": "W7",
+      "kind": "check",
+      "product_sha": "f361a9316debfa2ff2fc3af7d5169f781b6b8334",
+      "product_tree": "eea1e3c8bf6f36286491f7afb419ca542d7d87d5",
+      "snapshot_sha": "cd60418307bf532038b1b6bddc266f267aa67fd6",
+      "snapshot_tree": "e081d1b0cebb7fc65c092c984f6500acbbad0404",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43538761366,
+      "job_id": 132274084147,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538761366",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538761366/job/132274084147",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 80,
+        "own_product_and_test_diagnostics": 1
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 640,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14090133627,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5604,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090133627",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090133627/zip",
+          "expired": false,
+          "created_at": "2026-11-14T01:10:01Z",
+          "expires_at": "2026-11-28T01:10:01Z",
+          "updated_at": "2026-11-14T01:10:01Z",
+          "digest": "sha256:067b6afbcdb4e6b97fa4b506388a672bce12058978cad9c3734a66b283a2e533",
+          "workflow_run": {
+            "id": 43538761366,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "cd60418307bf532038b1b6bddc266f267aa67fd6"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/f361a9316debfa2ff2fc3af7d5169f781b6b8334...cd60418307bf532038b1b6bddc266f267aa67fd6",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W7",
+      "kind": "test",
+      "product_sha": "f361a9316debfa2ff2fc3af7d5169f781b6b8334",
+      "product_tree": "eea1e3c8bf6f36286491f7afb419ca542d7d87d5",
+      "snapshot_sha": "684e7f31ab6088622cff8f9be496072f98f2d67f",
+      "snapshot_tree": "c5703327ab491dc14b0535184ca9da3a20ec8d42",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43538757009,
+      "job_id": 132274068693,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538757009",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538757009/job/132274068693",
+      "conclusion": "failure",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp09/actions.test.ts",
+          "Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+          "Sucafinav1/test/product/wp09/capabilities.test.ts",
+          "Sucafinav1/test/product/wp09/confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/decision.test.ts",
+          "Sucafinav1/test/product/wp09/discovery.test.ts",
+          "Sucafinav1/test/product/wp09/dossier.test.ts",
+          "Sucafinav1/test/product/wp09/export-matrix.test.ts",
+          "Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast.test.ts",
+          "Sucafinav1/test/product/wp09/handoff.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+          "Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+          "Sucafinav1/test/product/wp09/publication.test.ts",
+          "Sucafinav1/test/product/wp09/recipes.test.ts",
+          "Sucafinav1/test/product/wp09/request-dossier.test.ts",
+          "Sucafinav1/test/product/wp09/result-access.test.ts",
+          "Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/review.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+          "Sucafinav1/test/product/wp09/schedule.test.ts",
+          "Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+          "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "b1f1b1bc5a8209fa50aa320fcb6b10b28b8a6e387282fad663eb476966e6f6f8",
+      "counts": {
+        "pass": 171,
+        "fail": 1,
+        "errors": 0,
+        "tests": 172,
+        "files": 30
+      },
+      "artifact_metadata": [],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log read and request verified.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/f361a9316debfa2ff2fc3af7d5169f781b6b8334...684e7f31ab6088622cff8f9be496072f98f2d67f",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    },
+    {
+      "candidate": "W8",
+      "kind": "check",
+      "product_sha": "e9345a939faba3be306c9069a5a7606cb2d14869",
+      "product_tree": "c1728e16c1f3af95b924b4a954e0ab9c48b2af7e",
+      "snapshot_sha": "91e2b9feb65acc03969fa94c29c7065016b40c67",
+      "snapshot_tree": "20931225f756997ae82436902f08e486ec1a7633",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43539044451,
+      "job_id": 132275011500,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539044451",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539044451/job/132275011500",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 79,
+        "own_product_and_test_diagnostics": 0
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 640,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14090508354,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5516,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090508354",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090508354/zip",
+          "expired": false,
+          "created_at": "2026-11-14T01:12:48Z",
+          "expires_at": "2026-11-28T01:12:47Z",
+          "updated_at": "2026-11-14T01:12:48Z",
+          "digest": "sha256:76ec13b404a0c6b2b9e01f48f9b2db3a7cb0fa12a387a3aa8f6af60e2c8ef3b8",
+          "workflow_run": {
+            "id": 43539044451,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "91e2b9feb65acc03969fa94c29c7065016b40c67"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/e9345a939faba3be306c9069a5a7606cb2d14869...91e2b9feb65acc03969fa94c29c7065016b40c67",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W9",
+      "kind": "check",
+      "product_sha": "c4e332cb2e1c6ee9b2432ce6ff19a70efc2014a9",
+      "product_tree": "882d8b02e1db4cdd95abeb0ea2f36fbb40f7f7f1",
+      "snapshot_sha": "62655e195efa94f1ade61d90b2ee0785c5e0ef2f",
+      "snapshot_tree": "802879eaa7a8e46389268a33606e9a7195b102c0",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43539171066,
+      "job_id": 132275492576,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539171066",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539171066/job/132275492576",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 79,
+        "own_product_and_test_diagnostics": 0
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 640,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14089554995,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5516,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14089554995",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14089554995/zip",
+          "expired": false,
+          "created_at": "2026-11-14T01:14:07Z",
+          "expires_at": "2026-11-28T01:14:07Z",
+          "updated_at": "2026-11-14T01:14:07Z",
+          "digest": "sha256:b5dfab1f27dc9f52aad02840c889bd6bc95212b01e3f797691650f0dcc259926",
+          "workflow_run": {
+            "id": 43539171066,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "62655e195efa94f1ade61d90b2ee0785c5e0ef2f"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/c4e332cb2e1c6ee9b2432ce6ff19a70efc2014a9...62655e195efa94f1ade61d90b2ee0785c5e0ef2f",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W9",
+      "kind": "test",
+      "product_sha": "c4e332cb2e1c6ee9b2432ce6ff19a70efc2014a9",
+      "product_tree": "882d8b02e1db4cdd95abeb0ea2f36fbb40f7f7f1",
+      "snapshot_sha": "05cb35cea050bcd767c12704d0d021d0d9134708",
+      "snapshot_tree": "2184550cdfb60aca62884d9bd1973712f5023089",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43539166516,
+      "job_id": 132275400016,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539166516",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539166516/job/132275400016",
+      "conclusion": "success",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp09/actions.test.ts",
+          "Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+          "Sucafinav1/test/product/wp09/capabilities.test.ts",
+          "Sucafinav1/test/product/wp09/confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/decision.test.ts",
+          "Sucafinav1/test/product/wp09/discovery.test.ts",
+          "Sucafinav1/test/product/wp09/dossier.test.ts",
+          "Sucafinav1/test/product/wp09/export-matrix.test.ts",
+          "Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast.test.ts",
+          "Sucafinav1/test/product/wp09/handoff.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+          "Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+          "Sucafinav1/test/product/wp09/publication.test.ts",
+          "Sucafinav1/test/product/wp09/recipes.test.ts",
+          "Sucafinav1/test/product/wp09/request-dossier.test.ts",
+          "Sucafinav1/test/product/wp09/result-access.test.ts",
+          "Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/review.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+          "Sucafinav1/test/product/wp09/schedule.test.ts",
+          "Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+          "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "b1f1b1bc5a8209fa50aa320fcb6b10b28b8a6e387282fad663eb476966e6f6f8",
+      "counts": {
+        "pass": 172,
+        "fail": 0,
+        "errors": 0,
+        "tests": 172,
+        "files": 30
+      },
+      "artifact_metadata": [],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log read and request verified.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/c4e332cb2e1c6ee9b2432ce6ff19a70efc2014a9...05cb35cea050bcd767c12704d0d021d0d9134708",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    },
+    {
+      "candidate": "W10",
+      "kind": "check",
+      "product_sha": "cb8b79b4695127c1fe846c041b9c1d53c63ac238",
+      "product_tree": "d17f03597fa9a1d5d0d78fefe6b7fc889b2ca63f",
+      "snapshot_sha": "8ef1163c3597845c95bb41de89e98e635ef44b3b",
+      "snapshot_tree": "acdd33b61854af461be96d983b55d6d3627baeb8",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43539709754,
+      "job_id": 132277143469,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539709754",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539709754/job/132277143469",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 78,
+        "own_product_and_test_diagnostics": 0
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 644,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14091585759,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5528,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14091585759",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14091585759/zip",
+          "expired": false,
+          "created_at": "2026-11-14T01:18:55Z",
+          "expires_at": "2026-11-28T01:18:55Z",
+          "updated_at": "2026-11-14T01:18:55Z",
+          "digest": "sha256:1140b9ca5d5ae035baf451e4c5865a674d347a9fccc621dc6c5fe307f10557cb",
+          "workflow_run": {
+            "id": 43539709754,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "8ef1163c3597845c95bb41de89e98e635ef44b3b"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/cb8b79b4695127c1fe846c041b9c1d53c63ac238...8ef1163c3597845c95bb41de89e98e635ef44b3b",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W10",
+      "kind": "test",
+      "product_sha": "cb8b79b4695127c1fe846c041b9c1d53c63ac238",
+      "product_tree": "d17f03597fa9a1d5d0d78fefe6b7fc889b2ca63f",
+      "snapshot_sha": "3adf14054b2828fe1c028f06fb16877089193c6a",
+      "snapshot_tree": "4090a243ef935d51dccf7b77806fdbb79eeb85d7",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43539704710,
+      "job_id": 132277126227,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539704710",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539704710/job/132277126227",
+      "conclusion": "failure",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp09/actions.test.ts",
+          "Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+          "Sucafinav1/test/product/wp09/capabilities.test.ts",
+          "Sucafinav1/test/product/wp09/confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/decision.test.ts",
+          "Sucafinav1/test/product/wp09/discovery.test.ts",
+          "Sucafinav1/test/product/wp09/dossier.test.ts",
+          "Sucafinav1/test/product/wp09/export-matrix.test.ts",
+          "Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast.test.ts",
+          "Sucafinav1/test/product/wp09/handoff.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+          "Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+          "Sucafinav1/test/product/wp09/publication.test.ts",
+          "Sucafinav1/test/product/wp09/recipes.test.ts",
+          "Sucafinav1/test/product/wp09/request-dossier.test.ts",
+          "Sucafinav1/test/product/wp09/result-access.test.ts",
+          "Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/review.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+          "Sucafinav1/test/product/wp09/schedule.test.ts",
+          "Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+          "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+          "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "fec5b4fe78bb5d7fc22e2d3e4e3e0c2df275534880bd8d52559924d9e15ebce1",
+      "counts": {
+        "pass": 172,
+        "fail": 3,
+        "errors": 0,
+        "tests": 175,
+        "files": 31
+      },
+      "artifact_metadata": [],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log read and request verified.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/cb8b79b4695127c1fe846c041b9c1d53c63ac238...3adf14054b2828fe1c028f06fb16877089193c6a",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    },
+    {
+      "candidate": "W11",
+      "kind": "check",
+      "product_sha": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+      "product_tree": "4805908207a293db75173a240b9d208ee5c56ee6",
+      "snapshot_sha": "16a58925e65f410c95e2096778ea24f912919427",
+      "snapshot_tree": "20efc924527dc2508948ad228370a428b3d4f248",
+      "workflow": ".github/workflows/astra-wp09-check.yml",
+      "run_id": 43540252662,
+      "job_id": 132278887356,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540252662",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540252662/job/132278887356",
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "result": "failure",
+        "diagnostics": 78,
+        "own_product_and_test_diagnostics": 0
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "cwd": ".",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "result": "success",
+        "rules": 78,
+        "changed_paths": 644,
+        "gate": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "artifact_metadata": [
+        {
+          "id": 14091019656,
+          "name": "astra-wp09-check-1",
+          "size_in_bytes": 5528,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14091019656",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14091019656/zip",
+          "expired": false,
+          "created_at": "2026-11-14T01:24:27Z",
+          "expires_at": "2026-11-28T01:24:27Z",
+          "updated_at": "2026-11-14T01:24:27Z",
+          "digest": "sha256:3258b435c9d894ca17a6ae99fb0a9641d732d07fc3a3f0eaa4b28266ec27f2e5",
+          "workflow_run": {
+            "id": 43540252662,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp09",
+            "head_sha": "16a58925e65f410c95e2096778ea24f912919427"
+          }
+        }
+      ],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "GitHub artifact metadata and job logs read; digest is the GitHub-reported digest.",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/a3dcbb62c88231f95a7c57afb32e975404a3b59c...16a58925e65f410c95e2096778ea24f912919427",
+        "changed_files": [
+          {
+            "path": ".astra-wp09-check.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".astra-wp09-check.json"
+      }
+    },
+    {
+      "candidate": "W11",
+      "kind": "test",
+      "product_sha": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+      "product_tree": "4805908207a293db75173a240b9d208ee5c56ee6",
+      "snapshot_sha": "000761d8604faf642c918c2df2435bf24a2e0297",
+      "snapshot_tree": "9154605f93bcf72e034b40b5a9362eac429f78d3",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43540247856,
+      "job_id": 132278872428,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540247856",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540247856/job/132278872428",
+      "conclusion": "success",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp09/actions.test.ts",
+          "Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+          "Sucafinav1/test/product/wp09/capabilities.test.ts",
+          "Sucafinav1/test/product/wp09/confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/decision.test.ts",
+          "Sucafinav1/test/product/wp09/discovery.test.ts",
+          "Sucafinav1/test/product/wp09/dossier.test.ts",
+          "Sucafinav1/test/product/wp09/export-matrix.test.ts",
+          "Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/forecast.test.ts",
+          "Sucafinav1/test/product/wp09/handoff.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+          "Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+          "Sucafinav1/test/product/wp09/publication.test.ts",
+          "Sucafinav1/test/product/wp09/recipes.test.ts",
+          "Sucafinav1/test/product/wp09/request-dossier.test.ts",
+          "Sucafinav1/test/product/wp09/result-access.test.ts",
+          "Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+          "Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+          "Sucafinav1/test/product/wp09/review.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+          "Sucafinav1/test/product/wp09/schedule.test.ts",
+          "Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+          "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+          "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "fec5b4fe78bb5d7fc22e2d3e4e3e0c2df275534880bd8d52559924d9e15ebce1",
+      "counts": {
+        "pass": 175,
+        "fail": 0,
+        "errors": 0,
+        "tests": 175,
+        "files": 31
+      },
+      "artifact_metadata": [],
+      "artifact_bytes_downloaded": false,
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log read and request verified.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "GitHub compare from exact product W to snapshot S lists only the allowed envelope; workflow verifies exact product parent/tree.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/a3dcbb62c88231f95a7c57afb32e975404a3b59c...000761d8604faf642c918c2df2435bf24a2e0297",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    },
+    {
+      "candidate": "W11",
+      "kind": "isolated_consumer",
+      "product_sha": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+      "product_tree": "4805908207a293db75173a240b9d208ee5c56ee6",
+      "snapshot_sha": "d713781f6f9a867eef264135b1eeebb960f7d4e4",
+      "snapshot_tree": "c607de31135231687771531a6e30fd1d83265a9a",
+      "workflow": ".github/workflows/test-ci.yml",
+      "run_id": 43540684025,
+      "job_id": 132280281865,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540684025",
+      "log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540684025/job/132280281865",
+      "conclusion": "failure",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "6c8554ecc45897d7dda104faca409b44b37988263148f6e7bffb463eb786468d",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "tests": 1,
+        "files": 1,
+        "expect_calls": 57
+      },
+      "declared_timeout_ms": 120000,
+      "reported_test_duration_ms": 132734.06,
+      "reported_suite_duration_seconds": 133.45,
+      "classification": "INTEGRATION_TIMEOUT_NOT_LOCALIZED",
+      "observation": "Timeout reproduced with this one file at the same product as the 175-pass selection. No cause, deadlock or regression from a previous passing baseline is established.",
+      "artifact_metadata": [],
+      "artifact_note": "Existing Bun lane has no mandatory test artifact; job log and exact normalized request were read.",
+      "omni_positive_control": "not applicable: no omni spawn or delegation",
+      "blob_equality": {
+        "proof": "Exact GitHub compare lists only the request envelope.",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/a3dcbb62c88231f95a7c57afb32e975404a3b59c...d713781f6f9a867eef264135b1eeebb960f7d4e4",
+        "changed_files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "truncated": false,
+        "allowed_envelope": ".ci-run.json"
+      }
+    }
+  ],
+  "historyNotes": [
+    {
+      "candidate": "W1",
+      "result": "not_tested",
+      "note": "First product publication; no hosted run attributed to it. WP10's later composition pin still references W1 and must be updated to the final own producer."
+    },
+    {
+      "candidate": "W2",
+      "result": "failed",
+      "note": "47 own type diagnostics, denied synthetic consumer evidence, closed-schema undefined optionals, missing public imports and document consumer load failures. Original broad WP06 runtime timeout retained."
+    },
+    {
+      "candidate": "W3",
+      "result": "check_failed",
+      "note": "Own type diagnostics removed; 83 shared diagnostics remained. No test run attributed to this intermediate product."
+    },
+    {
+      "candidate": "W4",
+      "result": "not_tested",
+      "note": "Consumer fixtures switched to real issued evidence; timeout declarations captured in W5 before test dispatch. No run attributed to W4."
+    },
+    {
+      "candidate": "W5",
+      "result": "mixed",
+      "note": "172 tests passed; new export-matrix table/receipt typing caused 22 own diagnostics in the package check."
+    },
+    {
+      "candidate": "W6",
+      "result": "mixed",
+      "note": "36 matrix tests passed; own type diagnostics zero; 79 shared diagnostics remained."
+    },
+    {
+      "candidate": "W7",
+      "result": "failed",
+      "note": "171 tests passed, one sourcing explanation assertion failed after an asymmetric object matcher; source evidence assertion also had one own type diagnostic. Root cause inside the matcher is not asserted."
+    },
+    {
+      "candidate": "W8",
+      "result": "check_failed",
+      "note": "Only source-evidence assertion typing changed; own type diagnostics zero. No test snapshot dispatched while the W7 runtime failure was being repaired."
+    },
+    {
+      "candidate": "W9",
+      "result": "mixed",
+      "note": "172 tests passed after independent scalar assertions; 79 shared type diagnostics remained."
+    },
+    {
+      "candidate": "W10",
+      "result": "failed",
+      "note": "172 tests passed; three current WP06 dossier HTTP cases failed at individual Request issuance because the integration projector diverged from the canonical approvalStage field set. Initial read/presentation assertions passed, later assertions were not reached."
+    },
+    {
+      "candidate": "W11",
+      "result": "draft_blocked",
+      "note": "Exact published WP10 canonical projection adapter composed. Main selection175/0, guards pass, own type diagnostics zero; package typecheck78 shared diagnostics and isolated WP06 runtime timeout remain unresolved."
+    }
+  ],
+  "artifactPolicy": "Check artifacts have 14-day retention, with GitHub-reported SHA-256 digests recorded per run. Full job logs were read. Bun test-ci does not require a dedicated uploaded artifact; no absent mandatory artifact is treated as PASS.",
+  "checkSnapshotAncestry": "Check snapshots have the exact product as first parent and, after the first check, the prior check snapshot as an additional parent, allowing fast-forward-only updates of astra-check-wp09. Their tree diff from product is only .astra-wp09-check.json; the workflow verifies that and checks out the exact product SHA.",
+  "readout": {
+    "main": "175 pass, 0 fail, 31 explicit files, 1085 expect calls",
+    "typecheck": "FAILED: 78 shared diagnostics; zero diagnostics in product/routines and test/product/wp09",
+    "guards": "PASS: 78 rules,644 changed paths against pinned origin/dev,0 gate,13 warnings,0 errors",
+    "isolated": "FAILED: WP06 runtime-e2e timeout120000ms,0 pass/1 fail,57 expect calls",
+    "native": "NOT_ESTABLISHED: no C07/Relay execution, provider/judge, resident SkillLoadReceipt, complete Schedule occurrence or full result-route/browser qualification."
+  }
+}
