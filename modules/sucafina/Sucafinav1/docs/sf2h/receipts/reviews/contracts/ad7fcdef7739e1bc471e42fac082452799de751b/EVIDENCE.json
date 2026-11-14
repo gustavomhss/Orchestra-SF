@@ -1,0 +1,1876 @@
+{
+  "schema": "orchestra.sf2h.independent-contract-review.v1",
+  "review_date": "2026-11-14",
+  "repository": "gustavomhss/Orchestra-SF",
+  "role": "Independent contract, composition and evidence review; no product authorship/integration",
+  "candidate": {
+    "pull_request": 44,
+    "branch": "compose-resume",
+    "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+    "tree": "885ce466354d2b8dcf674472561c9c1fc3b632ff",
+    "normative_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "publication": {
+    "branch": "review-contracts",
+    "base": "sf2-control",
+    "initial_base_commit": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+    "allowed_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/contracts/",
+    "finding_commit": "4c001116571ae4e7bcb56a8595572afa6bb672bc"
+  },
+  "verdict": {
+    "review": "REQUEST_CHANGES",
+    "affected_route": "HOLD_C11_METADATA_STALE_RECONCILIATION",
+    "GLOBAL_RELEASE": "NOT_APPROVED",
+    "GNATIVE": "NOT_GRANTED_BY_THIS_REVIEW",
+    "integrated_final_approvals": "Three final independent approvals still required; internal sub-reviews are not those approvals"
+  },
+  "method": {
+    "remote": "GitHub MCP only",
+    "product_tests_executed_by_review": false,
+    "CI_dispatched_by_review": false,
+    "product_modified": false,
+    "source_integration": false,
+    "merge_or_deploy": false,
+    "prior_receipts_modified": false,
+    "other_people_messaged": false,
+    "subreviews": [
+      "C01-C09 and independent cold check of C11 wrapper",
+      "C10-C17 and producer/consumer C11 finding",
+      "Run identity, snapshot equality, logs, artifacts metadata and obligations hashes"
+    ],
+    "limitations": [
+      "Static review of selected producer/consumer boundaries does not qualify all implementations/criteria.",
+      "No artifact ZIP was downloaded or inspected.",
+      "No native incident or UI impact was executed by this review."
+    ]
+  },
+  "scope": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "all_contract_registry_entries_compared": true,
+    "all_criteria_behaviourally_passed": false,
+    "normative_sources": [
+      {
+        "label": "agents",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/AGENTS.md",
+        "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+      },
+      {
+        "label": "COMMON",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+        "blob": "d61f32af03fe10747a50274233f953af044decf6"
+      },
+      {
+        "label": "WORKFLOW",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+        "blob": "043205bee6031b4517a98591b3588fca0ab12925"
+      },
+      {
+        "label": "contracts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+        "blob": "6d038e3218fb74be19314ee61ea88cf963e41071"
+      },
+      {
+        "label": "WP10",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+        "blob": "1c7fef239ba8d4e8de77b13ec4803e87d493c133"
+      },
+      {
+        "label": "proofMap",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/proof-map.json",
+        "blob": "3b2ff2424bba07656850105df3b341c2bc984708"
+      },
+      {
+        "label": "evidencePlan",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/evidence-plan.json",
+        "blob": "bd802e4ebc7fb1800004b981a75a431c7f1f2b53"
+      }
+    ],
+    "criteria_for_finding": [
+      {
+        "criterion_id": "WP10.QLT.40",
+        "entity_id": "WP10",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E16",
+          "E18"
+        ],
+        "expected": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
+        "status": "NOT_RUN",
+        "integrated_proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ]
+      },
+      {
+        "criterion_id": "WP12.QLT.10",
+        "entity_id": "WP12",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11",
+          "E15"
+        ],
+        "expected": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T01.DOD.01",
+        "entity_id": "WP10.T01",
+        "family": "dod",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "expected": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP10.T01.QLT.01",
+        "entity_id": "WP10.T01",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E01",
+          "E16",
+          "E17",
+          "E18"
+        ],
+        "expected": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C.",
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP12.T04.DOD.10",
+        "entity_id": "WP12.T04",
+        "family": "dod",
+        "proof_packages": [
+          "E11",
+          "E15"
+        ],
+        "expected": "Queued/running/needs-input/ready/stale/cancelled/failed/unavailable são verdadeiros em cada fronteira.",
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP12.T04.QLT.10",
+        "entity_id": "WP12.T04",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11",
+          "E15"
+        ],
+        "expected": "Falha conserva IDs/outputRefs seguros para retomar e diagnosticar.",
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP12.T04.CHK.01",
+        "entity_id": "WP12.T04",
+        "family": "check",
+        "proof_packages": [
+          "E11",
+          "E15"
+        ],
+        "expected": "Alterar caso durante inferência entrega resultado stale com sua versão original e não substitui a análise atual.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "obligations": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/compose-resume/R06-obligations.tsv",
+      "blob": "e66efb1fcbba438f571d65a9453a4099d0341620",
+      "rows": 1610,
+      "id_mismatches": 0,
+      "text_sha256_mismatches": 0,
+      "status_mismatches": 0,
+      "hash_method": "SHA-256 of UTF-8 proof-map.entries[].expected exactly; no trimming or normalization",
+      "integration_acceptance": "NOT_GRANTED_BY_THIS_RESUME",
+      "integration_acceptance_count": 1610
+    },
+    "contract_registry": {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+      "entries": 17,
+      "semantic_differences": 0
+    },
+    "freeze": {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "revision": 10,
+      "status": "CONTRACT_FROZEN_CONSUMERS_BLOCKED",
+      "profiles": 5,
+      "skills": 18,
+      "packs": 8,
+      "operations": 39,
+      "integrated_proofs": 6
+    }
+  },
+  "composition": {
+    "origin_commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "origin_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+    "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/9048e0e65351a5bd80768458a79fed94a4993db7...ad7fcdef7739e1bc471e42fac082452799de751b",
+    "commits": 5,
+    "changed_paths": 66,
+    "removed_paths": [],
+    "partition": {
+      "consumed_code_and_test_files": 22,
+      "receipt_files": 42,
+      "workflow_files": 1,
+      "guide_files": 1
+    },
+    "all_22_source_and_candidate_blob_mode_checks_match": true,
+    "consumed_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "source_commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "source_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "candidate_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3/modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/runtime/planner.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "source_commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "source_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+        "candidate_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3/modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/planner/port.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+        "source_commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "source_blob": "130c4940746088518376aa4c325bd68ade46aa87",
+        "candidate_blob": "130c4940746088518376aa4c325bd68ade46aa87",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3/modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/routines/schedule.ts",
+        "source_commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "source_blob": "c2f76fb6ebf2f05b8b89a08561bfac14cc52ad66",
+        "candidate_blob": "c2f76fb6ebf2f05b8b89a08561bfac14cc52ad66",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/20821df310ebc6ea08ccab27e829008d72a04de6/modules/sucafina/Sucafinav1/product/routines/schedule.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/routines/schedule.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+        "source_commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "source_blob": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+        "candidate_blob": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/20821df310ebc6ea08ccab27e829008d72a04de6/modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "74ccb3c50dcadd85878987870f0e388926898d53",
+        "candidate_blob": "74ccb3c50dcadd85878987870f0e388926898d53",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/ui/shell-state.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "2aeacf2c05e86fef28947c5332284f3089e00049",
+        "candidate_blob": "2aeacf2c05e86fef28947c5332284f3089e00049",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/src/screen-shell.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "c92748938661f561a7f99d16049c35d0b4ce345c",
+        "candidate_blob": "c92748938661f561a7f99d16049c35d0b4ce345c",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "candidate_blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "10fe1c087aae8b4f9d19124634676cd3840f69d8",
+        "candidate_blob": "10fe1c087aae8b4f9d19124634676cd3840f69d8",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+        "candidate_blob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+        "candidate_blob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "cd43fad88f3424ac160f32be743df17b80a74336",
+        "candidate_blob": "cd43fad88f3424ac160f32be743df17b80a74336",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "4d7823be0abff16b4505910d080b47cf7cb96522",
+        "candidate_blob": "4d7823be0abff16b4505910d080b47cf7cb96522",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "f96b7353b3fb595c133b8af87edea11c56f1c028",
+        "candidate_blob": "f96b7353b3fb595c133b8af87edea11c56f1c028",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+        "source_commit": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "source_blob": "8dc2ac105b64e73f9e5f0f18683ef27a59ee386d",
+        "candidate_blob": "8dc2ac105b64e73f9e5f0f18683ef27a59ee386d",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad94fd2d78be47cecfb91f801ce7764127667b60/modules/sucafina/Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp02/record-capture-scope.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+        "source_commit": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "source_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "candidate_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/812f8427423dc143cefc2731edc3485eeb8d1f04/modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/ai/analysis-host.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+        "source_commit": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "source_blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+        "candidate_blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/812f8427423dc143cefc2731edc3485eeb8d1f04/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "source_commit": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "source_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "candidate_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/812f8427423dc143cefc2731edc3485eeb8d1f04/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "source_commit": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "source_blob": "ab321fb2d1562255cf987571477233767c5240e3",
+        "candidate_blob": "ab321fb2d1562255cf987571477233767c5240e3",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/812f8427423dc143cefc2731edc3485eeb8d1f04/modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "source_commit": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "source_blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "candidate_blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/812f8427423dc143cefc2731edc3485eeb8d1f04/modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+        "source_commit": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "source_blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+        "candidate_blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+        "mode": "100644",
+        "match": true,
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/812f8427423dc143cefc2731edc3485eeb8d1f04/modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+        "candidate_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts"
+      }
+    ],
+    "matrix_crosscheck": {
+      "source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "total_rows": 1463,
+      "checked_rows": 1424,
+      "checked_unique_paths": 1287,
+      "unchecked_rows": 39,
+      "checked_subtrees": [
+        "modules/sucafina/Sucafinav1/product",
+        "modules/sucafina/Sucafinav1/runtime",
+        "modules/sucafina/Sucafinav1/src",
+        "modules/sucafina/Sucafinav1/test",
+        "apps/cli/src/sucafina-product"
+      ],
+      "mismatches": [],
+      "rows_checked_by_pr": [
+        {
+          "pr": 29,
+          "count": 284
+        },
+        {
+          "pr": 34,
+          "count": 163
+        },
+        {
+          "pr": 36,
+          "count": 147
+        },
+        {
+          "pr": 38,
+          "count": 31
+        },
+        {
+          "pr": 39,
+          "count": 77
+        },
+        {
+          "pr": 41,
+          "count": 235
+        },
+        {
+          "pr": 42,
+          "count": 334
+        },
+        {
+          "pr": 43,
+          "count": 153
+        }
+      ],
+      "meaning": "Verifies claimed candidate blob or absence, not semantic correctness or integration of HOLD source deltas."
+    }
+  },
+  "contract_matrix": [
+    {
+      "contract": "C01",
+      "claim": "Contexto, capacidades, identidade física e revogação",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "evidence": "Leitura dos escopos, revalidações e consumidores; não é execução de todos os cenários de revogação.",
+      "conclusion": "Sem BUG adicional demonstrado; consumo/revogação reais continuam sujeitos à qualificação."
+    },
+    {
+      "contract": "C02",
+      "claim": "Projeção canônica, período e moeda; sem matemática paralela",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/planner-projected.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+      ],
+      "evidence": "CI05 cobre rate identity; não substitui todo BI. Green BI da origem tem outro W e driver.",
+      "conclusion": "Sem BUG adicional; F06/F10/F15 permanecem."
+    },
+    {
+      "contract": "C03",
+      "claim": "Preview/apply, CAS, retry idêntico e conteúdo alterado",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+      ],
+      "evidence": "Leitura de comandos de domínio e metadados na transação; o resultado não fecha a variante C12.",
+      "conclusion": "Sem BUG adicional; não estender esta conclusão a F08."
+    },
+    {
+      "contract": "C04",
+      "claim": "Mesma proposta de importação e gravação atômica com recibo",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/imports/apply.ts",
+        "modules/sucafina/Sucafinav1/product/imports/dashboard-atomic.ts",
+        "modules/sucafina/Sucafinav1/product/imports/planner-atomic.ts",
+        "modules/sucafina/Sucafinav1/product/imports/source-fences.ts",
+        "apps/cli/src/sucafina-product/import-services.ts"
+      ],
+      "evidence": "Código de replay e gravação conjunta; native import/link e reader canônico continuam pendentes.",
+      "conclusion": "Sem novo BUG; F03/F04/F12 não foram considerados resolvidos."
+    },
+    {
+      "contract": "C05",
+      "claim": "Conteúdo preservado, com autorização atual de leitura",
+      "paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "apps/cli/src/sucafina-product/review-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts"
+      ],
+      "evidence": "Montagem conferida em host-context:262–266. Wrapper aplicado após a factory continua alcançando o mesmo objeto; hipótese de desconexão refutada.",
+      "conclusion": "Sem BUG distinto de F07; não fechar destinatário/autoridade/reuso."
+    },
+    {
+      "contract": "C06",
+      "claim": "Validade material separada da versão; auditoria preservada",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts"
+      ],
+      "evidence": "Leitura da transação refutou o suposto fence Planner ausente no fluxo Dashboard. Não equivale a prova de todos os cenários.",
+      "conclusion": "Sem BUG adicional; confirmação/reuso continuam nas pendências declaradas."
+    },
+    {
+      "contract": "C07",
+      "claim": "Admissão nativa, pinning e resultado factual",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/routines/schedule-native.ts",
+        "modules/sucafina/Sucafinav1/product/routines/schedule.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+      ],
+      "evidence": "CI05 usa doubles de ScheduleHost/BusinessPorts.schedules ao redor do adapter real; não demonstra Relay/workflow montado.",
+      "conclusion": "Limite conhecido, sem novo BUG; F11 e AM06 permanecem."
+    },
+    {
+      "contract": "C08",
+      "claim": "BusinessPorts explícitas; consumidor deve acompanhar o produtor",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+      ],
+      "evidence": "O delta R03 atualiza a observação de stale, mas o wrapper concreto perde o quarto argumento.",
+      "conclusion": "CR-C11-001 afeta esta fronteira de composição; sem segundo finding duplicado."
+    },
+    {
+      "contract": "C09",
+      "claim": "Caso persistido, participantes, referências e ledgers",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+      ],
+      "evidence": "Leitura de criação/retorno/recheck. As sete fixtures sem verificador estão entre os 14 diagnósticos existentes.",
+      "conclusion": "Sem BUG adicional; F05 não foi recontado."
+    },
+    {
+      "contract": "C10",
+      "claim": "Ausência não vira zero; cobertura pendente não vira completa",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts"
+      ],
+      "evidence": "Inspeção de ref, estado, fonte e condicionamento. Rate identity de CI05 não qualifica toda a cadeia C10.",
+      "conclusion": "Sem BUG adicional; F05/F06/F10 e a união WP13 continuam pendentes."
+    },
+    {
+      "contract": "C11",
+      "claim": "Resultado tardio vira stale recuperável, com output original",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+        "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+        "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts"
+      ],
+      "evidence": "Wrapper:183 descarta observation; run-store:232 recusa ready sem observation. CI03 usa o store direto, sem esse wrapper.",
+      "conclusion": "BUG P2 CR-C11-001. Esta rota requer correção e recheck antes de aceite."
+    },
+    {
+      "contract": "C12",
+      "claim": "Comando/recibo idempotentes, confirmação e recuperação após efeito",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+      ],
+      "evidence": "A falta de fence completo do caso pós-recibo está em F08. H25 falhou na fonte; não foi reproduzido em C.",
+      "conclusion": "Não duplicar F08 nem substituir a variante inteira removendo reservas. Sem novo BUG confirmado."
+    },
+    {
+      "contract": "C13",
+      "claim": "Memória derivada com ACL atual, source incarnation e egress autorizado",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "apps/cli/src/sucafina-product/business-services.ts"
+      ],
+      "evidence": "Inspeção dos leitores e montagem. Não demonstra restart/scanner/UI nativos.",
+      "conclusion": "Sem novo BUG; F09/AM05 continuam abertos."
+    },
+    {
+      "contract": "C14",
+      "claim": "Candidatos/confirmados e identidade dos digests de documentos",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+        "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts"
+      ],
+      "evidence": "A aparente ausência de currentRef no resolver isolado é resolvida pelo wrapper real; não virou falso finding.",
+      "conclusion": "Sem BUG adicional; import/link/dossiê e F04/F12 mantidos."
+    },
+    {
+      "contract": "C15",
+      "claim": "Perfil/skill observados, fonte pinada e contribuição consumida",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "apps/cli/src/sucafina-product/native-host.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/native-skill-proof.ts"
+      ],
+      "evidence": "Helper native-skill-proof não usado pelo inline, isoladamente, não prova falha. Não demonstrada violação adicional de autoridade/conteúdo.",
+      "conclusion": "Sem BUG confirmado; F11 continua. Catálogo e testes não fecham 5 perfis/18 skills consumidas."
+    },
+    {
+      "contract": "C16",
+      "claim": "Grant, lease, identidade privada e paridade no dispatch",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+      ],
+      "evidence": "Guards/refusals lidos, incluindo routine-result e fechamento do transporte antes do último guard.",
+      "conclusion": "Proteções presentes no código; AM02/AM03 e 39 rotas reais não qualificados por leitura."
+    },
+    {
+      "contract": "C17",
+      "claim": "Atlas/scanner reais, transação durável e continuidade da fonte",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "evidence": "Factories e leitores canônicos identificados. A leitura não comprova pacote gerado, execução, restart nem todos os consumidores.",
+      "conclusion": "Sem BUG adicional; oito variantes e ambos os cenários de F09 precisam ser preservados."
+    }
+  ],
+  "code_source_index": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "blob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "b3595989d0c08159c96484d96bd40a149a9721e6",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/planner/port.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/planner-projected.ts",
+      "blob": "6e61322d2518a5dedcc0dc78c39ee53fbc8c7fac",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/analytics/planner-projected.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+      "blob": "2f1b6f341817cbe618fe4751e2373957e34d2203",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/dashboard/commands.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/apply.ts",
+      "blob": "55adb72acb9f79a701cd8b75122861d302547de6",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/imports/apply.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-atomic.ts",
+      "blob": "4c51b8014628ab510f14a86134d4f265379729b1",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/imports/dashboard-atomic.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/planner-atomic.ts",
+      "blob": "f7577ce96cc2ab90fa494ef01fa8581b4cab2140",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/imports/planner-atomic.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/source-fences.ts",
+      "blob": "72555489670937db1a8af51c20d747275ea73751",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/imports/source-fences.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "blob": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/import-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "blob": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/extended-business-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "blob": "e795aa2e8667a0da134a00ce6012fe1f7f1dc712",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/review-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "blob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/review-history.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "blob": "2bd1fbd753e38f38ef58e4d71f364972ac22703e",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/review-read-integrity.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "blob": "9d38a30265e6efc2c9667371087a87bcce8e682f",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/runtime/local-store.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule-native.ts",
+      "blob": "0711a5d689e303f7cbca97b46d10a10aab4c2b8e",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/routines/schedule-native.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule.ts",
+      "blob": "c2f76fb6ebf2f05b8b89a08561bfac14cc52ad66",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/routines/schedule.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "blob": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "299979047340dd76d7cc2db667b826da675a1e2e",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+      "blob": "8d86bc416c711169fdc678635cc5eed12481fdea",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/decisions/comparison.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+      "blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/ai/analysis-host.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "blob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "blob": "6b655187d4444cff5b8966e868ba163191adfc42",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+      "blob": "a1413fd5224f373d704bbdfca7a489a904875d00",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "blob": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/native-host.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-skill-proof.ts",
+      "blob": "585cb79f0e458fdad72165fe4299d133064a6bbc",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/apps/cli/src/sucafina-product/native-skill-proof.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "blob": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "blob": "6ba1b02eee73d44133c78599284f9772b26007b1",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts"
+    }
+  ],
+  "evidence": {
+    "execution_W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "execution_W_tree": "64d26157c0044018712074e55a4a56f36db15d5f",
+    "focused_totals": {
+      "run_ids": [
+        43618683440,
+        43619530864,
+        43619906853
+      ],
+      "passed": 130,
+      "failed": 0,
+      "assertions": 1457,
+      "files": 12,
+      "historical_runs_included": false,
+      "typecheck_diagnostics_counted_as_tests": false
+    },
+    "runs": [
+      {
+        "run_id": 43618683440,
+        "job_id": 132519270810,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618683440",
+        "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618683440/job/132519270810",
+        "primary_metadata_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43618683440",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:00:21Z",
+        "updated_at": "2026-11-14T17:02:04Z",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "W_tree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "5a658cfcceeb618b5167315cc1dbc161a8c9516e",
+        "S_tree": "4550ff99bb61e2e34af5ec4146267f7f9bbb105c",
+        "api_head_sha": "5a658cfcceeb618b5167315cc1dbc161a8c9516e",
+        "snapshot_equality": {
+          "parents": [
+            "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+          ],
+          "changed_root_entries": [
+            ".ci-run.json"
+          ],
+          "all_other_root_entries_equal": true,
+          "request_blob": "494a260f7a4687146f090650dbba88453f0cf5f3",
+          "envelope_blob": null,
+          "method": "Git commit parent and root tree comparison: each equal subtree SHA preserves its recursive blobs. Independently checked by evidence sub-review via GitHub MCP."
+        },
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp12/analysis.test.ts",
+            "./Sucafinav1/test/product/wp12/run-store.test.ts",
+            "./Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "check_envelope": null,
+        "normalized_request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp12/analysis.test.ts",
+            "./Sucafinav1/test/product/wp12/run-store.test.ts",
+            "./Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "normalized_request_sha256": "1bf35f678fdee863a896746b27098dcc0ad03e5f24470db2bed67cc1d9e918d1",
+        "selected_files": [
+          "Sucafinav1/test/product/wp12/analysis.test.ts",
+          "Sucafinav1/test/product/wp12/run-store.test.ts",
+          "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts"
+        ],
+        "observed_files": [
+          "Sucafinav1/test/product/wp12/analysis.test.ts",
+          "Sucafinav1/test/product/wp12/run-store.test.ts",
+          "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts"
+        ],
+        "passed": 66,
+        "failed": 0,
+        "assertions": 795,
+        "summary": "Ran 66 tests across 3 files. [4.06s]",
+        "commands": null,
+        "diagnostics": null,
+        "omni_control": "omni positive control [2d0a4d2aa1d57ac454058479859aa17a]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "physical_browser_proofs": [],
+        "artifacts_metadata": {
+          "artifacts": []
+        },
+        "artifact_zip_inspected": false,
+        "remote_log_sha256": "7963eae33e765ec903ed51bf06a5acb1a66b23970dcdca8314fef530967a4c40",
+        "remote_log_bytes": 77857,
+        "root_reviewer_reopened_full_job_log": true,
+        "verification": "Compared receipt with primary run/job/log/request/snapshot metadata; log SHA-256 and browser proof objects independently recomputed/compared by evidence sub-review. No run was dispatched by this review.",
+        "limits": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D."
+      },
+      {
+        "run_id": 43619530864,
+        "job_id": 132521818078,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619530864",
+        "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619530864/job/132521818078",
+        "primary_metadata_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43619530864",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:09:12Z",
+        "updated_at": "2026-11-14T17:12:36Z",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "W_tree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "b31d8df5011a7e8307e80d79366253c16620c585",
+        "S_tree": "e8022862f9a9ace556e03c4e8e09df939971c16e",
+        "api_head_sha": "b31d8df5011a7e8307e80d79366253c16620c585",
+        "snapshot_equality": {
+          "parents": [
+            "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+          ],
+          "changed_root_entries": [
+            ".ci-run.json"
+          ],
+          "all_other_root_entries_equal": true,
+          "request_blob": "c7605cf227d4078f880acff2e3726e8175a3869a",
+          "envelope_blob": null,
+          "method": "Git commit parent and root tree comparison: each equal subtree SHA preserves its recursive blobs. Independently checked by evidence sub-review via GitHub MCP."
+        },
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+            "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+            "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+            "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+            "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "check_envelope": null,
+        "normalized_request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+            "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+            "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+            "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+            "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "normalized_request_sha256": "f89a393edaa83ae6be49f1e9aba4d4ba3b4c06407b70e2310b339c53db627015",
+        "selected_files": [
+          "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+          "Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+        ],
+        "observed_files": [
+          "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+          "Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+        ],
+        "passed": 30,
+        "failed": 0,
+        "assertions": 513,
+        "summary": "Ran 30 tests across 7 files. [113.71s]",
+        "commands": null,
+        "diagnostics": null,
+        "omni_control": "omni positive control [dacb86acc99ae9b4436dbb6072b22b2e]: pass (declared: 6 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts, Sucafinav1/test/product/wp02/workbench-recovery.test.ts); 6 omni spawn(s), 0 delegated.",
+        "physical_browser_proofs": [
+          {
+            "consumer": "host-draft-recovery",
+            "clientRuntime": {
+              "name": "bun",
+              "version": "1.3.14",
+              "pid": 4068
+            },
+            "driverRuntime": {
+              "name": "node",
+              "version": "24.22.2",
+              "pid": 4963
+            },
+            "playwrightVersion": "1.59.1",
+            "browserVersion": "157.0.8103.50",
+            "browserPid": 4978,
+            "transport": "playwright-unix-pipe-node-websocket",
+            "spawnBoundary": "AppProcess",
+            "browserStdioCount": 5,
+            "browserUsesPipe": true,
+            "browserPipeOwner": "node",
+            "bridge": {
+              "framing": "json-nul",
+              "acceptedClients": 1,
+              "framesToBrowser": 82,
+              "framesFromBrowser": 227,
+              "peakQueuedBytes": 3941,
+              "peakBufferedBytes": 3608,
+              "maxFrameBytes": 16777216,
+              "maxQueuedBytes": 33554432,
+              "directoryMode": 448,
+              "socketMode": 384
+            },
+            "lifecycle": {
+              "remainingContexts": 0,
+              "connected": false,
+              "nodeExitCode": 0,
+              "browserExitCode": 0,
+              "browserSignal": null,
+              "bridgeClosed": true,
+              "listenerClosed": true,
+              "socketClosed": true,
+              "pipeEnded": true,
+              "webSocketOpened": true,
+              "webSocketClosed": true,
+              "webSocketCloseCode": 1000,
+              "webSocketCloseWasClean": true,
+              "pendingFrameBytes": 0,
+              "queuedWriteBytes": 0,
+              "socketRemoved": true,
+              "directoryRemoved": true
+            }
+          },
+          {
+            "consumer": "host-egress-recovery",
+            "clientRuntime": {
+              "name": "bun",
+              "version": "1.3.14",
+              "pid": 4068
+            },
+            "driverRuntime": {
+              "name": "node",
+              "version": "24.22.2",
+              "pid": 5103
+            },
+            "playwrightVersion": "1.59.1",
+            "browserVersion": "157.0.8103.50",
+            "browserPid": 5118,
+            "transport": "playwright-unix-pipe-node-websocket",
+            "spawnBoundary": "AppProcess",
+            "browserStdioCount": 5,
+            "browserUsesPipe": true,
+            "browserPipeOwner": "node",
+            "bridge": {
+              "framing": "json-nul",
+              "acceptedClients": 1,
+              "framesToBrowser": 33,
+              "framesFromBrowser": 125,
+              "peakQueuedBytes": 3965,
+              "peakBufferedBytes": 3633,
+              "maxFrameBytes": 16777216,
+              "maxQueuedBytes": 33554432,
+              "directoryMode": 448,
+              "socketMode": 384
+            },
+            "lifecycle": {
+              "remainingContexts": 0,
+              "connected": false,
+              "nodeExitCode": 0,
+              "browserExitCode": 0,
+              "browserSignal": null,
+              "bridgeClosed": true,
+              "listenerClosed": true,
+              "socketClosed": true,
+              "pipeEnded": true,
+              "webSocketOpened": true,
+              "webSocketClosed": true,
+              "webSocketCloseCode": 1000,
+              "webSocketCloseWasClean": true,
+              "pendingFrameBytes": 0,
+              "queuedWriteBytes": 0,
+              "socketRemoved": true,
+              "directoryRemoved": true
+            }
+          },
+          {
+            "consumer": "host-source-recovery",
+            "clientRuntime": {
+              "name": "bun",
+              "version": "1.3.14",
+              "pid": 4068
+            },
+            "driverRuntime": {
+              "name": "node",
+              "version": "24.22.2",
+              "pid": 5240
+            },
+            "playwrightVersion": "1.59.1",
+            "browserVersion": "157.0.8103.50",
+            "browserPid": 5255,
+            "transport": "playwright-unix-pipe-node-websocket",
+            "spawnBoundary": "AppProcess",
+            "browserStdioCount": 5,
+            "browserUsesPipe": true,
+            "browserPipeOwner": "node",
+            "bridge": {
+              "framing": "json-nul",
+              "acceptedClients": 1,
+              "framesToBrowser": 97,
+              "framesFromBrowser": 305,
+              "peakQueuedBytes": 2459,
+              "peakBufferedBytes": 560,
+              "maxFrameBytes": 16777216,
+              "maxQueuedBytes": 33554432,
+              "directoryMode": 448,
+              "socketMode": 384
+            },
+            "lifecycle": {
+              "remainingContexts": 0,
+              "connected": false,
+              "nodeExitCode": 0,
+              "browserExitCode": 0,
+              "browserSignal": null,
+              "bridgeClosed": true,
+              "listenerClosed": true,
+              "socketClosed": true,
+              "pipeEnded": true,
+              "webSocketOpened": true,
+              "webSocketClosed": true,
+              "webSocketCloseCode": 1000,
+              "webSocketCloseWasClean": true,
+              "pendingFrameBytes": 0,
+              "queuedWriteBytes": 0,
+              "socketRemoved": true,
+              "directoryRemoved": true
+            }
+          },
+          {
+            "consumer": "host-access-recovery",
+            "clientRuntime": {
+              "name": "bun",
+              "version": "1.3.14",
+              "pid": 4068
+            },
+            "driverRuntime": {
+              "name": "node",
+              "version": "24.22.2",
+              "pid": 5480
+            },
+            "playwrightVersion": "1.59.1",
+            "browserVersion": "157.0.8103.50",
+            "browserPid": 5495,
+            "transport": "playwright-unix-pipe-node-websocket",
+            "spawnBoundary": "AppProcess",
+            "browserStdioCount": 5,
+            "browserUsesPipe": true,
+            "browserPipeOwner": "node",
+            "bridge": {
+              "framing": "json-nul",
+              "acceptedClients": 1,
+              "framesToBrowser": 53,
+              "framesFromBrowser": 149,
+              "peakQueuedBytes": 2458,
+              "peakBufferedBytes": 1589,
+              "maxFrameBytes": 16777216,
+              "maxQueuedBytes": 33554432,
+              "directoryMode": 448,
+              "socketMode": 384
+            },
+            "lifecycle": {
+              "remainingContexts": 0,
+              "connected": false,
+              "nodeExitCode": 0,
+              "browserExitCode": 0,
+              "browserSignal": null,
+              "bridgeClosed": true,
+              "listenerClosed": true,
+              "socketClosed": true,
+              "pipeEnded": true,
+              "webSocketOpened": true,
+              "webSocketClosed": true,
+              "webSocketCloseCode": 1000,
+              "webSocketCloseWasClean": true,
+              "pendingFrameBytes": 0,
+              "queuedWriteBytes": 0,
+              "socketRemoved": true,
+              "directoryRemoved": true
+            }
+          },
+          {
+            "consumer": "host-response-recovery",
+            "clientRuntime": {
+              "name": "bun",
+              "version": "1.3.14",
+              "pid": 4068
+            },
+            "driverRuntime": {
+              "name": "node",
+              "version": "24.22.2",
+              "pid": 5620
+            },
+            "playwrightVersion": "1.59.1",
+            "browserVersion": "157.0.8103.50",
+            "browserPid": 5635,
+            "transport": "playwright-unix-pipe-node-websocket",
+            "spawnBoundary": "AppProcess",
+            "browserStdioCount": 5,
+            "browserUsesPipe": true,
+            "browserPipeOwner": "node",
+            "bridge": {
+              "framing": "json-nul",
+              "acceptedClients": 1,
+              "framesToBrowser": 60,
+              "framesFromBrowser": 182,
+              "peakQueuedBytes": 2460,
+              "peakBufferedBytes": 1589,
+              "maxFrameBytes": 16777216,
+              "maxQueuedBytes": 33554432,
+              "directoryMode": 448,
+              "socketMode": 384
+            },
+            "lifecycle": {
+              "remainingContexts": 0,
+              "connected": false,
+              "nodeExitCode": 0,
+              "browserExitCode": 0,
+              "browserSignal": null,
+              "bridgeClosed": true,
+              "listenerClosed": true,
+              "socketClosed": true,
+              "pipeEnded": true,
+              "webSocketOpened": true,
+              "webSocketClosed": true,
+              "webSocketCloseCode": 1000,
+              "webSocketCloseWasClean": true,
+              "pendingFrameBytes": 0,
+              "queuedWriteBytes": 0,
+              "socketRemoved": true,
+              "directoryRemoved": true
+            }
+          },
+          {
+            "consumer": "wp01-shared-pool",
+            "clientRuntime": {
+              "name": "bun",
+              "version": "1.3.14",
+              "pid": 4068
+            },
+            "driverRuntime": {
+              "name": "node",
+              "version": "24.22.2",
+              "pid": 4089
+            },
+            "playwrightVersion": "1.59.1",
+            "browserVersion": "157.0.8103.50",
+            "browserPid": 4104,
+            "transport": "playwright-unix-pipe-node-websocket",
+            "spawnBoundary": "AppProcess",
+            "browserStdioCount": 5,
+            "browserUsesPipe": true,
+            "browserPipeOwner": "node",
+            "bridge": {
+              "framing": "json-nul",
+              "acceptedClients": 1,
+              "framesToBrowser": 541,
+              "framesFromBrowser": 1703,
+              "peakQueuedBytes": 17023,
+              "peakBufferedBytes": 13337,
+              "maxFrameBytes": 16777216,
+              "maxQueuedBytes": 33554432,
+              "directoryMode": 448,
+              "socketMode": 384
+            },
+            "lifecycle": {
+              "remainingContexts": 0,
+              "connected": false,
+              "nodeExitCode": 0,
+              "browserExitCode": 0,
+              "browserSignal": null,
+              "bridgeClosed": true,
+              "listenerClosed": true,
+              "socketClosed": true,
+              "pipeEnded": true,
+              "webSocketOpened": true,
+              "webSocketClosed": true,
+              "webSocketCloseCode": 1000,
+              "webSocketCloseWasClean": true,
+              "pendingFrameBytes": 0,
+              "queuedWriteBytes": 0,
+              "socketRemoved": true,
+              "directoryRemoved": true
+            }
+          }
+        ],
+        "artifacts_metadata": {
+          "artifacts": []
+        },
+        "artifact_zip_inspected": false,
+        "remote_log_sha256": "435493fa867cc91d758b6e90c434f8b461b59077f6af84b8ff709595d7c28eb0",
+        "remote_log_bytes": 105704,
+        "root_reviewer_reopened_full_job_log": true,
+        "verification": "Compared receipt with primary run/job/log/request/snapshot metadata; log SHA-256 and browser proof objects independently recomputed/compared by evidence sub-review. No run was dispatched by this review.",
+        "limits": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D."
+      },
+      {
+        "run_id": 43619906853,
+        "job_id": 132523011410,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619906853",
+        "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619906853/job/132523011410",
+        "primary_metadata_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43619906853",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:13:13Z",
+        "updated_at": "2026-11-14T17:14:52Z",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "W_tree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "094cba0f487059ecfd111eb30ea556fa6a91e5ef",
+        "S_tree": "01e675eb1ece014d9e4f7f23d618d58ff6bdce3b",
+        "api_head_sha": "094cba0f487059ecfd111eb30ea556fa6a91e5ef",
+        "snapshot_equality": {
+          "parents": [
+            "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+          ],
+          "changed_root_entries": [
+            ".ci-run.json"
+          ],
+          "all_other_root_entries_equal": true,
+          "request_blob": "01e7766fd6abe6647bce8650f9c9d3c1c318e5aa",
+          "envelope_blob": null,
+          "method": "Git commit parent and root tree comparison: each equal subtree SHA preserves its recursive blobs. Independently checked by evidence sub-review via GitHub MCP."
+        },
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+            "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "check_envelope": null,
+        "normalized_request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+            "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "normalized_request_sha256": "e4009a4c0143b328c715d5ad2d41a8b35b3a12f6270b87a76cb4b05d0e27aa36",
+        "selected_files": [
+          "Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+        ],
+        "observed_files": [
+          "Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+        ],
+        "passed": 34,
+        "failed": 0,
+        "assertions": 149,
+        "summary": "Ran 34 tests across 2 files. [281.00ms]",
+        "commands": null,
+        "diagnostics": null,
+        "omni_control": "omni positive control [a8aa59e56dffb2961a6829da91be6ba1]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "physical_browser_proofs": [],
+        "artifacts_metadata": {
+          "artifacts": []
+        },
+        "artifact_zip_inspected": false,
+        "remote_log_sha256": "0128db8585cad6078bb21ae2fc1afc57f393d00078b18cee83022b91e56c25e1",
+        "remote_log_bytes": 73950,
+        "root_reviewer_reopened_full_job_log": true,
+        "verification": "Compared receipt with primary run/job/log/request/snapshot metadata; log SHA-256 and browser proof objects independently recomputed/compared by evidence sub-review. No run was dispatched by this review.",
+        "limits": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D."
+      },
+      {
+        "run_id": 43618711524,
+        "job_id": 132519350118,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618711524",
+        "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618711524/job/132519350118",
+        "primary_metadata_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43618711524",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:00:37Z",
+        "updated_at": "2026-11-14T17:03:01Z",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "W_tree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "8bc10a569472662121586b07dee8098e52bfadde",
+        "S_tree": "0f8118fd8b00f11b0f6798c4054181a69807d7ac",
+        "api_head_sha": "8bc10a569472662121586b07dee8098e52bfadde",
+        "snapshot_equality": {
+          "parents": [
+            "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+          ],
+          "changed_root_entries": [
+            ".compose-resume-check.json"
+          ],
+          "all_other_root_entries_equal": true,
+          "request_blob": null,
+          "envelope_blob": "2503260da99665e02fb2ac17e76a74a80baec8d2",
+          "method": "Git commit parent and root tree comparison: each equal subtree SHA preserves its recursive blobs. Independently checked by evidence sub-review via GitHub MCP."
+        },
+        "request": null,
+        "check_envelope": {
+          "productSha": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+          "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+        },
+        "normalized_request": null,
+        "normalized_request_sha256": null,
+        "selected_files": null,
+        "observed_files": null,
+        "passed": null,
+        "failed": null,
+        "assertions": null,
+        "summary": null,
+        "commands": [
+          {
+            "cwd": "modules/sucafina",
+            "command": "bun typecheck",
+            "conclusion": "failure",
+            "diagnostics": 14
+          },
+          {
+            "cwd": "apps/cli",
+            "command": "bun typecheck",
+            "conclusion": "success"
+          },
+          {
+            "cwd": ".",
+            "command": "bun run check:spawn-imports",
+            "conclusion": "success"
+          },
+          {
+            "cwd": ".",
+            "command": "bun run check:guards --base origin/dev",
+            "conclusion": "success",
+            "rules": 78,
+            "changed_paths": 1432,
+            "gates": 0,
+            "warnings": 47,
+            "errors": 0
+          }
+        ],
+        "diagnostics": [
+          "product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+          "test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+          "test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+          "test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp08/confirmation-work-integration.test.ts(82,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp08/host-answer-reuse.test.ts(78,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp13/sensitivity-units-boundary.test.ts(158,127): error TS2322: Type 'PlannerSourceHost' is not assignable to type 'PlannerSourceHost & { projectForecastSource: SfPlannerSourceProjector; }'.",
+          "test/product/wp14/atlas-restart-reader.ts(54,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${s...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+        ],
+        "omni_control": null,
+        "physical_browser_proofs": [],
+        "artifacts_metadata": {
+          "artifacts": [
+            {
+              "id": 14123161341,
+              "name": "compose-resume-check-1",
+              "size_in_bytes": 3353,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14123161341",
+              "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14123161341/zip",
+              "expired": false,
+              "created_at": "2026-11-14T17:02:57Z",
+              "expires_at": "2026-11-28T17:02:56Z",
+              "updated_at": "2026-11-14T17:02:57Z",
+              "digest": "sha256:25c5bdffc6ddc23b78b53ed7454e894037b47589bb06a05f3361b30d5703664d",
+              "workflow_run": {
+                "id": 43618711524,
+                "repository_id": 1455724710,
+                "head_repository_id": 1455724710,
+                "head_branch": "compose-resume-check",
+                "head_sha": "8bc10a569472662121586b07dee8098e52bfadde"
+              }
+            }
+          ]
+        },
+        "artifact_zip_inspected": false,
+        "remote_log_sha256": "fee89f8684a410810ff9d59f3a30b96ee69b5d788b1dccbb7cc3583591a34c58",
+        "remote_log_bytes": 85737,
+        "root_reviewer_reopened_full_job_log": true,
+        "verification": "Compared receipt with primary run/job/log/request/snapshot metadata; log SHA-256 and browser proof objects independently recomputed/compared by evidence sub-review. No run was dispatched by this review.",
+        "limits": "Sucafina typecheck failed. CLI/spawn/guards success does not turn the combined check green. No source paths fixed solely to silence diagnostics."
+      }
+    ],
+    "later_normative_change": {
+      "commit": "d86d119c15d1149fd6f463e07acce836b197eb4e",
+      "tree": "a34d95ee5992bbb9099f073baf66422eded90934",
+      "path": "docs/guides/sucafina-workbench.md",
+      "qualification": "Not covered by guard on W; reviewed head is not qualified D/G7/G8. Known F14."
+    },
+    "check_workflow_authorization": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+      "line": 19,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md#L19",
+      "workflow_blob": "fe64056ed4736ac6974698de7ee1013c2d3e92c5",
+      "conclusion": "Operational authorization for minimal static-check workflow, not a change to immutable criteria or global qualification."
+    },
+    "historical_source_failures": [
+      {
+        "label": "H25",
+        "run_id": 43616586837,
+        "job_id": 132512863120,
+        "S": "c4e212a3970be85fc639007a31e156e9ef5883b7",
+        "passed": 42,
+        "failed": 1,
+        "assertions": 429,
+        "observed": "Expected HTTP409, got200",
+        "belongs_to_candidate": false,
+        "already_documented": "F08"
+      },
+      {
+        "label": "W26",
+        "run_id": 43615955284,
+        "job_id": 132510939072,
+        "S": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+        "passed": 2,
+        "failed": 1,
+        "assertions": 446,
+        "observed": "Timeout360000ms, empty catalog, inferenceExecuted=false, gnativeAccepted=false",
+        "belongs_to_candidate": false,
+        "already_documented": "F11"
+      }
+    ],
+    "existing_receipts": [
+      {
+        "name": "R05-validation.json",
+        "blob": "8726bc072b654476a345339f773cb5834e34a687",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/compose-resume/R05-validation.json"
+      },
+      {
+        "name": "FINDINGS.md",
+        "blob": "438594fa3923ae0b0399d537a8dae7229140631a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/compose-resume/FINDINGS.md"
+      },
+      {
+        "name": "HANDOFF.md",
+        "blob": "25e7836d38975da809fc0d6a7060f854e826fe01",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ad7fcdef7739e1bc471e42fac082452799de751b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/compose-resume/HANDOFF-S0.md"
+      }
+    ]
+  },
+  "findings": {
+    "BUG": [
+      {
+        "id": "CR-C11-001",
+        "severity": "P2",
+        "state": "OPEN",
+        "contract": "C11",
+        "composition_boundary": "C08",
+        "document": "FINDING-CR-C11-001.md",
+        "owner": "WP10 host wrapper/mount, coordinated with WP12 producer",
+        "reproduction": "Static discriminating call: wrapped.markStale(runRef,reason,call,validObservation), ready original run and permitted preflight; wrapper forwards 3 arguments; inner receives no observation and refuses ready transition with conflict/invalid-run-transition.",
+        "consequence": "Metadata-only ready-to-stale reconciliation cannot satisfy new protocol through installed wrapper; lifecycle can remain ready. No leak or financial reapplication demonstrated.",
+        "minimum_action": "Preserve pinned observation across wrapper and awaits/preflight; recheck installed consumer with post-commit stale, unchanged original output, concurrent mutations, cancellation and revocation; retain CAS/current ACL/refusals."
+      }
+    ],
+    "INFERENCE": [
+      {
+        "related_to": "CR-C11-001",
+        "independent_finding": false,
+        "statement": "Operational frequency and exact UI presentation of remaining ready lifecycle are not demonstrated; host output reads retain rechecks."
+      }
+    ],
+    "NEEDS_EVIDENCE": [
+      {
+        "related_to": "CR-C11-001",
+        "independent_finding": false,
+        "statement": "Discriminating proof through real createSfStaleAnalysisAccess wrapper/mount is required after owner delta."
+      }
+    ],
+    "existing_findings_preserved": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F09",
+      "F10",
+      "F11",
+      "F12",
+      "F13",
+      "F14",
+      "F15"
+    ],
+    "new_generic_pending_proof_findings": 0
+  },
+  "recheck": {
+    "candidate_specific": true,
+    "required_for_relevant_deltas": true,
+    "scope": [
+      "stale observation/wrapper/mount/lifecycle/CAS",
+      "authority and output reads",
+      "selected tests, request, fixtures, config and build inputs",
+      "normative guides and other material inputs"
+    ],
+    "documentation_approval_proves_implementation": false,
+    "does_not_replace_three_final_approvals": true
+  }
+}
