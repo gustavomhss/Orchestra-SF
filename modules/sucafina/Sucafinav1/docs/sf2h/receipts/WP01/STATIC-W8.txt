@@ -1,0 +1,693 @@
+WP01 — final static evidence for W8
+
+Run: 43537002262 (attempt 1)
+URL: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537002262
+Branch: astra-check-wp01
+Product commit: 61348f2279d301a5f9f8e28c562208ce3b8160ee
+Product tree: b48e6066ac4bedeb27933f38a5fb32445650e0aa
+Workflow status: completed / failure
+Candidate job: 132268312540 — checks
+Seed job: 132268312260 — seed-typecheck
+Seed commit: b0fa725b835149e222d48bd023b8899311abaefd
+Seed tree: 2e14a3943fc56d4c0076025b9300685d40facd49
+
+SOURCE LOG HASHES (complete decoded logs stored as LF text)
+candidate-job.log: sha256:466cafd7c5d7623b86c47aba90b875b161daf02f5df577450c0456b30fd5c4e1
+seed-job.log: sha256:f3ce9ab6efd06ba5100130a415af3c0b25e737a37499d0938af417c0623238af
+
+PRODUCT.JSON — printed by the hosted candidate job
+{
+  "schema": "sf2h.wp01.check.v1",
+  "productSha": "61348f2279d301a5f9f8e28c562208ce3b8160ee",
+  "productTree": "b48e6066ac4bedeb27933f38a5fb32445650e0aa",
+  "guardTargetRef": "origin/dev",
+  "guardTargetSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "guardMergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "runId": "43537002262",
+  "runAttempt": "1"
+}
+
+OUTCOMES.JSON — printed by the hosted candidate job
+{
+  "productSha": "61348f2279d301a5f9f8e28c562208ce3b8160ee",
+  "typecheck": "failure",
+  "typecheckExitCode": 2,
+  "typecheckLogExitCode": 0,
+  "guards": "success"
+}
+
+SEED EXIT VALUES — transcribed from the hosted seed step environment
+{
+  "typecheck": "failure",
+  "typecheckExitCode": 2,
+  "typecheckLogExitCode": 0,
+  "source": "Printed environment for Record baseline outcome; the seed outcomes JSON itself is not echoed in the decoded log."
+}
+
+COMMANDS AND RESULTS
+Candidate: working-directory modules/sucafina; bun typecheck; exit 2; log writer exit 0; FAILURE.
+Seed: working-directory modules/sucafina; bun typecheck; exit 2; log writer exit 0; FAILURE.
+Guards: repository root; bun run check:guards --base origin/dev; SUCCESS.
+Both jobs and the workflow are failures because typecheck failed. Guard success and comparison with baseline do not constitute a passing CI gate.
+
+EXACT DIAGNOSTIC COMPARISON
+Candidate: 132 diagnostics across 43 files. Seed: 155 diagnostics across 50 files.
+Strict multiset key: path + TS code + complete multiline message. Multiplicity and continuation indentation preserved; source line/column retained as evidence but excluded from this equality key.
+130 exact common; 2 strict added; 25 strict removed.
+There are 2 paired message variants at the same path, line, column and TS code. They remain unequal in the strict count; their full messages and independently fetched source blob identities follow below. No readonly field, property order, inferred property or reason is stripped to obtain equality.
+Location/code multiset: 132 common; 0 added; 23 removed. This secondary comparison does not replace strict message equality.
+No candidate diagnostic occurs in any of the 49 paths changed from the immutable seed; no new owned diagnostic, including decision-mutations.test.ts and the shared browser helper/finalizer.
+product/interface/import-http.ts(54,249) TS2345 remains an exact inherited match in explicitly excluded WP06 ownership.
+W7→W8 GitHub compare: 1 file: test/product/wp01/decision-mutations.test.ts. Application product source remains unchanged from W7.
+Candidate strict comparison with W7: {
+  "current": 132,
+  "previous": 132,
+  "common": 132,
+  "added": 0,
+  "removed": 0
+}
+Immutable seed strict comparison with its W7 execution: {
+  "current": 155,
+  "previous": 155,
+  "common": 155,
+  "added": 0,
+  "removed": 0
+}
+
+RECOVERABLE OBSERVATION
+The secondary location/code comparison and the complete strict comparison above are both preserved. Any paired message variants below remain unequal in the strict count even when independently fetched source blobs are identical. Their complete messages and source hashes allow audit without assuming semantic equality or asserting a compiler cause. The static gate remains failed and no foreign source was edited.
+
+GUARDS
+guards: 78 rules, 582 changed paths, 0 gate and 23 warn findings, 0 errors.
+Target: origin/dev at a1d37698a7bb097c1578f827eba6a19b9917ef07
+Merge base: 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf
+Warning comparison with W7 (path/rule/message multiset; line numbers excluded): {
+  "current": 23,
+  "previous": 23,
+  "common": 23,
+  "added": 0,
+  "removed": 0
+}
+Rules: {
+  "dep-new-added": 10,
+  "test-timeout-raised": 12,
+  "ts-double-cast": 1
+}
+The test-timeout findings concern the owned browser fixtures. Dependency and analysis-acceptance double-cast findings are inherited outside this fixture change. Existing fixture deadlines and their observed timeout diagnoses remain recorded in prior evidence. W8 changes only decision-mutations.test.ts to separate favicon traffic and match the exact fetch before revocation; it does not change application product source or assertion/navigation/test-case budgets. The exact warning delta and complete warning lines are retained in this report. No guard suppression, invented approval or passing typecheck claim was added.
+
+OMNI / NATIVE EXECUTION
+No omni nonce or positive-control evidence appears in these static logs. This report claims static diagnostics and guard outcomes only; browser/native execution belongs to the separate focused test run.
+
+ARTIFACT REFERENCES
+Artifact 14090975092: astra-wp01-seed-typecheck-1; 7713 bytes; sha256:5f200fbea68077a822f838fdd549507fcf203a7b7809a7d920960488079f1dd4; expires 2026-11-28T00:53:17Z; MCP file file_00000000a128820eaf3cbf114fbf9c2d; name astra-wp01-seed-typecheck-1-W8-43537002262.zip
+Artifact 14089582181: astra-wp01-check-1; 466308 bytes; sha256:e3f2607d3e9df10c6897daf4c21d9bb1ca2ba115c53f5d1fbc209f79d08f3641; expires 2026-11-28T00:53:58Z; MCP file file_0000000051fc820e88f0439b6db5a145; name astra-wp01-check-1-W8-43537002262.zip
+ZIPs were downloaded through GitHub MCP as provider file references. Analysis uses the complete decoded job logs; no claim of local ZIP extraction. Temporary signed URLs and setup chatter are omitted.
+
+COMPLETE CANDIDATE DIAGNOSTICS
+
+[1/132] ../../../apps/cli/src/sucafina-product/business-services.ts(85,30): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+
+[2/132] ../../../apps/cli/src/sucafina-product/business-services.ts(85,40): error TS7006: Parameter 'evidence' implicitly has an 'any' type.
+
+[3/132] ../../../apps/cli/src/sucafina-product/business-services.ts(188,20): error TS2322: Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: "ok"; value: { evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.
+
+[4/132] ../../../apps/cli/src/sucafina-product/host-context.ts(158,128): error TS2345: Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.
+  Type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is missing the following properties from type '{ replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }': imports, selectedPreviewRef
+
+[5/132] ../../../apps/cli/src/sucafina-product/host-context.ts(185,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type '{ status: "ok"; value: { runRef: string; }; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[6/132] ../../../apps/cli/src/sucafina-product/host-context.ts(217,138): error TS2322: Type 'SfStateResult<({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: "ok"; value: { runRef: string; }; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[7/132] ../../../apps/cli/src/sucafina-product/host-context.ts(273,138): error TS2322: Type 'SfStateResult<({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: "ok"; value: SfNativeRunRecord; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[8/132] ../../../apps/cli/src/sucafina-product/host-context.ts(396,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | ... 6 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]>>'.
+  Type 'Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }>' is not assignable to type 'Promise<PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]>>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }' is not assignable to type 'PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]>'.
+      Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type 'PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]>'.
+        Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type '{ status: "ok"; value: readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]; }'.
+          Types of property 'status' are incompatible.
+            Type '"ok" | "preview"' is not assignable to type '"ok"'.
+              Type '"preview"' is not assignable to type '"ok"'.
+
+[9/132] ../../../apps/cli/src/sucafina-product/host-context.ts(412,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.
+  Type 'Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...;...' is not assignable to type 'Promise<PortResult<SfNativeRunRecord>>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ....' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+      Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+        Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: "ok"; value: SfNativeRunRecord; }'.
+          Types of property 'status' are incompatible.
+            Type '"ok" | "preview"' is not assignable to type '"ok"'.
+              Type '"preview"' is not assignable to type '"ok"'.
+
+[10/132] ../../../apps/cli/src/sucafina-product/host-context.ts(551,5): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.
+  Types of parameters 'context' and 'context' are incompatible.
+    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.
+      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.
+        Types of property 'kind' are incompatible.
+          Type '"native"' is not assignable to type '"ui"'.
+
+[11/132] ../../../apps/cli/src/sucafina-product/import-services.ts(85,101): error TS2304: Cannot find name 'Period'.
+
+[12/132] ../../../apps/cli/src/sucafina-product/import-services.ts(115,21): error TS2304: Cannot find name 'isSfPeriod'.
+
+[13/132] product/collaboration/confirmation.ts(79,34): error TS2322: Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type 'PortResult<ConfirmationRecord>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type '{ status: "ok"; value: ConfirmationRecord; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[14/132] product/collaboration/confirmation.ts(91,34): error TS2322: Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type '{ status: "ok"; value: ConfirmationValidityProjection; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[15/132] product/collaboration/hot-topic-host.ts(16,9): error TS2322: Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.
+  Type 'Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: "ok"; value: T; } | { status: "conflict" | ... 5 more ... | "unavailable"; reason: string; }>' is not assignable to type 'Promise<PortResult<T>>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: "ok"; value: T; } | { status: "conflict" | ... 6 more ... | "unavailable"; reason: string; }' is not assignable to type 'PortResult<T>'.
+      Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type 'PortResult<T>'.
+        Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type '{ status: "ok"; value: T; }'.
+          Types of property 'status' are incompatible.
+            Type '"ok" | "preview"' is not assignable to type '"ok"'.
+              Type '"preview"' is not assignable to type '"ok"'.
+
+[16/132] product/collaboration/recipient-actions.ts(50,32): error TS2322: Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type 'PortResult<RecipientThread>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type '{ status: "ok"; value: RecipientThread; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[17/132] product/collaboration/relations.ts(70,66): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: "ok"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[18/132] product/collaboration/relations.ts(116,35): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: "ok"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[19/132] product/collaboration/relations.ts(127,35): error TS2322: Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type '{ status: "ok"; value: { relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[20/132] product/collaboration/threads.ts(57,34): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[21/132] product/collaboration/threads.ts(68,33): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[22/132] product/collaboration/threads.ts(86,31): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[23/132] product/collaboration/threads.ts(101,32): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.
+  Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.
+    Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+      Types of property 'status' are incompatible.
+        Type '"ok" | "preview"' is not assignable to type '"ok"'.
+          Type '"preview"' is not assignable to type '"ok"'.
+
+[24/132] product/contracts/host-context.ts(14,45): error TS2307: Cannot find module '../routines/factory.ts' or its corresponding type declarations.
+
+[25/132] product/dashboard/confirmation.ts(66,474): error TS7006: Parameter 'field' implicitly has an 'any' type.
+
+[26/132] product/dashboard/confirmation.ts(104,41): error TS2345: Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.
+  Type 'Promise<{ commit: false; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: "same"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.
+    Type '{ commit: false; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: "same"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.
+      Type '{ commit: false; value: { state: "same"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.
+        The types of 'value.state' are incompatible between these types.
+          Type '"same"' is not assignable to type '"replaced" | "unavailable"'.
+
+[27/132] product/dashboard/confirmation.ts(118,16): error TS2339: Property 'state' does not exist on type '{}'.
+
+[28/132] product/dashboard/confirmation.ts(118,52): error TS2339: Property 'index' does not exist on type '{}'.
+
+[29/132] product/dashboard/confirmation.ts(119,16): error TS2339: Property 'state' does not exist on type '{}'.
+
+[30/132] product/dashboard/confirmation.ts(120,77): error TS2339: Property 'fingerprints' does not exist on type '{}'.
+
+[31/132] product/dashboard/confirmation.ts(121,163): error TS2339: Property 'fingerprints' does not exist on type '{}'.
+
+[32/132] product/dashboard/confirmation.ts(123,61): error TS2339: Property 'fingerprints' does not exist on type '{}'.
+
+[33/132] product/dashboard/confirmation.ts(128,126): error TS2339: Property 'physicalIncarnations' does not exist on type '{}'.
+
+[34/132] product/decision-memory/source-access.ts(216,35): error TS2349: This expression is not callable.
+  Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures.
+
+[35/132] product/decision-memory/source-access.ts(222,33): error TS2349: This expression is not callable.
+  Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures.
+
+[36/132] product/decisions/prepared-apply.ts(46,5): error TS2322: Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: "ok"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.
+  Type 'Promise<{ reason?: undefined; status: "ok"; value: {}; } | { value?: undefined; status: {}; reason: string; }>' is not assignable to type 'Promise<PortResult<CommandReceipt>>'.
+    Type '{ reason?: undefined; status: "ok"; value: {}; } | { value?: undefined; status: {}; reason: string; }' is not assignable to type 'PortResult<CommandReceipt>'.
+      Type '{ reason?: undefined; status: "ok"; value: {}; }' is not assignable to type 'PortResult<CommandReceipt>'.
+        Type '{ reason?: undefined; status: "ok"; value: {}; }' is not assignable to type '{ status: "ok"; value: CommandReceipt; }'.
+          Types of property 'value' are incompatible.
+            Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.
+
+[37/132] product/decisions/prepared-apply.ts(71,446): error TS2345: Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: "unavailable"; existing?: undefined; } | null; }>'.
+  Type 'Promise<{ commit: false; value: null; } | { commit: false; value: { failure: "unavailable"; existing?: undefined; }; } | { commit: false; value: { existing: CommandReceipt; failure?: undefined; }; } | { ...; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { failure: "unavailable"; existing?: undefined; } | null; }>'.
+    Type '{ commit: false; value: null; } | { commit: false; value: { failure: "unavailable"; existing?: undefined; }; } | { commit: false; value: { existing: CommandReceipt; failure?: undefined; }; } | { ...; } | { ...; }' is not assignable to type '{ commit: boolean; value: { failure: "unavailable"; existing?: undefined; } | null; }'.
+      Type '{ commit: false; value: { existing: CommandReceipt; failure?: undefined; }; }' is not assignable to type '{ commit: boolean; value: { failure: "unavailable"; existing?: undefined; } | null; }'.
+        The types of 'value.failure' are incompatible between these types.
+          Type 'undefined' is not assignable to type '"unavailable"'.
+
+[38/132] product/decisions/prepared-apply.ts(95,75): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+
+[39/132] product/decisions/prepared-apply.ts(97,185): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.
+
+[40/132] product/decisions/prepared-apply.ts(100,74): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+
+[41/132] product/decisions/prepared-apply.ts(101,81): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+
+[42/132] product/decisions/prepared-apply.ts(101,112): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+
+[43/132] product/decisions/prepared-apply.ts(102,183): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.
+
+[44/132] product/decisions/proposals.ts(92,26): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[45/132] product/documents/capabilities.ts(71,172): error TS2339: Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.
+  Property 'reason' does not exist on type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: SfDocumentAssetCatalogEntry | undefined; }'.
+
+[46/132] product/host-binding/business-context.ts(170,71): error TS2353: Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.
+
+[47/132] product/host-binding/business-context.ts(170,153): error TS7006: Parameter 'refs' implicitly has an 'any' type.
+
+[48/132] product/host-binding/business-context.ts(170,159): error TS7006: Parameter 'call' implicitly has an 'any' type.
+
+[49/132] product/host-binding/business-context.ts(212,5): error TS2322: Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.
+  Type 'Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type 'Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]>'.
+    Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]' is not assignable to type 'readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]'.
+      Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }' is not assignable to type '{ envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }'.
+        Types of property 'entry' are incompatible.
+          Type 'MemoryEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'.
+            Type 'LogbookEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'.
+
+[50/132] product/imports/dashboard-preview.ts(38,75): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.
+  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.
+    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.
+      Type '{ commit: false; value: { format: "backup" | DashboardImportFormat; result: { status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.
+        The types of 'value.result' are incompatible between these types.
+          Type '{ status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ warnings?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.
+            Type '{ status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ warnings?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.
+              Types of property 'warnings' are incompatible.
+                Type 'string[]' is not assignable to type 'undefined'.
+
+[51/132] product/imports/dashboard-preview.ts(60,17): error TS2339: Property 'result' does not exist on type '{}'.
+
+[52/132] product/imports/dashboard-preview.ts(60,71): error TS2339: Property 'result' does not exist on type '{}'.
+
+[53/132] product/imports/dashboard-preview.ts(60,119): error TS2339: Property 'result' does not exist on type '{}'.
+
+[54/132] product/imports/dashboard-preview.ts(62,29): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+
+[55/132] product/imports/dashboard-preview.ts(74,251): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[56/132] product/imports/dashboard-preview.ts(74,306): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[57/132] product/imports/dashboard-preview.ts(74,353): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[58/132] product/imports/dashboard-preview.ts(74,457): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[59/132] product/imports/dashboard-preview.ts(75,297): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.
+
+[60/132] product/imports/dashboard-preview.ts(75,445): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.
+
+[61/132] product/imports/dashboard-preview.ts(75,469): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.
+
+[62/132] product/imports/dashboard-preview.ts(75,545): error TS2339: Property 'format' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[63/132] product/imports/dashboard-preview.ts(75,573): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[64/132] product/imports/dashboard-preview.ts(75,592): error TS2322: Type '{}' is not assignable to type 'string'.
+
+[65/132] product/imports/dashboard-preview.ts(75,674): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[66/132] product/imports/dashboard-preview.ts(75,848): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+
+[67/132] product/interface/import-http.ts(54,249): error TS2345: Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: "dashboard" | "planner"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.
+  Types of property 'surface' are incompatible.
+    Type 'string' is not assignable to type '"dashboard" | "planner"'.
+
+[68/132] product/planner/headcount.ts(27,73): error TS2339: Property 'domain' does not exist on type '{ state: HeadcountState; }'.
+
+[69/132] product/planner/headcount.ts(39,66): error TS2339: Property 'domain' does not exist on type '{ state: HeadcountState; }'.
+
+[70/132] product/planner/monthly-host.ts(58,598): error TS7006: Parameter 'cell' implicitly has an 'any' type.
+
+[71/132] product/planner/persistence.ts(33,19): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[72/132] product/planner/persistence.ts(38,22): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[73/132] product/planner/prepared.ts(54,5): error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.
+  Type '{ commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.
+    Type '{ commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.
+      Types of property 'value' are incompatible.
+        Type '{ reason?: undefined; status: string; }' is not assignable to type 'JsonValue'.
+          Type '{ reason?: undefined; status: string; }' is not assignable to type '{ readonly [key: string]: JsonValue; }'.
+            Property 'reason' is incompatible with index signature.
+              Type 'undefined' is not assignable to type 'JsonValue'.
+
+[74/132] product/planner/scenario-comparison-port.ts(40,18): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[75/132] product/portfolio/catalog.ts(13,20): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[76/132] product/portfolio/handoff.ts(41,18): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[77/132] product/portfolio/handoff.ts(78,18): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[78/132] product/portfolio/planner-sensitivity.ts(80,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+  Property 'costCoverage' does not exist on type 'PortfolioResult'.
+
+[79/132] product/portfolio/planner-sensitivity.ts(80,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+  Property 'costCoverage' does not exist on type 'PortfolioResult'.
+
+[80/132] product/portfolio/port.ts(36,20): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[81/132] product/portfolio/sensitivity-store.ts(25,19): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+
+[82/132] product/portfolio/verification.ts(119,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+  Property 'costCoverage' does not exist on type 'PortfolioResult'.
+
+[83/132] product/portfolio/verification.ts(119,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+  Property 'costCoverage' does not exist on type 'PortfolioResult'.
+
+[84/132] product/procurement/prepared.ts(69,5): error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.
+  Type '{ commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.
+    Type '{ commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.
+      Types of property 'value' are incompatible.
+        Type '{ reason?: undefined; status: string; }' is not assignable to type 'JsonValue'.
+          Type '{ reason?: undefined; status: string; }' is not assignable to type '{ readonly [key: string]: JsonValue; }'.
+            Property 'reason' is incompatible with index signature.
+              Type 'undefined' is not assignable to type 'JsonValue'.
+
+[85/132] test/product/wp03/parity-matrix.test.ts(106,68): error TS2339: Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.
+  Property 'recordId' does not exist on type '{ documentId: string; incarnation: string; revision: number; blobDigest: Digest; segment: { start: number; end: number; unit: "utf16"; textDigest: Digest; }; ragSourceId?: string | undefined; ragRevisionId?: string | undefined; ragSourceHash?: { ...; } | undefined; fieldCandidateId?: string | undefined; confirmation...'.
+
+[86/132] test/product/wp04/prepared-production.test.ts(208,41): error TS2554: Expected 0 arguments, but got 1.
+
+[87/132] test/product/wp04/prepared-production.test.ts(220,107): error TS2554: Expected 0 arguments, but got 1.
+
+[88/132] test/product/wp06/documents/runtime-e2e.test.ts(25,40): error TS2307: Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.
+
+[89/132] test/product/wp06/documents/runtime-e2e.test.ts(101,227): error TS7006: Parameter '_' implicitly has an 'any' type.
+
+[90/132] test/product/wp06/documents/runtime-e2e.test.ts(101,230): error TS7006: Parameter 'call' implicitly has an 'any' type.
+
+[91/132] test/product/wp06/documents/runtime-e2e.test.ts(114,229): error TS7006: Parameter '_' implicitly has an 'any' type.
+
+[92/132] test/product/wp06/documents/runtime-e2e.test.ts(114,232): error TS7006: Parameter 'call' implicitly has an 'any' type.
+
+[93/132] test/product/wp06/documents/runtime-e2e.test.ts(253,225): error TS7006: Parameter '_' implicitly has an 'any' type.
+
+[94/132] test/product/wp06/documents/runtime-e2e.test.ts(253,228): error TS7006: Parameter 'call' implicitly has an 'any' type.
+
+[95/132] test/product/wp06/documents/runtime-e2e.test.ts(263,227): error TS7006: Parameter '_' implicitly has an 'any' type.
+
+[96/132] test/product/wp06/documents/runtime-e2e.test.ts(263,230): error TS7006: Parameter 'call' implicitly has an 'any' type.
+
+[97/132] test/product/wp06/imports/end-to-end.test.ts(56,72): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: "unavailable"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: "ok"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: "unavailable"; reason: string; }; }>'.
+  Type 'Promise<{ commit: false; value: { value?: undefined; status: "unavailable"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: "ok"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { value?: undefined; status: "unavailable"; reason: string; }; }>'.
+    Type '{ commit: false; value: { value?: undefined; status: "unavailable"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: "ok"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: "unavailable"; reason: string; }; }'.
+      Type '{ commit: false; value: { reason?: undefined; status: "ok"; value: { versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; ... 5 more ...; projectionDigest: string; }; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: "unavailable"; reason: string; }; }'.
+        The types of 'value.value' are incompatible between these types.
+          Type '{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }' is not assignable to type 'undefined'.
+
+[98/132] test/product/wp06/imports/end-to-end.test.ts(65,590): error TS2322: Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { ...; }; }; }>>'.
+  Type 'Promise<unknown>' is not assignable to type 'Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>>'.
+    Type 'unknown' is not assignable to type 'PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>'.
+
+[99/132] test/product/wp06/imports/sqlite-planner.test.ts(41,76): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.
+  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+    Type '{ commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+      The types of 'value.changedFields' are incompatible between these types.
+        Type 'number' is not assignable to type 'undefined'.
+
+[100/132] test/product/wp06/imports/sqlite-planner.test.ts(42,12): error TS18046: 'applied' is of type 'unknown'.
+
+[101/132] test/product/wp06/imports/sqlite-planner.test.ts(46,74): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.
+  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+    Type '{ commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+      The types of 'value.changedFields' are incompatible between these types.
+        Type 'number' is not assignable to type 'undefined'.
+
+[102/132] test/product/wp06/imports/sqlite-planner.test.ts(47,12): error TS18046: 'stale' is of type 'unknown'.
+
+[103/132] test/product/wp07/review-port.test.ts(106,64): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+
+[104/132] test/product/wp07/review-port.test.ts(113,122): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+
+[105/132] test/product/wp07/review-port.test.ts(124,64): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+
+[106/132] test/product/wp08/confirmation-integration.test.ts(63,289): error TS2739: Type '{ state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection
+
+[107/132] test/product/wp10/integration/blob-generations.test.ts(13,112): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+
+[108/132] test/product/wp10/integration/blob-generations.test.ts(13,122): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+
+[109/132] test/product/wp10/integration/blob-generations.test.ts(31,58): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+
+[110/132] test/product/wp10/integration/blob-generations.test.ts(31,68): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+
+[111/132] test/product/wp10/integration/blob-generations.test.ts(40,63): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+
+[112/132] test/product/wp10/integration/blob-generations.test.ts(40,73): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+
+[113/132] test/product/wp10/integration/blob-generations.test.ts(51,49): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.
+
+[114/132] test/product/wp10/integration/blob-generations.test.ts(51,60): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+
+[115/132] test/product/wp10/integration/blob-generations.test.ts(68,69): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.
+
+[116/132] test/product/wp10/integration/blob-generations.test.ts(68,80): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+
+[117/132] test/product/wp10/integration/product-authority.test.ts(24,47): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+
+[118/132] test/product/wp10/integration/product-authority.test.ts(24,57): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+
+[119/132] test/product/wp11/analysis-acceptance-adversarial.test.ts(73,60): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.
+  Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.
+    Types of property 'kind' are incompatible.
+      Type '"native"' is not assignable to type '"ui"'.
+
+[120/132] test/product/wp11/coverage-access.test.ts(39,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.
+  Types of property 'surface' are incompatible.
+    Type 'string' is not assignable to type 'Surface'.
+
+[121/132] test/product/wp11/coverage-access.test.ts(48,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.
+  Types of property 'surface' are incompatible.
+    Type 'string' is not assignable to type 'Surface'.
+
+[122/132] test/product/wp11/coverage-access.test.ts(77,63): error TS2322: Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+  Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | (ComparisonBase & { comparisonStatus: "conditioned" | "incompatible" | "unavailable"; knownDifference: number | null; completeDifference: null; }) | (ScenarioBase & { ...; }) | (ScenarioBase & { ...; })'.
+    Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'ComparisonBase & { comparisonStatus: "conditioned" | "incompatible" | "unavailable"; knownDifference: number | null; completeDifference: null; }'.
+      Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type '{ comparisonStatus: "conditioned" | "incompatible" | "unavailable"; knownDifference: number | null; completeDifference: null; }'.
+        Types of property 'comparisonStatus' are incompatible.
+          Type 'string' is not assignable to type '"conditioned" | "incompatible" | "unavailable"'.
+
+[123/132] test/product/wp12/author-reader.test.ts(32,26): error TS2352: Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; incarnation: string; version: number; participants: string[]; }' is missing the following properties from type 'DecisionCase': state, objective, horizon, currency, and 10 more.
+
+[124/132] test/product/wp13/sensitivity-units-boundary.test.ts(218,211): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+
+[125/132] test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+
+[126/132] test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS18048: 'store.transactionAll' is possibly 'undefined'.
+
+[127/132] test/product/wp14/source-access-procurement.test.ts(10,43): error TS2305: Module '"../../../product/procurement/sources.ts"' has no exported member 'procurementSourceSelector'.
+
+[128/132] test/product/wp14/source-access-procurement.test.ts(11,33): error TS2724: '"../../../product/procurement/port.ts"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?
+
+[129/132] test/product/wp14/source-access-procurement.test.ts(31,54): error TS2741: Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: "ok"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.
+
+[130/132] test/product/wp14/source-access-procurement.test.ts(32,51): error TS2322: Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+  Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+
+[131/132] test/product/wp14/source-access-procurement.test.ts(32,83): error TS2322: Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+  Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+
+[132/132] test/product/wp14/source-access-procurement.test.ts(33,25): error TS2349: This expression is not callable.
+  Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures.
+
+STRICT MESSAGE VARIANTS — complete candidate/seed pairs
+
+[Variant 1] product/decisions/prepared-apply.ts
+Candidate blob: 0c928756378108fa2c5029ef0708a33a4539cf78
+Seed blob: 0c928756378108fa2c5029ef0708a33a4539cf78
+Identical source blob: True
+CANDIDATE:
+product/decisions/prepared-apply.ts(46,5): error TS2322: Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: "ok"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.
+  Type 'Promise<{ reason?: undefined; status: "ok"; value: {}; } | { value?: undefined; status: {}; reason: string; }>' is not assignable to type 'Promise<PortResult<CommandReceipt>>'.
+    Type '{ reason?: undefined; status: "ok"; value: {}; } | { value?: undefined; status: {}; reason: string; }' is not assignable to type 'PortResult<CommandReceipt>'.
+      Type '{ reason?: undefined; status: "ok"; value: {}; }' is not assignable to type 'PortResult<CommandReceipt>'.
+        Type '{ reason?: undefined; status: "ok"; value: {}; }' is not assignable to type '{ status: "ok"; value: CommandReceipt; }'.
+          Types of property 'value' are incompatible.
+            Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.
+SEED:
+product/decisions/prepared-apply.ts(46,5): error TS2322: Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: "ok"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.
+  Type 'Promise<{ reason?: undefined; status: "ok"; value: {}; } | { readonly value?: undefined; status: {}; reason: string; }>' is not assignable to type 'Promise<PortResult<CommandReceipt>>'.
+    Type '{ reason?: undefined; status: "ok"; value: {}; } | { readonly value?: undefined; status: {}; reason: string; }' is not assignable to type 'PortResult<CommandReceipt>'.
+      Type '{ reason?: undefined; status: "ok"; value: {}; }' is not assignable to type 'PortResult<CommandReceipt>'.
+        Type '{ reason?: undefined; status: "ok"; value: {}; }' is not assignable to type '{ status: "ok"; value: CommandReceipt; }'.
+          Types of property 'value' are incompatible.
+            Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.
+
+[Variant 2] product/imports/dashboard-preview.ts
+Candidate blob: 1ef975cc87f5ee31b3b8c742cd073035fa0b7ed9
+Seed blob: 1ef975cc87f5ee31b3b8c742cd073035fa0b7ed9
+Identical source blob: True
+CANDIDATE:
+product/imports/dashboard-preview.ts(38,75): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.
+  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.
+    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.
+      Type '{ commit: false; value: { format: "backup" | DashboardImportFormat; result: { status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.
+        The types of 'value.result' are incompatible between these types.
+          Type '{ status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ warnings?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.
+            Type '{ status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ warnings?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.
+              Types of property 'warnings' are incompatible.
+                Type 'string[]' is not assignable to type 'undefined'.
+SEED:
+product/imports/dashboard-preview.ts(38,75): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.
+  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.
+    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.
+      Type '{ commit: false; value: { format: "backup" | DashboardImportFormat; result: { reason?: undefined; status: "preview"; baseDigest: string; before: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.
+        The types of 'value.result' are incompatible between these types.
+          Type '{ reason?: undefined; status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; }'.
+            Type '{ reason?: undefined; status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; }'.
+              Types of property 'baseDigest' are incompatible.
+                Type 'string' is not assignable to type 'undefined'.
+
+SEED DIAGNOSTICS REMOVED WITHOUT A PAIRED MESSAGE VARIANT (23)
+
+[1/23] product/interface/analysis-http.ts(19,40): error TS2339: Property 'analysisInputs' does not exist on type 'SfHostServices'.
+
+[2/23] product/interface/analysis-http.ts(20,55): error TS2345: Argument of type '"analysis.cancel" | "analysis.prepare" | "analysis.read" | "analysis.start"' is not assignable to parameter of type '"analysis.cancel" | "analysis.read" | "analysis.start" | "collaboration.confirmation.confirm" | "collaboration.handoff.confirm" | "collaboration.relation.confirm" | "collaboration.thread.create" | ... 31 more ... | "views.save"'.
+  Type '"analysis.prepare"' is not assignable to type '"analysis.cancel" | "analysis.read" | "analysis.start" | "collaboration.confirmation.confirm" | "collaboration.handoff.confirm" | "collaboration.relation.confirm" | "collaboration.thread.create" | ... 31 more ... | "views.save"'. Did you mean '"analysis.read"'?
+
+[3/23] product/interface/analysis-http.ts(23,65): error TS2339: Property 'analysisInputs' does not exist on type 'SfHostServices'.
+
+[4/23] product/interface/analysis-http.ts(24,38): error TS2339: Property 'analysisInputs' does not exist on type 'SfHostServices'.
+
+[5/23] product/interface/analysis-http.ts(38,114): error TS2339: Property 'runRef' does not exist on type 'ContributionEnvelope'.
+  Property 'runRef' does not exist on type 'ContributionBase & { kind: "AnalysisPlan"; state: "ready"; payload: AnalysisPlan; }'.
+
+[6/23] product/interface/analysis-http.ts(38,171): error TS2339: Property 'version' does not exist on type 'ContributionEnvelope'.
+  Property 'version' does not exist on type 'ContributionBase & { kind: "AnalysisPlan"; state: "ready"; payload: AnalysisPlan; }'.
+
+[7/23] product/interface/analysis-http.ts(38,197): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.
+  Property 'outputRef' does not exist on type 'ContributionBase & { kind: "AnalysisPlan"; state: "ready"; payload: AnalysisPlan; }'.
+
+[8/23] product/interface/analysis-http.ts(38,235): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.
+  Property 'outputRef' does not exist on type 'ContributionBase & { kind: "AnalysisPlan"; state: "ready"; payload: AnalysisPlan; }'.
+
+[9/23] product/interface/http.ts(149,82): error TS7006: Parameter 'run' implicitly has an 'any' type.
+
+[10/23] product/interface/http.ts(149,87): error TS7006: Parameter 'index' implicitly has an 'any' type.
+
+[11/23] product/ui/contribution-body.ts(21,33): error TS2339: Property 'components' does not exist on type '{ proposalRef: string; eligible: boolean; score: number | null; convertedAmount: number | null; evidenceRefs: readonly BusinessEvidenceRef[]; issues: readonly string[]; }'.
+
+[12/23] product/ui/contribution-body.ts(22,28): error TS2339: Property 'money' does not exist on type '{ proposalRef: string; eligible: boolean; score: number | null; convertedAmount: number | null; evidenceRefs: readonly BusinessEvidenceRef[]; issues: readonly string[]; }'.
+
+[13/23] product/ui/contribution-body.ts(29,31): error TS2339: Property 'weights' does not exist on type 'CommercialComparison'.
+
+[14/23] product/ui/contribution-body.ts(30,317): error TS7006: Parameter 'item' implicitly has an 'any' type.
+
+[15/23] product/ui/contribution-body.ts(30,398): error TS7006: Parameter 'item' implicitly has an 'any' type.
+
+[16/23] product/ui/contribution-body.ts(31,33): error TS2339: Property 'selection' does not exist on type 'CommercialComparison'.
+
+[17/23] product/ui/forecast-analysis.ts(7,37): error TS2339: Property 'analysisInputs' does not exist on type 'SfHostServices'.
+
+[18/23] test/product/wp01/http.test.ts(36,339): error TS2353: Object literal may only specify known properties, and 'verifyScenarioOperations' does not exist in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }'.
+
+[19/23] test/product/wp01/http.test.ts(36,372): error TS7006: Parameter 'value' implicitly has an 'any' type.
+
+[20/23] test/product/wp01/http.test.ts(36,441): error TS7006: Parameter 'item' implicitly has an 'any' type.
+
+[21/23] test/product/wp01/http.test.ts(36,508): error TS7006: Parameter 'item' implicitly has an 'any' type.
+
+[22/23] test/product/wp01/personal-views.test.ts(35,137): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.
+  Types of parameters 'context' and 'context' are incompatible.
+    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.
+      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.
+        Types of property 'kind' are incompatible.
+          Type '"native"' is not assignable to type '"ui"'.
+
+[23/23] test/product/wp01/workbench-analysis.test.ts(6,38): error TS2307: Cannot find module '@orchestra/server/routes' or its corresponding type declarations.
+
+COMPLETE GUARD WARNINGS
+WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:117 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:166 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:41 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:158 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:417 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts:60 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:78 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:168 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:321 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts:77 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts:38 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/test/visual-layout.test.ts:74 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.
+
+REPRODUCTION AND PROVENANCE
+All JSON comparisons, both full decoded logs, complete candidate and seed diagnostic arrays, final run/jobs metadata, source variant blob identities and artifact references are archived in ci-static-review-8/. This text is generated only from those hosted results. No local product, test, browser, build or typecheck execution was performed. No remote mutation or workflow dispatch was performed by this monitor. Prior W5, W6 and W7 evidence files remain without modification.
