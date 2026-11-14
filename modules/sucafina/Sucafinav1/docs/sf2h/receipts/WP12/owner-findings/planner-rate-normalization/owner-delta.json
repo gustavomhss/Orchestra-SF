@@ -1,0 +1,58 @@
+{
+  "schema": "wp12-owner-planner-normalization-delta-v1",
+  "status": "HOLD_OWNER_FIX_REQUIRED_NOT_APPLIED_NOT_RUN",
+  "to": [
+    "WP03/Planner, PR35",
+    "WP10/integration, PR29"
+  ],
+  "subject": "Planner source qualification must preserve explicit numeric rate identity",
+  "finding": "WP12-OWNER-PLANNER-NUMERIC-RATE-IDENTITY-01",
+  "affected": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+    "blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+    "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "alsoPublishedInHost": "4bc9c7220f04f113609393aaba38934a7e69878b"
+  },
+  "currentRuntime": {
+    "blob": "c487332777d4053be7a2b177ea598efb77ca0d66",
+    "sourceCommit": "5c148a16b76f98dfe194823c0e10ed2ef7685a69"
+  },
+  "message": [
+    "WP12 reviewed the complete proposed Planner closure. Aggregate visibility, canonical formulas, FX and revalidation fences are consistent with the current policy; the intake is on hold for one concrete normalization defect.",
+    "The runtime normalizes a numeric position.rateId to a string before chosenRate. Port838 constructs qualification.hc from raw positions, and headcount-months passes that number through text(), producing an empty selector. A dangling numeric rate can therefore select an unrelated automatic card instead of remaining unresolved.",
+    "The source-derived counterexample uses rateId 999 plus a Brazil-compatible Employee card. The engine retains hasRate=false and its legacy budget 0; the qualifier can publish budget 0 as confirmed without missing-rate. This trace has not been executed, and it does not claim a complete C10 or native output.",
+    "The attached NOT_APPLIED proposal exports a narrow getter that delegates to the exact current versionOf(row).hc and uses it only in internal qualification. It does not duplicate rate-selection logic, impersonate a finance role, publish raw rates, change a formula, or alter role/lock/FX policy.",
+    "Please publish a whole compatible owner output and scoped GitHub Actions evidence. Do not replace or discard later owner runtime work to satisfy this consumer. The patch is based on the integration runtime c487; any solution based on a broader runtime still needs an explicit compatible publication and complete closure review before intake.",
+    "The attached NOT_RUN test proposal exercises the readable legacy source through the real source issuer, private UI authority and Planner, compares the engine's legacy zero to absent qualified values, checks finance/viewer egress, and preserves the source snapshot.",
+    "Please also cover dangling string identity, valid numeric identity, explicit known zero and independently observed actual/forecast, and retain same-source final revocation. Existing source tests cover parts of these controls; no result is inferred here.",
+    "After publication, WP12 will consume exact blobs, reconcile its explicitly hypothetical own fixtures, and run one changed scoped candidate. The current scenario timing failure, provider/native evidence and Executive historical-period finding remain separate."
+  ],
+  "attachments": [
+    "review.json",
+    "proposal.json",
+    "proposed-owner-fix.NOT_APPLIED.patch",
+    "proposed-owner-test.NOT_RUN.patch",
+    "source-pins.json"
+  ],
+  "review": {
+    "file": "review.json",
+    "blob": "9b25b0db91520ecf1dafdccadb87dc2befab42a4",
+    "sha256": "4bfe8a748b8affea57835dc6ed290b03730ebdd14f4727128d30ff8b0edc73b3",
+    "scope": "Independent full five-file review; HOLD. Proposed getter/test artifacts are separately marked unexecuted."
+  },
+  "alternativeSearch": {
+    "status": "NO_COMPATIBLE_WHOLE_READPAIR_PORT_IN_INSPECTED_HISTORY",
+    "distinctBlobs": [
+      "8389709232225424b5905638d0951d8cdbb71dd7",
+      "e365ac59376482dfcc6f81aed045b0153f911038",
+      "8c922385eaeba66ba5b302a8387b627ca607f495"
+    ],
+    "scope": "Four readPair-bearing commits in a 14-entry path history, all with the same raw-position qualification. PR35 head queried through GitHub MCP still ec052c2c, updated 2026-11-14T13:41:14Z. No claim about every branch."
+  },
+  "acceptanceRequired": [
+    "Exact immutable source commit, tree and complete blob(s).",
+    "Published compatibility mapping for current runtime/contracts and preserved private egress/fences.",
+    "Scoped GitHub Actions IDs/results and the discriminating numeric identity case.",
+    "No source rewrite, policy relaxation, broad runtime convenience intake or fabricated native evidence."
+  ]
+}
