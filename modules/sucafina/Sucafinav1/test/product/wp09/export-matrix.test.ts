@@ -12,7 +12,7 @@ import { createRoutineCapabilities, prepareRoutine, prepareWatch, readRoutineCat
 import type { RoutineHost } from "../../../product/routines/capabilities.ts"
 
 type Operation = keyof typeof routineInputSchemas
-const operations: readonly Operation[] = ["sf_routine_catalog", "sf_routine_prepare", "sf_routine_run", "sf_routine_status", "sf_routine_result", "sf_watch_prepare"]
+const operations: Operation[] = ["sf_routine_catalog", "sf_routine_prepare", "sf_routine_run", "sf_routine_status", "sf_routine_result", "sf_watch_prepare"]
 const payloads: { [K in Operation]: SfOperationInputMap[K] } = {
   sf_routine_catalog: { purpose: "review" },
   sf_routine_prepare: { publishedRecipeRef: "recipe", inputRefs: [], parameters: {} },
@@ -87,7 +87,9 @@ test.each(operations)("%s authorizes the declared export and binds its exact out
   expect(item.descriptor.handlerExport).toBe(handlerNames[operation])
   const result = await item.dispatch(context)
   if (result.status !== "ok") throw new Error(result.reason)
-  expect(result.receipt).toEqual(item.authority.receiptFor(context, operation, item.digest, digestSfValue(result.result)))
+  const expected = item.authority.receiptFor(context, operation, item.digest, digestSfValue(result.result))
+  if (!expected) throw new Error("Missing bound receipt for the authorized output")
+  expect(result.receipt).toEqual(expected)
   expect(result.receipt).toMatchObject({ kind: "ui", handlerExport: handlerNames[operation], principalRef: "owner", accessRevision: "access" })
   expect(item.state.calls).toEqual(expectedCalls[operation])
   expect(item.state.outputValidations).toBeGreaterThan(0)
