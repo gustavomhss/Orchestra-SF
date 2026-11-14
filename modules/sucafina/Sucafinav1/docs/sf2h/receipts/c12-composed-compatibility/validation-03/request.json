@@ -1,0 +1,45 @@
+{
+  "schema": "sf-c12-composed-request-v1",
+  "mission": 32,
+  "label": "validation-03",
+  "sourceImplementation": "6f61cc332b4ebfa4a45313cd69da9dd99d4ab4fe",
+  "bundleBase": "402a091485e11d60dff433049c7dedd7fcead687",
+  "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+  "W_tree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
+  "S": "0a316164ce059b113e966810dc0c09cf47e0f76b",
+  "S_tree": "c88f2b073c21fb10bbb5d1b6e2f806237f7447b3",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "-t",
+      "C12 recovery rechecks revocation after its receipt read and rejects a replaced physical target",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "ref": "ci-run-linux-astra-c12-32-796f7d75-egress-03",
+  "run": 43644467464,
+  "job": 132599028141,
+  "statusAtRecord": "in_progress",
+  "snapshotDelta": [
+    ".ci-run.json"
+  ],
+  "dedup": {
+    "sameSelectionRunsBeforeDispatch": 0,
+    "previousOwnRunCompleted": true,
+    "otherRunObserved": {
+      "id": 43644438895,
+      "branch": "ci-run-linux-finance-persistence-0b4c6338-short",
+      "differentOwnerAndSelection": true,
+      "untouched": true
+    },
+    "rerunReason": "Changed the failed test to observe internal retention and external egress separately; no product or shared fixture change."
+  },
+  "timeoutBudgetChanged": false,
+  "globalAcceptance": false
+}

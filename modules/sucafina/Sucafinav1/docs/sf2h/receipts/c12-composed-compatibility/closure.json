@@ -10,8 +10,8 @@
     "branch": "procurement-apply",
     "pr": 60,
     "observedHead": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
-    "implementationHead": "614e5c06b380fa671c3aed57ffe1172a31665ab3",
-    "implementationTree": "17a0981664506539c923274f497d006be0e40911",
+    "implementationHead": "6f61cc332b4ebfa4a45313cd69da9dd99d4ab4fe",
+    "implementationTree": "224b644f72a9f7ec2a3202feb76931403ff34a84",
     "applyPreimage": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
     "applyPostimage": "605ad1fbd9167b8234aa614a01638724e87f36f5",
     "runtimeClaim": "No source runtime PASS transferred to the composition; fresh-reconciliation.test.ts explicitly requires the composed executor."
@@ -24,10 +24,10 @@
     "productTree": "cd538127fa359cac8bfd3523bc6c5938084aa76c",
     "testTree": "bf50d3ce834ab7e832c9931690bf1c0ad36c8aed",
     "runtimeTree": "46c24e8b1e54af03501b1b401a251285fa008d82",
-    "W": "9cf37f42eefb080940c7c71e4c2b1c5539459295",
-    "tree": "28877563a208d3db3e0f96c761ce357fcc2703b0",
-    "S": "26cb97baa6ff8be3a4f020cad9ccfccbb1a6d860",
-    "snapshotTree": "b18ae30f95192771e10605da50fe451cec905879",
+    "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+    "tree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
+    "S": "0a316164ce059b113e966810dc0c09cf47e0f76b",
+    "snapshotTree": "c88f2b073c21fb10bbb5d1b6e2f806237f7447b3",
     "derivation": [
       {
         "W": "7fd76f647a57e9b9bc1415a4d516791e13b719b4",
@@ -46,6 +46,12 @@
         "tree": "28877563a208d3db3e0f96c761ce357fcc2703b0",
         "parent": "05b9486f7c96f3aa793f030d5157c17b7b340ac1",
         "purpose": "correct helper and refuse duplicate choice/change IDs; add two negative cases"
+      },
+      {
+        "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+        "tree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
+        "parent": "9cf37f42eefb080940c7c71e4c2b1c5539459295",
+        "purpose": "Only the failed revocation test changes: observe real internal result and require exact composed egress refusal; all product blobs unchanged."
       }
     ],
     "completeTrackedClosure": "The root Git tree of W fixes every tracked dependency. Relative to fixedBase the only runtime/test differences are the ten exact paths below; no old source executor, Finance producer, C08/state-provider/case-port, shared host, engine or dependency manifest is substituted.",
@@ -104,7 +110,7 @@
     {
       "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
       "preimage": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
-      "postimage": "57e7cffebff803da423a9b08bff562ba318a6e04",
+      "postimage": "76bf7963d30dde72eb369616dfcd0fee61948803",
       "status": "modified"
     },
     {

@@ -1,0 +1,96 @@
+{
+  "schema": "sf-c12-composed-validation-v1",
+  "mission": 32,
+  "label": "validation-03",
+  "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+  "W_tree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
+  "S": "0a316164ce059b113e966810dc0c09cf47e0f76b",
+  "S_tree": "c88f2b073c21fb10bbb5d1b6e2f806237f7447b3",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "-t",
+      "C12 recovery rechecks revocation after its receipt read and rejects a replaced physical target",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "run": 43644467464,
+  "job": 132599028141,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644467464",
+  "attempt": 1,
+  "conclusion": "success",
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "filteredOut": 4,
+    "expectCalls": 28,
+    "tests": 1,
+    "files": 1,
+    "seconds": 26.71
+  },
+  "observed": {
+    "revocationAfterReceiptRead": true,
+    "revokedStatus": 403,
+    "lastStateReadRevocation": 403,
+    "retentionResult": {
+      "status": "unavailable",
+      "reason": "receipt-authority-changed"
+    },
+    "egressReason": "case-selection-authority-changed",
+    "finalReadInterleavings": 1,
+    "reauthorizedStatus": 200,
+    "replacementStatus": 403,
+    "duplicateEffects": 0
+  },
+  "oracle": {
+    "realRecoverCalls": 1,
+    "returnValueUnchanged": true,
+    "observerRestoredInFinally": true,
+    "internal": {
+      "status": "unavailable",
+      "reason": "receipt-authority-changed"
+    },
+    "external": {
+      "status": 403,
+      "body": {
+        "status": "denied",
+        "reason": "case-selection-authority-changed"
+      }
+    },
+    "noReceiptIdDisclosed": true,
+    "durableBytesUnchanged": true,
+    "reauthorizedOriginalReceipt": 200,
+    "recreatedPhysicalTarget": 403,
+    "duplicateEffects": 0
+  },
+  "omni": {
+    "nonce": "98fbc5e5d13b496f454b2b75a7d16ee1",
+    "verdict": "not applicable",
+    "spawns": 0,
+    "delegated": 0,
+    "claim": false
+  },
+  "artifacts": [],
+  "combinedEvidence": {
+    "distinctScenarios": 23,
+    "C12": 15,
+    "OPS_REV_02": 7,
+    "WP04PreparedAlias": 1,
+    "passesFromW2": 22,
+    "passesFromW3": 1,
+    "oneAllGreenRunClaimed": false,
+    "sourceProofTransferred": false,
+    "productAndSharedFixturesUnchangedBetweenW2AndW3": true,
+    "changedTestFile": "test/product/c12-receipt-recovery/recovery-http.test.ts",
+    "unchangedPassedEntriesInSameFile": 4,
+    "reasonForReuse": "Git compare W2...W3 changes only the previously failed test body and its diagnostic. Imports, other test bodies, all product and shared fixture blobs remain identical."
+  },
+  "next": "Session23 consumes complete patches, reconciles current target preimages and qualifies its actual integrated candidate. Origin typecheck/guards are separate.",
+  "globalAcceptance": false
+}

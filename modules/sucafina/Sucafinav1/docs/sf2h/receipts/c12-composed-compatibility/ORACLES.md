@@ -1,5 +1,7 @@
 # Missão32 — justificativa contratual dos oráculos C12
 
+O ajuste posterior de revogação no HTTP composto está em [ORACLES-EGRESS.md](ORACLES-EGRESS.md): a recusa interna de retenção permanece exata, e a fronteira externa exige sua própria recusa de autoridade. Os resultados executados estão nos recibos `validation-02/` e `validation-03/`.
+
 ## Decisão e limite desta nota
 
 A compatibilidade com o executor Finance integrado exige distinguir três fatos: a mutação e o recibo do domínio já podem ter sido gravados; o vínculo do recibo ao caso pode ainda estar pendente; uma nova execução de Apply continua sujeita à revisão humana, à versão esperada e à autorização atual. A reconciliação de um recibo original pode preservar uma edição irrelevante do caso, mas não pode aceitar uma choice materialmente diferente, identidade ambígua, payload divergente ou autoridade revogada.
