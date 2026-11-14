@@ -1,0 +1,1378 @@
+{
+  "schema": "sf2h-mission28-read-ledger-v1",
+  "purpose": "Separate full normative reading, actual code reading scope and blob identity checks. Fetching/minified artifact identification is not asserted as full semantic reading.",
+  "native_campaign_workers_spawned": 0,
+  "auxiliaries": "Three review-only subagents, no product authorship; not R1/R3 signoffs.",
+  "normative": [
+    {
+      "path": "AGENTS.md",
+      "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "read": "FULL; same blob at mission/planning/review base",
+      "by": "principal and all auxiliaries"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "read": "FULL",
+      "by": "principal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "read": "FULL",
+      "by": "principal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "read": "FULL",
+      "by": "principal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "dfb48ef567034ebc235d47bb12be030083d3e065",
+      "read": "FULL",
+      "by": "allocated full pack, see pack_sections"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "read": "FULL",
+      "by": "C12 auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/execution-reconciliation.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+      "read": "FULL",
+      "by": "Finance auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "read": "FULL",
+      "by": "Memory auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "read": "FULL",
+      "by": "Memory auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP00.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "069c425c96ddfc303c3efc037ea5be4b90725f17",
+      "read": "FULL_ORIGINAL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "37e80dfc0a67aa43986477b8b170955384a1b29c",
+      "read": "FULL_ORIGINAL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP02.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d65a7b62e14bffd149670fa65f8a982932ce4ec9",
+      "read": "FULL_ORIGINAL",
+      "by": "Finance auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "875baa9afdc9006039b8b343fae88cc5bd7f9a9e",
+      "read": "FULL_ORIGINAL",
+      "by": "C03/C06/C12 auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP04.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "a6d5f581be25aeeeee223a9ac0e099b4d22dcc7e",
+      "read": "FULL_ORIGINAL",
+      "by": "C03/C06/C12 auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP05.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "24f85cc986d5f95583e8f4cb6a410eb058be2080",
+      "read": "FULL_ORIGINAL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "1aacabdc304f9e298084960a52a5fe55fd8fe98a",
+      "read": "FULL_ORIGINAL",
+      "by": "Finance auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP07.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "677eb6f87ba0a4a4e89cc7bbcd001f2c150161a7",
+      "read": "FULL_ORIGINAL",
+      "by": "Memory auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "42afe6b6194a9cd4de038743673923609059b6a0",
+      "read": "FULL_ORIGINAL",
+      "by": "C03/C06/C12 auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "77133cbba49108eca5d9a4f9b8b3cace025d18cd",
+      "read": "FULL_ORIGINAL",
+      "by": "Memory auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "1c7fef239ba8d4e8de77b13ec4803e87d493c133",
+      "read": "FULL_ORIGINAL",
+      "by": "Memory auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "b11c665d8a0b529a3a1b2ad16012167b167a2c5c",
+      "read": "FULL_ORIGINAL",
+      "by": "C03/C06/C12 auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "941b5e86c6a0ff9fc5125f93f298535c7418cd34",
+      "read": "FULL_ORIGINAL",
+      "by": "Finance auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "read": "FULL_ORIGINAL",
+      "by": "Finance auxiliary"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "1662398fbd2e69f89cd3f65d6ebc0e1569c0cc8b",
+      "read": "FULL_ORIGINAL",
+      "by": "S2-R2 principal"
+    }
+  ],
+  "pack_sections": [
+    {
+      "section": "provenance",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "job_id",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "actor",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "session",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "assignment",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "branch_provenance",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "common",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "write_authority",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "allocation",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "physical_slot",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "work_packages",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "contracts",
+      "read": "FULL",
+      "by": "C01/C02/C04/C05/C07/C08/C11/C16 principal; C03/C06/C12 auxiliary; C09/C10/C14 Finance; C13/C15/C17 Memory"
+    },
+    {
+      "section": "incoming_outgoing_handoffs",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "task_output_dependencies",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "consumer_edges",
+      "read": "FULL",
+      "by": "C12"
+    },
+    {
+      "section": "coverage",
+      "read": "FULL",
+      "by": "C12"
+    },
+    {
+      "section": "dependency_context",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "proof_bindings",
+      "read": "FULL",
+      "by": "Finance"
+    },
+    {
+      "section": "evidence",
+      "read": "FULL",
+      "by": "Finance"
+    },
+    {
+      "section": "execution_proofs",
+      "read": "FULL",
+      "by": "C12"
+    },
+    {
+      "section": "review_assignment",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "review_sources_read_only",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "resident",
+      "read": "FULL",
+      "by": "Memory"
+    },
+    {
+      "section": "reference_context_rule",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "resident_handoff_interfaces",
+      "read": "FULL",
+      "by": "Memory"
+    },
+    {
+      "section": "resident_gate_requirements",
+      "read": "FULL",
+      "by": "Memory"
+    },
+    {
+      "section": "resident_ui",
+      "read": "FULL",
+      "by": "Memory"
+    },
+    {
+      "section": "mandatory_appendices",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "code_sources",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "source_receipt_index",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "workflow",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "coverage_source",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "numeric_oracles",
+      "read": "FULL",
+      "by": "Finance"
+    },
+    {
+      "section": "selection_pointers",
+      "read": "FULL",
+      "by": "Finance"
+    },
+    {
+      "section": "criterion_ids",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "completion",
+      "read": "FULL",
+      "by": "S2-R2 principal"
+    },
+    {
+      "section": "ci_plan",
+      "read": "FULL",
+      "by": "Finance"
+    },
+    {
+      "section": "resident_packaging",
+      "read": "FULL",
+      "by": "Memory"
+    }
+  ],
+  "root_product_reading": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "bc00a2fe70bb37d6132369c3767388e544e18510"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "6ba1b02eee73d44133c78599284f9772b26007b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/apply.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "55adb72acb9f79a701cd8b75122861d302547de6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/source-fences.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "72555489670937db1a8af51c20d747275ea73751"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/planner-atomic.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "f7577ce96cc2ab90fa494ef01fa8581b4cab2140"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-atomic.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "4c51b8014628ab510f14a86134d4f265379729b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "40e02a3486c1b5a192395568c3ad37bde8a2e1e5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "098a92920857926f117e266f5b63325f6ad112ca"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/factory.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "387dd1238698a0f70cf719c517a749fd62a77e5c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "97d5062f42def4199cb16c1ae4502fdd982da68c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/records.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "f769274f2887a187fbdad8688c2bb3ae5ad4a1e5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "b968936724192eaab050cf48e69dc5a634dc54d9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "566776cda673751c1b6fe78f55ef53f573e83b37"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "c07d55c714b4c85ee41abb4d287ce5861500086d"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "a57e9d39f81e8a064f903765e70533bdffea4ba2"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-services.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "900f199800b683503267b011af2c255be841a3a1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "extent": "FULL",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "extent": "TARGETED; installed C09/C17/case/source-fence/Portfolio wiring",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "extent": "TARGETED; router/Portfolio/authority composition",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "extent": "TARGETED; authentication/page transaction/private-state filtering/download egress",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "extent": "TARGETED; case-event and Procurement; complementary full agent review",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "extent": "TARGETED; actual caller, historical pair and Memory; full auxiliary review",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+      "extent": "TARGETED; markup and submit handler",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "extent": "TARGETED; hidden controls and shared shell",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1"
+    }
+  ],
+  "auxiliary_read_ledgers": {
+    "c03_c06_c12": {
+      "schema": "mission28-c12-read-ledger-v1",
+      "entries": [
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/HANDOFF.md",
+          "blob": "e73fed58ebf09d7dc5e4112be3a872a02977d058",
+          "extent": "full",
+          "linesInCache": 87,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/HANDOFF.md",
+          "blob": "f4fe7dafe006297ec4fe8644ac9ecd0f88945152",
+          "extent": "full",
+          "linesInCache": 103,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-01/INTEGRATION.md",
+          "blob": "136765e9267c8e1cfd5bf044c13bb2820666d13f",
+          "extent": "full",
+          "linesInCache": 55,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-02/TESTS.json",
+          "blob": "6204b5beb611c5e92f3f0f1916c850d465a92082",
+          "extent": "full",
+          "linesInCache": 361,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/c12-owner-handoff.md",
+          "blob": "26895bea48214e36d92293adc77c7dbd3e956cd6",
+          "extent": "full",
+          "linesInCache": 68,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-work/README.md",
+          "blob": "c25f0949fabf7c2f94c7542079a828a92b20fce3",
+          "extent": "full",
+          "linesInCache": 53,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+          "blob": "012175e4acc2be40547089b43f248144beb6c712",
+          "extent": "full",
+          "linesInCache": 167,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-state-fence.ts",
+          "blob": "7b19cf14f220adb3a01530515ec5ad1657bc8f11",
+          "extent": "full",
+          "linesInCache": 32,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation-observations.ts",
+          "blob": "8219b413786bf3d4db93df4c4d95172861b108e9",
+          "extent": "full",
+          "linesInCache": 45,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation-source.ts",
+          "blob": "b0b5e1ce5423a3701ed2da10aacea9aeac00e938",
+          "extent": "full",
+          "linesInCache": 42,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation-work.ts",
+          "blob": "68f43ca3f03602fc7ac825fa8ac926d460a7dbfe",
+          "extent": "full",
+          "linesInCache": 17,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+          "blob": "9d38a30265e6efc2c9667371087a87bcce8e682f",
+          "extent": "full",
+          "linesInCache": 168,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+          "blob": "7d30096e973b003f222698bf2f605fc24031aba5",
+          "extent": "full",
+          "linesInCache": 93,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+          "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+          "extent": "full",
+          "linesInCache": 171,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/source-fence.ts",
+          "blob": "6249086a1f78a3988bda27ee940b9fa20c5194b0",
+          "extent": "full",
+          "linesInCache": 37,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+          "blob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+          "extent": "full",
+          "linesInCache": 30,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+          "extent": "full",
+          "linesInCache": 169,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+          "extent": "full",
+          "linesInCache": 126,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+          "extent": "full",
+          "linesInCache": 216,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/c12.ts",
+          "blob": "84f27e1312d3c58f3ba1ea5ae78fe5a936e3adc7",
+          "extent": "full",
+          "linesInCache": 33,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "extent": "full",
+          "linesInCache": 450,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "extent": "full",
+          "linesInCache": 84,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+          "extent": "full",
+          "linesInCache": 104,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+          "blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+          "extent": "full",
+          "linesInCache": 408,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+          "blob": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+          "extent": "full",
+          "linesInCache": 76,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+          "blob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+          "extent": "full",
+          "linesInCache": 266,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "blob": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+          "extent": "full",
+          "linesInCache": 64,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "blob": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+          "extent": "full",
+          "linesInCache": 255,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+          "blob": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+          "extent": "full",
+          "linesInCache": 219,
+          "basis": "GitHub MCP pinned file; Git blob also in pinned target subtree"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+          "extent": "28-38 and transaction core through115",
+          "basis": "Pinned cache supplied by root; selected sections read; no full-file claim"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+          "extent": "principal/currentSnapshots/auth revision and state authorize;87-131",
+          "basis": "Pinned cache supplied by root; selected sections read; no full-file claim"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+          "extent": "requestFor/revalidate;26-33",
+          "basis": "Pinned cache supplied by root; selected sections read; no full-file claim"
+        },
+        {
+          "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "extent": "currentCaseAuthority and withCase;228-229,263-277",
+          "basis": "Pinned cache supplied by root; source blob should be joined from root ledger; no full-file claim"
+        },
+        {
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+          "blob": "875baa9afdc9006039b8b343fae88cc5bd7f9a9e",
+          "extent": "full",
+          "basis": "Original normative file fetched through GitHub MCP and every field read; WP03 output middle truncation recovered by separate task03.work output"
+        },
+        {
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP04.json",
+          "blob": "a6d5f581be25aeeeee223a9ac0e099b4d22dcc7e",
+          "extent": "full",
+          "basis": "Original normative file fetched through GitHub MCP and every field read; WP03 output middle truncation recovered by separate task03.work output"
+        },
+        {
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.json",
+          "blob": "42afe6b6194a9cd4de038743673923609059b6a0",
+          "extent": "full",
+          "basis": "Original normative file fetched through GitHub MCP and every field read; WP03 output middle truncation recovered by separate task03.work output"
+        },
+        {
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+          "blob": "b11c665d8a0b529a3a1b2ad16012167b167a2c5c",
+          "extent": "full",
+          "basis": "Original normative file fetched through GitHub MCP and every field read; WP03 output middle truncation recovered by separate task03.work output"
+        },
+        {
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+          "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+          "extent": "full",
+          "basis": "Original normative appendix fetched through GitHub MCP"
+        },
+        {
+          "path": "AGENTS.md",
+          "extent": "full",
+          "basis": "Normative pinned cache supplied by root; root ledger provides Git blob"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+          "extent": "full",
+          "basis": "Normative pinned cache supplied by root; root ledger provides Git blob"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json",
+          "extent": "C03,C06,C12,execution_proofs AM01-AM06,consumer_edges,coverage full; other actor packs not loaded",
+          "basis": "Normative pinned cache supplied by root; root ledger provides Git blob"
+        },
+        {
+          "sha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
+          "extent": "full source-vs-target comparison; apply diff read entirely; unchanged four blobs read via exact target equality",
+          "basis": "GitHub MCP file fetch source+target"
+        },
+        {
+          "sha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+          "extent": "full source-vs-target comparison; apply diff read entirely; unchanged four blobs read via exact target equality",
+          "basis": "GitHub MCP file fetch source+target"
+        },
+        {
+          "sha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "extent": "full source-vs-target comparison; apply diff read entirely; unchanged four blobs read via exact target equality",
+          "basis": "GitHub MCP file fetch source+target"
+        },
+        {
+          "sha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "extent": "full source-vs-target comparison; apply diff read entirely; unchanged four blobs read via exact target equality",
+          "basis": "GitHub MCP file fetch source+target"
+        },
+        {
+          "sha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+          "extent": "full source-vs-target comparison; apply diff read entirely; unchanged four blobs read via exact target equality",
+          "basis": "GitHub MCP file fetch source+target"
+        },
+        {
+          "sha": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+          "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+          "extent": "Git blob equality verified to target; exact target source read in full",
+          "basis": "GitHub MCP pinned file fetch"
+        },
+        {
+          "sha": "f34edcfff26d0041145e13ea612d8d67f58dcbff",
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+          "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+          "extent": "Git blob equality verified to target; exact target source read in full",
+          "basis": "GitHub MCP pinned file fetch"
+        }
+      ]
+    },
+    "finance": {
+      "schema": "mission28-finance-read-ledger-v1",
+      "role": "auxiliary independent S2-R2 reviewer",
+      "authored_product": false,
+      "native_campaign_identity": "NOT_VERIFIED",
+      "fixed_target": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "full_documents": [
+        "AGENTS.md (root cache)",
+        "mission-COMMON.json (root cache)",
+        "mission.json (root cache)",
+        "norm/execution/COMMON.md (root cache)",
+        "specs/execution-reconciliation.md (aux-finance/reconciliation.md)",
+        "finance-journey-closure/HANDOFF-FINAL.md",
+        "WP11/finance-resume-performance/HANDOFF-FINAL.md"
+      ],
+      "pack_path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json",
+      "pack_sections_fully_read": [
+        "contracts C09 C10 C14",
+        "numeric_oracles (all including CONFIRM-SCOPE)",
+        "proof_bindings",
+        "evidence",
+        "ci_plan",
+        "selection_pointers"
+      ],
+      "original_work_packages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP02.json",
+          "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "blob": "d65a7b62e14bffd149670fa65f8a982932ce4ec9",
+          "read": "FULL",
+          "bytes": 35747,
+          "local_cached_sha256": "82559212b71a539157b5a7f9756cee9234a0953eb86614b0f0ed64400b7a1d6f",
+          "remote": "GitHub MCP"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+          "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "blob": "1aacabdc304f9e298084960a52a5fe55fd8fe98a",
+          "read": "FULL",
+          "bytes": 61024,
+          "local_cached_sha256": "11749952979877c5d34291b3f3ef78fd215cb14a9c94b5006d7275ede7610105",
+          "remote": "GitHub MCP"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json",
+          "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "blob": "941b5e86c6a0ff9fc5125f93f298535c7418cd34",
+          "read": "FULL",
+          "bytes": 41959,
+          "local_cached_sha256": "7e19be4a839044505d82602f46fd6a66bf68981ace82cd62756661d83e8ef3c9",
+          "remote": "GitHub MCP"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+          "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+          "read": "FULL",
+          "bytes": 27317,
+          "local_cached_sha256": "a4c0ad67f35986568d3d866f886e7be3bdd0d796c347100346dd28893016497f",
+          "remote": "GitHub MCP"
+        }
+      ],
+      "new_product_execution": "NOT_RUN",
+      "remote_mutation_by_auxiliary": false,
+      "note": "Other contracts and appendices are allocated to principal/other support; this ledger is deliberately bounded. Reading plan status NOT_RUN does not establish current runtime state."
+    },
+    "memory": {
+      "reviewer": "S2-R2 auxiliary Memory/security, no product authorship, no native actor identity",
+      "product_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+      "product_execution": false,
+      "remote_mutations": false,
+      "remote_transport": "GitHub MCP only",
+      "normative": [
+        {
+          "path": "AGENTS.md",
+          "cache": "../AGENTS.md",
+          "scope": "FULL"
+        },
+        {
+          "path": "validation-wave/COMMON.json",
+          "sha": "6da04cd66eb268362ee58509271fef773ac2a62e",
+          "cache": "../mission-COMMON.json",
+          "scope": "FULL"
+        },
+        {
+          "path": "validation-wave/review-contract-security.json",
+          "sha": "6da04cd66eb268362ee58509271fef773ac2a62e",
+          "cache": "../mission.json",
+          "scope": "FULL"
+        },
+        {
+          "path": "execution/COMMON.md",
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "cache": "../norm/execution/COMMON.md",
+          "scope": "FULL"
+        },
+        {
+          "path": "execution/actors/S2-R2.json",
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "cache": "../norm/execution/actors/S2-R2.json",
+          "scope": "ASSIGNED_SECTIONS_FULL",
+          "sections": [
+            "contracts C13 C15 C17",
+            "resident",
+            "resident_handoff_interfaces",
+            "resident_gate_requirements",
+            "resident_ui",
+            "resident_packaging"
+          ]
+        },
+        {
+          "path": "specs/resident-runtime.md",
+          "blob": "033737b1051b23443e633df7874c550629bf55a1",
+          "scope": "FULL"
+        },
+        {
+          "path": "specs/atlas-packaging.md",
+          "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+          "scope": "FULL"
+        },
+        {
+          "path": "work-packages/WP07.json",
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "blob": "677eb6f87ba0a4a4e89cc7bbcd001f2c150161a7",
+          "scope": "FULL_CONTIGUOUS_TEXT",
+          "received_lines": 830
+        },
+        {
+          "path": "work-packages/WP09.json",
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "blob": "77133cbba49108eca5d9a4f9b8b3cace025d18cd",
+          "scope": "FULL_CONTIGUOUS_TEXT",
+          "received_lines": 1183
+        },
+        {
+          "path": "work-packages/WP10.json",
+          "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "blob": "1c7fef239ba8d4e8de77b13ec4803e87d493c133",
+          "scope": "FULL_CONTIGUOUS_TEXT",
+          "received_lines": 1683
+        }
+      ],
+      "target_source_reads": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "8e1b7eaab139c3303462bdb5af9b4c679e61b276",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "dbf13c657c7d5e93837367eae7bb7b704f7577c4",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "5dfca7fad55453672986fbb3b29d6c68a9e1afa9",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/atlas/boundary/script/build.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "69d8473a2dd08704d7aaf8bf36a2930cb8de3e31",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "06f8085df12d57baf7973d0df500da3e366dc29a",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "7331e839a166dd9690610b99ec6b595aec50c6e5",
+          "scope": "FETCHED_FOR_BLOB_IDENTIFICATION_ONLY_NO_FULL_MINIFIED_READ"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+          "scope": "FETCHED_FOR_BLOB_IDENTIFICATION_ONLY_NO_FULL_MINIFIED_READ"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/native-memory.d.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "bc73667c5513e622ff2b5f4f553605fb3532b395",
+          "scope": "FETCHED_FOR_BLOB_IDENTIFICATION_ONLY_NO_FULL_MINIFIED_READ"
+        },
+        {
+          "path": "modules/atlas/boundary/src/generated/native-memory.js",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "820a3010be24a817edae7ff26299919d448ad4bf",
+          "scope": "FETCHED_FOR_BLOB_IDENTIFICATION_ONLY_NO_FULL_MINIFIED_READ"
+        },
+        {
+          "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "fb3d542eb22e9b8dc9a139ce1ff98189812d6e0d",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "ff67547a8b4bce811e3b34bbfc75aab530c150fc",
+          "scope": "TARGETED_C09_CONTINUITY_C17_LIMITATIONS_AND_SOURCE_PROVENANCE"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/RUN-INDEX.json",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "d05413eb1ae863cc7820c65328649ba997e2a3be",
+          "scope": "EXECUTION_INDEX_MI01_MI08_AND_CHECKS_FIELDS"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+          "scope": "CATALOG_IDS_GRANTS_DIGESTS_PACKS_SCHEMAS_AND_ALL39_ROUTE_TUPLES"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "102c849084980ae52223809d33bdeea36a58536b",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "790e7c98820df61306ad67bd5897b1301118d335",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/planner-materiality.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signals.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "a1413fd5224f373d704bbdfca7a489a904875d00",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "50fe5f69fbba4cff3ff6291e46553f3de9ca9df2",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "ea72668c00f4bd9d4fd4f902c803f3631b2268e3",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "4e61e3a87f2f944f4282c840450c36c8bbb6c7a1",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "blob": "b737b7f797b880c3e2664f65747ef2bc2c18156f",
+          "scope": "FULL_SOURCE_TEXT_READ"
+        }
+      ],
+      "shared_parent_cache_targeted_reads": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "lines": "40–110,140–165,229–372,434–509"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "lines": "40–258"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          "scope": "FULL_1_109"
+        }
+      ],
+      "source_receipts_full_reads": [
+        {
+          "path": "docs/sf2h/receipts/WP10/memory-integrity/HANDOFF.md",
+          "blob": "fa98e8cbf022258750171d38628dae2fd59e2451"
+        },
+        {
+          "path": "docs/sf2h/receipts/WP10/memory-integrity/MANIFEST.json",
+          "blob": "d217a10374ee72f54e06207d20c351f8aa2c557a"
+        },
+        {
+          "path": "docs/sf2h/receipts/integration/closed-output-intake-23/memory-terminal-authority.json",
+          "blob": "6483e6284be8b01babd0acf33036f86ce27c3b55"
+        }
+      ],
+      "atlas_agents_inventory": {
+        "tree": "cf7fdc434560d994fbe66e821a621622d0b2c85b",
+        "entries": 1553,
+        "truncated": false,
+        "agents": []
+      },
+      "actions": {
+        "metadata": "logs/READ-METADATA.json",
+        "jobs": [
+          132576026162,
+          132576581546,
+          132579470930,
+          132580630166
+        ],
+        "scope": "METADATA_PLUS_EXECUTED_SOURCE_SELECTION_PHASE_ASSERT_COUNTS_CONCLUSION_AND_BOUNDARY_GUARD_LOG_SECTIONS",
+        "not_claimed": "No complete archive artifact inspection; no new execution; existing source checks do not become fixed-target PASS"
+      }
+    }
+  },
+  "boundary": "Full pack and four mandatory appendices plus15original WPs were read collectively. code_sources catalogue read in full; this does not claim every baseline lockfile/legacy test file in that catalogue was semantically reread. Product audit follows all17contract boundaries and records unproved gates without approval."
+}
