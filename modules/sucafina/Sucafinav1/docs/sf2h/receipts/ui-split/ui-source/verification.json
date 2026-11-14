@@ -1,0 +1,259 @@
+{
+  "schema": "ui-source-hosted-receipts-v1",
+  "scope": "NOT_GLOBAL_RELEASE",
+  "baseHead": "2ee71fc90055814912654ae198f7a1dcf9583943",
+  "productBlob": "051be54adbf197a0f4b290ab6bc6aaa9f0f563d5",
+  "productIdenticalAcrossW1W2": true,
+  "runs": [
+    {
+      "W": "cfeda8edd29717f032f06b1ce66e63bd8a900c8e",
+      "tree": "c2162e543a4196b50785212d4490dd6529b061a0",
+      "S": "d204b40f21984398bd5abf90331f58b935229634",
+      "snapshotTree": "88d1150a9207f3bfb03f2ea263a612fd66e3f7a7",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/ui-split/ui-source/source-identity.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-source/draft-replay.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-source/source-continuity.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "requestSha256": "55cd24deb58a744fe20c8454886f64dc4db183c1a521070cbce81f8ce834a716",
+      "branch": "ci-run-linux-ui-source-cfeda8ed-55cd24de-1",
+      "changedSnapshotPaths": [
+        {
+          "path": ".ci-run.json",
+          "sha": "1d3c3cd78d57747f6c53775ba6ce21e3e17e7ded",
+          "status": "added"
+        }
+      ],
+      "id": 43620533033,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620533033",
+      "status": "completed",
+      "conclusion": "failure",
+      "runStartedAt": "2026-11-14T17:20:06Z",
+      "runCompletedAt": "2026-11-14T17:22:42Z",
+      "jobs": [
+        {
+          "id": 132524993530,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132525704711,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "logExcerpt": "runs/43620533033.log",
+      "fullLogSha256": "99ebd2472c5afbdbe3ceebf460ff621290e6a59b26c00a226191c369159d09ba",
+      "excerptSha256": "e6778f56217080a2735f25f07dde4bb8a05f67a4b5dda94b7e34227671e3d68c",
+      "typecheck": {
+        "exitCode": 2,
+        "status": "FAIL",
+        "diagnosticLocations": 18,
+        "ownDiagnosticLocations": 9,
+        "diagnostics": [
+          "../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+          "test/product/ui-split/ui-source/draft-replay.test.ts(8,71): error TS2345: Argument of type '\"lost-register-exact-replay\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/ui-split/ui-source/draft-replay.test.ts(21,74): error TS2345: Argument of type '\"different-command-old-case\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/ui-split/ui-source/draft-replay.test.ts(23,72): error TS2345: Argument of type '\"lost-register-exact-replay\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/ui-split/ui-source/draft-replay.test.ts(41,71): error TS2345: Argument of type '\"register-baseline\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/ui-split/ui-source/draft-replay.test.ts(44,72): error TS2345: Argument of type '\"register-baseline\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/ui-split/ui-source/draft-replay.test.ts(48,139): error TS2345: Argument of type '\"register-baseline\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/ui-split/ui-source/draft-replay.test.ts(52,73): error TS2345: Argument of type '\"register-baseline\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/ui-split/ui-source/replay-fixture.ts(24,84): error TS2339: Property 'reason' does not exist on type 'SfStateResult<{ preferences: Record<string, unknown>; transactions: Record<string, { namespace: SfStateNamespace; scopeDigest: string; principalRef: string; targetRef: string; targetIncarnation: string; ... 4 more ...; value: unknown; }>; }>'.",
+          "test/product/ui-split/ui-source/source-continuity.test.ts(19,72): error TS2345: Argument of type '\"write-after-revocation\"' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+          "test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+        ]
+      },
+      "guards": {
+        "exitCode": 0,
+        "status": "PASS",
+        "rules": 78,
+        "changedPaths": 889,
+        "gates": 0,
+        "warnings": 42,
+        "errors": 0,
+        "base": "origin/dev",
+        "baseSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "ownWarnings": []
+      },
+      "omniControl": "[b1124962c8d501239e54655a465e3b60]: pass (declared: 2 test(s) in Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts); 5 omni spawn(s), 0 delegated."
+    },
+    {
+      "W": "e10819f8242c7e34dfd62e279a261c91e9915fc7",
+      "tree": "f774f2338e6d1c1ac4a520980189858b1f210f2e",
+      "S": "d10a06048ff882bd90444f4b4a605c493f79d4d3",
+      "snapshotTree": "e99bc746d73a833b3cedec3a9632702cc78890bb",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/ui-split/ui-source/source-identity.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts",
+          "-t",
+          "legacy CREATE|physically bound CREATE|UPDATE binds|hosted"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "requestSha256": "47b175cd849f3d9a2144f83c38eef0080209ffc7d53ba006b43d46be81665e86",
+      "branch": "ci-run-linux-ui-source-e10819f8-47b175cd-1",
+      "changedSnapshotPaths": [
+        {
+          "path": ".ci-run.json",
+          "sha": "c631e13abc95301b5babae7e92e3e9050f1f4352",
+          "status": "added"
+        }
+      ],
+      "id": 43620871410,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620871410",
+      "status": "completed",
+      "conclusion": "failure",
+      "runStartedAt": "2026-11-14T17:23:45Z",
+      "runCompletedAt": "2026-11-14T17:26:00Z",
+      "jobs": [
+        {
+          "id": 132526032410,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132526618106,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "logExcerpt": "runs/43620871410.log",
+      "fullLogSha256": "de49fa32571302357adec0858d183f3476408f672951cda22a53fd0959dc336d",
+      "excerptSha256": "20e8c08dc113685c384c88d1d2d081c01d9469cb5e88479a6ed4e56059b087ee",
+      "typecheck": {
+        "exitCode": 2,
+        "status": "FAIL",
+        "diagnosticLocations": 9,
+        "ownDiagnosticLocations": 0,
+        "diagnostics": [
+          "../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+          "../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+          "test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+        ]
+      },
+      "guards": {
+        "exitCode": 0,
+        "status": "PASS",
+        "rules": 78,
+        "changedPaths": 889,
+        "gates": 0,
+        "warnings": 42,
+        "errors": 0,
+        "base": "origin/dev",
+        "baseSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "ownWarnings": []
+      },
+      "omniControl": "[cc42d8f17cfeb6e69b57b67bff6b8125]: pass (declared: 2 test(s) in Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts); 5 omni spawn(s), 0 delegated."
+    }
+  ],
+  "files": {
+    "W1": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+        "sha256": "3afbb553ca4ec15477e5e16269da7ee5dee8342852c7703c10e26856717a7403",
+        "gitBlob": "051be54adbf197a0f4b290ab6bc6aaa9f0f563d5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/draft-replay.test.ts",
+        "sha256": "643267f06ed23fbfee677d97f46caf4533583675903e92f895ebd00408da79b1",
+        "gitBlob": "0ca91cc62b19fa4c853370b046f2c5edcb299a5c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/replay-fixture.ts",
+        "sha256": "3a77857edb846718f82257b091d5ef7455637f49cfc8cda5cd81bfec7d6c1886",
+        "gitBlob": "2650593b1a71966aa841065026623c26b1d07656"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-continuity.test.ts",
+        "sha256": "b7fc6bec7229f2d691c399b6d6aa9b3c7df7062c74216e1248616cc011cf135f",
+        "gitBlob": "c737fcc4244cfe5699b9d22faba8fa2e815d2b8c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-fixture.ts",
+        "sha256": "039d44fe70f2232a8f715b960d144c2f0e4c48f007a63fec391bf43761a04a3a",
+        "gitBlob": "f4dac855c20b5f36da685f93abf8e26b07547708"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-identity.test.ts",
+        "sha256": "2260d06e51232ad1f4b44f4d620f7d5ea7a244eae008bdd13df5422737759396",
+        "gitBlob": "c4aafffa951314ff3beebd0e85e2aa3f08feb690"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts",
+        "sha256": "1ca5c3242c47f68fe85f12e25f73b6fc0d3922bfabb213816b2f7c50bc968333",
+        "gitBlob": "6b918d2a8e24b7dfe27a62660a51a249cd05f5c7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-source/README.md",
+        "sha256": "96ae59b435863868d21373c1a6229a25306875e5cf15a100f17dcee75114fc63",
+        "gitBlob": "01bb4c8028ca6c766f9e471869d006536d01a356"
+      }
+    ],
+    "W2": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-identity.test.ts",
+        "gitBlob": "1d49dbff2b6519083462112c6d74cc054f6a791b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/replay-fixture.ts",
+        "gitBlob": "7fe08ccbce867f3f2e3cbe94b5bfaaf9f66942cc"
+      }
+    ]
+  },
+  "retainedEvidence": {
+    "fromW1": [
+      "CREATE safe refusal",
+      "lost-register case-advance failure",
+      "exact-replay/no-advance and authorization controls",
+      "F04 source boundary"
+    ],
+    "notRerunReason": "W2 changed only the canonical save fixture version, HTTP key type annotation and an error-reporting branch. It did not change production. No new runtime acceptance is claimed for unexecuted W2 selections.",
+    "acceptedOnW2": [
+      "legacy CREATE receipt refusal",
+      "bound CREATE receipt consumption plus ABA",
+      "UPDATE effect-once/reopen/ABA/source revocation",
+      "guards"
+    ],
+    "externalFailuresRemain": [
+      "lost-register exact replay after compatible case advance",
+      "typecheck in host-context and WP07 review-port"
+    ],
+    "f04PositiveBrowserAcceptance": false,
+    "atomicCreatePositiveAcceptance": false
+  }
+}
