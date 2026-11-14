@@ -15,7 +15,9 @@ function sameMoney(read: Awaited<ReturnType<Awaited<ReturnType<typeof sourcingMo
     const c06 = projection.values.find((value) => value.id === field)!
     expect({ currency: c02.currency, state: c02.evidenceState }).toEqual({ currency: c06.currency, state: c06.evidenceState })
   }
-  expect(read.queue.rows[0]?.baseAmount).toBe(values(read.projection).baseAmount)
+  const baseAmount = values(read.projection).baseAmount
+  if (baseAmount !== null && typeof baseAmount !== "number") throw new Error("C02 base amount must be numeric or absent")
+  expect(read.queue.rows[0]?.baseAmount).toBe(baseAmount)
   expect(read.comparison.requestVersion).toBe(read.projection.version)
   expect(read.comparison.sourceRefs).toEqual(read.projection.values.find((value) => value.id === "baseAmount")!.sourceRefs)
 }

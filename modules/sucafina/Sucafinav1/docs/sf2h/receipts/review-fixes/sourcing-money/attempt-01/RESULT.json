@@ -1,0 +1,319 @@
+{
+  "schema": "sf2h.review-fix.sourcing-money.evidence.v1",
+  "finding": "OPS-REV-01",
+  "mission": "sourcing-money",
+  "attempt": 1,
+  "status": "FUNCTIONAL_PASS_OWN_TYPE_ERROR_AND_EXTERNAL_TYPE_ERROR",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "handoff_sha": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+  "pack_ci_sha": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "product": {
+    "sha": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+    "tree": "30d1c06c351f3dfd75881edaf8de51e575702797",
+    "blobs": {
+      "monetary": "c9a224b12c13b7cec506be90527300caa7e984fd",
+      "fixture": "6c28a1355277c883f2eee65e54fbff101211da75",
+      "test": "ff18380422e16a5c100b39ae768b7e177b8d96f5"
+    }
+  },
+  "test_snapshot": {
+    "sha": "532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c",
+    "tree": "2df9df940c42fb09225162d02f497d20758251a1",
+    "parent": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+    "only_delta": [
+      ".ci-run.json"
+    ],
+    "request_blob": "87624d39df3cf8cf4c9d4bbb0f9d50a95da59e30",
+    "request": {
+      "package": "sucafina",
+      "packageSelector": "packages/sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+        "./Sucafinav1/test/product/wp04/money.test.ts",
+        "./Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "./Sucafinav1/test/product/wp04/projection.test.ts",
+        "./Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "./Sucafinav1/test/product/wp04/confirmation.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    }
+  },
+  "test_run": {
+    "id": 43625920456,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625920456",
+    "attempt": 1,
+    "head_sha": "532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c",
+    "status": "completed",
+    "conclusion": "success",
+    "job": {
+      "id": 132541573935,
+      "name": "test (ubuntu-24.04)",
+      "conclusion": "success",
+      "run_tests_step": "success"
+    },
+    "pass": 58,
+    "fail": 0,
+    "expectations": 377,
+    "summary": "Ran 58 tests across 6 files. [1.52s]",
+    "omni": "omni positive control [b84f4da724d787fcfadd7e693f8c904f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "diagnostic": {
+      "rawLegacyValue": 200,
+      "c02": {
+        "baseAmount": 108,
+        "submittedAmount": 108,
+        "submittedCurrency": "USD",
+        "submittedFxRate": 1.08,
+        "originalAmount": 100,
+        "originalCurrency": "EUR",
+        "fxRate": 1.08,
+        "fxSource": "submitted",
+        "monetaryState": "pending-approval"
+      },
+      "c06": {
+        "baseAmount": 108,
+        "fxRate": 1.08,
+        "fxSource": "submitted",
+        "monetaryState": "pending-approval",
+        "originalAmount": 100,
+        "originalCurrency": "EUR",
+        "submittedAmount": 108,
+        "submittedCurrency": "USD",
+        "submittedFxRate": 1.08
+      },
+      "comparison": 108,
+      "sameFingerprint": true
+    },
+    "tests": [
+      "OPS-REV-01: real select_quote -> submit_sourcing freezes USD108 across C02, C06, detail and summary despite the future PO [340.18ms]",
+      "a genuinely submitted PO owns its later USD200 approval while historical sourcing stays USD108 [334.83ms]",
+      "missing live FX after real selection remains absent and refuses submission without inventing zero [143.36ms]",
+      "a changed base currency preserves submitted USD provenance and makes the current comparison unavailable [267.58ms]",
+      "a legally rejected sourcing decision does not fall back to the retained future PO or live FX [163.41ms]",
+      "submitted PO uses its frozen exchange rate and approved and issued totals remain separate [0.31ms]",
+      "an unavailable frozen quote rate does not use a later rate or the requisition estimate [0.20ms]",
+      "approval view separates unassigned holders and labels the pending decision [0.61ms]",
+      "request detail shows the discrepancy without changing the quoted total [1.70ms]",
+      "register export removes bank material recursively including audit values [0.20ms]",
+      "request detail explains why a different holder cannot be overridden [0.87ms]",
+      "unassigned approvals are not attributed to another holder [0.24ms]",
+      "approval queue retains missing steps and does not invent holder names or actions [1.56ms]",
+      "ranking does not replace a missing submitted FX snapshot with a later rate [0.24ms]",
+      "comparison displays the submitted rate even after the current rate changes [0.91ms]",
+      "submitted sourcing without a snapshot does not display live FX as historical [0.85ms]",
+      "invalid PO or selected quote values remain unavailable rather than falling back [0.12ms]",
+      "quote comparison preserves missing currency and frozen FX provenance [0.33ms]",
+      "request guidance distinguishes internal issue and unknown stages [0.18ms]",
+      "quote comparison distinguishes an invalid rate from a missing rate [0.21ms]",
+      "request comparison does not label an unspecified quote currency as base currency [1.17ms]",
+      "supplier activation explains alternative required fields without revealing bank values [0.24ms]",
+      "order guidance compares the linked selected quote without asserting edit history [0.17ms]",
+      "nonprivileged supplier view removes bank metadata and audit values [0.48ms]",
+      "request detail displays current stage validation without mutating the draft [1.24ms]",
+      "requisition rejection returns field errors from the actual validator [1.00ms]",
+      "supplier controls reflect existing buyer and supplier admin roles [1.91ms]",
+      "supplier presentation removes bank and audit material from a viewer [0.35ms]",
+      "order shows supplier terms as a suggestion without replacing recorded terms [1.24ms]",
+      "the canonical three-offer fixture preserves scoring, eligibility and exact price premium [0.26ms]",
+      "equal complete proposals retain recorded order without adding a tie-break policy [0.21ms]",
+      "missing currency and incomplete purchase orders cannot inherit a base-currency estimate [0.24ms]",
+      "ambiguous selected quotes and an overflowing order remain unavailable [0.16ms]",
+      "rejected submissions preserve the submitted currency and never reinterpret a frozen rate [0.16ms]",
+      "a frozen PR retains its submitted currency after the current base changes [0.60ms]",
+      "C06 preserves zero versus absence and fingerprints compensating financial inputs [0.38ms]",
+      "queue projection uses the latest submission, never a later save [0.25ms]",
+      "missing history and holder stay unavailable, and restricted fields are omitted [0.19ms]",
+      "requisition drafts and revisions expose their saved justification in the authorized projection [0.17ms]",
+      "port authenticates against the current snapshot and does not reveal another request [0.72ms]",
+      "aging uses the trusted observation time and leaves unproven ages unavailable [0.36ms]",
+      "sourcing comparison reads the authorized request and uses frozen FX [6.92ms]",
+      "stock counts open stages only and retains a stage-specific drilldown [1.16ms]",
+      "aging for the next holder starts at the preceding approval, or remains unavailable without that event [0.33ms]",
+      "supplier projection returns authorized fields and refuses bank fields [1.34ms]",
+      "decision preparation is deterministic and does not change the request [0.32ms]",
+      "revocation during the domain read prevents returning the projection [0.89ms]",
+      "projection reports PO original amount and submitted FX without replacing the base value [0.50ms]",
+      "a legacy PO with no currency leaves its monetary basis unavailable [0.23ms]",
+      "unrecognized imported status stays explicitly unavailable [0.15ms]",
+      "approval stage is the current pending level and is scoped to its evidence [0.26ms]",
+      "confirmation material tracks only selected fields and the status dependency [0.31ms]",
+      "confirmation material isolates relevant monetary inputs and preserves missing FX [0.38ms]",
+      "producer with missing submitted FX suppresses every score and rank despite a current rate [1.36ms]",
+      "producer with absent weights or incomplete human assessments withholds ranking [1.77ms]",
+      "a stated total mismatch in one proposal suppresses the whole producer ranking [1.96ms]",
+      "runtime and producer present the same submitted quote amount and FX source [2.35ms]",
+      "confirmation observes scoped material and fences against source changes and revoked authority [29.59ms]"
+    ],
+    "artifacts": [],
+    "artifact_limit": "Bun request has no mandatory uploaded test artifact in inherited test-ci workflow; job logs are the source of execution evidence.",
+    "local_tests": false
+  },
+  "checks": {
+    "snapshot": "96688ded4096accb327aa87db36fbc24d4a2cef8",
+    "tree": "3ff6a03d03647110404a7be115d8b01174f0e1f5",
+    "parent": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+    "only_delta": [
+      ".astra-operations-check.json"
+    ],
+    "request": {
+      "productSha": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "run_id": 43626182880,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626182880",
+    "status": "completed",
+    "conclusion": "failure",
+    "job_id": 132542383185,
+    "steps": {
+      "sucafina_typecheck": "failure",
+      "cli_typecheck": "success",
+      "guards": "success",
+      "artifact_upload": "success"
+    },
+    "diagnostics": [
+      {
+        "path": "test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+        "line": 18,
+        "code": "TS2769",
+        "message": "Argument of type 'string | number | boolean | null' is not assignable to parameter of type 'number | null'.",
+        "owner": "sourcing-money",
+        "next": "Narrow the projected baseAmount before the numeric equality assertion; preserve the assertion."
+      },
+      {
+        "path": "test/product/wp14/source-access-atlas.test.ts",
+        "line": 167,
+        "code": "TS2741",
+        "message": "Property 'procurementEvidenceWrites' is missing.",
+        "owner": "WP14 / composition",
+        "next": "Owner patch provided outside product write paths."
+      }
+    ],
+    "guards": {
+      "rules": 78,
+      "changed_paths": 840,
+      "gate": 0,
+      "warn": 11,
+      "errors": 0
+    },
+    "artifacts": [
+      {
+        "id": 14125314453,
+        "name": "astra-operations-check-1",
+        "size_in_bytes": 1726,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14125314453",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14125314453/zip",
+        "expired": false,
+        "created_at": "2026-11-14T18:24:08Z",
+        "expires_at": "2026-11-28T18:24:07Z",
+        "updated_at": "2026-11-14T18:24:08Z",
+        "digest": "sha256:f6a130cd1424152645b5c9623ddd51a775d25f84880fe2b0bb16b06b8c811324",
+        "workflow_run": {
+          "id": 43626182880,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-operations-sourcing-money-aa5d8c0e-1",
+          "head_sha": "96688ded4096accb327aa87db36fbc24d4a2cef8"
+        }
+      }
+    ]
+  },
+  "coverage": [
+    {
+      "criteria": [
+        "WP04.T03.CHK.03",
+        "WP04.T03.DOD.02",
+        "WP04.T03.SUC.02",
+        "WP04.T04.QLT.02",
+        "C02",
+        "C06"
+      ],
+      "scenario": "Real select_quote -> submit_sourcing with future PO; FX1.08 ->2",
+      "observed": {
+        "amount": 108,
+        "currency": "USD",
+        "source": "submitted",
+        "c06_fingerprint": "unchanged",
+        "same_persisted_request": true
+      },
+      "result": "PASS_SCOPED"
+    },
+    {
+      "criteria": [
+        "WP04.INV.02",
+        "WP04.T04.CHK.02"
+      ],
+      "scenario": "Sourcing approved ->po_draft ->submit_po atFX2 ->currentFX3",
+      "observed": {
+        "po": 200,
+        "currency": "USD",
+        "fx": 2,
+        "historical_sourcing": 108
+      },
+      "result": "PASS_SCOPED"
+    },
+    {
+      "criteria": [
+        "WP04.T03.CHK.03",
+        "CAMP.INV.03"
+      ],
+      "scenario": "Missing live FX before submission",
+      "observed": {
+        "base_amount": null,
+        "fx": null,
+        "comparison": null,
+        "submit_status": 422
+      },
+      "result": "PASS_SCOPED"
+    },
+    {
+      "criteria": [
+        "WP04.T03.DOD.02",
+        "CAMP.INV.03"
+      ],
+      "scenario": "Base USD ->GBP after sourcing submission",
+      "observed": {
+        "current_base_amount": null,
+        "submitted_amount": 108,
+        "submitted_currency": "USD",
+        "submitted_fx": 1.08,
+        "c06_fingerprint": "changed"
+      },
+      "result": "PASS_SCOPED"
+    },
+    {
+      "criteria": [
+        "WP04.T03.INV.02",
+        "WP04.INV.02"
+      ],
+      "scenario": "Legal sourcing rejection preserves unavailable cleared snapshot",
+      "observed": {
+        "status": "src_rejected",
+        "base_amount": null,
+        "submitted_amount": 108,
+        "submitted_currency": "USD"
+      },
+      "result": "PASS_SCOPED"
+    }
+  ],
+  "limitations": [
+    "No whole-WP04, AM02, global release, full suite, browser click journey, or native/MCP end-to-end acceptance is claimed.",
+    "C06 observation/fingerprints are exercised with real source lifecycle; the test does not itself submit a collaboration confirmation record.",
+    "Legacy raw request.value remains200 in the pending sourcing scenario. C02-backed queue/detail monetary summary/C06 and comparison remain108. Unmounted table fallback and separate legacy order-difference text are outside permitted product write paths.",
+    "Owner patch is proposed only, with preimage runtime/procurement.ts blob6cd5783d5b4f6f9c9ed3e15547d59f79ccb5ef72; it is not applied or covered by the green run."
+  ],
+  "changed_product_paths": [
+    "modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+  ],
+  "unchanged_confirmation_fields_blob": "a1e45e803105e76f147e695a7e92246257de9b16",
+  "pr": {
+    "number": 57,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/57",
+    "head": "sourcing-money",
+    "base": "astra-operations",
+    "merge": false
+  }
+}

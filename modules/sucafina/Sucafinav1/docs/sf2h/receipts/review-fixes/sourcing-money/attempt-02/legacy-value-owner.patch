@@ -1,0 +1,27 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/procurement.ts b/modules/sucafina/Sucafinav1/runtime/procurement.ts
+--- a/modules/sucafina/Sucafinav1/runtime/procurement.ts
++++ b/modules/sucafina/Sucafinav1/runtime/procurement.ts
+@@ -16,7 +16,7 @@
+ import { visibleRequests, requestStageGuidance, orderSourceGuidance } from "../src/requests.ts"
+ import { quoteAssessment, quoteComparisonPresentation } from "../src/form.ts"
+ import type { FormSettings } from "../src/form.ts"
+-import { approvalDecision, approvalQueue, approvalStageEntry, exportRegister, requestValue } from "../src/procurement-screen.ts"
++import { approvalDecision, approvalQueue, approvalStageEntry, exportRegister } from "../src/procurement-screen.ts"
+ import type { RequestView } from "../src/procurement-screen.ts"
+ import { initialProcurementSettings } from "../src/initial-settings.ts"
+ import { activateSupplier, open, seal, supplierActivationRequirements } from "../src/supplier.ts"
+@@ -883,13 +883,7 @@
+         ...structuredClone(row.request),
+         status: text(row.request.status),
+         createdBy: text(row.request.createdBy),
+-        value: requestValue(row.request as RequestView, {
+-          currency: text(store.settings.currency),
+-          fxRates: rows(store.settings.fxRates).map((rate) => ({
+-            code: text(rate.code),
+-            rate: finite(rate.rate),
+-          })),
+-        }),
++        value: procurementMonetaryFacts(row.request, text(store.settings.currency), store.settings).baseAmount,
+         ...(row.rank ? { ranking: structuredClone(row.rank) } : {}),
+       })),
+       actor,

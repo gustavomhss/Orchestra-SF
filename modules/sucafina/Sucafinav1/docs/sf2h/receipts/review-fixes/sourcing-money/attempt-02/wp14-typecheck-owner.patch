@@ -1,0 +1,12 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
+@@ -164,7 +164,7 @@
+     documents = createSfDocumentServices({ runtime: app.runtime, authority })
+     if (!documents) throw new Error("Actual document services unavailable")
+     const service = documents
+-    business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), documentRead: service.documents.reader })
++    business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites: new WeakSet(), documentRead: service.documents.reader })
+     const product = business
+     const host = authority.host
+     let selectedCase: { id: string; incarnation: string } | undefined
