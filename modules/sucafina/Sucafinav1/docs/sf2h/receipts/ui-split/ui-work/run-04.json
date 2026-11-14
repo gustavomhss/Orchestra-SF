@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h.ui-work.ci-result.v1",
+  "attempt": 4,
+  "W": "e817f5d9d8a85d8d19d70f7e356120cac30a0265",
+  "WTree": "92739139bed9987f1f6fc583d2185213f4c15698",
+  "S": "0e244bfb4d4b59ffed4424025ea4125adcb846e2",
+  "STree": "2d6df63de210d8e00dce3298f44f0119bd4bafca",
+  "requestSha256": "2d3eb1be0b921a76359084bcd0674f133f15a17b710dba54946c44978914f6a8",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/ui-split/ui-work/guards.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "equivalence": [
+    {
+      "filename": ".ci-run.json",
+      "status": "added",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "previous_filename": null
+    }
+  ],
+  "run": {
+    "id": 43622829031,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43622829031",
+    "jobId": 132532071169,
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43622829031/job/132532071169",
+    "conclusion": "success"
+  },
+  "counts": {
+    "pass": 1,
+    "fail": 0
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "baseFetchExitCode": 0,
+    "exitCode": 0,
+    "rules": 78,
+    "changedPaths": 924,
+    "gateFindings": 0,
+    "warnings": 52,
+    "errors": 0
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "e66e61f48926aa7e81a89b3e4617159a",
+    "declaringTests": 1,
+    "spawns": 2,
+    "delegated": 0
+  },
+  "scope": "Only the receipt cleanup and unchanged repository guards were exercised. This run does not rerun or close browser journeys, typecheck, C03/G03 acceptance, or global gates."
+}

@@ -1,0 +1,22 @@
+{
+  "predecessor": "owner-intake.json",
+  "purpose": "Readonly lifecycle preimages for the integration boundary; no foreign patch requested or applied by UI.",
+  "verified_at": "2026-11-14T19:56:49Z",
+  "candidate": "d8524169e0de188312f6c2d3b6877562c47e664d",
+  "owner": "shell lifecycle owner / Composition-WP10",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+      "preimage_blob": "74ccb3c50dcadd85878987870f0e388926898d53",
+      "observed": "revokeAccess dispatches sf-access-revoked before the queued DOM detach; consumers can synchronously purge their captured requests and session storage."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "preimage_blob": "2aeacf2c05e86fef28947c5332284f3089e00049",
+      "observed": "Real shell imports shellStateScript; authorized refresh revokes on401/403/signed-out/access revision change; persisted pageshow reloads."
+    }
+  ],
+  "consumer_ack": "The own consumer listens for that event even after its article detaches. Run02 directly proves that handler; the installed shell/host composition is not exercised by this own fixture.",
+  "limitation": "A fresh signed-out/503 document without this consumer cannot run its handler. Source-replacement proves denial and no protected render, not storage purge in that error document.",
+  "next_action": "During installed-host C03 integration, preserve the existing pre-detach revocation notification and verify transitions through the shared shell under current ownership. Do not edit these foreign preimages from ui-work."
+}

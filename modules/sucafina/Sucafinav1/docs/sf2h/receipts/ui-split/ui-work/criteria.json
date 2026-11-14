@@ -1,0 +1,191 @@
+{
+  "schema": "sf2h.ui-work.criteria-overlay.v1",
+  "universe": "criterion-universe.json",
+  "baselineEvidencePreserved": true,
+  "proofs": {
+    "R02": {
+      "run": 43621603578,
+      "W": "639636280859f5f21f44813658d5d9a0c207fff0",
+      "S": "aebd6ee7bf597fd6cd742af347e60846f58e5cfc",
+      "receipt": "run-02.json"
+    },
+    "R03": {
+      "run": 43622153636,
+      "W": "a8d5d83f9da9a7042f1bfb5f3f19eb601cc16db3",
+      "S": "27d000afc04aa646e27f6804bf430c6dea76835c",
+      "receipt": "run-03.json"
+    },
+    "R04": {
+      "run": 43622829031,
+      "W": "e817f5d9d8a85d8d19d70f7e356120cac30a0265",
+      "S": "0e244bfb4d4b59ffed4424025ea4125adcb846e2",
+      "receipt": "run-04.json"
+    }
+  },
+  "criteria": [
+    {
+      "criterion_id": "WP01.T03.DOD.01",
+      "definition": "Salvamento, validação, cancelamento e conflito têm estados completos e recuperáveis nos componentes reais.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: exact C08 reply loss/retry/reload PASS",
+        "R02: recipient current projection uncertainty + fresh actor admission PASS",
+        "R02: selection loss/retry/reload PASS"
+      ],
+      "remaining": [
+        "R02: real G03 CAS still returns 503",
+        "R02/R03: confirmation/reuse timing acceptance FAIL",
+        "Other baseline criteria/journeys remain inherited."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.INV.01",
+      "definition": "Reconciliação visual nunca faz escrita não solicitada nem ignora a versão esperada.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: exact C08 reply loss/retry/reload PASS",
+        "R02: recipient current projection uncertainty + fresh actor admission PASS",
+        "R02: selection loss/retry/reload PASS"
+      ],
+      "remaining": [
+        "R02: real G03 CAS still returns 503",
+        "R02/R03: confirmation/reuse timing acceptance FAIL",
+        "Other baseline criteria/journeys remain inherited."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.CMP.01",
+      "definition": "Cobrir sucesso, validação, perda de conexão, timeout, conflito, read-only e navegação com edição pendente.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: exact C08 reply loss/retry/reload PASS",
+        "R02: recipient current projection uncertainty + fresh actor admission PASS",
+        "R02: selection loss/retry/reload PASS"
+      ],
+      "remaining": [
+        "R02: real G03 CAS still returns 503",
+        "R02/R03: confirmation/reuse timing acceptance FAIL",
+        "Other baseline criteria/journeys remain inherited."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T03.SUC.01",
+      "definition": "A pessoa consegue corrigir o problema e continuar sem redigitar sua contribuição.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: exact C08 reply loss/retry/reload PASS",
+        "R02: recipient current projection uncertainty + fresh actor admission PASS",
+        "R02: selection loss/retry/reload PASS"
+      ],
+      "remaining": [
+        "R02: real G03 CAS still returns 503",
+        "R02/R03: confirmation/reuse timing acceptance FAIL",
+        "Other baseline criteria/journeys remain inherited."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.CMP.01",
+      "definition": "Cobrir usuário novo, preferência existente, registro removido/inacessível, busca sem resultado e nenhuma pendência.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: one selection, same case/source/March period, exact retry and reload PASS"
+      ],
+      "remaining": [
+        "Published G03 producer fix is not integrated in this write lease.",
+        "WorkSignals/destinations and installed host retain their existing composition boundaries.",
+        "This slice does not requalify directory assignment or all first-cycle states."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.CMP.02",
+      "definition": "Primeiro ciclo distingue ausência de configuração, ausência de acesso e ausência de pendência; permite selecionar registros, período e responsáveis confirmados pelo diretório já autorizado.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: one selection, same case/source/March period, exact retry and reload PASS"
+      ],
+      "remaining": [
+        "Published G03 producer fix is not integrated in this write lease.",
+        "WorkSignals/destinations and installed host retain their existing composition boundaries.",
+        "This slice does not requalify directory assignment or all first-cycle states."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T04.SUC.01",
+      "definition": "Responsáveis chegam aos seus registros, André à revisão e aprovadores às suas decisões com contexto preservado.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: one selection, same case/source/March period, exact retry and reload PASS"
+      ],
+      "remaining": [
+        "Published G03 producer fix is not integrated in this write lease.",
+        "WorkSignals/destinations and installed host retain their existing composition boundaries.",
+        "This slice does not requalify directory assignment or all first-cycle states."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.INV.01",
+      "definition": "UI nunca inventa permissão, confirmação, resultado de IA ou sucesso de comando; chat não é fonte única dos dados da decisão.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: no false recipient ACK from current projection; no automatic writes after reload",
+        "R02: selected message identity passed preparation assertions",
+        "R03: exact prepare-message and answer-confirm HTTP 200 recorded as diagnostics only"
+      ],
+      "remaining": [
+        "Confirmation/reuse timed out; no passing final attachment journey.",
+        "Installed host/native identity and other decision/AI journeys remain outside this proof."
+      ]
+    },
+    {
+      "criterion_id": "WP01.T05.CMP.01",
+      "definition": "Cobrir novo caso, caso existente, lacuna, análise em curso, cancelamento, falha, stale, escolha, aplicação parcial, reavaliação e acesso revogado.",
+      "status": "PARTIAL_SCOPED_OBSERVATIONS_ONLY",
+      "implementation": [
+        "product/ui/case-work-selection.ts",
+        "product/ui/work-collaboration.ts"
+      ],
+      "proofs": [
+        "R02: no false recipient ACK from current projection; no automatic writes after reload",
+        "R02: selected message identity passed preparation assertions",
+        "R03: exact prepare-message and answer-confirm HTTP 200 recorded as diagnostics only"
+      ],
+      "remaining": [
+        "Confirmation/reuse timed out; no passing final attachment journey.",
+        "Installed host/native identity and other decision/AI journeys remain outside this proof."
+      ]
+    }
+  ],
+  "globalRelease": false
+}

@@ -1,0 +1,99 @@
+{
+  "mission": "ui-recipient-ack",
+  "actor": "S1-A",
+  "branch": "ui-work",
+  "pull_request": 47,
+  "base_branch": "interface-resume",
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "assignment": {
+    "commit": "5e5c6b6ad29b985376880b4da40cb51c7424849b",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/ui-recipient-ack.json",
+    "blob": "0c42704f0cf502147f61b2f5da47359e1e2ecc60"
+  },
+  "common": {
+    "commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c"
+  },
+  "actor_pack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S1-A.json",
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "blob": "2b4576e752bba8b2175a99a1807e0713695e7265"
+  },
+  "reconciliation": {
+    "previous_head": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "tree": "d0508747f0818b3467f44bac845ca6a878bdb7ea",
+    "terminal_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-work/README.md",
+    "terminal_blob": "c25f0949fabf7c2f94c7542079a828a92b20fce3",
+    "pr_comments": 0,
+    "branch_runs": 0,
+    "previous_writer": "Terminal delivery and handoff read; new user assignment explicitly resumes that delivery. No inference from silence.",
+    "latest_readback": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "preservation": "All prior commits and receipts retained; no reset, merge or new product branch."
+  },
+  "ui_preimage": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+    "blob": "175ff36fe09405e0f31dd55207d751e3753f6ffb"
+  },
+  "producer": {
+    "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+    "current_branch_head": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+    "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+    "contract_blob": "b007f61c444af37a4fcb788bd512baad34b7071a",
+    "intake": "Verbatim factory inside own test namespace; real retained dependencies and HTTP. Production host remains readonly.",
+    "prior_handoff": "work-ack@92243fc68ff81df7fc563ec081ac9db686a24dfa is historical; its Boolean producer diagnosis does not describe the current producer."
+  },
+  "prior_validation": [
+    {
+      "run": 43628901092,
+      "job": 132550878448,
+      "W": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+      "S": "0499e3e313814baad066b3cccb14e4c37ee9fa1c",
+      "pass": 20,
+      "fail": 0,
+      "assertions": 247,
+      "files": 8,
+      "scope": "Producer; not browser intent recovery"
+    },
+    {
+      "run": 43630483191,
+      "job": 132555760059,
+      "W": "f34edcfff26d0041145e13ea612d8d67f58dcbff",
+      "S": "0f11903d2c4a888092dd9e13bcea5c817ef5249d",
+      "pass": 3,
+      "fail": 0,
+      "filtered": 5,
+      "assertions": 36,
+      "files": 3,
+      "scope": "Selected producer follow-up; not 20 cases"
+    },
+    {
+      "run": 43621603578,
+      "scope": "Prior ordinary component proof retained; full run had 5 pass / 2 fail in G03 and confirmation; not promoted"
+    }
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+    "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-ack-completion/"
+  ],
+  "validation": {
+    "local_product_tests": "NOT_RUN",
+    "hosted": "PENDING",
+    "request": "ci-request.01.json",
+    "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "location_validator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+    "runner": "existing test-ci.yml via GitHub MCP snapshot; no epic/full suite",
+    "static_baseline": "9 pre-existing foreign typecheck diagnostics remain a possible full-run failure; do not turn them into PASS."
+  },
+  "limitations": [
+    "No G03 or reuse/attachment duplication.",
+    "ACK is C03 mutation acknowledgment, not C06 confirmation or financial approval.",
+    "Real fixture actor authentication/recipient leases and seeded case-question link remain explicit boundaries.",
+    "No native, C05 installation, AM01-AM06, full campaign acceptance or GLOBAL_RELEASE."
+  ],
+  "state": "IMPLEMENTED_PENDING_HOSTED_VALIDATION"
+}
+

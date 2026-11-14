@@ -1,0 +1,47 @@
+{
+  "scope": "Delta only; broad 15 WP / 74 tasks / 17 contracts / 1610 criteria and canonical texts remain unchanged.",
+  "affected": [
+    {
+      "ids": [
+        "WP01.T03.CHK.01",
+        "WP01.T03.INV.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "behavior": "Uncertain reply preserves original payload/key/storage version; reload requires fresh authorization and explicit retry.",
+      "status": "PENDING_HOSTED"
+    },
+    {
+      "ids": [
+        "WP01.INV.01",
+        "WP01.T05.INV.01",
+        "WP01.T05.CHK.02",
+        "WP01.T05.CMP.01"
+      ],
+      "behavior": "Exact receipt/message association; revocation/principal/project/policy/case scope protection and purge; no invented ACK.",
+      "status": "PENDING_HOSTED"
+    }
+  ],
+  "proofs": [
+    "ordinary C08 exact snapshot regression",
+    "same-text distinct identities + loss after commit + original-key retry",
+    "SQLite reopen + browser reload + resolved replay + no autosend/reopen",
+    "body/expectedStorageVersion divergence",
+    "missing/Boolean/wrong kind/action/principal/key/thread/digests/message tuple/source receipt",
+    "durable Boolean legacy outcome",
+    "edited original message version",
+    "revocation and principal switch",
+    "physical source replacement",
+    "detached view purge and bfcache reauthorization"
+  ],
+  "not_claimed": [
+    "Complete WP01 DoD",
+    "G03",
+    "C06 confirmation/reuse",
+    "answer attachment",
+    "C05 installed host",
+    "native/AM proofs",
+    "GLOBAL_RELEASE"
+  ]
+}
+

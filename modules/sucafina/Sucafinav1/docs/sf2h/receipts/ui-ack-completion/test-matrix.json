@@ -1,0 +1,260 @@
+{
+  "schema": "sf-ui-ack-test-matrix-v1",
+  "mission": "ui-recipient-ack",
+  "functional_case_count": 12,
+  "candidate": {
+    "W": "d8524169e0de188312f6c2d3b6877562c47e664d",
+    "S": "a53551af20e1476173cbeed8b54ae8f61c9872fe"
+  },
+  "status_basis": "Observed completed GitHub Actions logs; exact per-case provenance, with reuse proven in blobs.03.json. Aggregate package runs remain failure due typecheck.",
+  "runs": {
+    "run01": {
+      "id": 43632801654,
+      "job": 132562905431,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632801654/job/132562905431",
+      "status": "completed_failure",
+      "result": "3 pass / 12 fail / 30 assertions; ordinary/startup/lifecycle passed; 11 recipient tests stopped at loader; external typecheck failed."
+    },
+    "run02": {
+      "id": 43633483813,
+      "job": 132565093216,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633483813/job/132565093216",
+      "S": "d482772e85f117e95f70dbaabed7b0518e9f5b1e",
+      "status": "completed_failure",
+      "result": "11 pass / 3 fail / 308 assertions / 14 tests / 6 files / 131.15s. Nine recipient cases passed; lifecycle/source navigation tests and external typecheck failed."
+    },
+    "run03": {
+      "id": 43634168745,
+      "job": 132567207864,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634168745/job/132567207864",
+      "status": "completed_failure",
+      "result": "6 pass / 1 fail / 113 assertions / 7 tests / 5 files / 92.00s. All four selected recipient cases passed; only external typecheck failed."
+    }
+  },
+  "cases": [
+    {
+      "id": "ordinary-thread",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+      "test": "an exact C08 reply snapshot survives lost delivery and identical concurrent replies without a duplicate after retry or reload",
+      "status": "PASS01",
+      "evidence": "run01",
+      "input_action": "Ordinary thread with an equal prior reply; commit the UI reply, corrupt delivery, append an equal concurrent reply, retry the original request, then reload.",
+      "oracle_expected": "Exact C08 transaction snapshot acknowledges its own append; original body/key preserved; durable messages remain four; retry/reload adds no duplicate.",
+      "reuse": "ordinary01",
+      "observed": "PASS in run01 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "recipient-exact-identity",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "test": "recipient ACK selects the committed identity among equal messages and exact retry never appends twice",
+      "status": "PASS03",
+      "evidence": "run03",
+      "prior_observation": "PASS02",
+      "input_action": "Equal prior recipient reply, lost UI commit response, equal later reply, then explicit retry.",
+      "oracle_expected": "Real receipt matches principal/key/thread/commandDigest/complete intentDigest/source incarnation and exact message id/incarnation/version; current messages remain four; storage clears only after that ACK; no C06 calls.",
+      "reuse": "changed_file03",
+      "observed": "Matched exact test name in run03 job132567207864; all assertions completed."
+    },
+    {
+      "id": "recipient-page-lifecycle",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "test": "pagehide removes protected pending content and persisted pageshow reauthorizes by GET without autosend",
+      "status": "PASS03",
+      "evidence": "run03",
+      "prior_observation": "FAIL02: the load wait expired while the navigation response remained gated; synchronization was corrected without a product change or timeout increase.",
+      "input_action": "After a real lost commit, dispatch synthetic PageTransitionEvent pagehide/pageshow.persisted; gate the actual document GET, observe zero commits, release it, reopen and explicitly retry.",
+      "oracle_expected": "Protected DOM is hidden/cleared before reload; scoped intent survives; real GET200 yields exactly one new document commit; no automatic thread read or reply; fresh authorization restores original request; explicit replay clears it.",
+      "boundary": "Synthetic lifecycle event control only. This is not a native browser BFcache restoration proof.",
+      "reuse": "changed_file03",
+      "observed": "Matched exact test name in run03 job132567207864; all assertions completed."
+    },
+    {
+      "id": "recipient-reload-resolved",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "test": "reload reauthorizes before showing pending content and replays a resolved thread without reopening or autosend",
+      "status": "PASS03",
+      "evidence": "run03",
+      "prior_observation": "PASS02",
+      "input_action": "Lose a committed reply; append an equal message; resolve thread; reopen the actual SQLite store; reload; gate fresh thread-read; explicitly retry.",
+      "oracle_expected": "No stored content renders before fresh thread/case authorization; original body/key/expectedStorageVersion survive; same receipt acknowledges exact message; thread stays resolved; no new append/history/storage version; no C06 calls.",
+      "reuse": "changed_file03",
+      "observed": "Matched exact test name in run03 job132567207864; all assertions completed."
+    },
+    {
+      "id": "divergent-intent",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "test": "same recipient key with changed text or expected storage version conflicts and preserves the pending original",
+      "status": "PASS02",
+      "evidence": "run02",
+      "input_action": "Reuse the lost operation key first with changed text and then changed expectedStorageVersion; finally retry the original envelope.",
+      "oracle_expected": "Both divergent attempts return409 idempotency-content-changed; original remains pending and later acknowledges without another durable reply; four observed POST attempts.",
+      "reuse": "refusal02",
+      "observed": "PASS in run02 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "persisted-scope-purge",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "test": "recovery purges a persisted intent whose project or policy scope differs from the fresh page",
+      "status": "PASS02",
+      "evidence": "run02",
+      "input_action": "For projectId and policyVersion separately, change only the negative persisted scope envelope after a real lost commit, then reload and open.",
+      "oracle_expected": "Fresh page purges foreign scope before rendering pending content; composer is empty; no retry control or automatic POST; committed state remains unchanged.",
+      "reuse": "refusal02",
+      "observed": "PASS in run02 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "invalid-delivered-receipt",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "test": "current projection, legacy Boolean and invalid receipt fields cannot acknowledge the pending mutation",
+      "status": "PASS02",
+      "evidence": "run02",
+      "input_action": "For each subcase, fetch the same legitimate producer replay and corrupt only its delivered receipt; finally deliver the original receipt.",
+      "oracle_expected": "All12 variants preserve locked pending intent despite an apparently successful current projection; final valid original receipt clears it. Fourteen exact POST attempts; one durable UI append.",
+      "subcases": [
+        {
+          "id": "missing",
+          "input": "Omit mutationReceipt from a real successful producer response.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "legacy-Boolean",
+          "input": "Replace delivered mutationReceipt with true.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "wrong-principal",
+          "input": "Change principalRef to reader-c.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "wrong-key",
+          "input": "Change idempotencyKey.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "wrong-thread",
+          "input": "Change threadId.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "wrong-intent",
+          "input": "Change intentDigest.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "wrong-command",
+          "input": "Change commandDigest.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "missing-message",
+          "input": "Point reply.id to an absent message.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "different-incarnation",
+          "input": "Change reply.incarnation.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "different-version",
+          "input": "Increment reply.version.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "equal-text-prior-message",
+          "input": "Point reply to a pre-existing equal-text message tuple.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        },
+        {
+          "id": "different-source",
+          "input": "Change sourceIncarnation.",
+          "status": "PASS02",
+          "expected": "Remain pending with the original locked text/key/version; no additional durable reply."
+        }
+      ],
+      "reuse": "refusal02",
+      "observed": "PASS in run02 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "detached-purge",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "test": "an access-revoked event purges a pending intent even after its conversation element detaches",
+      "status": "PASS02",
+      "evidence": "run02",
+      "input_action": "After a real lost commit, detach the conversation article, dispatch sf-access-revoked, then reload with fresh authorization.",
+      "oracle_expected": "Detached entry loses protected content and scope attributes; pending storage purges; no retry or automatic POST; fresh composer is empty.",
+      "boundary": "Synthetic UI revocation signal; the prior domain commit and receipt are real.",
+      "reuse": "refusal02",
+      "observed": "PASS in run02 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "persisted-legacy-boolean",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "test": "legacy persisted Boolean remains unavailable after retry and reload without a synthetic ACK",
+      "status": "PASS02",
+      "evidence": "run02",
+      "input_action": "Replace the existing real C08 transaction outcome with legacy true as negative corpus; retry; reopen SQLite and reload.",
+      "oracle_expected": "Producer returns503 thread-mutation-receipt-unavailable; no identity backfill or new append; fresh reauthorization recovers pending original but never acknowledges Boolean.",
+      "reuse": "refusal02",
+      "observed": "PASS in run02 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "edited-exact-message",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "test": "editing the exact committed message invalidates its old version instead of matching the new text",
+      "status": "PASS02",
+      "evidence": "run02",
+      "input_action": "After lost commit, edit its exact message through the actual authorized threadHistory port, increasing version; retry original.",
+      "oracle_expected": "New message version remains durable; original receipt cannot identify its old current version, returns503 receipt-unavailable; UI preserves frozen request without another append.",
+      "reuse": "refusal02",
+      "observed": "PASS in run02 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "revocation-principal-purge",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "test": "revocation and principal switch purge the scoped intent before any retry or protected render",
+      "status": "PASS02",
+      "evidence": "run02",
+      "input_action": "After lost commit, separately disable reader-b or switch browser actor to reader-c; click retry; restore reader-b and reopen.",
+      "oracle_expected": "Fresh case GET denies before mutation POST; protected UI and persisted intent purge; no extra reply; restoring access requires new authorized reads and yields empty composer.",
+      "reuse": "refusal02",
+      "observed": "PASS in run02 retained only with exact unchanged inputs; see blobs.03.json."
+    },
+    {
+      "id": "physical-source-replacement",
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+      "test": "physical source replacement refuses the old recipient intent and reload cannot render its protected text",
+      "status": "PASS03",
+      "evidence": "run03",
+      "prior_observation": "FAIL02: real GET503/body-empty passed, but the navigation error prefix was reload: rather than page.reload:; exact-code matcher corrected.",
+      "input_action": "After lost commit, delete the source using its real domain command, then inject explicitly hostile same-ID replacement corpus; replay old intent and reload.",
+      "oracle_expected": "Physical incarnation changes; old replay returns no receipt/content and no mutation; independent GET is503 empty; only the documented ERR_HTTP_RESPONSE_CODE_FAILURE navigation rejection is tolerated; no protected content/autosend.",
+      "reuse": "changed_file03",
+      "observed": "Matched exact test name in run03 job132567207864; all assertions completed."
+    }
+  ],
+  "reuse_requirements": {
+    "common": "Carry evidence only with exact relevant production/test/helper/fixture/dependency/config blobs, selected commands/environment, producer pin and scope retained. W→S must differ only by .ci-run.json. Keep failed runs and source logs; guard or unrelated green is not functional PASS.",
+    "ordinary01": "Run01 ordinary evidence may carry only while work-collaboration.ts, ordinary-thread.test.ts and its actual retained fixture/driver closure remain identical. It does not load the recipient producer helper.",
+    "refusal02": "Run02 seven-case refusal evidence may carry only while recipient-refusal.test.ts, work-collaboration.ts, browser-fixture/proof-helpers/producer-loader, exact producer/dependencies and retained fixture/driver closure remain identical. Run03 edits confined to recovery/source tests do not transfer a pass to those edited files.",
+    "changed_file03": "All three cases in edited recipient-recovery.test.ts and the edited source-replacement.test.ts passed the exact selected run03. No edited test receives run02's prior result."
+  },
+  "limits": [
+    "All positive recipient receipts come from the published factory blob22c6309c61b27b89914086a7602bf3bea61a988b and real SQLite/C08/HTTP. Negative delivery/corpus changes never fabricate a positive receipt.",
+    "Component composition uses readonly shared fixtures with an explicit actor-authentication/recipient-lease boundary; not production host installation or C05 review acceptance.",
+    "No native BFcache claim, no C06 confirmation/financial approval, no G03/reuse/attachment closure, no complete WP01/E02/E10/AM claim.",
+    "Only GitHub Actions selected tests. No local execution. External typecheck failure remains an independent blocker even when functional cases pass."
+  ]
+}

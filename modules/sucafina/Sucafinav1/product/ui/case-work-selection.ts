@@ -44,11 +44,12 @@ document.querySelectorAll('[data-case-work-selection]').forEach((form) => {
     const ticket = epoch, controller = new AbortController(); controllers.add(controller)
     const timeout = setTimeout(() => controller.abort(), 10000)
     try {
-      const response = await fetch(request.url, { ...request.init, credentials: 'same-origin', signal: controller.signal })
+      const response = await fetch(request.url, { ...request.init, credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
       if (!active()) throw Object.assign(new Error('closed'), { ignored: true })
       if (response.status === 401 || response.status === 403) { revoke(); dispatchEvent(new CustomEvent('sf-access-revoked')); throw Object.assign(new Error('access-changed'), { ignored: true }) }
       const body = await response.text()
       if (!active() || ticket !== epoch) throw Object.assign(new Error('superseded'), { ignored: true })
+      if (controller.signal.aborted) throw new Error('selection-response-expired')
       return { response, body }
     } finally { clearTimeout(timeout); controllers.delete(controller) }
   }

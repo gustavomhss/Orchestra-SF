@@ -1,0 +1,22 @@
+NOT_APPLIED — exact published producer intake for Collaboration/Composition.
+Preimage commit 2ee71fc90055814912654ae198f7a1dcf9583943, blob ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0.
+Postimage commit 0d9820924b33a8fc7b145f54a675aeef76c98489, blob cd9a67887f41986243809672572c972440c832ec.
+This receipt does not modify the producer path.
+
+diff --git a/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts b/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts
+--- a/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts
+@@ -176,7 +176,7 @@
+       }
+       input.caseSelectionWrites.add(work)
+       const saved = await input.state.transaction(request, { namespace: "preferences", ...selected.mutation, commandDigest: digestSfValue(selected.draft), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.caseSelectionWrites.delete(work))
+-      if (saved.status === "preview") return { status: "conflict", reason: "selection-not-committed" }
++      if (saved.status === "preview" || (saved.status === "conflict" && saved.reason === "product-state-changed")) return { status: "conflict", reason: "selection-not-committed" }
+       if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "selection-unavailable" }
+       const verified = await load(saved.value, stored.period, context)
+       if (verified.status !== "ok") return verified
+@@ -185,3 +185,4 @@
+   }
+ }
+ 
++
