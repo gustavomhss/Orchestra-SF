@@ -1,0 +1,29 @@
+{
+  "schema": "compose-resume-published-guide-intake-v1",
+  "parent": {
+    "sha": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "tree": "64d26157c0044018712074e55a4a56f36db15d5f"
+  },
+  "source": {
+    "pr": 43,
+    "branch": "interface-resume",
+    "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+    "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+    "path": "docs/guides/sucafina-workbench.md",
+    "blob": "bf1a152781f38845f1b22384072ae0b36987984a"
+  },
+  "previousBlob": "e112f63432fe922a59242fdf08d4c28367abccf1",
+  "owner": [
+    "WP01",
+    "WP02"
+  ],
+  "decision": "CONSUME_THREE_EXACT_PUBLISHED_TEXT_HUNKS",
+  "hunks": [
+    "## Preservar um retrato do Dashboard\n\nNo Dashboard, abra **Revisão e ações**, confira o período e selecione **Carregar opções**. Em **Registro para preservar**, escolha um registro da página atual e selecione **Preservar retrato**. A captura conserva os campos autorizados dessa seleção, inclusive quando o registro também aparece em outra página. Para consultar o retrato salvo, selecione-o em **Reunião ou retrato preservado** e use **Abrir histórico**; a data apresentada é a da captura e o acesso é conferido novamente.\n\n",
+    "Uma atualização ou consulta de um componente que detecta sessão expirada ou mudança de permissão remove a visualização anterior inteira, inclusive diálogos e rascunhos que não podem mais ser exibidos. Já uma indisponibilidade temporária conserva a edição e informa que a atualização falhou. Se você continuar digitando durante um salvamento, o novo texto permanece pendente depois que a tentativa anterior termina.",
+    "No painel de pauta e Hot Topics, uma resposta incompleta ou incompatível com a tentativa não confirma retrato, reunião, rascunho, preparação ou aplicação. Os campos e a solicitação original permanecem preservados e bloqueados; use **Repetir mesma tentativa** para conferir o resultado com seu acesso atual. Uma aplicação sem confirmação continua inconclusiva mesmo que a gravação já tenha ocorrido: confira o recibo autorizado antes de iniciar outra alteração."
+  ],
+  "why": "Document only already-consumed R02 behavior. All other guide text preserved; C05/decision recovery source additions remain held with corresponding code.",
+  "validation": "No product tests repeated for documentation-only change. Execution receipts retain their exact W=e1a1888bd2117616d53c5af5f5014e81c4b4e530. This guide is normative product material, so this increment is NOT D and cannot inherit global C/G7 acceptance. S0 freezes final C including guides and runs its guards.",
+  "codeChanged": false
+}

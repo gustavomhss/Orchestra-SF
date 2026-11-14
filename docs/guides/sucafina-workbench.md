@@ -33,6 +33,10 @@ Se um registro, plano ou filtro salvo deixar de estar disponível, a lista mostr
 
 Se a confirmação de salvar, remover ou definir a página inicial não chegar, mantenha a página aberta e use a opção de repetir a mesma solicitação. Nome, densidade e filtros ficam preservados enquanto o resultado é incerto. Abrir outra visualização com uma edição pendente exige confirmar o descarte.
 
+## Preservar um retrato do Dashboard
+
+No Dashboard, abra **Revisão e ações**, confira o período e selecione **Carregar opções**. Em **Registro para preservar**, escolha um registro da página atual e selecione **Preservar retrato**. A captura conserva os campos autorizados dessa seleção, inclusive quando o registro também aparece em outra página. Para consultar o retrato salvo, selecione-o em **Reunião ou retrato preservado** e use **Abrir histórico**; a data apresentada é a da captura e o acesso é conferido novamente.
+
 ## Registrar e comparar uma decisão
 
 Use **Create a decision** quando precisar manter objetivo, critérios, alternativas e histórico juntos. Informe o objetivo, as datas, a moeda e um critério por linha; depois selecione **Create decision**. A tela abre o caso criado. Você pode editar objetivo, período, moeda e critérios em **Edit decision**.
@@ -112,7 +116,9 @@ Ao recarregar a mesma página, uma prévia ainda disponível é recuperada após
 
 Mensagens de indisponibilidade, mudança de acesso, informação desatualizada ou edição simultânea indicam que a informação ou a permissão não pôde ser confirmada naquele momento. Atualize a página e confira o registro de origem. Se houver uma edição em andamento, compare os valores atuais com os seus antes de tentar novamente.
 
-Uma atualização que detecta sessão expirada ou mudança de permissão remove a visualização anterior, inclusive diálogos e rascunhos que não podem mais ser exibidos. Já uma indisponibilidade temporária conserva a edição e informa que a atualização falhou. Se você continuar digitando durante um salvamento, o novo texto permanece pendente depois que a tentativa anterior termina.
+Uma atualização ou consulta de um componente que detecta sessão expirada ou mudança de permissão remove a visualização anterior inteira, inclusive diálogos e rascunhos que não podem mais ser exibidos. Já uma indisponibilidade temporária conserva a edição e informa que a atualização falhou. Se você continuar digitando durante um salvamento, o novo texto permanece pendente depois que a tentativa anterior termina.
+
+No painel de pauta e Hot Topics, uma resposta incompleta ou incompatível com a tentativa não confirma retrato, reunião, rascunho, preparação ou aplicação. Os campos e a solicitação original permanecem preservados e bloqueados; use **Repetir mesma tentativa** para conferir o resultado com seu acesso atual. Uma aplicação sem confirmação continua inconclusiva mesmo que a gravação já tenha ocorrido: confira o recibo autorizado antes de iniciar outra alteração.
 
 Uma lista vazia pode significar que não há itens atribuídos no período, decisões acessíveis ou resultados salvos. Uma tela indisponível não confirma que a ação foi concluída. Em caso de dúvida, consulte o registro de origem antes de repetir uma gravação.
 
