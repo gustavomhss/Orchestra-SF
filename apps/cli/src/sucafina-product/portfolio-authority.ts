@@ -38,21 +38,34 @@ export function createSfPortfolioAuthority(input: {
   const readMetric: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
     if (!scenarios || request.metricRef !== "planner:known-subtotal-difference" || !request.baselineRef)
       return { status: "unavailable", reason: "criterion-metric-producer-unavailable" }
-    const stored = await business.results.readHistoricalScenario({ resultRef: request.scenarioRef }, call)
+    const captured = structuredClone(request)
+    const source = host.requestFor(call)
+    const binding = digestSfValue([call.kind, call.binding])
+    const stored = await business.results.readHistoricalScenario({ resultRef: captured.scenarioRef }, call)
     if (stored.status !== "ok") return stored
-    if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== request.caseRef.id || stored.value.caseRef.incarnation !== request.caseRef.incarnation || stored.value.caseRef.version > request.caseRef.version)
+    if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== captured.caseRef.id || stored.value.caseRef.incarnation !== captured.caseRef.incarnation || stored.value.caseRef.version > captured.caseRef.version)
       return { status: "denied", reason: "criterion-scenario-scope-mismatch" }
-    const result = await business.planner.compareScenarios({ scenarioRefs: [request.baselineRef, request.scenarioRef], criteria: [] }, call)
+    // Observe only this invocation's real producer reads. The public comparator
+    // reopens both scenarios and validates these final snapshots before return.
+    // No observation serves a resolve call or survives this metric invocation.
+    const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
+    const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
+      const observation = structuredClone(await scenarios.resolve(reference, context))
+      observed.set(reference, observation)
+      return observation
+    } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
     if (result.status !== "ok") return result
-    const baseline = await scenarios.resolve(request.baselineRef, call)
-    const candidate = await scenarios.resolve(request.scenarioRef, call)
+    const baseline = observed.get(captured.baselineRef!)
+    const candidate = observed.get(captured.scenarioRef)
+    if (!baseline || !candidate) return { status: "unavailable", reason: "criterion-metric-observation-unavailable" }
     if (baseline.status !== "ok") return baseline
     if (candidate.status !== "ok") return candidate
-    if (digestSfValue(candidate.value.result) !== stored.value.resultDigest || result.value.baselineResultRef !== request.baselineRef ||
-      result.value.alternativeResultRef !== request.scenarioRef || !await host.revalidate(call)) return { status: "stale", reason: "criterion-metric-changed" }
+    if (digestSfValue(candidate.value.result) !== stored.value.resultDigest || result.value.baselineResultRef !== captured.baselineRef ||
+      result.value.alternativeResultRef !== captured.scenarioRef || !await host.revalidate(call) || !source || host.requestFor(call) !== source || source.signal.aborted ||
+      binding !== digestSfValue([call.kind, call.binding]) || digestSfValue(request) !== digestSfValue(captured)) return { status: "stale", reason: "criterion-metric-changed" }
     const evidenceRefs = [...baseline.value.result.sourceRefs, ...candidate.value.result.sourceRefs]
       .filter((ref, index, all) => all.findIndex((entry) => entry.refDigest === ref.refDigest) === index)
-    return { status: "ok", value: { ...request, value: result.value.knownDifference, unit: candidate.value.result.currency,
+    return { status: "ok", value: { ...captured, value: result.value.knownDifference, unit: candidate.value.result.currency,
       period: candidate.value.result.horizon, evidenceRefs, state: result.value.comparisonStatus === "complete" ? "confirmed" : "conditioned",
       engineVersion: candidate.value.projection.engineVersion } }
   }

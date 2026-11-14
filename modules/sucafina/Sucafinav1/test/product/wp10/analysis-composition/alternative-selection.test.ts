@@ -39,6 +39,8 @@ function ok<T>(result: PortResult<T> | SfStateResult<T>): T {
 
 // Real SQLite/C08, Planner, source issuance, human selection and one-use native binding.
 // Session/skill observations are declared boundary fixtures; no model or native session execution is claimed.
+// The authority proof selects January from the unchanged annual Planner source.
+// It does not qualify annual composition latency or complete financial coverage.
 async function fixture() {
   const deadline = performance.now() + 105_000
   const deadlineError = new Error("Alternative-selection fixture exceeded its 105000ms cooperative deadline")
@@ -135,7 +137,7 @@ async function fixture() {
     const initial = { id: "case", incarnation: "case-inc", version: 1 }
     ok(await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref,
       targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "case", commandDigest: digestSfValue(initial) }, async (state) => {
-      state.cases.case = { ...initial, state: "draft", objective: "Explicit alternative", horizon: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD",
+      state.cases.case = { ...initial, state: "draft", objective: "Explicit alternative", horizon: { start: "2026-01-01", end: "2026-01-31" }, currency: "USD",
         criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
       return { commit: true, value: true }
     }))
@@ -175,8 +177,10 @@ async function fixture() {
     }
     const read = await readCall()
     const source = ok(await phase("fixture.source", () => business.plannerProduct.issueSource("v0", read))).evidence
-    const horizon = { start: "2026-01-01", end: "2026-12-31" }
+    const horizon = { start: "2026-01-01", end: "2026-01-31" }
     const forecast = ok(await phase("fixture.forecast", () => business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: horizon, currency: "USD" }, read)))
+    expect(source.target.period).toEqual({ start: "2026-01-01", end: "2026-12-31" })
+    expect(forecast.baseline.context.period).toEqual(horizon)
     authority.ui.finish(read)
     const coverage: BaselineCoverageRequest = { caseRef: initial, source, expectedVersion: 0,
       basis: { id: "renewal", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [source] },
@@ -191,6 +195,7 @@ async function fixture() {
       for (const id of ["first", "chosen", "outside"]) {
         const scenario: ScenarioRequest = { baseRef: source.refId, operations: [], assumptions: [{ id: "hypothesis", value: id, state: "hypothetical", evidenceRefs: [] }] }
         const result = ok(await phase(`fixture.scenario.${id}`, () => business.planner.simulateScenario(scenario, coverageCall)))
+        expect(result.horizon).toEqual(horizon)
         // Only the fixture's case identities are assigned; financial results and source evidence come from the actual Planner.
         alternatives.push({ id, version: 1, title: "Same title", scenario, result: { ...result, costCoverage: { ...result.costCoverage, alternativeId: id, alternativeVersion: 1 } } })
       }

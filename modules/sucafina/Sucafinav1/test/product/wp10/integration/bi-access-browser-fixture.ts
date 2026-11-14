@@ -1,6 +1,11 @@
 import { expect } from "bun:test"
+import type { Route } from "@playwright/test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
+
+type BrowserRequest = ReturnType<Route["request"]>
+type BrowserResponse = NonNullable<Awaited<ReturnType<BrowserRequest["response"]>>>
+type Handled = { status: number; body: Buffer }
 
 /** Chromium uses the real composed HTML/bundle and exact HTTP-handler output.
  * Route forwarding is a transport seam, not TCP hosting or installed-auth/native/global acceptance.
@@ -9,10 +14,10 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
   privateReferences: readonly string[]; signal: AbortSignal }) {
   const { chromium } = await import("@playwright/test")
   const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
+  input.signal.throwIfAborted()
   const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
-  const pending = { release: () => {}, observed: (_value: { status: number; body: Buffer }) => {}, settled: () => {} }
+  const pending = { release: () => {}, settled: () => {} }
   const release = new Promise<void>((resolve) => { pending.release = resolve })
-  const observed = new Promise<{ status: number; body: Buffer }>((resolve) => { pending.observed = resolve })
   const settled = new Promise<void>((resolve) => { pending.settled = resolve })
   const errors: string[] = []
   const bounded = async <T>(work: Promise<T>) => {
@@ -23,11 +28,43 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
       })])
     } finally { if (timer) clearTimeout(timer) }
   }
+  const ready = async <T>(work: Promise<T>) => {
+    input.signal.throwIfAborted()
+    let stop: (() => void) | undefined
+    const cancelled = new Promise<never>((_resolve, reject) => {
+      stop = () => reject(input.signal.reason)
+      input.signal.addEventListener("abort", stop, { once: true })
+    })
+    try { return await Promise.race([work, cancelled]) }
+    finally { if (stop) input.signal.removeEventListener("abort", stop) }
+  }
+  const watches: { mode: string; request?: BrowserRequest; sent: ReturnType<typeof observedEvent<BrowserRequest>>;
+    handled: ReturnType<typeof observedEvent<Handled>>; response: ReturnType<typeof observedEvent<BrowserResponse>> }[] = []
+  const observe = (mode: string) => {
+    const watch = { mode, request: undefined as BrowserRequest | undefined, sent: observedEvent<BrowserRequest>(),
+      handled: observedEvent<Handled>(), response: observedEvent<BrowserResponse>() }
+    watches.push(watch)
+    return {
+      handled: async () => { await bounded(ready(watch.sent.promise)); return ready(watch.handled.promise) },
+      response: async () => {
+        await bounded(ready(watch.sent.promise))
+        // The real producer remains within the test's 105s cancellation budget.
+        // The 10s browser delivery window starts after actual handler output;
+        // it does not expire while goto is still awaiting the HTML/bundle.
+        await ready(watch.handled.promise)
+        return bounded(ready(watch.response.promise))
+      },
+    }
+  }
   let closeBrowser: (() => Promise<void>) | undefined
   let closed = false, held = false
   const dispose = async () => {
     if (closed) return
     closed = true; pending.release()
+    for (const watch of watches) {
+      const error = new Error("WP10_BI_BROWSER_CLOSED")
+      watch.sent.reject(error); watch.handled.reject(error); watch.response.reject(error)
+    }
     if (closeBrowser) await closeBrowser()
     else await browser.close()
   }
@@ -38,35 +75,50 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
     context.setDefaultNavigationTimeout(15_000)
     await context.route("https://example.test/**", async (route) => {
       const request = route.request()
-      const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
-        ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
-      if (!response) { await route.abort("blockedbyclient"); return }
-      const forwarded = { status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) }
-      const delayed = !held && new URL(request.url()).searchParams.get("sf") === "bi-source"
-      if (delayed) {
-        held = true; pending.observed({ status: response.status, body: forwarded.body })
-        await release
+      const mode = new URL(request.url()).searchParams.get("sf") ?? "other"
+      const watch = watches.find((entry) => entry.mode === mode && !entry.request)
+      if (watch) { watch.request = request; watch.sent.resolve(request) }
+      const at = performance.now()
+      console.info("SF_BI_BROWSER_HTTP", JSON.stringify({ mode, state: "started" }))
+      try {
+        const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
+          ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
+        if (!response) {
+          if (watch) throw new Error(`Real handler did not handle browser request ${mode}`)
+          await route.abort("blockedbyclient")
+          return
+        }
+        const forwarded = { status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) }
+        watch?.handled.resolve({ status: response.status, body: forwarded.body })
+        console.info("SF_BI_BROWSER_HTTP", JSON.stringify({ mode, state: "handled", status: response.status, elapsedMs: Math.round(performance.now() - at) }))
+        const delayed = !held && mode === "bi-source"
+        if (delayed) { held = true; await release }
+        try { await route.fulfill(forwarded) }
+        catch (error) {
+          // clearPrivate legitimately aborts the old source fetch. The retained
+          // genuine success must not restore private data after that abort.
+          if (!closed && !delayed) throw error
+        } finally { if (delayed) pending.settled() }
+      } catch (error) {
+        watch?.handled.reject(error); watch?.response.reject(error)
+        if (!closed && !input.signal.aborted) errors.push(error instanceof Error ? error.message : String(error))
+        await route.abort("failed").catch(() => undefined)
       }
-      try { await route.fulfill(forwarded) }
-      catch (error) {
-        // clearPrivate legitimately aborts the old source fetch. The retained
-        // genuine success must not restore private data after that abort.
-        if (!closed && !delayed) errors.push(error instanceof Error ? error.message : String(error))
-      } finally { if (delayed) pending.settled() }
     })
     const page = await context.newPage()
     page.on("pageerror", (error) => errors.push(error.message))
-    const optionsResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-options")
-    expect((await page.goto(input.url))?.status()).toBe(200)
-    const options = await optionsResponse
+    page.on("response", (response) => watches.find((watch) => watch.request === response.request())?.response.resolve(response))
+    const optionsResponse = observe("bi-options")
+    expect((await page.goto(input.url, { waitUntil: "commit" }))?.status()).toBe(200)
+    const options = await optionsResponse.response()
     expect(options.status()).toBe(200)
     const optionsBody = await options.json()
     expect(optionsBody.status).toBe("ok")
     expect(optionsBody.value.choices.some((choice: { selectionRef: string }) => choice.selectionRef === input.selectionRef)).toBe(true)
     await page.waitForFunction((selectionRef) => (document.querySelector('select[aria-label="Dados para visualizar"]') as HTMLSelectElement)?.value === selectionRef, input.selectionRef)
-    const dataResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
+    const dataResponse = observe("bi-data")
     await page.getByRole("button", { name: "Atualizar visualização", exact: true }).evaluate((button) => (button as HTMLButtonElement).click())
-    const data = await dataResponse
+    const data = await dataResponse.response()
     expect(data.status()).toBe(200)
     const dataBody = await data.json()
     expect(dataBody.request.selectionRef).toBe(input.selectionRef)
@@ -75,18 +127,19 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
     await content.locator("table").first().waitFor({ state: "visible" })
     for (const reference of input.privateReferences) expect(await content.textContent()).toContain(reference)
     const sourceButton = content.getByRole("button", { name: "Abrir origem", exact: true }).first()
+    const sourceResponse = observe("bi-source")
     await sourceButton.evaluate((button) => (button as HTMLButtonElement).click())
-    const prior = await bounded(observed)
+    const prior = await sourceResponse.handled()
     expect(prior.status).toBe(200)
     expect(JSON.parse(prior.body.toString()).links.length).toBeGreaterThan(0)
     return {
       dispose,
       async verifyAfterCaseRevocation() {
-        const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source")
+        const sourceResponse = observe("bi-source")
         // The page retains its visible data while a previous real source fetch
         // is held. A second ordinary source click must receive the real403.
         await sourceButton.evaluate((button) => (button as HTMLButtonElement).click())
-        const source = await sourceResponse
+        const source = await sourceResponse.response()
         expect(source.status()).toBe(403)
         const denied = await source.json()
         expect(denied).toMatchObject({ status: "denied" })
@@ -115,4 +168,15 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
       },
     }
   } catch (error) { await dispose(); throw error }
+}
+
+function observedEvent<T>() {
+  let resolve!: (value: T) => void
+  let reject!: (error: unknown) => void
+  const promise = new Promise<T>((done, failed) => { resolve = done; reject = failed })
+  // The observer is installed before navigation or clicking. A later error is
+  // already handled while another action/producer is still pending, and the
+  // awaiting stage will still receive and throw the original rejection.
+  void promise.catch(() => undefined)
+  return { promise, resolve, reject }
 }

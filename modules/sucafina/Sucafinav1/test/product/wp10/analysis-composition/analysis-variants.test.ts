@@ -34,6 +34,7 @@ import type { SfStateResult } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { domain as portfolio } from "../../../../runtime/dashboard-portfolio.ts"
+import { compositionTestDeadline } from "../integration/composition-test-deadline.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 const at = "2026-11-14T00:00:00Z"
@@ -47,144 +48,201 @@ function ok<T>(result: PortResult<T> | SfStateResult<T>): T {
 // These tests execute real C08, selection receipts, Dashboard/Planner source issuance, C06,
 // producers and verifiers. Seeded choices and candidate financial values are declared fixtures;
 // no model execution, native receipt, or global acceptance is asserted by this suite.
-async function fixture(withChoice = true, duplicateMilestone = false, withRelation = false) {
-  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-analysis-variants-"))
-  const driver = await openLocalStore(path.join(directory, "store"))
-  const persistence = { ...driver, ...createSfSourcePersistence({ persistence: driver, createId: randomUUID, enumerate: enumerateSfSources,
-    projectScope: createSfSourceScopeProjector(() => at) }) }
-  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
-  await persistence.transaction("dashboard", async (snapshot) => {
-    const milestone = { id: "ms/1", name: "Release", date: "2026-12-20", status: "upcoming" }
-    snapshot.data.projects = [{ id: "project:1", name: "Selected project", status: "In Progress", risk: "Low", budget: 0, spent: 0, pct: 0,
-      milestones: duplicateMilestone ? [milestone, { ...milestone }] : [milestone] }]
-    if (withRelation) {
-      snapshot.data.capexProjects = [{ id: "capex:1", name: "Selected investment", year: 2026, budget: 1200, spent: 0, status: "Approved", owner: "person" }]
-      ;(snapshot.data.projects as unknown[]).push({ id: "project:2", name: "Other selected project", status: "In Progress", risk: "Low", budget: 0, spent: 0, pct: 0,
-        milestones: [{ id: "ms/2", name: "Separate release", date: "2026-12-21", status: "upcoming" }] })
-    }
-    snapshot.versions["projects:project:1"] = { version: 1, by: "person" }
-    return { commit: true, value: true }
-  })
-  await persistence.transaction("planner", async (snapshot) => {
-    snapshot.data.versions = [{ id: "v0", year: 2026, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD",
-      b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(100) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
-    return { commit: true, value: true }
-  })
-  await persistence.initializeSources("dashboard")
-  await persistence.initializeSources("planner")
-  const control = { active: true }
-  const selectionWrites = new WeakSet<object>()
-  const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
-  const request = new Request("https://example.test/product", { method: "POST", headers: { origin: "https://example.test" } })
-  const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "policy", persistence,
-    grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "reviews", "confirmations", "relations"],
-      operations: ["sf_dashboard_read", "sf_forecast_compare", "sf_case_read"], humanActions: ["analysis.prepare", "collaboration.confirmation.confirm", "collaboration.relation.confirm"] }],
-    analysisSelectionWrites: selectionWrites, now: Date.now, createId: randomUUID,
-    authenticate: async (_request, scope) => control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null,
-    environment: async () => ({ at, id: randomUUID, directory: [] }), commandIdentity: async (_request, operation, digest) => `${operation}:${digest}`,
-    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
-    providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
-  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet() })
-  business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "a".repeat(64), manifestVersion: "b".repeat(64), skillVersion: "c".repeat(64) })
-  const call = ok(await authority.ui.admit(request, "sf_dashboard_read", digestSfValue("fixture")))
-  if (!await authority.ui.validate(call, "sf_dashboard_read", digestSfValue("fixture"))) throw new Error("Read admission unavailable")
-  let source = ok(await business.dashboardServices.issue({ recordType: "dashboard-page", recordId: "Portfolio Dashboard", fields: ["projects"], period }, call))
-  const relationRecords: Extract<BusinessEvidenceRef, { kind: "record" }>[] = []
-  if (withRelation) {
-    relationRecords.push(ok(await business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: "project:1", fields: ["name"], period }, call)))
-    relationRecords.push(ok(await business.dashboardRecords.issue({ page: "CAPEX Projects", recordType: "capexProjects", recordId: "capex:1", fields: ["name"], period }, call)))
-  }
-  const caseRef = { id: "case", incarnation: "case-inc", version: 1 }
-  const result: ScenarioResult = { id: "fixture-result", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [source],
-    unresolvedConditions: ["Cost coverage has not been evaluated by this boundary fixture"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: null, total: null,
-    costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "candidate", alternativeVersion: 1, currency: "USD", horizon: period,
-      issues: ["Coverage pending"], evaluatedSourceRefs: [source], coverageState: "pending", entries: [{ status: "pending", categoryId: "service", reason: "Not evaluated" }], derivedMissingCategoryIds: ["service"] } }
-  const decision: DecisionCase = { ...caseRef, state: withChoice ? "chosen" : "draft", objective: "Review exact selected product variants", horizon: period, currency: "USD", participants: ["person"], criteria: [{ id: "cost", description: "Cost coverage", required: true }],
-    sourceRefs: withChoice ? [source, ...relationRecords] : [], assumptions: [], questions: [], alternatives: withChoice ? [{ id: "candidate", version: 1, title: "Selected candidate", scenario: { baseRef: source.refId, operations: [], assumptions: [] }, result }] : [],
-    costCoverageBases: withChoice ? [{ id: "basis", version: 1, decisionType: "fixture", categoryIds: ["service"], additionalCategoryIds: [], sourceRefs: [source] }] : [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
-  if (withChoice) {
-    const chosen = createChoiceSnapshot({ case: decision, alternativeId: "candidate", alternativeVersion: 1,
-      comparison: { baselineResultRef: "baseline-fixture", alternativeResultRef: result.id, costCoverageRefs: [], criterionResults: [], unresolvedConditions: result.unresolvedConditions, comparisonStatus: "conditioned", knownDifference: null, completeDifference: null },
-      criteria: ["cost"], values: [], evidenceRefs: [source], id: "chosen", principalRef: "person", reason: "Explicit human choice fixture", at })
-    if (chosen.status !== "ok") throw new Error(chosen.reason)
-    decision.choices = [chosen.choice]
-  }
-  ok(await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
-    idempotencyKey: "seed", commandDigest: digestSfValue(decision) }, async (state) => { state.cases.case = decision; return { commit: true, value: true } }))
-  const relationPair = withRelation ? { fromRef: relationRecords[0]!.refId, toRef: relationRecords[1]!.refId, kind: "pmo-capex", evidenceRefs: [...relationRecords, source] } : undefined
-  const relation = await (async () => {
-    if (!relationPair) return undefined
-    const mutation = { expectedStorageVersion: ok(await business.collaboration.relations.storageVersion(call)), idempotencyKey: "confirm-dependency" }
-    const human = ok(await authority.human.admit(request, "collaboration.relation.confirm", { operation: "create", pair: relationPair, mutation }))
-    try { return ok(await business.collaboration.relations.create(relationPair, mutation, human)) }
-    finally { authority.human.finish(human) }
-  })()
-  const removeRelation = async () => {
-    if (!relation || !relationPair) throw new Error("No confirmed relation selected")
-    const mutation = { expectedStorageVersion: ok(await business.collaboration.relations.storageVersion(call)), idempotencyKey: "remove-dependency" }
-    const human = ok(await authority.human.admit(request, "collaboration.relation.confirm", { operation: "remove", id: relation.id, pair: relationPair, mutation }))
-    try { return ok(await business.collaboration.relations.remove(relation.id, relationPair, mutation, human)) }
-    finally { authority.human.finish(human) }
-  }
-  const scoped = createSfAnalysisSelectionScope({ authority, cases: business.cases, selectionWrites, skills: ["sf-revisar-dependencias", "sf-preparar-revisao-executiva"] })
-  const base = { cases: business.cases, planner: business.planner, procurement: business.procurement, context: business.context, host: authority.host }
-  const dependency = { ...base, collaboration: business.collaboration, dashboard: business.dashboard, readHumanSelection: scoped.read }
-  const dependencies = { producer: createSfDependencyInputProducer(dependency), verifier: createSfDependencyVerifier(dependency) }
-  const fresh = async (currentCall: TrustedDomainContext) => (await business.context.resolve(source, currentCall)).state === "fresh" && await authority.host.revalidate(currentCall)
-  // The test's explicit review selector is backed by the real Dashboard read and ReviewPort.
-  const reviews = createReviewPort({ state: authority.state, creationTarget: authority.creationTarget, now: () => at, requestFor: authority.host.requestFor,
-    select: async (selectionRef, sectionRefs, currentCall, selectedPeriod) => {
-      if (selectionRef !== source.refId || digestSfValue(sectionRefs) !== digestSfValue(["projects"]) || digestSfValue(selectedPeriod) !== digestSfValue(period)) return { status: "denied", reason: "fixture-review-not-selected" }
-      const projected = await business.dashboard.read({ selectionRef, fields: ["projects"], period }, currentCall)
-      return projected.status === "ok" ? { status: "ok", value: [{ id: "projects", title: "Portfolio", period, recordCount: 1, projection: projected.value }] } : projected
-    },
-    authorizeSections: fresh, revalidate: fresh, revalidateEvidence: async (currentCall, refs) => {
-      const values = await business.context.context({ refs }, currentCall)
-      return values.every((value) => value.state === "fresh") && await fresh(currentCall)
-    },
-    authorizeComments: async (currentCall, values) => !values.length && await fresh(currentCall), authorizeOutcomeComparison: async (currentCall, values) => !values.length && await fresh(currentCall),
-    authorizeOutcome: async (currentCall, values) => !values.length && await fresh(currentCall), authorizeDecision: async (currentCall, values) => !values.length && await fresh(currentCall),
-    authorizeSensitivity: async (currentCall, values) => !values.length && await fresh(currentCall) })
-  const confirmation = business.collaboration.confirmation
-  if (!confirmation) throw new Error("Real confirmation composition is missing")
-  const confirmations = createSfAnalysisConfirmationReader({ host: authority.host, state: authority.state, confirmation })
-  const executive = { ...base, reviews, confirmations, readHumanSelection: scoped.read }
-  const executives = { producer: createSfExecutiveInputProducer(executive), verifier: createSfExecutiveReviewVerifier(executive) }
-  const confirm = async (scope: ConfirmationScope) => {
-    const displayed = ok(await confirmation.prepare(scope, call))
-    const before = await authority.state.read(request, "confirmations", () => true)
-    if (before.status !== "ok") throw new Error("C08 namespace unavailable")
-    const command: ConfirmationCommand = { scope, observedSourceVersion: displayed.sourceVersion, expectedScopeFingerprint: displayed.scopeFingerprint, expectedStorageVersion: before.storageVersion, idempotencyKey: randomUUID() }
-    const human = ok(await authority.human.admit(request, "collaboration.confirmation.confirm", command))
-    try { return ok(await confirmation.confirm(command, human)) } finally { authority.human.finish(human) }
-  }
-  const confirmDashboard = () => confirm({ sourceRef: { surface: "dashboard", type: "dashboard-page", id: "Portfolio Dashboard", incarnation: source.target.incarnation }, fields: ["projects"], period, materialDependencies: [], scopeDefinitionVersion: "dashboard-c06-v1" })
-  const editDate = async (date: string) => {
-    const edited = await persistence.transaction("dashboard", async (snapshot) => {
-      const result = portfolio.execute(snapshot, { id: "person", canWrite: true, roles: ["admin"] }, { page: "Portfolio Dashboard", action: "save-milestone", id: "project:1", version: snapshot.versions["projects:project:1"]!.version,
-        values: { milestoneId: "ms/1", name: "Release", date, status: "upcoming" } }, { at, id: randomUUID, directory: [] })
-      return { commit: result.ok, value: result }
+async function fixture(withChoice = true, duplicateMilestone = false, withRelation = false, phaseScope?: string) {
+  const deadline = compositionTestDeadline(`analysis-variants.${phaseScope ?? (withRelation ? "DependencyConflict" : "standard")}`, withRelation ? 50_000 : 25_000)
+  const metrics = { transactions: 0, allTransactions: 0, snapshotCopies: 0, authentications: 0, environments: 0,
+    caseReads: 0, relationReads: 0, dashboardReads: 0, evidenceContexts: 0, evidenceResolutions: 0 }
+  const phase = <T>(label: string, work: () => Promise<T>) => {
+    const before = { ...metrics }
+    return deadline.phase(label, async () => {
+      try { return await work() }
+      finally {
+        console.info("SF_ANALYSIS_VARIANTS_COUNTERS", JSON.stringify({ phase: label,
+          delta: Object.fromEntries(Object.entries(metrics).map(([key, value]) => [key, value - before[key as keyof typeof before]])), total: { ...metrics } }))
+      }
     })
-    if (!edited.ok) throw new Error(`Domain edit failed: ${edited.status}`)
   }
-  const refresh = async () => { source = ok(await business.dashboardServices.issue({ recordType: "dashboard-page", recordId: "Portfolio Dashboard", fields: ["projects"], period }, call)); return source }
-  const admit = async (skillId: string, selection: unknown) => {
-    const analysis: SfAnalysisRequest = { caseRef, profileId: skillId === "sf-revisar-dependencias" ? "sf_portfolio" : "sf_maestro", profileVersion: "1", skillId, skillVersion: "1", manifestDigest: "a".repeat(64), outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_case_read"], objective: decision.objective }
-    const incoming: SfAnalysisPreparation = { request: analysis, selection }
-    return { incoming, call: ok(await authority.human.admit(request, "analysis.prepare", incoming)) }
+  const close = async () => {
+    console.info("SF_ANALYSIS_VARIANTS_CLEANUP", JSON.stringify({ state: "started", ...metrics }))
+    try { await deadline.close() }
+    finally { console.info("SF_ANALYSIS_VARIANTS_CLEANUP", JSON.stringify({ state: "returned", ...metrics })) }
   }
-  const prepare = (pair: { producer: SfInputProducer; verifier: SfAnalysisVerifier }, incoming: SfAnalysisPreparation, human: TrustedUiContext) => scoped.selectionScope.prepare(incoming, human, async () => {
-    const result = await pair.producer.prepare(incoming.selection, incoming.request, human)
-    if (result.status !== "ok") return result
-    const proof = await scoped.selectionScope.verify(result.value, incoming.request, human, () => pair.verifier.verify(result.value, incoming.request, human))
-    return proof.status === "ok" ? result : proof
-  })
-  const accept = (pair: { verifier: SfAnalysisVerifier }, value: unknown, incoming: SfAnalysisPreparation, human: TrustedUiContext, output: ContributionEnvelope) => scoped.selectionScope.verify(value, incoming.request, human, async () => {
-    const proof = await pair.verifier.verify(value, incoming.request, human)
-    return proof.status === "ok" ? proof.value.acceptsOutput(output, human) : proof
-  })
-  const close = async () => { authority.ui.finish(call); business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
-  return { control, authority, business, request, call, caseRef, source: () => source, relation, removeRelation, dependencies, executives, confirmations, confirmation, scoped, confirm, confirmDashboard, editDate, refresh, admit, prepare, accept, close }
+  try {
+    const directory = await phase("fixture.directory", async () => {
+      const value = await mkdtemp(path.join(await realpath(tmpdir()), "sf-analysis-variants-"))
+      deadline.own(() => rm(value, { recursive: true, force: true }))
+      return value
+    })
+    const driver = await phase("fixture.store", async () => {
+      const value = await openLocalStore(path.join(directory, "store"))
+      deadline.own(() => value.dispose())
+      return value
+    })
+    // Observe actual work without replacing a transaction, snapshot, access
+    // decision or producer output. Phase deltas are inclusive of nested phases.
+    const allTransactions: typeof driver.transactionAll = driver.transactionAll
+      ? async (work, options) => { metrics.allTransactions++; deadline.check(); return driver.transactionAll!(work, options) } : undefined
+    const metered: typeof driver = { ...driver,
+      transaction: async (surface, work, options) => { metrics.transactions++; deadline.check(); return driver.transaction(surface, work, options) },
+      ...(allTransactions ? { transactionAll: allTransactions } : {}),
+      ...(driver.currentSnapshots ? { currentSnapshots: () => { metrics.snapshotCopies++; deadline.check(); return driver.currentSnapshots!() } } : {}),
+    }
+    const persistence = { ...metered, ...createSfSourcePersistence({ persistence: metered, createId: randomUUID, enumerate: enumerateSfSources,
+      projectScope: createSfSourceScopeProjector(() => at) }) }
+    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+    await persistence.transaction("dashboard", async (snapshot) => {
+      const milestone = { id: "ms/1", name: "Release", date: "2026-12-20", status: "upcoming" }
+      snapshot.data.projects = [{ id: "project:1", name: "Selected project", status: "In Progress", risk: "Low", budget: 0, spent: 0, pct: 0,
+        milestones: duplicateMilestone ? [milestone, { ...milestone }] : [milestone] }]
+      if (withRelation) {
+        snapshot.data.capexProjects = [{ id: "capex:1", name: "Selected investment", year: 2026, budget: 1200, spent: 0, status: "Approved", owner: "person" }]
+        ;(snapshot.data.projects as unknown[]).push({ id: "project:2", name: "Other selected project", status: "In Progress", risk: "Low", budget: 0, spent: 0, pct: 0,
+          milestones: [{ id: "ms/2", name: "Separate release", date: "2026-12-21", status: "upcoming" }] })
+      }
+      snapshot.versions["projects:project:1"] = { version: 1, by: "person" }
+      return { commit: true, value: true }
+    })
+    await persistence.transaction("planner", async (snapshot) => {
+      snapshot.data.versions = [{ id: "v0", year: 2026, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD",
+        b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(100) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+      return { commit: true, value: true }
+    })
+    await persistence.initializeSources("dashboard")
+    await persistence.initializeSources("planner")
+    const control = { active: true }
+    const selectionWrites = new WeakSet<object>()
+    const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
+    const request = new Request("https://example.test/product", { method: "POST", headers: { origin: "https://example.test" }, signal: deadline.signal })
+    const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "policy", persistence,
+      grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "reviews", "confirmations", "relations"],
+        operations: ["sf_dashboard_read", "sf_forecast_compare", "sf_case_read"], humanActions: ["analysis.prepare", "collaboration.confirmation.confirm", "collaboration.relation.confirm"] }],
+      analysisSelectionWrites: selectionWrites, now: Date.now, createId: randomUUID,
+      authenticate: async (_request, scope) => { metrics.authentications++; deadline.check(); return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null },
+      environment: async () => { metrics.environments++; deadline.check(); return { at, id: randomUUID, directory: [] } },
+      commandIdentity: async (_request, operation, digest) => { deadline.check(); return `${operation}:${digest}` },
+      inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
+      providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
+    const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet() })
+    deadline.own(() => business.dispose())
+    business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "a".repeat(64), manifestVersion: "b".repeat(64), skillVersion: "c".repeat(64) })
+    const call = ok(await authority.ui.admit(request, "sf_dashboard_read", digestSfValue("fixture")))
+    deadline.own(() => authority.ui.finish(call))
+    if (!await authority.ui.validate(call, "sf_dashboard_read", digestSfValue("fixture"))) throw new Error("Read admission unavailable")
+    let source = ok(await phase("fixture.dashboard-source", () => business.dashboardServices.issue({ recordType: "dashboard-page", recordId: "Portfolio Dashboard", fields: ["projects"], period }, call)))
+    const relationRecords: Extract<BusinessEvidenceRef, { kind: "record" }>[] = []
+    if (withRelation) {
+      relationRecords.push(ok(await business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: "project:1", fields: ["name"], period }, call)))
+      relationRecords.push(ok(await business.dashboardRecords.issue({ page: "CAPEX Projects", recordType: "capexProjects", recordId: "capex:1", fields: ["name"], period }, call)))
+    }
+    const caseRef = { id: "case", incarnation: "case-inc", version: 1 }
+    const result: ScenarioResult = { id: "fixture-result", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [source],
+      unresolvedConditions: ["Cost coverage has not been evaluated by this boundary fixture"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: null, total: null,
+      costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "candidate", alternativeVersion: 1, currency: "USD", horizon: period,
+        issues: ["Coverage pending"], evaluatedSourceRefs: [source], coverageState: "pending", entries: [{ status: "pending", categoryId: "service", reason: "Not evaluated" }], derivedMissingCategoryIds: ["service"] } }
+    const decision: DecisionCase = { ...caseRef, state: withChoice ? "chosen" : "draft", objective: "Review exact selected product variants", horizon: period, currency: "USD", participants: ["person"], criteria: [{ id: "cost", description: "Cost coverage", required: true }],
+      sourceRefs: withChoice ? [source, ...relationRecords] : [], assumptions: [], questions: [], alternatives: withChoice ? [{ id: "candidate", version: 1, title: "Selected candidate", scenario: { baseRef: source.refId, operations: [], assumptions: [] }, result }] : [],
+      costCoverageBases: withChoice ? [{ id: "basis", version: 1, decisionType: "fixture", categoryIds: ["service"], additionalCategoryIds: [], sourceRefs: [source] }] : [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+    if (withChoice) {
+      const chosen = createChoiceSnapshot({ case: decision, alternativeId: "candidate", alternativeVersion: 1,
+        comparison: { baselineResultRef: "baseline-fixture", alternativeResultRef: result.id, costCoverageRefs: [], criterionResults: [], unresolvedConditions: result.unresolvedConditions, comparisonStatus: "conditioned", knownDifference: null, completeDifference: null },
+        criteria: ["cost"], values: [], evidenceRefs: [source], id: "chosen", principalRef: "person", reason: "Explicit human choice fixture", at })
+      if (chosen.status !== "ok") throw new Error(chosen.reason)
+      decision.choices = [chosen.choice]
+    }
+    ok(await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
+      idempotencyKey: "seed", commandDigest: digestSfValue(decision) }, async (state) => { state.cases.case = decision; return { commit: true, value: true } }))
+    const relationPair = withRelation ? { fromRef: relationRecords[0]!.refId, toRef: relationRecords[1]!.refId, kind: "pmo-capex", evidenceRefs: [...relationRecords, source] } : undefined
+    const relation = await phase("fixture.relation-confirm", async () => {
+      if (!relationPair) return undefined
+      const mutation = { expectedStorageVersion: ok(await business.collaboration.relations.storageVersion(call)), idempotencyKey: "confirm-dependency" }
+      const human = ok(await authority.human.admit(request, "collaboration.relation.confirm", { operation: "create", pair: relationPair, mutation }))
+      try { return ok(await business.collaboration.relations.create(relationPair, mutation, human)) }
+      finally { authority.human.finish(human) }
+    })
+    const removeRelation = () => phase("relation.remove", async () => {
+      if (!relation || !relationPair) throw new Error("No confirmed relation selected")
+      const mutation = { expectedStorageVersion: ok(await business.collaboration.relations.storageVersion(call)), idempotencyKey: "remove-dependency" }
+      const human = ok(await authority.human.admit(request, "collaboration.relation.confirm", { operation: "remove", id: relation.id, pair: relationPair, mutation }))
+      try { return ok(await business.collaboration.relations.remove(relation.id, relationPair, mutation, human)) }
+      finally { authority.human.finish(human) }
+    })
+    const cases = { ...business.cases, read: async (...args: Parameters<typeof business.cases.read>) => {
+      metrics.caseReads++; deadline.check(); return business.cases.read(...args)
+    } }
+    const context = { ...business.context,
+      context: async (...args: Parameters<typeof business.context.context>) => { metrics.evidenceContexts++; deadline.check(); return business.context.context(...args) },
+      resolve: async (...args: Parameters<typeof business.context.resolve>) => { metrics.evidenceResolutions++; deadline.check(); return business.context.resolve(...args) },
+    }
+    const collaboration = { ...business.collaboration, relations: { ...business.collaboration.relations,
+      readVersioned: async (...args: Parameters<typeof business.collaboration.relations.readVersioned>) => {
+        metrics.relationReads++; deadline.check(); return business.collaboration.relations.readVersioned(...args)
+      },
+    } }
+    const dashboard = { ...business.dashboard, read: async (...args: Parameters<typeof business.dashboard.read>) => {
+      metrics.dashboardReads++; deadline.check(); return business.dashboard.read(...args)
+    } }
+    const scoped = createSfAnalysisSelectionScope({ authority, cases, selectionWrites, skills: ["sf-revisar-dependencias", "sf-preparar-revisao-executiva"] })
+    const base = { cases, planner: business.planner, procurement: business.procurement, context, host: authority.host }
+    const dependency = { ...base, collaboration, dashboard, readHumanSelection: scoped.read }
+    const dependencies = { producer: createSfDependencyInputProducer(dependency), verifier: createSfDependencyVerifier(dependency) }
+    const fresh = async (currentCall: TrustedDomainContext) => (await business.context.resolve(source, currentCall)).state === "fresh" && await authority.host.revalidate(currentCall)
+    // The test's explicit review selector is backed by the real Dashboard read and ReviewPort.
+    const reviews = createReviewPort({ state: authority.state, creationTarget: authority.creationTarget, now: () => at, requestFor: authority.host.requestFor,
+      select: async (selectionRef, sectionRefs, currentCall, selectedPeriod) => {
+        if (selectionRef !== source.refId || digestSfValue(sectionRefs) !== digestSfValue(["projects"]) || digestSfValue(selectedPeriod) !== digestSfValue(period)) return { status: "denied", reason: "fixture-review-not-selected" }
+        const projected = await business.dashboard.read({ selectionRef, fields: ["projects"], period }, currentCall)
+        return projected.status === "ok" ? { status: "ok", value: [{ id: "projects", title: "Portfolio", period, recordCount: 1, projection: projected.value }] } : projected
+      },
+      authorizeSections: fresh, revalidate: fresh, revalidateEvidence: async (currentCall, refs) => {
+        const values = await business.context.context({ refs }, currentCall)
+        return values.every((value) => value.state === "fresh") && await fresh(currentCall)
+      },
+      authorizeComments: async (currentCall, values) => !values.length && await fresh(currentCall), authorizeOutcomeComparison: async (currentCall, values) => !values.length && await fresh(currentCall),
+      authorizeOutcome: async (currentCall, values) => !values.length && await fresh(currentCall), authorizeDecision: async (currentCall, values) => !values.length && await fresh(currentCall),
+      authorizeSensitivity: async (currentCall, values) => !values.length && await fresh(currentCall) })
+    const confirmation = business.collaboration.confirmation
+    if (!confirmation) throw new Error("Real confirmation composition is missing")
+    const confirmations = createSfAnalysisConfirmationReader({ host: authority.host, state: authority.state, confirmation })
+    const executive = { ...base, reviews, confirmations, readHumanSelection: scoped.read }
+    const executives = { producer: createSfExecutiveInputProducer(executive), verifier: createSfExecutiveReviewVerifier(executive) }
+    const confirm = (scope: ConfirmationScope) => phase("confirmation.confirm", async () => {
+      const displayed = ok(await confirmation.prepare(scope, call))
+      const before = await authority.state.read(request, "confirmations", () => true)
+      if (before.status !== "ok") throw new Error("C08 namespace unavailable")
+      const command: ConfirmationCommand = { scope, observedSourceVersion: displayed.sourceVersion, expectedScopeFingerprint: displayed.scopeFingerprint, expectedStorageVersion: before.storageVersion, idempotencyKey: randomUUID() }
+      const human = ok(await authority.human.admit(request, "collaboration.confirmation.confirm", command))
+      try { return ok(await confirmation.confirm(command, human)) } finally { authority.human.finish(human) }
+    })
+    const confirmDashboard = () => confirm({ sourceRef: { surface: "dashboard", type: "dashboard-page", id: "Portfolio Dashboard", incarnation: source.target.incarnation }, fields: ["projects"], period, materialDependencies: [], scopeDefinitionVersion: "dashboard-c06-v1" })
+    const editDate = (date: string) => phase("dashboard.edit-date", async () => {
+      const edited = await persistence.transaction("dashboard", async (snapshot) => {
+        const result = portfolio.execute(snapshot, { id: "person", canWrite: true, roles: ["admin"] }, { page: "Portfolio Dashboard", action: "save-milestone", id: "project:1", version: snapshot.versions["projects:project:1"]!.version,
+          values: { milestoneId: "ms/1", name: "Release", date, status: "upcoming" } }, { at, id: randomUUID, directory: [] })
+        return { commit: result.ok, value: result }
+      })
+      if (!edited.ok) throw new Error(`Domain edit failed: ${edited.status}`)
+    })
+    const refresh = () => phase("dashboard.refresh", async () => { source = ok(await business.dashboardServices.issue({ recordType: "dashboard-page", recordId: "Portfolio Dashboard", fields: ["projects"], period }, call)); return source })
+    const admit = async (skillId: string, selection: unknown) => {
+      const analysis: SfAnalysisRequest = { caseRef, profileId: skillId === "sf-revisar-dependencias" ? "sf_portfolio" : "sf_maestro", profileVersion: "1", skillId, skillVersion: "1", manifestDigest: "a".repeat(64), outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_case_read"], objective: decision.objective }
+      const incoming: SfAnalysisPreparation = { request: analysis, selection }
+      const human = ok(await phase("analysis.admit", () => authority.human.admit(request, "analysis.prepare", incoming)))
+      deadline.own(() => authority.human.finish(human))
+      return { incoming, call: human }
+    }
+    const attempts = { prepare: 0, accept: 0 }
+    const prepare = (pair: { producer: SfInputProducer; verifier: SfAnalysisVerifier }, incoming: SfAnalysisPreparation, human: TrustedUiContext) => phase(`prepare.${++attempts.prepare}`, () => scoped.selectionScope.prepare(incoming, human, async () => {
+      const result = await phase("prepare.producer", () => pair.producer.prepare(incoming.selection, incoming.request, human))
+      if (result.status !== "ok") return result
+      const proof = await phase("prepare.verify", () => scoped.selectionScope.verify(result.value, incoming.request, human, () => pair.verifier.verify(result.value, incoming.request, human)))
+      return proof.status === "ok" ? result : proof
+    }))
+    const accept = (pair: { verifier: SfAnalysisVerifier }, value: unknown, incoming: SfAnalysisPreparation, human: TrustedUiContext, output: ContributionEnvelope) => phase(`accept.${++attempts.accept}`, () => scoped.selectionScope.verify(value, incoming.request, human, async () => {
+      const proof = await phase("accept.verify", () => pair.verifier.verify(value, incoming.request, human))
+      return proof.status === "ok" ? phase("accept.output", () => proof.value.acceptsOutput(output, human)) : proof
+    }))
+    return { control, authority, business, request, call, caseRef, source: () => source, relation, removeRelation, dependencies, executives, confirmations, confirmation, scoped, confirm, confirmDashboard, editDate, refresh, admit, prepare, accept, close }
+  } catch (error) { await close(); throw error }
 }
 
 function dependencySelection() { return { relationRefIds: [], commitmentIds: ["chosen"], milestoneIds: [milestoneId], declaredConstraints: [declaration] } }
@@ -242,8 +300,17 @@ test("dependency variants refuse absent choices, noncanonical IDs, ambiguous mil
   } finally { await ambiguous.close() }
 }, 30_000)
 
-test("DependencyConflict preserves a real confirmed relation and selected unverified constraint as needs-input", async () => {
-  const state = await fixture(true, false, true)
+// Each group owns the full real setup and a positive baseline. Separating the
+// independent output counterexamples keeps each existing 60s budget meaningful;
+// no verification result, authority or source read is shared between tests.
+for (const group of [
+  { kind: "states", name: "DependencyConflict preserves a real confirmed relation and selected unverified constraint as needs-input", invalid: [0, 1] },
+  { kind: "relations", name: "DependencyConflict refuses reversed relations and unselected or unrelated constraints", invalid: [2, 3, 4, 5] },
+  { kind: "declarations", name: "DependencyConflict preserves the literal declaration without inventing capacity", invalid: [6, 7] },
+  { kind: "evidence", name: "DependencyConflict requires exact payload and envelope evidence", invalid: [8, 9] },
+  { kind: "scope", name: "DependencyConflict revalidates selected input and actual relation removal", invalid: [] },
+] as const) test(group.name, async () => {
+  const state = await fixture(true, false, true, `DependencyConflict.${group.kind}`)
   try {
     const relation = state.relation
     if (!relation) throw new Error("Actual human-confirmed relation is missing")
@@ -259,10 +326,12 @@ test("DependencyConflict preserves a real confirmed relation and selected unveri
       if (output.state !== "ready" || output.kind !== "DependencyConflict") throw new Error("Fixture kind mismatch")
       expect(decodeSfContributionOutput("DependencyConflict", output.payload).ok).toBe(true)
       expect(await state.accept(state.dependencies, input, human.incoming, human.call, output)).toEqual({ status: "ok", value: true })
-      const milestone = structuredClone(output)
-      milestone.payload.constraintRef = milestoneId
-      milestone.payload.reason = `Unverified dependency constraint for selected milestone ${milestoneId} at 2026-12-20 (upcoming); required delivery date or capacity rule is unavailable`
-      expect(await state.accept(state.dependencies, input, human.incoming, human.call, milestone)).toEqual({ status: "ok", value: true })
+      if (group.kind === "states") {
+        const milestone = structuredClone(output)
+        milestone.payload.constraintRef = milestoneId
+        milestone.payload.reason = `Unverified dependency constraint for selected milestone ${milestoneId} at 2026-12-20 (upcoming); required delivery date or capacity rule is unavailable`
+        expect(await state.accept(state.dependencies, input, human.incoming, human.call, milestone)).toEqual({ status: "ok", value: true })
+      }
       const invalid: (typeof output.payload)[] = [
         { ...output.payload, state: "conflict" },
         { ...output.payload, state: "unavailable" },
@@ -275,12 +344,17 @@ test("DependencyConflict preserves a real confirmed relation and selected unveri
         { ...output.payload, evidenceRefs: relation.evidenceRefs.slice(1) },
         { ...output.payload, evidenceRefs: [...relation.evidenceRefs, relation.evidenceRefs[0]!] },
       ]
-      for (const payload of invalid) expect((await state.accept(state.dependencies, input, human.incoming, human.call, { ...output, payload })).status).toBe("unavailable")
-      expect((await state.accept(state.dependencies, input, human.incoming, human.call, { ...output, evidenceRefs: [] })).status).toBe("unavailable")
-      expect((await state.accept(state.dependencies, { ...input, declaredConstraints: [declaration.trim()] }, human.incoming, human.call, output)).status).toBe("unavailable")
-      // Real C06 removal after admission must invalidate the same output at egress.
-      await state.removeRelation()
-      expect((await state.accept(state.dependencies, input, human.incoming, human.call, output)).status).toBe("unavailable")
+      for (const index of group.invalid) {
+        const payload = invalid[index]!
+        expect((await state.accept(state.dependencies, input, human.incoming, human.call, { ...output, payload })).status).toBe("unavailable")
+      }
+      if (group.kind === "evidence") expect((await state.accept(state.dependencies, input, human.incoming, human.call, { ...output, evidenceRefs: [] })).status).toBe("unavailable")
+      if (group.kind === "scope") {
+        expect((await state.accept(state.dependencies, { ...input, declaredConstraints: [declaration.trim()] }, human.incoming, human.call, output)).status).toBe("unavailable")
+        // Real C06 removal after admission must invalidate the same output at egress.
+        await state.removeRelation()
+        expect((await state.accept(state.dependencies, input, human.incoming, human.call, output)).status).toBe("unavailable")
+      }
     } finally { state.authority.human.finish(human.call) }
   } finally { await state.close() }
 }, 60_000)

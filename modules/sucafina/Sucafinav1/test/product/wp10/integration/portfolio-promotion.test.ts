@@ -8,6 +8,7 @@ import type { TrustedDomainContext } from "../../../../product/contracts/sf-exec
 import type { BaselineCoverageRequest } from "../../../../product/decisions/baseline-coverage.ts"
 import type { CriterionRuleInput } from "../../../../product/decisions/criterion-rules.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
+import { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 type Fixture = Awaited<ReturnType<typeof financialCompositionFixture>>
 type CaseRef = { id: string; incarnation: string; version: number }
@@ -23,9 +24,12 @@ function ok<T>(result: PortResult<T>, label: string): T {
 
 // Actual SQLite/C08, Planner calculations, BCS, human registries and HTTP mutations.
 // Only the empty case and domain inputs are seeded; no alternative/result/choice/receipt is seeded.
-async function promotionFixture() {
-  const fixture = await financialCompositionFixture()
+async function promotionFixture(name: string, budgetMs: number) {
+  const deadline = compositionTestDeadline(name, budgetMs)
   try {
+    const fixture = await deadline.phase("fixture.initialize", () => financialCompositionFixture({ signal: deadline.signal,
+      beforeEnvironment: async () => deadline.check() }))
+    deadline.own(() => fixture.dispose())
     const { authority, business } = fixture
     business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "a".repeat(64), manifestVersion: "b".repeat(64), skillVersion: "c".repeat(64) })
     await fixture.persistence.transaction("planner", async (snapshot) => {
@@ -36,7 +40,7 @@ async function promotionFixture() {
     })
     await fixture.persistence.initializeSources("planner")
     const call = await fixture.read()
-    const prepared = await (async () => {
+    const prepared = await deadline.phase("fixture.sources", async () => {
       try {
         const sources = [] as BaselineCoverageRequest["source"][]
         const componentIds: string[][] = []
@@ -49,7 +53,7 @@ async function promotionFixture() {
         }
         return { sources, componentIds }
       } finally { authority.ui.finish(call) }
-    })()
+    })
     const initialRef: CaseRef = { id: "promotion-case", incarnation: "promotion-case-incarnation", version: 1 }
     const basis: BaselineCoverageRequest["basis"] = { id: "renewal", version: 1, decisionType: "renewal-transition-v1",
       categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: prepared.sources }
@@ -62,11 +66,11 @@ async function promotionFixture() {
       return { commit: true, value: true }
     })
     if (seeded.status !== "ok") throw new Error(`Empty case seed failed: ${JSON.stringify(seeded)}`)
-    const registerCoverage = async (coverage: BaselineCoverageRequest, operation: string) => {
+    const registerCoverage = async (coverage: BaselineCoverageRequest, operation: string) => deadline.phase(`coverage.${operation}`, async () => {
       const human = ok(await authority.human.admit(fixture.request(operation), "decisions.coverage", coverage), "Admit human coverage")
       try { return ok(await business.withCase(human, coverage.caseRef, {}, () => business.baselineCoverage.register(coverage, human)), "Register human coverage") }
       finally { authority.human.finish(human) }
-    }
+    })
     const requests: BaselineCoverageRequest[] = prepared.sources.map((source, index) => ({ caseRef: initialRef, source, basis, expectedVersion: 0,
       entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service"
         ? { categoryId, status: "included", componentRefs: prepared.componentIds[index]!, evidenceRefs: [source], scopeNote: "License service explicitly classified by the human" }
@@ -76,32 +80,33 @@ async function promotionFixture() {
     const promotion = (index: number, caseRef: CaseRef): Promotion => ({ caseRef, title: index ? "Candidate" : "Baseline",
       scenario: { baseRef: prepared.sources[index]!.refId, operations: [], assumptions: [] }, coverageRef: classifications[index]!.coverageRef })
     const http = fixture.portfolio.http({ origin: "https://example.test", mount: "/product" })
-    const post = async (mode: "decision-promote" | "decision-choose", payload: unknown, operation: string) => {
+    const post = async (mode: "decision-promote" | "decision-choose", payload: unknown, operation: string) => deadline.phase(`http.${mode}.${operation}`, async () => {
       const response = await http(new Request(`https://example.test/product/planner?sf=${mode}`, { method: "POST",
-        headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": operation }, body: JSON.stringify(payload) }), "planner")
+        signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": operation }, body: JSON.stringify(payload) }), "planner")
       if (!response) throw new Error("Portfolio route did not handle its own action")
       return { status: response.status, result: await response.json() as PortResult<Receipt> }
-    }
+    })
     const snapshot = async () => {
       const result = await authority.state.read(fixture.request(), "cases", (state) => ({ case: state.cases[initialRef.id],
         results: state.decisionResults ?? {}, transactions: state.transactions, outbox: state.outbox }))
       if (result.status !== "ok" || !result.value.case) throw new Error("C08 snapshot unavailable")
       return { storageVersion: result.storageVersion, ...result.value, case: result.value.case }
     }
-    const scoped = async <T>(caseRef: CaseRef, work: (call: TrustedDomainContext) => Promise<PortResult<T>>) => {
+    const scoped = async <T>(caseRef: CaseRef, work: (call: TrustedDomainContext) => Promise<PortResult<T>>, label = "scoped.read") => deadline.phase(label, async () => {
       const read = await fixture.read()
       try { return await business.withCase(read, caseRef, {}, () => work(read)) }
       finally { authority.ui.finish(read) }
-    }
-    const registerRule = async (caseRef: CaseRef) => {
+    })
+    const registerRule = async (caseRef: CaseRef) => deadline.phase("criterion.register", async () => {
       const rule: CriterionRuleInput = { caseRef, criterionId: "cost", metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0,
         unit: "USD", period: horizon, evidenceRefs: prepared.sources, expectedRuleVersion: 0 }
       const human = ok(await authority.human.admit(fixture.request("register-cost-rule"), "decisions.criteria", rule), "Admit human criterion")
       try { return ok(await business.withCase(human, caseRef, {}, () => fixture.portfolio.rules.register(rule, human)), "Register human criterion") }
       finally { authority.human.finish(human) }
-    }
-    return { fixture, initialRef, requests, classifications, sources: prepared.sources, promotion, post, snapshot, scoped, registerCoverage, registerRule }
-  } catch (error) { await fixture.dispose(); throw error }
+    })
+    return { fixture, initialRef, requests, classifications, sources: prepared.sources, promotion, post, snapshot, scoped, registerCoverage, registerRule,
+      close: () => deadline.close() }
+  } catch (error) { await deadline.close(); throw error }
 }
 
 type Prepared = Awaited<ReturnType<typeof promotionFixture>>
@@ -121,14 +126,14 @@ async function promotedPair(state: Prepared) {
   expect(saved.case.alternatives).toHaveLength(2)
   await state.registerRule(candidate.caseRef)
   const comparison = ok(await state.scoped(candidate.caseRef, (call) => state.fixture.portfolio.compare({ caseRef: candidate.caseRef,
-    baselineAlternativeId: saved.case.alternatives[0]!.id, alternativeId: saved.case.alternatives[1]!.id, criteria: ["cost"] }, call)), "Compare stored alternatives")
+    baselineAlternativeId: saved.case.alternatives[0]!.id, alternativeId: saved.case.alternatives[1]!.id, criteria: ["cost"] }, call), "comparison.promoted-pair"), "Compare stored alternatives")
   const choice: Choice = { caseRef: candidate.caseRef, alternativeId: saved.case.alternatives[1]!.id, alternativeVersion: saved.case.alternatives[1]!.version,
     comparison: comparison.request, criteria: ["cost"], reason: "Human accepts the known subtotal while the remaining cost categories await evidence" }
   return { baseline, candidate, comparison, choice }
 }
 
 test("first HTTP promotion commits real coverage and a historical baseline supports a new choice in N+2", async () => {
-  const state = await promotionFixture()
+  const state = await promotionFixture("portfolio-promotion-choice", 285_000)
   try {
     const empty = await state.snapshot()
     expect(empty.case.alternatives).toHaveLength(0)
@@ -160,14 +165,14 @@ test("first HTTP promotion commits real coverage and a historical baseline suppo
     const second = await state.snapshot()
     expect(second.results[baselineRef]).toEqual(first.results[baselineRef])
     expect(second.results[candidateRef]?.caseRef.version).toBe(3)
-    const exactRead = await state.scoped(candidate.caseRef, (call) => state.fixture.business.results.read({ kind: "scenario", resultRef: baselineRef }, call))
+    const exactRead = await state.scoped(candidate.caseRef, (call) => state.fixture.business.results.read({ kind: "scenario", resultRef: baselineRef }, call), "read.exact-baseline")
     expect(exactRead).toMatchObject({ status: "denied", reason: "result-access-unavailable" })
-    const historical = ok(await state.scoped(candidate.caseRef, (call) => state.fixture.business.results.readHistoricalScenario({ resultRef: baselineRef }, call)), "Read authorized historical baseline")
+    const historical = ok(await state.scoped(candidate.caseRef, (call) => state.fixture.business.results.readHistoricalScenario({ resultRef: baselineRef }, call), "read.historical-baseline"), "Read authorized historical baseline")
     expect(historical).toEqual(first.results[baselineRef])
     const rule = await state.registerRule(candidate.caseRef)
     expect(rule.version).toBe(1)
     const comparison = ok(await state.scoped(candidate.caseRef, (call) => state.fixture.portfolio.compare({ caseRef: candidate.caseRef,
-      baselineAlternativeId: second.case.alternatives[0]!.id, alternativeId: second.case.alternatives[1]!.id, criteria: ["cost"] }, call)), "Compare actual alternatives")
+      baselineAlternativeId: second.case.alternatives[0]!.id, alternativeId: second.case.alternatives[1]!.id, criteria: ["cost"] }, call), "comparison.actual-alternatives"), "Compare actual alternatives")
     expect(comparison.request.scenarioRefs).toEqual([baselineRef, candidateRef])
     expect(comparison.comparison).toMatchObject({ comparisonStatus: "conditioned", completeDifference: null,
       criterionResults: [{ criterionId: "cost", state: "unknown", reason: "criterion-metric-conditioned" }] })
@@ -195,11 +200,11 @@ test("first HTTP promotion commits real coverage and a historical baseline suppo
     expect(await state.snapshot()).toEqual(chosen)
     expect((await state.post("decision-choose", { ...choice, reason: "Changed after admission" }, "choose-candidate")).status).toBe(409)
     expect(await state.snapshot()).toEqual(chosen)
-  } finally { await state.fixture.dispose() }
+  } finally { await state.close() }
 }, 300_000)
 
 test("promotion refuses additional authority fields, changed admitted intent and revoked admission without storing a result", async () => {
-  const state = await promotionFixture()
+  const state = await promotionFixture("portfolio-promotion-authority", 105_000)
   const { authority, business, portfolio } = state.fixture
   try {
     const request = state.promotion(0, state.initialRef)
@@ -214,11 +219,11 @@ test("promotion refuses additional authority fields, changed admitted intent and
     expect((await state.post("decision-promote", request, "revoked-admission")).status).toBe(403)
     state.fixture.active.value = true
     expect(await state.snapshot()).toEqual(before)
-  } finally { state.fixture.active.value = true; await state.fixture.dispose() }
+  } finally { state.fixture.active.value = true; await state.close() }
 }, 120_000)
 
 for (const change of ["source", "classification", "authority"] as const) test(`promotion rechecks ${change} changed immediately before the real C08 commit`, async () => {
-  const state = await promotionFixture()
+  const state = await promotionFixture(`portfolio-promotion-${change}-race`, 165_000)
   const original = state.fixture.authority.state.transaction
   let reachedCommit = false
   try {
@@ -255,11 +260,11 @@ for (const change of ["source", "classification", "authority"] as const) test(`p
       try { expect((await state.fixture.business.context.resolve(state.sources[0]!, fresh)).state).not.toBe("fresh") }
       finally { state.fixture.authority.ui.finish(fresh) }
     }
-  } finally { state.fixture.authority.state.transaction = original; state.fixture.active.value = true; await state.fixture.dispose() }
+  } finally { state.fixture.authority.state.transaction = original; state.fixture.active.value = true; await state.close() }
 }, 180_000)
 
 test("historical choice rejects removed membership, replaced incarnation, changed alternative digest and stale source", async () => {
-  const state = await promotionFixture()
+  const state = await promotionFixture("portfolio-promotion-historical-negatives", 285_000)
   try {
     const pair = await promotedPair(state)
     const before = await state.snapshot()
@@ -296,5 +301,5 @@ test("historical choice rejects removed membership, replaced incarnation, change
     expect(after.results).toEqual(before.results)
     expect(after.transactions).toEqual(before.transactions)
     expect(after.outbox).toEqual(before.outbox)
-  } finally { state.fixture.active.value = true; await state.fixture.dispose() }
+  } finally { state.fixture.active.value = true; await state.close() }
 }, 300_000)

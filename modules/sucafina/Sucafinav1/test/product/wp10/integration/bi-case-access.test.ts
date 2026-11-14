@@ -25,10 +25,16 @@ function ok<T>(result: PortResult<T>, label: string): T {
 test("BI clears a real persisted case after participant revocation with the session valid and discards a delayed authorized source", async () => {
   const deadline = compositionTestDeadline("bi-case-access")
   try {
-    const fixture = await deadline.phase("fixture.initialize", () => financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() }))
-    deadline.own(() => fixture.dispose())
+    const fixture = await deadline.phase("fixture.initialize", async () => {
+      const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
+      deadline.own(() => value.dispose())
+      return value
+    })
     const { authority, business, portfolio, persistence } = fixture
-    const period = { start: "2026-01-01", end: "2026-12-31" }
+    // This authority/privacy fixture projects one whole month from two real
+    // annual sources. The case and human coverage retain that same horizon;
+    // it does not claim annual coverage or a complete financial comparison.
+    const period = { start: "2026-01-01", end: "2026-01-31" }
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [100, 80].map((amount, index) => ({ id: `bi-v${index}`, name: index ? "BI candidate" : "BI baseline", year: 2026, closed: 0,
         lines: [{ id: "line", name: "Private license service", sec: "opex", el: "licenses", cur: "USD",
@@ -50,6 +56,8 @@ test("BI clears a real persisted case after participant revocation with the sess
       const forecast = ok(await deadline.phase(`forecast.${index}`, () => business.planner.compareForecast({ baseRef: issued.evidence.refId,
         candidateRef: issued.evidence.refId, period, currency: "USD" }, call)), "Read real BI forecast")
       expect(forecast.baseline.components.length).toBeGreaterThan(0)
+      expect(forecast.baseline.context.period).toEqual(period)
+      expect(issued.evidence.target.period).toEqual({ start: "2026-01-01", end: "2026-12-31" })
       sources.push(issued.evidence)
       componentIds.push(forecast.baseline.components.map((component) => component.id))
     }
@@ -92,6 +100,7 @@ test("BI clears a real persisted case after participant revocation with the sess
     expect(snapshot.value.choices).toHaveLength(0)
     for (const alternative of snapshot.value.alternatives) {
       expect(alternative.result).toMatchObject({ comparisonStatus: "conditioned", total: null, costCoverage: { coverageState: "pending" } })
+      expect(alternative.result.horizon).toEqual(period)
       expect(alternative.result.costCoverage.entries.find((entry) => entry.categoryId === "service")?.status).toBe("included")
       expect(alternative.result.knownSubtotal).toBeGreaterThan(0)
     }
@@ -137,10 +146,16 @@ test("BI clears a real persisted case after participant revocation with the sess
     expect(procurement.status).toBe("ok")
     expect(procurement.value.choices).toHaveLength(1)
     expect(procurement.value.choices[0].label).toContain("0 registros")
-    const browser = await deadline.phase("browser.prepare", () => prepareSfBiAccessBrowser({ http, signal: deadline.signal, selectionRef,
-      privateReferences: [candidate.resultRef, persisted.resultRef],
-      url: `https://example.test/dashboard?${new URLSearchParams({ sf: "bi", viewId: "BI09", selectionRef, start: period.start, end: period.end })}` }))
-    deadline.own(() => browser.dispose())
+    // Compile only the actual static bundle before the navigation clock starts.
+    // Authenticated HTML/options/data still come from each real browser request.
+    await deadline.phase("browser.bundle", () => assets.bi())
+    const browser = await deadline.phase("browser.prepare", async () => {
+      const value = await prepareSfBiAccessBrowser({ http, signal: deadline.signal, selectionRef,
+        privateReferences: [candidate.resultRef, persisted.resultRef],
+        url: `https://example.test/dashboard?${new URLSearchParams({ sf: "bi", viewId: "BI09", selectionRef, start: period.start, end: period.end })}` })
+      deadline.own(() => value.dispose())
+      return value
+    })
     expect(dispatches.positive).toBeGreaterThan(0)
     expect(dispatches.replaysDenied).toBe(dispatches.positive)
     // Controlled ACL mutation, not a replacement reader or a logout. No result,

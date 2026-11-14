@@ -1,17 +1,20 @@
 import { expect } from "bun:test"
-import type { Page } from "@playwright/test"
+import type { Page, Route } from "@playwright/test"
 import type { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
+
+type BrowserRequest = ReturnType<Route["request"]>
+type BrowserResponse = NonNullable<Awaited<ReturnType<BrowserRequest["response"]>>>
 
 /** Real browser, producer and HTTP handler; route transport forwards exact handler bytes.
  * This seam does not qualify TCP hosting, installed identity, native AI or global E2E.
  */
-export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; url: string; privateText: string; signal?: AbortSignal }) {
+export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; url: string; privateText: string; signal: AbortSignal }) {
   const { chromium } = await import("@playwright/test")
   const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
+  input.signal.throwIfAborted()
   const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
-  const pending = { release: () => {}, observed: (_status: number) => {}, settled: () => {} }
+  const pending = { release: () => {}, settled: () => {} }
   const release = new Promise<void>((resolve) => { pending.release = resolve })
-  const observed = new Promise<number>((resolve) => { pending.observed = resolve })
   const settled = new Promise<void>((resolve) => { pending.settled = resolve })
   const errors: string[] = []
   const bounded = async <T>(work: Promise<T>) => {
@@ -22,12 +25,44 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       })])
     } finally { if (timer) clearTimeout(timer) }
   }
+  const ready = async <T>(work: Promise<T>) => {
+    input.signal.throwIfAborted()
+    let stop: (() => void) | undefined
+    const cancelled = new Promise<never>((_resolve, reject) => {
+      stop = () => reject(input.signal.reason)
+      input.signal.addEventListener("abort", stop, { once: true })
+    })
+    try { return await Promise.race([work, cancelled]) }
+    finally { if (stop) input.signal.removeEventListener("abort", stop) }
+  }
+  const watches: { page: Page; mode: string; request?: BrowserRequest; sent: ReturnType<typeof observedEvent<BrowserRequest>>;
+    handled: ReturnType<typeof observedEvent<number>>; response: ReturnType<typeof observedEvent<BrowserResponse>> }[] = []
+  const observe = (page: Page, mode: string) => {
+    const watch = { page, mode, request: undefined as BrowserRequest | undefined, sent: observedEvent<BrowserRequest>(),
+      handled: observedEvent<number>(), response: observedEvent<BrowserResponse>() }
+    watches.push(watch)
+    return {
+      handled: async () => { await bounded(ready(watch.sent.promise)); return ready(watch.handled.promise) },
+      response: async () => {
+        await bounded(ready(watch.sent.promise))
+        // Producer work remains inside the caller's 105s cancellation budget.
+        // The 10s delivery window starts after the actual handler has returned,
+        // so it cannot reject while goto is still producing its HTML/bundle.
+        await ready(watch.handled.promise)
+        return bounded(ready(watch.response.promise))
+      },
+    }
+  }
   let closeBrowser: (() => Promise<void>) | undefined
   let closed = false, held = false
   let focusPage: Page | undefined
   const dispose = async () => {
     if (closed) return
     closed = true; pending.release()
+    for (const watch of watches) {
+      const error = new Error("WP10_REVIEW_BROWSER_CLOSED")
+      watch.sent.reject(error); watch.handled.reject(error); watch.response.reject(error)
+    }
     if (closeBrowser) await closeBrowser()
     else await browser.close()
   }
@@ -38,51 +73,68 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
     context.setDefaultNavigationTimeout(15_000)
     await context.route("https://example.test/**", async (route) => {
       const request = route.request()
-      const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
-        ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
-      if (!response) { await route.abort("blockedbyclient"); return }
-      // Capture only actual host output. Status, headers and bytes are never
-      // synthesized to emulate a successful projection or a denied response.
-      const forwarded = { status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) }
-      const delayed = !held && request.frame().page() === focusPage && new URL(request.url()).searchParams.get("sf") === "review-source"
-      if (delayed) {
-        held = true; pending.observed(response.status)
-        await release
+      const page = request.frame().page()
+      const mode = new URL(request.url()).searchParams.get("sf") ?? "other"
+      const watch = watches.find((entry) => entry.page === page && entry.mode === mode && !entry.request)
+      if (watch) { watch.request = request; watch.sent.resolve(request) }
+      const at = performance.now()
+      console.info("SF_REVIEW_BROWSER_HTTP", JSON.stringify({ page: page === focusPage ? "focus" : "source", mode, state: "started" }))
+      try {
+        const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
+          ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
+        if (!response) {
+          if (watch) throw new Error(`Real handler did not handle browser request ${mode}`)
+          await route.abort("blockedbyclient")
+          return
+        }
+        // Capture only actual host output. Status, headers and bytes are never
+        // synthesized to emulate a successful projection or a denied response.
+        const forwarded = { status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) }
+        watch?.handled.resolve(response.status)
+        console.info("SF_REVIEW_BROWSER_HTTP", JSON.stringify({ page: page === focusPage ? "focus" : "source", mode, state: "handled", status: response.status, elapsedMs: Math.round(performance.now() - at) }))
+        const delayed = !held && page === focusPage && mode === "review-source"
+        if (delayed) { held = true; await release }
+        try { await route.fulfill(forwarded) }
+        catch (error) {
+          // Revocation aborts the in-flight source fetch. It must not revive the DOM.
+          if (!closed && !delayed) throw error
+        } finally { if (delayed) pending.settled() }
+      } catch (error) {
+        watch?.handled.reject(error); watch?.response.reject(error)
+        if (!closed && !input.signal.aborted) errors.push(error instanceof Error ? error.message : String(error))
+        await route.abort("failed").catch(() => undefined)
       }
-      try { await route.fulfill(forwarded) }
-      catch (error) {
-        // Revocation aborts the in-flight source fetch. It must not revive the DOM.
-        if (!closed && !delayed) errors.push(error instanceof Error ? error.message : String(error))
-      } finally { if (delayed) pending.settled() }
     })
     focusPage = await context.newPage()
     const sourcePage = await context.newPage()
     const pages = [focusPage, sourcePage]
     for (const page of pages) {
       page.on("pageerror", (error) => errors.push(error.message))
-      const firstRead = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "review-read")
-      expect((await page.goto(input.url))?.status()).toBe(200)
-      expect((await firstRead).status()).toBe(200)
+      page.on("response", (response) => watches.find((watch) => watch.request === response.request())?.response.resolve(response))
+      const firstRead = observe(page, "review-read")
+      expect((await page.goto(input.url, { waitUntil: "commit" }))?.status()).toBe(200)
+      expect((await firstRead.response()).status()).toBe(200)
       await page.locator("[data-sf-review-selected-section] table").waitFor({ state: "visible" })
       expect(await page.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
       expect(await page.locator("script[data-sf-review-bootstrap]").count()).toBe(0)
     }
     // Hold a genuinely authorized source response across the later case-only
     // revocation; no response payload or access decision is substituted.
+    const priorSource = observe(focusPage, "review-source")
     await focusPage.locator("[data-sf-review-selected-section]").getByRole("button", { name: "Abrir origem", exact: true }).first()
       .evaluate((button) => (button as HTMLButtonElement).click())
-    expect(await bounded(observed)).toBe(200)
+    expect(await priorSource.handled()).toBe(200)
     return {
       dispose,
       async verifyAfterCaseRevocation() {
-        const probe = focusPage!.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "review")
+        const probe = observe(focusPage!, "review")
         await focusPage!.evaluate(() => window.dispatchEvent(new Event("focus")))
-        const probeStatus = (await probe).status()
+        const probeStatus = (await probe.response()).status()
         expect(probeStatus).toBe(403)
-        const source = sourcePage.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "review-source")
+        const source = observe(sourcePage, "review-source")
         await sourcePage.locator("[data-sf-review-selected-section]").getByRole("button", { name: "Abrir origem", exact: true }).first()
           .evaluate((button) => (button as HTMLButtonElement).click())
-        const sourceStatus = (await source).status()
+        const sourceStatus = (await source.response()).status()
         expect(sourceStatus).toBe(403)
         const checkEmpty = async (page: Page) => {
           await page.waitForFunction(() => document.querySelector("[data-sf-review-workspace]")?.textContent === "O acesso mudou. Reabra uma revisão autorizada.")
@@ -105,4 +157,14 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       },
     }
   } catch (error) { await dispose(); throw error }
+}
+
+function observedEvent<T>() {
+  let resolve!: (value: T) => void
+  let reject!: (error: unknown) => void
+  const promise = new Promise<T>((done, failed) => { resolve = done; reject = failed })
+  // Install the rejection handler before navigation or clicking. Awaiting the
+  // original promise still propagates the exact failure at its observed stage.
+  void promise.catch(() => undefined)
+  return { promise, resolve, reject }
 }
