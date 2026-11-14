@@ -1,0 +1,108 @@
+{
+  "schema": "sf2h.wp06.historical-relay-reconciliation.v1",
+  "scope": "WP06",
+  "observed_control_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "original_T0": "2026-11-13T04:01:10Z",
+  "original_pause_at": "2026-11-13T20:42:14.934674+00:00",
+  "current_resume_authority": "User explicitly requested complete WP06 and then directed continuation of necessary integrations in astra-wp06. This authorization does not rewrite historical observations.",
+  "findings": [
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/operational/leases/lease-transfers-wave1.json",
+      "blob": "3e9c735b046c3a2ee4caa1eb097e931fa82552d1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/operational/leases/lease-transfers-wave1.json",
+      "observed": {
+        "at": "2026-11-13T16:50:02.736851+00:00",
+        "transfers": [
+          {
+            "from": "S2 e4 Terra, IDLE verified head34999c32f5",
+            "to": "S2-C Terra WP06",
+            "paths": [
+              "modules/sucafina/Sucafinav1/product/documents/**",
+              "modules/sucafina/Sucafinav1/test/product/wp06/documents/**",
+              "modules/sucafina/package.json",
+              "bun.lock",
+              "modules/sucafina/Sucafinav1/runtime/application.ts",
+              "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts"
+            ],
+            "source": "34999c32f5d677a298195a5f392f1ddc69de1bb8",
+            "epoch": 5,
+            "extra": "S0 authorizes extracting SAME existing backup-import branch into executeDashboardBackupImport shared producer, reused by legacy HTTP + WP06 JSON. Preserve payload/status, migrations/version/audit/protected state semantics exactly. Do not duplicate logic or add fake target authority."
+          }
+        ]
+      }
+    },
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/operational/leases/lease-doc-adapter-e3.json",
+      "blob": "eaf70f954188f41682f7045b32c20b81139b7592",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/operational/leases/lease-doc-adapter-e3.json",
+      "observed": {
+        "at": "2026-11-13T17:45:14.284285+00:00",
+        "event_id": "wp06-document-adapter-e3",
+        "source_actors": [
+          "S0-B",
+          "S1-A"
+        ],
+        "target_actor": "S2-C",
+        "lease_epoch": 3,
+        "paths": [
+          "apps/cli/src/sucafina-product/document-services.ts",
+          "modules/sucafina/Sucafinav1/product/interface/document-http.ts"
+        ],
+        "condition": "new paths only; old owners notified and cannot write until accepted handoff"
+      }
+    },
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/operational/leases/lease-import-adapter-e4.json",
+      "blob": "b3c831cf54338babd867ce011848c96e085b167f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/operational/leases/lease-import-adapter-e4.json",
+      "observed": {
+        "at": "2026-11-13T17:50:06.293583+00:00",
+        "event_id": "wp06-import-adapter-e4",
+        "source_actors": [
+          "S0-B",
+          "S1-A"
+        ],
+        "target_actor": "S2-C",
+        "lease_epoch": 4,
+        "paths": [
+          "apps/cli/src/sucafina-product/import-services.ts",
+          "modules/sucafina/Sucafinav1/product/interface/import-http.ts"
+        ],
+        "source_owners_notified": true
+      }
+    }
+  ],
+  "assessment": {
+    "later_transfer_receipts": "OBSERVED",
+    "original_T_plus_20_doc_ref_acceptance": "NOT_ESTABLISHED_BY_AVAILABLE_RECEIPTS",
+    "original_T_plus_35_doc_extract_acceptance": "NOT_ESTABLISHED_BY_AVAILABLE_RECEIPTS",
+    "original_T_plus_53_transfer": "NOT_ESTABLISHED_BY_AVAILABLE_RECEIPTS",
+    "uninterrupted_no_overlap_of_original_writers": "NOT_ESTABLISHED_BY_AVAILABLE_RECEIPTS"
+  },
+  "limits": [
+    "The three retrieved transfers are later than the original T+20/T+35/T+53 schedule; they prove their own recorded later events only.",
+    "No retrospective delivery timestamp, receipt or owner acknowledgement has been generated.",
+    "The recovered archive and producer source remain intact. Current product tests, if successful, establish current behavior, not original schedule compliance.",
+    "Current authorized cross-work-package integration is performed only on astra-wp06. S0 retains final review/integration; no merge or deployment is authorized."
+  ],
+  "inspected_sources": [
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/STOP-STATE.json",
+      "blob": "51e633e896d7fd45b77838a146f50d9181bb021b"
+    },
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/input-archive-manifest.json",
+      "blob": "3f406e6bf89f1678f70dde0445ead1ea696793d6"
+    },
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/operational/accepted-inputs/shared.json",
+      "blob": "ff320783e82bac626114f5c734707cdfab71c005"
+    }
+  ]
+}

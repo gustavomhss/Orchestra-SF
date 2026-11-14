@@ -116,7 +116,7 @@ export function createPortfolioProofVerifier(input: {
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.kind !== "scenario" || source.value.kind !== "scenario" || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = await input.exactThreshold(binding.request, unitBinding, trusted)
         if (result.status === "ok") exact.value = result.value
         return result

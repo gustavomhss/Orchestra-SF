@@ -1,0 +1,39 @@
+{
+  "schema": "astra-operations.c12-producer-intake.v1",
+  "sourcePullRequest": 35,
+  "sourceTree": "a67576fae5212720d3e695138b0979931d4f7c79",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+      "before": "8c1c96fc5b280bbc359b242c1dc82f35976f95bd",
+      "after": "ae7a4476d686638512f3fc8bcf342a746259cacc",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "mode": "consume-published-producer-verbatim"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "before": "ac58ba1e3d8ba5028aa527bb408528031cd87357",
+      "after": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "mode": "consume-published-producer-verbatim"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "before": "927ae5bd892412d7025bde5e9acf274087d71fd9",
+      "after": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "mode": "consume-published-producer-verbatim"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "before": null,
+      "after": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "mode": "consume-published-producer-verbatim"
+    }
+  ],
+  "excluded": [
+    "human-authority.ts: no new C12 API required; additional read/action grants outside this dependency closure",
+    "mutations.ts and unrelated Finance changes: owned by Finance and compose"
+  ]
+}

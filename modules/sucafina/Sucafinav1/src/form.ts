@@ -157,6 +157,51 @@ export function quoteAssessment(rec: { sourcing?: SourcingForm | null }, setting
   return evalQuotes(rec, settings)
 }
 
+export type QuoteMonetaryIssue = "currency-missing" | "total-missing" | "total-invalid" | "total-not-positive" | "fx-missing" | "fx-invalid" | "submitted-base-unavailable"
+
+export type QuoteComparisonRow = {
+  id?: string
+  currency: string | null
+  total: number | null
+  fxRate: number | null
+  rank: number | null
+  eligible: boolean
+  complete: boolean
+  monetary: QuoteMonetaryIssue[]
+}
+
+/** Presents quoteAssessment in quote order. It does not score, rank, convert, or authorize. */
+export function quoteComparisonPresentation(rec: { sourcing?: SourcingForm | null }, settings: FormSettings, options?: { submitted?: boolean; submittedBaseCurrency?: string }): QuoteComparisonRow[] {
+  const sourcing = rec.sourcing ?? emptySourcing()
+  const assessed = quoteAssessment(rec, settings)
+  return (sourcing.quotes ?? []).map((quote, index) => {
+    const item = assessed[index]
+    const currency = typeof quote.currency === "string" && quote.currency ? quote.currency : null
+    const total = typeof quote.total === "number" && Number.isFinite(quote.total) ? quote.total : null
+    const monetary: QuoteMonetaryIssue[] = []
+    if (!currency) monetary.push("currency-missing")
+    if (quote.total == null || quote.total === "") monetary.push("total-missing")
+    else if (total == null) monetary.push("total-invalid")
+    else if (!(total > 0)) monetary.push("total-not-positive")
+    const validBase = !options?.submitted || options.submittedBaseCurrency === settings.currency
+    const rate = !currency || !validBase ? null : currency === settings.currency ? 1 : sourcing.fxSnapshot ? sourcing.fxSnapshot[currency] : options?.submitted ? null : settings.fxRates?.find((entry) => entry.code === currency)?.rate
+    if (!validBase) monetary.push("submitted-base-unavailable")
+    if (currency && validBase && rate == null) monetary.push("fx-missing")
+    if (currency && validBase && rate != null && (typeof rate !== "number" || !Number.isFinite(rate) || !(rate > 0))) monetary.push("fx-invalid")
+    const fxRate = typeof rate === "number" && Number.isFinite(rate) && rate > 0 ? rate : null
+    return {
+      id: quote.id,
+      currency,
+      total,
+      fxRate,
+      rank: item?.rank ?? null,
+      eligible: item?.eligible === true,
+      complete: item?.complete === true,
+      monetary,
+    }
+  })
+}
+
 function evalQuotes(rec: { sourcing?: SourcingForm | null }, settings: FormSettings) {
   const sourcing = rec.sourcing ?? emptySourcing()
   const weight = weights(sourcing, settings)

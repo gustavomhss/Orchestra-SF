@@ -1,0 +1,245 @@
+{
+  "id": "OPS-NATIVE-UI-ACQUISITION",
+  "owners": [
+    "astra-interface",
+    "astra-compose"
+  ],
+  "status": "blocked-browser-acquisition; H09 unqualified",
+  "product": {
+    "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "snapshot": {
+    "sha": "9e1d872f453c218909d328b480ffaf8bed6f0c82",
+    "tree": "19c1fb2cc3c949ddb564fba885977a0799c95c2e",
+    "parents": [
+      "c4a2f4ebeb88f5915e51569b921be06b3c37ddad"
+    ]
+  },
+  "snapshotProof": {
+    "soleParent": true,
+    "onlyAddedRequest": true,
+    "comparison": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "head": "9e1d872f453c218909d328b480ffaf8bed6f0c82",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/c4a2f4ebeb88f5915e51569b921be06b3c37ddad"
+      },
+      "merge_base_commit": {
+        "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/c4a2f4ebeb88f5915e51569b921be06b3c37ddad"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 13,
+          "deletions": 0,
+          "changes": 13,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "runId": 43584405211,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584405211",
+  "testJobId": 132415709827,
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    },
+    "blob": "26184451c4ce2fe834a96f0127cf831f3bfb9fcd",
+    "sha256": "ca850c98b31f54c91dd4d93ff4a627af9918150885489b1eae3f1cdd5179842d"
+  },
+  "actualSelection": {
+    "files": [
+      "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ],
+    "fileCount": 3,
+    "expectedCaseCount": 11,
+    "actualCaseCount": 11,
+    "selectedAndExecutedEqual": true,
+    "executionOrderEqualsRequest": true,
+    "emptySelection": false,
+    "bailOrEarlyStop": false
+  },
+  "summary": {
+    "pass": 8,
+    "fail": 3,
+    "skip": 0,
+    "testCount": 11,
+    "fileCount": 3,
+    "expectCalls": 190,
+    "durationSeconds": 74.7
+  },
+  "componentQualification": {
+    "hostCasesPassed": [
+      "H01",
+      "H02",
+      "H03",
+      "H04",
+      "H05",
+      "H06",
+      "H07",
+      "H08"
+    ],
+    "uiCase": "H09 unqualified: pool refusal before hostFixture, review, Apply or receipt assertions",
+    "earlierW4FailuresNowPassed": [
+      "H02",
+      "H03",
+      "H05"
+    ],
+    "h09ProofRecordPresent": false,
+    "hostTestBlob": "a71839833d50fa3da37f18b2c1fca4597032a5b7"
+  },
+  "browserAcquisition": {
+    "conclusion": "failure",
+    "phases": [
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "playwright-import",
+        "elapsedMs": 0
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "playwright-imported",
+        "elapsedMs": 329
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "app-process-service",
+        "elapsedMs": 336
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "app-process-spawn",
+        "elapsedMs": 336
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "app-process-spawned",
+        "elapsedMs": 347,
+        "driverPid": 4170
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "node-import",
+        "elapsedMs": 371,
+        "driverPid": 4170
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "node-imported",
+        "elapsedMs": 585,
+        "driverPid": 4170
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "chromium-launch",
+        "elapsedMs": 597,
+        "driverPid": 4170
+      },
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "startup-cancelled",
+        "elapsedMs": 10000,
+        "waitingAt": "chromium-launch",
+        "driverPid": 4170
+      }
+    ],
+    "failure": {
+      "consumer": "wp01-shared-pool",
+      "phase": "startup-cancelled",
+      "driverPid": 4170,
+      "elapsedMs": 10004,
+      "reason": "Browser driver launch exceeded 9667 ms",
+      "stderr": ""
+    },
+    "driverFailures": [
+      {
+        "consumer": "wp01-shared-pool",
+        "phase": "startup-cancelled",
+        "driverPid": 4170,
+        "reason": "WP01 browser timed out: single Node-owned Chromium launch and PID acquisition",
+        "stderr": ""
+      }
+    ],
+    "ownerDriverBlob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+    "ownerDriverHead": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+    "browserPidObserved": false,
+    "browserPid": null,
+    "physicalExitProved": false,
+    "lifecycleReport": {
+      "launches": 0,
+      "acquisitions": 0,
+      "releases": 0,
+      "pid": null,
+      "activeLease": false,
+      "contexts": 0,
+      "disconnected": false,
+      "driverClosed": false,
+      "processExited": false
+    },
+    "qualification": "No browser PID was reported. This does not establish absence of a browser process; physical cleanup was not proved."
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "e73271f7e6e425831126deb297111537",
+    "declaringTests": 1,
+    "declaringFiles": [
+      "Sucafinav1/test/product/wp01/browser-startup.test.ts"
+    ],
+    "spawns": 1,
+    "delegations": 0,
+    "raw": "omni positive control [e73271f7e6e425831126deb297111537]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.",
+    "qualification": "One actual AppProcess/Omni spawn was attributed to startup. It is not proof that Chromium was acquired or physically closed."
+  },
+  "workflowCleanup": {
+    "jobId": 132416458692,
+    "conclusion": "success",
+    "qualification": "Snapshot-branch workflow cleanup succeeded. This is separate from physical browser lifecycle proof."
+  },
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-host-browser-43584405211.log",
+    "sha256": "0c136358dfb791018a8e3cf93f86e3eb6be84ae015547a60c4dedaa49e2991e2",
+    "bytes": 86523
+  },
+  "priorOwnerRun": {
+    "runId": 43581816415,
+    "product": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+    "snapshot": "4d58627f1bb996e422bbba2796050b4acaeb6144",
+    "snapshotTree": "a2db0fab2738bc8b029a77781d74b880d62d1a78",
+    "sameObservedStage": "chromium-launch",
+    "error": "Browser driver launch exceeded 9651 ms",
+    "stderr": "",
+    "decisionMutations": "beforeAll failed; Apply bodies unexecuted",
+    "log": {
+      "path": "/workspace/scratch/67acc0fafe95/audit-ci/owner-refresh/interface-43581816415.log",
+      "sha256": "271ad3c30bbfda1959ccff88131e22a3e979bdf38da5dec02061fcc94ae2ba1f",
+      "bytes": 143818
+    }
+  },
+  "automaticRerun": false,
+  "productModifiedByReviewer": false,
+  "rootCause": "not established",
+  "physicalProcessAbsenceClaimed": false
+}

@@ -1,0 +1,11 @@
+# Browser evidence — Operations W2
+
+Hosted run `43580401528`, test job `132403694001`, snapshot `26726f85ce39819fcfa376daf1e6ebea203188b2`, product `5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3`. Artifact `14108775848` has verified SHA256 `eb747ff47369eaa6301947e3ef92b6c0977dff5b100e2f782448c70d751a5aab`. The exact request selected three production Chromium specs; list and runtime case IDs match. All 30 cases passed once, with zero retries, skipped tests, unexpected outcomes or flakies.
+
+The artifact contains 11 PNG attachments from WP04, representing 10 unique image hashes, and 11 decoded JSON attachments. WP06's 22 cases have no PNG attachments in this run. Files, checksums, case associations and decoded JSON are recorded in `operations-browser-43580401528.json`; the HTML report and original runtime/list reports remain extracted in `browser3/`.
+
+All 10 unique PNGs were opened for visual inspection. They show populated Procurement UI for required-field focus, explicit stale-version review, cancelled-action comments, unsaved later edits, saved purchase-order fields, submitted sourcing comparison, restored request filtering, supplier revalidation and restricted supplier views. Bank details in the revalidation screenshot are deliberately masked in the screenshot. Queue and settings-reset screenshots have identical pixels; they remain distinct test attachments and are not counted as two independent visual states.
+
+These are fixed viewport captures, often scrolled into a section, not full-page records. For example, the purchase-order screenshot displays negotiated form values rather than the final issuance status; that status is reported in the test assertions/JSON attachment. The restricted-supplier screenshot does not display every lower section, so it does not independently prove all authorization checks. The runtime assertions and JSON attachments must accompany the images.
+
+Every JSON attachment explicitly records `humanTimingMeasured: false`. The screenshot inspection is not a human usability study, approval exercise, timing measurement, native-agent acceptance or global gate. The browser log contains Omni setup and nonce `b1d52941d1e8d2aa5205dced92ace189` but no positive-control verdict; no Omni proof is inferred.

@@ -5,7 +5,7 @@ import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
 import type { AuthorizedWorkList } from "../contracts/outputs.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
 import { esc } from "../../src/screen-shell.ts"
-import { contributionBody } from "./contribution-body.ts"
+import { contributionBody, type ContributionRenderOptions } from "./contribution-body.ts"
 
 /** Render only a context already filtered by the host for the current principal. */
 export function contextBar(context: ProductContext, version: number): string {
@@ -43,11 +43,11 @@ function scenarioBasis(input: ScenarioRequest): string {
 }
 
 /** The caller must revalidate access and supply a persisted, authorized contribution. */
-export function contribution(output: ContributionEnvelope): string {
+export function contribution(output: ContributionEnvelope, options?: ContributionRenderOptions): string {
   const provenance = output.runProvenance
   const status = output.state === "ready" ? "Ready for review" : output.state
   const labels: Record<ContributionEnvelope["kind"], string> = { IntentFrame: "Decision framing", AnalysisPlan: "Analysis plan", DecisionBrief: "Decision brief", QuestionProposal: "Question", FinancialAnalysis: "Financial analysis", ScenarioComparison: "Scenario comparison", SensitivityResult: "Sensitivity", CommercialComparison: "Commercial comparison", CommercialGap: "Commercial gap", EvidenceCandidate: "Evidence candidate", PreparedChangeSet: "Prepared changes", DossierDraft: "Purchase preparation", DeliveryAssessment: "Delivery assessment", DependencyConflict: "Dependency conflict", PortfolioComparison: "Portfolio comparison", ReconsiderationProposal: "Reconsideration", CritiqueReport: "Decision review", UnresolvedCondition: "Open condition", ClaimIssue: "Evidence review", DocumentEvidence: "Document evidence", ContextualBIProposal: "Contextual view", MeetingMaterialProposal: "Meeting material", CaseRecall: "Related decisions", MatchExplanation: "Relevance and differences" }
-  return `<section class="product-contribution"><h3>${labels[output.kind]}</h3><p role="status">${esc(status)}${output.state === "ready" ? "" : ` · ${esc(output.reason)}`}</p>${contributionBody(output)}<details><summary>Sources (${output.evidenceRefs.length})</summary><ul>${output.evidenceRefs.map((ref) => `<li>${esc(ref.refId)} · ${esc(ref.evidenceLevel)}</li>`).join("")}</ul></details><details><summary>Contribution details</summary><dl><dt>Profile</dt><dd>${esc(provenance.profileId)} ${esc(provenance.profileVersion)}</dd><dt>Skill</dt><dd>${esc(provenance.skillId)} ${esc(provenance.skillVersion)}</dd><dt>Digest</dt><dd>${esc(provenance.sourceDigest)}</dd><dt>Model</dt><dd>${esc(provenance.actualModel)}</dd><dt>Run</dt><dd>${esc(provenance.runId)}</dd></dl></details></section>`
+  return `<section class="product-contribution"><h3>${labels[output.kind]}</h3><p role="status">${esc(status)}${output.state === "ready" ? "" : ` · ${esc(output.reason)}`}</p>${contributionBody(output, options)}<details><summary>Sources (${output.evidenceRefs.length})</summary><ul>${output.evidenceRefs.map((ref) => `<li>${esc(ref.refId)} · ${esc(ref.evidenceLevel)}</li>`).join("")}</ul></details><details><summary>Contribution details</summary><dl><dt>Profile</dt><dd>${esc(provenance.profileId)} ${esc(provenance.profileVersion)}</dd><dt>Skill</dt><dd>${esc(provenance.skillId)} ${esc(provenance.skillVersion)}</dd><dt>Digest</dt><dd>${esc(provenance.sourceDigest)}</dd><dt>Model</dt><dd>${esc(provenance.actualModel)}</dd><dt>Run</dt><dd>${esc(provenance.runId)}</dd></dl></details></section>`
 }
 
 /** Read-only composition of an authorized case. Actions remain in the domain host. */

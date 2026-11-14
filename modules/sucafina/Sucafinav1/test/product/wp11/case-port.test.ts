@@ -222,7 +222,7 @@ test("partial domain execution reconciles a durable receipt and never repeats it
         return result
       },
     }
-    const execute = createPreparedExecution({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, apply, authorizeCase: async () => true, authorizeApplication: async () => domain.authorized, confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: () => "operation", classifyReceipt: async () => ({ state: "applied", evidence: { schema: "sf-evidence-v1", refId: "receipt-ref", installationId: "install", projectId: "project", refDigest: "d".repeat(64), evidenceLevel: "observed", kind: "receipt", target: { surface: "planner", receiptId: "receipt", idempotencyKey: "key", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 1 } } }) })
+    const execute = createPreparedExecution({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, apply, reviewDigestFor: () => "a".repeat(64), revalidateProducer: async () => ({ status: "ok", value: { reviewDigest: "a".repeat(64) } }), authorizeCase: async () => true, authorizeApplication: async () => domain.authorized, confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: () => "operation", classifyReceipt: async () => ({ state: "applied", evidence: { schema: "sf-evidence-v1", refId: "receipt-ref", installationId: "install", projectId: "project", refDigest: "d".repeat(64), evidenceLevel: "observed", kind: "receipt", target: { surface: "planner", receiptId: "receipt", idempotencyKey: "key", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 1 } } }) })
     const request = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
     expect((await execute(request, binding)).status).toBe("unavailable")
     expect(domain.calls).toBe(0)
@@ -237,12 +237,11 @@ test("partial domain execution reconciles a durable receipt and never repeats it
     domain.revokeOnConfirm = false
     expect((await execute(request, binding)).status).toBe("unavailable")
     domain.loseResponse = false
-    expect((await execute(request, binding)).status).toBe("ok")
-    expect((await execute(request, binding)).status).toBe("ok")
+    expect(await execute(request, binding)).toMatchObject({ status: "unavailable", reason: "review-proof-unbound" })
     expect(domain.calls).toBe(1)
     const result = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     expect(result.status).toBe("ok")
-    if (result.status === "ok") expect(result.value).toMatchObject({ state: "partially-applied", version: 2 })
+    if (result.status === "ok") expect(result.value).toMatchObject({ state: "chosen", version: 1 })
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })

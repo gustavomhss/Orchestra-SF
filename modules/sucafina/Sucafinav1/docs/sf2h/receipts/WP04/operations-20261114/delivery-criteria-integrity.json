@@ -1,0 +1,373 @@
+{
+  "schema": "astra-operations.criteria-integrity.v1",
+  "kind": "document integrity verification; not a product test or acceptance proof",
+  "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "handoffCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "totalCriteria": 251,
+  "totalTasks": 10,
+  "maps": [
+    {
+      "wp": "WP04",
+      "criterionCount": 111,
+      "canonicalIdsAndLiteralTextEqual": true,
+      "proofBindingIdsEqual": true,
+      "scopeCounts": {
+        "WP04": 20,
+        "WP04.T01": 20,
+        "WP04.T02": 14,
+        "WP04.T03": 21,
+        "WP04.T04": 15,
+        "WP04.T05": 21
+      },
+      "taskInventory": [
+        {
+          "id": "WP04.T01",
+          "title": "Filas e projeções de Procurement com próxima ação verificável",
+          "intent": "Entregar a leitura autorizada do pedido que sustenta Requests, My approvals, BI e rotinas, com estado, responsável e idade semanticamente corretos.",
+          "work": [
+            "Mapear páginas, estados e comandos do baseline para uma projeção C02 única do pedido; obter capacidades pelo C01 e comandos existentes, sem duplicar a máquina de estados em uma view.",
+            "Apresentar filas por próxima ação, com busca/filtros de requester, buyer, etapa e responsável quando os campos existem; separar esperando por você, por outros e sem holder atribuído.",
+            "Produzir entrada comprovada na etapa a partir do evento correto de submissão/transição, considerando rejeição e ressubmissão; não usar createdAt, último save ou importação como substituto silencioso.",
+            "Expor referências C01 de drilldown e motivos de pendência consumíveis por WP05/WP08/WP09; callbacks ficam exportados, e a navegação comum será composta por WP10.",
+            "Manter a organização das filas baseada em datas e critérios visíveis, sem inventar SLA, prioridade numérica ou inferir responsáveis ausentes.",
+            "Publicar descritores e handlers de sf_request_read, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "WP00.T02: C01, C02, C03 e C08 congelados, inventário do baseline e fixtures provenientes dos motores reais.",
+            "Baseline 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf: src/requests.ts, runtime/procurement.ts, src/procurement-screen.ts e porta/act.ts.",
+            "Registros representativos com história íntegra, histórico importado incompleto, rejeição/ressubmissão e holder ausente.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Projeção C02 real de filas/pedidos, com evidência de entrada na etapa ou ausência explícita.",
+            "Views locais de Requests/My approvals e referências de drilldown exportadas em product/procurement/**.",
+            "Mapa de cobertura de estados/papéis e casos discriminantes para consumidores.",
+            "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readRequest (sf_request_read; RequestReadRequest -> AuthorizedRequest)"
+          ],
+          "depends_on": [
+            "WP00.T02"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP04.T02",
+          "title": "Pedido guiado e preenchimento reaproveitado com origem",
+          "intent": "Permitir editar somente o que cabe à etapa atual, retomando o trabalho sem reentrada desnecessária nem perda de alterações.",
+          "work": [
+            "Organizar PR, sourcing e PO em detalhe progressivo com resumo persistente do pedido, pendências locais e controles coerentes com etapa/papel; conservar os quatro detalhes Requisition, Sourcing, Purchase order e History.",
+            "Reaproveitar dados existentes entre requisição, proposta selecionada, fornecedor e PO, distinguindo valores negociados de sugestões do cadastro e defaults; mostrar origem e preservar sobrescritas permitidas.",
+            "Aplicar validações existentes junto aos campos, incluindo recorrência, estratégia de contrato, condições de entrega e linhas; campos condicionais ficam acessíveis quando aplicáveis e não são descartados ao ocultar.",
+            "Apresentar save, cancelamento, exclusão permitida e retomada usando C03; em conflito preservar entrada local, mostrar a versão recebida e exigir revisão antes de reaplicar.",
+            "Exportar as views e comandos para o compositor sem alterar shell, application ou workbooks."
+          ],
+          "inputs": [
+            "WP04.T01: filas, capacidades e projeção contextual do pedido.",
+            "C01/C03/C08 congelados e inventário dos campos PR/sourcing/PO do baseline.",
+            "src/form.ts, runtime/procurement.ts e comportamento existente de proposta de PO/endereço padrão."
+          ],
+          "outputs": [
+            "Detalhe guiado de PR, sourcing e PO com origem do preenchimento e pendências locais.",
+            "Apresentação de conflito que conserva os valores digitados e referencia o registro atual.",
+            "Cobertura de preservação de campos, cancelamento, exclusão e retomada por etapa."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP04.T01"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP04.T03",
+          "title": "Comparação honesta e valores financeiros consistentes",
+          "intent": "Permitir compreender por que uma proposta lidera, quanto custa a diferença e quais números são comparáveis, sem criar política nova.",
+          "work": [
+            "Expor o ranking e seus componentes a partir de quoteRanking/validações existentes: preço normalizado, notas humanas, pesos, elegibilidade e justificativas; não criar outro algoritmo de avaliação.",
+            "Tratar uma única proposta, notas incompletas e dados desconhecidos como limitações explícitas; uma pontuação provisória não deve parecer recomendação definitiva.",
+            "Produzir valores C02 com moeda original, base, fonte da taxa e snapshot pertinente à etapa; corrigir a apresentação monetária da PO conforme a definição C02 congelada, sem buscar câmbio externo ou reinterpretar alçadas.",
+            "Separar aprovados, emitidos internamente e estimativas nas métricas; não oferecer realizado ou saldo orçamentário sem projeção real correspondente.",
+            "Mostrar discrepância entre total da proposta e quantidade vezes preço antes de reaproveitar a PO, sem inventar desconto, imposto ou frete para fechar os números; manter as decisões na revisão humana dos campos existentes.",
+            "Publicar descritores e handlers de sf_sourcing_compare, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "WP04.T02: detalhe guiado e dados de propostas/PO preservados.",
+            "C02: definição congelada de valores de apresentação, moeda, snapshots, estados e ausência.",
+            "src/form.ts, src/procurement-screen.ts, src/initial-settings.ts e porta/act.ts no baseline.",
+            "Fixture sintética com as configurações existentes: pesos técnico/comercial 60/40, critérios técnicos 35/20/15/15/15 e comerciais 70 automático/15/15.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Comparação de propostas com decomposição explicável do ranking e limitações visíveis.",
+            "Projeção monetária C02 reconciliada com o domínio, com estados e taxas identificados.",
+            "Casos de referência para WP05/WP07/WP09, inclusive comparação incompleta e FX ausente.",
+            "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#compareSourcing (sf_sourcing_compare; SourcingCompareRequest -> CommercialComparison)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP04.T02"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP04.T04",
+          "title": "Resumo por tipo de aprovação e decisão sobre a versão correta",
+          "intent": "Dar ao aprovador contexto suficiente para decidir a etapa atual rapidamente e entender o efeito exato da sua ação.",
+          "work": [
+            "Criar resumos distintos para aprovar a necessidade/PR, a seleção de fornecedor/sourcing e a PO; reutilizar C02 e mostrar objeto, valor, diferença pertinente, justificativa, evidências disponíveis e próximo passo.",
+            "Explicar holder, etapas ainda pendentes e efeitos de approve/reject usando a rota real; comentários e motivos usam comandos existentes, sem criar estado informal que substitua rejeição.",
+            "Vincular a decisão à versão esperada C03; em conflito interromper a tentativa e apresentar o que mudou sem descartar o comentário digitado ou reaplicar a decisão automaticamente.",
+            "Exportar preparação somente leitura do resumo e pendências como C02, consumida pela receita C07 de WP09, terminando em rascunho; Relay e outros consumidores não recebem um caminho implícito de aprovação.",
+            "Apresentar referências textuais como tal e relações C06 somente quando fornecidas explicitamente; o resumo não declara orçamento disponível ou contrato validado por inferência."
+          ],
+          "inputs": [
+            "WP04.T03: comparação, valores, snapshots e limitações C02.",
+            "C01/C03/C06/C07/C08 congelados.",
+            "Porta real de approve/reject, holders, etapas e histórico do baseline."
+          ],
+          "outputs": [
+            "Três variantes de resumo decisório com resultado esperado de cada ação.",
+            "Apresentação de recusa/conflito de decisão preservando comentário local.",
+            "Porta de preparação read-only por versão e recibo dos dados usados, consumível por WP09/WP10."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP04.T03"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP04.T05",
+          "title": "Fornecedores e preservação completa do processo de compras",
+          "intent": "Concluir a experiência de fornecedores e provar que a nova apresentação preserva os fluxos e controles originais de Procurement.",
+          "work": [
+            "Organizar cadastro, categorias, contatos, comercial, banco, compliance, linked requests e auditoria do fornecedor com busca/filtros e mensagens de ativação específicas; preservar os campos e validações existentes.",
+            "Manter criação pelo buyer, ativação/bloqueio/inativação e edição bancária pelos papéis permitidos; apresentar a revalidação após mudança bancária sem expor dados sensíveis no resumo/histórico/C02.",
+            "Preservar Settings completo: matriz, moedas, critérios, minQuotes, endereços, condições, anexos, lembretes e reset; essa task melhora sua compreensão e não define novos defaults ou políticas.",
+            "Conferir consultas, registro/exportações, download da PO, identidade PR/PO/SUP, histórico, rascunhos rejeitados, cancelamento e exclusão; adaptar apenas dentro dos arquivos de ownership.",
+            "Entregar recibo de cobertura e portas reais a WP05/WP06/WP07/WP08/WP09/WP10; importação, colaboração, rotinas e composição seguem com seus proprietários e não são implementadas aqui.",
+            "Publicar descritores e handlers de sf_supplier_read, sf_contract_read, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente."
+          ],
+          "inputs": [
+            "WP04.T04: jornada completa até decisão e preparação de PO.",
+            "src/supplier.ts, src/procurement.ts, src/initial-settings.ts e runtime/procurement.ts; inventário funcional congelado por WP00.",
+            "C01/C02/C03/C08 e fixtures de fornecedor ativo/pendente/bloqueado/inativo, dados bancários e identificadores importados.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Experiência de Suppliers/Settings preservando campos, restrições e feedback específico.",
+            "Recibo de cobertura dos fluxos originais, cenários adversos e portas exportadas.",
+            "Handoff verificável de Procurement para composição final e consumidores reais, sem alterações fora do ownership.",
+            "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readSupplier (sf_supplier_read; SupplierReadRequest -> AuthorizedSupplier)",
+            "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readContract (sf_contract_read; ContractReadRequest -> AuthorizedContract)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP04.T04"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        }
+      ],
+      "sourcePack": {
+        "path": "planning/WP04.pack.json",
+        "sha256": "ce48b184c65e19ead4fe62e82e0ab55a7385457d03fc4315723f18fa95bbb59e"
+      },
+      "publishedMapSource": {
+        "path": "audit-wp04/operations-criteria-111.normalized.json",
+        "sha256": "bd213691c15e13b1ed32d45163c7ff78547b534e928b132c03d16a69a25a9dc5"
+      }
+    },
+    {
+      "wp": "WP06",
+      "criterionCount": 140,
+      "canonicalIdsAndLiteralTextEqual": true,
+      "proofBindingIdsEqual": true,
+      "scopeCounts": {
+        "WP06": 27,
+        "WP06.T01": 16,
+        "WP06.T02": 28,
+        "WP06.T03": 24,
+        "WP06.T04": 18,
+        "WP06.T05": 27
+      },
+      "taskInventory": [
+        {
+          "id": "WP06.T01",
+          "title": "Preservar formatos e normalização dos arquivos originais",
+          "intent": "Estabelecer um parse/export rastreável dos arquivos suportados sem modificar seu significado ou aceitar autoridade vinda do arquivo.",
+          "work": [
+            "Catalogar cada fluxo de arquivo congelado no WP00: Planner Info/OPEX/CAPEX/Headcount/Rate cards/FX rates, XLS legado, All Members/Summary by Leader, operações/projetos e backup JSON do Dashboard, com executor de domínio e regras de exportação existentes.",
+            "Refinar somente os arquivos sob ownership para produzir parse e normalização C04 com aba/coluna/linha de origem, dados ignorados identificáveis e os mesmos valores escalares, datas, IDs e resultados de fórmula do baseline.",
+            "Preservar os limites e validações de arquivo existentes, inclusive rejeição de estruturas perigosas ou inválidas, sem transformar a entrega em um parser genérico ou introduzir acesso externo.",
+            "Manter exportações autorizadas e prepareDashboardImport com preservação de configuração confiável e anexos por identidade; erros de formato não geram dados parciais considerados aplicáveis.",
+            "Publicar o catálogo e fixtures de formatos em product/imports/** para que preview/apply usem comandos e adapters dos contratos congelados."
+          ],
+          "inputs": [
+            "WP00.T02: C01/C03/C04/C08, inventário de formatos/rotas e exemplos originais congelados.",
+            "runtime/workbooks.ts e runtime/dashboard-import.ts no baseline; testes existentes de workbook, legacy workbook e dashboard import como referência.",
+            "Interfaces congeladas dos adapters de domínio; sua existência em outro WP não é dependência adicional de início."
+          ],
+          "outputs": [
+            "Catálogo de formatos, regras de normalização e exports do parser em product/imports/**.",
+            "Parse/export preservados em runtime/workbooks.ts e preparação segura de JSON em runtime/dashboard-import.ts.",
+            "Fixtures locais XLSX/XLS/JSON com ausência, zero, datas, IDs, abas auxiliares e referências privadas."
+          ],
+          "depends_on": [
+            "WP00.T02"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP06.T02",
+          "title": "Construir prévia do impacto e manifesto de mudanças",
+          "intent": "Mostrar antecipadamente o efeito de negócio de um arquivo usando exatamente o comando que poderá ser aplicado.",
+          "work": [
+            "Transformar o parse em comando C03/C04 e invocar o adapter puro publicado pelo domínio sobre cópia autorizada, com versão-base, revisões, opções e convenção de IDs previstas nos contratos.",
+            "Produzir manifesto de incluídos, alterados, removidos, inalterados, ignorados e rejeitados, com valores antes/depois permitidos ao ator e impactos de C02 fornecidos pelo domínio.",
+            "No Planner, consumir o adapter do WP03 para budget/actual/outlook/HR e preservar regras de lock, owner, salário, referências, newVersion e removeMissing; não editar runtime/planner.ts nem repetir suas fórmulas.",
+            "Construir a contribuição de UI de prévia com drilldown por item/campo, referência da versão/período/moeda e indicação explícita do que não será aplicado.",
+            "Vincular o manifesto ao contexto-base C04 e marcar como indisponível a simulação sem adapter real; fixtures contratuais ficam apenas nas provas e não servem como execução de produto.",
+            "Publicar descritores e handlers de sf_import_preview, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente.",
+            "sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados."
+          ],
+          "inputs": [
+            "WP06.T01: parse normalizado, catálogo e fixtures de formatos.",
+            "C01/C02/C03/C04 congelados e adapter puro do Planner publicado pelo WP03, além dos adapters dos outros domínios aplicáveis.",
+            "Fixtures contratuais para desenvolvimento paralelo e plano de conformidade com adapters reais a executar no WP10.",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Coordenador puro de simulação e manifesto C04 em product/imports/**.",
+            "Contribuição de prévia com mudanças, ignorados, remoções e impacto previsto.",
+            "Pacote de conformidade que compara a prévia ao mesmo comando executado pelo adapter real.",
+            "modules/sucafina/Sucafinav1/product/imports/capabilities.ts#previewImport (sf_import_preview; ImportPreviewRequest -> ImportManifest)"
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP06.T01"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP06.T03",
+          "title": "Entregar Apply explícito, reprévia e recibo fiel",
+          "intent": "Aplicar somente o que foi revisado, preservar alterações concorrentes e explicar o resultado confirmado ao usuário.",
+          "work": [
+            "Construir em product/imports/** o coordenador de estados arquivo/prévia/aplicação/resultado, recebendo a porta autorizada e transacional C08 que será montada pelo WP10; não editar application.ts nem criar persistência paralela.",
+            "Exigir a ação explícita de Apply com opções/contexto da prévia e rechecagem de revisões, lock e autoridade conforme C03/C04; mudanças relevantes devolvem conflito/reprévia em vez de overwrite.",
+            "Preservar arquivo, opções e detalhes locais em cancelamento ou conflito quando isso não expuser dados restritos; reabrir a diferença atual antes de nova aplicação.",
+            "Gerar recibo apenas do resultado confirmado, com registros/campos realmente alterados, ignorados/removidos, contexto, ator autorizado e impacto reconciliado; distinguir falha, ausência de mudanças e sucesso.",
+            "Publicar o recibo C04 para a experiência de importação composta por WP10 com os componentes WP01, sem disparar mensagens, tarefas ou decisões de negócio automaticamente.",
+            "Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística."
+          ],
+          "inputs": [
+            "WP06.T02: manifesto, contexto-base e contribuição de prévia.",
+            "C03/C04/C08 e porta de execução autorizada, a ser composta nos entrypoints reais pelo WP10.",
+            "Casos de conflito por mesma linha, mudança de lock/papel, remoção, inclusão com IDs previstos e falha tardia de validação."
+          ],
+          "outputs": [
+            "Contribuição Apply/cancelamento/reprévia e coordenador C04 por porta injetada em product/imports/**.",
+            "Modelo e apresentação de recibo a partir do resultado confirmado.",
+            "Roteiros de conformidade transacional e preservação de trabalho para a composição real do WP10."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP06.T02"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP06.T04",
+          "title": "Qualificar roundtrip e entregar as fronteiras de importação",
+          "intent": "Fechar a cobertura de arquivos, privacidade e concorrência com exemplos reproduzíveis e preparar a aceitação nos entrypoints reais.",
+          "work": [
+            "Consolidar a matriz formato/rota/papel/opção/resultado, cobrindo todos os fluxos inventariados e distinguindo validação local de conformidade real dependente da montagem WP10.",
+            "Construir provas de roundtrip autorizado e alteração mínima de arquivos, incluindo versões legadas, IDs estáveis, branco/zero, dados calculados ignorados, rates/FX e roster de oito campos.",
+            "Cobrir os casos adversos de permissões, HR privado, referência desconhecida, JSON com anexos/configuração confiáveis, revisão stale e remoção restrita às abas fornecidas.",
+            "Preparar a demonstração parse→preview de impacto→Apply→recibo e o pacote de conformidade a ser executado com adapters e entrypoints reais, sem aceitar fixtures como execução de produção.",
+            "Entregar exports, recibo C04 e instruções de composição da experiência de importação ao WP10, sem escrever em suas áreas."
+          ],
+          "inputs": [
+            "WP06.T03: coordenador e recibo; WP06.T01/T02: catálogo, parse e manifesto.",
+            "Adapters reais dos domínios por C03/C04 e entrypoints C08 a serem montados pelo WP10.",
+            "Fixtures originais e sintéticas XLSX/XLS/JSON de WP00.T03, mais inventário de papéis e fluxos de WP00.T01."
+          ],
+          "outputs": [
+            "Matriz de cobertura e suíte de conformidade em product/imports/**.",
+            "Fixtures e resultados esperados de roundtrip, alteração mínima, remoção, privacidade e concorrência.",
+            "Handoff C04/C08, roteiro da demonstração e lista explícita de evidências locais versus integradas a fechar no WP10."
+          ],
+          "depends_on": [
+            "WP00.T02",
+            "WP06.T03"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        },
+        {
+          "id": "WP06.T05",
+          "title": "Extrair evidências de documentos com confirmação",
+          "intent": "Converter documentos fornecidos em dados revisáveis, com ligação ao trecho original.",
+          "work": [
+            "Aceitar PDF digital, DOCX e texto pelo caminho autorizado de anexos; definir limites de tamanho/páginas antes de parse e preservar importações de planilha existentes.",
+            "Extrair texto e localização determinísticos; entregar à porta IA somente projeção autorizada e dados, nunca instruções do documento.",
+            "Apresentar campo/valor/unidade/trecho-origem e estado extraído; exigir confirmação para promover a premissa utilizável.",
+            "Recusar arquivo inválido, protegido ou escaneado sem texto com motivo claro; registrar referência privada sem expor blob ou segredo.",
+            "Publicar descritores e handlers de sf_document_extract, sf_knowledge_search, consumidos por dispatchSfCapability; UI e MCP usam a mesma porta autorizada desta task.",
+            "Exportar schemas de entrada/saída e ref de implementação; nenhum handler de exemplo, fórmula paralela ou autorização por nome de agente.",
+            "Implementar createSfDocumentEvidenceAdapter com exports públicos reais de RAG Studio e Store por request já filtrado; PDF digital/texto por extract, DOCX por JSZip/saxes antes do parser; preservar revisão e offsets.",
+            "Manter SHA-256 de arquivo/trecho separado do BLAKE3 de texto RAG e qualificar SpanRef com documento/incarnation/revisão. Persistência concreta de chunks/revisões é porta WP10.",
+            "Separar documentos da fila de importação: WP06.T01-T04 continuam com S2-C em product/imports; T05 usa product/documents com writer S2. Parser de planilha não é pré-requisito para resolver documento.",
+            "T05 entrega fontes/contratos a T07 em 20 e extração completa a WP12 em 35. Em 53 S2 transfere paths documentais a S2-C para correções/consumo até 75, depois de terminar imports; não há escrita simultânea."
+          ],
+          "inputs": [
+            "Contratos publicados por WP00",
+            "Projeções autorizadas e serviços reais dos produtores declarados",
+            "C16",
+            "C15"
+          ],
+          "outputs": [
+            "Extrator de documentos autorizado",
+            "Campos candidatos com fonte",
+            "Confirmação e estados de falha",
+            "DocumentEvidence C14 consumível pelo dossiê WP09.T04, com referência/versão/trecho/status e condição atual de acesso.",
+            "modules/sucafina/Sucafinav1/product/documents/capabilities.ts#extractDocumentEvidence (sf_document_extract; DocumentExtractRequest -> DocumentEvidence)",
+            "modules/sucafina/Sucafinav1/product/documents/capabilities.ts#searchDocumentEvidence (sf_knowledge_search; KnowledgeSearchRequest -> EvidenceSearchResult)",
+            "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts#createSfDocumentEvidenceAdapter",
+            "BusinessEvidenceRef documental com Source/revision/SpanRef e algoritmos de digest explícitos",
+            "DOC-REF T+20: product/documents/evidence-resolver.ts::resolveSfDocumentEvidence; documento/revisão/trecho/hash e recusa de ACL/revisão/encarnação inválida.",
+            "DOC-EXTRACT T+35: extração/confirmabilidade real para PDF digital, DOCX e texto; os consumidores WP12.T02/T07 deixam fixtures."
+          ],
+          "depends_on": [
+            "WP00.T02"
+          ],
+          "final_evidence_owner": "WP10",
+          "done_requires": "Axiomas locais e herdados satisfeitos com evidência válida; integração real quando declarada. A janela de construção não declara DONE."
+        }
+      ],
+      "sourcePack": {
+        "path": "planning/WP06.pack.json",
+        "sha256": "bc11ed4cfba897219dff274591681946af2b514362fd32a76502e33d3720717a"
+      },
+      "publishedMapSource": {
+        "path": "audit-wp06/operations-criteria-140-W5.json",
+        "sha256": "631f002850851cec8f8428b133462ba50af7a1cea6936b3bf3573323e0d38ddf"
+      }
+    }
+  ]
+}

@@ -1,0 +1,270 @@
+{
+  "schema": "astra-operations.wp04-w3-w4-closure.v1",
+  "source": "GitHub MCP compare and git commit; static symbol/call-path review",
+  "base": {
+    "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "tree": "a3ebf675545fadcd3124b387b15f396550652df8"
+  },
+  "head": {
+    "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605",
+    "soleParent": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+  },
+  "comparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "head": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+    },
+    "merge_base_commit": {
+      "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+    },
+    "files": [
+      {
+        "filename": ".github/workflows/astra-operations-check.yml",
+        "status": "modified",
+        "additions": 11,
+        "deletions": 8,
+        "changes": 19,
+        "previous_filename": null
+      },
+      {
+        "filename": "apps/cli/src/sucafina-product/dossier-services.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 3,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+        "status": "modified",
+        "additions": 17,
+        "deletions": 0,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-case-port-independent-review.md",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-fixture-negative-followup.json",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/scoped-check-modes-review.md",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-impact.json",
+        "status": "added",
+        "additions": 138,
+        "deletions": 0,
+        "changes": 138,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-impact.md",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-independent-source-review.json",
+        "status": "added",
+        "additions": 242,
+        "deletions": 0,
+        "changes": 242,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-intake.json",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-test-manifest.json",
+        "status": "added",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+        "status": "modified",
+        "additions": 110,
+        "deletions": 0,
+        "changes": 110,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 3,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+        "status": "modified",
+        "additions": 43,
+        "deletions": 2,
+        "changes": 45,
+        "previous_filename": null
+      }
+    ]
+  },
+  "materialProductionPaths": [
+    "apps/cli/src/sucafina-product/dossier-services.ts",
+    "apps/cli/src/sucafina-product/dossier-workbench.ts"
+  ],
+  "otherExecutablePaths": [
+    "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+    "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+    ".github/workflows/astra-operations-check.yml"
+  ],
+  "boundaryProofs": [
+    {
+      "id": "C34-01",
+      "scope": "historical pure/controller selection",
+      "result": "NO_NEW_MATERIAL_CALL_PATH",
+      "reason": "The inspected runtime closures of the 18 historically reused Bun files and one two-case browser controller spec contain neither changed CLI dossier module. W3-to-W4 does not change their sources, package lock/config or runtime inputs. Earlier D-to-W1 scoped exclusions and W1-to-W2 symbol proof remain necessary."
+    },
+    {
+      "id": "C34-02",
+      "scope": "W1 WP04 non-C12 cases",
+      "result": "NO_NEW_MATERIAL_CALL_PATH",
+      "reason": "WP04 source consumers and test bodies are unchanged. Direct business-services consumers invoke sourcing/queues/capabilities/contracts, not CLI dossier.prepare/http. business.procurementDossier uses canonical routines/dossier.ts, also unchanged here; its distinct OPS-HOST-01B remains pending. The changed CLI modules only export factories; additions are in dossier prepare/render paths, not module registration or common service initialization."
+    },
+    {
+      "id": "C34-03",
+      "scope": "WP04 Procurement browser8",
+      "result": "NO_NEW_MATERIAL_CALL_PATH",
+      "reason": "The real WP04 browser host initializes the Procurement queue service and app renderer; its requests exercise queues/records/approvals/settings/supplier access, not sourcing-dossier routes. No C12 Apply or changed dossier rendering is invoked. W2 passed browser cases are retained at their actual SHA; the changed WP06 document spec is separately selected."
+    },
+    {
+      "id": "C34-04",
+      "scope": "C12 five Bun files",
+      "result": "AWAIT_AFFECTED_BUN24",
+      "reason": "Own host-integration and prepared-production plus WP11 prepared-apply/planner-apply/case-port depend on newly consumed receipt review proof. W1 passes cannot qualify W4 for them. W4 adjusts only case-port's owner-derived negative expectations; own host source remains W3."
+    },
+    {
+      "id": "C34-05",
+      "scope": "W3 isolated native import component",
+      "result": "REUSE_UNCHANGED_EXECUTION_CLOSURE",
+      "reason": "WP06 owner-dossier-impact.json inspects withNativeWp06, runtime-fixture, business-services, import HTTP/workbench/scripts and evidence producer. That fixture directly composes import/document/business services and never imports CLI dossier-services/workbench or host bootstrap. The complete W3-to-W4 comparison confirms no other production runtime or native fixture path changed.",
+      "ownerImpactRef": "../audit-wp06/owner-dossier-impact.json",
+      "nativeRunObserved": {
+        "id": 43580976466,
+        "head_sha": "c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      "nativeSnapshotComparison": {
+        "repository_full_name": "gustavomhss/Orchestra-SF",
+        "base": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "head": "c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01",
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "total_commits": 1,
+        "too_large": null,
+        "base_commit": {
+          "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+        },
+        "merge_base_commit": {
+          "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+        },
+        "files": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "additions": 9,
+            "deletions": 0,
+            "changes": 9,
+            "previous_filename": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "C34-06",
+      "scope": "allcheck",
+      "result": "NO_BLANKET_TYPECHECK_REUSE",
+      "reason": "W3 CLI and guards passed at the recorded tree, with Sucafina failing one external Atlas consumer. W4 changes CLI source, tests and check workflow; its current allcheck is required and pending. W3 check comparison preserved separately.",
+      "checkSnapshotComparison": {
+        "repository_full_name": "gustavomhss/Orchestra-SF",
+        "base": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "head": "3cf8e9327f344e85ccc4b8b2b88c2bf77470bd8e",
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "total_commits": 1,
+        "too_large": null,
+        "base_commit": {
+          "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+        },
+        "merge_base_commit": {
+          "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+        },
+        "files": [
+          {
+            "filename": ".astra-operations-check.json",
+            "status": "added",
+            "additions": 4,
+            "deletions": 0,
+            "changes": 4,
+            "previous_filename": null
+          }
+        ]
+      }
+    }
+  ],
+  "changedDossierReview": "owner-dossier-review/review.json",
+  "noLocalProductExecution": true,
+  "limits": [
+    "A passing case in failed W1 remains a passing case, not a green aggregate run.",
+    "No WP04 native/human criterion is promoted by two WP06 native import component cases.",
+    "No global, S0 or full-WP acceptance.",
+    "OPS-HOST-01B and OPS-CONSUMER-03 require owner consumption; the current W4 tree does not include them."
+  ]
+}

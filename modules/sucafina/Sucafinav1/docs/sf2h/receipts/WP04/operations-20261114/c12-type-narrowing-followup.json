@@ -1,0 +1,10 @@
+{
+  "finding": "TS2345 from W2 allcheck43580277793/job132403312862",
+  "base_commit": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+  "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+  "base_blob": "4209315764673f8c52fdd94fd76b0f120767b39f",
+  "candidate_blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+  "sha256": "dc8a1a16ea7b54b03ca6bafacf60cc27b61aff32626c2a8cf69affa5d3f1399f",
+  "change": "Require context.kind === ui before matchesIntent. This adds a runtime type guard and narrows TrustedDomainContext; no cast, new grant, fallback or contract relaxation.",
+  "validation": "No local tests/typechecks; rerun hosted check with next root candidate."
+}

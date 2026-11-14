@@ -1,0 +1,2631 @@
+{
+  "u20Run": 43557187051,
+  "w1Run": 43578845234,
+  "method": "Parse existing GitHub Actions logs; no product execution. Same ordered checkpoint sequence compared through first divergence.",
+  "u20Events": 552,
+  "w1Events": 518,
+  "alignedCompletedStages": [
+    {
+      "index": 1,
+      "stage": "fixture:create-app",
+      "u20Ms": 18,
+      "w1Ms": 28,
+      "u20Total": 18,
+      "w1Total": 28,
+      "ratio": 1.5555555555555556
+    },
+    {
+      "index": 5,
+      "stage": "http:import-route",
+      "u20Ms": 15,
+      "w1Ms": 26,
+      "u20Total": 492,
+      "w1Total": 754,
+      "ratio": 1.7333333333333334
+    },
+    {
+      "index": 6,
+      "stage": "http:import:import-targets",
+      "u20Ms": 16,
+      "w1Ms": 27,
+      "u20Total": 492,
+      "w1Total": 754,
+      "ratio": 1.6875
+    },
+    {
+      "index": 8,
+      "stage": "import:workbook",
+      "u20Ms": 12,
+      "w1Ms": 27,
+      "u20Total": 504,
+      "w1Total": 782,
+      "ratio": 2.25
+    },
+    {
+      "index": 11,
+      "stage": "http:import-route",
+      "u20Ms": 45,
+      "w1Ms": 60,
+      "u20Total": 549,
+      "w1Total": 842,
+      "ratio": 1.3333333333333333
+    },
+    {
+      "index": 12,
+      "stage": "http:import:import-admit",
+      "u20Ms": 45,
+      "w1Ms": 60,
+      "u20Total": 549,
+      "w1Total": 842,
+      "ratio": 1.3333333333333333
+    },
+    {
+      "index": 15,
+      "stage": "http:import-route",
+      "u20Ms": 641,
+      "w1Ms": 1018,
+      "u20Total": 1196,
+      "w1Total": 1874,
+      "ratio": 1.5881435257410297
+    },
+    {
+      "index": 16,
+      "stage": "http:import:import-preview",
+      "u20Ms": 647,
+      "w1Ms": 1032,
+      "u20Total": 1196,
+      "w1Total": 1874,
+      "ratio": 1.5950540958268933
+    },
+    {
+      "index": 19,
+      "stage": "bind:run-create",
+      "u20Ms": 421,
+      "w1Ms": 622,
+      "u20Total": 1659,
+      "w1Total": 2566,
+      "ratio": 1.477434679334917
+    },
+    {
+      "index": 21,
+      "stage": "bind:session-create",
+      "u20Ms": 15,
+      "w1Ms": 17,
+      "u20Total": 1675,
+      "w1Total": 2583,
+      "ratio": 1.1333333333333333
+    },
+    {
+      "index": 23,
+      "stage": "bind:skill-load",
+      "u20Ms": 12,
+      "w1Ms": 16,
+      "u20Total": 1687,
+      "w1Total": 2600,
+      "ratio": 1.3333333333333333
+    },
+    {
+      "index": 25,
+      "stage": "bind:run-attach",
+      "u20Ms": 504,
+      "w1Ms": 812,
+      "u20Total": 2191,
+      "w1Total": 3412,
+      "ratio": 1.6111111111111112
+    },
+    {
+      "index": 27,
+      "stage": "bind:native-admit",
+      "u20Ms": 87,
+      "w1Ms": 148,
+      "u20Total": 2279,
+      "w1Total": 3560,
+      "ratio": 1.7011494252873562
+    },
+    {
+      "index": 28,
+      "stage": "bind:sf-explicar-forecast",
+      "u20Ms": 1081,
+      "w1Ms": 1685,
+      "u20Total": 2279,
+      "w1Total": 3560,
+      "ratio": 1.5587419056429233
+    },
+    {
+      "index": 31,
+      "stage": "call:context",
+      "u20Ms": 7,
+      "w1Ms": 8,
+      "u20Total": 2286,
+      "w1Total": 3568,
+      "ratio": 1.1428571428571428
+    },
+    {
+      "index": 33,
+      "stage": "call:dispatch",
+      "u20Ms": 5453,
+      "w1Ms": 8940,
+      "u20Total": 7739,
+      "w1Total": 12508,
+      "ratio": 1.6394645149459013
+    },
+    {
+      "index": 35,
+      "stage": "call:publish-result",
+      "u20Ms": 48,
+      "w1Ms": 55,
+      "u20Total": 7788,
+      "w1Total": 12564,
+      "ratio": 1.1458333333333333
+    },
+    {
+      "index": 36,
+      "stage": "mcp:sf_import_preview",
+      "u20Ms": 5509,
+      "w1Ms": 9003,
+      "u20Total": 7788,
+      "w1Total": 12564,
+      "ratio": 1.6342348883644944
+    },
+    {
+      "index": 39,
+      "stage": "ui:admit",
+      "u20Ms": 51,
+      "w1Ms": 86,
+      "u20Total": 7857,
+      "w1Total": 12670,
+      "ratio": 1.6862745098039216
+    },
+    {
+      "index": 42,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1379,
+      "w1Ms": 2126,
+      "u20Total": 9291,
+      "w1Total": 14919,
+      "ratio": 1.5416968817984047
+    },
+    {
+      "index": 44,
+      "stage": "import:issue-source",
+      "u20Ms": 281,
+      "w1Ms": 463,
+      "u20Total": 9572,
+      "w1Total": 15383,
+      "ratio": 1.6476868327402134
+    },
+    {
+      "index": 46,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1329,
+      "w1Ms": 2008,
+      "u20Total": 10920,
+      "w1Total": 17415,
+      "ratio": 1.510910458991723
+    },
+    {
+      "index": 48,
+      "stage": "import:issue-source",
+      "u20Ms": 321,
+      "w1Ms": 445,
+      "u20Total": 11241,
+      "w1Total": 17860,
+      "ratio": 1.3862928348909658
+    },
+    {
+      "index": 49,
+      "stage": "forecast:replay",
+      "u20Ms": 3400,
+      "w1Ms": 5198,
+      "u20Total": 11281,
+      "w1Total": 17919,
+      "ratio": 1.5288235294117647
+    },
+    {
+      "index": 50,
+      "stage": "ui:sf_import_preview",
+      "u20Ms": 3483,
+      "w1Ms": 5344,
+      "u20Total": 11281,
+      "w1Total": 17919,
+      "ratio": 1.5343095033017513
+    },
+    {
+      "index": 53,
+      "stage": "call:context",
+      "u20Ms": 74,
+      "w1Ms": 67,
+      "u20Total": 11527,
+      "w1Total": 18247,
+      "ratio": 0.9054054054054054
+    },
+    {
+      "index": 55,
+      "stage": "call:dispatch",
+      "u20Ms": 85,
+      "w1Ms": 123,
+      "u20Total": 11613,
+      "w1Total": 18370,
+      "ratio": 1.4470588235294117
+    },
+    {
+      "index": 57,
+      "stage": "call:publish-result",
+      "u20Ms": 13,
+      "w1Ms": 18,
+      "u20Total": 11626,
+      "w1Total": 18388,
+      "ratio": 1.3846153846153846
+    },
+    {
+      "index": 58,
+      "stage": "native:sf_import_preview",
+      "u20Ms": 172,
+      "w1Ms": 225,
+      "u20Total": 11626,
+      "w1Total": 18388,
+      "ratio": 1.308139534883721
+    },
+    {
+      "index": 61,
+      "stage": "call:context",
+      "u20Ms": 46,
+      "w1Ms": 65,
+      "u20Total": 11672,
+      "w1Total": 18453,
+      "ratio": 1.4130434782608696
+    },
+    {
+      "index": 63,
+      "stage": "call:dispatch",
+      "u20Ms": 76,
+      "w1Ms": 119,
+      "u20Total": 11748,
+      "w1Total": 18573,
+      "ratio": 1.5657894736842106
+    },
+    {
+      "index": 65,
+      "stage": "call:publish-result",
+      "u20Ms": 34,
+      "w1Ms": 21,
+      "u20Total": 11782,
+      "w1Total": 18594,
+      "ratio": 0.6176470588235294
+    },
+    {
+      "index": 66,
+      "stage": "mcp:sf_import_preview",
+      "u20Ms": 156,
+      "w1Ms": 206,
+      "u20Total": 11782,
+      "w1Total": 18594,
+      "ratio": 1.3205128205128205
+    },
+    {
+      "index": 69,
+      "stage": "human:admit",
+      "u20Ms": 77,
+      "w1Ms": 127,
+      "u20Total": 11859,
+      "w1Total": 18721,
+      "ratio": 1.6493506493506493
+    },
+    {
+      "index": 73,
+      "stage": "analysis:case-read",
+      "u20Ms": 574,
+      "w1Ms": 872,
+      "u20Total": 13082,
+      "w1Total": 20669,
+      "ratio": 1.519163763066202
+    },
+    {
+      "index": 75,
+      "stage": "import:preview-view",
+      "u20Ms": 1328,
+      "w1Ms": 1969,
+      "u20Total": 14411,
+      "w1Total": 22639,
+      "ratio": 1.4826807228915662
+    },
+    {
+      "index": 77,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1345,
+      "w1Ms": 2027,
+      "u20Total": 15779,
+      "w1Total": 24719,
+      "ratio": 1.5070631970260222
+    },
+    {
+      "index": 79,
+      "stage": "import:issue-source",
+      "u20Ms": 281,
+      "w1Ms": 441,
+      "u20Total": 16060,
+      "w1Total": 25160,
+      "ratio": 1.5693950177935942
+    },
+    {
+      "index": 81,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1358,
+      "w1Ms": 2013,
+      "u20Total": 17437,
+      "w1Total": 27204,
+      "ratio": 1.4823269513991164
+    },
+    {
+      "index": 83,
+      "stage": "import:issue-source",
+      "u20Ms": 275,
+      "w1Ms": 461,
+      "u20Total": 17712,
+      "w1Total": 27664,
+      "ratio": 1.6763636363636363
+    },
+    {
+      "index": 85,
+      "stage": "analysis:source-context",
+      "u20Ms": 177,
+      "w1Ms": 276,
+      "u20Total": 17935,
+      "w1Total": 28000,
+      "ratio": 1.5593220338983051
+    },
+    {
+      "index": 87,
+      "stage": "analysis:case-read",
+      "u20Ms": 571,
+      "w1Ms": 848,
+      "u20Total": 18507,
+      "w1Total": 28848,
+      "ratio": 1.4851138353765323
+    },
+    {
+      "index": 89,
+      "stage": "import:preview-view",
+      "u20Ms": 1309,
+      "w1Ms": 2038,
+      "u20Total": 19816,
+      "w1Total": 30887,
+      "ratio": 1.5569136745607335
+    },
+    {
+      "index": 90,
+      "stage": "forecast:prepare",
+      "u20Ms": 7429,
+      "w1Ms": 11237,
+      "u20Total": 19880,
+      "w1Total": 30958,
+      "ratio": 1.5125858123569793
+    },
+    {
+      "index": 91,
+      "stage": "forecast:with-case",
+      "u20Ms": 8020,
+      "w1Ms": 12237,
+      "u20Total": 19880,
+      "w1Total": 30958,
+      "ratio": 1.5258104738154614
+    },
+    {
+      "index": 92,
+      "stage": "human:analysis.prepare",
+      "u20Ms": 8097,
+      "w1Ms": 12364,
+      "u20Total": 19880,
+      "w1Total": 30958,
+      "ratio": 1.5269853031987155
+    },
+    {
+      "index": 95,
+      "stage": "human:admit",
+      "u20Ms": 84,
+      "w1Ms": 118,
+      "u20Total": 19977,
+      "w1Total": 31093,
+      "ratio": 1.4047619047619047
+    },
+    {
+      "index": 98,
+      "stage": "analysis:case-read",
+      "u20Ms": 552,
+      "w1Ms": 845,
+      "u20Total": 20597,
+      "w1Total": 32024,
+      "ratio": 1.5307971014492754
+    },
+    {
+      "index": 100,
+      "stage": "import:preview-view",
+      "u20Ms": 1344,
+      "w1Ms": 2074,
+      "u20Total": 21942,
+      "w1Total": 34098,
+      "ratio": 1.5431547619047619
+    },
+    {
+      "index": 102,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1338,
+      "w1Ms": 2065,
+      "u20Total": 23311,
+      "w1Total": 36199,
+      "ratio": 1.5433482810164425
+    },
+    {
+      "index": 104,
+      "stage": "import:issue-source",
+      "u20Ms": 292,
+      "w1Ms": 432,
+      "u20Total": 23603,
+      "w1Total": 36630,
+      "ratio": 1.4794520547945205
+    },
+    {
+      "index": 106,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1442,
+      "w1Ms": 1949,
+      "u20Total": 25062,
+      "w1Total": 38605,
+      "ratio": 1.3515950069348128
+    },
+    {
+      "index": 108,
+      "stage": "import:issue-source",
+      "u20Ms": 278,
+      "w1Ms": 478,
+      "u20Total": 25339,
+      "w1Total": 39084,
+      "ratio": 1.7194244604316546
+    },
+    {
+      "index": 110,
+      "stage": "analysis:source-context",
+      "u20Ms": 181,
+      "w1Ms": 274,
+      "u20Total": 25570,
+      "w1Total": 39417,
+      "ratio": 1.5138121546961325
+    },
+    {
+      "index": 112,
+      "stage": "analysis:case-read",
+      "u20Ms": 567,
+      "w1Ms": 900,
+      "u20Total": 26137,
+      "w1Total": 40317,
+      "ratio": 1.5873015873015872
+    },
+    {
+      "index": 114,
+      "stage": "import:preview-view",
+      "u20Ms": 1339,
+      "w1Ms": 2016,
+      "u20Total": 27476,
+      "w1Total": 42333,
+      "ratio": 1.5056011949215833
+    },
+    {
+      "index": 115,
+      "stage": "forecast:verify",
+      "u20Ms": 7553,
+      "w1Ms": 11313,
+      "u20Total": 27530,
+      "w1Total": 42406,
+      "ratio": 1.4978154375744737
+    },
+    {
+      "index": 116,
+      "stage": "human:analysis.read",
+      "u20Ms": 7650,
+      "w1Ms": 11448,
+      "u20Total": 27530,
+      "w1Total": 42407,
+      "ratio": 1.4964705882352942
+    },
+    {
+      "index": 119,
+      "stage": "bind:run-create",
+      "u20Ms": 852,
+      "w1Ms": 1175,
+      "u20Total": 28498,
+      "w1Total": 43734,
+      "ratio": 1.3791079812206573
+    },
+    {
+      "index": 121,
+      "stage": "bind:session-create",
+      "u20Ms": 21,
+      "w1Ms": 29,
+      "u20Total": 28519,
+      "w1Total": 43763,
+      "ratio": 1.380952380952381
+    },
+    {
+      "index": 123,
+      "stage": "bind:skill-load",
+      "u20Ms": 6,
+      "w1Ms": 17,
+      "u20Total": 28525,
+      "w1Total": 43780,
+      "ratio": 2.8333333333333335
+    },
+    {
+      "index": 125,
+      "stage": "bind:run-attach",
+      "u20Ms": 1084,
+      "w1Ms": 1535,
+      "u20Total": 29611,
+      "w1Total": 45317,
+      "ratio": 1.4160516605166051
+    },
+    {
+      "index": 127,
+      "stage": "bind:native-admit",
+      "u20Ms": 160,
+      "w1Ms": 251,
+      "u20Total": 29770,
+      "w1Total": 45568,
+      "ratio": 1.56875
+    },
+    {
+      "index": 129,
+      "stage": "bind:prompt-admit",
+      "u20Ms": 42,
+      "w1Ms": 48,
+      "u20Total": 29813,
+      "w1Total": 45616,
+      "ratio": 1.1428571428571428
+    },
+    {
+      "index": 130,
+      "stage": "bind:sf-explicar-forecast",
+      "u20Ms": 2280,
+      "w1Ms": 3206,
+      "u20Total": 29813,
+      "w1Total": 45616,
+      "ratio": 1.406140350877193
+    },
+    {
+      "index": 132,
+      "stage": "complete:encode",
+      "u20Ms": 7,
+      "w1Ms": 10,
+      "u20Total": 29820,
+      "w1Total": 45626,
+      "ratio": 1.4285714285714286
+    },
+    {
+      "index": 134,
+      "stage": "complete:textStart",
+      "u20Ms": 5,
+      "w1Ms": 5,
+      "u20Total": 29825,
+      "w1Total": 45632,
+      "ratio": 1.0
+    },
+    {
+      "index": 136,
+      "stage": "complete:textDelta",
+      "u20Ms": 0,
+      "w1Ms": 0,
+      "u20Total": 29825,
+      "w1Total": 45632,
+      "ratio": 0.0
+    },
+    {
+      "index": 138,
+      "stage": "complete:textEnd",
+      "u20Ms": 13,
+      "w1Ms": 14,
+      "u20Total": 29838,
+      "w1Total": 45646,
+      "ratio": 1.0769230769230769
+    },
+    {
+      "index": 140,
+      "stage": "complete:assistant",
+      "u20Ms": 5,
+      "w1Ms": 9,
+      "u20Total": 29843,
+      "w1Total": 45655,
+      "ratio": 1.8
+    },
+    {
+      "index": 142,
+      "stage": "complete:stepEnded",
+      "u20Ms": 39,
+      "w1Ms": 16,
+      "u20Total": 29882,
+      "w1Total": 45671,
+      "ratio": 0.41025641025641024
+    },
+    {
+      "index": 144,
+      "stage": "complete:readMessage",
+      "u20Ms": 8,
+      "w1Ms": 10,
+      "u20Total": 29890,
+      "w1Total": 45681,
+      "ratio": 1.25
+    },
+    {
+      "index": 147,
+      "stage": "complete:humanAdmit",
+      "u20Ms": 76,
+      "w1Ms": 123,
+      "u20Total": 29969,
+      "w1Total": 45806,
+      "ratio": 1.618421052631579
+    },
+    {
+      "index": 149,
+      "stage": "complete:runTransition",
+      "u20Ms": 1089,
+      "w1Ms": 1649,
+      "u20Total": 31058,
+      "w1Total": 47456,
+      "ratio": 1.5142332415059687
+    },
+    {
+      "index": 151,
+      "stage": "complete:buildContribution",
+      "u20Ms": 44,
+      "w1Ms": 61,
+      "u20Total": 31102,
+      "w1Total": 47517,
+      "ratio": 1.3863636363636365
+    },
+    {
+      "index": 156,
+      "stage": "analysis:case-read",
+      "u20Ms": 556,
+      "w1Ms": 871,
+      "u20Total": 32330,
+      "w1Total": 49294,
+      "ratio": 1.566546762589928
+    },
+    {
+      "index": 158,
+      "stage": "import:preview-view",
+      "u20Ms": 1351,
+      "w1Ms": 2102,
+      "u20Total": 33681,
+      "w1Total": 51395,
+      "ratio": 1.5558845299777941
+    },
+    {
+      "index": 160,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1363,
+      "w1Ms": 1947,
+      "u20Total": 35078,
+      "w1Total": 53379,
+      "ratio": 1.4284666177549523
+    },
+    {
+      "index": 162,
+      "stage": "import:issue-source",
+      "u20Ms": 284,
+      "w1Ms": 424,
+      "u20Total": 35362,
+      "w1Total": 53803,
+      "ratio": 1.4929577464788732
+    },
+    {
+      "index": 164,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1336,
+      "w1Ms": 2020,
+      "u20Total": 36715,
+      "w1Total": 55862,
+      "ratio": 1.5119760479041917
+    },
+    {
+      "index": 166,
+      "stage": "import:issue-source",
+      "u20Ms": 310,
+      "w1Ms": 409,
+      "u20Total": 37025,
+      "w1Total": 56271,
+      "ratio": 1.3193548387096774
+    },
+    {
+      "index": 168,
+      "stage": "analysis:source-context",
+      "u20Ms": 178,
+      "w1Ms": 285,
+      "u20Total": 37242,
+      "w1Total": 56631,
+      "ratio": 1.601123595505618
+    },
+    {
+      "index": 170,
+      "stage": "analysis:case-read",
+      "u20Ms": 540,
+      "w1Ms": 866,
+      "u20Total": 37783,
+      "w1Total": 57497,
+      "ratio": 1.6037037037037036
+    },
+    {
+      "index": 172,
+      "stage": "import:preview-view",
+      "u20Ms": 1357,
+      "w1Ms": 2007,
+      "u20Total": 39139,
+      "w1Total": 59504,
+      "ratio": 1.4789977892409727
+    },
+    {
+      "index": 173,
+      "stage": "forecast:verify-output",
+      "u20Ms": 7470,
+      "w1Ms": 11226,
+      "u20Total": 39183,
+      "w1Total": 59560,
+      "ratio": 1.5028112449799196
+    },
+    {
+      "index": 176,
+      "stage": "analysis:case-read",
+      "u20Ms": 543,
+      "w1Ms": 820,
+      "u20Total": 39755,
+      "w1Total": 60427,
+      "ratio": 1.5101289134438305
+    },
+    {
+      "index": 178,
+      "stage": "import:preview-view",
+      "u20Ms": 1393,
+      "w1Ms": 2009,
+      "u20Total": 41148,
+      "w1Total": 62436,
+      "ratio": 1.4422110552763818
+    },
+    {
+      "index": 180,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1334,
+      "w1Ms": 1930,
+      "u20Total": 42516,
+      "w1Total": 64422,
+      "ratio": 1.446776611694153
+    },
+    {
+      "index": 182,
+      "stage": "import:issue-source",
+      "u20Ms": 283,
+      "w1Ms": 455,
+      "u20Total": 42799,
+      "w1Total": 64877,
+      "ratio": 1.607773851590106
+    },
+    {
+      "index": 184,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1355,
+      "w1Ms": 2053,
+      "u20Total": 44193,
+      "w1Total": 66975,
+      "ratio": 1.5151291512915128
+    },
+    {
+      "index": 186,
+      "stage": "import:issue-source",
+      "u20Ms": 321,
+      "w1Ms": 439,
+      "u20Total": 44514,
+      "w1Total": 67414,
+      "ratio": 1.367601246105919
+    },
+    {
+      "index": 188,
+      "stage": "analysis:source-context",
+      "u20Ms": 179,
+      "w1Ms": 341,
+      "u20Total": 44742,
+      "w1Total": 67816,
+      "ratio": 1.905027932960894
+    },
+    {
+      "index": 190,
+      "stage": "analysis:case-read",
+      "u20Ms": 563,
+      "w1Ms": 897,
+      "u20Total": 45306,
+      "w1Total": 68713,
+      "ratio": 1.5932504440497335
+    },
+    {
+      "index": 192,
+      "stage": "import:preview-view",
+      "u20Ms": 1369,
+      "w1Ms": 1953,
+      "u20Total": 46674,
+      "w1Total": 70667,
+      "ratio": 1.4265887509130752
+    },
+    {
+      "index": 193,
+      "stage": "forecast:accept-output",
+      "u20Ms": 7551,
+      "w1Ms": 11200,
+      "u20Total": 46733,
+      "w1Total": 70760,
+      "ratio": 1.4832472520196
+    },
+    {
+      "index": 194,
+      "stage": "complete:verifyOutput",
+      "u20Ms": 15116,
+      "w1Ms": 22580,
+      "u20Total": 46733,
+      "w1Total": 70760,
+      "ratio": 1.4937814236570521
+    },
+    {
+      "index": 198,
+      "stage": "analysis:case-read",
+      "u20Ms": 867,
+      "w1Ms": 1216,
+      "u20Total": 48313,
+      "w1Total": 73023,
+      "ratio": 1.4025374855824684
+    },
+    {
+      "index": 200,
+      "stage": "import:preview-view",
+      "u20Ms": 2056,
+      "w1Ms": 3059,
+      "u20Total": 50369,
+      "w1Total": 76082,
+      "ratio": 1.48784046692607
+    },
+    {
+      "index": 202,
+      "stage": "import:prepared-preview",
+      "u20Ms": 2011,
+      "w1Ms": 3024,
+      "u20Total": 52427,
+      "w1Total": 79160,
+      "ratio": 1.5037294878170064
+    },
+    {
+      "index": 204,
+      "stage": "import:issue-source",
+      "u20Ms": 406,
+      "w1Ms": 619,
+      "u20Total": 52833,
+      "w1Total": 79779,
+      "ratio": 1.5246305418719213
+    },
+    {
+      "index": 206,
+      "stage": "import:prepared-preview",
+      "u20Ms": 2013,
+      "w1Ms": 3005,
+      "u20Total": 54870,
+      "w1Total": 82820,
+      "ratio": 1.4927968206656732
+    },
+    {
+      "index": 208,
+      "stage": "import:issue-source",
+      "u20Ms": 457,
+      "w1Ms": 656,
+      "u20Total": 55327,
+      "w1Total": 83476,
+      "ratio": 1.4354485776805253
+    },
+    {
+      "index": 210,
+      "stage": "analysis:source-context",
+      "u20Ms": 263,
+      "w1Ms": 423,
+      "u20Total": 55654,
+      "w1Total": 84006,
+      "ratio": 1.608365019011407
+    },
+    {
+      "index": 212,
+      "stage": "analysis:case-read",
+      "u20Ms": 845,
+      "w1Ms": 1310,
+      "u20Total": 56499,
+      "w1Total": 85317,
+      "ratio": 1.5502958579881656
+    },
+    {
+      "index": 214,
+      "stage": "import:preview-view",
+      "u20Ms": 2015,
+      "w1Ms": 2954,
+      "u20Total": 58515,
+      "w1Total": 88271,
+      "ratio": 1.4660049627791563
+    },
+    {
+      "index": 215,
+      "stage": "forecast:verify-output",
+      "u20Ms": 11217,
+      "w1Ms": 16642,
+      "u20Total": 58563,
+      "w1Total": 88345,
+      "ratio": 1.4836409022020147
+    },
+    {
+      "index": 218,
+      "stage": "analysis:case-read",
+      "u20Ms": 819,
+      "w1Ms": 1243,
+      "u20Total": 59424,
+      "w1Total": 89724,
+      "ratio": 1.5177045177045176
+    },
+    {
+      "index": 220,
+      "stage": "import:preview-view",
+      "u20Ms": 2046,
+      "w1Ms": 3101,
+      "u20Total": 61470,
+      "w1Total": 92825,
+      "ratio": 1.5156402737047898
+    },
+    {
+      "index": 222,
+      "stage": "import:prepared-preview",
+      "u20Ms": 2042,
+      "w1Ms": 3104,
+      "u20Total": 63547,
+      "w1Total": 95988,
+      "ratio": 1.5200783545543586
+    },
+    {
+      "index": 224,
+      "stage": "import:issue-source",
+      "u20Ms": 441,
+      "w1Ms": 701,
+      "u20Total": 63989,
+      "w1Total": 96690,
+      "ratio": 1.5895691609977325
+    },
+    {
+      "index": 226,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1997,
+      "w1Ms": 3057,
+      "u20Total": 66008,
+      "w1Total": 99800,
+      "ratio": 1.5307961942914372
+    },
+    {
+      "index": 228,
+      "stage": "import:issue-source",
+      "u20Ms": 420,
+      "w1Ms": 641,
+      "u20Total": 66428,
+      "w1Total": 100441,
+      "ratio": 1.526190476190476
+    },
+    {
+      "index": 230,
+      "stage": "analysis:source-context",
+      "u20Ms": 303,
+      "w1Ms": 428,
+      "u20Total": 66793,
+      "w1Total": 100973,
+      "ratio": 1.4125412541254125
+    },
+    {
+      "index": 232,
+      "stage": "analysis:case-read",
+      "u20Ms": 844,
+      "w1Ms": 1290,
+      "u20Total": 67638,
+      "w1Total": 102263,
+      "ratio": 1.528436018957346
+    },
+    {
+      "index": 234,
+      "stage": "import:preview-view",
+      "u20Ms": 2037,
+      "w1Ms": 3045,
+      "u20Total": 69675,
+      "w1Total": 105309,
+      "ratio": 1.4948453608247423
+    },
+    {
+      "index": 235,
+      "stage": "forecast:accept-output",
+      "u20Ms": 11189,
+      "w1Ms": 17083,
+      "u20Total": 69752,
+      "w1Total": 105428,
+      "ratio": 1.5267673608007866
+    },
+    {
+      "index": 236,
+      "stage": "complete:verifyOutput",
+      "u20Ms": 22552,
+      "w1Ms": 33946,
+      "u20Total": 69752,
+      "w1Total": 105428,
+      "ratio": 1.505232351897836
+    },
+    {
+      "index": 237,
+      "stage": "complete:runPublish",
+      "u20Ms": 38733,
+      "w1Ms": 58028,
+      "u20Total": 69835,
+      "w1Total": 105545,
+      "ratio": 1.4981540288642758
+    },
+    {
+      "index": 238,
+      "stage": "human:analysis.start",
+      "u20Ms": 39943,
+      "w1Ms": 59861,
+      "u20Total": 69835,
+      "w1Total": 105545,
+      "ratio": 1.4986605913426634
+    },
+    {
+      "index": 240,
+      "stage": "http:import-route",
+      "u20Ms": 160,
+      "w1Ms": 243,
+      "u20Total": 70072,
+      "w1Total": 105897,
+      "ratio": 1.51875
+    },
+    {
+      "index": 242,
+      "stage": "http:import-route",
+      "u20Ms": 1065,
+      "w1Ms": 1583,
+      "u20Total": 71137,
+      "w1Total": 107480,
+      "ratio": 1.4863849765258217
+    },
+    {
+      "index": 245,
+      "stage": "human:admit",
+      "u20Ms": 125,
+      "w1Ms": 238,
+      "u20Total": 71286,
+      "w1Total": 107774,
+      "ratio": 1.904
+    },
+    {
+      "index": 247,
+      "stage": "analysis:case-read",
+      "u20Ms": 869,
+      "w1Ms": 1295,
+      "u20Total": 72220,
+      "w1Total": 109181,
+      "ratio": 1.4902186421173762
+    },
+    {
+      "index": 249,
+      "stage": "import:preview-view",
+      "u20Ms": 2015,
+      "w1Ms": 3018,
+      "u20Total": 74235,
+      "w1Total": 112199,
+      "ratio": 1.4977667493796527
+    },
+    {
+      "index": 251,
+      "stage": "import:prepared-preview",
+      "u20Ms": 2133,
+      "w1Ms": 3009,
+      "u20Total": 76414,
+      "w1Total": 115262,
+      "ratio": 1.410689170182841
+    },
+    {
+      "index": 253,
+      "stage": "import:issue-source",
+      "u20Ms": 472,
+      "w1Ms": 646,
+      "u20Total": 76886,
+      "w1Total": 115908,
+      "ratio": 1.36864406779661
+    },
+    {
+      "index": 255,
+      "stage": "import:prepared-preview",
+      "u20Ms": 2032,
+      "w1Ms": 3049,
+      "u20Total": 78941,
+      "w1Total": 118995,
+      "ratio": 1.500492125984252
+    },
+    {
+      "index": 257,
+      "stage": "import:issue-source",
+      "u20Ms": 444,
+      "w1Ms": 628,
+      "u20Total": 79385,
+      "w1Total": 119623,
+      "ratio": 1.4144144144144144
+    },
+    {
+      "index": 259,
+      "stage": "analysis:source-context",
+      "u20Ms": 257,
+      "w1Ms": 406,
+      "u20Total": 79710,
+      "w1Total": 120137,
+      "ratio": 1.5797665369649805
+    },
+    {
+      "index": 261,
+      "stage": "analysis:case-read",
+      "u20Ms": 844,
+      "w1Ms": 1325,
+      "u20Total": 80554,
+      "w1Total": 121462,
+      "ratio": 1.569905213270142
+    },
+    {
+      "index": 263,
+      "stage": "import:preview-view",
+      "u20Ms": 2008,
+      "w1Ms": 2987,
+      "u20Total": 82562,
+      "w1Total": 124450,
+      "ratio": 1.4875498007968126
+    },
+    {
+      "index": 265,
+      "stage": "analysis:case-read",
+      "u20Ms": 828,
+      "w1Ms": 1266,
+      "u20Total": 83485,
+      "w1Total": 125884,
+      "ratio": 1.5289855072463767
+    },
+    {
+      "index": 267,
+      "stage": "import:preview-view",
+      "u20Ms": 1988,
+      "w1Ms": 3054,
+      "u20Total": 85473,
+      "w1Total": 128939,
+      "ratio": 1.5362173038229376
+    },
+    {
+      "index": 269,
+      "stage": "import:prepared-preview",
+      "u20Ms": 2032,
+      "w1Ms": 3037,
+      "u20Total": 87555,
+      "w1Total": 132032,
+      "ratio": 1.4945866141732282
+    },
+    {
+      "index": 271,
+      "stage": "import:issue-source",
+      "u20Ms": 453,
+      "w1Ms": 629,
+      "u20Total": 88009,
+      "w1Total": 132661,
+      "ratio": 1.3885209713024282
+    },
+    {
+      "index": 273,
+      "stage": "import:prepared-preview",
+      "u20Ms": 1949,
+      "w1Ms": 3096,
+      "u20Total": 89980,
+      "w1Total": 135792,
+      "ratio": 1.5885069266290406
+    },
+    {
+      "index": 275,
+      "stage": "import:issue-source",
+      "u20Ms": 448,
+      "w1Ms": 656,
+      "u20Total": 90428,
+      "w1Total": 136449,
+      "ratio": 1.4642857142857142
+    },
+    {
+      "index": 277,
+      "stage": "analysis:source-context",
+      "u20Ms": 299,
+      "w1Ms": 401,
+      "u20Total": 90784,
+      "w1Total": 136959,
+      "ratio": 1.3411371237458194
+    },
+    {
+      "index": 279,
+      "stage": "analysis:case-read",
+      "u20Ms": 833,
+      "w1Ms": 1267,
+      "u20Total": 91617,
+      "w1Total": 138226,
+      "ratio": 1.5210084033613445
+    },
+    {
+      "index": 281,
+      "stage": "import:preview-view",
+      "u20Ms": 1982,
+      "w1Ms": 3042,
+      "u20Total": 93598,
+      "w1Total": 141269,
+      "ratio": 1.5348133198789102
+    },
+    {
+      "index": 282,
+      "stage": "human:analysis.read",
+      "u20Ms": 22509,
+      "w1Ms": 33849,
+      "u20Total": 93670,
+      "w1Total": 141385,
+      "ratio": 1.503798480607757
+    },
+    {
+      "index": 285,
+      "stage": "human:admit",
+      "u20Ms": 126,
+      "w1Ms": 175,
+      "u20Total": 93797,
+      "w1Total": 141568,
+      "ratio": 1.3888888888888888
+    },
+    {
+      "index": 289,
+      "stage": "analysis:case-read",
+      "u20Ms": 845,
+      "w1Ms": 1396,
+      "u20Total": 95652,
+      "w1Total": 144444,
+      "ratio": 1.6520710059171597
+    },
+    {
+      "index": 291,
+      "stage": "import:preview-view",
+      "u20Ms": 2023,
+      "w1Ms": 3083,
+      "u20Total": 97676,
+      "w1Total": 147527,
+      "ratio": 1.5239742956005933
+    },
+    {
+      "index": 293,
+      "stage": "analysis:source-context",
+      "u20Ms": 264,
+      "w1Ms": 404,
+      "u20Total": 97940,
+      "w1Total": 147935,
+      "ratio": 1.5303030303030303
+    },
+    {
+      "index": 295,
+      "stage": "import:preview-view",
+      "u20Ms": 2018,
+      "w1Ms": 2989,
+      "u20Total": 100396,
+      "w1Total": 151514,
+      "ratio": 1.4811694747274529
+    },
+    {
+      "index": 297,
+      "stage": "analysis:case-read",
+      "u20Ms": 838,
+      "w1Ms": 1291,
+      "u20Total": 101269,
+      "w1Total": 152857,
+      "ratio": 1.5405727923627686
+    },
+    {
+      "index": 298,
+      "stage": "intent:prepare",
+      "u20Ms": 6629,
+      "w1Ms": 10057,
+      "u20Total": 101357,
+      "w1Total": 152979,
+      "ratio": 1.5171217378186754
+    },
+    {
+      "index": 299,
+      "stage": "intent:with-case",
+      "u20Ms": 7560,
+      "w1Ms": 11411,
+      "u20Total": 101357,
+      "w1Total": 152980,
+      "ratio": 1.5093915343915343
+    },
+    {
+      "index": 300,
+      "stage": "human:analysis.prepare",
+      "u20Ms": 7687,
+      "w1Ms": 11595,
+      "u20Total": 101357,
+      "w1Total": 152980,
+      "ratio": 1.508390789644855
+    },
+    {
+      "index": 303,
+      "stage": "human:admit",
+      "u20Ms": 123,
+      "w1Ms": 170,
+      "u20Total": 101481,
+      "w1Total": 153151,
+      "ratio": 1.3821138211382114
+    },
+    {
+      "index": 305,
+      "stage": "analysis:case-read",
+      "u20Ms": 841,
+      "w1Ms": 1240,
+      "u20Total": 102395,
+      "w1Total": 154511,
+      "ratio": 1.474435196195006
+    },
+    {
+      "index": 307,
+      "stage": "import:preview-view",
+      "u20Ms": 2065,
+      "w1Ms": 3153,
+      "u20Total": 104459,
+      "w1Total": 157665,
+      "ratio": 1.5268765133171913
+    },
+    {
+      "index": 309,
+      "stage": "analysis:source-context",
+      "u20Ms": 260,
+      "w1Ms": 432,
+      "u20Total": 104720,
+      "w1Total": 158097,
+      "ratio": 1.6615384615384616
+    },
+    {
+      "index": 310,
+      "stage": "human:analysis.prepare",
+      "u20Ms": 3423,
+      "w1Ms": 5203,
+      "u20Total": 104781,
+      "w1Total": 158183,
+      "ratio": 1.5200116856558574
+    },
+    {
+      "index": 313,
+      "stage": "human:admit",
+      "u20Ms": 118,
+      "w1Ms": 175,
+      "u20Total": 104905,
+      "w1Total": 158376,
+      "ratio": 1.4830508474576272
+    },
+    {
+      "index": 316,
+      "stage": "analysis:case-read",
+      "u20Ms": 855,
+      "w1Ms": 1245,
+      "u20Total": 105766,
+      "w1Total": 159641,
+      "ratio": 1.456140350877193
+    },
+    {
+      "index": 318,
+      "stage": "import:preview-view",
+      "u20Ms": 2019,
+      "w1Ms": 3028,
+      "u20Total": 107893,
+      "w1Total": 162813,
+      "ratio": 1.4997523526498266
+    },
+    {
+      "index": 320,
+      "stage": "import:preview-view",
+      "u20Ms": 2070,
+      "w1Ms": 3002,
+      "u20Total": 110008,
+      "w1Total": 165869,
+      "ratio": 1.45024154589372
+    },
+    {
+      "index": 322,
+      "stage": "analysis:source-context",
+      "u20Ms": 261,
+      "w1Ms": 412,
+      "u20Total": 110270,
+      "w1Total": 166281,
+      "ratio": 1.578544061302682
+    },
+    {
+      "index": 323,
+      "stage": "intent:verify",
+      "u20Ms": 5409,
+      "w1Ms": 7978,
+      "u20Total": 110314,
+      "w1Total": 166353,
+      "ratio": 1.4749491588093917
+    },
+    {
+      "index": 324,
+      "stage": "human:analysis.read",
+      "u20Ms": 5528,
+      "w1Ms": 8170,
+      "u20Total": 110314,
+      "w1Total": 166353,
+      "ratio": 1.4779305354558612
+    },
+    {
+      "index": 327,
+      "stage": "bind:run-create",
+      "u20Ms": 1262,
+      "w1Ms": 1919,
+      "u20Total": 111701,
+      "w1Total": 168457,
+      "ratio": 1.5206022187004755
+    },
+    {
+      "index": 329,
+      "stage": "bind:session-create",
+      "u20Ms": 13,
+      "w1Ms": 23,
+      "u20Total": 111714,
+      "w1Total": 168480,
+      "ratio": 1.7692307692307692
+    },
+    {
+      "index": 331,
+      "stage": "bind:skill-load",
+      "u20Ms": 13,
+      "w1Ms": 18,
+      "u20Total": 111727,
+      "w1Total": 168498,
+      "ratio": 1.3846153846153846
+    },
+    {
+      "index": 333,
+      "stage": "bind:run-attach",
+      "u20Ms": 1599,
+      "w1Ms": 2375,
+      "u20Total": 113327,
+      "w1Total": 170875,
+      "ratio": 1.4853033145716072
+    },
+    {
+      "index": 335,
+      "stage": "bind:native-admit",
+      "u20Ms": 228,
+      "w1Ms": 406,
+      "u20Total": 113555,
+      "w1Total": 171281,
+      "ratio": 1.780701754385965
+    },
+    {
+      "index": 337,
+      "stage": "bind:prompt-admit",
+      "u20Ms": 21,
+      "w1Ms": 43,
+      "u20Total": 113577,
+      "w1Total": 171324,
+      "ratio": 2.0476190476190474
+    },
+    {
+      "index": 338,
+      "stage": "bind:sf-enquadrar-decisao",
+      "u20Ms": 3260,
+      "w1Ms": 4968,
+      "u20Total": 113577,
+      "w1Total": 171324,
+      "ratio": 1.5239263803680982
+    },
+    {
+      "index": 341,
+      "stage": "call:context",
+      "u20Ms": 9,
+      "w1Ms": 9,
+      "u20Total": 113592,
+      "w1Total": 171343,
+      "ratio": 1.0
+    },
+    {
+      "index": 343,
+      "stage": "call:dispatch",
+      "u20Ms": 6422,
+      "w1Ms": 9535,
+      "u20Total": 120013,
+      "w1Total": 180878,
+      "ratio": 1.4847399563998753
+    },
+    {
+      "index": 345,
+      "stage": "call:publish-result",
+      "u20Ms": 4,
+      "w1Ms": 5,
+      "u20Total": 120017,
+      "w1Total": 180883,
+      "ratio": 1.25
+    },
+    {
+      "index": 346,
+      "stage": "mcp:sf_case_draft",
+      "u20Ms": 6434,
+      "w1Ms": 9548,
+      "u20Total": 120017,
+      "w1Total": 180883,
+      "ratio": 1.4839912962387318
+    },
+    {
+      "index": 348,
+      "stage": "complete:encode",
+      "u20Ms": 0,
+      "w1Ms": 0,
+      "u20Total": 120018,
+      "w1Total": 180883,
+      "ratio": 0.0
+    },
+    {
+      "index": 350,
+      "stage": "complete:textStart",
+      "u20Ms": 2,
+      "w1Ms": 3,
+      "u20Total": 120020,
+      "w1Total": 180886,
+      "ratio": 1.5
+    },
+    {
+      "index": 352,
+      "stage": "complete:textDelta",
+      "u20Ms": 0,
+      "w1Ms": 15,
+      "u20Total": 120020,
+      "w1Total": 180901,
+      "ratio": 15.0
+    },
+    {
+      "index": 354,
+      "stage": "complete:textEnd",
+      "u20Ms": 2,
+      "w1Ms": 4,
+      "u20Total": 120021,
+      "w1Total": 180905,
+      "ratio": 2.0
+    },
+    {
+      "index": 356,
+      "stage": "complete:assistant",
+      "u20Ms": 0,
+      "w1Ms": 0,
+      "u20Total": 120021,
+      "w1Total": 180905,
+      "ratio": 0.0
+    },
+    {
+      "index": 358,
+      "stage": "complete:stepEnded",
+      "u20Ms": 2,
+      "w1Ms": 14,
+      "u20Total": 120023,
+      "w1Total": 180919,
+      "ratio": 7.0
+    },
+    {
+      "index": 360,
+      "stage": "complete:readMessage",
+      "u20Ms": 0,
+      "w1Ms": 1,
+      "u20Total": 120024,
+      "w1Total": 180919,
+      "ratio": 1.0
+    },
+    {
+      "index": 363,
+      "stage": "complete:humanAdmit",
+      "u20Ms": 126,
+      "w1Ms": 200,
+      "u20Total": 120150,
+      "w1Total": 181120,
+      "ratio": 1.5873015873015872
+    },
+    {
+      "index": 365,
+      "stage": "complete:runTransition",
+      "u20Ms": 1677,
+      "w1Ms": 2465,
+      "u20Total": 121827,
+      "w1Total": 183584,
+      "ratio": 1.4698867024448419
+    },
+    {
+      "index": 367,
+      "stage": "complete:buildContribution",
+      "u20Ms": 10,
+      "w1Ms": 20,
+      "u20Total": 121837,
+      "w1Total": 183604,
+      "ratio": 2.0
+    },
+    {
+      "index": 372,
+      "stage": "analysis:case-read",
+      "u20Ms": 868,
+      "w1Ms": 1302,
+      "u20Total": 123509,
+      "w1Total": 186090,
+      "ratio": 1.5
+    },
+    {
+      "index": 374,
+      "stage": "import:preview-view",
+      "u20Ms": 2029,
+      "w1Ms": 3031,
+      "u20Total": 125642,
+      "w1Total": 189312,
+      "ratio": 1.4938393297190735
+    },
+    {
+      "index": 376,
+      "stage": "import:preview-view",
+      "u20Ms": 2066,
+      "w1Ms": 2944,
+      "u20Total": 127743,
+      "w1Total": 192309,
+      "ratio": 1.424975798644724
+    },
+    {
+      "index": 378,
+      "stage": "analysis:source-context",
+      "u20Ms": 270,
+      "w1Ms": 394,
+      "u20Total": 128013,
+      "w1Total": 192703,
+      "ratio": 1.4592592592592593
+    },
+    {
+      "index": 379,
+      "stage": "intent:verify-output",
+      "u20Ms": 5409,
+      "w1Ms": 8004,
+      "u20Total": 128049,
+      "w1Total": 192768,
+      "ratio": 1.4797559622850804
+    },
+    {
+      "index": 382,
+      "stage": "analysis:case-read",
+      "u20Ms": 831,
+      "w1Ms": 1281,
+      "u20Total": 128885,
+      "w1Total": 194051,
+      "ratio": 1.5415162454873645
+    },
+    {
+      "index": 384,
+      "stage": "import:preview-view",
+      "u20Ms": 2001,
+      "w1Ms": 3028,
+      "u20Total": 130989,
+      "w1Total": 197262,
+      "ratio": 1.5132433783108445
+    },
+    {
+      "index": 386,
+      "stage": "import:preview-view",
+      "u20Ms": 1950,
+      "w1Ms": 2966,
+      "u20Total": 133003,
+      "w1Total": 200310,
+      "ratio": 1.521025641025641
+    },
+    {
+      "index": 388,
+      "stage": "analysis:source-context",
+      "u20Ms": 273,
+      "w1Ms": 422,
+      "u20Total": 133276,
+      "w1Total": 200732,
+      "ratio": 1.5457875457875458
+    },
+    {
+      "index": 390,
+      "stage": "analysis:case-read",
+      "u20Ms": 838,
+      "w1Ms": 1250,
+      "u20Total": 136179,
+      "w1Total": 205080,
+      "ratio": 1.4916467780429594
+    },
+    {
+      "index": 392,
+      "stage": "import:preview-view",
+      "u20Ms": 2028,
+      "w1Ms": 2987,
+      "u20Total": 138307,
+      "w1Total": 208207,
+      "ratio": 1.472879684418146
+    },
+    {
+      "index": 394,
+      "stage": "import:preview-view",
+      "u20Ms": 2032,
+      "w1Ms": 2955,
+      "u20Total": 140374,
+      "w1Total": 211216,
+      "ratio": 1.454232283464567
+    },
+    {
+      "index": 396,
+      "stage": "analysis:source-context",
+      "u20Ms": 263,
+      "w1Ms": 396,
+      "u20Total": 140637,
+      "w1Total": 211612,
+      "ratio": 1.505703422053232
+    },
+    {
+      "index": 397,
+      "stage": "intent:accept-output",
+      "u20Ms": 12654,
+      "w1Ms": 18940,
+      "u20Total": 140703,
+      "w1Total": 211709,
+      "ratio": 1.4967599178125495
+    },
+    {
+      "index": 398,
+      "stage": "complete:verifyOutput",
+      "u20Ms": 18222,
+      "w1Ms": 27160,
+      "u20Total": 140703,
+      "w1Total": 211709,
+      "ratio": 1.4905059817802657
+    },
+    {
+      "index": 402,
+      "stage": "analysis:case-read",
+      "u20Ms": 859,
+      "w1Ms": 1343,
+      "u20Total": 142344,
+      "w1Total": 214084,
+      "ratio": 1.5634458672875438
+    },
+    {
+      "index": 404,
+      "stage": "import:preview-view",
+      "u20Ms": 2031,
+      "w1Ms": 3000,
+      "u20Total": 144478,
+      "w1Total": 217247,
+      "ratio": 1.4771048744460857
+    },
+    {
+      "index": 406,
+      "stage": "import:preview-view",
+      "u20Ms": 2078,
+      "w1Ms": 2917,
+      "u20Total": 146601,
+      "w1Total": 220233,
+      "ratio": 1.4037536092396534
+    },
+    {
+      "index": 408,
+      "stage": "analysis:source-context",
+      "u20Ms": 273,
+      "w1Ms": 406,
+      "u20Total": 146874,
+      "w1Total": 220638,
+      "ratio": 1.4871794871794872
+    },
+    {
+      "index": 409,
+      "stage": "intent:verify-output",
+      "u20Ms": 5436,
+      "w1Ms": 7972,
+      "u20Total": 146917,
+      "w1Total": 220696,
+      "ratio": 1.4665194996320825
+    },
+    {
+      "index": 412,
+      "stage": "analysis:case-read",
+      "u20Ms": 867,
+      "w1Ms": 1280,
+      "u20Total": 147785,
+      "w1Total": 221977,
+      "ratio": 1.4763552479815456
+    },
+    {
+      "index": 414,
+      "stage": "import:preview-view",
+      "u20Ms": 2032,
+      "w1Ms": 2974,
+      "u20Total": 149920,
+      "w1Total": 225106,
+      "ratio": 1.4635826771653544
+    },
+    {
+      "index": 416,
+      "stage": "import:preview-view",
+      "u20Ms": 2070,
+      "w1Ms": 2952,
+      "u20Total": 152039,
+      "w1Total": 228130,
+      "ratio": 1.4260869565217391
+    },
+    {
+      "index": 418,
+      "stage": "analysis:source-context",
+      "u20Ms": 265,
+      "w1Ms": 422,
+      "u20Total": 152304,
+      "w1Total": 228553,
+      "ratio": 1.5924528301886793
+    },
+    {
+      "index": 420,
+      "stage": "analysis:case-read",
+      "u20Ms": 905,
+      "w1Ms": 1239,
+      "u20Total": 155307,
+      "w1Total": 232837,
+      "ratio": 1.369060773480663
+    },
+    {
+      "index": 422,
+      "stage": "import:preview-view",
+      "u20Ms": 2010,
+      "w1Ms": 2950,
+      "u20Total": 157419,
+      "w1Total": 235950,
+      "ratio": 1.4676616915422886
+    },
+    {
+      "index": 424,
+      "stage": "import:preview-view",
+      "u20Ms": 2060,
+      "w1Ms": 2979,
+      "u20Total": 159516,
+      "w1Total": 238982,
+      "ratio": 1.446116504854369
+    },
+    {
+      "index": 426,
+      "stage": "analysis:source-context",
+      "u20Ms": 262,
+      "w1Ms": 380,
+      "u20Total": 159778,
+      "w1Total": 239363,
+      "ratio": 1.450381679389313
+    },
+    {
+      "index": 427,
+      "stage": "intent:accept-output",
+      "u20Ms": 12976,
+      "w1Ms": 18760,
+      "u20Total": 159893,
+      "w1Total": 239456,
+      "ratio": 1.4457459926017262
+    },
+    {
+      "index": 428,
+      "stage": "complete:verifyOutput",
+      "u20Ms": 18579,
+      "w1Ms": 26950,
+      "u20Total": 159893,
+      "w1Total": 239456,
+      "ratio": 1.4505624629958556
+    },
+    {
+      "index": 429,
+      "stage": "complete:runPublish",
+      "u20Ms": 38133,
+      "w1Ms": 55958,
+      "u20Total": 159970,
+      "w1Total": 239562,
+      "ratio": 1.4674428972281226
+    },
+    {
+      "index": 430,
+      "stage": "human:analysis.start",
+      "u20Ms": 39946,
+      "w1Ms": 58643,
+      "u20Total": 159970,
+      "w1Total": 239562,
+      "ratio": 1.468056876783658
+    },
+    {
+      "index": 432,
+      "stage": "http:import-route",
+      "u20Ms": 161,
+      "w1Ms": 232,
+      "u20Total": 160197,
+      "w1Total": 239899,
+      "ratio": 1.4409937888198758
+    },
+    {
+      "index": 434,
+      "stage": "http:import-route",
+      "u20Ms": 1056,
+      "w1Ms": 1527,
+      "u20Total": 161253,
+      "w1Total": 241425,
+      "ratio": 1.4460227272727273
+    },
+    {
+      "index": 437,
+      "stage": "human:admit",
+      "u20Ms": 121,
+      "w1Ms": 170,
+      "u20Total": 161381,
+      "w1Total": 241604,
+      "ratio": 1.4049586776859504
+    },
+    {
+      "index": 439,
+      "stage": "analysis:case-read",
+      "u20Ms": 845,
+      "w1Ms": 1269,
+      "u20Total": 162227,
+      "w1Total": 242873,
+      "ratio": 1.501775147928994
+    },
+    {
+      "index": 441,
+      "stage": "import:preview-view",
+      "u20Ms": 2036,
+      "w1Ms": 2920,
+      "u20Total": 164369,
+      "w1Total": 245955,
+      "ratio": 1.4341846758349706
+    },
+    {
+      "index": 443,
+      "stage": "import:preview-view",
+      "u20Ms": 1971,
+      "w1Ms": 2908,
+      "u20Total": 166407,
+      "w1Total": 248936,
+      "ratio": 1.4753932014205986
+    },
+    {
+      "index": 445,
+      "stage": "analysis:source-context",
+      "u20Ms": 269,
+      "w1Ms": 412,
+      "u20Total": 166676,
+      "w1Total": 249348,
+      "ratio": 1.5315985130111525
+    },
+    {
+      "index": 447,
+      "stage": "analysis:case-read",
+      "u20Ms": 856,
+      "w1Ms": 1293,
+      "u20Total": 167576,
+      "w1Total": 250713,
+      "ratio": 1.5105140186915889
+    },
+    {
+      "index": 449,
+      "stage": "import:preview-view",
+      "u20Ms": 2062,
+      "w1Ms": 2925,
+      "u20Total": 169744,
+      "w1Total": 253795,
+      "ratio": 1.4185257032007759
+    },
+    {
+      "index": 451,
+      "stage": "import:preview-view",
+      "u20Ms": 2041,
+      "w1Ms": 3102,
+      "u20Total": 171820,
+      "w1Total": 256951,
+      "ratio": 1.51984321411073
+    },
+    {
+      "index": 453,
+      "stage": "analysis:source-context",
+      "u20Ms": 305,
+      "w1Ms": 395,
+      "u20Total": 172125,
+      "w1Total": 257346,
+      "ratio": 1.2950819672131149
+    },
+    {
+      "index": 455,
+      "stage": "analysis:case-read",
+      "u20Ms": 856,
+      "w1Ms": 1269,
+      "u20Total": 175101,
+      "w1Total": 261738,
+      "ratio": 1.4824766355140186
+    },
+    {
+      "index": 457,
+      "stage": "import:preview-view",
+      "u20Ms": 2063,
+      "w1Ms": 3096,
+      "u20Total": 177269,
+      "w1Total": 264976,
+      "ratio": 1.5007270964614638
+    },
+    {
+      "index": 459,
+      "stage": "import:preview-view",
+      "u20Ms": 2061,
+      "w1Ms": 2996,
+      "u20Total": 179408,
+      "w1Total": 268027,
+      "ratio": 1.4536632702571568
+    },
+    {
+      "index": 461,
+      "stage": "analysis:source-context",
+      "u20Ms": 267,
+      "w1Ms": 406,
+      "u20Total": 179675,
+      "w1Total": 268434,
+      "ratio": 1.5205992509363295
+    },
+    {
+      "index": 463,
+      "stage": "analysis:case-read",
+      "u20Ms": 851,
+      "w1Ms": 1293,
+      "u20Total": 180588,
+      "w1Total": 269823,
+      "ratio": 1.5193889541715628
+    },
+    {
+      "index": 464,
+      "stage": "human:analysis.read",
+      "u20Ms": 19432,
+      "w1Ms": 28551,
+      "u20Total": 180692,
+      "w1Total": 269985,
+      "ratio": 1.4692774804446274
+    },
+    {
+      "index": 467,
+      "stage": "http:import-route",
+      "u20Ms": 380,
+      "w1Ms": 520,
+      "u20Total": 181118,
+      "w1Total": 270590,
+      "ratio": 1.368421052631579
+    },
+    {
+      "index": 468,
+      "stage": "http:import:import-reference",
+      "u20Ms": 381,
+      "w1Ms": 538,
+      "u20Total": 181118,
+      "w1Total": 270590,
+      "ratio": 1.4120734908136483
+    },
+    {
+      "index": 471,
+      "stage": "human:admit",
+      "u20Ms": 122,
+      "w1Ms": 182,
+      "u20Total": 181240,
+      "w1Total": 270782,
+      "ratio": 1.4918032786885247
+    },
+    {
+      "index": 473,
+      "stage": "analysis:case-read",
+      "u20Ms": 344,
+      "w1Ms": 487,
+      "u20Total": 181668,
+      "w1Total": 271408,
+      "ratio": 1.4156976744186047
+    },
+    {
+      "index": 474,
+      "stage": "human:analysis.prepare",
+      "u20Ms": 550,
+      "w1Ms": 818,
+      "u20Total": 181668,
+      "w1Total": 271408,
+      "ratio": 1.4872727272727273
+    },
+    {
+      "index": 477,
+      "stage": "human:admit",
+      "u20Ms": 125,
+      "w1Ms": 178,
+      "u20Total": 181793,
+      "w1Total": 271586,
+      "ratio": 1.424
+    },
+    {
+      "index": 479,
+      "stage": "analysis:case-read",
+      "u20Ms": 310,
+      "w1Ms": 466,
+      "u20Total": 182181,
+      "w1Total": 272234,
+      "ratio": 1.5032258064516129
+    },
+    {
+      "index": 480,
+      "stage": "human:analysis.prepare",
+      "u20Ms": 513,
+      "w1Ms": 826,
+      "u20Total": 182181,
+      "w1Total": 272234,
+      "ratio": 1.6101364522417154
+    },
+    {
+      "index": 483,
+      "stage": "human:admit",
+      "u20Ms": 145,
+      "w1Ms": 182,
+      "u20Total": 182328,
+      "w1Total": 272417,
+      "ratio": 1.2551724137931035
+    },
+    {
+      "index": 485,
+      "stage": "analysis:case-read",
+      "u20Ms": 313,
+      "w1Ms": 452,
+      "u20Total": 182641,
+      "w1Total": 272870,
+      "ratio": 1.4440894568690097
+    },
+    {
+      "index": 486,
+      "stage": "human:analysis.read",
+      "u20Ms": 460,
+      "w1Ms": 635,
+      "u20Total": 182641,
+      "w1Total": 272870,
+      "ratio": 1.3804347826086956
+    },
+    {
+      "index": 489,
+      "stage": "http:import-route",
+      "u20Ms": 281,
+      "w1Ms": 369,
+      "u20Total": 182924,
+      "w1Total": 273247,
+      "ratio": 1.313167259786477
+    },
+    {
+      "index": 490,
+      "stage": "http:import:import-targets",
+      "u20Ms": 282,
+      "w1Ms": 378,
+      "u20Total": 182924,
+      "w1Total": 273247,
+      "ratio": 1.3404255319148937
+    },
+    {
+      "index": 493,
+      "stage": "http:import-route",
+      "u20Ms": 1860,
+      "w1Ms": 2799,
+      "u20Total": 184785,
+      "w1Total": 276058,
+      "ratio": 1.5048387096774194
+    },
+    {
+      "index": 494,
+      "stage": "http:import:import-admit",
+      "u20Ms": 1861,
+      "w1Ms": 2810,
+      "u20Total": 184785,
+      "w1Total": 276058,
+      "ratio": 1.5099408919935517
+    },
+    {
+      "index": 497,
+      "stage": "bind:run-create",
+      "u20Ms": 1210,
+      "w1Ms": 1830,
+      "u20Total": 186115,
+      "w1Total": 278070,
+      "ratio": 1.512396694214876
+    },
+    {
+      "index": 499,
+      "stage": "bind:session-create",
+      "u20Ms": 10,
+      "w1Ms": 23,
+      "u20Total": 186126,
+      "w1Total": 278092,
+      "ratio": 2.3
+    },
+    {
+      "index": 501,
+      "stage": "bind:skill-load",
+      "u20Ms": 7,
+      "w1Ms": 19,
+      "u20Total": 186132,
+      "w1Total": 278111,
+      "ratio": 2.7142857142857144
+    },
+    {
+      "index": 503,
+      "stage": "bind:run-attach",
+      "u20Ms": 1578,
+      "w1Ms": 2426,
+      "u20Total": 187712,
+      "w1Total": 280539,
+      "ratio": 1.5373891001267428
+    },
+    {
+      "index": 505,
+      "stage": "bind:native-admit",
+      "u20Ms": 236,
+      "w1Ms": 362,
+      "u20Total": 187948,
+      "w1Total": 280900,
+      "ratio": 1.5338983050847457
+    },
+    {
+      "index": 506,
+      "stage": "bind:sf-enquadrar-decisao",
+      "u20Ms": 3163,
+      "w1Ms": 4843,
+      "u20Total": 187948,
+      "w1Total": 280901,
+      "ratio": 1.5311413215301928
+    },
+    {
+      "index": 509,
+      "stage": "http:import-route",
+      "u20Ms": 6368,
+      "w1Ms": 9648,
+      "u20Total": 194316,
+      "w1Total": 290549,
+      "ratio": 1.515075376884422
+    },
+    {
+      "index": 510,
+      "stage": "http:import:import-preview",
+      "u20Ms": 6368,
+      "w1Ms": 9649,
+      "u20Total": 194316,
+      "w1Total": 290549,
+      "ratio": 1.5152324120603016
+    },
+    {
+      "index": 513,
+      "stage": "call:context",
+      "u20Ms": 11,
+      "w1Ms": 9,
+      "u20Total": 194328,
+      "w1Total": 290576,
+      "ratio": 0.8181818181818182
+    }
+  ],
+  "u20FinalEvents": [
+    {
+      "stage": "http:import-route",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 233990
+    },
+    {
+      "stage": "http:import-route",
+      "phase": "end",
+      "elapsedMs": 74,
+      "totalMs": 234064
+    },
+    {
+      "stage": "http:import:import-preview",
+      "phase": "end",
+      "elapsedMs": 78,
+      "totalMs": 234064
+    },
+    {
+      "stage": "native:sf_import_preview",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234064
+    },
+    {
+      "stage": "call:context",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234069
+    },
+    {
+      "stage": "call:context",
+      "phase": "end",
+      "elapsedMs": 111,
+      "totalMs": 234180
+    },
+    {
+      "stage": "call:dispatch",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234180
+    },
+    {
+      "stage": "call:dispatch",
+      "phase": "end",
+      "elapsedMs": 88,
+      "totalMs": 234268
+    },
+    {
+      "stage": "call:publish-result",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234268
+    },
+    {
+      "stage": "call:publish-result",
+      "phase": "end",
+      "elapsedMs": 34,
+      "totalMs": 234302
+    },
+    {
+      "stage": "native:sf_import_preview",
+      "phase": "end",
+      "elapsedMs": 238,
+      "totalMs": 234302
+    },
+    {
+      "stage": "mcp:sf_import_preview",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234302
+    },
+    {
+      "stage": "call:context",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234302
+    },
+    {
+      "stage": "call:context",
+      "phase": "end",
+      "elapsedMs": 109,
+      "totalMs": 234411
+    },
+    {
+      "stage": "call:dispatch",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234411
+    },
+    {
+      "stage": "call:dispatch",
+      "phase": "end",
+      "elapsedMs": 94,
+      "totalMs": 234505
+    },
+    {
+      "stage": "call:publish-result",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 234505
+    },
+    {
+      "stage": "call:publish-result",
+      "phase": "end",
+      "elapsedMs": 55,
+      "totalMs": 234560
+    },
+    {
+      "stage": "mcp:sf_import_preview",
+      "phase": "end",
+      "elapsedMs": 258,
+      "totalMs": 234560
+    },
+    {
+      "stage": "fixture:work",
+      "phase": "end",
+      "elapsedMs": 234185,
+      "totalMs": 234656
+    }
+  ],
+  "w1FinalEvents": [
+    {
+      "stage": "bind:session-create",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 278070
+    },
+    {
+      "stage": "bind:session-create",
+      "phase": "end",
+      "elapsedMs": 23,
+      "totalMs": 278092
+    },
+    {
+      "stage": "bind:skill-load",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 278092
+    },
+    {
+      "stage": "bind:skill-load",
+      "phase": "end",
+      "elapsedMs": 19,
+      "totalMs": 278111
+    },
+    {
+      "stage": "bind:run-attach",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 278113
+    },
+    {
+      "stage": "bind:run-attach",
+      "phase": "end",
+      "elapsedMs": 2426,
+      "totalMs": 280539
+    },
+    {
+      "stage": "bind:native-admit",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 280539
+    },
+    {
+      "stage": "bind:native-admit",
+      "phase": "end",
+      "elapsedMs": 362,
+      "totalMs": 280900
+    },
+    {
+      "stage": "bind:sf-enquadrar-decisao",
+      "phase": "end",
+      "elapsedMs": 4843,
+      "totalMs": 280901
+    },
+    {
+      "stage": "http:import:import-preview",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 280901
+    },
+    {
+      "stage": "http:import-route",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 280901
+    },
+    {
+      "stage": "http:import-route",
+      "phase": "end",
+      "elapsedMs": 9648,
+      "totalMs": 290549
+    },
+    {
+      "stage": "http:import:import-preview",
+      "phase": "end",
+      "elapsedMs": 9649,
+      "totalMs": 290549
+    },
+    {
+      "stage": "native:sf_import_preview",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 290550
+    },
+    {
+      "stage": "call:context",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 290567
+    },
+    {
+      "stage": "call:context",
+      "phase": "end",
+      "elapsedMs": 9,
+      "totalMs": 290576
+    },
+    {
+      "stage": "call:dispatch",
+      "phase": "start",
+      "elapsedMs": 0,
+      "totalMs": 290576
+    },
+    {
+      "stage": "call:dispatch",
+      "phase": "failed",
+      "elapsedMs": 9459,
+      "totalMs": 300035
+    },
+    {
+      "stage": "native:sf_import_preview",
+      "phase": "failed",
+      "elapsedMs": 9485,
+      "totalMs": 300035
+    },
+    {
+      "stage": "fixture:work",
+      "phase": "failed",
+      "elapsedMs": 299315,
+      "totalMs": 300036
+    }
+  ],
+  "controls": [
+    {
+      "u20": {
+        "status": "pass",
+        "name": "HTTP dispatch previews without domain writes, applies once, returns a receipt and denies revoked access",
+        "ms": 3598.88
+      },
+      "w1": {
+        "status": "pass",
+        "name": "HTTP dispatch previews without domain writes, applies once, returns a receipt and denies revoked access",
+        "ms": 4619.46
+      }
+    },
+    {
+      "u20": {
+        "status": "pass",
+        "name": "real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files",
+        "ms": 32535.93
+      },
+      "w1": {
+        "status": "pass",
+        "name": "real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files",
+        "ms": 45877.49
+      }
+    },
+    {
+      "u20": {
+        "status": "pass",
+        "name": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+        "ms": 234691.8
+      },
+      "w1": {
+        "status": "fail",
+        "name": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+        "ms": 300101.81
+      }
+    },
+    {
+      "u20": {
+        "status": "pass",
+        "name": "Dashboard Members: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+        "ms": 1390.27
+      },
+      "w1": {
+        "status": "pass",
+        "name": "Dashboard Members: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+        "ms": 1933.23
+      }
+    },
+    {
+      "u20": {
+        "status": "pass",
+        "name": "Dashboard Projects: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+        "ms": 1071.83
+      },
+      "w1": {
+        "status": "pass",
+        "name": "Dashboard Projects: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+        "ms": 1605.16
+      }
+    },
+    {
+      "u20": {
+        "status": "pass",
+        "name": "Dashboard Operations: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+        "ms": 929.3
+      },
+      "w1": {
+        "status": "pass",
+        "name": "Dashboard Operations: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+        "ms": 1386.89
+      }
+    }
+  ]
+}

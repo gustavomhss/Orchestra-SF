@@ -1,0 +1,1194 @@
+{
+  "schema": "astra-operations.hosted-receipt.v1",
+  "runId": 43582205250,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582205250",
+  "headBranch": "ci-run-linux-astra-operations-64432477-6a4634ea330c-1",
+  "headSha": "6108eafea9a35ba15968271f0aed76b1498d5ac4",
+  "status": "completed",
+  "conclusion": "failure",
+  "createdAt": "2026-11-14T09:47:26Z",
+  "updatedAt": "2026-11-14T09:52:42Z",
+  "product": {
+    "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605"
+  },
+  "snapshot": {
+    "sha": "6108eafea9a35ba15968271f0aed76b1498d5ac4",
+    "tree": "4936290eef233ef027c5d6a2e85098bd700aaf78",
+    "parents": [
+      "644324778e4a21d22424515dd698d5b8d6c01893"
+    ]
+  },
+  "snapshotProof": {
+    "soleParent": true,
+    "onlyAddedRequest": true,
+    "comparison": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "head": "6108eafea9a35ba15968271f0aed76b1498d5ac4",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/644324778e4a21d22424515dd698d5b8d6c01893",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/644324778e4a21d22424515dd698d5b8d6c01893"
+      },
+      "merge_base_commit": {
+        "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/644324778e4a21d22424515dd698d5b8d6c01893",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/644324778e4a21d22424515dd698d5b8d6c01893"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 32,
+          "deletions": 0,
+          "changes": 32,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/parity-planner.test.ts",
+      "Sucafinav1/test/planner-runtime.test.ts",
+      "Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+      "Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+      "Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+    ],
+    "env": {},
+    "blob": "9f05f47165054bc410b125789f0fd0f4f1449ab8",
+    "sha256": "6a4634ea330cfef363042c93fe674ba276d5d83dd4034b3e085be0c45f4100eb"
+  },
+  "jobs": [
+    {
+      "id": 132409129729,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43582205250,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132410311350,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43582205250,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-bun24-43582205250.log",
+    "sha256": "106ea8f72699064ebd8a34f31e49c619b8becb58408a0a21f6efb56fb5564d68",
+    "bytes": 95254
+  },
+  "actualSelection": {
+    "files": [
+      "Sucafinav1/test/parity-planner.test.ts",
+      "Sucafinav1/test/planner-runtime.test.ts",
+      "Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+      "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+      "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+    ],
+    "fileCount": 24,
+    "selectedAndExecutedEqual": true,
+    "executionOrderEqualsRequest": false,
+    "emptySelection": false,
+    "bailOrEarlyStop": false
+  },
+  "summary": {
+    "pass": 114,
+    "fail": 3,
+    "skip": 0,
+    "testCount": 117,
+    "fileCount": 24,
+    "durationSeconds": 212.48,
+    "expectCalls": 1445
+  },
+  "cases": [
+    {
+      "file": "Sucafinav1/test/parity-planner.test.ts",
+      "result": "pass",
+      "title": "planner workbook import form accepts both XLSX and legacy XLS files",
+      "durationMs": 17.38
+    },
+    {
+      "file": "Sucafinav1/test/parity-planner.test.ts",
+      "result": "pass",
+      "title": "Dashboard members export parses and imports its roster while ignoring its paired leader summary",
+      "durationMs": 297.0
+    },
+    {
+      "file": "Sucafinav1/test/parity-planner.test.ts",
+      "result": "pass",
+      "title": "the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically",
+      "durationMs": 0.37
+    },
+    {
+      "file": "Sucafinav1/test/parity-planner.test.ts",
+      "result": "pass",
+      "title": "a stale position revision rejects the workbook import without applying roster or position changes",
+      "durationMs": 0.41
+    },
+    {
+      "file": "Sucafinav1/test/parity-planner.test.ts",
+      "result": "pass",
+      "title": "members roster imports persist while a locked plan keeps all positions unchanged",
+      "durationMs": 0.36
+    },
+    {
+      "file": "Sucafinav1/test/parity-planner.test.ts",
+      "result": "pass",
+      "title": "OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides",
+      "durationMs": 5.31
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "planner required pages contain functional controls or nonempty read views",
+      "durationMs": 1.31
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "planner direct write without canWrite fails atomically",
+      "durationMs": 0.14
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "planner creates first version only once and rejects stale record writes",
+      "durationMs": 0.57
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "line numerical operations preserve manual months and null versus zero",
+      "durationMs": 2.02
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "independent line revisions allow two editors while stale same-line fails atomically",
+      "durationMs": 0.77
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "lock reread rejects budget and HR but permits finance actual forecast and closing",
+      "durationMs": 0.93
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "official per year has shared CAS and official cannot unlock or delete",
+      "durationMs": 0.87
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "HR calculations and recursive privacy preserve domain aggregates",
+      "durationMs": 2.8
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "FX preserves cur shape, parses comma and warns without rejecting missing rate totals",
+      "durationMs": 1.05
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "owner scope, directory identity and unknown actions fail closed",
+      "durationMs": 0.97
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "CPX sequence spans versions, survives deletion and copies preserve codes",
+      "durationMs": 0.56
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "shared lists reject normalized duplicates and references across versions",
+      "durationMs": 0.83
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "roster sync retains manual domain and does not ingest future or terminated people",
+      "durationMs": 0.55
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "viewer with write identity never writes and salary cannot leak through stale conflicts",
+      "durationMs": 0.47
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "HR actuals are independent of calculated budget and reject the wrong page",
+      "durationMs": 0.75
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "total-only mode refuses multiple rows and HR split is immutable",
+      "durationMs": 0.65
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "legacy numeric identifiers stay addressable and directory selects show names",
+      "durationMs": 1.28
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "CAPEX GET owner, classification and search filters affect rendered rows",
+      "durationMs": 1.33
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero",
+      "durationMs": 0.89
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook preview command never writes and a late invalid position rolls every sheet back",
+      "durationMs": 0.57
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook preflights each changed CAS and rolls back earlier records when a later token is stale",
+      "durationMs": 1.14
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast",
+      "durationMs": 0.85
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "newVersion imports into an unlocked atomic copy without moving official or touching source",
+      "durationMs": 0.97
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook resolves directory names and list names or codes; unknown values warn without inventing records",
+      "durationMs": 0.84
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification",
+      "durationMs": 1.16
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic",
+      "durationMs": 0.85
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns",
+      "durationMs": 0.54
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "salary imports obey HR edit rules and synthetic HR ignores workbook budget",
+      "durationMs": 1.29
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "removeMissing prunes only supplied sheets and never removes orphan projects",
+      "durationMs": 1.41
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked",
+      "durationMs": 0.3
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically",
+      "durationMs": 0.97
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project",
+      "durationMs": 0.92
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook CPX sequence is global, CAS protected and rolls back on later validation failure",
+      "durationMs": 1.06
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock",
+      "durationMs": 0.92
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "roster singleton has CAS and ignores all salary, classification, outlook and notes input",
+      "durationMs": 0.5
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "known IDs allow sparse workbook updates without guessing names or elements",
+      "durationMs": 1.06
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook leaves unrelated legacy versions and absent sequence untouched",
+      "durationMs": 0.36
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "Info Field and Value rows only warn on version mismatch and cannot change year or authority",
+      "durationMs": 0.45
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply",
+      "durationMs": 0.88
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads",
+      "durationMs": 1.22
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "render accepts the original dictionary directly and never offers an empty-store first version",
+      "durationMs": 1.19
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write",
+      "durationMs": 0.78
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "successful legacy write persists canonical versions and official-by-year without respreading another version",
+      "durationMs": 0.88
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "canonical official takes precedence over the retained global pointer, including after deleting the previous official",
+      "durationMs": 1.2
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads",
+      "durationMs": 0.95
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "workbook apply accepts a dictionary source with an ID recovered from its dictionary key",
+      "durationMs": 0.53
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "invalid dictionary records cannot authorize creating a replacement first version",
+      "durationMs": 0.16
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "result": "pass",
+      "title": "global official numeric ID is never interpreted as an array offset during migration",
+      "durationMs": 0.23
+    },
+    {
+      "file": "Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "result": "pass",
+      "title": "C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority",
+      "durationMs": 763.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "result": "pass",
+      "title": "real Planner mutation and case receipt commit atomically across surfaces",
+      "durationMs": 52.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+      "durationMs": 23.76
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "an entirely omitted renewal category remains pending",
+      "durationMs": 1.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "coverage distinguishes a sourced zero from an omitted category",
+      "durationMs": 1.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "case references encode both identities without accepting ambiguous aliases",
+      "durationMs": 0.14
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "receipt reconciliation preserves partial application and rejects changed identity",
+      "durationMs": 0.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "a conditional human choice freezes the comparison and cost gap",
+      "durationMs": 1.4
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "preparing a change preserves the domain command and never applies it",
+      "durationMs": 0.72
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "revoked source suppresses an otherwise authorized case",
+      "durationMs": 14.64
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+      "durationMs": 14.29
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "result": "pass",
+      "title": "human choice persists a versioned snapshot and ledger using the planner comparison",
+      "durationMs": 109.16
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "result": "pass",
+      "title": "human-approved prepared dashboard command and receipt commit together",
+      "durationMs": 38.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "result": "pass",
+      "title": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+      "durationMs": 140.14
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "result": "pass",
+      "title": "prepared Procurement mutation records a stale source conflict without changing the domain",
+      "durationMs": 113.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+      "durationMs": 1236.95
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "fail",
+      "title": "real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence",
+      "durationMs": 10190.65
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "fail",
+      "title": "private original evidence is immutable and a replacement Request cannot revive historical facts or receipts",
+      "durationMs": 14786.9
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent",
+      "durationMs": 501.05
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "fail",
+      "title": "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+      "durationMs": 8317.43
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "a durable application recovers after a lost commit response and cleared review cache",
+      "durationMs": 15198.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "C12 rejects another review proof, changed human intent and an expired observed review",
+      "durationMs": 6136.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "C12 rereads the real review producer before the first application and rejects a changed source",
+      "durationMs": 6989.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "result": "pass",
+      "title": "SQLite commits the Hot Topic and its correlation together and revalidates source access",
+      "durationMs": 34.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "result": "pass",
+      "title": "an absent or unavailable domain adapter cannot persist or fabricate an import preview",
+      "durationMs": 81.57
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "result": "pass",
+      "title": "real deletion and recreation of a Planner ID invalidates its old preview and cannot emit an Apply receipt",
+      "durationMs": 2103.78
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "result": "pass",
+      "title": "member replacement previews internally and applies only the approved command on a staged copy",
+      "durationMs": 5.34
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "result": "pass",
+      "title": "backup preview and apply use the legacy producer and preserve private state",
+      "durationMs": 2.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "result": "pass",
+      "title": "Dashboard import evidence fences changed collections and stale projections",
+      "durationMs": 2.1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+      "result": "pass",
+      "title": "C04 budget-owner preview and detail exclude two people's private HR inputs and individual calculated amounts",
+      "durationMs": 530.72
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "result": "pass",
+      "title": "rich Planner XLSX export survives real HTTP preview, Apply and retry with stable financial identities",
+      "durationMs": 8247.55
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "result": "pass",
+      "title": "the real import host rejects a mixed-owner workbook preview without domain writes",
+      "durationMs": 64.34
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "result": "pass",
+      "title": "a later-row domain refusal after preview has a rejected summary and no partial Apply",
+      "durationMs": 1091.52
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "result": "pass",
+      "title": "revocation after preview denies Apply and preserves the selected file and domain",
+      "durationMs": 321.49
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+      "result": "pass",
+      "title": "default CLI roster composition preserves ignored sheets, rejects an ABA roster and applies a fresh preview to a locked version",
+      "durationMs": 32503.18
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "result": "pass",
+      "title": "CSP hashes every inline script, including scripts with attributes",
+      "durationMs": 0.99
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "result": "pass",
+      "title": "HTML decoration runs after authorization and the final response CSP covers its script",
+      "durationMs": 12.52
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+      "result": "pass",
+      "title": "C04 includes the real Planner C02 impact and never doubles the included forecast",
+      "durationMs": 830.93
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "result": "pass",
+      "title": "locked HTTP preview labels retained inputs while applying only the permitted forecast",
+      "durationMs": 7690.39
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "result": "pass",
+      "title": "HTTP newVersion uses a stable preview identity, preserves its official source and returns one receipt",
+      "durationMs": 31245.06
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "result": "pass",
+      "title": "legacy XLS removeMissing removes only supplied OPEX and a subsequent no-op has an unchanged receipt",
+      "durationMs": 37610.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "roster scope is required for both All Members and roster-shaped Headcount",
+      "durationMs": 0.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "workbook preview and real Planner command agree without mutating the source",
+      "durationMs": 6.51
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "replayed operation identities are deterministic and distinct per operation",
+      "durationMs": 0.14
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "Apply preserves an independent concurrent value and rejects a changed lock without mutation",
+      "durationMs": 3.53
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "forecast workbook replaces the included amount without changing budget or actual",
+      "durationMs": 3.7
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "the 72000 included forecast becomes 84000 and reconciles 590000 to 602000",
+      "durationMs": 2.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "exported workbook reimports through the Planner engine without new lines and normalizes absent bm",
+      "durationMs": 73.03
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "result": "pass",
+      "title": "budget owner workbook with one foreign forecast is refused without a commit",
+      "durationMs": 1.7
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "result": "pass",
+      "title": "roster change on source read 2 prevents publishing a stale preview",
+      "durationMs": 76.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "result": "pass",
+      "title": "roster change on source read 3 prevents publishing a stale preview",
+      "durationMs": 563.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "result": "pass",
+      "title": "txt Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "durationMs": 1584.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "result": "pass",
+      "title": "docx Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "durationMs": 2638.19
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "result": "pass",
+      "title": "pdf Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "durationMs": 3771.06
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "result": "pass",
+      "title": "independent authorized extractions reuse the same candidates and preserve human confirmation without duplicate writes",
+      "durationMs": 1144.38
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "txt real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "durationMs": 3597.83
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "docx real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "durationMs": 4350.63
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "pdf real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "durationMs": 4921.58
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "real sourcing dossier preserves Request proposal terms and refuses source-change during its egress reread",
+      "durationMs": 441.05
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "real sourcing dossier preserves Request proposal terms and refuses logout during its egress reread",
+      "durationMs": 412.03
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "result": "pass",
+      "title": "discovery fences source revisions again after both surface reads finish",
+      "durationMs": 32.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "result": "pass",
+      "title": "Request document evidence uses the actual Request resolver and fences an asset changed after list",
+      "durationMs": 328.19
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "result": "pass",
+      "title": "search suppresses an earlier match when a later document read changes its source",
+      "durationMs": 353.8
+    }
+  ],
+  "perFile": [
+    {
+      "file": "Sucafinav1/test/parity-planner.test.ts",
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/planner-runtime.test.ts",
+      "pass": 48,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "pass": 10,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "pass": 5,
+      "fail": 3,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "pass": 8,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    }
+  ],
+  "omni": {
+    "verdict": "not-applicable",
+    "nonce": "caf487c0ef56b49348b180d44c20a00e",
+    "declaringTests": 0,
+    "spawns": 0,
+    "delegations": 0,
+    "raw": "omni positive control [caf487c0ef56b49348b180d44c20a00e]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  },
+  "qualification": "The aggregate run remains FAILURE. All 24 exact files executed through the final summary: 114 passed and 3 WP04 host-integration cases failed. Per-case passes are scoped to W4; no failed case or global gate is promoted. No Omni execution was proved."
+}

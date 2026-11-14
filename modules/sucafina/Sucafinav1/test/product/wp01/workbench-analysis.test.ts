@@ -3,7 +3,7 @@ import path from "node:path"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { randomBytes, randomUUID } from "node:crypto"
-import { createEmbeddedRoutes } from "@orchestra/server/routes"
+import { createEmbeddedRoutes } from "../../../../../../packages/server/src/routes.ts"
 import { Context, Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { ProductHost } from "../../../../../../apps/cli/src/host.ts"
@@ -92,6 +92,18 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     expect(crossSite.status).toBe(403)
     const missingIdempotency = await post({ action: "read", runRef: "sf-run-forged-reference" }, { "idempotency-key": "" })
     expect(missingIdempotency.status).toBe(400)
+
+    // A missing run is denied; corrupt storage stays unavailable rather than being
+    // misreported as a permission failure or exposing native session information.
+    await persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.__sfProductV1 = { schemaVersion: "invalid" }
+      return { commit: true, value: undefined }
+    })
+    for (const action of ["read", "output"]) {
+      const unavailable = await post({ action, runRef: "sf-run-forged-reference" })
+      expect(unavailable.status).toBe(503)
+      expect(await unavailable.text()).not.toContain("nativeSessionId")
+    }
   } finally {
     await web?.dispose()
     await server.stop(true)

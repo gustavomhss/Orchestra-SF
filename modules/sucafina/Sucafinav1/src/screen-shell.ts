@@ -14,11 +14,11 @@ export type Drawn = {
   aside: { key: string; page: false }[]
 }
 
-type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; stored?: unknown; by?: string } | null
+type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; stored?: unknown; by?: string; currentVersionCAS?: number } | null
 
 const SCRIPT = `
 const unsaved = ${JSON.stringify(UNSAVED)}
-const pending = { html: null, loading: false, focus: null, closed: false, controller: null, generation: 0, writing: 0, again: false }
+const pending = { html: null, loading: false, focus: null, commandFocus: null, closed: false, controller: null, generation: 0, writing: 0, again: false }
 function notice(message) { (document.querySelector("dialog[open] [data-editor-status]") || document.getElementById("notice")).textContent = message }
 function assignValue(target, name, value) {
   const path = name.replace(/\\[(\\d+)\\]/g, ".$1").split(".")
@@ -45,26 +45,188 @@ async function valuesOf(form) {
   function compact(value) { if (Array.isArray(value)) return value.filter((entry) => entry !== undefined).map(compact); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, compact(entry)])); return value }
   return compact(values)
 }
-function showResult(result, attempt) {
-  if (result && result.status === 409) {
-    const describe = (value) => value && typeof value === "object" ? Object.entries(value).map(([key, item]) => key + ": " + (item == null ? "Not provided" : typeof item === "object" ? JSON.stringify(item) : String(item))).join(" · ") : String(value ?? "Not available")
-    notice("This record changed since you opened it. Your edits are still here. Current: " + describe(result.stored) + ". Your attempt: " + describe(attempt) + ". Review the current record before retrying.")
+function editorScope(form) { return form.closest("section") || form }
+function submissionEditors(form) {
+  return document.body.dataset.surface === "procurement" && ["submit_pr", "submit_sourcing", "submit_po"].includes(form.dataset.command)
+    ? [...editorScope(form).querySelectorAll('form[data-command="save"]')].filter((editor) => editor.dataset.record === form.dataset.record && editor.dataset.page === form.dataset.page)
+    : []
+}
+function revealField(input) {
+  for (let parent = input.parentElement; parent; parent = parent.parentElement) if (parent.tagName === "DETAILS") parent.open = true
+  input.focus()
+}
+function clearFieldErrors(form) {
+  const scope = editorScope(form)
+  const messages = [...scope.querySelectorAll("[data-field-error], [data-error-for]")]
+  const ids = new Set(messages.map((message) => message.id).filter(Boolean))
+  scope.querySelectorAll("[aria-describedby]").forEach((input) => {
+    const described = input.getAttribute("aria-describedby").split(/\\s+/)
+    if (!described.some((id) => ids.has(id))) return
+    const remaining = described.filter((id) => !ids.has(id))
+    if (remaining.length) input.setAttribute("aria-describedby", remaining.join(" ")); else input.removeAttribute("aria-describedby")
+    input.removeAttribute("aria-invalid")
+    delete input.dataset.fieldInvalid
+  })
+  messages.forEach((message) => message.remove())
+}
+function presentFieldErrors(form, errors) {
+  let first
+  const scope = editorScope(form)
+  for (const [index, error] of errors.entries()) {
+    if (typeof error?.field !== "string" || typeof error.message !== "string") continue
+    const name = document.body.dataset.surface === "procurement" && error.field === "sourcing.selectedId" ? "quoteId" : error.field
+    const controls = [...scope.querySelectorAll("input,select,textarea")].filter((input) => !input.matches(":disabled") && input.type !== "hidden")
+    const exact = controls.filter((input) => input.name === name)
+    const inputs = exact.length ? exact : controls.filter((input) => input.name.startsWith(name + "."))
+    for (const input of inputs) {
+      if (!input.getAttribute("aria-labelledby") && !input.getAttribute("aria-label")) {
+        const label = input.closest("label")
+        const nodes = label ? [...label.childNodes] : []
+        const boundary = nodes.findIndex((node) => node === input || node.nodeType === 1 && node.contains(input))
+        if (label && boundary > 0) {
+          const title = document.createElement("span")
+          title.id = "field-label-" + crypto.randomUUID()
+          nodes.slice(0, boundary).forEach((node) => title.append(node))
+          label.prepend(title)
+          input.setAttribute("aria-labelledby", title.id)
+        }
+      }
+      const message = document.createElement("span")
+      message.id = "field-error-" + crypto.randomUUID() + "-" + index
+      message.dataset.fieldError = error.field
+      message.className = "field-error"
+      message.setAttribute("role", "status")
+      message.textContent = error.message
+      input.insertAdjacentElement("afterend", message)
+      input.setAttribute("aria-invalid", "true")
+      input.dataset.fieldInvalid = "true"
+      input.setAttribute("aria-describedby", [input.getAttribute("aria-describedby"), message.id].filter(Boolean).join(" "))
+      first ||= input
+    }
+  }
+  if (first) revealField(first)
+}
+function conflictReview(result, attempt, form) {
+  const affected = [form, ...submissionEditors(form)]
+  affected.forEach((editor) => { editor.dataset.dirty = "true"; editor.dataset.conflictReview = "required" })
+  form.querySelector("[data-conflict-review]")?.remove()
+  const panel = document.createElement("section")
+  panel.dataset.conflictReview = "true"
+  panel.setAttribute("aria-label", "Review conflicting changes")
+  const heading = document.createElement("h3")
+  heading.textContent = "Review the changed record"
+  heading.tabIndex = -1
+  const message = document.createElement("p")
+  message.setAttribute("role", "status")
+  message.textContent = "Your entries remain unsaved. Review the current record before choosing a version for your next submission."
+  const current = document.createElement("p")
+  current.dataset.currentVersionCas = "true"
+  current.textContent = Number.isSafeInteger(result?.currentVersionCAS) && result.currentVersionCAS >= 0 ? "Current version: " + result.currentVersionCAS + "." : "Current version unavailable."
+  const snapshot = document.createElement("details")
+  const summary = document.createElement("summary")
+  summary.textContent = "Current record and attempted values"
+  const values = document.createElement("pre")
+  values.textContent = JSON.stringify({ current: result?.stored ?? null, attempt: attempt ?? null }, null, 2)
+  snapshot.append(summary, values)
+  const review = document.createElement("button")
+  review.type = "button"
+  review.textContent = "Review current record"
+  const open = document.createElement("a")
+  open.href = location.href
+  open.target = "_blank"
+  open.rel = "noopener"
+  open.textContent = "Open current record separately"
+  panel.append(heading, message, current, snapshot, review, open)
+  form.append(panel)
+  review.addEventListener("click", async () => {
+    review.disabled = true
+    panel.querySelector("[data-reviewed-values]")?.remove()
+    panel.querySelector("[data-adopt-reviewed-version]")?.remove()
+    const revisions = affected.map((editor) => editor.dataset.previewRevision || "0")
+    try {
+      const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store" })
+      if (!response.ok) { message.textContent = "The current record could not be read. Your entries remain here; review again when access is available."; return }
+      const next = new DOMParser().parseFromString(await response.text(), "text/html")
+      if (next.body.dataset.surface !== document.body.dataset.surface) { message.textContent = "Your access changed. Reopen the record with your current access."; return }
+      // A Procurement record has separate save forms for PR, sourcing and PO.
+      // Review only the same stable section; a missing section stays unavailable.
+      const section = form.closest("section[id]")
+      const scope = section ? next.getElementById(section.id) : next
+      const candidates = [...(scope?.querySelectorAll("form[data-command]") || [])].filter((candidate) => candidate.dataset.page === form.dataset.page && candidate.dataset.record === form.dataset.record && candidate.dataset.command === form.dataset.command)
+      const latest = candidates.length === 1 ? candidates[0] : null
+      const version = latest?.dataset.version === undefined ? NaN : Number(latest.dataset.version)
+      if (!latest || !Number.isSafeInteger(version) || version < 0 || latest.closest("fieldset[disabled]") || latest.querySelector('button[type="submit"]')?.disabled) {
+        message.textContent = "This action is no longer available for the current record. Your unsaved entries remain here; reopen the record to continue."
+        return
+      }
+      if (affected.some((editor, index) => (editor.dataset.previewRevision || "0") !== revisions[index])) { message.textContent = "Your entries changed while reading the record. Review again before choosing a version."; return }
+      const record = next.getElementById(form.dataset.record) || latest.closest("section") || latest
+      const comparison = document.createElement("div")
+      comparison.dataset.reviewedValues = "true"
+      const status = document.createElement("p")
+      status.textContent = record.querySelector("[data-request-summary]")?.textContent || "Current authorized record"
+      const table = document.createElement("table")
+      const head = document.createElement("thead")
+      const headers = document.createElement("tr")
+      for (const label of ["Field", "Current record", "Your entry"]) { const cell = document.createElement("th"); cell.scope = "col"; cell.textContent = label; headers.append(cell) }
+      head.append(headers)
+      const body = document.createElement("tbody")
+      const display = (input) => !input ? "Unavailable" : input.type === "checkbox" ? (input.checked ? "Yes" : "No") : input.value === "" ? "Not provided" : input.value
+      for (const editor of affected) for (const input of editor.querySelectorAll("input,select,textarea")) {
+        if (!input.name || input.type === "hidden" || input.matches(":disabled") || input.closest('section[data-conflict-review="true"]')) continue
+        const peers = [...record.querySelectorAll("input,select,textarea")].filter((peer) => peer.name === input.name && peer.type !== "hidden")
+        const label = input.closest("label")?.cloneNode(true)
+        label?.querySelectorAll("input,select,textarea,.field-error").forEach((node) => node.remove())
+        const row = document.createElement("tr")
+        for (const value of [label?.textContent.trim() || input.name, display(peers.length === 1 ? peers[0] : null), display(input)]) { const cell = document.createElement("td"); cell.textContent = value; row.append(cell) }
+        body.append(row)
+      }
+      table.append(head, body)
+      comparison.append(status, table)
+      const adopt = document.createElement("button")
+      adopt.type = "button"
+      adopt.dataset.adoptReviewedVersion = "true"
+      adopt.textContent = "Use reviewed version and keep my entries"
+      adopt.addEventListener("click", () => {
+        if (affected.some((editor, index) => (editor.dataset.previewRevision || "0") !== revisions[index])) { message.textContent = "Your entries changed after this comparison. Review again before choosing a version."; adopt.remove(); return }
+        affected.forEach((editor) => { editor.dataset.version = String(version); delete editor.dataset.conflictReview })
+        message.textContent = "Version " + version + " is selected for your next submission. Nothing has been saved. Review your entries, then submit when ready."
+        adopt.remove()
+        review.remove()
+        const target = affected.flatMap((editor) => [...editor.querySelectorAll("input,select,textarea")]).find((input) => input.type !== "hidden" && !input.matches(":disabled")) || form.querySelector('button[type="submit"]')
+        if (target) revealField(target)
+      })
+      current.textContent = "Current version: " + version + "."
+      panel.append(comparison, adopt)
+      message.textContent = "Review every difference below. Keeping your entries selects this version; it does not save or repeat the earlier command."
+      adopt.focus()
+    } catch { message.textContent = "The current record could not be read. Your entries remain here; review again when the connection is available." }
+    finally { review.disabled = false }
+  })
+  heading.focus()
+}
+function showResult(result, attempt, form, status = result?.status) {
+  if (status === 409) {
+    notice("This record changed since you opened it. Your edits are still here. Review the current record before retrying.")
+    if (form) conflictReview(result, attempt, form)
     return
   }
+  if (form && Array.isArray(result?.fieldErrors)) presentFieldErrors(form, result.fieldErrors)
   notice(result && result.errors ? result.errors.join(" · ") : unsaved)
 }
 function beginWrite() {
   pending.writing++
   pending.generation++
   pending.html = null
+  pending.commandFocus = null
   return () => { pending.writing--; pending.generation++; pending.html = null }
 }
-async function send(command) {
+async function send(command, form) {
   const finish = beginWrite()
   try {
   const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(command) })
   const result = await response.json()
-  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values); return false }
+  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values, form, response.status); return false }
   notice(result.warnings && result.warnings.length ? result.warnings.join(" · ") : "Saved.")
   return true
   } finally { finish() }
@@ -157,7 +319,23 @@ function attach() {
     const dialog = button.closest("td").querySelector("dialog")
     const form = dialog.querySelector("form[data-command]")
     button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record]) : ""
-    button.addEventListener("click", () => dialog.showModal())
+    dialog.id ||= "record-editor-" + crypto.randomUUID()
+    dialog.tabIndex = -1
+    button.setAttribute("aria-haspopup", "dialog")
+    button.setAttribute("aria-controls", dialog.id)
+    button.setAttribute("aria-expanded", "false")
+    button.addEventListener("click", () => {
+      dialog.showModal()
+      button.setAttribute("aria-expanded", "true")
+      const first = dialog.querySelector('input:not([type=hidden]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled)')
+      ;(first || dialog).focus()
+    })
+    dialog.addEventListener("close", () => {
+      button.setAttribute("aria-expanded", "false")
+      pending.focus = button.dataset.editorKey
+      button.focus()
+      applyRefresh()
+    })
     dialog.addEventListener("cancel", (event) => {
       const dirty = dialog.querySelectorAll("form[data-dirty]")
       if (!dirty.length) return
@@ -268,12 +446,25 @@ function attach() {
     form.dataset.bound = "true"
     form.addEventListener("submit", async (event) => {
       event.preventDefault()
+      if (form.dataset.conflictReview === "required") {
+        notice("Review the current record before submitting your preserved entries.")
+        editorScope(form).querySelector('section[data-conflict-review="true"] h3')?.focus()
+        return
+      }
+      clearFieldErrors(form)
       const confirmed = /import|delete|replace|restore/.test(form.dataset.command)
       if (confirmed && !window.confirm("Confirm this change?")) return
       const buttons = [...form.querySelectorAll("button")]
       buttons.forEach((button) => button.disabled = true)
       try {
-        const values = await valuesOf(form)
+        const submitsEditor = document.body.dataset.surface === "procurement" && ["submit_pr", "submit_sourcing", "submit_po"].includes(form.dataset.command)
+        const editors = submissionEditors(form)
+        if (submitsEditor && editors.length !== 1) { notice("The current editor is unavailable. Reopen the record before submitting."); return }
+        if (submitsEditor && !editors[0].reportValidity()) return
+        if (editors.some((editor) => editor.dataset.conflictReview === "required")) { notice("Review the current record before submitting your preserved entries."); return }
+        const editorRevision = submitsEditor ? editors[0].dataset.previewRevision || "0" : undefined
+        const formRevision = form.dataset.previewRevision || "0"
+        const values = submitsEditor ? { ...await valuesOf(editors[0]), ...await valuesOf(form) } : await valuesOf(form)
         const command = { page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true }
         if (document.body.dataset.surface === "dashboard" && ["OPEX Detail", "CAPEX Projects"].includes(command.page) && ["year-amount", "annual-entry", "save-entry"].includes(command.action)) {
           const revision = form.dataset.previewRevision || "0"
@@ -281,7 +472,7 @@ function attach() {
           try {
             const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "preview-change", version: 0, values: { command: { ...command, confirmed: false } } }) })
             const result = await response.json()
-            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values); return }
+            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values, form, response.status); return }
             if ((form.dataset.previewRevision || "0") !== revision) { notice("The draft changed. Review a new preview."); return }
             const preview = result.value
             const panel = document.createElement("section")
@@ -307,7 +498,7 @@ function attach() {
               try {
                 const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "apply-preview", version: 0, values: { previewRef: preview.previewRef } }) })
                 const result = await response.json()
-                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values); if (response.status === 409) panel.remove(); return }
+                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values, form, response.status); if (response.status === 409) panel.remove(); return }
                 if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The reviewed changes were saved. New edits remain unsaved; review them before applying."); return }
                 delete form.dataset.dirty
                 const dialog = form.closest("dialog")
@@ -325,8 +516,11 @@ function attach() {
           } finally { finish() }
           return
         }
-        const saved = await send(command)
+        const saved = await send(command, form)
         if (saved) {
+          if ((form.dataset.previewRevision || "0") !== formRevision) { notice("The submitted changes were saved. Later edits remain unsaved; review them before continuing."); return }
+          if (submitsEditor && (editors[0].dataset.previewRevision || "0") !== editorRevision) { notice("The submission was saved. Later edits remain unsaved; review them before continuing."); return }
+          if (submitsEditor) delete editors[0].dataset.dirty
           delete form.dataset.dirty
           const dialog = form.closest("dialog")
           if (dialog) {
@@ -335,7 +529,14 @@ function attach() {
             dialog.close()
             notice(message)
           }
-          if (!dialog) document.activeElement.blur()
+          if (!dialog) {
+            const active = document.activeElement
+            if (!active || active === document.body || form.contains(active) || editors.some((editor) => editor.contains(active))) {
+              pending.commandFocus = { page: form.dataset.page, action: form.dataset.command, record: form.dataset.record,
+                section: form.closest("section[id]")?.id, container: form.closest("details[id]")?.id }
+              active?.blur()
+            }
+          }
           await refresh()
         }
       } catch { notice(unsaved) }
@@ -365,6 +566,16 @@ function applyRefresh() {
     if (target) { if (!target.matches("button")) target.tabIndex = -1; target.focus() }
     pending.focus = null
   }
+  if (pending.commandFocus !== null) {
+    const saved = pending.commandFocus
+    const container = saved.container ? document.getElementById(saved.container) : null
+    const scope = saved.section ? document.getElementById(saved.section) : container || main
+    const candidates = [...(scope?.querySelectorAll("form[data-command]") || [])].filter((form) => form.dataset.page === saved.page && form.dataset.command === saved.action && form.dataset.record === saved.record)
+    const target = (candidates.length === 1 ? candidates[0].querySelector('button[type="submit"]:not(:disabled)') : null)
+      || container?.querySelector("[data-request-summary]") || container?.querySelector("summary") || scope?.querySelector("h3,h2,h1") || main.querySelector("h1")
+    if (target) { if (!target.matches("button,summary")) target.tabIndex = -1; revealField(target) }
+    pending.commandFocus = null
+  }
 }
 async function refresh(silent = false) {
   if (pending.closed || pending.writing) return
@@ -383,7 +594,7 @@ async function refresh(silent = false) {
   } catch { if (!silent && !pending.closed) notice(unsaved) }
   finally { clearTimeout(deadline); pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
 }
-const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
+const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { pending.commandFocus = null; form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
 document.addEventListener("input", markDirty)
 document.addEventListener("change", markDirty)
 const businessTimer = setInterval(() => { if (!document.hidden) void refresh(true) }, 30000)
@@ -400,7 +611,7 @@ export function press(
 ):
   | { saved: true; value?: unknown }
   | { saved: false; notice: string }
-  | { saved: false; status?: 409; stored?: unknown; by?: string } {
+  | { saved: false; status?: 409; stored?: unknown; by?: string; currentVersionCAS?: number } {
   let result: PressResult
   try {
     result = action()
@@ -408,7 +619,7 @@ export function press(
     return { saved: false, notice: UNSAVED }
   }
   if (!result) return { saved: false, notice: UNSAVED }
-  if (!result.ok && result.status === 409) return { saved: false, status: 409, stored: result.stored, by: result.by }
+  if (!result.ok && result.status === 409) return { saved: false, status: 409, stored: result.stored, by: result.by, ...(result.currentVersionCAS === undefined ? {} : { currentVersionCAS: result.currentVersionCAS }) }
   if (!result.ok) return { saved: false }
   return { saved: true, value: result.value }
 }

@@ -14,6 +14,7 @@ export function createSfProductState(input: {
   /** Root-private callback identities; never exposed through a product capability or serialized input. */
   nativeEvidenceWrites?: WeakSet<object>
   proposalCoverageWrites?: WeakSet<object>
+  procurementEvidenceWrites?: WeakSet<object>
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
   return {
@@ -84,6 +85,9 @@ export function createSfProductState(input: {
         const proposalMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:proposal-coverage:") || key.startsWith("sf:criterion-rule:")))
         if (!input.proposalCoverageWrites?.has(work) && digestSfValue(proposalMetadata(staged.preferences)) !== digestSfValue(proposalMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "proposal-coverage-write-outside-authority" } }
+        const procurementEvidence = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:procurement-evidence:")))
+        if (!input.procurementEvidenceWrites?.has(work) && digestSfValue(procurementEvidence(staged.preferences)) !== digestSfValue(procurementEvidence(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "procurement-evidence-write-outside-authority" } }
         if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])) ||
           (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)) ||
           (!scope.some((entry) => entry.namespace === "cases") && digestSfValue(staged.decisionResults) !== digestSfValue(state.decisionResults)))

@@ -1,0 +1,344 @@
+{
+  "schema": "operations-consumers.results.v1",
+  "recordedAt": "2026-11-14T18:58:17Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-operations",
+  "pr": 34,
+  "status": "PARTIAL_EXTERNAL_EXPORT_CONSUMER_OPEN",
+  "functionalConclusion": "FAILURE: 10 pass, 2 fail; scoped authorized consumers and both composed Atlas cases passed",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "globalRelease": false,
+  "authority": {
+    "acceptedFrom": "PR34 terminal D2 delivery comment 6876138417, 2026-11-14T10:48:06Z, and original OPERATIONS-DELIVERY.md/delivery-status.json",
+    "explicitAssignment": "Current user instruction and operations-consumers.json at 61eea4adb1fcf0fa50eecf5f6fa5f17e426059e3",
+    "initialLiveHead": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "unexpectedSubsequentProductCommitsAtIntake": 0,
+    "basis": "Positive published handoff and explicit new mission; not silence",
+    "release": "This writer releases its bounded ownership in the terminal PR34 comment after the final checks, not by inference from inactivity."
+  },
+  "product": {
+    "W": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+    "tree": "f0fc51a399640983b20d29944a56c4dc0610313f",
+    "parent": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "changedEntries": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/PREPARATION.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0dff065c4994523fba9c92eb9ea8b967330dbe0b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/downloads-owner.patch",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d47538f593c2b563e34c75434044def6e070de58"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/normative-read.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bef6cd9c4e5b4959139d1eee4ac9a5e8a633f093"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3170c80978ef8c87e0a254c8817ffe8514019d7c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/fixture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "13dc9ab57a57fbd5e1c1477cf5fc6718cd5d2cad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f57ad2e8a745c56797bd7e1b7fe9c8fb0cda83bf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d7d2a69837560f42438d470b83724c1a61939a73"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9a224b12c13b7cec506be90527300caa7e984fd"
+      }
+    ],
+    "remotePublication": "GitHub MCP update_ref, expected_sha=ba8a09e371ce8d93eb917eabb102caaee5affaf4, force=false",
+    "sourceHelper": {
+      "commit": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "gitBlob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+      "verbatimReadback": true
+    }
+  },
+  "functional": {
+    "W": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+    "treeW": "f0fc51a399640983b20d29944a56c4dc0610313f",
+    "S": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+    "treeS": "a37c2473f242712cafbfd7b4cd6e8cb05d21fa40",
+    "snapshotParent": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+    "onlySnapshotDelta": "A .ci-run.json",
+    "productBlobsIdentical": true,
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "./Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "./Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestBlob": "417694b0fb189826b91e552f7b501bfbeecd58ff",
+    "branch": "ci-run-linux-astra-operations-fd363ca6-417694b0-1",
+    "dedupe": "Existing runs queried for exact new product/request branch before publication; no matching run; only one mission run in flight.",
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflowBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "run": {
+      "id": 43628901747,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747",
+      "attempt": 1,
+      "conclusion": "failure",
+      "createdAt": "2026-11-14T18:51:20Z",
+      "completedUpdateAt": "2026-11-14T18:55:37Z"
+    },
+    "jobs": [
+      {
+        "id": 132550880255,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "failure",
+        "startedAt": "2026-11-14T18:51:22Z",
+        "completedAt": "2026-11-14T18:55:33Z"
+      },
+      {
+        "id": 132552039173,
+        "name": "cleanup",
+        "conclusion": "success"
+      }
+    ],
+    "execution": {
+      "bun": "1.3.14 (0d9b296a)",
+      "files": 3,
+      "tests": 12,
+      "pass": 10,
+      "fail": 2,
+      "skip": 0,
+      "expectCalls": 212,
+      "durationSeconds": 144.13,
+      "exitCode": 1,
+      "runTestsStartedAt": "2026-11-14T18:53:07Z",
+      "runTestsCompletedAt": "2026-11-14T18:55:31Z"
+    },
+    "tests": [
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "submitted sourcing reconciles domain, unmounted Requests, C02/C06 and register while its future PO remains distinct",
+        "result": "PASS",
+        "durationMs": 263.72
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "a submitted PO freezes 200 USD through later FX, exports and cancellation",
+        "result": "PASS",
+        "durationMs": 109.43
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "missing live FX stays unavailable in unmounted consumers and refuses sourcing submission",
+        "result": "PASS",
+        "durationMs": 48.87
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "missing historical sourcing FX never borrows the future PO rate in pending or rejected request consumers",
+        "result": "PASS",
+        "durationMs": 75.38
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "changing the base withholds current request value and keeps the submitted 108 USD history",
+        "result": "PASS",
+        "durationMs": 52.05
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "cancelling directly from sourcing preserves the inherited PO value and labels it cancelled",
+        "result": "PASS",
+        "durationMs": 52.31
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "an incidental PO with missing or malformed lines cannot borrow a sourcing amount for PO-only text",
+        "result": "PASS",
+        "durationMs": 57.3
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "name": "missing monetary inputs stay unavailable in quote choices and the PO document while actual zero stays zero",
+        "result": "PASS",
+        "durationMs": 49.07
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "name": "OPS-CONSUMER-EXPORT-01: future PO exports use their current estimate while the real sourcing decision stays frozen",
+        "result": "FAIL",
+        "durationMs": 56.82
+      },
+      {
+        "file": "Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "name": "OPS-CONSUMER-EXPORT-02: future PO line totals do not borrow the whole selected quote",
+        "result": "FAIL",
+        "durationMs": 52.99
+      },
+      {
+        "file": "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "name": "protected Atlas original binds cross-principal continuity after store reopen",
+        "result": "PASS",
+        "durationMs": 112732.3
+      },
+      {
+        "file": "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "name": "confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation",
+        "result": "PASS",
+        "durationMs": 30137.69
+      }
+    ],
+    "omni": {
+      "nonce": "669e4e5da490881aaf29411e7ca2b727",
+      "markerCount": 1,
+      "nonceMatchesJob": true,
+      "verdict": "pass",
+      "declaredTests": 2,
+      "spawns": 4,
+      "delegated": 0
+    },
+    "artifacts": [],
+    "artifactExplanation": "This Bun workflow uploads no general test artifact; Playwright/Lean uploads were skipped. Complete decoded job log was retrieved through GitHub MCP; no artifact is invented.",
+    "log": {
+      "job": 132550880255,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747/job/132550880255",
+      "hashEncoding": "UTF-8 of decoded MCP content exactly, including BOM and trailing LF",
+      "utf8Bytes": 77744,
+      "sha256": "95c77b84f39b225c7eecf7deec4637f907ac59bb82b32e1a9825c1026ab86b12"
+    },
+    "independentVerification": "ci_review separately retrieved run/request/jobs/logs and confirmed all 12 outcomes and exact nonce. Root also inspected decoded log."
+  },
+  "findings": [
+    {
+      "id": "OPS-CONSUMER-EXPORT-01",
+      "status": "OPEN",
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "preimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+      "test": "export-owner-regression.test.ts:28",
+      "expected": {
+        "poBaseAmount": 200,
+        "fxRate": 2,
+        "fxSource": "current",
+        "monetaryState": "estimate",
+        "submittedPoAmount": "Unavailable",
+        "submittedPoFx": "Unavailable"
+      },
+      "observed": {
+        "poBaseAmount": 108,
+        "fxRate": 1.08,
+        "fxSource": "submitted",
+        "monetaryState": "pending-approval",
+        "submittedPoAmount": 108,
+        "submittedPoFx": 1.08
+      },
+      "justification": "PO-labelled CSV/HTML currently invokes the request-level helper with sourcing status; it borrows the sourcing decision instead of describing the future PO."
+    },
+    {
+      "id": "OPS-CONSUMER-EXPORT-02",
+      "status": "OPEN",
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "preimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+      "test": "export-owner-regression.test.ts:65",
+      "expectedLineTotals": [
+        40,
+        60
+      ],
+      "observedLineTotals": [
+        100,
+        100
+      ],
+      "justification": "The per-line helper sees sourcing status and repeats the whole selected quote. Two-line setup is a discarded read snapshot, not a claimed legal edit in pending sourcing."
+    }
+  ],
+  "externalPatch": {
+    "path": "downloads-owner.patch",
+    "blob": "d47538f593c2b563e34c75434044def6e070de58",
+    "target": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+    "preimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+    "applied": false,
+    "tested": false,
+    "requiredOwner": "Current owner of runtime/downloads.ts, coordinated by S0/Compose after verifying authority",
+    "design": "Reuse purchaseOrderMoney for individual lines; project only sourcing statuses to po_draft inside that read-only PO consumer. Do not change source records, stage machine or canonical monetary producer."
+  },
+  "validationLimits": [
+    "The combined functional run is red and is never called PASS.",
+    "domain.data.register.value passes; the downloadable register.csv future-PO columns remain failing.",
+    "Submitted PO exports and cancellation passed; this does not cover the distinct pre-submission PO export case.",
+    "No full sourcing58+5, import14 or Apply10 repeat; unchanged producer proofs remain source-bound, not reassigned to W.",
+    "No local product tests, typechecks or guards; no full suite/epic, merge, deploy, engine changes or Orchestra restart.",
+    "Real Atlas services and Omni control pass only in the two selected scenarios; document ingress scanner remains its declared fixture, and no external model/GNATIVE/global/human acceptance is inferred.",
+    "Exact intake retains cancelled-from-sourcing semantics that select the retained PO lines. Cancelled labels/totals were verified; producer was not redesigned.",
+    "Historical H09/browser acquisition, native/human, AM01-AM06 and global gates remain open."
+  ],
+  "reuse": [
+    {
+      "run": 43625920456,
+      "selection": "Sourcing 58-test producer proof",
+      "result": "prior published 58 pass, retained at its original W"
+    },
+    {
+      "run": 43626658534,
+      "selection": "Sourcing five-case final producer revalidation",
+      "W": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "S": "fb440a03e4d712e0d6f40f021997b31a80943a3d",
+      "result": "prior published 5 pass; not repeated"
+    },
+    {
+      "selection": "Import14 and Apply10",
+      "result": "not repeated; no altered closure in this delivery"
+    }
+  ],
+  "staticChecks": {
+    "statusAtReceiptCommit": "PENDING_FINAL_HOSTED_CHECK",
+    "checkedProduct": "The containing documentation delivery commit D (published after W); D changes only new operations-consumers receipts.",
+    "workflow": ".github/workflows/astra-operations-check.yml",
+    "workflowBlob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "mode": "default all; omit mode and typecheckSha from actual envelope",
+    "commands": [
+      {
+        "directory": "modules/sucafina",
+        "command": "bun typecheck"
+      },
+      {
+        "directory": "apps/cli",
+        "command": "bun typecheck"
+      },
+      {
+        "directory": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "terminalReceipt": "PR34 terminal operations-consumers comment records exact D/tree/S-check/dev/run/jobs/artifact/outcomes. Keeping that receipt external avoids self-reference and an unchecked extra commit.",
+    "notFunctionalProof": true
+  }
+}

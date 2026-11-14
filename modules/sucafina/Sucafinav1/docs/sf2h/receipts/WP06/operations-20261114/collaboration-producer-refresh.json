@@ -1,0 +1,21 @@
+{
+  "schema": "astra-operations.collaboration-producer-refresh.v1",
+  "pullRequest": 33,
+  "head": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+  "source": "GitHub MCP contents reads at the explicit current PR head",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+      "blob": "ed88a6ff4f6c42eecfd80ba13824e8122fcc774e",
+      "operationsBlobEqual": true,
+      "consumedFrom": "1998acb0dcb59e68d41ee924eca4737bccbd5148"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+      "blob": "2eb9ee92719402d137aca96c4861c086c6526971",
+      "operationsBlobEqual": true
+    }
+  ],
+  "result": "The canonical dossier and actual sourcing evidence producers remain identical at the latest observed Collaboration head. Operations consumes that producer in both owned integration paths; no wider Collaboration merge is inferred.",
+  "qualification": "Source identity and consumer composition only; final routine/native/global proofs still require their prescribed final-bundle qualification."
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "operations-consumers.source-review.v1",
+  "scope": "Bounded source review only; not campaign/G7 acceptance.",
+  "reviewer": "ci_review",
+  "authorship": {
+    "productEdits": false,
+    "testEdits": false,
+    "remoteMutations": false,
+    "execution": false
+  },
+  "product": {
+    "sha": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+    "tree": "f0fc51a399640983b20d29944a56c4dc0610313f"
+  },
+  "blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+      "sha": "3170c80978ef8c87e0a254c8817ffe8514019d7c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/fixture.ts",
+      "sha": "13dc9ab57a57fbd5e1c1477cf5fc6718cd5d2cad"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+      "sha": "f57ad2e8a745c56797bd7e1b7fe9c8fb0cda83bf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "sha": "d7d2a69837560f42438d470b83724c1a61939a73"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "sha": "c9a224b12c13b7cec506be90527300caa7e984fd"
+    }
+  ],
+  "conclusion": "NO_MATERIAL_SOURCE_BLOCKER_IN_AUTHORIZED_DELTA; HOSTED_VALIDATION_REQUIRED; EXTERNAL_EXPORT_FINDING_OPEN",
+  "findings": [
+    {
+      "id": "OPS-CONSUMER-MONEY",
+      "observation": "Stage-aware domain and Requests outputs preserve sourcing USD108/submitted1.08; future PO-only text separately projects USD200/current2 without mutating status or snapshot.",
+      "result": "Source-reviewed; not yet runtime evidence."
+    },
+    {
+      "id": "OPS-CONSUMER-ABSENCE",
+      "observation": "Missing/nonfinite quote and PO line fields display Unavailable, observed numeric zero remains zero. Incidental empty/malformed PO lines cannot borrow PR/sourcing amounts for PO-only text.",
+      "result": "Focused consumer correction included."
+    },
+    {
+      "id": "OPS-CONSUMER-ATLAS",
+      "observation": "One empty WeakSet is supplied to both actual authority and business-service constructors; producer requirement, scenarios, grants and assertions are unchanged.",
+      "result": "Correct capability identity at source level."
+    },
+    {
+      "id": "OPS-CONSUMER-EXPORT-01",
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "preimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+      "observation": "Future PO-labelled CSV/HTML borrows request sourcing facts after intake. Expected PO USD200/current/estimate/no submitted PO approval; unchanged caller projects sourcing USD108/submitted/pending.",
+      "result": "Outside writer paths; ordinary regression retains correct expected values. Owner patch proposed, not applied or tested."
+    },
+    {
+      "id": "OPS-CONSUMER-EXPORT-02",
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "preimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+      "observation": "PO line helper is called with sourcing status and may repeat whole quote100 instead of exact individual lines40/60.",
+      "result": "Same external dependency; discarded read-snapshot premise is labelled, not claimed as legal pending-stage edit."
+    }
+  ],
+  "criteriaStillOpen": [
+    "WP04.INV.03 complete export scope",
+    "WP04.T05.CHK.04 complete export scope",
+    "Historical native/human requirements",
+    "AM01-AM06 and global campaign gates"
+  ],
+  "cancelledSemantics": "The exact supplied helper selects retained PO lines after cancellation, including cancellation from sourcing. Runtime preserves that inherited rule, labels cancelled and excludes cancelled records from approved/issued totals; no authority to redesign producer.",
+  "intake": "Direct existing Git blob c9a224b12c13b7cec506be90527300caa7e984fd avoids a scratch-only extra newline; readback equality against published source was verified.",
+  "limitations": [
+    "Source/diff/byte review only. Hosted tests/typechecks/guards are separately identified by W/S/run.",
+    "No claim that a projected in-memory register equals the downloadable CSV consumer.",
+    "No acceptance is inferred from guards, capability type conformity, fixture count or source inspection."
+  ],
+  "phase": "Source review completed before functional execution; RESULTS.json provides the later executed outcomes."
+}

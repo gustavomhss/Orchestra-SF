@@ -1,0 +1,12 @@
+{
+  "schema": "astra-operations.c12-fixture-followup.v2",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+  "before": "3cfdaf5adbb8abcfe7f90640a56db3f9d733ac56",
+  "after": "a8348b91ed8eb4483352e449b8bb37aef409b803",
+  "ownerCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+  "ownerFile": "4e01acf909609e40bf9fc5e64c633ea8189c6e8b",
+  "mode": "consume-published-C12-negative-proof-assertions",
+  "reason": "The fake domain port deliberately records a receipt without the persistent review proof. The strict producer must return unavailable/review-proof-unbound and preserve the chosen case. The real successful replay proof remains in WP04 host-integration.",
+  "review": "Independent reviewer identified the two correlated owner hunks omitted by the first partial fixture intake. Existing original attempt and its receipt remain preserved.",
+  "unrelatedChanges": "All lines outside the C12 scenario remain Operations input; unrelated case/proposal-store dependencies are not consumed."
+}

@@ -1,0 +1,113 @@
+{
+  "schema": "astra-operations.check-receipt.v1",
+  "runId": 43580747934,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580747934",
+  "jobId": 132404768523,
+  "status": "completed",
+  "conclusion": "failure",
+  "product": {
+    "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "tree": "a3ebf675545fadcd3124b387b15f396550652df8"
+  },
+  "snapshot": {
+    "sha": "3cf8e9327f344e85ccc4b8b2b88c2bf77470bd8e",
+    "tree": "af8226c4c64d89c040d7f486cf4a364525cdd8b5",
+    "parents": [
+      "d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+    ]
+  },
+  "envelope": {
+    "productSha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mode": "all",
+    "blob": "90aba4c336a36901f58a2ed46cdf4804feee871d",
+    "sha256": "1ba6daf443ff9c2c3b0268d037e8538d4b564c7ec623aaf29b25596d7e1406e3"
+  },
+  "sourceComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "head": "3cf8e9327f344e85ccc4b8b2b88c2bf77470bd8e",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+    },
+    "merge_base_commit": {
+      "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+    },
+    "files": [
+      {
+        "filename": ".astra-operations-check.json",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      }
+    ]
+  },
+  "checks": {
+    "envelope": "success",
+    "exactProduct": "success",
+    "guardBase": "success",
+    "sucafinaTypecheck": {
+      "conclusion": "failure",
+      "errors": [
+        {
+          "file": "test/product/wp14/source-access-atlas.test.ts",
+          "line": 167,
+          "column": 41,
+          "code": "TS2741",
+          "reason": "Missing procurementEvidenceWrites",
+          "ownership": "Intelligence/WP14; OPS-CONSUMER-02 owner patch pending"
+        }
+      ]
+    },
+    "cliTypecheck": {
+      "conclusion": "success",
+      "errors": []
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 732,
+      "gateFindings": 0,
+      "warnings": 11,
+      "errors": 0
+    }
+  },
+  "artifact": {
+    "id": 14107773891,
+    "name": "astra-operations-check-1",
+    "size_in_bytes": 1579,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107773891",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107773891/zip",
+    "expired": false,
+    "created_at": "2026-11-14T09:30:34Z",
+    "expires_at": "2026-11-28T09:30:33Z",
+    "updated_at": "2026-11-14T09:30:34Z",
+    "digest": "sha256:42b7470ecb760bd753cc80fe78b1cbe2a539d9791fac3e5ddc5f841f763efbbc",
+    "workflow_run": {
+      "id": 43580747934,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "astra-check-operations-d7d343ec-1",
+      "head_sha": "3cf8e9327f344e85ccc4b8b2b88c2bf77470bd8e"
+    },
+    "verifiedSha256": "42b7470ecb760bd753cc80fe78b1cbe2a539d9791fac3e5ddc5f841f763efbbc",
+    "localFile": "/workspace/scratch/67acc0fafe95/audit-ci/artifact-14107773891.zip",
+    "extractedTo": "/workspace/scratch/67acc0fafe95/audit-ci/check3"
+  },
+  "qualification": "Sucafina failed only at the documented Atlas fixture consumer. CLI and guards passed independently. CLI success may be reused for later changes outside the CLI input closure; the overall failed run and Sucafina failure remain explicit. No global acceptance.",
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-check3-43580747934.log",
+    "sha256": "1e396aa6606b9c903650599c0cf9663f5ce365f8a043ecc47794ccf4eb766cf5"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "base_commit": "08588f4122ac57bb7915ef70ad619edfea5570b4",
+  "finding_commit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+  "producer_commit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+  "findings": [
+    "TS-29",
+    "TS-30"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "base_blob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "candidate_blob": "4209315764673f8c52fdd94fd76b0f120767b39f",
+      "sha256": "5233b56f21ebef9cee4e2081f86fd302fba22f664f7ea40f8e4efd2579c59042"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "base_blob": "d6ce17ec9d81b5c1d2feb91b7ccaf640295f6e3b",
+      "candidate_blob": "e169d335f091c446bb380ee73f450083f917946f",
+      "sha256": "e853571c1530368e85136175d913c646c95bf5c850eefb583270f605ed6eddd1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "base_blob": "ae82f2d972c44256f2328dc3b733627c44bb3dd6",
+      "candidate_blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "base_blob": "929443b4e7a0c3dabc7db88534c17a7489f25c03",
+      "candidate_blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "sha256": "d03fd49e40bbbdaba425923237153c306622856cacf93b84928cf16f27f6950c"
+    }
+  ],
+  "validation": "static source review only; no local product tests or typechecks run",
+  "recommended_bun_selectors": [
+    "test/product/wp04/host-integration.test.ts",
+    "test/product/wp04/prepared-production.test.ts"
+  ],
+  "producer_owner_selectors": [
+    "test/product/wp11/prepared-apply.test.ts",
+    "test/product/wp11/planner-apply.test.ts"
+  ],
+  "reuse_scope": "confirmation.test.ts and confirmation-cross-actor.test.ts are not changed by this C12 delta; keep their W1 affected-closure run/evidence without duplicate dispatch solely for TS-29/TS-30.",
+  "qualification": "The lost-response test clears the review cache through dispose(); it does not reopen the process or prove a complete process restart. No native or human acceptance proof is promoted."
+}

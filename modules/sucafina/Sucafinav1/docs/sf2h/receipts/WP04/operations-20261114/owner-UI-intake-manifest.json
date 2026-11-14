@@ -1,0 +1,233 @@
+{
+  "schema": "astra-operations.owner-ui-consumer-intake.v1",
+  "owner": {
+    "pr": 31,
+    "head": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+    "tree": "47c22a8bd808367c77171f555afc27bcf8fef7b3"
+  },
+  "product": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+    "before": "3bee0f4326c1a65d3c0573695c3e4a1609b6c480",
+    "after": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+    "source": "audit-ci/owner-refresh/ui-interface.ts",
+    "scope": "Exact owner UI includes reviewDigest plus uncertain retry, access revocation, frozen intention and receipt verification changes previously absent in Operations."
+  },
+  "minimalBrowserFixture": [
+    {
+      "key": "browserFixture31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "sha": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+      "localFile": "audit-ci/owner-refresh/browserFixture31.ts"
+    },
+    {
+      "key": "browserDriver31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "sha": "e476274c6d997a3e305cdf7c139cc3e03430890e",
+      "localFile": "audit-ci/owner-refresh/browserDriver31.ts"
+    },
+    {
+      "key": "browserStart31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "sha": "6952098674a027afafb11ff9cdf6d942580c4149",
+      "localFile": "audit-ci/owner-refresh/browserStart31.ts"
+    },
+    {
+      "key": "browserLifecycle31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "sha": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "localFile": "audit-ci/owner-refresh/browserLifecycle31.ts"
+    }
+  ],
+  "fixtureEvidence": {
+    "coreProcessIdentical": {
+      "before": "a2c29d4a18c44ff407e6055b27830fade5d43f20",
+      "after": "a2c29d4a18c44ff407e6055b27830fade5d43f20"
+    },
+    "node": "24.15 setup by test-ci validator before all runners",
+    "chrome": {
+      "source": "https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md",
+      "blob": "cc509401857a95cfe09c44b3668825e37389e7e3",
+      "version": "157.0.8103.50",
+      "channel": "chrome"
+    },
+    "launchBoundary": "AppProcess/Omni; Node owns Chrome pipes; exclusive browser leases; startup first, finalizer last.",
+    "allowedSelection": "Explicit Linux Bun .test.ts paths only; no filters/isolation/reordering; only --timeout accepted.",
+    "extraAncestorAgents": [
+      {
+        "path": "modules/AGENTS.md",
+        "status": "404"
+      },
+      {
+        "path": "modules/sucafina/AGENTS.md",
+        "status": "404"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/AGENTS.md",
+        "status": "404"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/AGENTS.md",
+        "status": "404"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/AGENTS.md",
+        "status": "404"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/AGENTS.md",
+        "status": "404"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/AGENTS.md",
+        "status": "404"
+      }
+    ],
+    "verifiedApiCompatibility": {
+      "AppProcess": {
+        "path": "packages/core/src/process.ts",
+        "owner": "a2c29d4a18c44ff407e6055b27830fade5d43f20",
+        "operationsW4": "a2c29d4a18c44ff407e6055b27830fade5d43f20",
+        "apiChecks": [
+          "Service exposes ChildProcessSpawner Service interface, so .spawn exists and returns scoped process handle",
+          "collectStream(stream,maxOutputBytes) returns Effect with {buffer,truncated}; driver uses errors.buffer",
+          "waitForAbort(AbortSignal) returns interrupting Effect and releases abort listener",
+          "node is makeGlobalNode({service:Service,layer,deps:[CrossSpawnSpawner.node]}); driver compiles it via LayerNode"
+        ]
+      },
+      "LayerNode": {
+        "path": "packages/core/src/effect/layer-node.ts",
+        "owner": "4d1491948140e05894193050f07b664163a69912",
+        "operationsW4": "4d1491948140e05894193050f07b664163a69912",
+        "apiChecks": [
+          "compile(root:Node<A,E,any>, replacements?, options?) returns Layer.Layer<A,E>, valid for Effect.provide(LayerNode.compile(AppProcess.node))"
+        ]
+      },
+      "OmniExpect": {
+        "path": "packages/core/test/fixture/omni-expect.ts",
+        "owner": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac",
+        "operationsW4": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac"
+      },
+      "RuntimeObject": {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "owner": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+        "operationsW4": "9e9bac976b503409de65868a366f352ca1e65071",
+        "identicalExport": "export function object(value: unknown): Record<string, unknown> {\n  return value !== null && typeof value === \"object\" && !Array.isArray(value) ? (value as Record<string, unknown>) : {}\n}",
+        "difference": "Only unrelated Result/command contract shape differs; object export is byte-identical and imports are type-only."
+      },
+      "Dependencies": {
+        "packageRoot": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+        "ownerPackageRoot": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+        "bunLock": "c190f0e6158ffff3a73fd0d84df72d3d1ba0b31f",
+        "ownerBunLock": "c190f0e6158ffff3a73fd0d84df72d3d1ba0b31f",
+        "sucafinaPackage": "0fabcdd9148286629ba67bcbda4860783ab9c487",
+        "ownerSucafinaPackage": "0fabcdd9148286629ba67bcbda4860783ab9c487",
+        "effect": "4.0.0-beta.83",
+        "playwright": "1.59.1"
+      },
+      "assessment": "All fixture-used existing APIs are compatible by declaration inspection and identical source/lockfile blobs. No shared runtime intake is necessary. This is source compatibility evidence, not proof of browser acquisition or end-to-end execution."
+    },
+    "selectionOrderProof": {
+      "ownerRun": 43581816415,
+      "ownerUsesDotSlash": true,
+      "ownerObservedOrderMatches": true,
+      "operationsBun24": {
+        "run": 43582205250,
+        "usesDotSlash": false,
+        "exactFileSet": true,
+        "observedOrderMatches": false
+      },
+      "requirement": "Use ./ prefixes for the H09 three-file selection. The Bun request validator preserves args and does not insert the prefix."
+    }
+  },
+  "excludedOwnerTests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "sha": "393b34550b39c796a4bd7125162eba1c2fae806b",
+      "source": "audit-ci/owner-refresh/mutations31.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/real-review-fixture.ts",
+      "sha": "c0017ee1b77d218972dc05a3eeb0edec0203997f",
+      "source": "audit-ci/owner-refresh/reviewFixture31.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "sha": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "source": "audit-ci/owner-refresh/recoveryFixture31.ts"
+    }
+  ],
+  "ownerReceipt": {
+    "runId": 43581816415,
+    "jobId": 132407955487,
+    "conclusion": "failure",
+    "snapshot": "4d58627f1bb996e422bbba2796050b4acaeb6144",
+    "tree": "a2db0fab2738bc8b029a77781d74b880d62d1a78",
+    "product": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+    "parentOnlyRequest": true,
+    "summary": {
+      "pass": 13,
+      "fail": 23,
+      "cases": 36,
+      "files": 25
+    },
+    "decisionMutations": "beforeAll failed: browser pool poisoned by startup timeout at Chromium launch (9651ms). None of the Apply test bodies qualified.",
+    "omni": "pass, 4 spawns/0 delegated, nonce 179466a922a0a6511be87bd18d26f25f",
+    "log": "audit-ci/owner-refresh/interface-43581816415.log"
+  },
+  "proposedOwnConsumer": {
+    "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+    "case": "H09 to be implemented by WP04 owner with real createApplication/SQLite, Bun origin, actual Bearer/UI authority, reviewDigest from real review and real receipt. No route.fulfill for review/receipt.",
+    "sequence": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "qualification": "No test result is inferred for unpublished H09. Generic Dashboard/Planner HTTP still rejects fourth field at W4; this remains an astra-compose consumer finding, outside the own Procurement proof.",
+  "mutationsPerformed": "Only audit cache/manifest. No product files changed and no CI dispatched.",
+  "latestPublishedOwner": {
+    "head": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+    "tree": "07681e28bfb16f216c738c54345661af1239dc3c",
+    "uiBlob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+    "driver": {
+      "previous": "e476274c6d997a3e305cdf7c139cc3e03430890e",
+      "current": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "file": "audit-ci/owner-refresh/browserDriver31-latest.ts",
+      "delta": "Only bounded Playwright stderr diagnostic enabled in Node child; APIs/deadlines/assertions unchanged."
+    },
+    "remainingThreeFixtures": "unchanged by complete one-file commit comparison"
+  },
+  "effectiveMinimalBrowserFixture": [
+    {
+      "key": "browserFixture31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "sha": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+      "localFile": "audit-ci/owner-refresh/browserFixture31.ts",
+      "sourceRef": "50906b86da953f9e6fb24f989c51db0fc69496c1"
+    },
+    {
+      "key": "browserDriver31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "sha": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "localFile": "audit-ci/owner-refresh/browserDriver31-latest.ts",
+      "sourceRef": "50906b86da953f9e6fb24f989c51db0fc69496c1"
+    },
+    {
+      "key": "browserStart31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "sha": "6952098674a027afafb11ff9cdf6d942580c4149",
+      "localFile": "audit-ci/owner-refresh/browserStart31.ts",
+      "sourceRef": "50906b86da953f9e6fb24f989c51db0fc69496c1"
+    },
+    {
+      "key": "browserLifecycle31",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "sha": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "localFile": "audit-ci/owner-refresh/browserLifecycle31.ts",
+      "sourceRef": "50906b86da953f9e6fb24f989c51db0fc69496c1"
+    }
+  ]
+}

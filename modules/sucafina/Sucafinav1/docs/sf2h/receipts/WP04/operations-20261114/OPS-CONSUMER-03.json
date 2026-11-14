@@ -1,0 +1,36 @@
+{
+  "id": "OPS-CONSUMER-03",
+  "status": "PROPOSED_NOT_APPLIED",
+  "owner": "astra-compose / shared UI owner",
+  "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+  "baseCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+  "baseTree": "da48ad2d7d4f72867c4093aa32174f6bf731ebbb",
+  "beforeBlob": "2c9677ab431d90d1295a12099e27b780b860eafb",
+  "afterBlob": "daded373d54af0f67f42e8e5afb98a7e25c7f548",
+  "producer": "WP11 PR35 W2 981ad44102b2e2e67d31bfc8fb7d97208e390e5b + operations WP04 closed AdmittedApply consumer",
+  "requestShape": [
+    "caseRef",
+    "choiceId",
+    "changeId",
+    "reviewDigest"
+  ],
+  "proofSource": "review.value.reviewDigest from the real prepared-review producer; never synthesized by the browser",
+  "retainedOwnerBehavior": [
+    "busy and connected guards",
+    "sf-access-revoked purge",
+    "401 and 403 revocation",
+    "one serialized intention body and idempotency key retained across uncertainty",
+    "exact same retry after conflict/timeout/ambiguous failure",
+    "first-attempt validation rejection clears review and requires a new one",
+    "completed or receipted change cannot be reapplied from this review"
+  ],
+  "proposedBehavior": [
+    "reject absent or non-lowercase-hex-64 digest before enabling confirmation",
+    "capture valid digest only for an applicable current review",
+    "send captured digest in first serialized apply intention",
+    "keep that exact body on retry",
+    "clear captured digest on revoke, new review or definitive first-attempt validation rejection"
+  ],
+  "notApplied": true,
+  "localProductExecution": false
+}

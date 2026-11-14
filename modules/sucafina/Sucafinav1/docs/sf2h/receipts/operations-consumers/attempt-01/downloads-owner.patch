@@ -1,0 +1,32 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/downloads.ts b/modules/sucafina/Sucafinav1/runtime/downloads.ts
+--- a/modules/sucafina/Sucafinav1/runtime/downloads.ts
++++ b/modules/sucafina/Sucafinav1/runtime/downloads.ts
+@@ -202,8 +202,8 @@
+       return number === null ? "Unavailable" : number.toLocaleString("en-US", { minimumFractionDigits: 2 })
+     }
+     const lineRows = lines.map((line, index) => {
+-      const value = procurementMonetaryFacts({ ...request, po: { ...po, lines: [line] } }, text(settings.currency), settings)
+-      return `<tr><td>${index + 1}</td><td>${esc(text(line.desc ?? line.description))}</td><td>${recordedNumber(line.qty) ?? "Unavailable"}</td><td>${esc(text(line.uom ?? line.unit))}</td><td>${money(currency ? line.unitPrice : null)}</td><td>${money(currency ? value.original : null)}</td></tr>`
++      const value = purchaseOrderMoney({ ...request, po: { ...po, lines: [line] } }, settings)
++      return `<tr><td>${index + 1}</td><td>${esc(text(line.desc ?? line.description))}</td><td>${recordedNumber(line.qty) ?? "Unavailable"}</td><td>${esc(text(line.uom ?? line.unit))}</td><td>${money(currency ? line.unitPrice : null)}</td><td>${money(currency ? value?.original : null)}</td></tr>`
+     }).join("")
+     const baseCurrency = recordedCurrency(settings.currency)
+     const monetarySummary = `<p>Monetary state: ${esc(order?.monetaryState ?? "Unavailable")}. Current base amount: ${order?.baseAmount != null && baseCurrency ? `${money(order.baseAmount)} ${esc(baseCurrency)}` : "Unavailable"}. FX: ${recordedNumber(order?.validRate) ?? "Unavailable"} (${esc(order?.fxSource ?? "Unavailable")}). Submitted approval: ${order?.submittedAmount != null && order.submittedCurrency ? `${money(order.submittedAmount)} ${esc(order.submittedCurrency)}` : "Unavailable"}; submitted FX: ${recordedNumber(order?.submittedFxRate) ?? "Unavailable"}.</p>`
+@@ -240,11 +240,15 @@
+ }
+ function purchaseOrderMoney(request: Record<string, unknown>, settings: Record<string, unknown>) {
+   const lines = object(request.po).lines
++  const status = text(request.status)
+   // PO stages retain observed approval metadata even when lines are unavailable.
+   // An incidental PO in another stage must not borrow its quote or PR estimate.
+-  if (!["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(text(request.status)) &&
++  if (!["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(status) &&
+     (!Array.isArray(lines) || !lines.length || rows(lines).length !== lines.length)) return undefined
+-  return procurementMonetaryFacts(request, text(settings.currency), settings)
++  // A saved future PO is a separate estimate from the sourcing decision.
++  // This projection neither changes the request stage nor persists a new state.
++  const projection = ["sourcing", "src_pending", "src_rejected"].includes(status) ? { ...request, status: "po_draft" } : request
++  return procurementMonetaryFacts(projection, text(settings.currency), settings)
+ }
+ function csv(name: string, data: Record<string, unknown>[]): ArtifactResult {
+   const columns = [...new Set(data.flatMap((record) => Object.keys(record)))]

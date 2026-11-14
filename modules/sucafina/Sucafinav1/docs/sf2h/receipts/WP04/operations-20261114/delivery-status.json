@@ -1,0 +1,139 @@
+{
+  "schema": "astra-operations.delivery-status.v1",
+  "pullRequest": 34,
+  "branch": "astra-operations",
+  "target": "sf2-stack",
+  "draft": true,
+  "product": {
+    "label": "W5",
+    "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "receiptCommit": "Recorded by the PR head; this document cannot contain its own commit hash. A strict guards-only snapshot proves receipt-only delta from W5.",
+  "inputHeads": {
+    "PR23": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+    "PR26": "e7fd8ff797441681f360e7775155a8cc2830280c"
+  },
+  "criteria": {
+    "WP04": 111,
+    "WP06": 140,
+    "total": 251,
+    "tasks": 10,
+    "integrityReceipt": "delivery-criteria-integrity.json"
+  },
+  "readyForIncrementalS0Intake": true,
+  "allTypechecksPassed": false,
+  "allSelectedRunsPassed": false,
+  "formalAcceptance": {
+    "WP04": false,
+    "WP06": false,
+    "global": false
+  },
+  "observedW5": {
+    "checkRun": 43584394810,
+    "checkSnapshot": "70bfcae5a16f8a007ee95402976cd1534d4a2ca3",
+    "cliTypecheck": "PASS",
+    "sucafinaTypecheck": "FAIL_ONLY_EXTERNAL_ATLAS_CALLER",
+    "guards": {
+      "status": "PASS",
+      "rules": 78,
+      "paths": 772,
+      "gates": 0,
+      "warnings": 11,
+      "errors": 0
+    },
+    "testRun": 43584405211,
+    "testSnapshot": "9e1d872f453c218909d328b480ffaf8bed6f0c82",
+    "aggregate": "FAILURE",
+    "pass": 8,
+    "fail": 3,
+    "skip": 0,
+    "assertions": 190,
+    "ownedHostCases": "H01-H08 PASS",
+    "H09": "FAILED_AT_BROWSER_LEASE_BEFORE_HOST_OR_HTTP_ASSERTIONS",
+    "chromiumLifecycle": "NOT_PROVED",
+    "omni": {
+      "verdict": "PASS",
+      "spawns": 1,
+      "delegated": 0,
+      "nonce": "e73271f7e6e425831126deb297111537",
+      "scope": "Node driver spawn, not browser acquisition, UI or GNATIVE"
+    }
+  },
+  "consumerStatus": [
+    {
+      "id": "Procurement-C12",
+      "status": "SCOPED_COMPONENT_PASS_W5",
+      "finding": "Published CAS reconciliation restored while retaining review binding"
+    },
+    {
+      "id": "Procurement-C06-Collaboration",
+      "status": "SCOPED_COMPONENT_PASS_W5"
+    },
+    {
+      "id": "OPS-HOST-01",
+      "status": "CONSUMED_OWNER_AND_SCOPED_COMPONENT_PASS_W4"
+    },
+    {
+      "id": "OPS-HOST-01B",
+      "status": "CONSUMED_OWNER_AND_SCOPED_COMPONENT_PASS_W5_H01"
+    },
+    {
+      "id": "OPS-CONSUMER-03",
+      "status": "UI_OWNER_CODE_CONSUMED_H09_NOT_QUALIFIED",
+      "additionalBlocker": "Generic Dashboard/Planner three-field HTTP parser at W5 rejects reviewDigest; owner bundle binding remains required"
+    },
+    {
+      "id": "OPS-CONSUMER-02",
+      "status": "OWNER_CALLER_PATCH_PENDING",
+      "requirement": "Same authority/business WeakSet; preserve both Atlas scenarios; targeted test and typecheck"
+    },
+    {
+      "id": "OPS-NATIVE-UI-ACQUISITION",
+      "status": "OWNER_NATIVE_BLOCKER",
+      "finding": "findings/OPS-NATIVE-UI-ACQUISITION/README.md"
+    }
+  ],
+  "unqualifiedRequirements": {
+    "WP04HistoricalStatusCounts": {
+      "PASS_SCOPED": 97,
+      "BLOCKED_NATIVE": 10,
+      "NOT_RUN_HUMAN": 4
+    },
+    "WP06InputStatusCounts": {
+      "COMPONENT_EVIDENCED": 131,
+      "HISTORICAL_PARTIAL": 7,
+      "EXPLICIT_AM_PARTIAL": 2
+    },
+    "preservedSkips": 2,
+    "noRetroactiveHistoricalDeadlines": true,
+    "noNativeModelOrHumanAcceptanceInferred": true,
+    "globalOwner": "S0: integrate all work, required reviews, C/G7 D/G8 AM01-AM06, eight final selections and final-bundle epic"
+  },
+  "operations": {
+    "remoteChannel": "GitHub MCP",
+    "productExecution": "GitHub Actions only",
+    "localProductTests": false,
+    "localTypechecks": false,
+    "localGuards": false,
+    "groupEpic": false,
+    "mergePerformed": false
+  },
+  "documentationGuards": {
+    "D1": {
+      "sha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+      "tree": "6264ac2e186a1455dbd9ad5fce16b3c1030769be",
+      "runId": 43586114915,
+      "snapshot": "09bd92ba86dca618c398c893303f29d0902dc98e",
+      "conclusion": "FAILURE",
+      "finding": "12 raw .log outputs violate agent-scratch",
+      "rules": 78,
+      "paths": 847,
+      "gates": 12,
+      "warnings": 11,
+      "errors": 0
+    },
+    "correction": "Remove the 12 raw outputs, retain structured receipts and Actions log references/hashes, and rerun only strict receipt guards. No rule, product, source, test, fixture or workflow changes.",
+    "finalResult": "Recorded in the PR after the corrected immutable receipt commit is validated."
+  }
+}

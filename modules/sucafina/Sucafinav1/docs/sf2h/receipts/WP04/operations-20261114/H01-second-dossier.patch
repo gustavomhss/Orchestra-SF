@@ -1,0 +1,127 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts
+@@ -11,7 +11,7 @@
+ import { createApplication } from "../../../runtime/application.ts"
+ import type { Application } from "../../../runtime/application.ts"
+ import { openLocalStore } from "../../../runtime/local-store.ts"
+-import { object } from "../../../runtime/contract.ts"
++import { object, rows } from "../../../runtime/contract.ts"
+ import { domain } from "../../../runtime/procurement.ts"
+ import { initialProcurementSettings } from "../../../src/initial-settings.ts"
+ import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+@@ -74,6 +74,60 @@
+     const dossierAfter = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+     expect(dossierAfter).toEqual(dossierBefore)
+ 
++    await fixture.persistence.transaction("procurement", async (snapshot) => {
++      const store = object(snapshot.data.store)
++      object(store.settings).fxRates = [{ code: "USD", rate: 1 }, { code: "EUR", rate: 2 }]
++      object(object(object(store.requests)["PR-1"]).request).sourcing = {
++        selectedId: "B", selectionJustification: "Recorded Request choice", approvalBaseCurrency: "USD", fxSnapshot: { USD: 1, EUR: 1.08 },
++        quotes: [
++          { id: "A", supplier: "A", total: 32400, currency: "USD", techPass: true, scores: [5, 4, 4, 4, 4], cscores: [null, 4, 4] },
++          { id: "B", supplier: "B", total: 28000, currency: "EUR", techPass: true, scores: [4, 4, 4, 3, 4], cscores: [null, 5, 4] },
++        ],
++      }
++      return { commit: true, value: undefined }
++    })
++    await fixture.select()
++    const commercial = await fixture.business.individual.issue("procurement-request", "PR-1", call)
++    if (commercial.status !== "ok") throw new Error("commercial Request source unavailable")
++    const source = await fixture.business.sourcingEvidence(commercial.value, call)
++    if (source.status !== "ok") throw new Error(`real sourcing facts unavailable: ${source.reason}`)
++    const termsBefore = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++    const withTerms = await fixture.business.procurementDossier.prepare(commercial.value, call)
++    expect(withTerms.status).toBe("ok")
++    if (withTerms.status !== "ok") throw new Error(`commercial dossier unavailable: ${withTerms.reason}`)
++    expect(withTerms.value.sourcing).toEqual(source.value)
++    expect(withTerms.value.comparison).toEqual(source.value.comparison)
++    expect(withTerms.value.request.version).toBe(source.value.evidence.target.version)
++    expect(withTerms.value.request.context).toEqual(source.value.context)
++    expect(withTerms.value.request.values.length).toBeGreaterThan(0)
++    expect(withTerms.value.request.values.every((entry) => digestSfValue(entry.sourceRefs) === digestSfValue([source.value.evidence]))).toBe(true)
++    expect(withTerms.value.commercialSources.proposalTerms).toEqual({ status: "available", sourceRef: source.value.evidence,
++      offers: source.value.offers, submittedBaseCurrency: "USD", submittedFx: [{ from: "EUR", rate: 1.08 }, { from: "USD", rate: 1 }] })
++    expect(source.value.offers).toEqual([
++      { offerRef: "A", version: source.value.evidence.target.version, amount: 32400, currency: "USD", technicalPass: true },
++      { offerRef: "B", version: source.value.evidence.target.version, amount: 28000, currency: "EUR", technicalPass: true },
++    ])
++    expect(source.value.comparison?.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
++    expect(withTerms.value.explanation.selection).toMatchObject({ state: "recorded", proposalRef: "B", message: expect.stringContaining("Recorded Request choice") })
++    expect(withTerms.value.commercialSources.supplierRegister).toEqual({ status: "not-selected" })
++    expect(withTerms.value.draft).toMatchObject({ domainApplied: false, sourceRefs: [source.value.evidence] })
++    expect(await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))).toEqual(termsBefore)
++
++    let sourceChangedDuringReread = false
++    fixture.afterSourcingFactsRead(2, async () => {
++      sourceChangedDuringReread = true
++      await fixture.persistence.transaction("procurement", async (snapshot) => {
++        const sourcing = object(object(object(object(snapshot.data.store).requests)["PR-1"]).request).sourcing
++        rows(object(sourcing).quotes)[0]!.total = 99999
++        return { commit: true, value: undefined }
++      })
++    })
++    const changedDossier = await fixture.business.procurementDossier.prepare(commercial.value, call)
++    expect(sourceChangedDuringReread).toBe(true)
++    expect(changedDossier).toMatchObject({ status: "denied", reason: "access-changed" })
++    expect(changedDossier).not.toHaveProperty("value")
++    expect((await fixture.business.procurementDossier.prepare(commercial.value, call)).status).toBe("stale")
++
+     await fixture.edit({ description: "Unrelated description" })
+     expect(await confirmation.project(confirmed.value.id, call)).toMatchObject({ status: "ok", value: { state: "valid" } })
+     await fixture.edit({ title: "Materially changed subject" })
+@@ -85,7 +139,19 @@
+     const attached = await fixture.business.individual.issue("procurement-request", "PR-1", call)
+     if (attached.status !== "ok") throw new Error("attached Request source unavailable")
+     expect((await fixture.business.procurementDossier.prepare(attached.value, call)).status).toBe("unavailable")
+-    fixture.revoke("alice")
++    await fixture.persistence.transaction("procurement", async (snapshot) => {
++      object(object(object(object(snapshot.data.store).requests)["PR-1"]).request).attachments = []
++      return { commit: true, value: undefined }
++    })
++    const current = await fixture.business.individual.issue("procurement-request", "PR-1", call)
++    if (current.status !== "ok") throw new Error("current dossier Request source unavailable")
++    let revokedDuringReread = false
++    fixture.afterSourcingFactsRead(2, async () => { revokedDuringReread = true; fixture.revoke("alice") })
++    const revokedDossier = await fixture.business.procurementDossier.prepare(current.value, call)
++    expect(revokedDuringReread).toBe(true)
++    expect(revokedDossier).toMatchObject({ status: "denied", reason: "access-changed" })
++    expect(revokedDossier).not.toHaveProperty("value")
++    expect((await fixture.business.procurementDossier.prepare(current.value, call)).status).toBe("denied")
+     expect((await confirmation.project(confirmed.value.id, call)).status).toBe("denied")
+     expect((await fixture.business.context.resolve(issued.value.evidence, call)).state).toBe("unavailable")
+   } finally { await fixture.dispose() }
+@@ -408,7 +474,7 @@
+   const permitted = new Set(["alice", "bob"])
+   const origin = "https://local.invalid"
+   const sources = createSfSourcePersistence({ persistence: meteredStore, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at), createId: randomUUID })
+-  const scheduling: { afterReceipt?: () => Promise<void>; afterCaptured?: () => Promise<void> } = {}
++  const scheduling: { afterReceipt?: () => Promise<void>; afterCaptured?: () => Promise<void>; afterSourcingRead?: { remaining: number; work: () => Promise<void> } } = {}
+   const receiptCommits: { beforeCases: number; afterCases: number }[] = []
+   // This adapter changes only scheduling: both competing transactions commit through
+   // the same real lifecycle and SQLite store. It supplies no data or consumer result.
+@@ -419,6 +485,16 @@
+       const interleave = scheduling.afterCaptured
+       scheduling.afterCaptured = undefined
+       await interleave?.()
++    }
++    // The real source transaction has returned; only its next comparison/read is interleaved.
++    const facts = object(captured.value)
++    const sourcing = scheduling.afterSourcingRead
++    if (sourcing && surface === "procurement" && captured.status === "ok" && typeof facts.stage === "string" && Array.isArray(facts.offers) && facts.evidence) {
++      sourcing.remaining -= 1
++      if (sourcing.remaining === 0) {
++        scheduling.afterSourcingRead = undefined
++        await sourcing.work()
++      }
+     }
+     return result
+   }, transactionAll: async (work, options) => {
+@@ -513,6 +589,7 @@
+   return { authority, business, persistence, application, request, ui, select, storedCase, evidence: source.value.evidence, receiptCommits,
+     afterReceiptCommit: (work: () => Promise<void>) => { scheduling.afterReceipt = work },
+     afterApplyTargetCaptured: (work: () => Promise<void>) => { scheduling.afterCaptured = work },
++    afterSourcingFactsRead: (count: number, work: () => Promise<void>) => { scheduling.afterSourcingRead = { remaining: count, work } },
+     advance: (milliseconds: number) => { clock.at = new Date(Date.parse(clock.at) + milliseconds).toISOString() }, revoke: (actor: string) => { permitted.delete(actor) },
+     material: () => persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: { request: structuredClone(object(object(object(object(snapshot.data.store).requests)["PR-1"]).request)), version: structuredClone(snapshot.versions["requests:PR-1"]) } })),
+     edit: async (pr: Record<string, unknown>) => {

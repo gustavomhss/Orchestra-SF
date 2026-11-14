@@ -1,0 +1,4385 @@
+{
+  "schema": "astra-operations.wp06-candidate-evidence-appendix.v1",
+  "wp": "WP06",
+  "criterionCount": 140,
+  "baseMap": {
+    "path": "audit-wp06/operations-criteria-140.normalized.json",
+    "bytes": 278132,
+    "sha256": "de7b242968aac4cc55e777f80c863bc4b97dbd8eba95977d3e983cca7beeb521"
+  },
+  "appendOnly": true,
+  "wpFullyAccepted": false,
+  "canonical": {
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "handoffCommit": "a3d29d011ba3607a57914701300f09117a3e2de9"
+  },
+  "policy": [
+    "All 140 canonical criteria and exact text remain in the referenced immutable base map. This appendix adds observations; it does not overwrite original statuses, historical receipts or human obligations.",
+    "A run conclusion and each individual observation are separate. W1 aggregate remains failed despite 100 individual passes. W2 and W3 typecheck failures remain explicit.",
+    "Newer observations never promote an entire criterion or work package to accepted. Reuse beyond the recorded product SHA requires the scoped impact ledger.",
+    "The added dossier integration tests and owner consumer have no green result in this appendix. Their publication and validation must be appended after Actions."
+  ],
+  "checks": {
+    "OPS-CHECK-W1": {
+      "runId": 43578238861,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578238861",
+      "status": "completed",
+      "conclusion": "failure",
+      "product": {
+        "sha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "tree": "e7c36171c132009e34d4f870e5d300bab4a1c82a"
+      },
+      "snapshot": {
+        "sha": "a04e0ab099a568b25fe2385da0d50772f8278df0",
+        "tree": "0de3e8518c7f859978cddbb26a7e31b3d58b5151",
+        "parents": [
+          "de6959db82dbe48bd59e3d012ff668a86347a6cd"
+        ]
+      },
+      "checks": {
+        "sucafinaTypecheck": {
+          "conclusion": "failure",
+          "errors": [
+            "TS2741 test/product/wp14/source-access-atlas.test.ts:167 missing procurementEvidenceWrites"
+          ]
+        },
+        "cliTypecheck": {
+          "conclusion": "success"
+        },
+        "guards": {
+          "conclusion": "success",
+          "rules": 78,
+          "changedPaths": 712,
+          "gateFindings": 0,
+          "warnings": 11,
+          "errors": 0
+        }
+      },
+      "qualification": "Overall failed. CLI and guards passed independently; only foreign WP14 consumer caused the Sucafina typecheck failure.",
+      "receipt": {
+        "path": "audit-ci/operations-check-43578238861.json",
+        "bytes": 22654,
+        "sha256": "bddae189116a183bc893ea79a3d71d50cc89b08ff88d7a4c26ed57743cc8a55f"
+      },
+      "jobIds": [
+        132397139678
+      ],
+      "artifact": {
+        "id": 14107352748,
+        "name": "astra-operations-check-1",
+        "digest": "sha256:9660acb92cc9c28c8ad4d2cee6386d4d3df201258e6e0b423c6797396b5b5efd",
+        "size_in_bytes": 1579
+      }
+    },
+    "OPS-BUN43-W1": {
+      "runId": 43578845234,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578845234",
+      "status": "completed",
+      "conclusion": "failure",
+      "product": {
+        "sha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "tree": "e7c36171c132009e34d4f870e5d300bab4a1c82a"
+      },
+      "summary": {
+        "pass": 100,
+        "fail": 1,
+        "skip": 0,
+        "expectCalls": 2052,
+        "testCount": 101,
+        "fileCount": 43,
+        "durationSeconds": 797.75
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp04/capabilities.test.ts",
+          "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+          "Sucafinav1/test/product/wp04/confirmation.test.ts",
+          "Sucafinav1/test/product/wp04/contracts.test.ts",
+          "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "Sucafinav1/test/product/wp04/reissue.test.ts",
+          "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+          "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp04/queue-view.test.ts",
+          "Sucafinav1/test/product/wp01/personal-views.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+          "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "Sucafinav1/test/product/wp12/author-reader.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp13/handoff.test.ts",
+          "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+          "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+          "Sucafinav1/test/product/wp04/host-integration.test.ts",
+          "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+          "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+          "Sucafinav1/test/product/wp06/import-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+          "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/native/documents.test.ts",
+          "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+          "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts"
+        ],
+        "env": {},
+        "sha256": "751ea3c856857e764e3e8636c457e362eb0e426a1bd2b20cac4bef44728a6de9",
+        "blob": "8140cd4e48f193be9a60087b18eca3a00d0092dd",
+        "selectedFileCount": 43
+      },
+      "actualSelection": {
+        "fileCount": 43,
+        "missing": [],
+        "unexpected": [],
+        "empty": [],
+        "files": [
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+          "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "Sucafinav1/test/product/wp13/handoff.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+          "Sucafinav1/test/product/wp04/reissue.test.ts",
+          "Sucafinav1/test/product/wp04/capabilities.test.ts",
+          "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+          "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "Sucafinav1/test/product/wp04/contracts.test.ts",
+          "Sucafinav1/test/product/wp04/confirmation.test.ts",
+          "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+          "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+          "Sucafinav1/test/product/wp04/queue-view.test.ts",
+          "Sucafinav1/test/product/wp04/host-integration.test.ts",
+          "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "Sucafinav1/test/product/wp12/author-reader.test.ts",
+          "Sucafinav1/test/product/wp06/import-runtime.test.ts",
+          "Sucafinav1/test/product/wp01/personal-views.test.ts",
+          "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+          "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+          "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "Sucafinav1/test/product/wp06/native/documents.test.ts",
+          "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+          "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+          "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+          "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+          "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+          "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+          "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+        ]
+      },
+      "omni": {
+        "verdict": "not-applicable",
+        "nonce": "dd9c25dfcefd518e218d73fea9b39141",
+        "declaringTests": 0,
+        "spawns": 0,
+        "delegations": 0,
+        "raw": "omni positive control [dd9c25dfcefd518e218d73fea9b39141]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "qualification": "The complete hosted selection failed; 100 individual passes are scoped W1 observations, reusable only after impact review. Native import-analysis failed and is not accepted. No Omni proof, no group/global acceptance.",
+      "receipt": {
+        "path": "audit-ci/operations-bun43-final.json",
+        "bytes": 44485,
+        "sha256": "185e8b8cba8b71e20bfaab9394de60d374b826e36390de9a2e0292327db6635f"
+      },
+      "jobIds": [
+        132399004959,
+        132402624630
+      ],
+      "snapshot": {
+        "sha": "acd7f87c28c70a68bd75ab65bac6c05477f470fe",
+        "tree": "f99ffc12dabe8e2ee7e1a2d2e18bd127bc8d3009",
+        "parents": [
+          "de6959db82dbe48bd59e3d012ff668a86347a6cd"
+        ]
+      }
+    },
+    "OPS-CHECK-W2": {
+      "runId": 43580277793,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580277793",
+      "status": "completed",
+      "conclusion": "failure",
+      "product": {
+        "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "tree": "d780548f6058e08e555e0565f013b3b0054973da"
+      },
+      "snapshot": {
+        "sha": "ee2099e581eb4a6fc83283599763dd825c4a8ac4",
+        "tree": "9d7b605e49faf56f7cad31f087846d16351c171a",
+        "parents": [
+          "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+        ]
+      },
+      "checks": {
+        "envelope": "success",
+        "exactProduct": "success",
+        "guardBase": "success",
+        "sucafinaTypecheck": {
+          "conclusion": "failure",
+          "errors": [
+            {
+              "file": "product/procurement/decision-host.ts",
+              "line": 154,
+              "column": 293,
+              "code": "TS2345",
+              "reason": "TrustedDomainContext is not assignable to TrustedUiContext",
+              "ownership": "WP04"
+            },
+            {
+              "file": "test/product/wp11/case-port.test.ts",
+              "line": 225,
+              "column": 45,
+              "code": "TS2739",
+              "reason": "Missing reviewDigestFor and revalidateProducer",
+              "ownership": "Finance/WP11 consumer fixture"
+            },
+            {
+              "file": "test/product/wp14/source-access-atlas.test.ts",
+              "line": 167,
+              "column": 41,
+              "code": "TS2741",
+              "reason": "Missing procurementEvidenceWrites",
+              "ownership": "Intelligence/WP14; OPS-CONSUMER-02 patch pending"
+            }
+          ]
+        },
+        "cliTypecheck": {
+          "conclusion": "failure",
+          "errors": [
+            {
+              "file": "../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+              "line": 154,
+              "column": 293,
+              "code": "TS2345",
+              "reason": "TrustedDomainContext is not assignable to TrustedUiContext",
+              "ownership": "WP04"
+            }
+          ]
+        },
+        "guards": {
+          "conclusion": "success",
+          "rules": 78,
+          "changedPaths": 727,
+          "gateFindings": 0,
+          "warnings": 11,
+          "errors": 0
+        }
+      },
+      "qualification": "Both typechecks failed. Guards passed independently. No typecheck reuse baseline or component/global acceptance arises from this run.",
+      "receipt": {
+        "path": "audit-ci/operations-check2-43580277793.json",
+        "bytes": 5112,
+        "sha256": "2caa099dbe1791544261387ba587c3d4604ac6de7c7be455733ded90d0b19b77"
+      },
+      "jobIds": [
+        132403312862
+      ],
+      "artifact": {
+        "id": 14107882603,
+        "name": "astra-operations-check-1",
+        "digest": "sha256:eccc9e9e3738f57de2142d606d49fe6f18cb79949c86f22ac1abea5c1f62400c",
+        "size_in_bytes": 2125
+      }
+    },
+    "OPS-BROWSER-W2": {
+      "runId": 43580401528,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580401528",
+      "status": "completed",
+      "conclusion": "success",
+      "product": {
+        "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "tree": "d780548f6058e08e555e0565f013b3b0054973da"
+      },
+      "snapshot": {
+        "sha": "26726f85ce39819fcfa376daf1e6ebea203188b2",
+        "tree": "894b04fdaa5213758aa57430c13df0b090f6457f",
+        "parents": [
+          "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+        ]
+      },
+      "summary": {
+        "startTime": "2026-11-14T09:26:10.507Z",
+        "duration": 103659.9,
+        "expected": 30,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0,
+        "attemptCount": 30,
+        "retriedTests": 0
+      },
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/wp04/procurement.spec.ts",
+          "e2e/sucafina/wp06/imports.spec.ts",
+          "e2e/sucafina/wp06/documents.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts",
+        "sha256": "4560be8ad457182e3b3348825f39daabae4468c46824f079c043fb4080ce4b33",
+        "blob": "a659d0d1cab1ce14578e261808ef9fa38b8dd528"
+      },
+      "actualSelection": {
+        "files": [
+          "e2e/sucafina/wp04/procurement.spec.ts",
+          "e2e/sucafina/wp06/documents.spec.ts",
+          "e2e/sucafina/wp06/imports.spec.ts"
+        ],
+        "caseCount": 30,
+        "listedAndExecutedCaseIdsEqual": true,
+        "byFile": [
+          {
+            "file": "e2e/sucafina/wp04/procurement.spec.ts",
+            "tests": 8
+          },
+          {
+            "file": "e2e/sucafina/wp06/documents.spec.ts",
+            "tests": 8
+          },
+          {
+            "file": "e2e/sucafina/wp06/imports.spec.ts",
+            "tests": 14
+          }
+        ],
+        "listReportSkippedMeans": "The 30 skipped entries in --list JSON are discovery-only; runtime executed every case."
+      },
+      "omni": {
+        "verdict": "not-reported",
+        "nonce": "b1d52941d1e8d2aa5205dced92ace189",
+        "configuredMode": "suite",
+        "qualification": "The log records setup and nonce but no positive-control verdict; this browser run supplies no Omni acceptance evidence."
+      },
+      "qualification": "30 production-renderer browser cases passed at W2. These results do not certify native Omni, human timing/approval or global acceptance. Later changes require their own impact analysis.",
+      "receipt": {
+        "path": "audit-ci/operations-browser-43580401528.json",
+        "bytes": 53507,
+        "sha256": "023d0eb95313ae36ae404a5a59c27b51d84a76a338157e182441600e5851b210"
+      },
+      "jobIds": [
+        132403694001
+      ],
+      "artifact": {
+        "id": 14108775848,
+        "name": "playwright-ubuntu-24.04-1",
+        "digest": "sha256:eb747ff47369eaa6301947e3ef92b6c0977dff5b100e2f782448c70d751a5aab",
+        "verifiedSha256": "eb747ff47369eaa6301947e3ef92b6c0977dff5b100e2f782448c70d751a5aab",
+        "size_in_bytes": 1888979
+      }
+    },
+    "OPS-CHECK-W3": {
+      "runId": 43580747934,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580747934",
+      "status": "completed",
+      "conclusion": "failure",
+      "product": {
+        "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "tree": "a3ebf675545fadcd3124b387b15f396550652df8"
+      },
+      "snapshot": {
+        "sha": "3cf8e9327f344e85ccc4b8b2b88c2bf77470bd8e",
+        "tree": "af8226c4c64d89c040d7f486cf4a364525cdd8b5",
+        "parents": [
+          "d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+        ]
+      },
+      "checks": {
+        "envelope": "success",
+        "exactProduct": "success",
+        "guardBase": "success",
+        "sucafinaTypecheck": {
+          "conclusion": "failure",
+          "errors": [
+            {
+              "file": "test/product/wp14/source-access-atlas.test.ts",
+              "line": 167,
+              "column": 41,
+              "code": "TS2741",
+              "reason": "Missing procurementEvidenceWrites",
+              "ownership": "Intelligence/WP14; OPS-CONSUMER-02 owner patch pending"
+            }
+          ]
+        },
+        "cliTypecheck": {
+          "conclusion": "success",
+          "errors": []
+        },
+        "guards": {
+          "conclusion": "success",
+          "rules": 78,
+          "changedPaths": 732,
+          "gateFindings": 0,
+          "warnings": 11,
+          "errors": 0
+        }
+      },
+      "qualification": "Sucafina failed only at the documented Atlas fixture consumer. CLI and guards passed independently. CLI success may be reused for later changes outside the CLI input closure; the overall failed run and Sucafina failure remain explicit. No global acceptance.",
+      "receipt": {
+        "path": "audit-ci/operations-check3-43580747934.json",
+        "bytes": 4295,
+        "sha256": "655d4ae14e43a7af43bf9597fe513bdfd5c22ba7f9d858605b20c611963611d5"
+      },
+      "jobIds": [
+        132404768523
+      ],
+      "artifact": {
+        "id": 14107773891,
+        "name": "astra-operations-check-1",
+        "digest": "sha256:42b7470ecb760bd753cc80fe78b1cbe2a539d9791fac3e5ddc5f841f763efbbc",
+        "verifiedSha256": "42b7470ecb760bd753cc80fe78b1cbe2a539d9791fac3e5ddc5f841f763efbbc",
+        "size_in_bytes": 1579
+      }
+    },
+    "OPS-NATIVE-W3": {
+      "runId": 43580976466,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580976466",
+      "status": "completed",
+      "conclusion": "success",
+      "product": {
+        "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "tree": "a3ebf675545fadcd3124b387b15f396550652df8"
+      },
+      "snapshot": {
+        "sha": "c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01",
+        "tree": "31dd6b7d20177d4f6bfbf778ea1167e433bbdbce",
+        "parents": [
+          "d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+        ]
+      },
+      "summary": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "expectCalls": 123,
+        "testCount": 2,
+        "fileCount": 1,
+        "durationSeconds": 311.3
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+        ],
+        "env": {},
+        "sha256": "9d66a1145ac11d041b3f674fc320229ce710adbff21ec92eedd858f79b6ce02f",
+        "blob": "39fa5f7b8719bc542020d11abbdf13afb651aac6"
+      },
+      "actualSelection": {
+        "files": [
+          "Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+        ],
+        "fileCount": 1,
+        "selectedAndExecutedEqual": true
+      },
+      "omni": {
+        "verdict": "not-applicable",
+        "nonce": "3006e77114a37fdb4b42598611e825df",
+        "declaringTests": 0,
+        "spawns": 0,
+        "delegations": 0,
+        "raw": "omni positive control [3006e77114a37fdb4b42598611e825df]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "qualification": "The isolated exact file passed in hosted Actions with no request timeout override or fixture assertion change. The earlier W1 aggregate run remains failed. This confirms these Session/MCP/native-adapter component cases at W3, not Omni/model execution, human acceptance, or the global gate. No specific root cause for W1 slowness is inferred.",
+      "receipt": {
+        "path": "audit-ci/operations-native-43580976466.json",
+        "bytes": 9245,
+        "sha256": "8729c77e831ef9c041f87b9a16b771d15714d6e6357532b02ca141bcc6b20fc8"
+      },
+      "jobIds": [
+        132405428532,
+        132407107175
+      ]
+    }
+  },
+  "observations": {
+    "O001": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "preserved review survives changed projections and is denied after access revocation",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T102"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 311
+    },
+    "O002": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "comparison requires identity and a compatible period before calculating a delta",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T103"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1.48
+    },
+    "O003": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "preserved report exports every selected record from the captured projection",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T104"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 54.25
+    },
+    "O004": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "review capability denies a forged binding before selecting source data",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T105"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 0.87
+    },
+    "O005": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "financial trajectory exports a captured figure and the same data table in both formats",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T106"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 43.02
+    },
+    "O006": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "category charts paginate every captured value in both export formats",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T107"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 76.76
+    },
+    "O007": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "ticket flow chart keeps monthly entries as separate periods",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T108"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1.36
+    },
+    "O008": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "timeline export paginates resolved milestones and refuses fabricated completion",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T109"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 40.94
+    },
+    "O009": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "waterfall export uses resolved endpoints and marks a mismatched snapshot unavailable",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T110"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 59.78
+    },
+    "O010": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "capacity and cost charts require alignment and keep separate units",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T111"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 18.24
+    },
+    "O011": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T112"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 26.62
+    },
+    "O012": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "name": "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T114"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 152
+    },
+    "O013": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "name": "scenario and comparison results use the real case-scoped result store",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T115"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 24.42
+    },
+    "O014": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "name": "monthly UI authority previews and commits only valid current domain rows",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T116"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 24.06
+    },
+    "O015": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "name": "headcount projection follows domain visibility and increase preview is disposable",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T117"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 3.8
+    },
+    "O016": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "name": "forecast port compares the real engine, and detects source changes",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T118"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1288.13
+    },
+    "O017": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "name": "real Planner mutation and case receipt commit atomically across surfaces",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T120"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 48.91
+    },
+    "O018": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "name": "human-confirmed conditional choice persists its C10 caveat and provenance",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T121"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 15.48
+    },
+    "O019": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "name": "C10 complete coverage needs every category and fresh source resolution",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T122"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1
+    },
+    "O020": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "name": "human-approved prepared dashboard command and receipt commit together",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T123"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 41.23
+    },
+    "O021": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "name": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T124"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1.42
+    },
+    "O022": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "name": "persisted comparison results are scoped to current case, principal, and source access",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T125"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 17.28
+    },
+    "O023": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "name": "Procurement evidence is read through current source and domain ports",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T128"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 46.66
+    },
+    "O024": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "name": "prepares through the WP11 port only when the persisted human choice matches",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T129"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 2.77
+    },
+    "O025": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "name": "promotes the reviewed combination through the case domain only for a human",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T130"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1.58
+    },
+    "O026": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "name": "review digest ignores observation clocks but retains financial changes",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T131"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 0.23
+    },
+    "O027": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "name": "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T142"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 195513.33
+    },
+    "O028": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "name": "sourcing entry renders only attached authorized request selectors with the verified resident manifest and supplied catalog",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 18.87
+    },
+    "O029": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "name": "sourcing entry remains unavailable without a catalog, sourcing source or mounted analysis port",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 10.41
+    },
+    "O030": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "name": "sourcing input is mounted in the workbench and refuses absent runtime or an unrelated origin and path",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 2.47
+    },
+    "O031": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts",
+      "name": "reissue requires the recipient's current scope and the same physical request",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 197.26
+    },
+    "O032": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "name": "capability refuses forged arguments and refuses an ungranted direct call",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 0.61
+    },
+    "O033": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "name": "authorized capability reads through an issued scoped source and consumes once",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 166.53
+    },
+    "O034": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "name": "supplier export requires a consumed UI grant and preserves current scoped source failures",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 37.75
+    },
+    "O035": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "name": "durable queue selection, counts and drilldowns keep requester scope across unrelated changes",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 81.88
+    },
+    "O036": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "name": "sourcing comparison crosses the shared dispatcher with frozen money, criteria and a real UI receipt",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 90.51
+    },
+    "O037": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "name": "incomplete sourcing remains conditioned across the closed shared dispatcher and input verifier",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 544.48
+    },
+    "O038": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "name": "sourcing verifier checks current weights, manual requirements, evidence and offer eligibility",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 577.08
+    },
+    "O039": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "name": "revoked sourcing authority cannot reuse a prepared input or a dispatched comparison",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 102.15
+    },
+    "O040": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "name": "case-bound sourcing input crosses the real business composition and HTTP authority boundary",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 2312.13
+    },
+    "O041": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "name": "sourcing output verifier rejects non-ready envelopes and tampered replay material",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 410.28
+    },
+    "O042": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T143"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 69.58
+    },
+    "O043": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T144"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 55.99
+    },
+    "O044": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+      "name": "contract capability reads only the issued Dashboard scope and rejects revocation and ABA",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 67.44
+    },
+    "O045": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "name": "confirmation observes scoped material and fences against source changes and revoked authority",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 33.89
+    },
+    "O046": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "name": "confirmation reauthorizes material across buyers and fences physical replacement",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 94.91
+    },
+    "O047": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 54.48
+    },
+    "O048": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "name": "authorized Requests and My approvals render the actual C02 queue across baseline states",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 454.32
+    },
+    "O049": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "name": "the page fence refuses material changes and revocation between C02 preparation and rendering",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 258.04
+    },
+    "O050": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "name": "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1178.47
+    },
+    "O051": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "name": "real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 22193.57
+    },
+    "O052": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "name": "private original evidence is immutable and a replacement Request cannot revive historical facts or receipts",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 20680.24
+    },
+    "O053": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "name": "Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 527.66
+    },
+    "O054": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "name": "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 7416.27
+    },
+    "O055": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "name": "a durable application recovers after a lost commit response and cleared review cache",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 11243.76
+    },
+    "O056": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "name": "dashboard observation supports a human confirmation and another authorized reader",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T151"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 429.21
+    },
+    "O057": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "name": "author reader rechecks the real stored run, receipt, case, and current authority",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T152"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 31.62
+    },
+    "O058": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "name": "HTTP dispatch previews without domain writes, applies once, returns a receipt and denies revoked access",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T320"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 4619.46
+    },
+    "O059": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "name": "personal views isolate authenticated principals and reconcile exact retries",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T154"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 3675.91
+    },
+    "O060": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "name": "Workbench analysis HTTP enforces human authority and hides forged run references",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T155"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 2553.66
+    },
+    "O061": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "name": "Workbench analysis returns unavailable when its host services are absent",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T156"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 0.69
+    },
+    "O062": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "name": "blob generations survive ABA, removal and restart while rollback and forgery fail",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T158"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 33.13
+    },
+    "O063": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "name": "caught generation overflow cannot commit blob changes",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T159"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 16.44
+    },
+    "O064": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "product authority revalidates current surfaces without opening a nested transaction",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T165"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 8.44
+    },
+    "O065": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "human writes require their own action grant and cannot borrow a consumed read lease",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T166"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 15.82
+    },
+    "O066": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "human command admission binds exact action and payload and revokes on authority change",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T167"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 15.13
+    },
+    "O067": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "dashboard roles alone do not grant C08 or a business operation",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T168"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 12.98
+    },
+    "O068": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "private grants narrow namespaces and operations; role changes revoke existing UI authority",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T169"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 7.15
+    },
+    "O069": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "write requires current write authority and document targets do not accept unverified identifiers",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T170"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 13.47
+    },
+    "O070": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "native binding cannot be invented without a current stored run",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T171"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 13.82
+    },
+    "O071": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "a real C08 run and case still cannot bind a missing native Session",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T172"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 60.37
+    },
+    "O072": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "assignment and domain revocation invalidate authority without incorporating other principals",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T173"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 23.02
+    },
+    "O073": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "workspace target is limited to explicit creation namespaces and still requires current grant and write access",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T174"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 21.12
+    },
+    "O074": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "name": "identity mutation during authentication is denied",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T175"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 5.05
+    },
+    "O075": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "name": "cyclic case event resolution fails closed and releases the guard",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 7.54
+    },
+    "O076": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "name": "historical evidence keeps its original identity and requires authorized historical content",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 0.96
+    },
+    "O077": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "name": "recall rejects forged source versions after current authorization",
+      "status": "pass",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1.17
+    },
+    "O078": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "name": "txt real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T002"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 8976.62
+    },
+    "O079": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "name": "docx real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T003"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 10253.2
+    },
+    "O080": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "name": "pdf real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T004"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 11824.55
+    },
+    "O081": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "name": "real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T321"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 45877.49
+    },
+    "O082": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "name": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+      "status": "fail",
+      "linkedInputTestIds": [
+        "T322"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 300101.81
+    },
+    "O083": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "name": "SQLite Planner imports workbook bytes and rejects a stale preview without partial writes",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T193"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 77.94
+    },
+    "O084": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "name": "human workbook admission, Planner preview, atomic receipt and retry survive SQLite reopen",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T224"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1780.31
+    },
+    "O085": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "name": "human JSON restore keeps private state and returns the same receipt after source replacement",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T226"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 246.95
+    },
+    "O086": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "name": "Dashboard import fence checks the authenticated scoped incarnation and projection",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T227"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 8.44
+    },
+    "O087": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "name": "dataset restoration requires the current administrator-scoped source",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T228"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 0.93
+    },
+    "O088": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "name": "default Planner evidence preserves the real projection and refuses resealed, changed, replaced and revoked sources",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T229"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 270.48
+    },
+    "O089": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "name": "Planner evidence rechecks durable ABA and logout across its asynchronous coverage boundary",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T230"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 134.39
+    },
+    "O090": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "name": "Planner evidence refuses coverage failures and mutation of a reused coverage result",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T231"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 88.79
+    },
+    "O091": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+      "name": "import analysis choices read actual authorized cases and installed skills without needing a provider or changing the import",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T001"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1071.5
+    },
+    "O092": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "name": "Dashboard Members: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T323"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1933.23
+    },
+    "O093": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "name": "Dashboard Projects: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T324"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1605.16
+    },
+    "O094": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "name": "Dashboard Operations: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T325"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 1386.89
+    },
+    "O095": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "name": "real host persists procurement document evidence and Planner import under current authority",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T235"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 28902.41
+    },
+    "O096": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "name": "real host distinguishes admitted import analyses and invalidates them after actual Apply",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T236"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 31399.18
+    },
+    "O097": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "name": "real host fences roster ABA and preserves locked Planner positions during roster Apply",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T237"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 53166.31
+    },
+    "O098": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+      "name": "a confirmed document amount reaches the real Planner scenario through HTTP without copying, applying or surviving source revocation",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T247"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 3642.36
+    },
+    "O099": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "name": "txt real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T249"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 4030.01
+    },
+    "O100": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "name": "docx real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T250"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 4954.64
+    },
+    "O101": {
+      "checkId": "OPS-BUN43-W1",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "name": "pdf real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T251"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 5518.3
+    },
+    "O102": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "keyboard submission uses current entries and focuses the real 422 field without clearing the draft",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2204,
+          "errors": []
+        }
+      ]
+    },
+    "O103": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "two authenticated actors review an actual CAS conflict and submit only after an explicit version choice",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 4489,
+          "errors": []
+        }
+      ]
+    },
+    "O104": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "a stale approval preserves the typed comment and refuses to revive an action after cancellation",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 4293,
+          "errors": []
+        }
+      ]
+    },
+    "O105": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "a real committed save cannot clear edits typed before its response arrives",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2910,
+          "errors": []
+        }
+      ]
+    },
+    "O106": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "a recurring request reaches an internally issued PO with source values and negotiated entries preserved",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 17360,
+          "errors": []
+        }
+      ]
+    },
+    "O107": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "the A B C comparison shows score components and retains submitted FX in the real detail and queue",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 7742,
+          "errors": []
+        }
+      ]
+    },
+    "O108": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "an authorized bank change requires supplier revalidation and a real viewer cannot read or update bank details",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 5089,
+          "errors": []
+        }
+      ]
+    },
+    "O109": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "name": "settings reject invalid currencies with visible feedback and reset restores defaults without changing a submitted request",
+      "status": "expected",
+      "linkedInputTestIds": [],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 6935,
+          "errors": []
+        }
+      ]
+    },
+    "O110": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 real document renderer shows a candidate and source as data until explicit confirmation",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T298"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 747,
+          "errors": []
+        }
+      ]
+    },
+    "O111": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 real document renderer preserves an explicit stale refusal and removes unusable source content",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T299"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1006,
+          "errors": []
+        }
+      ]
+    },
+    "O112": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 dossier renderer exposes unit, revision, reference and literal source excerpt without confirming",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T300"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 493,
+          "errors": []
+        }
+      ]
+    },
+    "O113": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 dossier renderer invalidates selection after sourcing-dossier-read 403",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T301"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 729,
+          "errors": []
+        }
+      ]
+    },
+    "O114": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 dossier renderer invalidates selection after sourcing-dossier-read 409",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T302"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 707,
+          "errors": []
+        }
+      ]
+    },
+    "O115": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 dossier renderer invalidates selection after document-open 409",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T303"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 728,
+          "errors": []
+        }
+      ]
+    },
+    "O116": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 document scenario renderer submits references only after explicit preview and preserves conditional totals",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T304"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 384,
+          "errors": []
+        }
+      ]
+    },
+    "O117": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "name": "WP06 document scenario renderer removes prior result and source after a stale refusal",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T305"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 521,
+          "errors": []
+        }
+      ]
+    },
+    "O118": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: simulation, literal source content and cancel preserve inputs without Apply",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T306"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 835,
+          "errors": []
+        }
+      ]
+    },
+    "O119": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: stale Apply requires a new destination and explicit preview",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T307"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1217,
+          "errors": []
+        }
+      ]
+    },
+    "O120": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: failed preview detail cannot enable Apply before review",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T308"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 730,
+          "errors": []
+        }
+      ]
+    },
+    "O121": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: a receipt read failure retries without another Apply",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T309"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 876,
+          "errors": []
+        }
+      ]
+    },
+    "O122": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: rejected Apply displays a rejected receipt and disables replay",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T310"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 769,
+          "errors": []
+        }
+      ]
+    },
+    "O123": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: a stale analysis reference never claims an applied import",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T311"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 638,
+          "errors": []
+        }
+      ]
+    },
+    "O124": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: explicit Apply displays confirmed applied receipt",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T312"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 760,
+          "errors": []
+        }
+      ]
+    },
+    "O125": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 real renderer: explicit Apply displays confirmed unchanged receipt",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T313"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 761,
+          "errors": []
+        }
+      ]
+    },
+    "O126": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 optional sf-enquadrar-decisao starts from the exact reviewed file, preview and selected case",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T314"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 947,
+          "errors": []
+        }
+      ]
+    },
+    "O127": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 optional sf-explicar-forecast starts from the exact reviewed file, preview and selected case",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T315"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 956,
+          "errors": []
+        }
+      ]
+    },
+    "O128": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 missing analysis model preserves the independent reviewed Apply action",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T316"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 881,
+          "errors": []
+        }
+      ]
+    },
+    "O129": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 stale analysis preparation cannot start a session or consume the import Apply action",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T317"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 907,
+          "errors": []
+        }
+      ]
+    },
+    "O130": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 an uncertain analysis Start retries the exact admitted request and idempotency key",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T318"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1044,
+          "errors": []
+        }
+      ]
+    },
+    "O131": {
+      "checkId": "OPS-BROWSER-W2",
+      "file": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "name": "WP06 stale analysis output is removed while the deterministic preview remains visible",
+      "status": "expected",
+      "linkedInputTestIds": [
+        "T319"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1008,
+          "errors": []
+        }
+      ]
+    },
+    "O132": {
+      "checkId": "OPS-NATIVE-W3",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "name": "real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T321"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 37509.61
+    },
+    "O133": {
+      "checkId": "OPS-NATIVE-W3",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "name": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+      "status": "pass",
+      "linkedInputTestIds": [
+        "T322"
+      ],
+      "qualification": "OBSERVED_AT_THIS_PRODUCT_SHA_ONLY",
+      "durationMs": 272633.35
+    }
+  },
+  "criteria": [
+    {
+      "id": "WP06.DOD.01",
+      "observationIds": [
+        "O085",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.DOD.02",
+      "observationIds": [
+        "O058",
+        "O092",
+        "O093",
+        "O094",
+        "O120"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.DOD.03",
+      "observationIds": [
+        "O058",
+        "O084",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.DOD.04",
+      "observationIds": [
+        "O092",
+        "O093",
+        "O094",
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.DOD.10",
+      "observationIds": [
+        "O058",
+        "O078",
+        "O079",
+        "O080",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O099",
+        "O100",
+        "O101",
+        "O110",
+        "O111",
+        "O112",
+        "O113",
+        "O114",
+        "O115",
+        "O116",
+        "O117",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": true,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.DOD.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.INV.01",
+      "observationIds": [
+        "O058",
+        "O083",
+        "O118",
+        "O120"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.INV.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.INV.03",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.INV.10",
+      "observationIds": [
+        "O058",
+        "O078",
+        "O079",
+        "O080",
+        "O081",
+        "O082",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.INV.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.QLT.01",
+      "observationIds": [
+        "O118",
+        "O121",
+        "O122",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.QLT.02",
+      "observationIds": [
+        "O084",
+        "O121",
+        "O122",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.QLT.03",
+      "observationIds": [
+        "O119",
+        "O120"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.QLT.10",
+      "observationIds": [
+        "O058",
+        "O078",
+        "O079",
+        "O080",
+        "O081",
+        "O082",
+        "O084",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.QLT.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.CMP.01",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.CMP.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.CMP.03",
+      "observationIds": [
+        "O058",
+        "O092",
+        "O093",
+        "O094",
+        "O118",
+        "O119",
+        "O121",
+        "O122",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.CMP.04",
+      "observationIds": [
+        "O092",
+        "O093",
+        "O094",
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.CMP.10",
+      "observationIds": [
+        "O058",
+        "O078",
+        "O079",
+        "O080",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.CMP.40",
+      "observationIds": [
+        "O095",
+        "O096",
+        "O097",
+        "O099",
+        "O100",
+        "O101",
+        "O110",
+        "O111",
+        "O112",
+        "O113",
+        "O114",
+        "O115",
+        "O116",
+        "O117"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": true,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.SUC.01",
+      "observationIds": [
+        "O084",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.SUC.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.SUC.03",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.SUC.10",
+      "observationIds": [
+        "O058",
+        "O078",
+        "O079",
+        "O080",
+        "O081",
+        "O082",
+        "O092",
+        "O093",
+        "O094",
+        "O095",
+        "O096",
+        "O097",
+        "O099",
+        "O100",
+        "O101",
+        "O110",
+        "O111",
+        "O112",
+        "O113",
+        "O114",
+        "O115",
+        "O116",
+        "O117",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": true,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.SUC.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.CHK.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.CHK.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.CHK.03",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.CHK.04",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.CHK.05",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.DOD.01",
+      "observationIds": [
+        "O085",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.DOD.02",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.INV.01",
+      "observationIds": [
+        "O058"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.INV.02",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.INV.03",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.QLT.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.QLT.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.CMP.01",
+      "observationIds": [
+        "O085",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.CMP.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.SUC.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T01.SUC.02",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CHK.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CHK.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CHK.03",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CHK.04",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CHK.05",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CHK.18",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CHK.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.DOD.01",
+      "observationIds": [
+        "O092",
+        "O093",
+        "O094",
+        "O118"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.DOD.02",
+      "observationIds": [
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.DOD.18",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.DOD.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.INV.01",
+      "observationIds": [
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.INV.02",
+      "observationIds": [
+        "O058",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.INV.03",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.INV.18",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.INV.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.QLT.01",
+      "observationIds": [
+        "O118"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.QLT.02",
+      "observationIds": [
+        "O118"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.QLT.18",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.QLT.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CMP.01",
+      "observationIds": [
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CMP.02",
+      "observationIds": [
+        "O083"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CMP.18",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.CMP.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.SUC.01",
+      "observationIds": [
+        "O118",
+        "O120"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.SUC.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.SUC.18",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T02.SUC.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CHK.01",
+      "observationIds": [
+        "O058",
+        "O118"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CHK.02",
+      "observationIds": [
+        "O083",
+        "O092",
+        "O093",
+        "O094",
+        "O119"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CHK.03",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CHK.04",
+      "observationIds": [
+        "O084",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CHK.05",
+      "observationIds": [
+        "O083"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CHK.06",
+      "observationIds": [
+        "O084",
+        "O121",
+        "O122",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CHK.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.DOD.01",
+      "observationIds": [
+        "O058",
+        "O118",
+        "O119",
+        "O121",
+        "O122",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.DOD.02",
+      "observationIds": [
+        "O058",
+        "O083",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.DOD.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.INV.01",
+      "observationIds": [
+        "O058",
+        "O118",
+        "O120"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.INV.02",
+      "observationIds": [
+        "O083"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.INV.03",
+      "observationIds": [
+        "O084"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.INV.04",
+      "observationIds": [
+        "O085",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.INV.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.QLT.01",
+      "observationIds": [
+        "O119"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.QLT.02",
+      "observationIds": [
+        "O084",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.QLT.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CMP.01",
+      "observationIds": [
+        "O118",
+        "O119"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CMP.02",
+      "observationIds": [
+        "O084",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.CMP.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.SUC.01",
+      "observationIds": [
+        "O083",
+        "O119"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.SUC.02",
+      "observationIds": [
+        "O084",
+        "O092",
+        "O093",
+        "O094",
+        "O121",
+        "O122",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T03.SUC.60",
+      "observationIds": [
+        "O058",
+        "O081",
+        "O082",
+        "O084",
+        "O091",
+        "O095",
+        "O096",
+        "O097",
+        "O118",
+        "O119",
+        "O120",
+        "O121",
+        "O122",
+        "O123",
+        "O124",
+        "O125",
+        "O126",
+        "O127",
+        "O128",
+        "O129",
+        "O130",
+        "O131",
+        "O132",
+        "O133"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1",
+        "OPS-NATIVE-W3"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CHK.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CHK.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CHK.03",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CHK.04",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CHK.05",
+      "observationIds": [
+        "O092",
+        "O093",
+        "O094",
+        "O118",
+        "O119"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CHK.06",
+      "observationIds": [
+        "O058",
+        "O084",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.DOD.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.DOD.02",
+      "observationIds": [
+        "O058",
+        "O084"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.INV.01",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.INV.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.INV.03",
+      "observationIds": [
+        "O058",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.QLT.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.QLT.02",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CMP.01",
+      "observationIds": [
+        "O085",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CMP.02",
+      "observationIds": [
+        "O058",
+        "O092",
+        "O093",
+        "O094",
+        "O118",
+        "O119",
+        "O121",
+        "O122",
+        "O124",
+        "O125"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.CMP.03",
+      "observationIds": [
+        "O085"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.SUC.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T04.SUC.02",
+      "observationIds": [
+        "O058",
+        "O092",
+        "O093",
+        "O094"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CHK.01",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CHK.02",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CHK.03",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CHK.20",
+      "observationIds": [
+        "O095",
+        "O096",
+        "O097",
+        "O099",
+        "O100",
+        "O101",
+        "O110",
+        "O111",
+        "O112",
+        "O113",
+        "O114",
+        "O115",
+        "O116",
+        "O117"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": true,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CHK.18",
+      "observationIds": [
+        "O078",
+        "O079",
+        "O080"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CHK.19",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CHK.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.DOD.01",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.DOD.18",
+      "observationIds": [
+        "O078",
+        "O079",
+        "O080"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.DOD.19",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.DOD.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.INV.01",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.INV.18",
+      "observationIds": [
+        "O078",
+        "O079",
+        "O080"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.INV.19",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.INV.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.QLT.01",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.QLT.18",
+      "observationIds": [
+        "O078",
+        "O079",
+        "O080"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.QLT.19",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.QLT.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CMP.01",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CMP.18",
+      "observationIds": [
+        "O078",
+        "O079",
+        "O080"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CMP.19",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.CMP.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.SUC.01",
+      "observationIds": [
+        "O095",
+        "O096",
+        "O097",
+        "O098",
+        "O099",
+        "O100",
+        "O101",
+        "O110",
+        "O111",
+        "O112",
+        "O113",
+        "O114",
+        "O115",
+        "O116",
+        "O117"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2",
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": true,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.SUC.18",
+      "observationIds": [
+        "O078",
+        "O079",
+        "O080"
+      ],
+      "checkIds": [
+        "OPS-BUN43-W1"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.SUC.19",
+      "observationIds": [
+        "O110",
+        "O111"
+      ],
+      "checkIds": [
+        "OPS-BROWSER-W2"
+      ],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    },
+    {
+      "id": "WP06.T05.SUC.40",
+      "observationIds": [],
+      "checkIds": [],
+      "newDossierConsumerValidationPending": false,
+      "criterionAcceptance": "NOT_ASSERTED",
+      "canonicalAndHumanObligations": "UNCHANGED_FROM_BASE_MAP"
+    }
+  ],
+  "nativeReconciliation": {
+    "priorControl": "U20 at W20: same two cases passed; forecast/intent 234691.80ms.",
+    "failedCandidate": {
+      "checkId": "OPS-BUN43-W1",
+      "case": "T322",
+      "durationMs": 300101.81,
+      "status": "FAILED_AT_COOPERATIVE_300000MS_DEADLINE",
+      "assertionsAfterInterruption": "NOT_COMPLETED_OR_QUALIFIED"
+    },
+    "isolatedCandidate": {
+      "checkId": "OPS-NATIVE-W3",
+      "linkedInputTestIds": [
+        "T321",
+        "T322"
+      ],
+      "durationMs": [
+        37509.61,
+        272633.35
+      ],
+      "sameFixtureDeadlineMs": 300000,
+      "sameBunCaseTimeoutMs": 360000,
+      "assertionsOrBudgetChanged": false,
+      "result": "2_PASS_0_FAIL_0_SKIP_123_ASSERTIONS"
+    },
+    "diagnosis": {
+      "path": "audit-wp06/native-timeout-diagnosis.md",
+      "bytes": 5129,
+      "sha256": "334d9ba6da093343e0a0bec3e088bf6e5a53e705608a9363bcb25cadf40131f6"
+    },
+    "checkpointComparison": {
+      "path": "audit-wp06/native-U20-W1-comparison.json",
+      "bytes": 56927,
+      "sha256": "5e52c571e0b4ed5538a5e9c0f643d35d31d7ec8616557575744607e7fc50da50"
+    },
+    "conclusion": "The isolated actual Session/MCP/recorded-ingress component case now completed at W3. No specific cause of earlier slowdown is established; no native model/Omni/human/global qualification follows."
+  },
+  "reuse": {
+    "full81Ledger": {
+      "path": "audit-wp06/operations-impact-81.normalized.json",
+      "bytes": 569041,
+      "sha256": "8e0100e03c4253d5dc2afc0456b9dbd948b9d9753a53452ec91dde34535a7a1c"
+    },
+    "historicalClosures": {
+      "files": 31,
+      "passObservations": 137,
+      "skipsRetained": 2,
+      "qualification": "SCOPED_HISTORY_ONLY_AS_EXPLAINED_IN_LEDGER"
+    },
+    "additionalSelection": {
+      "path": "audit-wp06/additional-18-request.json",
+      "bytes": 1286,
+      "sha256": "98d7c59d307ca7807fa06c845529f4342ec004e55de00f049ff1ab3207198fc4"
+    },
+    "ownerDossierImpact": {
+      "path": "audit-wp06/owner-dossier-impact.json",
+      "bytes": 6656,
+      "sha256": "40a1e6e40600b45cb3fa270448d361288a3ed8d2ae6c44274937c27ef96ad863"
+    },
+    "browserW2": {
+      "checkId": "OPS-BROWSER-W2",
+      "wp06Imports": 14,
+      "wp06Documents": 8,
+      "wp04Procurement": 8,
+      "qualification": "All30 passed at W2; no retries/skips/flaky. The new dossier consumer and spec require the documents spec again. Imports and procurement are reusable only with the separate W2-to-final closure review.",
+      "wp06Screenshots": 0,
+      "omni": "NOT_REPORTED_NO_POSITIVE_VERDICT"
+    }
+  },
+  "ownerSeams": {
+    "OPS-HOST-01": {
+      "ownerProduct": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "consumerBlobs": {
+        "dossier-services.ts": "0a89225f73bfe1c458ac5530918609a063ae385d",
+        "dossier-workbench.ts": "aca602b5d5ea02c6cea88897c4c2110c6c9afe39"
+      },
+      "status": "OWNER_CODE_PUBLISHED_CONSUMED_LOCALLY_VALIDATION_PENDING",
+      "ownedTests": {
+        "path": "audit-wp06/patches/owner-dossier-tests/manifest.json",
+        "bytes": 828,
+        "sha256": "aaac2e9d2dabc85089d15ae23b5e13763321fe7bca48610f152d43b357e92c86"
+      }
+    },
+    "OPS-HOST-01B": {
+      "status": "OWNER_PATCH_PREPARED_NOT_YET_QUALIFIED",
+      "path": "audit-wp04/patches/OPS-HOST-01B"
+    },
+    "OPS-CONSUMER-02": {
+      "status": "WP14_OWNER_FIXTURE_PATCH_PENDING_IN_OPERATIONS",
+      "diagnostic": "TS2741 source-access-atlas.test.ts:167 missing procurementEvidenceWrites",
+      "latestCheckId": "OPS-CHECK-W3"
+    }
+  },
+  "limits": [
+    "No global GNATIVE result",
+    "No AM/human measurements",
+    "No installed scanner qualification",
+    "No model/provider execution inferred from prerecorded public ingress",
+    "S0 retains final all-work bundle epic and integration acceptance"
+  ]
+}

@@ -1,0 +1,481 @@
+--- a/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts
++++ b/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts
+@@ -17,13 +17,14 @@
+ import { createDecisionPreparedReview } from "../decisions/prepared-review.ts"
+ import { createSfPreparedApply } from "../decisions/prepared-apply.ts"
+ import { createPreparedExecution } from "../decisions/apply.ts"
++import { isReviewDigest, type AdmittedApply, type ReviewDigestFor } from "../decisions/receipt-review-binding.ts"
+ import { createProcurementC12Bridge } from "./c12.ts"
+ import { projectProcurementSource } from "./port.ts"
+ 
+ type ApplyRequest = Parameters<PreparedApplyPort["executePrepared"]>[0]
+ type MutationHost = Parameters<typeof createDecisionMutations>[0]
+ type BridgeInput = Parameters<typeof createProcurementC12Bridge>[0]
+-type ActiveApply = { context: TrustedDomainContext; bindingDigest: string; request: ApplyRequest; decision: DecisionCase; change: PreparedChange; actor: Actor; roleMapDigest: string; physicalIncarnation: string; environment: Environment }
++type ActiveApply = { context: TrustedDomainContext; bindingDigest: string; request: ApplyRequest; admitted: AdmittedApply; decision: DecisionCase; change: PreparedChange; actor: Actor; roleMapDigest: string; physicalIncarnation: string; environment: Environment }
+ type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
+ type ArchivedSource = { schema: "sf-procurement-evidence-v1"; evidence: RecordEvidence; projection: DomainProjection; scope: SfSourceScope; physicalIncarnation: string; projectionDigest: string; proofDigest: string }
+ 
+@@ -121,7 +122,7 @@
+     resolveChoiceValues: async () => ({ status: "unavailable", reason: "procurement-preparation-only" }),
+   })
+   const readReview = createDecisionPreparedReview({ state, host, cases: input.cases, reviewDomain: bridge.reviewDomain })
+-  const reviews = new Map<string, { changeDigest: string; expiresAt: number }>()
++  const reviews = new Map<string, { changeDigest: string; reviewDigest: string; expiresAt: number }>()
+   const reviewKey = (request: ApplyRequest, context: TrustedDomainContext) => digestSfValue({ request, installation: context.binding.installationId, project: context.binding.projectId, principal: context.binding.principalRef, access: context.binding.accessRevision, policy: context.binding.policyVersion })
+   const reviewChange = async (incoming: ApplyRequest, context: TrustedDomainContext) => {
+     const request = structuredClone(incoming)
+@@ -134,7 +135,8 @@
+     if (after.status !== "ok" || digestSfValue(after.value) !== digestSfValue(before.value) || !await host.revalidate(context)) return { status: "stale", reason: "prepared-review-changed" } as const
+     const expiresAt = Date.parse(input.now()) + 300_000
+     if (!Number.isFinite(expiresAt)) return { status: "unavailable", reason: "prepared-review-clock-unavailable" } as const
+-    reviews.set(reviewKey(request, context), { changeDigest: digestSfValue(before.value.change), expiresAt })
++    if (!isReviewDigest(review.value.reviewDigest)) return { status: "unavailable", reason: "prepared-review-proof-unavailable" } as const
++    reviews.set(reviewKey(request, context), { changeDigest: digestSfValue(before.value.change), reviewDigest: review.value.reviewDigest, expiresAt })
+     if (reviews.size > 512) reviews.delete(reviews.keys().next().value!)
+     return review
+   }
+@@ -144,6 +146,13 @@
+     const held = source ? active.get(source) : undefined
+     return held?.context === context && held.bindingDigest === digestSfValue(context.binding) && source && !source.signal.aborted ? held : undefined
+   }
++  // Only the active human intent supplies the producer proof to WP11. Initial
++  // application also checks the observed review; receipt replay checks its durable binding.
++  // WP11 changes state/receipt during reconciliation; the reviewed proposal must stay identical.
++  const reviewDigestFor: ReviewDigestFor = (context, request, change) => {
++    const held = current(context)
++    return held && isReviewDigest(held.admitted.reviewDigest) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue({ ...change, state: "planned", receipt: null }) === digestSfValue({ ...held.change, state: "planned", receipt: null }) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admitted)) ? held.admitted.reviewDigest : undefined
++  }
+   const validTarget = (snapshot: Snapshot, held: ActiveApply) => {
+     const target = held.change.target
+     const scopes = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === target.incarnation && entry.scope.recordType === target.type && entry.scope.recordId === target.id && entry.scope.principalRef === held.context.binding.principalRef && entry.scope.accessRevision === held.context.binding.accessRevision && entry.scope.policyVersion === held.context.binding.policyVersion)
+@@ -163,14 +172,14 @@
+   const authorizeReceipt: Parameters<typeof createSfPreparedApply>[0]["authorizeReceipt"] = async (receipt, lookup, context) => receipt.principalRef === context.binding.principalRef && receipt.surface === lookup.surface && receipt.targetIncarnation === lookup.targetIncarnation && receipt.idempotencyKey === lookup.idempotencyKey && receipt.commandDigest === lookup.commandDigest && await authorizeLookup(lookup, context)
+   const confirmHuman: Parameters<typeof createSfPreparedApply>[0]["confirmHuman"] = async (request, change, context) => {
+     const held = current(context)
+-    return !!held && digestSfValue(request) === digestSfValue(held.request) && digestSfValue(change.operation) === digestSfValue(held.change.operation) && await input.authority.human.authorize(context, "decisions.apply", request)
+-  }
+-  const prepared = createSfPreparedApply({ state, host, authorizeCase, authorizeLookup, authorizeReceipt, confirmHuman,
++    return !!held && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && await input.authority.human.authorize(context, "decisions.apply", held.admitted)
++  }
++  const prepared = createSfPreparedApply({ state, host, authorizeCase, authorizeLookup, authorizeReceipt, confirmHuman, reviewDigestFor,
+     resolveActor: (snapshot, context) => { const held = current(context); return held && validTarget(snapshot, held) ? structuredClone(held.actor) : undefined },
+     resolveMutation: bridge.resolveMutation,
+     verifyGrant: (snapshot, request, change, actor, context) => {
+       const held = current(context)
+-      return !!held && context.kind === "ui" && digestSfValue(actor) === digestSfValue(held.actor) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue(change.operation) === digestSfValue(held.change.operation) && validTarget(snapshot, held) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(request))
++      return !!held && context.kind === "ui" && digestSfValue(actor) === digestSfValue(held.actor) && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && validTarget(snapshot, held)
+     },
+     receiptVersion: bridge.receiptVersion,
+     environment: (context) => { const held = current(context); if (!held) throw new Error("Prepared execution unavailable"); return held.environment },
+@@ -184,15 +193,27 @@
+     const evidence: Extract<BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", kind: "receipt", refId: `sf-procurement-receipt:${encodeURIComponent(receipt.id)}`, installationId: context.binding.installationId, projectId: context.binding.projectId, evidenceLevel: "observed", refDigest: "", target: { surface: "procurement", receiptId: receipt.id, targetIncarnation: receipt.targetIncarnation, idempotencyKey: receipt.idempotencyKey, commandDigest: receipt.commandDigest, version: receipt.version } }
+     return { state: receipt.result.ok ? "applied" as const : receipt.result.status === 409 ? "conflict" as const : "failed" as const, evidence: { ...evidence, refDigest: digestSfEvidenceRef(evidence) } }
+   }
+-  const execute = createPreparedExecution({ state, host, apply: prepared, authorizeCase, operationIdentity: input.operationIdentity,
++  const execute = createPreparedExecution({ state, host, apply: prepared, authorizeCase, operationIdentity: input.operationIdentity, reviewDigestFor,
+     authorizeApplication: (request, change, context) => confirmHuman(request, change, context),
+-    confirmApplication: async (request, context) => !!current(context) && await input.authority.human.authorize(context, "decisions.apply", request),
++    confirmApplication: async (request, context) => { const held = current(context); return !!held && await confirmHuman(request, held.change, context) },
++    revalidateProducer: async (request, context) => {
++      const held = current(context)
++      if (!held || reviewDigestFor(context, request, held.change) !== held.admitted.reviewDigest) return { status: "denied", reason: "human-application-required" }
++      const review = await readReview(request, context)
++      if (review.status !== "ok") return review
++      const reviewed = reviews.get(reviewKey(request, context))
++      const checkedAt = Date.parse(input.now())
++      if (!reviewed || !Number.isFinite(checkedAt) || reviewed.expiresAt <= checkedAt || reviewed.changeDigest !== digestSfValue(held.change) || reviewed.reviewDigest !== held.admitted.reviewDigest) return { status: "denied", reason: "prepared-review-required" }
++      return review
++    },
+     classifyReceipt,
+   })
+-  const apply = async (incoming: ApplyRequest, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
+-    const request = structuredClone(incoming)
++  const apply = async (incoming: AdmittedApply, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
++    const admitted = structuredClone(incoming)
++    if (!isReviewDigest(admitted.reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
++    const request: ApplyRequest = { caseRef: admitted.caseRef, changeId: admitted.changeId, choiceId: admitted.choiceId }
+     const source = host.requestFor(context)
+-    if (!source || context.kind !== "ui" || active.has(source) || !await input.authority.human.authorize(context, "decisions.apply", request) || !await host.revalidate(context)) return { status: "denied", reason: "human-application-required" }
++    if (!source || context.kind !== "ui" || active.has(source) || !await input.authority.human.authorize(context, "decisions.apply", admitted) || !await host.revalidate(context)) return { status: "denied", reason: "human-application-required" }
+     const loaded = await readChange(request, context)
+     if (loaded.status !== "ok") return loaded
+     const reviewed = reviews.get(reviewKey(request, context))
+@@ -207,7 +228,7 @@
+       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: [], domains: [] }
+       const physical = snapshot.sfSources?.records[JSON.stringify([loaded.value.change.target.type, loaded.value.change.target.id])]
+       if (!physical?.alive) return { commit: false, value: undefined }
+-      const value: ActiveApply = { context, bindingDigest: digestSfValue(context.binding), request, ...loaded.value, actor, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), physicalIncarnation: physical.incarnation, environment }
++      const value: ActiveApply = { context, bindingDigest: digestSfValue(context.binding), request, admitted, ...loaded.value, actor, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), physicalIncarnation: physical.incarnation, environment }
+       return { commit: false, value: validTarget(snapshot, value) ? value : undefined }
+     }, { signal: source.signal })
+     if (!held || !await host.revalidate(context)) return { status: "denied", reason: "application-source-authority-unavailable" }
+@@ -217,6 +238,7 @@
+         const receipt = await prepared.readReceipt({ surface: held.change.target.surface, targetRef: held.change.target.id, targetIncarnation: held.change.target.incarnation, idempotencyKey: held.change.idempotencyKey, commandDigest: held.change.operation.commandDigest }, context)
+         if (receipt.status !== "ok") return receipt
+         if (receipt.value.state === "not-found" && (!reviewed || reviewed.expiresAt <= checkedAt || reviewed.changeDigest !== digestSfValue(loaded.value.change))) return { status: "denied", reason: "prepared-review-required" }
++        if (receipt.value.state === "not-found" && reviewed?.reviewDigest !== admitted.reviewDigest) return { status: "conflict", reason: "prepared-review-proof-mismatch" }
+       }
+       return await execute(request, context)
+     } finally { active.delete(source) }
+@@ -224,7 +246,7 @@
+   const authorizeReceiptTarget = async (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => {
+     const held = active.get(request)
+     const domain = host.persistence.currentSnapshots?.()?.procurement
+-    if (!held || current(held.context) !== held || !domain || targetRef !== held.change.target.id || authority.principalRef !== held.context.binding.principalRef || authority.accessRevision !== held.context.binding.accessRevision || authority.policyVersion !== held.context.binding.policyVersion || !validTarget(domain, held) || !await input.authority.human.authorize(held.context, "decisions.apply", held.request)) return undefined
++    if (!held || current(held.context) !== held || !domain || targetRef !== held.change.target.id || authority.principalRef !== held.context.binding.principalRef || authority.accessRevision !== held.context.binding.accessRevision || authority.policyVersion !== held.context.binding.policyVersion || !validTarget(domain, held) || !await input.authority.human.authorize(held.context, "decisions.apply", held.admitted)) return undefined
+     const decision = object(object(object(snapshot.data.__sfProductV1).cases)[held.decision.id])
+     const change = rows(decision.preparedChanges).filter((value) => value.id === held.change.id && value.choiceId === held.change.choiceId)
+     if (decision.id !== held.decision.id || decision.incarnation !== held.decision.incarnation || decision.version !== held.decision.version || !Array.isArray(decision.participants) || !decision.participants.includes(authority.principalRef) || change.length !== 1 || digestSfValue(change[0]) !== digestSfValue(held.change)) return undefined
+--- a/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts
++++ b/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts
+@@ -3,12 +3,14 @@
+ import type { TrustedUiContext } from "../contracts/sf-execution.ts"
+ import type { createSfHumanAuthority } from "../integration/human-authority.ts"
+ import { encodeCaseRef } from "../decisions/case-port.ts"
++import { isReviewDigest } from "../decisions/receipt-review-binding.ts"
+ import type { createProcurementDecisionHost } from "./decision-host.ts"
+ import { readProcurementBody } from "./http-body.ts"
+ 
+ type CaseRef = { id: string; incarnation: string; version: number }
+ type Decisions = ReturnType<typeof createProcurementDecisionHost>
+ type Apply = Parameters<Decisions["apply"]>[0]
++type Review = Parameters<Decisions["reviewChange"]>[0]
+ type Prepare = Parameters<Decisions["prepareChanges"]>[0]
+ 
+ /** Narrow HTTP adapter over the real Procurement/WP11 services and full human intent. */
+@@ -42,9 +44,10 @@
+       return await runtime.withCase(admitted.value, parsed.caseRef, { allowHistoricalRetry: mode !== "decision-review" }, async (): Promise<PortResult<Response>> => {
+         if (mode === "decision-prepare-changes" && "operations" in parsed) return { status: "ok", value: response(await runtime.decisions.prepareChanges(parsed, admitted.value)) }
+         if (!("changeId" in parsed)) return { status: "needs-input", reason: "invalid-decision-input" }
+-        const selected: Apply = { caseRef: parsed.caseRef, choiceId: parsed.choiceId, changeId: parsed.changeId }
++        const selected: Review = { caseRef: parsed.caseRef, choiceId: parsed.choiceId, changeId: parsed.changeId }
+         if (mode === "decision-review") return { status: "ok", value: response(await runtime.decisions.reviewChange(selected, admitted.value)) }
+-        const result = await runtime.decisions.apply(selected, admitted.value)
++        if (!("reviewDigest" in parsed)) return { status: "needs-input", reason: "invalid-decision-input" }
++        const result = await runtime.decisions.apply({ ...selected, reviewDigest: parsed.reviewDigest }, admitted.value)
+         return { status: "ok", value: result.status === "ok" ? response({ status: "ok", value: { receiptId: result.value.id, surface: result.value.surface, version: result.value.version, outcome: result.value.result.ok ? "applied" : result.value.result.status === 409 ? "conflict" : "failed" } }) : response(result) }
+       }).then((result) => result.status === "ok" ? result.value : response(result))
+     } catch {
+@@ -53,7 +56,7 @@
+   }
+ }
+ 
+-function parse(mode: string, value: unknown): Prepare | Apply | (Apply & { purpose: "review" }) | undefined {
++function parse(mode: string, value: unknown): Prepare | Apply | (Review & { purpose: "review" }) | undefined {
+   if (!object(value) || !caseRef(value.caseRef) || typeof value.choiceId !== "string" || !value.choiceId.trim()) return undefined
+   if (mode === "decision-prepare-changes") {
+     if (!closed(value, ["caseRef", "choiceId", "operations"])) return undefined
+@@ -62,7 +65,7 @@
+   }
+   if (typeof value.changeId !== "string" || !value.changeId.trim()) return undefined
+   if (mode === "decision-review") return closed(value, ["purpose", "caseRef", "choiceId", "changeId"]) && value.purpose === "review" ? { purpose: "review", caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId } : undefined
+-  return closed(value, ["caseRef", "choiceId", "changeId"]) ? { caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId } : undefined
++  return closed(value, ["caseRef", "choiceId", "changeId", "reviewDigest"]) && typeof value.reviewDigest === "string" && isReviewDigest(value.reviewDigest) ? { caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId, reviewDigest: value.reviewDigest } : undefined
+ }
+ 
+ function response(result: PortResult<unknown>, status?: number) {
+--- a/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts
+@@ -28,6 +28,7 @@
+ import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
+ import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
+ import { createProcurementDecisionHttp } from "../../../product/procurement/decision-http.ts"
++import { createProcurementDecisionHost } from "../../../product/procurement/decision-host.ts"
+ 
+ const period = { start: "2026-01-01", end: "2026-12-31" }
+ const initialAt = "2026-11-13T00:00:00Z"
+@@ -100,7 +101,8 @@
+     if (visible.status !== "ok") throw new Error(`prepared case unreadable: ${visible.reason}`)
+     expect(visible.value.case.preparedChanges[0]).not.toHaveProperty("operation")
+     expect(visible.value.case.preparedChanges[0]).toHaveProperty("operationRef")
+-    const noReview = await fixture.http("decision-apply", prepared.request)
++    expect((await fixture.http("decision-apply", prepared.request)).response.status).toBe(400)
++    const noReview = await fixture.http("decision-apply", { ...prepared.request, reviewDigest: digestSfValue({ purpose: "unobserved-review" }) })
+     expect(noReview.response.status).toBe(403)
+     expect(noReview.body.reason).toBe("prepared-review-required")
+     expect(object((await fixture.material()).request.pr).estAmount).toBe(100)
+@@ -110,8 +112,9 @@
+     expect(object(review.body.value).fields).toContainEqual(expect.objectContaining({ field: "originalAmount", before: 100, after: 150 }))
+     expect(object(review.body.value)).not.toHaveProperty("command")
+     expect(object(review.body.value)).not.toHaveProperty("operation")
++    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
+     fixture.advance(60_000)
+-    const applied = await fixture.http("decision-apply", prepared.request, "alice", "apply-one")
++    const applied = await fixture.http("decision-apply", application, "alice", "apply-one")
+     expect(applied.response.status).toBe(200)
+     expect(object(applied.body.value)).toMatchObject({ outcome: "applied", surface: "procurement", version: 1 })
+     expect(fixture.receiptCommits).toHaveLength(1)
+@@ -119,7 +122,7 @@
+     const after = await fixture.material()
+     expect(object(after.request.pr).estAmount).toBe(150)
+     expect(after.request.history).toEqual([expect.objectContaining({ action: "Saved", by: "alice", at: "2026-11-13T00:01:00.000Z" })])
+-    const retry = await fixture.http("decision-apply", prepared.request, "alice", "apply-one")
++    const retry = await fixture.http("decision-apply", application, "alice", "apply-one")
+     expect(retry.response.status).toBe(200)
+     expect(retry.body).toEqual(applied.body)
+     expect(await fixture.material()).toEqual(after)
+@@ -149,7 +152,7 @@
+     fixture.revoke("alice")
+     expect((await fixture.business.context.resolve(fixture.evidence, call)).state).toBe("unavailable")
+     expect((await fixture.business.context.resolve(receipt, call)).state).toBe("unavailable")
+-    expect((await fixture.http("decision-apply", prepared.request, "alice", "apply-one")).response.status).toBe(403)
++    expect((await fixture.http("decision-apply", application, "alice", "apply-one")).response.status).toBe(403)
+     expect(await fixture.material()).toEqual(after)
+   } finally { await fixture.dispose() }
+ // W5 measured 30.58s across prepare/review/apply/retry and multi-actor historical reads.
+@@ -181,8 +184,10 @@
+     expect(archivedAgain).toMatchObject({ status: "ok", value: before.value[key] })
+     const updated = readCaseRef(object(repeated.body.value).caseRef)
+     const chosen = { ...prepared.request, caseRef: updated }
+-    expect((await fixture.http("decision-review", { purpose: "review", ...chosen })).response.status).toBe(200)
+-    expect((await fixture.http("decision-apply", chosen)).response.status).toBe(200)
++    const review = await fixture.http("decision-review", { purpose: "review", ...chosen })
++    expect(review.response.status).toBe(200)
++    const application = { ...chosen, reviewDigest: readReviewDigest(review.body) }
++    expect((await fixture.http("decision-apply", application)).response.status).toBe(200)
+     const call = await fixture.ui("sf_case_read", { caseRef: encodeCaseRef(updated) })
+     const current = await fixture.business.cases.read({ caseRef: encodeCaseRef(updated) }, call)
+     if (current.status !== "ok") throw new Error(`applied case unavailable: ${current.reason}`)
+@@ -215,7 +220,7 @@
+     expect((await fixture.business.context.resolve(fixture.evidence, call)).state).toBe("unavailable")
+     expect((await fixture.business.context.resolve(receipt, call)).state).toBe("unavailable")
+     expect((await fixture.business.cases.read({ caseRef: encodeCaseRef(updated) }, call)).status).toBe("unavailable")
+-    expect((await fixture.http("decision-apply", chosen)).response.status).toBe(403)
++    expect((await fixture.http("decision-apply", application)).response.status).toBe(403)
+     expect((await fixture.material()).request).toEqual(saved.request)
+   } finally { await fixture.dispose() }
+ // W5 measured 23.97s for two preparations, archive guards and historical/ABA checks.
+@@ -226,13 +231,14 @@
+   try {
+     const prepared = await prepareChange(fixture)
+     const before = await fixture.material()
+-    for (const payload of [{ ...prepared.request, actor: "alice" }, { ...prepared.request, command: { page: "Requests", action: "delete" } }, { ...prepared.request, caseRef: { ...prepared.request.caseRef, version: "3" } }]) {
++    const application = { ...prepared.request, reviewDigest: digestSfValue({ purpose: "rejected-http-intent" }) }
++    for (const payload of [prepared.request, { ...application, reviewDigest: "invalid" }, { ...application, reviewDigest: null }, { ...application, actor: "alice" }, { ...application, command: { page: "Requests", action: "delete" } }, { ...application, caseRef: { ...prepared.request.caseRef, version: "3" } }]) {
+       expect((await fixture.http("decision-apply", payload)).response.status).toBe(400)
+     }
+-    expect((await fixture.http("decision-apply", prepared.request, "mallory")).response.status).toBe(403)
+-    const cross = await fixture.application(fixture.request("alice", "decision-apply", prepared.request, randomUUID(), { origin: "https://other.invalid" }))
++    expect((await fixture.http("decision-apply", application, "mallory")).response.status).toBe(403)
++    const cross = await fixture.application(fixture.request("alice", "decision-apply", application, randomUUID(), { origin: "https://other.invalid" }))
+     expect(cross?.status).toBe(403)
+-    const extraQuery = fixture.request("alice", "decision-apply", prepared.request)
++    const extraQuery = fixture.request("alice", "decision-apply", application)
+     const wrongQuery = new Request(`${extraQuery.url}&actor=alice`, extraQuery)
+     expect((await fixture.application(wrongQuery))?.status).toBe(400)
+     expect(await fixture.material()).toEqual(before)
+@@ -243,14 +249,16 @@
+   const fixture = await hostFixture("H05")
+   try {
+     const prepared = await prepareChange(fixture)
+-    expect((await fixture.http("decision-review", { purpose: "review", ...prepared.request })).response.status).toBe(200)
++    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(review.response.status).toBe(200)
++    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
+     fixture.afterReceiptCommit(async () => {
+       const current = await fixture.storedCase()
+       const changed = { ...current.value, version: current.value.version + 1, objective: "Concurrent authorized case edit" }
+       const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: changed.id, targetIncarnation: changed.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed) }, async (state) => { state.cases[changed.id] = changed; return { commit: true, value: true } })
+       if (saved.status !== "ok") throw new Error("concurrent real case edit failed")
+     })
+-    const conflict = await fixture.http("decision-apply", prepared.request)
++    const conflict = await fixture.http("decision-apply", application)
+     expect(conflict.response.status).toBe(409)
+     expect(conflict.body).toEqual({ status: "stale", reason: "case-changed-after-application" })
+     expect(fixture.receiptCommits).toHaveLength(1)
+@@ -267,7 +275,7 @@
+     expect(receipts.value).toHaveLength(1)
+     expect(receipts.value[0]).toMatchObject({ principalRef: "alice", surface: "procurement", version: 1 })
+     expect(receipts.value[0]!.result).toEqual({ ok: true, value: { status: "applied" } })
+-    expect((await fixture.http("decision-apply", prepared.request)).response.status).toBe(409)
++    expect((await fixture.http("decision-apply", application)).response.status).toBe(409)
+     expect(await fixture.material()).toEqual(after)
+     expect(fixture.receiptCommits).toHaveLength(1)
+   } finally { await fixture.dispose() }
+@@ -278,19 +286,27 @@
+   const fixture = await hostFixture("H06")
+   try {
+     const prepared = await prepareChange(fixture)
+-    expect((await fixture.http("decision-review", { purpose: "review", ...prepared.request })).response.status).toBe(200)
++    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(review.response.status).toBe(200)
++    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
+     fixture.afterReceiptCommit(async () => {
+       fixture.business.procurementDecisions.dispose()
+       throw new Error("injected response loss after the real SQLite receipt commit")
+     })
+-    const interrupted = await fixture.http("decision-apply", prepared.request, "alice", "recover-application")
++    const interrupted = await fixture.http("decision-apply", application, "alice", "recover-application")
+     expect(interrupted.response.status).toBe(503)
+     const afterCommit = await fixture.material()
+     expect(object(afterCommit.request.pr).estAmount).toBe(150)
+     expect(afterCommit.request.history).toHaveLength(1)
+     expect((await fixture.storedCase()).value.receipts).toEqual([])
+     expect(fixture.receiptCommits).toHaveLength(1)
+-    const recovered = await fixture.http("decision-apply", prepared.request, "alice", "recover-application")
++    fixture.advance(300_001)
++    const changedProof = await fixture.http("decision-apply", { ...application, reviewDigest: changedReviewDigest(application.reviewDigest) }, "alice", "recover-application")
++    expect(changedProof.response.status).toBe(409)
++    expect(changedProof.body).toEqual({ status: "conflict", reason: "review-proof-mismatch" })
++    expect(await fixture.material()).toEqual(afterCommit)
++    expect(fixture.receiptCommits).toHaveLength(1)
++    const recovered = await fixture.http("decision-apply", application, "alice", "recover-application")
+     expect(recovered.response.status).toBe(200)
+     expect(object(recovered.body.value)).toMatchObject({ outcome: "applied", version: 1 })
+     expect((await fixture.storedCase()).value.state).toBe("applied")
+@@ -305,7 +321,7 @@
+     })
+     // The actor and grants remain unchanged: physical continuity must be checked
+     // again after the host captures its target and before returning the receipt.
+-    const replaced = await fixture.http("decision-apply", prepared.request, "alice", "recover-application")
++    const replaced = await fixture.http("decision-apply", application, "alice", "recover-application")
+     expect(replacedAfterCapture).toBe(true)
+     expect(replaced.response.status).toBe(403)
+     expect(object((await fixture.material()).request.pr).estAmount).toBe(150)
+@@ -315,7 +331,61 @@
+ // W5 measured 15.30s including durable failure recovery and the receipt ABA interleave.
+ }, 30_000)
+ 
+-async function hostFixture(scenario: string) {
++test("C12 rejects another review proof, changed human intent and an expired observed review", async () => {
++  const fixture = await hostFixture("H07", true)
++  try {
++    const prepared = await prepareChange(fixture)
++    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(review.response.status).toBe(200)
++    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
++    const changed = { ...application, reviewDigest: changedReviewDigest(application.reviewDigest) }
++    const before = await fixture.material()
++    const mismatched = await fixture.http("decision-apply", changed)
++    expect(mismatched.response.status).toBe(409)
++    expect(mismatched.body).toEqual({ status: "conflict", reason: "prepared-review-proof-mismatch" })
++    const admitted = await fixture.authority.human.admit(fixture.request("alice", "decision-apply", application), "decisions.apply", application)
++    if (admitted.status !== "ok") throw new Error(`real human admission unavailable: ${admitted.reason}`)
++    try {
++      expect(await fixture.business.procurementDecisions.apply(changed, admitted.value)).toEqual({ status: "denied", reason: "human-application-required" })
++    } finally { fixture.authority.human.finish(admitted.value) }
++    fixture.advance(300_000)
++    const expired = await fixture.http("decision-apply", application)
++    expect(expired.response.status).toBe(403)
++    expect(expired.body).toEqual({ status: "denied", reason: "prepared-review-required" })
++    expect(await fixture.material()).toEqual(before)
++    expect(fixture.receiptCommits).toHaveLength(0)
++    const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
++    expect(receipts).toMatchObject({ status: "ok", value: [] })
++  } finally { await fixture.dispose() }
++}, 25_000)
++
++test("C12 rereads the real review producer before the first application and rejects a changed source", async () => {
++  const fixture = await hostFixture("H08")
++  try {
++    const prepared = await prepareChange(fixture)
++    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(review.response.status).toBe(200)
++    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
++    let changedAfterCapture = false
++    fixture.afterApplyTargetCaptured(async () => {
++      changedAfterCapture = true
++      await fixture.edit({ estAmount: 175 })
++    })
++    const rejected = await fixture.http("decision-apply", application)
++    expect(changedAfterCapture).toBe(true)
++    expect(rejected.response.status).toBe(409)
++    expect(rejected.body.status).toBe("stale")
++    const material = await fixture.material()
++    expect(object(material.request.pr).estAmount).toBe(175)
++    expect(material.request.history).toHaveLength(1)
++    expect(fixture.receiptCommits).toHaveLength(0)
++    const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
++    expect(receipts).toMatchObject({ status: "ok", value: [] })
++    expect((await fixture.storedCase()).value.preparedChanges[0]?.state).toBe("planned")
++  } finally { await fixture.dispose() }
++}, 25_000)
++
++async function hostFixture(scenario: string, controlledReviewClock = false) {
+   const started = performance.now()
+   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-procurement-host-"))
+   await chmod(directory, 0o700)
+@@ -394,7 +464,18 @@
+     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined, proposalCoverageWrites, procurementEvidenceWrites,
+     authorizePreparedTarget: (value, snapshot, targetRef, current) => mounted.business?.procurementDecisions.authorizeReceiptTarget(value, snapshot, targetRef, current) ?? Promise.resolve(undefined),
+   })
+-  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, procurementEvidenceWrites })
++  const services = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, procurementEvidenceWrites })
++  // The expiry case varies only the owned producer's clock. Its ports, grants,
++  // review producer, source fences and SQLite persistence are the real services.
++  const decisions = controlledReviewClock ? createProcurementDecisionHost({
++    host: { ...authority.host, ...services.registry, resolveRequestSource: services.resolveProcurement,
++      isCurrentRequestSource: (snapshot, evidence) => services.registry.isCurrentRequestSource(snapshot, evidence) || services.individual.isCurrent(snapshot, evidence),
++      resolveSupplierSource: services.individual.resolve, isCurrentSupplierSource: services.individual.isCurrent, readContractSource: services.contracts.readContractSource },
++    port: services.procurement, individual: services.individual, authority, procurementEvidenceWrites, cases: services.cases,
++    planner: services.planner, plannerSources: services.plannerSources, operationIdentity: services.operationIdentity,
++    readSourceFences: services.readSourceFences, lockedSourceFences: services.lockedSourceFences, createId: randomUUID, now: () => clock.at,
++  }) : services.procurementDecisions
++  const business = { ...services, procurementDecisions: decisions }
+   mounted.business = business
+   const root = path.resolve(import.meta.dir, "../../../product/ai")
+   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
+@@ -447,6 +528,7 @@
+       return { response, body: object(await response.json()) }
+     },
+     dispose: async () => {
++      if (controlledReviewClock) decisions.dispose()
+       business.dispose()
+       await store.dispose()
+       await rm(directory, { recursive: true, force: true })
+@@ -484,3 +566,13 @@
+   if (typeof ref.id !== "string" || typeof ref.incarnation !== "string" || typeof ref.version !== "number" || !Number.isSafeInteger(ref.version)) throw new Error("HTTP case reference invalid")
+   return { id: ref.id, incarnation: ref.incarnation, version: ref.version }
+ }
++
++function readReviewDigest(body: Record<string, unknown>) {
++  const digest = object(body.value).reviewDigest
++  if (typeof digest !== "string" || !/^[a-f0-9]{64}$/.test(digest)) throw new Error("real review producer digest unavailable")
++  return digest
++}
++
++function changedReviewDigest(digest: string) {
++  return `${digest[0] === "0" ? "1" : "0"}${digest.slice(1)}`
++}
+--- a/modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts
+@@ -11,6 +11,7 @@
+ import type { Actor } from "../../../runtime/contract.ts"
+ import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+ import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
++import { proposalReviewDigest } from "../../../product/decisions/receipt-review-binding.ts"
+ import type { DecisionCase, PreparedChange } from "../../../product/contracts/decisions.ts"
+ import type { ProductContext, SourceRef } from "../../../product/contracts/context.ts"
+ import { digestSfValue } from "../../../product/contracts/canonical.ts"
+@@ -270,6 +271,13 @@
+     return { commit: true, value: true }
+   })
+   if (caseSeed.status !== "ok") throw new Error("C08 case seed failed")
++  const applyRequest = { caseRef: { id: caseId, incarnation: caseIncarnation, version: 1 }, changeId, choiceId }
++  const observed = await bridge.reviewDomain(prepared.command, context)
++  if (observed.status !== "ok") throw new Error(`real Procurement review unavailable: ${observed.reason}`)
++  // This component fixture admits the real domain observation through WP11's
++  // canonical digest producer; the full human/review boundary is tested in host-integration.
++  const reviewDigest = proposalReviewDigest({ caseId, caseIncarnation, changeCaseVersion: change.caseVersion,
++    choiceDigest: digestSfValue(decision.choices[0]), change, fields: observed.value.fields, sourceRefDigest: observed.value.source.refDigest })
+   const scopes = new Map([[sourceRef.id, { scope: evidence.value.scope, evidence: evidence.value.evidence, target: sourceRef }]])
+   const apply = createSfPreparedApply({
+     state: productState,
+@@ -278,6 +286,7 @@
+     authorizeLookup: async (lookup, binding) => lookup.surface === "procurement" && lookup.targetRef === sourceRef.id && await ui.revalidate(binding as TrustedUiContext),
+     authorizeReceipt: async (receipt, lookup, binding) => receipt.principalRef === binding.binding.principalRef && receipt.surface === lookup.surface && receipt.idempotencyKey === lookup.idempotencyKey && await ui.revalidate(binding as TrustedUiContext),
+     confirmHuman: async (_incoming, _change, binding) => confirm && await ui.revalidate(binding as TrustedUiContext),
++    reviewDigestFor: (binding, incoming, selected) => binding === context && digestSfValue(incoming) === digestSfValue(applyRequest) && digestSfValue(selected) === digestSfValue(change) ? reviewDigest : undefined,
+     resolveActor: (_domainSnapshot, binding) => binding.binding.principalRef === actor.id && currentRole === "requester" ? actor : undefined,
+     resolveMutation: (domainSnapshot, selected, currentActor, binding) => {
+       const held = scopes.get(selected.target.id)
+@@ -309,7 +318,7 @@
+       idempotencyKey: prepared.command.idempotencyKey,
+       mutation: prepared.mutation,
+       snapshot,
+-      request: { caseRef: { id: caseId, incarnation: caseIncarnation, version: 1 }, changeId, choiceId },
++      request: structuredClone(applyRequest),
+     }),
+     dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
+   }

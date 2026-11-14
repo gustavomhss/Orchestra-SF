@@ -1,0 +1,14 @@
+{
+  "package": "app",
+  "directory": "packages/app-shell",
+  "runner": "playwright",
+  "args": [
+    "e2e/sucafina/wp04/procurement.spec.ts",
+    "e2e/sucafina/wp06/imports.spec.ts",
+    "e2e/sucafina/wp06/documents.spec.ts"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod"
+  },
+  "config": "e2e/playwright.production.config.ts"
+}

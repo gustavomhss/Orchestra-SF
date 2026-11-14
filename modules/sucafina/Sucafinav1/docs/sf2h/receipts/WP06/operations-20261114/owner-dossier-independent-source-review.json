@@ -1,0 +1,242 @@
+{
+  "schema": "astra-operations.independent-owner-dossier-review.v1",
+  "reviewer": "/root/wp04_audit",
+  "authorship": "Reviewer did not author the OPS-HOST-01 consumer patch or WP06 tests. Reviewer authored the separate, unapplied OPS-HOST-01B proposal; that proposal is not included in this review scope.",
+  "source_owner": "astra-compose",
+  "owner_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+  "owner_pr": 32,
+  "finding": "OPS-HOST-01",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "before": "cbdb8aed51f5c01f147181e968327cc5611d75ed",
+      "after": "0a89225f73bfe1c458ac5530918609a063ae385d",
+      "observed_blob": "0a89225f73bfe1c458ac5530918609a063ae385d",
+      "sha256": "cfdb70eb5668110081c4eac4f040f09bd2db0150c83fa686b2048e5613735bc9",
+      "matches_owner_mcp_blob": true,
+      "matches_original_patch_result": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "before": "e5170c5ef3cc8d18934684dfcd417f142c22d03b",
+      "after": "aca602b5d5ea02c6cea88897c4c2110c6c9afe39",
+      "observed_blob": "aca602b5d5ea02c6cea88897c4c2110c6c9afe39",
+      "sha256": "59384a9b2944f737b13df234cf8f3b9917ab7d1395b34e200803cfae61ba93d8",
+      "matches_owner_mcp_blob": true,
+      "matches_original_patch_result": true
+    }
+  ],
+  "source_verdict": "NO_NEW_MATERIAL_DEFECT_CONFIRMED_BY_STATIC_REVIEW",
+  "test_review_status": "COMPLETED_AT_FIXED_BLOBS_NO_NEW_MATERIAL_DEFECT_CONFIRMED",
+  "execution": "No local product execution, tests or typechecks. This is source and evidence review, not a passing CI receipt.",
+  "source_observations": [
+    {
+      "id": "D01",
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "symbols": [
+        "prepareProcurement"
+      ],
+      "finding": "The adapter passes sourcing: source.value from the real business.sourcingEvidence producer after requiring the Request projection version, ProductContext and every nonempty value source-ref list to match the producer evidence. Comparison comes from that same producer. No score, price, FX or winner is calculated by the consumer."
+    },
+    {
+      "id": "D02",
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "symbols": [
+        "revalidateProcurement",
+        "identity"
+      ],
+      "finding": "Every egress material reread includes the complete sourcing value in the equality digest, alongside request version, engine, context, each field source-ref list, comparison and limitations. Request numeric fields are bound through their source evidence/projection identity; clock-derived age is not independently treated as a material change."
+    },
+    {
+      "id": "D03",
+      "path": "modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+      "symbols": [
+        "prepareSourcingDossier",
+        "prepareDossierEvidence"
+      ],
+      "finding": "The consumed producer validates comparison identity, checks selected documents again, resolves document evidence twice, invokes retained document-reader authorization checks, and revalidates Procurement plus selected refs before output. Only confirmed document evidence enters draft.sourceRefs; rejected values are not returned as premises."
+    },
+    {
+      "id": "D04",
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "symbols": [
+        "sfDossierWorkbench",
+        "element",
+        "read"
+      ],
+      "finding": "New explanation, domain ranking, selection message, Request proposal facts, next steps and draft conditions/gaps are rendered through textContent. Supplier register stays explicitly not-selected. No ordering is interpreted as human choice and no command/confirmation control is introduced."
+    },
+    {
+      "id": "D05",
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "symbols": [
+        "entry.state === rejected"
+      ],
+      "finding": "Rejected evidence has its own explicit label and authorized field/reference metadata; this branch neither reads entry.evidence nor calls document-open nor displays a rejected value. Unavailable evidence remains a different branch."
+    },
+    {
+      "id": "D06",
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "symbols": [
+        "clearSelection",
+        "catch",
+        "document-open"
+      ],
+      "finding": "Any dossier read or source-open failure clears the rendered result and selection and disables Show dossier. Original-document links remain restricted to the same origin and pathname. The page is a snapshot, not a continuous revocation subscription."
+    },
+    {
+      "id": "D07",
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "symbols": [
+        "http"
+      ],
+      "finding": "GET-only routes retain closed query validation, admitted UI authority, no-store responses, initial validation and final host.revalidate. Current Request-document selection continues through createSfRequestDocumentEvidence and the actual document reader."
+    }
+  ],
+  "remaining_limits": [
+    {
+      "id": "OPS-HOST-01B",
+      "owner": "astra-compose",
+      "status": "PENDING_SEPARATE_CONSUMPTION",
+      "scope": "The second business.procurementDossier path still drops optional sourcing. This owner intake covers dossier-services/workbench only."
+    },
+    {
+      "id": "TESTS",
+      "status": "STATIC_REVIEW_COMPLETE_HOSTED_CI_PENDING",
+      "scope": "Both owned WP06 deltas were reviewed at fixed blobs. Run the changed real-runtime test and changed browser spec through GitHub Actions on the composed product pin. Prior browser/runtime passes do not qualify the changed consumer."
+    },
+    {
+      "id": "BROWSER_SCOPE",
+      "status": "EXPLICIT_SYNTHETIC_HTTP_FIXTURE",
+      "scope": "documents.spec.ts uses production renderer/script/CSP with intercepted synthetic HTTP data. It cannot prove producer, parser, SQLite, ACL or native behavior; dossier-runtime.test.ts covers actual services separately."
+    },
+    {
+      "id": "ACCEPTANCE",
+      "status": "NOT_PROMOTED",
+      "scope": "No native/Omni, human timing/comprehension, full WP acceptance or global bundle acceptance is supplied by this static review."
+    },
+    {
+      "id": "SOURCE_CHANGE_DISCRIMINATION",
+      "status": "BOUNDED_CLAIM",
+      "scope": "The real source-change test proves stale/authority fencing during egress, but does not isolate the added sourcing digest member from Request selector invalidation. Full sourcing membership in the equality identity is established by source inspection; do not claim a mutation test uniquely discriminates it."
+    },
+    {
+      "id": "RENDERER_REVOCATION",
+      "status": "SNAPSHOT_UI",
+      "scope": "The workbench clears data after a refused dossier read or document-open. It does not subscribe to revocation while idle; the review makes no continuous purge claim."
+    }
+  ],
+  "review_guidance": {
+    "app_shell_agents_read": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/app-shell/e2e/AGENTS.md"
+    ],
+    "playwright_official_guides_read": [
+      "https://playwright.dev/docs/best-practices",
+      "https://playwright.dev/docs/actionability",
+      "https://playwright.dev/docs/test-assertions",
+      "https://playwright.dev/docs/locators",
+      "https://playwright.dev/docs/network",
+      "https://playwright.dev/docs/browser-contexts"
+    ]
+  },
+  "overall_static_verdict": "SCOPED_STATIC_REVIEW_COMPLETE_HOSTED_VALIDATION_PENDING",
+  "producer": {
+    "path": "modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+    "blob": "ed88a6ff4f6c42eecfd80ba13824e8122fcc774e",
+    "owner_commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+    "reviewed_symbols": [
+      "prepareSourcingDossier",
+      "prepareDossierEvidence",
+      "explainSourcing"
+    ]
+  },
+  "baseline_test_commit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+  "test_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "before": "1f98172064c80a9e4b3ee053b95f008b979e5d01",
+      "after": "312eedee019b1118707a9024749bbdbc862b5976",
+      "observed_blob": "312eedee019b1118707a9024749bbdbc862b5976",
+      "sha256": "d0dd8f0e1b494f16c995230b1204e76ef06b8675a6e8ca61047fdc9fa6f10352",
+      "baseline_independently_fetched_via_github_mcp": true,
+      "scenario_count_after": 5,
+      "new_scenarios": 2,
+      "previous_scenarios_preserved": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "before": "4fbd2fc2dfab7308bba8df4dcef89cc95c23f762",
+      "after": "6d7322f9cac51c897c45211a4d69329df95d402c",
+      "observed_blob": "6d7322f9cac51c897c45211a4d69329df95d402c",
+      "sha256": "6cd45b5e982228811e1c58acaa7153e0161134c2404dc3dc6ad51a5b54069d60",
+      "baseline_independently_fetched_via_github_mcp": true,
+      "scenario_count_after": 8,
+      "new_scenarios": 0,
+      "previous_scenarios_preserved": true
+    }
+  ],
+  "test_observations": [
+    {
+      "id": "T01",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "scope": "REAL_HOST_PRODUCER_SQLITE_AUTH",
+      "finding": "The three pre-existing TXT/DOCX/PDF scenarios are retained without assertion removal. They cover real Request-document pending/confirmed flow, source replacement staleness and access revocation. The new scenarios supplement these, not replace them."
+    },
+    {
+      "id": "T02",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "scope": "REAL_SOURCING_SUCCESS",
+      "finding": "Two new parameterized scenarios construct real Request quotes and an empty authorized document namespace through actual state/source transactions. Positive HTTP output is compared with real business.sourcingEvidence: identical complete sourcing/comparison, Request version/context/every source-ref list, offers, Request source identity and recorded selection. Submitted EUR 1.08 is explicitly distinguished from current EUR 2; B converts to USD 30240 through the unchanged domain producer. Supplier register is explicitly not-selected, absent documents create a gap and a next step, and the read leaves the Procurement store unchanged."
+    },
+    {
+      "id": "T03",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "scope": "REAL_SOURCE_CHANGE_DURING_EGRESS",
+      "finding": "Only the timing wrapper is instrumented. On the second sourcingEvidence call it performs a real persisted quote edit and then calls the unchanged real producer. Dossier output is denied (403 with no value), exactly two source reads are observed, the persisted source actually changes, and a later GET with the former Request selector is stale (409). This proves the composed refusal path for a real changed source; it does not separately isolate the additional equality-digest sourcing member because current Request selection is invalidated first."
+    },
+    {
+      "id": "T04",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "scope": "REAL_LOGOUT_DURING_EGRESS",
+      "finding": "The second source call invokes real operator-identity logout (204), then calls the actual producer. The dossier and the next GET are denied (403 with no value); the Procurement store remains unchanged. This exercises loss of current authority rather than a boolean authorization stub."
+    },
+    {
+      "id": "T05",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "scope": "PRODUCTION_RENDERER_SYNTHETIC_HTTP",
+      "finding": "All eight existing browser scenarios remain. The positive dossier fixture adds a synthetic explanation, ranking A/B, separately recorded human choice B, Request offers/submitted FX, rejected evidence without a value and nextSteps/draft gaps. Assertions verify literal text, full displayed commercial terms, explicit Supplier register not-selected, rejected vs unavailable distinction, no rejected-document link/open, no confirmation/apply/winner controls, and no HTML injection."
+    },
+    {
+      "id": "T06",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "scope": "RENDERER_REFUSAL_AND_CLEARING",
+      "finding": "All three existing refused-read/source-open cases additionally require the new comparison, proposal-term, rejected-evidence and next-step sections to disappear. The entire Dossier region must be empty, selected Request cleared/disabled and Show disabled, followed by an explicit Request reload. HTTP call method/order is checked, each test owns its response state, and assertions use Playwright waiting locators without fixed sleeps or retrying mutations."
+    },
+    {
+      "id": "T07",
+      "file": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "scope": "ATTACHMENT_ONLY_PENDING_CI",
+      "finding": "A full-page PNG is attached after the positive behavior assertions. Its existence in source is not a screenshot verdict, native observation, human-comprehension result or Omni qualification; those depend on the future hosted run and their own acceptance requirements."
+    }
+  ],
+  "supporting_static_sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+      "commit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "blob": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+      "source": "GitHub MCP",
+      "reason": "Confirms USD base, five technical and three commercial criteria used by the real fixture; no settings/policy change applied."
+    }
+  ],
+  "proposed_hosted_selection": {
+    "bun": [
+      "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+    ],
+    "playwright": [
+      "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts"
+    ],
+    "dispatch": "Parent CI coordinator only; no run dispatched by reviewer. Typechecks/guards per applicable AGENTS and parent impact closure."
+  }
+}

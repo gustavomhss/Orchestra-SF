@@ -1,0 +1,11 @@
+{
+  "package": "app",
+  "directory": "packages/app-shell",
+  "runner": "playwright",
+  "args": [
+    "e2e/sucafina/wp04/procurement.spec.ts",
+    "e2e/sucafina/wp04/sourcing-controller.spec.ts"
+  ],
+  "env": {},
+  "config": "e2e/playwright.production.config.ts"
+}

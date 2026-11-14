@@ -1,0 +1,54 @@
+{
+  "schema": "astra-operations.final-owner-refresh.v1",
+  "operationsProduct": {
+    "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "consumedInputsUnchanged": {
+    "PR23": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+    "PR26": "e7fd8ff797441681f360e7775155a8cc2830280c"
+  },
+  "observations": {
+    "collaboration": {
+      "pr": 33,
+      "head": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "previous": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+      "commits": 2,
+      "changedPaths": 56,
+      "productPaths": 27,
+      "testPaths": 17,
+      "receiptPaths": 12,
+      "dossierBlob": "ed88a6ff4f6c42eecfd80ba13824e8122fcc774e",
+      "sourcingEvidenceBlob": "2eb9ee92719402d137aca96c4861c086c6526971",
+      "qualification": "Both consumed producer blobs unchanged. Broad Collaboration/routine/UI changes remain for S0 composition and impact analysis."
+    },
+    "compose": {
+      "pr": 32,
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "applyBlob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "operationsReconciledApplyBlob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "atlasBlob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+      "genericHttpBlob": "b1fca9569190eb42880387bd12c49dd769304522",
+      "qualification": "Operations CAS union still requires intake. Generic binding is published in owner but not integrated into Operations W5. Atlas file still has one scenario; preserve both Operations scenarios when fixing caller."
+    },
+    "finance": {
+      "pr": 35,
+      "head": "c80144bfa8e0097c6be189ff6dbdb85f4b37e2e7",
+      "applyBlob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "genericHttpBlob": "b1fca9569190eb42880387bd12c49dd769304522",
+      "qualification": "No owner intake of Operations CAS union observed."
+    },
+    "interface": {
+      "pr": 31,
+      "head": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+      "previous": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+      "commits": 2,
+      "newDriverBlob": "174a976308f00e604310b66fadf5fbf202808802",
+      "operationsDriverBlob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "qualification": "New driver adds bounded process/protocol launch diagnostics; does not establish a fixed acquisition or qualify H09. Not consumed or rerun in Operations."
+    }
+  },
+  "noCodeMutation": true,
+  "noNewProductRuns": true,
+  "formalAcceptance": false
+}

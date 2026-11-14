@@ -1,0 +1,60 @@
+name: astra-wp04-check
+
+on:
+  push:
+    branches: [astra-check-wp04]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: WP04 typecheck and guards
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact product commit
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Record product and guard base
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git fetch --no-tags origin dev:refs/remotes/origin/dev
+          mkdir -p "$RUNNER_TEMP/wp04-checks"
+          git rev-parse HEAD HEAD^{tree} origin/dev > "$RUNNER_TEMP/wp04-checks/revisions.txt"
+          cat "$RUNNER_TEMP/wp04-checks/revisions.txt"
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+      - name: Verify generated output contracts
+        working-directory: modules/sucafina/Sucafinav1
+        run: |
+          set -euo pipefail
+          bun product/contracts/generate-output-schemas.ts
+          bun product/contracts/generate-output-schemas.ts --check
+          cp product/contracts/output-schemas.ts "$RUNNER_TEMP/wp04-checks/output-schemas.ts"
+          git diff --exit-code -- product/contracts/output-schemas.ts
+      - name: Package typecheck
+        if: always() && steps.setup.outcome == 'success'
+        working-directory: modules/sucafina
+        run: |
+          set -o pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/wp04-checks/typecheck.log"
+      - name: Repository guards against origin/dev
+        if: always() && steps.setup.outcome == 'success'
+        run: |
+          set -o pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/wp04-checks/guards.log"
+      - name: Preserve check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: astra-wp04-checks
+          path: ${{ runner.temp }}/wp04-checks
+          if-no-files-found: error

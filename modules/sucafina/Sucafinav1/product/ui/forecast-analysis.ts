@@ -3,10 +3,14 @@ import type { SfHostServices } from "../contracts/host-context.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { esc } from "../../src/screen-shell.ts"
 
+export function analysisHistory(projection: AuthorizedCaseProjection) {
+  return `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}"><h3>Analysis history</h3><p role="status">Loading analysis history…</p><div data-results></div></section>`
+}
+
 /** The selections and source references are restricted to the authorized case. */
 export async function forecastAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
   if (!runtime.analyses) return "<p>Forecast analysis is currently unavailable.</p>"
-  const history = `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}"><h3>Analysis history</h3><p role="status">Loading analysis history…</p><div data-results></div></section>`
+  const history = analysisHistory(projection)
   if (!runtime.forecastInputs) return `${history}<p>Forecast analysis is currently unavailable.</p>`
   const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
   const skill = parent?.skills.find((item) => item.id === "sf-explicar-forecast")
@@ -17,10 +21,10 @@ export async function forecastAnalysisForm(projection: AuthorizedCaseProjection,
     profileId: parent.profile.id, profileVersion: parent.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: parent.manifestDigest,
     outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => parent.operationIds.includes(operation)), models }
   const options = sources.map((source, index) => `<option value="${esc(source.refId)}">Forecast source ${index + 1}${source.target.period ? ` · ${esc(source.target.period.start)} – ${esc(source.target.period.end)}` : ""}</option>`).join("")
-  return `${history}<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><label>Model<select name="model" required><option value="">Choose a model</option>${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status" aria-live="polite"></p></form></section>`
+  return `${history}<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><label>Model<select name="model" required><option value="">Choose a model</option>${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label><button type="submit">Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status" aria-live="polite"></p></form></section>`
 }
 
-export const forecastAnalysisScript = `
+export const analysisHistoryScript = `
 document.querySelectorAll('[data-analysis-history]').forEach((section) => {
   if (section.dataset.sfAnalysisHistoryReady) return; section.dataset.sfAnalysisHistoryReady = 'true'
   const status = section.querySelector('[role=status]')
@@ -68,10 +72,16 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
         catch { state.textContent += ' · Result unavailable or access changed.' }
       }
       if (runs.some((run) => ['preparing', 'queued', 'running'].includes(run.state))) timer = setTimeout(load, 3000)
-    } catch { output.replaceChildren(); status.textContent = 'Analysis history unavailable or access changed.' }
+    } catch {
+      if (!section.querySelector('form[data-dirty]')) output.replaceChildren()
+      status.textContent = 'Analysis history unavailable or access changed. Any unsaved reason is preserved.'
+    }
   }
   section.addEventListener('sf-analysis-refresh', load); load()
 })
+`
+
+export const forecastAnalysisScript = `
 document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
   if (form.dataset.sfForecastReady) return; form.dataset.sfForecastReady = 'true'
   const config = JSON.parse(form.dataset.config)

@@ -1,0 +1,76 @@
+{
+  "schema": "astra-operations.c12-cas-restoration-symbol-impact.v1",
+  "base_product": "644324778e4a21d22424515dd698d5b8d6c01893",
+  "base_producer_blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+  "proposed_producer_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+  "observed_run": 43582205250,
+  "job_id": 132409129729,
+  "aggregate_conclusion": "failure",
+  "scope": "Exact restoration hunk only; any other W5 runtime changes need their own caller closure. No local execution.",
+  "rows": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+      "decision": "RERUN_AFFECTED",
+      "call_path": [
+        "host-integration.http(decision-apply)",
+        "createProcurementDecisionHost.apply",
+        "createPreparedExecution",
+        "post-domain receipt classification/reconciliation"
+      ],
+      "why": "H02/H03 first applications, H05 concurrent case edit, H06 same-proof receipt recovery reach the restored block. H01 will additionally change to prove OPS-HOST-01B. Retain all eight test bodies and revalidate this selected file; the three failures remain historical observations until the corrected candidate passes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "sha256": "d03fd49e40bbbdaba425923237153c306622856cacf93b84928cf16f27f6950c",
+      "decision": "REUSE_W4_PASS_DIRECT_PORT_CLOSURE",
+      "call_path": [
+        "test",
+        "createSfPreparedApply.executePrepared/readReceipt"
+      ],
+      "why": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "blob": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb",
+      "sha256": "f24ff0e954254cefb82e5bbecb09c0e857382cb661f806c4ed9d2fdbd84256f0",
+      "decision": "REUSE_W4_PASS_DIRECT_PORT_CLOSURE",
+      "call_path": [
+        "test",
+        "createSfPreparedApply.executePrepared/readReceipt"
+      ],
+      "why": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "blob": "160df21d7dd44109c392cf213680629b6c26d450",
+      "sha256": "4e33961e339eeccce9c0f865dafc9a1676e22b6cc3bc2a9b098b32a936418cc9",
+      "decision": "REUSE_W4_PASS_DIRECT_PORT_CLOSURE",
+      "call_path": [
+        "test",
+        "createSfPreparedApply.executePrepared/readReceipt"
+      ],
+      "why": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "blob": "a8348b91ed8eb4483352e449b8bb37aef409b803",
+      "sha256": "05f037d91a3151006b64e5399364d6e31ffda935ea6c61076e39fe75d7abebf4",
+      "decision": "REUSE_W4_PASS_EARLY_RETURN_CLOSURE",
+      "call_path": [
+        "partial domain execution case",
+        "createPreparedExecution",
+        "receipt lookup / confirmation / apply-throws / unbound receipt checks"
+      ],
+      "why": "The only createPreparedExecution test has five attempts: unknown read→unavailable; unconfirmed→denied; revoked on confirmation→denied; synthetic domain writes then throws→domain-result-unknown; retry finds fake domain receipt without persisted review proof→review-proof-unbound. Every attempt returns before classification/post-domain reconciliation. Other file cases exercise separate pure/domain ports. The new hunk adds no import, parameter, module-level effect or change to those early branches.",
+      "scope": "Component negative fixture only; not proof of real review production, durable binding or successful reconciliation."
+    }
+  ],
+  "minimal_affected_bun": [
+    "Sucafinav1/test/product/wp04/host-integration.test.ts"
+  ],
+  "reusable_file_count": 4,
+  "qualification": "Reusable individual passed cases remain attributed to W4 and its failed aggregate; do not rename the run successful or substitute static analysis for first execution of changed code."
+}

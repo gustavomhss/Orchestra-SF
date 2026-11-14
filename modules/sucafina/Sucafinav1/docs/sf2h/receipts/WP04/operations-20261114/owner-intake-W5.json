@@ -1,0 +1,37 @@
+{
+  "schema": "astra-operations.published-owner-intake.v1",
+  "baseProduct": "644324778e4a21d22424515dd698d5b8d6c01893",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "from": "audit-wp04/patches/OPS-C12-CAS-REGRESSION/apply.proposed.ts",
+      "before": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "after": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "mode": "union of published PR23 post-domain reconciliation and Finance review-binding producer"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "from": "audit-ci/owner-refresh/OPS-HOST-01B/business-services.after.ts",
+      "before": "41a795e5a2c05600741e694efca19f0ab329db55",
+      "after": "9aee116a091c684ba467f81316d2fb915b3f8758",
+      "mode": "minimal published owner OPS-HOST-01B import, wrapper and two call sites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "from": "audit-ci/owner-refresh/ui-interface.ts",
+      "before": "3bee0f4326c1a65d3c0573695c3e4a1609b6c480",
+      "after": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "mode": "verbatim Interface published consumer",
+      "materializedBefore": "audit-ci/owner-refresh/ui-operations-w4.ts"
+    }
+  ],
+  "sourcePins": {
+    "casRestoration": {
+      "prior": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "finance": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b"
+    },
+    "dossier": "8f760659279567d2c169691c3e57cf19be10417d",
+    "ui": "a29565f763ddd90bc5bc3b8d298afb47ad84008d"
+  },
+  "qualification": "Source-reviewed intake only, pending affected hosted validation. No new shared feature or generic host change authored by Operations."
+}

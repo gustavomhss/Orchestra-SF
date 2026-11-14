@@ -1,0 +1,24 @@
+{
+  "schema": "astra-operations.owner-dossier-intake.v1",
+  "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+  "sourcePullRequest": 32,
+  "originalFinding": "OPS-HOST-01",
+  "consumption": "verbatim published owner files; no new out-of-ownership implementation",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "before": "cbdb8aed51f5c01f147181e968327cc5611d75ed",
+      "after": "0a89225f73bfe1c458ac5530918609a063ae385d"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "before": "e5170c5ef3cc8d18934684dfcd417f142c22d03b",
+      "after": "aca602b5d5ea02c6cea88897c4c2110c6c9afe39"
+    }
+  ],
+  "pending": [
+    "Affected consumer validation on new product pin",
+    "OPS-HOST-01B second business.procurementDossier consumer not included",
+    "Native/human/global acceptance not claimed"
+  ]
+}

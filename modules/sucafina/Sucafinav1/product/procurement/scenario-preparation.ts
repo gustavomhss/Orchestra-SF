@@ -10,8 +10,9 @@ import { prepareProcurementMutation } from "./prepared.ts"
 
 /** Translate only an explicitly selected, evidenced PR amount replacement. */
 export function createProcurementScenarioPreparation(input: { host: DomainPortHost; sources: ReturnType<typeof createProcurementSourceResolver> }) {
-  return async (selection: { operation: ScenarioOperation; choice: ChoiceRecord; operationId: string; idempotencyKey: string }, binding: TrustedDomainContext) => {
-    const operation = structuredClone(selection.operation)
+  return async (requestSelection: { operation: ScenarioOperation; choice: ChoiceRecord; operationId: string; idempotencyKey: string }, binding: TrustedDomainContext) => {
+    const selection = structuredClone(requestSelection)
+    const operation = selection.operation
     if (operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || !operation.currency || !operation.period) return { status: "needs-input" as const, reason: "explicit-requisition-amount-required" }
     if (!selection.choice.scenario.operations.some((candidate) => digestSfValue(candidate) === digestSfValue(operation))) return { status: "denied" as const, reason: "operation-not-in-choice" }
     const request = input.host.requestFor(binding)

@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h-test-composition-v1",
+  "ownership": "delegated existing published test overlap composition only",
+  "remoteMutation": false,
+  "productExecutedLocally": false,
+  "sourcePins": {
+    "wp04": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+    "wp06": "e7fd8ff797441681f360e7775155a8cc2830280c"
+  },
+  "decisions": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "variant": "06",
+      "reason": "WP06 retains the original saved-view flow and adds changed URL after refresh / saved-view restoration assertions and bounded browser launch diagnostics.",
+      "newComposedBlob": false,
+      "existingBlobVariants": [
+        "06"
+      ],
+      "inputBlobs": {
+        "04": "7e28a2d04e2cd9676d0e0b1e877e1bcac5c785e2",
+        "06": "3f5b97c87b09cca223581cfb9228270be6b32da6",
+        "Base": "cf1b08ea18fc00fec74654ffbea96ea5f7b52c8c"
+      },
+      "previousCandidateBlob": "3f5b97c87b09cca223581cfb9228270be6b32da6",
+      "resultBlob": "3f5b97c87b09cca223581cfb9228270be6b32da6",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "variant": "04",
+      "reason": "Equivalent scenario and expectation; WP04 explicitly rejects a non-record Forecast source before reading recordId.",
+      "newComposedBlob": false,
+      "existingBlobVariants": [
+        "04"
+      ],
+      "inputBlobs": {
+        "04": "9a8236fad4a5a8e6f36fa509c94d3d1064050b13",
+        "06": "49aa288b0ef6fcd90debecc0bfea0bfc4749eb15",
+        "Base": "d1dc95ad31f2fd042d72dcbeb340ba12bd5df79d"
+      },
+      "previousCandidateBlob": "49aa288b0ef6fcd90debecc0bfea0bfc4749eb15",
+      "resultBlob": "9a8236fad4a5a8e6f36fa509c94d3d1064050b13",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "variant": "04",
+      "reason": "Same existing SQLite review/export/revocation/tamper scenarios, retaining actual UI admission, persisted shape assertions, and equivalent byte comparisons.",
+      "newComposedBlob": false,
+      "existingBlobVariants": [
+        "04"
+      ],
+      "inputBlobs": {
+        "04": "4f3a2f9ca16548c863ce756f4c653ef7ae341f12",
+        "06": "8de5152664dbc0c68a0d7cab53d4b3a189136b05",
+        "Base": "427f322788d519f06d337aae3469cc79d0a57107"
+      },
+      "previousCandidateBlob": "8de5152664dbc0c68a0d7cab53d4b3a189136b05",
+      "resultBlob": "4f3a2f9ca16548c863ce756f4c653ef7ae341f12",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "variant": "04",
+      "reason": "WP04 asserts the complete pending and not-applicable partitions and all unsupported-scope reasons; these include WP06 narrower category assertions.",
+      "newComposedBlob": false,
+      "existingBlobVariants": [
+        "04"
+      ],
+      "inputBlobs": {
+        "04": "70441c630d5ff61836b3de2c937aac8bd500be29",
+        "06": "8316465164821b543fe5b1a631541e2253799573",
+        "Base": "ee19e33048f68984fe6e0fbdc215412a37cbcfa8"
+      },
+      "previousCandidateBlob": "8316465164821b543fe5b1a631541e2253799573",
+      "resultBlob": "70441c630d5ff61836b3de2c937aac8bd500be29",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "variant": "04",
+      "reason": "Same existing atomic Planner Apply assertions with source lifecycle initialized for all three existing surfaces.",
+      "newComposedBlob": false,
+      "existingBlobVariants": [
+        "04"
+      ],
+      "inputBlobs": {
+        "04": "cd5a0de4a3af51f064b69b538d5a619d09f3ebdc",
+        "06": "c64ba46b7276558201080d09d2e75df82d5cef55",
+        "Base": "7925f873f6638dc02e9d823912699edd48745e82"
+      },
+      "previousCandidateBlob": "c64ba46b7276558201080d09d2e75df82d5cef55",
+      "resultBlob": "cd5a0de4a3af51f064b69b538d5a619d09f3ebdc",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "variant": "04",
+      "reason": "Identical stored-run/receipt/current-authority assertions; case state, objective and horizon differ only as fixture values and the reader does not branch on them.",
+      "newComposedBlob": false,
+      "existingBlobVariants": [
+        "04"
+      ],
+      "inputBlobs": {
+        "04": "6a05fe2a6df7f4e0570dfd04440f69cb2ab8495b",
+        "06": "657d0953b68ac355c1247b8f842dda6fcea1e31d",
+        "Base": "4038c152a9c3483d66b7f4a60fa1b9231fe92ba7"
+      },
+      "previousCandidateBlob": "657d0953b68ac355c1247b8f842dda6fcea1e31d",
+      "resultBlob": "6a05fe2a6df7f4e0570dfd04440f69cb2ab8495b",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "variant": "04+06",
+      "reason": "WP04 retains absent-FX evidence assertion, transactionAll guard and richer existing checkpoints; adopts WP06 existing 360000ms timeout. No new product scenario.",
+      "newComposedBlob": true,
+      "existingBlobVariants": [],
+      "inputBlobs": {
+        "04": "2252ba887bff0a963d3ebad69b7943a77b310d43",
+        "06": "b90ef3d0f067c082876d535c6ab5fd7d4a68550f",
+        "Base": "242d6c499afd338e2339004ad02a203fc38a7fe4"
+      },
+      "previousCandidateBlob": "b90ef3d0f067c082876d535c6ab5fd7d4a68550f",
+      "resultBlob": "360806db367feca8c8dc199d3739632e72767ed9",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "variant": "06",
+      "reason": "WP06 preserves issuance/resolution/read/revocation assertions and additionally uses the full source scope projector and asserts physical source identity.",
+      "newComposedBlob": false,
+      "existingBlobVariants": [
+        "06"
+      ],
+      "inputBlobs": {
+        "04": "dd59251e9e82d74d072b8aa178254952f691493b",
+        "06": "c906976e26b1fa182dd4532b68d32c3831fc17f2",
+        "Base": "9506535855a0b2bc8546d37df668f89a765c4057"
+      },
+      "previousCandidateBlob": "c906976e26b1fa182dd4532b68d32c3831fc17f2",
+      "resultBlob": "c906976e26b1fa182dd4532b68d32c3831fc17f2",
+      "newScenario": false,
+      "validation": "No local execution. Previous source receipts remain source-specific; group candidate and composed sensitivity timeout require root impact-based hosted CI qualification."
+    }
+  ]
+}

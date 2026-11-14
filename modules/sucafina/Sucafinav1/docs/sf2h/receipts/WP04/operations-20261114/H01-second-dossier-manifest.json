@@ -1,0 +1,44 @@
+{
+  "schema": "astra-operations.owned-dossier-consumer-proof.v1",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+  "base_product": "644324778e4a21d22424515dd698d5b8d6c01893",
+  "before": {
+    "blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+    "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+    "bytes": 46778
+  },
+  "after": {
+    "blob": "b65dc1e315f88dd535881b1f8a895661e95e485b",
+    "sha256": "e4ae25d909719b84d26b7926963520b4e858f8d5629264afa0766d4111261c06",
+    "bytes": 52614
+  },
+  "related_finding": "OPS-HOST-01B",
+  "producer_owner_commit": "8f760659279567d2c169691c3e57cf19be10417d",
+  "scenario_count": 8,
+  "all_original_titles_preserved": true,
+  "changed_scenario": "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+  "new_positive_proof": [
+    "Original no-comparison/limitations/empty-documents read-only scenario retained.",
+    "Real persisted Request quotes A/B, submitted EUR1.08 vs current EUR2, actual source producer B convertedUSD30240.",
+    "Dossier sourcing/comparison equal actual producer; Request version/context/every value sourceRefs match same source evidence.",
+    "Request terms include exact offers, submitted base/FX and source; Supplier register not-selected; selectedB message carries recorded justification.",
+    "Procurement snapshot before/after successful dossier read unchanged; no fabricated consumer result."
+  ],
+  "new_negative_proof": [
+    "After the second real source facts transaction returns, mutate quote A through same lifecycle/SQLite store before its comparison/reread. Require actual callback, denied/access-changed, no value, and stale subsequent old-selector call.",
+    "Retain attached document without extraction unavailable scenario.",
+    "Clear attachment fixture, issue current real source, and revoke fixture principal after second actual source facts read. Require callback, denied/access-changed with no value, subsequent denial, and existing C06/context denial."
+  ],
+  "timing_seam": "Test fixture persistence adapter changes only scheduling after committed/read source transactions. It forwards original producer results; no stub authority boolean returned and no sourcing payload invented. Principal auth is the existing deterministic local test authority, not operator-login native proof.",
+  "limits": [
+    "This verifies the business.procurementDossier path, distinct from CLI dossier-services.",
+    "Mutation invalidates current source ref before/comparison and tests composed refusal; it does not isolate sourcing equality member alone.",
+    "The fixture seeds controlled quotes in its editable Request; this does not claim the legal sourcing approval journey, covered separately by existing domain/browser evidence.",
+    "No local product execution or hosted PASS yet.",
+    "No native, human or global qualification."
+  ],
+  "selection": [
+    "Sucafinav1/test/product/wp04/host-integration.test.ts"
+  ],
+  "file_freeze": "No further edits planned until independent reviewer feedback or affected hosted result."
+}

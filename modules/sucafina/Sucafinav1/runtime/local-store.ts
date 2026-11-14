@@ -157,8 +157,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       requireScope(scope)
       const snapshots = scope.root.snapshots
       if (!snapshots.dashboard || !snapshots.planner || !snapshots.procurement) throw new Error("Local transaction snapshots unavailable")
-      return { dashboard: decodeSnapshot(encodeSnapshot(snapshots.dashboard)), planner: decodeSnapshot(encodeSnapshot(snapshots.planner)),
-        procurement: decodeSnapshot(encodeSnapshot(snapshots.procurement)) }
+      return { dashboard: cloneSnapshot(snapshots.dashboard), planner: cloneSnapshot(snapshots.planner),
+        procurement: cloneSnapshot(snapshots.procurement) }
     },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
       const parent = context.getStore()
@@ -169,7 +169,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
         const staged = parent.root.snapshots[surface]
         const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = staged ? decodeSnapshot(encodeSnapshot(staged)) :
+        const snapshot = staged ? cloneSnapshot(staged) :
           row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
         const blobs: BlobTransaction = {
           get: async (key) => {
@@ -437,7 +437,36 @@ export function decodeSnapshot(payload: string): Snapshot {
   const envelope: unknown = JSON.parse(payload)
   if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
     throw new Error("Unsupported local snapshot encoding")
-  const value = decode(envelope[2])
+  return validateSnapshot(decode(envelope[2]))
+}
+
+/** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
+function cloneSnapshot(snapshot: Snapshot): Snapshot {
+  return validateSnapshot(copyValue(snapshot))
+}
+
+function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
+  if (value === undefined || value === null || typeof value === "boolean" || typeof value === "string") return value
+  if (typeof value === "number" && Number.isFinite(value)) return value
+  if (typeof value !== "object") throw new Error("Unsupported local snapshot value")
+  if (ancestors.has(value)) throw new Error("Cyclic local snapshot")
+  if (!Array.isArray(value) && Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null)
+    throw new Error("Local snapshots require plain objects")
+  if (Object.getOwnPropertySymbols(value).length) throw new Error("Unsupported symbol properties")
+  ancestors.add(value)
+  try {
+    // Array.from densifies holes; each path is copied separately, including shared aliases.
+    if (Array.isArray(value)) return Array.from(value, (item) => copyValue(item, ancestors))
+    return Object.fromEntries(Object.entries(Object.getOwnPropertyDescriptors(value)).map(([key, descriptor]) => {
+      if (!Object.hasOwn(descriptor, "value")) throw new Error("Unsupported snapshot accessor")
+      return [key, copyValue(descriptor.value, ancestors)]
+    }))
+  } finally {
+    ancestors.delete(value)
+  }
+}
+
+function validateSnapshot(value: unknown): Snapshot {
   if (!record(value) || !record(value.data) || !record(value.versions) || !record(value.sequences) || !Array.isArray(value.audit) || !Array.isArray(value.notices))
     throw new Error("Corrupt local snapshot shape")
   if (value.sfBlobGenerations !== undefined && (!record(value.sfBlobGenerations) || !Object.values(value.sfBlobGenerations).every((generation) => Number.isSafeInteger(generation) && Number(generation) >= 0)))

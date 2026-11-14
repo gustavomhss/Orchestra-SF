@@ -1,0 +1,1245 @@
+{
+  "schema": "astra-operations.bun43-receipt.v1",
+  "runId": 43578845234,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578845234",
+  "workflow": ".github/workflows/test-ci.yml",
+  "status": "completed",
+  "conclusion": "failure",
+  "headBranch": "ci-run-linux-astra-operations-de6959db-751ea3c85685-1",
+  "headSha": "acd7f87c28c70a68bd75ab65bac6c05477f470fe",
+  "tree": "f99ffc12dabe8e2ee7e1a2d2e18bd127bc8d3009",
+  "createdAt": "2026-11-14T09:05:08Z",
+  "updatedAt": "2026-11-14T09:20:07Z",
+  "jobs": [
+    {
+      "id": 132399004959,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43578845234,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132402624630,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43578845234,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "product": {
+    "sha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+    "tree": "e7c36171c132009e34d4f870e5d300bab4a1c82a"
+  },
+  "snapshotProof": {
+    "soleParent": true,
+    "onlyAddedRequest": true,
+    "comparison": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+      "head": "acd7f87c28c70a68bd75ab65bac6c05477f470fe",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/de6959db82dbe48bd59e3d012ff668a86347a6cd"
+      },
+      "merge_base_commit": {
+        "sha": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/de6959db82dbe48bd59e3d012ff668a86347a6cd",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/de6959db82dbe48bd59e3d012ff668a86347a6cd"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 51,
+          "deletions": 0,
+          "changes": 51,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "Sucafinav1/test/product/wp04/contracts.test.ts",
+      "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "Sucafinav1/test/product/wp04/reissue.test.ts",
+      "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "Sucafinav1/test/product/wp03/port.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "Sucafinav1/test/product/wp03/persistence.test.ts",
+      "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+      "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts"
+    ],
+    "env": {},
+    "sha256": "751ea3c856857e764e3e8636c457e362eb0e426a1bd2b20cac4bef44728a6de9",
+    "blob": "8140cd4e48f193be9a60087b18eca3a00d0092dd",
+    "selectedFileCount": 43
+  },
+  "actualSelection": {
+    "fileCount": 43,
+    "missing": [],
+    "unexpected": [],
+    "empty": [],
+    "files": [
+      "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "Sucafinav1/test/product/wp03/persistence.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "Sucafinav1/test/product/wp03/port.test.ts",
+      "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "Sucafinav1/test/product/wp04/reissue.test.ts",
+      "Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "Sucafinav1/test/product/wp04/contracts.test.ts",
+      "Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+      "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+      "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+    ]
+  },
+  "summary": {
+    "pass": 100,
+    "fail": 1,
+    "skip": 0,
+    "expectCalls": 2052,
+    "testCount": 101,
+    "fileCount": 43,
+    "durationSeconds": 797.75
+  },
+  "cases": [
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "preserved review survives changed projections and is denied after access revocation",
+      "durationMs": 311
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "comparison requires identity and a compatible period before calculating a delta",
+      "durationMs": 1.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "preserved report exports every selected record from the captured projection",
+      "durationMs": 54.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "review capability denies a forged binding before selecting source data",
+      "durationMs": 0.87
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "financial trajectory exports a captured figure and the same data table in both formats",
+      "durationMs": 43.02
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "category charts paginate every captured value in both export formats",
+      "durationMs": 76.76
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "ticket flow chart keeps monthly entries as separate periods",
+      "durationMs": 1.36
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "timeline export paginates resolved milestones and refuses fabricated completion",
+      "durationMs": 40.94
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "waterfall export uses resolved endpoints and marks a mismatched snapshot unavailable",
+      "durationMs": 59.78
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "capacity and cost charts require alignment and keep separate units",
+      "durationMs": 18.24
+    },
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "result": "pass",
+      "title": "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+      "durationMs": 26.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "result": "pass",
+      "title": "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+      "durationMs": 152
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/persistence.test.ts",
+      "result": "pass",
+      "title": "scenario and comparison results use the real case-scoped result store",
+      "durationMs": 24.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "result": "pass",
+      "title": "monthly UI authority previews and commits only valid current domain rows",
+      "durationMs": 24.06
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/port.test.ts",
+      "result": "pass",
+      "title": "headcount projection follows domain visibility and increase preview is disposable",
+      "durationMs": 3.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/port.test.ts",
+      "result": "pass",
+      "title": "forecast port compares the real engine, and detects source changes",
+      "durationMs": 1288.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "result": "pass",
+      "title": "real Planner mutation and case receipt commit atomically across surfaces",
+      "durationMs": 48.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "result": "pass",
+      "title": "human-confirmed conditional choice persists its C10 caveat and provenance",
+      "durationMs": 15.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "result": "pass",
+      "title": "C10 complete coverage needs every category and fresh source resolution",
+      "durationMs": 1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "result": "pass",
+      "title": "human-approved prepared dashboard command and receipt commit together",
+      "durationMs": 41.23
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "result": "pass",
+      "title": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+      "durationMs": 1.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "result": "pass",
+      "title": "persisted comparison results are scoped to current case, principal, and source access",
+      "durationMs": 17.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "result": "pass",
+      "title": "Procurement evidence is read through current source and domain ports",
+      "durationMs": 46.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "result": "pass",
+      "title": "prepares through the WP11 port only when the persisted human choice matches",
+      "durationMs": 2.77
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "result": "pass",
+      "title": "promotes the reviewed combination through the case domain only for a human",
+      "durationMs": 1.58
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "result": "pass",
+      "title": "review digest ignores observation clocks but retains financial changes",
+      "durationMs": 0.23
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "result": "pass",
+      "title": "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08",
+      "durationMs": 195513.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "result": "pass",
+      "title": "sourcing entry renders only attached authorized request selectors with the verified resident manifest and supplied catalog",
+      "durationMs": 18.87
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "result": "pass",
+      "title": "sourcing entry remains unavailable without a catalog, sourcing source or mounted analysis port",
+      "durationMs": 10.41
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "result": "pass",
+      "title": "sourcing input is mounted in the workbench and refuses absent runtime or an unrelated origin and path",
+      "durationMs": 2.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/reissue.test.ts",
+      "result": "pass",
+      "title": "reissue requires the recipient's current scope and the same physical request",
+      "durationMs": 197.26
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "result": "pass",
+      "title": "capability refuses forged arguments and refuses an ungranted direct call",
+      "durationMs": 0.61
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "result": "pass",
+      "title": "authorized capability reads through an issued scoped source and consumes once",
+      "durationMs": 166.53
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "result": "pass",
+      "title": "supplier export requires a consumed UI grant and preserves current scoped source failures",
+      "durationMs": 37.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "result": "pass",
+      "title": "durable queue selection, counts and drilldowns keep requester scope across unrelated changes",
+      "durationMs": 81.88
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "result": "pass",
+      "title": "sourcing comparison crosses the shared dispatcher with frozen money, criteria and a real UI receipt",
+      "durationMs": 90.51
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "result": "pass",
+      "title": "incomplete sourcing remains conditioned across the closed shared dispatcher and input verifier",
+      "durationMs": 544.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "result": "pass",
+      "title": "sourcing verifier checks current weights, manual requirements, evidence and offer eligibility",
+      "durationMs": 577.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "result": "pass",
+      "title": "revoked sourcing authority cannot reuse a prepared input or a dispatched comparison",
+      "durationMs": 102.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "result": "pass",
+      "title": "case-bound sourcing input crosses the real business composition and HTTP authority boundary",
+      "durationMs": 2312.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "result": "pass",
+      "title": "sourcing output verifier rejects non-ready envelopes and tampered replay material",
+      "durationMs": 410.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "result": "pass",
+      "title": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+      "durationMs": 69.58
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "result": "pass",
+      "title": "prepared Procurement mutation records a stale source conflict without changing the domain",
+      "durationMs": 55.99
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/contracts.test.ts",
+      "result": "pass",
+      "title": "contract capability reads only the issued Dashboard scope and rejects revocation and ABA",
+      "durationMs": 67.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "result": "pass",
+      "title": "confirmation observes scoped material and fences against source changes and revoked authority",
+      "durationMs": 33.89
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "result": "pass",
+      "title": "confirmation reauthorizes material across buyers and fences physical replacement",
+      "durationMs": 94.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "result": "pass",
+      "title": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+      "durationMs": 54.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "result": "pass",
+      "title": "authorized Requests and My approvals render the actual C02 queue across baseline states",
+      "durationMs": 454.32
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "result": "pass",
+      "title": "the page fence refuses material changes and revocation between C02 preparation and rendering",
+      "durationMs": 258.04
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+      "durationMs": 1178.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence",
+      "durationMs": 22193.57
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "private original evidence is immutable and a replacement Request cannot revive historical facts or receipts",
+      "durationMs": 20680.24
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent",
+      "durationMs": 527.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+      "durationMs": 7416.27
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "result": "pass",
+      "title": "a durable application recovers after a lost commit response and cleared review cache",
+      "durationMs": 11243.76
+    },
+    {
+      "file": "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "result": "pass",
+      "title": "dashboard observation supports a human confirmation and another authorized reader",
+      "durationMs": 429.21
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "result": "pass",
+      "title": "author reader rechecks the real stored run, receipt, case, and current authority",
+      "durationMs": 31.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "result": "pass",
+      "title": "HTTP dispatch previews without domain writes, applies once, returns a receipt and denies revoked access",
+      "durationMs": 4619.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "result": "pass",
+      "title": "personal views isolate authenticated principals and reconcile exact retries",
+      "durationMs": 3675.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "result": "pass",
+      "title": "Workbench analysis HTTP enforces human authority and hides forged run references",
+      "durationMs": 2553.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "result": "pass",
+      "title": "Workbench analysis returns unavailable when its host services are absent",
+      "durationMs": 0.69
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "result": "pass",
+      "title": "blob generations survive ABA, removal and restart while rollback and forgery fail",
+      "durationMs": 33.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "result": "pass",
+      "title": "caught generation overflow cannot commit blob changes",
+      "durationMs": 16.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "product authority revalidates current surfaces without opening a nested transaction",
+      "durationMs": 8.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "human writes require their own action grant and cannot borrow a consumed read lease",
+      "durationMs": 15.82
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "human command admission binds exact action and payload and revokes on authority change",
+      "durationMs": 15.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "dashboard roles alone do not grant C08 or a business operation",
+      "durationMs": 12.98
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "private grants narrow namespaces and operations; role changes revoke existing UI authority",
+      "durationMs": 7.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "write requires current write authority and document targets do not accept unverified identifiers",
+      "durationMs": 13.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "native binding cannot be invented without a current stored run",
+      "durationMs": 13.82
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "a real C08 run and case still cannot bind a missing native Session",
+      "durationMs": 60.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "assignment and domain revocation invalidate authority without incorporating other principals",
+      "durationMs": 23.02
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "workspace target is limited to explicit creation namespaces and still requires current grant and write access",
+      "durationMs": 21.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "result": "pass",
+      "title": "identity mutation during authentication is denied",
+      "durationMs": 5.05
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "result": "pass",
+      "title": "cyclic case event resolution fails closed and releases the guard",
+      "durationMs": 7.54
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "result": "pass",
+      "title": "historical evidence keeps its original identity and requires authorized historical content",
+      "durationMs": 0.96
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "result": "pass",
+      "title": "recall rejects forged source versions after current authorization",
+      "durationMs": 1.17
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "result": "pass",
+      "title": "txt real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces",
+      "durationMs": 8976.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "result": "pass",
+      "title": "docx real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces",
+      "durationMs": 10253.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "result": "pass",
+      "title": "pdf real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces",
+      "durationMs": 11824.55
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "result": "pass",
+      "title": "real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files",
+      "durationMs": 45877.49
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "result": "fail",
+      "title": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+      "durationMs": 300101.81
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "result": "pass",
+      "title": "SQLite Planner imports workbook bytes and rejects a stale preview without partial writes",
+      "durationMs": 77.94
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "result": "pass",
+      "title": "human workbook admission, Planner preview, atomic receipt and retry survive SQLite reopen",
+      "durationMs": 1780.31
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "result": "pass",
+      "title": "human JSON restore keeps private state and returns the same receipt after source replacement",
+      "durationMs": 246.95
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "result": "pass",
+      "title": "Dashboard import fence checks the authenticated scoped incarnation and projection",
+      "durationMs": 8.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "result": "pass",
+      "title": "dataset restoration requires the current administrator-scoped source",
+      "durationMs": 0.93
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "result": "pass",
+      "title": "default Planner evidence preserves the real projection and refuses resealed, changed, replaced and revoked sources",
+      "durationMs": 270.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "result": "pass",
+      "title": "Planner evidence rechecks durable ABA and logout across its asynchronous coverage boundary",
+      "durationMs": 134.39
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "result": "pass",
+      "title": "Planner evidence refuses coverage failures and mutation of a reused coverage result",
+      "durationMs": 88.79
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+      "result": "pass",
+      "title": "import analysis choices read actual authorized cases and installed skills without needing a provider or changing the import",
+      "durationMs": 1071.5
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "result": "pass",
+      "title": "Dashboard Members: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "durationMs": 1933.23
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "result": "pass",
+      "title": "Dashboard Projects: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "durationMs": 1605.16
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "result": "pass",
+      "title": "Dashboard Operations: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "durationMs": 1386.89
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "result": "pass",
+      "title": "real host persists procurement document evidence and Planner import under current authority",
+      "durationMs": 28902.41
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "result": "pass",
+      "title": "real host distinguishes admitted import analyses and invalidates them after actual Apply",
+      "durationMs": 31399.18
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "result": "pass",
+      "title": "real host fences roster ABA and preserves locked Planner positions during roster Apply",
+      "durationMs": 53166.31
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+      "result": "pass",
+      "title": "a confirmed document amount reaches the real Planner scenario through HTTP without copying, applying or surviving source revocation",
+      "durationMs": 3642.36
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "txt real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "durationMs": 4030.01
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "docx real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "durationMs": 4954.64
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "result": "pass",
+      "title": "pdf real Request dossier composes default services and preserves pending, confirmed and revoked document identity",
+      "durationMs": 5518.3
+    }
+  ],
+  "files": [
+    {
+      "file": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/persistence.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/port.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/reissue.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/contracts.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "pass": 1,
+      "fail": 1,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    }
+  ],
+  "omni": {
+    "verdict": "not-applicable",
+    "nonce": "dd9c25dfcefd518e218d73fea9b39141",
+    "declaringTests": 0,
+    "spawns": 0,
+    "delegations": 0,
+    "raw": "omni positive control [dd9c25dfcefd518e218d73fea9b39141]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  },
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-bun43-43578845234.log",
+    "sha256": "784292e76e98a1516cbd45d6facd8a2b6c7a68a89017a1998810ec44e70ff4a8",
+    "bytes": 178317
+  },
+  "qualification": "The complete hosted selection failed; 100 individual passes are scoped W1 observations, reusable only after impact review. Native import-analysis failed and is not accepted. No Omni proof, no group/global acceptance."
+}
