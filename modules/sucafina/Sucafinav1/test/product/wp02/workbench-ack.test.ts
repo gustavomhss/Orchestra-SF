@@ -118,7 +118,7 @@ test("Dashboard requires the requested review sections before acknowledging its 
     await recover(panel, attempts, 3, "Reunião preservada.")
     const saved = await f.authority.state.read(f.request(), "reviews", (state) => Object.values(state.reviews))
     expect(saved.status === "ok" && saved.value).toHaveLength(1)
-    expect(saved.status === "ok" && saved.value[0]).toEqual(attempts[0]!.value)
+    expect<unknown>(saved.status === "ok" && saved.value[0]).toEqual(attempts[0]!.value)
   })
 }, 45_000)
 
@@ -172,7 +172,7 @@ test("Dashboard rejects an incomplete C12 ACK after the real commit and preserve
     expect(attempts).toHaveLength(1)
     expect(attempts[0]!.status).toBe(200)
     const saved = await f.authority.state.read(f.request(), "cases", (state) => state.cases[initialCaseRef.id])
-    expect(saved.status === "ok" && saved.value?.receipts).toEqual([attempts[0]!.value])
+    expect<unknown>(saved.status === "ok" && saved.value?.receipts).toEqual([attempts[0]!.value])
     expect(saved.status === "ok" && saved.value?.preparedChanges[0]?.state).toBe("applied")
     expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("ACK retained operational action")
     expect(await panel.locator("[data-dashboard-review-view]").textContent()).toBe(reviewed)
@@ -200,7 +200,7 @@ test("Dashboard acknowledges the complete receipt of one real reviewed applicati
     const receipt = object(await response.json()).value
     await panel.getByText("Alterações aplicadas. O comprovante foi registrado no caso.", { exact: false }).waitFor()
     const saved = await f.authority.state.read(f.request(), "cases", (state) => state.cases[initialCaseRef.id])
-    expect(saved.status === "ok" && saved.value?.receipts).toEqual([receipt])
+    expect<unknown>(saved.status === "ok" && saved.value?.receipts).toEqual([receipt])
     expect(saved.status === "ok" && saved.value?.preparedChanges[0]?.state).toBe("applied")
     expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("ACK retained operational action")
     expect(await panel.locator("[data-dashboard-pending]").getAttribute("data-dirty")).toBeNull()
