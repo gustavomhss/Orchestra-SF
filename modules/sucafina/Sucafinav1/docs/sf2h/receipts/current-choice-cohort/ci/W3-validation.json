@@ -1,0 +1,267 @@
+{
+  "schema": "sf2h-current-choice-validation-v1",
+  "mission": 46,
+  "source": {
+    "W": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+    "tree": "aa997dd3ade458eab7a1f2d2d1fe35bda33256d2",
+    "S": "d586e4d3bf4a61fcd967a2de7e13c9390770ad71",
+    "S_tree": "2cd294a17a27d91113c909b88bb56412fa2e5454",
+    "snapshot_delta": [
+      ".ci-run.json"
+    ]
+  },
+  "test": {
+    "run": 43653193008,
+    "job": 132625941654,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653193008",
+    "conclusion": "success",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "pass": 32,
+    "fail": 0,
+    "skip": 0,
+    "files": 5,
+    "expect_calls": 443,
+    "elapsed_seconds": 202.01,
+    "bun": "1.3.14 (0d9b296a)",
+    "omni": "not applicable (focused: no declaring test ran)",
+    "historical_matcher_diagnostic": "Existing diagnostic mutates only an observation copy: SF_CANONICAL_UNSUPPORTED after asymmetric matcher; retained source/basis digests are asserted unchanged and lifecycle passes.",
+    "cleanup_job": 132627226019,
+    "cases": [
+      {
+        "name": "current-choice promotion requires the exact human action, persists atomically, and replays only with current authority",
+        "status": "pass",
+        "milliseconds": 5411.68
+      },
+      {
+        "name": "current-choice real command identity rejects the same key with a different authorized payload",
+        "status": "pass",
+        "milliseconds": 2204.6
+      },
+      {
+        "name": "current-choice durable replay suppresses its receipt when ui.finish runs in the final real read authorization",
+        "status": "pass",
+        "milliseconds": 3199.87
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final ui.finish",
+        "status": "pass",
+        "milliseconds": 2986.95
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final expired lease",
+        "status": "pass",
+        "milliseconds": 2974.11
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final request abort",
+        "status": "pass",
+        "milliseconds": 2960.9
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final request headers",
+        "status": "pass",
+        "milliseconds": 2958.46
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final unrelated renewed lease",
+        "status": "pass",
+        "milliseconds": 2993.85
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final principal",
+        "status": "pass",
+        "milliseconds": 2925.77
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final policy",
+        "status": "pass",
+        "milliseconds": 2961.08
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final installation",
+        "status": "pass",
+        "milliseconds": 3030.8
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final project",
+        "status": "pass",
+        "milliseconds": 2945.06
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final source snapshot",
+        "status": "pass",
+        "milliseconds": 2981.25
+      },
+      {
+        "name": "current-choice real promotion rolls back every staged mutation after final access snapshot",
+        "status": "pass",
+        "milliseconds": 3049.81
+      },
+      {
+        "name": "current-choice real final provider authorization suppresses output after ui.finish",
+        "status": "pass",
+        "milliseconds": 2249.58
+      },
+      {
+        "name": "current-choice real final provider authorization suppresses output after expired lease",
+        "status": "pass",
+        "milliseconds": 2258.29
+      },
+      {
+        "name": "current-choice real final provider authorization suppresses output after unrelated renewed lease",
+        "status": "pass",
+        "milliseconds": 2306
+      },
+      {
+        "name": "current-choice real final provider authorization suppresses output after request abort",
+        "status": "pass",
+        "milliseconds": 2241.74
+      },
+      {
+        "name": "current-choice real final provider authorization suppresses output after request headers",
+        "status": "pass",
+        "milliseconds": 2266.27
+      },
+      {
+        "name": "current-choice cannot substitute a serialized context, lease or binding even while its real admission remains active",
+        "status": "pass",
+        "milliseconds": 2283.15
+      },
+      {
+        "name": "current-choice real authorization refuses principal changes at final provider egress",
+        "status": "pass",
+        "milliseconds": 2255.73
+      },
+      {
+        "name": "current-choice real authorization refuses authentication revocation changes at final provider egress",
+        "status": "pass",
+        "milliseconds": 2264.27
+      },
+      {
+        "name": "current-choice real authorization refuses policy changes at final provider egress",
+        "status": "pass",
+        "milliseconds": 2318.31
+      },
+      {
+        "name": "current-choice real authorization refuses installation changes at final provider egress",
+        "status": "pass",
+        "milliseconds": 2318.41
+      },
+      {
+        "name": "current-choice real authorization refuses project changes at final provider egress",
+        "status": "pass",
+        "milliseconds": 2316.21
+      },
+      {
+        "name": "current-choice real authorization refuses host changes at final provider egress",
+        "status": "pass",
+        "milliseconds": 2289.5
+      },
+      {
+        "name": "current-choice joint fence observes a real source commit after source verification",
+        "status": "pass",
+        "milliseconds": 2330.23
+      },
+      {
+        "name": "current-choice joint fence observes a real case commit after source verification",
+        "status": "pass",
+        "milliseconds": 2315.11
+      },
+      {
+        "name": "real product authority prepares the canonical current Planner result, binds real coverage, and promotes only a separate exact human command",
+        "status": "pass",
+        "milliseconds": 28174.03
+      },
+      {
+        "name": "current-choice read suppresses its binding when membership changes during the final case authorization",
+        "status": "pass",
+        "milliseconds": 135.67
+      },
+      {
+        "name": "current-choice read suppresses its binding when preferences read changes during the final case authorization",
+        "status": "pass",
+        "milliseconds": 115
+      },
+      {
+        "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+        "status": "pass",
+        "milliseconds": 97505.06
+      }
+    ]
+  },
+  "checks": {
+    "run": 43653194135,
+    "job": 132625944721,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653194135",
+    "conclusion": "failure",
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "conclusion": "failure",
+      "diagnostics": 131,
+      "current_choice_diagnostics": 0,
+      "prior_run": 43599389386,
+      "prior_job": 132460676353,
+      "prior_product": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "same_path_location_code_set_as_prior": true,
+      "new_path_location_codes": [],
+      "comparison": {
+        "prior": 131,
+        "current": 131,
+        "added": [],
+        "removed": []
+      }
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "conclusion": "success",
+      "rules": 78,
+      "changed_paths": 1119,
+      "gates": 0,
+      "warnings": 14,
+      "errors": 0,
+      "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+    },
+    "artifact": {
+      "id": 14136414974,
+      "name": "astra-finance-checks-61a7a7eab8dd12e1767e9343398acea7becbff42-1",
+      "size_in_bytes": 8108,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14136414974",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14136414974/zip",
+      "expired": false,
+      "created_at": "2026-11-14T23:27:19Z",
+      "expires_at": "2026-11-28T23:27:19Z",
+      "updated_at": "2026-11-14T23:27:19Z",
+      "digest": "sha256:cb762d3c701979485e55dc306502d46a936ff057014b1bd239820cc28f12d40a",
+      "workflow_run": {
+        "id": 43653194135,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-finance",
+        "head_sha": "61a7a7eab8dd12e1767e9343398acea7becbff42"
+      }
+    }
+  },
+  "claim": "32 selected source tests PASS, including actual canonical prepare/result/coverage/exact human promotion/replay and real adapter negatives. Package typecheck remains FAILURE with exactly the same131 external path/location/code diagnostics; guards PASS. Shared UI/runtime composition and final same-C acceptance remain unexecuted.",
+  "fixes_since_W2": {
+    "production_changed": false,
+    "test_composition": "Independent canonical source-continuity observer shares real host/store and makes no case-scoped cost claim; producer/preview retain the actual canonical registry. All replay assertions remain and now pass.",
+    "test_typing": "Explicit narrowing of optional coverageDigest; no type escape.",
+    "evidence": "Removed two raw .log files required by agent-scratch; historical commits, original run/jobs and structured receipts preserved."
+  }
+}

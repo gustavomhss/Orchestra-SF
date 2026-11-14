@@ -25,6 +25,12 @@
       "status": "FIXED_VALIDATED_W1",
       "finding": "Prior receipt returned without full current provenance/canonical coverage revalidation.",
       "resolution": "Revalidate historical producer/result, live source, bound coverage record/adopted basis and exact existing receipt before authorized egress."
+    },
+    {
+      "id": "M46-C12-READ-TESTS",
+      "status": "PRESERVED_PENDING_W4_GATE",
+      "finding": "Composed C12 had two additional late namespace lease cases absent from the original Finance source.",
+      "resolution": "All four C12 cases/assertions retained with the owned fence; inspect persisted state using the external provider after old lease revocation. Existing twenty-eight real adapter cases remain decisive."
     }
   ],
   "shared_findings": [
@@ -51,6 +57,10 @@
     {
       "id": "M46-OPTIONS-FRESHNESS",
       "resolution": "Reobserve every emitted ready request, source, Atlas continuity and canonical baseline via captureSources before output, retaining source/classification guards through private/case read and final egress. Initially unavailable choices remain disabled. Any ready proof drift denies the response."
+    },
+    {
+      "id": "M46-CANDIDATE-RECONCILIATION",
+      "resolution": "Rebased complete shared patch onto observed08ff8221. Preserved the new Procurement HTTP chain and decision controls evidence block; inspected current business, cost coverage, Planner and SQLite APIs. Requalification on composed C remains mandatory."
     }
   ],
   "limits": [
@@ -58,19 +68,29 @@
     "Numeric lifecycle financial coverage complete does not upgrade conditioned total=null into canonical complete250000/difference-10000/threshold15000.",
     "Source tests do not validate proposed shared HTTP/UI wiring, native parity, all consumers or final composed-C acceptance."
   ],
-  "superseded_shared_patch": {
-    "base": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
-    "sha256": "8d7b661b23891ea74814099f84073a5c20623705c7470362479c3889223e659c",
-    "paths": 6,
-    "status": "SUPERSEDED_BY_COMPLETE_V2_NEVER_APPLY_CUMULATIVELY",
-    "text_verification": "Root reconstructed the complete unified diff against isolated pinned scratch preimages and matched all six proposed Git blobs; this is not product or UI execution."
-  },
+  "superseded_shared_patches": [
+    {
+      "base": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+      "sha256": "8d7b661b23891ea74814099f84073a5c20623705c7470362479c3889223e659c",
+      "paths": 6,
+      "status": "SUPERSEDED_BY_COMPLETE_V3_NEVER_APPLY_CUMULATIVELY",
+      "text_verification": "Root reconstructed the complete unified diff against isolated pinned scratch preimages and matched all six proposed Git blobs; this is not product or UI execution."
+    },
+    {
+      "base": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+      "revision": 2,
+      "sha256": "bff0986db06d756d2bd8a466752ad2f8d179504c3c9359a209f7fb41b3a8211a",
+      "paths": 6,
+      "status": "SUPERSEDED_BY_COMPLETE_V3_NEVER_APPLY_CUMULATIVELY",
+      "text_verification": "Root reconstructed the complete v2 unified diff against isolated pinned scratch preimages and matched all six proposed Git blobs. Both static reviewers inspected source guards and exact option revalidation; no product or UI execution."
+    }
+  ],
   "shared_patch": {
-    "base": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
-    "revision": 2,
-    "sha256": "bff0986db06d756d2bd8a466752ad2f8d179504c3c9359a209f7fb41b3a8211a",
+    "base": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "revision": 3,
+    "sha256": "d036ee32780f10c6e217a1608701e3de3aa520143b2b2fe03f91d87ca5a03d9f",
     "paths": 6,
     "status": "NOT_APPLIED_TO_SOURCE_NOT_TYPECHECKED_NOT_RUNTIME_TESTED",
-    "text_verification": "Root reconstructed the complete v2 unified diff against isolated pinned scratch preimages and matched all six proposed Git blobs. Both static reviewers inspected source guards and exact option revalidation; no product or UI execution."
+    "text_verification": "Root reconstructed all six files against pinned08ff preimages; every output blob matches. Independent reviewer compared fourteen hunks and seven updated dependencies. No runtime/UI execution."
   }
 }

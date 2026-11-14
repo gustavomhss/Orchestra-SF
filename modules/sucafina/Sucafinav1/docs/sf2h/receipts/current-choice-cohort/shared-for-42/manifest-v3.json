@@ -1,0 +1,141 @@
+{
+  "base_commit": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+  "observation_cutoff": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c; no later branch state consulted",
+  "requires": "mission46 owned changes in current-choice-preview.ts, current-choice-promotion.ts, planner/current-choice.ts; production owned changes unchanged by this artifact revision",
+  "status": "NOT_APPLIED_NOT_TYPECHECKED_NOT_TESTED",
+  "revision": 3,
+  "supersedes_patch_sha256": "bff0986db06d756d2bd8a466752ad2f8d179504c3c9359a209f7fb41b3a8211a",
+  "also_supersedes_patch_sha256": "8d7b661b23891ea74814099f84073a5c20623705c7470362479c3889223e659c",
+  "previous_base_commit": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "supersedes_reason": "Complete rebase onto observed08ff preimages preserving incoming Procurement host route and controls evidence block. Includes exact ready-option source/baseline/request egress fence from v2.",
+  "review": "Independent final static review by cohort_contract_ci completed: six target preimages/outputs, fourteen diff hunks, index headers and seven dependency hashes matched source artifacts; incoming Procurement wiring preserved; no new blocker identified. No product execution, UI or runtime integration PASS claim.",
+  "preservation_observations": [
+    "Incoming Procurement controls evidence block retained byte-for-byte.",
+    "Prior08ff HTTP route chain retained byte-for-byte after removing only added currentChoiceHttp prefix.",
+    "New service and HTTP output blobs unchanged from reviewed v2.",
+    "Local-entry and host-contract preimages unchanged and v2 outputs retained.",
+    "v1 and v2 patch, manifest and integration notes preserved unchanged."
+  ],
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+      "base_blob": null,
+      "base_sha256": null,
+      "base_bytes": null,
+      "proposed_blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+      "proposed_sha256": "f596a63299c16eb39bfdf2e4abb5f9a4a97698b7cc1271abd62e30213692571e",
+      "proposed_bytes": 15693,
+      "lines": 154
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-services.ts",
+      "base_blob": null,
+      "base_sha256": null,
+      "base_bytes": null,
+      "proposed_blob": "c2ef2828e824a46d67d7c6e79012656a092a3c82",
+      "proposed_sha256": "766d7b7efeff80e1ed3552079e37337234864b863e00a003563a2179cb2de06f",
+      "proposed_bytes": 27750,
+      "lines": 329
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "base_blob": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+      "base_sha256": "20c213b0260d5dc420fa5afcdfb40e5f6acf23bcc2a80041e40babc7973ea513",
+      "base_bytes": 46513,
+      "proposed_blob": "e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7",
+      "proposed_sha256": "b16718649f20a95187b1496d16c5c66c59524b7ea9a5e115fd82b9e6010a0fce",
+      "proposed_bytes": 47451,
+      "lines": 423
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "base_blob": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "base_sha256": "7df401ef6421e39622536876495321374a5eb5b3f24078b863135a36c12ced53",
+      "base_bytes": 76739,
+      "proposed_blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "proposed_sha256": "09017349a0e60c625ab92f68bb209ea0d369aaa9ab7570d1e585fbae5e3689ea",
+      "proposed_bytes": 77300,
+      "lines": 861
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "base_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "base_sha256": "8803349c063a93cb03a805c9833ff612bec158e832f4ef05a1ef3cc5b7d7324b",
+      "base_bytes": 22887,
+      "proposed_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+      "proposed_sha256": "4940108bc478808d4ebe2d0b5d048c6a8c146d5ed774382d7778931179852877",
+      "proposed_bytes": 23544,
+      "lines": 283
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "base_blob": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "base_sha256": "0476febc21bf87c35a734e4cae028bc4fee2f72ccfebfd30a0490ecf44fae055",
+      "base_bytes": 6587,
+      "proposed_blob": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "proposed_sha256": "6890256adf55319ac3da3d7c5943587462a1defb0ba5da48079bc390dfd9560e",
+      "proposed_bytes": 6799,
+      "lines": 105
+    }
+  ],
+  "runtime_dependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "observed_blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+      "observed_sha256": "c16f0b23685a47a17aa5b07c548784559da443c72f28e81cd29259feca572f0e",
+      "bytes": 71377,
+      "previous_observed_blob_at_36521": "ce3a281bf07819f90af7fad10f98861980f3273b",
+      "observation": "Adds Procurement standalone routing and explicit-promotion guard in exposed calculations.persist; Planner delegation and API retained. Cohort calls this exposed canonical persist without bypass."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "observed_blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "observed_sha256": "17fdc608af6af1bca5780637d37419d49301b9c4158e36f89d701accd1cadd1e",
+      "bytes": 8790,
+      "previous_observed_blob_at_36521": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "observation": "Unchanged canonical baseline/classification and Planner actor APIs."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "observed_blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "observed_sha256": "404383fd380ff5daaaac58c4ef110b989c6c6f2aad8862638be4dbfe2e7b4d5b",
+      "bytes": 14443,
+      "previous_observed_blob_at_36521": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "observation": "Adds constrained conditioned Procurement assessment acceptance while retaining Planner source requirement branch; cohort does not change coverage policy."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "observed_blob": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8",
+      "observed_sha256": "d761246d11f1efaf23ff1a809e16d188bed457adcc955b3031d83ca3cdd81af6",
+      "bytes": 4392,
+      "previous_observed_blob_at_36521": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "observation": "Adds optional standalone producer; issueSource remains bound to actual Planner sources. Cohort retains planner-version selection."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "observed_sha256": "4f16fe7291f763ffba129ba024e6ee0b001d05b6769d0445f049c8869fc54311",
+      "bytes": 31405,
+      "previous_observed_blob_at_36521": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "observation": "Adds immutable decoder-string memo and per-scope lazy materialization. SQL lock, fresh three-surface currentSnapshots clones, nested-write rejection and commit/rollback boundary remain. Static compatibility observation only; no execution of composed fence on this runtime."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "observed_blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "observed_sha256": "15e3cb14cc755c20a16359dd94c650a99c42930956d3767b4285a7ae1ec02669",
+      "bytes": 18119,
+      "previous_observed_blob_at_36521": null,
+      "observation": "Observed preserved incoming Procurement host service. Existing HTTP wiring and controls use this producer; cohort patch does not modify it."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "observed_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "observed_sha256": "aaa4799f7258e8e663df2f8ae10523e3cf5fef7105b2f551782de5574d2cf331",
+      "bytes": 21165,
+      "previous_observed_blob_at_36521": null,
+      "observation": "Observed supports predicate is restricted to request.baseRef starting sf-procurement:. Cohort issuer selects planner-version sources and does not redirect through this producer."
+    }
+  ],
+  "patch_sha256": "d036ee32780f10c6e217a1608701e3de3aa520143b2b2fe03f91d87ca5a03d9f",
+  "patch_bytes": 59360
+}

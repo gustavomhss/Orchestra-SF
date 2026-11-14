@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h-current-choice-owned-patch-v1",
+  "mission": 46,
+  "base_commit": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+  "scope": "Complete selective nine-file CurrentChoice source/test increment; never merge the mixed historical astra-finance branch.",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "base_blob": "c27e908140ba34ffea39078a78626f47943a8444",
+      "output_blob": "db487cd1b6263835302e9bcf80499d18531aa592"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "base_blob": "2441642f59179516da09c9f9780b1b4764f6fd83",
+      "output_blob": "6333d208823355d26b2c02259859a13e0eae9b19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "base_blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "output_blob": "349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "base_blob": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+      "output_blob": "b2f96bec220a6ec2f674057546541d5a700e969e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "base_blob": "87e24342ee27b98e26b29a69a2f8de6b7bf7206c",
+      "output_blob": "e3b25caeece77ca1d755bc64e8253ca003179793"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+      "base_blob": null,
+      "output_blob": "dd5c155115190cf4af4ab76ec37970e3df268253"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+      "base_blob": null,
+      "output_blob": "1f7e6cb2716cb2b17084ab599219f7651961e485"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+      "base_blob": null,
+      "output_blob": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "base_blob": null,
+      "output_blob": "084f7050ca7f45fe22962207f706a5e0d71e3a93"
+    }
+  ],
+  "patch_sha256": "e4c649eae4fdffac0b5fe72dfbb106b12d75df6a0bc04ebdd865977ae14a9ad8",
+  "patch_git_blob": "9c11c83f1fa3d62b26a16f2fbd8e8e5a46c538a7",
+  "text_verification": "Reconstructed against exact pinned isolated preimages and matched all nine output blobs. No product execution.",
+  "C12_reconciliation": "Three producer changes preserve and supersede the C12 exact Request defense; read-fence keeps all four C12 cases and assertions plus composed fence. Other lifecycle fixture base unchanged.",
+  "application_status": "NOT_APPLIED_TO_COMPOSED_C",
+  "source_validation": "See source validation receipts; final supplemental C12 file gate still pending when artifact generated.",
+  "dependencies": "Shared composition patch is mandatory; the owned factories fail closed without the branded persistence fence. Requalify with candidate-specific driver/provider and consumers; source greens do not transfer."
+}

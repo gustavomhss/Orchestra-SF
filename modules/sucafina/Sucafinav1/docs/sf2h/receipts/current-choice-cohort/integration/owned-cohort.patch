@@ -1,0 +1,1548 @@
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts b/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts
+index c27e908140ba34ffea39078a78626f47943a8444..db487cd1b6263835302e9bcf80499d18531aa592 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts
+@@ -5,8 +5,11 @@
+ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
+-import type { Snapshot } from "../../runtime/contract.ts"
+-import type { CurrentChoicePromotion } from "./current-choice-promotion.ts"
++import { AsyncLocalStorage } from "node:async_hooks"
++import type { AssetPersistence, BlobTransaction } from "../../runtime/assets.ts"
++import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
++import type { Surface } from "../../src/identity.ts"
++import type { CurrentChoicePromotion, CurrentChoicePromotionReceipt } from "./current-choice-promotion.ts"
+ import type { createSfDecisionResultStore } from "./result-store.ts"
+ import type { createDecisionMutations } from "./mutations.ts"
+ import { encodeCaseRef } from "./case-port.ts"
+@@ -15,8 +18,8 @@
+ type CaseRef = { id: string; incarnation: string; version: number }
+ type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
+ export type CurrentChoicePreviewRequest = { caseRef: CaseRef; choiceId: string; alternativeRef: { id: string; version: number }; coverageRef: string }
+-type Request = CurrentChoicePreviewRequest
+-export type CurrentChoiceBinding = { schema: "sf-current-choice-binding-v1"; promotion: CurrentChoicePromotion; originalSource: RecordEvidence; source: RecordEvidence; producerResultRef: string; producerResultDigest: string; recordDigest: string }
++type PreviewRequest = CurrentChoicePreviewRequest
++export type CurrentChoiceBinding = { schema: "sf-current-choice-binding-v1"; promotion: CurrentChoicePromotion; originalSource: RecordEvidence; source: RecordEvidence; producerResultRef: string; producerResultDigest: string; coverageDigest?: string; coverageRecordDigest?: string; recordDigest: string }
+ const key = (resultRef: string) => `sf:proposal-coverage:current-choice:${digestSfValue(resultRef)}`
+ const digest = (value: CurrentChoiceBinding) => digestSfValue(Object.fromEntries(Object.entries(value).filter(([name]) => name !== "recordDigest")))
+ 
+@@ -34,20 +37,22 @@
+ /** Prepare the exact C10 result for human review without modifying the original choice. */
+ export function createCurrentChoicePreview(input: {
+   state: SfProductStatePort
++  /** Mandatory at runtime; compose it below source lifecycle and every producer. */
++  fence?: CurrentChoiceFence
+   host: Pick<DomainPortHost, "requestFor" | "revalidate">
+   sources: Pick<PlannerSourceHost, "resolveForecastCoverage">
+   results: ReturnType<typeof createSfDecisionResultStore>
+   coverageEvidence: NonNullable<Parameters<typeof createDecisionMutations>[0]["coverageEvidence"]>
+   authorizeCase: (decision: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
+-  authorizePreview: (request: Request, context: TrustedDomainContext) => Promise<boolean>
++  authorizePreview: (request: PreviewRequest, context: TrustedDomainContext) => Promise<boolean>
+   resimulate: (request: { caseRef: CaseRef; choice: ChoiceRecord }, context: TrustedDomainContext) => Promise<PortResult<{ resultRef: string; scenario: ScenarioRequest; result: ScenarioResult; choiceDigest: string; requestDigest: string; resultDigest: string; originalSource: RecordEvidence; source: RecordEvidence; fenceSnapshot: (snapshot: Snapshot) => boolean }>>
+   registerCoverage: (request: { caseRef: string; expectedCaseVersion: number; basis: import("../contracts/decisions.ts").CostCoverageBasis; assessment: import("../contracts/decisions.ts").CostCoverageAssessment; result: ScenarioResult; scenario: ScenarioRequest }, context: TrustedDomainContext) => Promise<PortResult<{ coverageRef: string }>>
+-  verifySnapshot: (snapshot: Snapshot, request: Request, binding: CurrentChoiceBinding, context: TrustedDomainContext) => boolean
++  verifySnapshot: (snapshot: Snapshot, request: PreviewRequest, binding: CurrentChoiceBinding, context: TrustedDomainContext) => boolean
+   verifySources: (binding: CurrentChoiceBinding, context: TrustedDomainContext) => Promise<boolean>
+   operationIdentity: (context: TrustedDomainContext) => string | undefined
+   writes: WeakSet<object>
+ }) {
+-  const prepare = async (incoming: Request, context: TrustedDomainContext): Promise<PortResult<{ promotion: CurrentChoicePromotion; bindingDigest: string }>> => {
++  const prepare = async (incoming: PreviewRequest, context: TrustedDomainContext): Promise<PortResult<{ promotion: CurrentChoicePromotion; bindingDigest: string }>> => {
+     try {
+       const request = structuredClone(incoming)
+       const source = input.host.requestFor(context)
+@@ -71,12 +76,16 @@
+       if (entries.status !== "ok") return entries
+       const result = await reassessScenarioCoverage({ scenario: attributed, basis: baseline.value.basis, baseline: baseline.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence.resolve(refs, context), supports: input.coverageEvidence.supports })
+       if (!result || validateScenarioCoverage(result, baseline.value.basis, result.costCoverage)) return { status: "unavailable", reason: "choice-preview-coverage-unavailable" }
++      input.fence!.observe(context, (snapshots) => preview.value.fenceSnapshot(snapshots.planner) && input.coverageEvidence.verifySnapshot(snapshots.planner, result, baseline.value.basis, context))
+       const coverage = await input.registerCoverage({ caseRef: encodeCaseRef(request.caseRef), expectedCaseVersion: request.caseRef.version, basis: baseline.value.basis, assessment: result.costCoverage, result, scenario: preview.value.scenario }, context)
+       if (coverage.status !== "ok") return coverage
+-      const stored = await input.results.write({ kind: "scenario", caseRef: request.caseRef, requestDigest: digestSfValue(preview.value.scenario), result, sourceRefs: [...result.sourceRefs, ...result.costCoverage.evaluatedSourceRefs, ...result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index), idempotencyKey: `choice-preview:${operation}` }, context)
++      const coverageProof = await input.sources.resolveForecastCoverage(coverage.value.coverageRef, context)
++      const coverageRecord = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[`sf:proposal-coverage:${coverage.value.coverageRef}`] : undefined)
++      if (coverageProof.status !== "ok" || coverageProof.value.coverageRef !== coverage.value.coverageRef || digestSfValue(coverageProof.value.basis) !== digestSfValue(baseline.value.basis) || digestSfValue(coverageProof.value.assessment) !== digestSfValue(result.costCoverage) || coverageRecord.status !== "ok" || !coverageRecord.value) return { status: "unavailable", reason: "choice-preview-coverage-unavailable" }
++      const stored = await input.results.write({ kind: "scenario", caseRef: request.caseRef, requestDigest: digestSfValue(preview.value.scenario), result, sourceRefs: [...baseline.value.basis.sourceRefs, ...result.sourceRefs, ...result.costCoverage.evaluatedSourceRefs, ...result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index), idempotencyKey: `choice-preview:${operation}` }, context)
+       if (stored.status !== "ok") return stored
+       const promotion = { caseRef: request.caseRef, choiceId: request.choiceId, choiceDigest: preview.value.choiceDigest, alternativeRef: request.alternativeRef, resultRef: stored.value.resultRef, resultDigest: digestSfValue(result), scenario: preview.value.scenario, coverageRef: coverage.value.coverageRef }
+-      const initial: CurrentChoiceBinding = { schema: "sf-current-choice-binding-v1", promotion, originalSource: preview.value.originalSource, source: preview.value.source, producerResultRef: preview.value.resultRef, producerResultDigest: preview.value.resultDigest, recordDigest: "" }
++      const initial: CurrentChoiceBinding = { schema: "sf-current-choice-binding-v1", promotion, originalSource: preview.value.originalSource, source: preview.value.source, producerResultRef: preview.value.resultRef, producerResultDigest: preview.value.resultDigest, coverageDigest: digestSfValue(coverageProof.value), coverageRecordDigest: digestSfValue(coverageRecord.value), recordDigest: "" }
+       const binding = { ...initial, recordDigest: digest(initial) }
+       const preferences = await input.state.read(source, "preferences", (_state, authority) => sameAuthority(authority, context))
+       const latest = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+@@ -87,48 +96,264 @@
+         const previous = state.preferences[key(promotion.resultRef)]
+         if (!sameAuthority(authority, context) || !actual || digestSfValue(actual) !== digestSfValue(decision) || !saved || digestSfValue(saved) !== digestSfValue(stored.value) || previous && digestSfValue(previous) !== digestSfValue(binding) || !preview.value.fenceSnapshot(snapshot) || !input.coverageEvidence.verifySnapshot(snapshot, result, baseline.value.basis, context) || !input.verifySnapshot(snapshot, request, binding, context)) return { commit: false, value: null }
+         state.preferences[key(promotion.resultRef)] = binding
++        // Runs after C08's last async authorization/target resolution, against
++        // the same snapshots the real driver will commit.
++        input.fence!.observe(context, (snapshots) => {
++          const actualState = snapshots.dashboard.data.__sfProductV1 as SfProductState | undefined
++          return !!actualState && digestSfValue(actualState.cases[decision.id]) === digestSfValue(decision) &&
++            digestSfValue(actualState.decisionResults?.[promotion.resultRef]) === digestSfValue(stored.value) &&
++            verifyCurrentChoiceBinding(actualState, promotion, digestSfValue(binding)) &&
++            digestSfValue(actualState.preferences[`sf:proposal-coverage:${promotion.coverageRef}`]) === binding.coverageRecordDigest &&
++            input.verifySnapshot(snapshots.planner, request, binding, context)
++        })
+         return { commit: true, value: { promotion, bindingDigest: digestSfValue(binding) } }
+       }
+       input.writes.add(work)
+       const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: latest.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `choice-preview-binding:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.writes.delete(work))
+       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "choice-preview-unavailable" }
+-      const verified = await read(promotion, context)
++      const verified = await guardedRead(promotion, context)
+       if (verified.status !== "ok" || digestSfValue(verified.value) !== saved.value.bindingDigest) return { status: "unavailable", reason: "choice-preview-unavailable" }
+       return { status: "ok", value: saved.value }
+     } catch { return { status: "unavailable", reason: "choice-preview-unavailable" } }
+   }
+-  const read = async (incoming: CurrentChoicePromotion, context: TrustedDomainContext): Promise<PortResult<CurrentChoiceBinding>> => {
++  const read = async (incoming: CurrentChoicePromotion, context: TrustedDomainContext, promoted?: CurrentChoicePromotionReceipt): Promise<PortResult<CurrentChoiceBinding>> => {
+     try {
+       const request = structuredClone(incoming)
+       const source = input.host.requestFor(context)
+       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-preview-access-unavailable" }
+       const stored = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(request.resultRef)] : undefined)
+       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+-      const result = await input.results.read({ resultRef: request.resultRef, kind: "scenario" }, context)
+-      if (stored.status !== "ok" || !stored.value || typeof stored.value !== "object" || current.status !== "ok" || !current.value || current.value.incarnation !== request.caseRef.incarnation || current.value.version !== request.caseRef.version || !current.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value, context) || result.status !== "ok") return { status: "unavailable", reason: "choice-preview-unavailable" }
++      const receipt = promoted ? await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `${input.operationIdentity(context)}:promote-current-choice`])] : undefined) : undefined
++      if (promoted && (receipt?.status !== "ok" || !receipt.value || receipt.value.commandDigest !== digestSfValue(request) || receipt.value.targetIncarnation !== request.caseRef.incarnation || digestSfValue(receipt.value.value) !== digestSfValue(promoted) || promoted.caseRef.id !== request.caseRef.id || promoted.caseRef.incarnation !== request.caseRef.incarnation || promoted.caseRef.version !== request.caseRef.version + 1)) return { status: "unavailable", reason: "choice-preview-receipt-unavailable" }
++      const result = promoted ? await input.results.readHistoricalScenario({ resultRef: request.resultRef }, context) : await input.results.read({ resultRef: request.resultRef, kind: "scenario" }, context)
++      if (stored.status !== "ok" || !stored.value || typeof stored.value !== "object" || current.status !== "ok" || !current.value || current.value.incarnation !== request.caseRef.incarnation || current.value.version !== (promoted?.caseRef.version ?? request.caseRef.version) || !current.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value, context) || result.status !== "ok") return { status: "unavailable", reason: "choice-preview-unavailable" }
+       const binding = structuredClone(stored.value) as CurrentChoiceBinding
+       const choice = current.value.choices.filter((item) => item.id === request.choiceId && item.alternativeId === request.alternativeRef.id && digestSfValue(item) === request.choiceDigest)
+-      if (binding.schema !== "sf-current-choice-binding-v1" || binding.recordDigest !== digest(binding) || digestSfValue(binding.promotion) !== digestSfValue(request) || result.value.resultDigest !== request.resultDigest || result.value.requestDigest !== digestSfValue(request.scenario) || choice.length !== 1 || current.value.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version).length !== 1 || digestSfValue({ ...choice[0]!.scenario, baseRef: binding.source.refId }) !== digestSfValue(request.scenario) || !choice[0]!.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(binding.originalSource))) return { status: "unavailable", reason: "choice-preview-unavailable" }
+-      const producer = await input.results.read({ resultRef: binding.producerResultRef, kind: "scenario" }, context)
++      if (binding.schema !== "sf-current-choice-binding-v1" || binding.recordDigest !== digest(binding) || digestSfValue(binding.promotion) !== digestSfValue(request) || result.value.resultDigest !== request.resultDigest || result.value.requestDigest !== digestSfValue(request.scenario) || choice.length !== 1 || current.value.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version + (promoted ? 1 : 0) && (!promoted || digestSfValue(item.scenario) === digestSfValue(request.scenario) && digestSfValue(item.result) === request.resultDigest)).length !== 1 || digestSfValue({ ...choice[0]!.scenario, baseRef: binding.source.refId }) !== digestSfValue(request.scenario) || !choice[0]!.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(binding.originalSource))) return { status: "unavailable", reason: "choice-preview-unavailable" }
++      const producer = promoted ? await input.results.readHistoricalScenario({ resultRef: binding.producerResultRef }, context) : await input.results.read({ resultRef: binding.producerResultRef, kind: "scenario" }, context)
+       if (producer.status !== "ok" || producer.value.kind !== "scenario" || producer.value.resultDigest !== binding.producerResultDigest || producer.value.requestDigest !== digestSfValue(request.scenario) || digestSfValue(producer.value.caseRef) !== digestSfValue(request.caseRef) || !producer.value.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(binding.source)) || !await input.verifySources(structuredClone(binding), context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "unavailable", reason: "choice-preview-unavailable" }
+       if (!await input.authorizeCase(current.value, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "choice-preview-changed" }
+       // Reauthorize the private namespace after external callbacks; a case read
+       // alone does not grant access to its preference-backed binding.
+       const bindingAgain = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? readCurrentChoiceBinding(state, request) : undefined)
+       if (bindingAgain.status !== "ok" || !bindingAgain.value || digestSfValue(bindingAgain.value) !== digestSfValue(binding)) return { status: "stale", reason: "choice-preview-changed" }
++      if (binding.coverageRecordDigest) {
++        const coverageRecord = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[`sf:proposal-coverage:${request.coverageRef}`] : undefined)
++        if (coverageRecord.status !== "ok" || !coverageRecord.value || digestSfValue(coverageRecord.value) !== binding.coverageRecordDigest) return { status: "stale", reason: "choice-preview-changed" }
++      }
++      input.fence!.observe(context, (snapshots) => {
++        const state = snapshots.dashboard.data.__sfProductV1 as SfProductState | undefined
++        const savedReceipt = promoted && state?.transactions[JSON.stringify([context.binding.principalRef, "cases", request.caseRef.id, `${input.operationIdentity(context)}:promote-current-choice`])]
++        const promotedResult = promoted && state?.decisionResults?.[promoted.resultRef]
++        return !!state && digestSfValue(state.cases[request.caseRef.id]) === digestSfValue(current.value) &&
++          digestSfValue(state.decisionResults?.[request.resultRef]) === digestSfValue(result.value) &&
++          digestSfValue(state.decisionResults?.[binding.producerResultRef]) === digestSfValue(producer.value) &&
++          verifyCurrentChoiceBinding(state, request, digestSfValue(binding)) &&
++          (!binding.coverageRecordDigest || digestSfValue(state.preferences[`sf:proposal-coverage:${request.coverageRef}`]) === binding.coverageRecordDigest) &&
++          (!promoted || !!savedReceipt && receipt?.status === "ok" && digestSfValue(savedReceipt) === digestSfValue(receipt.value) &&
++            !!promotedResult && promotedResult.resultRef === promoted.resultRef && digestSfValue(promotedResult.caseRef) === digestSfValue(promoted.caseRef) &&
++            promotedResult.resultDigest === request.resultDigest && digestSfValue(promotedResult.result) === request.resultDigest) &&
++          input.verifySnapshot(snapshots.planner, request, binding, context)
++      })
+       // Observe the case, both results and the binding together after callbacks
+       // and namespace authorization, with no external callback after this fence.
+       const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef], producer: state.decisionResults?.[binding.producerResultRef], binding: readCurrentChoiceBinding(state, request) } : undefined)
+-      // C08 reauthorizes its namespace after the reader callback. That check
+-      // does not own the UI/native lease; inspect its retained Request without
+-      // another asynchronous callback after the final data observation.
+-      if (final.status !== "ok" || !final.value?.decision || digestSfValue(final.value.decision) !== digestSfValue(current.value) || digestSfValue(final.value.result) !== digestSfValue(result.value) || digestSfValue(final.value.producer) !== digestSfValue(producer.value) || !final.value.binding || digestSfValue(final.value.binding) !== digestSfValue(bindingAgain.value) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "choice-preview-changed" }
++      if (final.status !== "ok" || !final.value?.decision || digestSfValue(final.value.decision) !== digestSfValue(current.value) || digestSfValue(final.value.result) !== digestSfValue(result.value) || digestSfValue(final.value.producer) !== digestSfValue(producer.value) || !final.value.binding || digestSfValue(final.value.binding) !== digestSfValue(bindingAgain.value) || source.signal.aborted || input.host.requestFor(context) !== source || !input.fence!.current(context)) return { status: "stale", reason: "choice-preview-changed" }
+       return { status: "ok", value: structuredClone(final.value.binding) }
+-    } catch { return { status: "unavailable", reason: "choice-preview-unavailable" } }
+-  }
+-  return { prepare, read }
++    } catch { return { status: "stale", reason: "choice-preview-changed" } }
++  }
++  const guardedRead = async (request: CurrentChoicePromotion, context: TrustedDomainContext, promoted?: CurrentChoicePromotionReceipt): Promise<PortResult<CurrentChoiceBinding>> => {
++    if (!isCurrentChoiceFence(input.fence)) return { status: "unavailable", reason: "choice-fence-unavailable" }
++    try {
++      const receipt = promoted ? structuredClone(promoted) : undefined
++      return await input.fence.run(context, () => read(request, context, receipt))
++    }
++    catch { return { status: "stale", reason: "choice-preview-changed" } }
++  }
++  return {
++    read: guardedRead,
++    prepare: async (request: PreviewRequest, context: TrustedDomainContext): Promise<PortResult<{ promotion: CurrentChoicePromotion; bindingDigest: string }>> => {
++      if (!isCurrentChoiceFence(input.fence)) return { status: "unavailable", reason: "choice-fence-unavailable" }
++      try { return await input.fence.run(context, () => prepare(request, context)) }
++      catch { return { status: "unavailable", reason: "choice-preview-unavailable" } }
++    },
++  }
+ }
+ 
+ function sameAuthority(authority: SfStateAuthority, context: TrustedDomainContext) {
+   return authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision
+ }
++
++
++type CurrentChoiceSnapshots = Readonly<Record<Surface, Snapshot>>
++type CurrentChoiceSnapshotGuard = (snapshots: CurrentChoiceSnapshots) => boolean
++type CurrentChoicePersistence = AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots">
++
++export type CurrentChoiceFence = {
++  persistence: CurrentChoicePersistence
++  run: <T>(context: TrustedDomainContext, work: () => Promise<T>) => Promise<T>
++  observe: (context: TrustedDomainContext, guard: CurrentChoiceSnapshotGuard) => void
++  check: (context: TrustedDomainContext) => Promise<boolean>
++  current: (context: TrustedDomainContext) => boolean
++}
++const currentChoiceFences = new WeakSet<object>()
++
++export function isCurrentChoiceFence(value: unknown): value is CurrentChoiceFence {
++  return !!value && typeof value === "object" && currentChoiceFences.has(value)
++}
++
++/**
++ * Install immediately above the real persistence driver, before source-lifecycle
++ * and product-authority are built. Every canonical producer must use that same
++ * chain. This preserves provider admission, blob capabilities and SQLite's
++ * nested-write prohibition; it does not implement another state store.
++ *
++ * A scope is one invocation, not cached authority. Independent successful
++ * producer writes remain separate durable steps; this is not a multi-step
++ * rollback mechanism. The final promotion stays one canonical transaction.
++ */
++export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(input: {
++  persistence: P
++  host: () => Pick<DomainPortHost, "requestFor" | "revalidate">
++  operationIdentity: (context: TrustedDomainContext) => string | undefined
++  identity: () => { installationId: string; projectId: string } | undefined
++}): CurrentChoiceFence & { persistence: P } {
++  type Scope = {
++    context: TrustedDomainContext
++    request: Request
++    requestDigest: string
++    host: Pick<DomainPortHost, "requestFor" | "revalidate">
++    command: string
++    bindingDigest: string
++    identityDigest: string
++    guards: CurrentChoiceSnapshotGuard[]
++    parent?: Scope
++    open: boolean
++    pending: number
++  }
++  const scopes = new AsyncLocalStorage<Scope>()
++  const denied = () => new Error("SF_CURRENT_CHOICE_FENCE_CHANGED")
++  const currentScope = (scope: Scope): boolean => {
++    const identity = input.identity()
++    return scope.open && (!scope.parent || currentScope(scope.parent)) &&
++      !scope.request.signal.aborted && scope.host.requestFor(scope.context) === scope.request &&
++      digestSfValue({ method: scope.request.method, url: scope.request.url, headers: [...scope.request.headers] }) === scope.requestDigest &&
++      input.operationIdentity(scope.context) === scope.command &&
++      digestSfValue(scope.context.binding) === scope.bindingDigest &&
++      !!identity && identity.installationId === scope.context.binding.installationId &&
++      identity.projectId === scope.context.binding.projectId && digestSfValue(identity) === scope.identityDigest
++  }
++  const current = (context: TrustedDomainContext) => {
++    const scope = scopes.getStore()
++    return !!scope && scope.context === context && currentScope(scope)
++  }
++  const verify = (scope: Scope, snapshots: CurrentChoiceSnapshots | undefined): boolean => {
++    if (!snapshots || !snapshots.dashboard || !snapshots.planner || !snapshots.procurement || !currentScope(scope)) return false
++    // Each observer gets private bytes, so it cannot rewrite a later observer's
++    // basis. Async observers return a Promise and fail the strict true check.
++    const valid = (!scope.parent || verify(scope.parent, snapshots)) &&
++      scope.guards.every((guard) => guard(structuredClone(snapshots)) === true)
++    return valid && currentScope(scope)
++  }
++  const authorizeSnapshot = async (scope: Scope): Promise<string | undefined> => {
++    const snapshots = input.persistence.currentSnapshots?.()
++    if (!snapshots || !currentScope(scope)) return undefined
++    // The actual host reauthorizes from these locked snapshots. Pin all bytes
++    // across that await, including role/access maps; checking only the old lease
++    // would miss revocation during the provider's final target resolution.
++    const observed = digestSfValue(snapshots)
++    if (!await scope.host.revalidate(scope.context)) return undefined
++    return observed
++  }
++  const publication = (scope: Scope, authorized: string | undefined): boolean => {
++    // currentSnapshots returns detached observations in the shipped driver.
++    // Re-capture after the await; never compare the old copy to itself.
++    const snapshots = input.persistence.currentSnapshots?.()
++    return authorized !== undefined && !!snapshots && digestSfValue(snapshots) === authorized && verify(scope, snapshots)
++  }
++  const count = (scope: Scope, change: number) => {
++    scope.pending += change
++    if (scope.parent) count(scope.parent, change)
++  }
++  const track = async <T>(scope: Scope, work: () => Promise<T>): Promise<T> => {
++    if (!currentScope(scope)) throw denied()
++    count(scope, 1)
++    try { return await work() } finally { count(scope, -1) }
++  }
++  const persistence: P = {
++    ...input.persistence,
++    transaction: <T>(
++      surface: Surface,
++      work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>,
++      options?: TransactionOptions,
++    ) => {
++      const scope = scopes.getStore()
++      if (!scope) return input.persistence.transaction(surface, work, options)
++      return track(scope, () => input.persistence.transaction(surface, async (snapshot, blobs) => {
++        if (!currentScope(scope)) throw denied()
++        const result = await work(snapshot, blobs)
++        // The shipped SQLite driver holds one serialized transaction and exposes
++        // all three current snapshots, including this callback's staged writes.
++        const authorized = await authorizeSnapshot(scope)
++        if (!publication(scope, authorized)) throw denied()
++        return result
++      }, options))
++    },
++    ...(input.persistence.transactionAll ? {
++      transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
++        const scope = scopes.getStore()
++        if (!scope) return input.persistence.transactionAll!(work, options)
++        return track(scope, () => input.persistence.transactionAll!(async (snapshots) => {
++          if (!currentScope(scope)) throw denied()
++          const result = await work(snapshots)
++          const authorized = await authorizeSnapshot(scope)
++          if (!publication(scope, authorized)) throw denied()
++          return result
++        }, options))
++      },
++    } : {}),
++  }
++  const check = async (context: TrustedDomainContext): Promise<boolean> => {
++    const scope = scopes.getStore()
++    if (!scope || scope.context !== context || !currentScope(scope)) return false
++    const inspect = async () => {
++      const authorized = await authorizeSnapshot(scope)
++      return publication(scope, authorized)
++    }
++    // Reuse an existing real read scope instead of opening a nested writer.
++    if (input.persistence.currentSnapshots?.()) return inspect()
++    if (!input.persistence.transactionAll) return false
++    return input.persistence.transactionAll(async () => ({ commit: false, value: await inspect() }), { signal: scope.request.signal })
++  }
++  const fence: CurrentChoiceFence & { persistence: P } = {
++    persistence, current, check,
++    observe: (context, guard) => {
++      const scope = scopes.getStore()
++      if (!scope || scope.context !== context || !currentScope(scope)) throw denied()
++      scope.guards.push(guard)
++    },
++    run: async <T>(context: TrustedDomainContext, work: () => Promise<T>): Promise<T> => {
++      const parent = scopes.getStore()
++      const host = input.host()
++      const request = host.requestFor(context)
++      const command = input.operationIdentity(context)
++      const identity = input.identity()
++      if (!request || !command || !identity || !Object.isFrozen(context) || !Object.isFrozen(context.binding) ||
++        (parent && (parent.context !== context || !currentScope(parent)))) throw denied()
++      const scope: Scope = { context, request, requestDigest: digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }), host, command, bindingDigest: digestSfValue(context.binding),
++        identityDigest: digestSfValue(identity), guards: [], parent, open: true, pending: 0 }
++      if (!currentScope(scope)) throw denied()
++      try {
++        return await scopes.run(scope, async () => {
++          const value = await work()
++          // Unawaited provider calls retain this closed scope and cannot commit.
++          if (scope.pending || !await check(context) || scope.pending || !currentScope(scope)) throw denied()
++          return value
++        })
++      } finally { scope.open = false }
++    },
++  }
++  currentChoiceFences.add(fence)
++  return Object.freeze(fence)
++}
++
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts b/modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts
+index 2441642f59179516da09c9f9780b1b4764f6fd83..6333d208823355d26b2c02259859a13e0eae9b19 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts
+@@ -4,80 +4,151 @@
+ import type { ScenarioRequest } from "../contracts/operations.ts"
+ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+-import type { SfProductStatePort } from "../contracts/state.ts"
++import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
+ import type { Snapshot } from "../../runtime/contract.ts"
+ import type { StoredDecisionResult } from "./result-store.ts"
+ import { validateScenarioCoverage } from "./cost-coverage.ts"
+ import { decisionScenarioResultRef } from "./mutations.ts"
+-import { readCurrentChoiceBinding, verifyCurrentChoiceBinding } from "./current-choice-preview.ts"
++import { isCurrentChoiceFence, readCurrentChoiceBinding, verifyCurrentChoiceBinding, type CurrentChoiceFence } from "./current-choice-preview.ts"
+ 
+ type CaseRef = { id: string; incarnation: string; version: number }
+ export type CurrentChoicePromotion = { caseRef: CaseRef; choiceId: string; choiceDigest: string; alternativeRef: { id: string; version: number }; resultRef: string; resultDigest: string; scenario: ScenarioRequest; coverageRef: string }
++export type CurrentChoicePromotionReceipt = { caseRef: CaseRef; resultRef: string }
+ 
+-/** Adopts the exact reviewed result, leaving the historical choice unchanged. */
++/** Adopts the exact reviewed result, leaving every historical choice byte intact. */
+ export function createCurrentChoicePromotion(input: {
+   state: SfProductStatePort
++  /** Mandatory at runtime; use the same fence as the real provider and producers. */
++  fence?: CurrentChoiceFence
+   host: Pick<DomainPortHost, "requestFor" | "revalidate">
+   sources: Pick<PlannerSourceHost, "resolveForecastCoverage">
+   authorizeCase: (decision: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
+   authorizePromotion: (request: CurrentChoicePromotion, context: TrustedDomainContext) => Promise<boolean>
+-  verifyProvenance: (request: CurrentChoicePromotion, choice: ChoiceRecord, result: StoredDecisionResult, context: TrustedDomainContext) => Promise<boolean>
++  verifyProvenance: (request: CurrentChoicePromotion, choice: ChoiceRecord, result: StoredDecisionResult, context: TrustedDomainContext, promoted?: CurrentChoicePromotionReceipt) => Promise<boolean>
+   verifySnapshot: (snapshot: Snapshot, request: CurrentChoicePromotion, choice: ChoiceRecord, result: StoredDecisionResult, context: TrustedDomainContext) => boolean
+   operationIdentity: (context: TrustedDomainContext) => string | undefined
+   now: () => string
+ }) {
+-  return async (incoming: CurrentChoicePromotion, context: TrustedDomainContext): Promise<PortResult<{ caseRef: CaseRef; resultRef: string }>> => {
+-    try {
+-      const request = structuredClone(incoming)
+-      const source = input.host.requestFor(context)
+-      const operation = input.operationIdentity(context)
+-      if (context.kind !== "ui" || !source || !operation || !request.choiceId.trim() || !request.resultRef.trim() || !request.coverageRef.trim() || !/^[a-f0-9]{64}$/.test(request.choiceDigest) || !/^[a-f0-9]{64}$/.test(request.resultDigest) || !decodeSfOperationInput("sf_scenario_simulate", request.scenario).ok || !await input.authorizePromotion(request, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
+-      const loaded = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef], binding: readCurrentChoiceBinding(state, request), prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `${operation}:promote-current-choice`])] } : undefined)
+-      if (loaded.status !== "ok" || !loaded.value?.decision || loaded.value.decision.incarnation !== request.caseRef.incarnation || !loaded.value.decision.participants.includes(context.binding.principalRef) || !await input.authorizeCase(loaded.value.decision, context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
+-      const decision = loaded.value.decision
+-      if (loaded.value.prior) {
+-        const prior = loaded.value.prior
+-        if (prior.commandDigest !== digestSfValue(request) || prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
+-        const saved = prior.value
+-        if (!saved || typeof saved !== "object" || !("caseRef" in saved) || !("resultRef" in saved) || typeof saved.resultRef !== "string" || !saved.caseRef || typeof saved.caseRef !== "object" || !("id" in saved.caseRef) || saved.caseRef.id !== request.caseRef.id || !("incarnation" in saved.caseRef) || saved.caseRef.incarnation !== request.caseRef.incarnation || !("version" in saved.caseRef) || !Number.isSafeInteger(saved.caseRef.version)) return { status: "unavailable", reason: "choice-promotion-receipt-unavailable" }
+-        const savedRef = saved.resultRef
+-        const savedVersion = Number(saved.caseRef.version)
+-        const checked = await input.state.read(source, "cases", (state) => state.decisionResults?.[savedRef])
+-        if (checked.status !== "ok" || !checked.value || checked.value.kind !== "scenario" || checked.value.resultDigest !== request.resultDigest || checked.value.resultDigest !== digestSfValue(checked.value.result) || checked.value.caseRef.id !== request.caseRef.id || checked.value.caseRef.incarnation !== request.caseRef.incarnation || checked.value.caseRef.version !== savedVersion || !await input.host.revalidate(context)) return { status: "unavailable", reason: "choice-promotion-receipt-unavailable" }
+-        return { status: "ok", value: { caseRef: { id: request.caseRef.id, incarnation: request.caseRef.incarnation, version: savedVersion }, resultRef: savedRef } }
+-      }
+-      if (decision.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }
+-      const choices = decision.choices.filter((choice) => choice.id === request.choiceId && digestSfValue(choice) === request.choiceDigest)
+-      const alternatives = decision.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version)
+-      const result = loaded.value.result
+-      const binding = loaded.value.binding
+-      if (!binding) return { status: "denied", reason: "choice-preview-binding-unavailable" }
+-      if (choices.length !== 1 || alternatives.length !== 1 || !result || result.kind !== "scenario" || result.caseRef.id !== request.caseRef.id || result.caseRef.incarnation !== request.caseRef.incarnation || result.caseRef.version !== request.caseRef.version || result.resultRef !== request.resultRef || result.requestDigest !== digestSfValue(request.scenario) || result.resultDigest !== request.resultDigest || result.resultDigest !== digestSfValue(result.result) || result.result.costCoverage.alternativeId !== request.alternativeRef.id || result.result.costCoverage.alternativeVersion !== request.alternativeRef.version + 1 || result.result.currency !== decision.currency || digestSfValue(result.result.horizon) !== digestSfValue(decision.horizon)) return { status: "conflict", reason: "choice-result-mismatch" }
+-      const choice = choices[0]!
+-      if (choice.alternativeId !== request.alternativeRef.id) return { status: "conflict", reason: "choice-alternative-mismatch" }
+-      if (!await input.verifyProvenance(request, choice, result, context)) return { status: "denied", reason: "choice-provenance-unavailable" }
+-      const coverage = await input.sources.resolveForecastCoverage(request.coverageRef, context)
+-      if (coverage.status !== "ok") return coverage
+-      if (coverage.value.coverageRef !== request.coverageRef || digestSfValue(coverage.value.assessment) !== digestSfValue(result.result.costCoverage) || validateScenarioCoverage(result.result, coverage.value.basis, coverage.value.assessment)) return { status: "conflict", reason: "choice-coverage-changed" }
+-      const existingBasis = decision.costCoverageBases.find((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version)
+-      if (existingBasis && digestSfValue(existingBasis) !== digestSfValue(coverage.value.basis)) return { status: "conflict", reason: "coverage-inventory-version-conflict" }
+-      const caseRef = { ...request.caseRef, version: request.caseRef.version + 1 }
+-      const resultRef = decisionScenarioResultRef(caseRef, result.requestDigest)
++  const promote = async (incoming: CurrentChoicePromotion, context: TrustedDomainContext): Promise<PortResult<CurrentChoicePromotionReceipt>> => {
++    const request = structuredClone(incoming)
++    const source = input.host.requestFor(context)
++    const operation = input.operationIdentity(context)
++    if (context.kind !== "ui" || !source || !operation || !request.choiceId.trim() || !request.resultRef.trim() || !request.coverageRef.trim() ||
++      !Number.isSafeInteger(request.caseRef.version) || request.caseRef.version < 1 || !Number.isSafeInteger(request.alternativeRef.version) || request.alternativeRef.version < 1 ||
++      !/^[a-f0-9]{64}$/.test(request.choiceDigest) || !/^[a-f0-9]{64}$/.test(request.resultDigest) || !decodeSfOperationInput("sf_scenario_simulate", request.scenario).ok ||
++      !await input.authorizePromotion(request, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
++    const transactionKey = JSON.stringify([context.binding.principalRef, "cases", request.caseRef.id, `${operation}:promote-current-choice`])
++    const loaded = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
++      ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef], binding: readCurrentChoiceBinding(state, request), prior: state.transactions[transactionKey] }
++      : undefined)
++    if (loaded.status !== "ok" || !loaded.value?.decision || loaded.value.decision.incarnation !== request.caseRef.incarnation ||
++      !loaded.value.decision.participants.includes(context.binding.principalRef) || !await input.authorizeCase(loaded.value.decision, context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
++    const { decision, result, binding, prior } = loaded.value
++    let receipt: CurrentChoicePromotionReceipt | undefined
++    if (prior) {
++      if (prior.commandDigest !== digestSfValue(request) || prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
++      const saved = prior.value as CurrentChoicePromotionReceipt | undefined
++      if (!saved || typeof saved !== "object" || typeof saved.resultRef !== "string" || !saved.caseRef || saved.caseRef.id !== request.caseRef.id ||
++        saved.caseRef.incarnation !== request.caseRef.incarnation || saved.caseRef.version !== request.caseRef.version + 1) return { status: "unavailable", reason: "choice-promotion-receipt-unavailable" }
++      receipt = structuredClone(saved)
++    }
++    if (decision.version !== (receipt?.caseRef.version ?? request.caseRef.version)) return { status: "stale", reason: "case-changed" }
++    const choices = decision.choices.filter((choice) => choice.id === request.choiceId && digestSfValue(choice) === request.choiceDigest)
++    const alternatives = decision.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version + (receipt ? 1 : 0))
++    if (!binding || !binding.coverageDigest || !binding.coverageRecordDigest) return { status: "denied", reason: "choice-preview-binding-unavailable" }
++    if (choices.length !== 1 || alternatives.length !== 1 || !result || result.kind !== "scenario" || result.caseRef.id !== request.caseRef.id ||
++      result.caseRef.incarnation !== request.caseRef.incarnation || result.caseRef.version !== request.caseRef.version || result.resultRef !== request.resultRef ||
++      result.requestDigest !== digestSfValue(request.scenario) || result.resultDigest !== request.resultDigest || result.resultDigest !== digestSfValue(result.result) ||
++      result.result.costCoverage.alternativeId !== request.alternativeRef.id || result.result.costCoverage.alternativeVersion !== request.alternativeRef.version + 1 ||
++      result.result.currency !== decision.currency || digestSfValue(result.result.horizon) !== digestSfValue(decision.horizon) ||
++      receipt && (digestSfValue(alternatives[0]!.scenario) !== result.requestDigest || digestSfValue(alternatives[0]!.result) !== result.resultDigest)) return { status: "conflict", reason: "choice-result-mismatch" }
++    const choice = choices[0]!
++    if (choice.alternativeId !== request.alternativeRef.id) return { status: "conflict", reason: "choice-alternative-mismatch" }
++    // A receipt is an authorized read, never a shortcut around live provenance.
++    if (!await input.verifyProvenance(request, choice, result, context, receipt)) return { status: "denied", reason: "choice-provenance-unavailable" }
++    const privateCoverage = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context)
++      ? state.preferences[`sf:proposal-coverage:${request.coverageRef}`] : undefined)
++    if (privateCoverage.status !== "ok" || !privateCoverage.value || digestSfValue(privateCoverage.value) !== binding.coverageRecordDigest) return { status: "denied", reason: "choice-coverage-changed" }
++    // The ordinary registry intentionally requires its original case version.
++    // On replay, use only the exact basis already adopted into the current case,
++    // pinned to the canonical coverage proof and private record minted at prepare.
++    const adoptedBasis = receipt ? decision.costCoverageBases.find((basis) => basis.id === result.result.costCoverage.basisId && basis.version === result.result.costCoverage.basisVersion) : undefined
++    const coverage = receipt
++      ? adoptedBasis ? { status: "ok" as const, value: { coverageRef: request.coverageRef, basis: adoptedBasis, assessment: result.result.costCoverage } } : { status: "unavailable" as const, reason: "choice-coverage-unavailable" }
++      : await input.sources.resolveForecastCoverage(request.coverageRef, context)
++    if (coverage.status !== "ok") return coverage
++    if (digestSfValue(coverage.value) !== binding.coverageDigest || coverage.value.coverageRef !== request.coverageRef ||
++      digestSfValue(coverage.value.assessment) !== digestSfValue(result.result.costCoverage) || validateScenarioCoverage(result.result, coverage.value.basis, coverage.value.assessment)) return { status: "conflict", reason: "choice-coverage-changed" }
++    const existingBasis = decision.costCoverageBases.find((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version)
++    if (existingBasis && digestSfValue(existingBasis) !== digestSfValue(coverage.value.basis)) return { status: "conflict", reason: "coverage-inventory-version-conflict" }
++    input.fence!.observe(context, (snapshots) => {
++      const state = snapshots.dashboard.data.__sfProductV1 as SfProductState | undefined
++      return !!state && verifyCurrentChoiceBinding(state, request, digestSfValue(binding)) &&
++        digestSfValue(state.preferences[`sf:proposal-coverage:${request.coverageRef}`]) === binding.coverageRecordDigest &&
++        input.verifySnapshot(snapshots.planner, request, choice, result, context)
++    })
++    const caseRef = receipt?.caseRef ?? { ...request.caseRef, version: request.caseRef.version + 1 }
++    const resultRef = receipt?.resultRef ?? decisionScenarioResultRef(caseRef, result.requestDigest)
++    const expectedReceipt = { caseRef, resultRef }
++    const observeAdoption = (expectedDecision: DecisionCase, expectedResult: StoredDecisionResult) => {
++      input.fence!.observe(context, (snapshots) => {
++        const state = snapshots.dashboard.data.__sfProductV1 as SfProductState | undefined
++        const saved = state?.transactions[transactionKey]
++        return !!state && digestSfValue(state.cases[request.caseRef.id]) === digestSfValue(expectedDecision) &&
++          digestSfValue(state.decisionResults?.[resultRef]) === digestSfValue(expectedResult) &&
++          digestSfValue(state.decisionResults?.[request.resultRef]) === digestSfValue(result) &&
++          !!saved && saved.commandDigest === digestSfValue(request) && saved.targetIncarnation === request.caseRef.incarnation &&
++          digestSfValue(saved.value) === digestSfValue(expectedReceipt)
++      })
++    }
++    if (receipt) {
++      const checked = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.decisionResults?.[resultRef] : undefined)
++      if (checked.status !== "ok" || !checked.value || checked.value.kind !== "scenario" || checked.value.resultRef !== resultRef ||
++        digestSfValue(checked.value.caseRef) !== digestSfValue(caseRef) || checked.value.resultDigest !== request.resultDigest ||
++        digestSfValue(checked.value.result) !== request.resultDigest || checked.value.requestDigest !== result.requestDigest) return { status: "unavailable", reason: "choice-promotion-receipt-unavailable" }
++      observeAdoption(decision, checked.value)
++    } else {
+       const createdAt = input.now()
+       if (!Number.isFinite(Date.parse(createdAt)) || !await input.authorizePromotion(request, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
+-      const saved = await input.state.transaction(source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: loaded.storageVersion, targetRef: decision.id, targetIncarnation: decision.incarnation, idempotencyKey: `${operation}:promote-current-choice`, commandDigest: digestSfValue(request) }, async (state, authority, snapshot) => {
++      const saved = await input.state.transaction(source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: loaded.storageVersion,
++        targetRef: decision.id, targetIncarnation: decision.incarnation, idempotencyKey: `${operation}:promote-current-choice`, commandDigest: digestSfValue(request) }, async (state, authority, snapshot) => {
+         const actual = state.cases[decision.id]
+         const stored = state.decisionResults?.[request.resultRef]
+-        if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !stored || digestSfValue(stored) !== digestSfValue(result) || actual.choices.filter((item) => item.id === choice.id && digestSfValue(item) === request.choiceDigest).length !== 1 || actual.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version).length !== 1 || state.decisionResults?.[resultRef] || !verifyCurrentChoiceBinding(state, request, digestSfValue(binding)) || !input.verifySnapshot(snapshot, request, choice, result, context)) return { commit: false, value: null }
+-        state.cases[decision.id] = { ...actual, version: caseRef.version, state: "reconsidering", alternatives: actual.alternatives.map((item) => item.id === request.alternativeRef.id ? { ...item, version: request.alternativeRef.version + 1, scenario: request.scenario, result: result.result } : item), costCoverageBases: existingBasis ? actual.costCoverageBases : [...actual.costCoverageBases, coverage.value.basis] }
++        if (!sameAuthority(authority, context) || !actual || digestSfValue(actual) !== digestSfValue(decision) || !stored || digestSfValue(stored) !== digestSfValue(result) ||
++          state.decisionResults?.[resultRef] || !verifyCurrentChoiceBinding(state, request, digestSfValue(binding)) ||
++          digestSfValue(state.preferences[`sf:proposal-coverage:${request.coverageRef}`]) !== binding.coverageRecordDigest ||
++          !input.verifySnapshot(snapshot, request, choice, result, context)) return { commit: false, value: null }
++        const adopted: DecisionCase = { ...actual, version: caseRef.version, state: "reconsidering",
++          alternatives: actual.alternatives.map((item) => item.id === request.alternativeRef.id
++            ? { ...item, version: request.alternativeRef.version + 1, scenario: request.scenario, result: result.result } : item),
++          costCoverageBases: existingBasis ? actual.costCoverageBases : [...actual.costCoverageBases, coverage.value.basis] }
++        const adoptedResult: StoredDecisionResult = { ...result, caseRef, resultRef, createdAt }
++        state.cases[decision.id] = adopted
+         const results = state.decisionResults ??= {}
+-        results[resultRef] = { ...result, caseRef, resultRef, createdAt }
+-        return { commit: true, value: { caseRef, resultRef } }
++        results[resultRef] = adoptedResult
++        // The provider still has asynchronous authority and target checks to run.
++        // This guard checks their final staged bytes immediately before SQLite commit.
++        observeAdoption(adopted, adoptedResult)
++        return { commit: true, value: expectedReceipt }
+       })
+       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "choice-promotion-unavailable" }
+-      const confirmed = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[resultRef] } : undefined)
+-      if (confirmed.status !== "ok" || !confirmed.value?.decision || confirmed.value.decision.incarnation !== request.caseRef.incarnation || confirmed.value.decision.version !== caseRef.version || !confirmed.value.decision.participants.includes(context.binding.principalRef) || confirmed.value.decision.choices.filter((item) => item.id === choice.id && digestSfValue(item) === request.choiceDigest).length !== 1 || confirmed.value.decision.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version + 1 && digestSfValue(item.scenario) === result.requestDigest && digestSfValue(item.result) === request.resultDigest).length !== 1 || !confirmed.value.result || confirmed.value.result.resultDigest !== request.resultDigest || !await input.authorizeCase(confirmed.value.decision, context) || !await input.authorizePromotion(request, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
+-      return { status: "ok", value: saved.value }
+-    } catch { return { status: "unavailable", reason: "choice-promotion-unavailable" } }
++    }
++    if (!await input.authorizeCase(decision, context) || !await input.authorizePromotion(request, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
++    const confirmed = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
++      ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[resultRef], receipt: state.transactions[transactionKey] } : undefined)
++    if (confirmed.status !== "ok" || !confirmed.value?.decision || confirmed.value.decision.incarnation !== request.caseRef.incarnation || confirmed.value.decision.version !== caseRef.version ||
++      digestSfValue(confirmed.value.decision.choices) !== digestSfValue(decision.choices) || !confirmed.value.result || confirmed.value.result.resultDigest !== request.resultDigest ||
++      !confirmed.value.receipt || digestSfValue(confirmed.value.receipt.value) !== digestSfValue(expectedReceipt) || source.signal.aborted ||
++      input.host.requestFor(context) !== source || !input.fence!.current(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
++    return { status: "ok", value: expectedReceipt }
++  }
++  return async (request: CurrentChoicePromotion, context: TrustedDomainContext): Promise<PortResult<CurrentChoicePromotionReceipt>> => {
++    if (!isCurrentChoiceFence(input.fence)) return { status: "unavailable", reason: "choice-fence-unavailable" }
++    try { return await input.fence.run(context, () => promote(request, context)) }
++    catch { return { status: "unavailable", reason: "choice-promotion-unavailable" } }
+   }
+ }
++
++function sameAuthority(authority: SfStateAuthority, context: TrustedDomainContext) {
++  return authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision
++}
+diff --git a/modules/sucafina/Sucafinav1/product/planner/current-choice.ts b/modules/sucafina/Sucafinav1/product/planner/current-choice.ts
+index c9d83f1dcc7865e9c724f9246a65102efa7824ca..349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae 100644
+--- a/modules/sucafina/Sucafinav1/product/planner/current-choice.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/current-choice.ts
+@@ -1,18 +1,22 @@
+ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { ChoiceRecord } from "../contracts/decisions.ts"
+-import type { PlannerPort, PortResult } from "../contracts/ports.ts"
++import type { DomainPortHost, PlannerPort, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
+ import type { createPlannerResultPersistence } from "./persistence.ts"
+ import type { createPlannerSourceIssuer } from "./source-issuer.ts"
+ import type { Snapshot } from "../../runtime/contract.ts"
+ 
++import { isCurrentChoiceFence, type CurrentChoiceFence } from "../decisions/current-choice-preview.ts"
++
+ type CaseRef = { id: string; incarnation: string; version: number }
+ type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
+ 
+ /** Re-simulate an authorized historic choice without modifying the recorded choice. */
+ export function createCurrentPlannerChoice(input: {
++  fence?: CurrentChoiceFence
++  host?: Pick<DomainPortHost, "requestFor" | "revalidate">
+   planner: Pick<PlannerPort, "simulateScenario">
+   issueSource: ReturnType<typeof createPlannerSourceIssuer>
+   persist: ReturnType<typeof createPlannerResultPersistence>
+@@ -21,17 +25,19 @@
+   verifyContinuity: (original: RecordEvidence, current: RecordEvidence, context: TrustedDomainContext) => Promise<PortResult<{ fence: () => Promise<boolean>; fenceSnapshot: (snapshot: Snapshot) => boolean; revalidate: () => Promise<boolean> }>>
+   operationIdentity: (context: TrustedDomainContext) => string | undefined
+ }) {
+-  return async (request: { caseRef: CaseRef; choice: ChoiceRecord }, context: TrustedDomainContext) => {
++  const resimulate = async (request: { caseRef: CaseRef; choice: ChoiceRecord }, context: TrustedDomainContext) => {
+     const choice = structuredClone(request.choice)
+     const caseRef = structuredClone(request.caseRef)
++    const source = input.host?.requestFor(context)
+     const callId = input.operationIdentity(context)
+-    if (!callId || !await input.authorizeChoice(caseRef, choice, context)) return { status: "denied", reason: "choice-resimulation-unavailable" } as const
++    if (context.kind !== "ui" || !source || !callId || !await input.authorizeChoice(caseRef, choice, context)) return { status: "denied", reason: "choice-resimulation-unavailable" } as const
+     const original = choice.result.sourceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.refId === choice.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version" && ref.refDigest === digestSfEvidenceRef(ref) && ref.installationId === context.binding.installationId && ref.projectId === context.binding.projectId)
+     if (original.length !== 1) return { status: "unavailable", reason: "choice-source-unavailable" } as const
+     const current = await input.issueSource(original[0]!.target.recordId, context)
+     if (current.status !== "ok") return current
+     const continuity = await input.verifyContinuity(original[0]!, current.value.evidence, context)
+     if (continuity.status !== "ok" || !await continuity.value.revalidate()) return { status: "unavailable", reason: "choice-source-continuity-unavailable" } as const
++    input.fence!.observe(context, (snapshots) => continuity.value.fenceSnapshot(snapshots.planner))
+     const scenario = { ...choice.scenario, baseRef: current.value.evidence.refId }
+     const simulated = await input.planner.simulateScenario(scenario, context)
+     if (simulated.status !== "ok") return simulated
+@@ -42,6 +48,13 @@
+     if (stored.status !== "ok" || stored.value.kind !== "scenario" || stored.value.caseRef.id !== caseRef.id || stored.value.caseRef.incarnation !== caseRef.incarnation || stored.value.caseRef.version !== caseRef.version || stored.value.requestDigest !== digestSfValue(scenario) || stored.value.resultDigest !== digestSfValue(simulated.value)) return { status: "stale", reason: "choice-result-unavailable" } as const
+     const again = await input.issueSource(original[0]!.target.recordId, context)
+     if (again.status !== "ok" || again.value.evidence.refDigest !== current.value.evidence.refDigest || !await continuity.value.revalidate() || !await input.authorizeChoice(caseRef, choice, context)) return { status: "stale", reason: "choice-or-source-changed" } as const
++    if (input.host?.requestFor(context) !== source || source.signal.aborted || !input.fence!.current(context)) return { status: "stale", reason: "choice-or-source-changed" } as const
+     return { status: "ok", value: { resultRef: saved.value.resultRef, scenario, result: simulated.value, choiceDigest: digestSfValue(choice), requestDigest: digestSfValue(scenario), resultDigest: digestSfValue(simulated.value), originalSource: original[0]!, source: current.value.evidence, fenceSnapshot: continuity.value.fenceSnapshot } } as const
+   }
++  return async (request: { caseRef: CaseRef; choice: ChoiceRecord }, context: TrustedDomainContext): Promise<Awaited<ReturnType<typeof resimulate>>> => {
++    if (!isCurrentChoiceFence(input.fence) || !input.host) return { status: "unavailable", reason: "choice-fence-unavailable" }
++    try { return await input.fence.run(context, () => resimulate(request, context)) }
++    catch { return { status: "unavailable", reason: "choice-resimulation-unavailable" } }
++  }
+ }
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts b/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts
+index d220c42a28e87b034ca3513aca088a0dd0db262b..b2f96bec220a6ec2f674057546541d5a700e969e 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts
+@@ -5,7 +5,7 @@
+ import type { SfProductStatePort } from "../../../product/contracts/state.ts"
+ import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+ import { reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
+-import { createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
++import { createCurrentChoiceFence, createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
+ import { createCurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
+ import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
+ import { createProposalCoverageRegistry } from "../../../product/decisions/proposal-coverage.ts"
+@@ -91,15 +91,25 @@
+     expect(digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })).toBe(coverageBeforeObservation)
+     const plannerAfterQuote = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
+     const writes = new WeakSet<object>()
+-    const makeState = (store: typeof fixture.store) => createSfProductState({
++    let activeStore = fixture.store
++    const persistence: typeof fixture.store = { ...fixture.store,
++      transaction: (surface, work, options) => activeStore.transaction(surface, work, options),
++      transactionAll: (work, options) => activeStore.transactionAll!(work, options),
++      currentSnapshots: () => activeStore.currentSnapshots?.(),
++    }
++    const operationIdentity = () => `wp11-lifecycle-command-${human.round}`
++    const fence = createCurrentChoiceFence({ persistence, host: () => fixture.host, operationIdentity,
++      identity: () => ({ installationId: fixture.context.binding.installationId, projectId: fixture.context.binding.projectId }) })
++    const makeState = (store: Parameters<typeof createSfProductState>[0]["persistence"]) => createSfProductState({
+       persistence: store, proposalCoverageWrites: writes, createId: () => "unused-lifecycle-incarnation",
+       resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }),
+       authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? { principalRef: "finance", policyVersion: "policy", accessRevision: "access" } : undefined,
+     })
+-    const state = makeState(fixture.store)
++    const state = makeState(fence.persistence)
++    const outside = makeState(persistence)
+     const authorizeCase = async (decision: DecisionCase, context: TrustedDomainContext) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && decision.participants.includes(context.binding.principalRef) && await fixture.host.revalidate(context)
+     const sourceFence = (snapshot: Snapshot) => human.sourceAllowed && digestSfValue({ versionId: currentSource.target.recordId, projection: projectPlannerSource(snapshot, actor, currentSource.target.recordId) }) === currentSource.target.projectionDigest
+-    const sourceCurrent = async () => human.sourceAllowed && await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: sourceFence(snapshot) }))
++    const sourceCurrent = async () => human.sourceAllowed && await activeStore.transaction("planner", async (snapshot) => ({ commit: false, value: sourceFence(snapshot) }))
+     const resolveEvidence = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext): Promise<readonly BusinessEvidenceResolution[]> => {
+       const current = await sourceCurrent() && await fixture.host.revalidate(context)
+       return Promise.all(refs.map(async (ref) => {
+@@ -125,7 +135,7 @@
+       },
+     })
+     const resimulate = createCurrentPlannerChoice({
+-      planner: fixture.planner, persist, store: results, authorizeChoice,
++      fence, host: fixture.host, planner: fixture.planner, persist, store: results, authorizeChoice,
+       issueSource: (versionId, context) => fixture.sources.resolveForecastSource(versionId, context),
+       verifyContinuity: async (original, current, context) => digestSfValue(original) === digestSfValue(originalSource) && digestSfValue(current) === digestSfValue(currentSource) && await fixture.host.revalidate(context) && await sourceCurrent()
+         ? { status: "ok", value: { fence: sourceCurrent, fenceSnapshot: sourceFence, revalidate: sourceCurrent } }
+@@ -177,7 +187,7 @@
+       console.debug("WP11_CURRENT_CHOICE_DIAGNOSTIC", JSON.stringify(failure))
+     }
+     const preview = createCurrentChoicePreview({
+-      state, host: fixture.host, sources, results, authorizeCase, resimulate: (request, context) => tracePreview("resimulate", () => resimulate(request, context)), writes,
++      fence, state, host: fixture.host, sources, results, authorizeCase, resimulate: (request, context) => tracePreview("resimulate", () => resimulate(request, context)), writes,
+       authorizePreview: async () => human.preview,
+       registerCoverage: registry.registerProposalCoverage,
+       coverageEvidence: {
+@@ -223,9 +233,9 @@
+         const valid = digestSfValue(binding.originalSource) === digestSfValue(originalSource) && digestSfValue(binding.source) === digestSfValue(currentSource) && await fixture.host.revalidate(context) && await sourceCurrent()
+         if (valid && human.raceCase) {
+           human.raceCase = false
+-          const latest = await state.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
++          const latest = await outside.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
+           if (latest.status !== "ok" || !latest.value) throw new Error("Concurrent case unavailable")
+-          const changed = await state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: "wp11-lifecycle-case-race", commandDigest: digestSfValue({ objective: "Review the training quote with updated context" }) }, async (value) => {
++          const changed = await outside.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: "wp11-lifecycle-case-race", commandDigest: digestSfValue({ objective: "Review the training quote with updated context" }) }, async (value) => {
+             const current = value.cases[fixture.caseRef.id]!
+             value.cases[fixture.caseRef.id] = { ...current, version: current.version + 1, objective: "Review the training quote with updated context" }
+             return { commit: true, value: true }
+@@ -234,17 +244,17 @@
+         }
+         return valid
+       },
+-      operationIdentity: () => `wp11-lifecycle-preview-${human.round}`,
++      operationIdentity,
+     })
+     const makePromotion = (currentState: SfProductStatePort) => createCurrentChoicePromotion({
+-      state: currentState, host: fixture.host, sources, authorizeCase,
++      fence, state: currentState, host: fixture.host, sources, authorizeCase,
+       authorizePromotion: async () => human.promote,
+-      verifyProvenance: async (request, candidate, result, context) => {
+-        const binding = await preview.read(request, context)
++      verifyProvenance: async (request, candidate, result, context, receipt) => {
++        const binding = await preview.read(request, context, receipt)
+         return binding.status === "ok" && digestSfValue(candidate) === originalDigest && result.resultDigest === request.resultDigest && await sourceCurrent()
+       },
+       verifySnapshot: (snapshot, _request, candidate) => sourceFence(snapshot) && digestSfValue(candidate) === originalDigest,
+-      operationIdentity: () => "wp11-lifecycle-human-promotion", now: () => "2026-11-14T00:00:00Z",
++      operationIdentity, now: () => "2026-11-14T00:00:00Z",
+     })
+     const promotion = makePromotion(state)
+     const previewRequest = { caseRef: recorded.value.caseRef, choiceId: choice.id, alternativeRef: { id: "selected", version: 1 }, coverageRef: "current-training-inventory" }
+@@ -297,8 +307,9 @@
+     // dispose() is idempotent; fixture.cleanup() can safely repeat it after this real restart.
+     await fixture.store.dispose()
+     const reopened = await openLocalStore(fixture.directory)
++    activeStore = reopened
+     try {
+-      const restoredState = makeState(reopened)
++      const restoredState = makeState(fence.persistence)
+       const restored = await restoredState.read(fixture.request, "cases", (value) => ({ decision: value.cases[fixture.caseRef.id], result: value.decisionResults?.[promoted.value.resultRef] }))
+       if (restored.status !== "ok" || !restored.value.decision) throw new Error("Current choice after reopen unavailable")
+       expect(restored.value.decision.version).toBe(4)
+@@ -318,3 +329,4 @@
+     } finally { await reopened.dispose() }
+   } finally { await fixture.cleanup() }
+ }, 180000)
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts b/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts
+index 87e24342ee27b98e26b29a69a2f8de6b7bf7206c..e3b25caeece77ca1d755bc64e8253ca003179793 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts
+@@ -8,8 +8,9 @@
+ import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
+ import type { DomainPortHost } from "../../../product/contracts/ports.ts"
+ import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
+-import type { SfProductState } from "../../../product/contracts/state.ts"
+-import { createCurrentChoicePreview, type CurrentChoiceBinding } from "../../../product/decisions/current-choice-preview.ts"
++import type { SfProductState, SfStateNamespace } from "../../../product/contracts/state.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { createCurrentChoiceFence, createCurrentChoicePreview, type CurrentChoiceBinding } from "../../../product/decisions/current-choice-preview.ts"
+ import type { CurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
+ import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
+ import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+@@ -51,11 +52,12 @@
+     const context = admitted.value
+     admittedContext = context
+     const host: Pick<DomainPortHost, "requestFor" | "revalidate"> = { requestFor: (trusted) => trusted.kind === "ui" ? ui.requestFor(trusted) : undefined, revalidate: (trusted) => trusted.kind === "ui" ? ui.revalidate(trusted) : Promise.resolve(false) }
++    const fence = createCurrentChoiceFence({ persistence: store, host: () => host, operationIdentity: (trusted) => trusted.kind === "ui" ? ui.operationIdentity(trusted) : undefined, identity: () => identity })
+     const writes = new WeakSet<object>()
+     const access = { preferencesRead: true, preferencesWrite: true }
+     const race = { armed: false, authorizations: 0, applied: false, namespaceFence: false, finalAuthorizations: 0 }
+     const lateLease = revocation === "finished lease" || revocation === "replacement lease"
+-    const state = createSfProductState({ persistence: store, proposalCoverageWrites: writes, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (incoming, _snapshot, namespace, mode) => {
++    const stateOptions = { proposalCoverageWrites: writes, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (incoming: Request, _snapshot: Snapshot, namespace: SfStateNamespace, mode: "read" | "write") => {
+       // Like product-authority, namespace authorization authenticates the
+       // Request/principal; it does not attest the separately retained UI lease.
+       if (incoming !== request || namespace === "preferences" && !(mode === "read" ? access.preferencesRead : access.preferencesWrite)) return undefined
+@@ -69,7 +71,9 @@
+         race.applied = true
+       }
+       return { principalRef: identity.principalRef, policyVersion: identity.policyVersion, accessRevision: identity.accessRevision }
+-    } })
++    } }
++    const state = createSfProductState({ ...stateOptions, persistence: fence.persistence })
++    const outside = createSfProductState({ ...stateOptions, persistence: store })
+     const originalSource = source("original-source", 1)
+     const currentSource = source("current-source", 2)
+     const originalScenario: ScenarioRequest = { baseRef: originalSource.refId, operations: [], assumptions: [] }
+@@ -100,32 +104,33 @@
+     let unexpectedProducerCalls = 0
+     const unused = (): never => { unexpectedProducerCalls += 1; throw new Error("Reader must not calculate, prepare, promote or dispatch") }
+     const unusedAsync = async (): Promise<never> => unused()
+-    const preview = createCurrentChoicePreview({ state, host, results, writes,
++    const preview = createCurrentChoicePreview({ state, host, fence, results, writes,
+       sources: { resolveForecastCoverage: unusedAsync }, coverageEvidence: { entries: unusedAsync, resolve: unusedAsync, supports: unused, verifySnapshot: unused },
+-      authorizePreview: async () => false, resimulate: unusedAsync, registerCoverage: unusedAsync, verifySnapshot: unused,
++      authorizePreview: async () => false, resimulate: unusedAsync, registerCoverage: unusedAsync,
++      // Legacy binding-only fixture; canonical source snapshot coverage lives in current-choice-cohort.
++      verifySnapshot: (_snapshot, _request, value) => digestSfValue(value.originalSource) === digestSfValue(originalSource) && digestSfValue(value.source) === digestSfValue(currentSource),
+       operationIdentity: (trusted) => trusted.kind === "ui" ? ui.operationIdentity(trusted) : undefined,
+       verifySources: async (value) => digestSfValue(value.originalSource) === digestSfValue(originalSource) && digestSfValue(value.source) === digestSfValue(currentSource) && await ui.revalidate(context),
+       authorizeCase: async (value) => {
+         const allowed = await authorizeCase(value)
+         if (race.armed && ++race.authorizations === 2) {
+           if (revocation === "membership") {
+-            const current = await state.read(request, "cases", (stored) => stored.cases[caseRef.id])
++            const current = await outside.read(request, "cases", (stored) => stored.cases[caseRef.id])
+             if (current.status !== "ok" || !current.value) throw new Error("Race case unavailable")
+-            const removed = await state.transaction(request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "remove-member-during-final-authorization", commandDigest: digestSfValue({ caseRef, remove: identity.principalRef }) }, async (stored) => {
++            const removed = await outside.transaction(request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "remove-member-during-final-authorization", commandDigest: digestSfValue({ caseRef, remove: identity.principalRef }) }, async (stored) => {
+               const actual = stored.cases[caseRef.id]
+               if (!actual || digestSfValue(actual) !== digestSfValue(current.value)) return { commit: false, value: false }
+               stored.cases[caseRef.id] = { ...actual, version: actual.version + 1, participants: [] }
+               return { commit: true, value: true }
+             })
+             if (removed.status !== "ok" || !removed.value) throw new Error("Membership race did not commit")
+-          } else if (revocation === "preferences read") {
+-            access.preferencesRead = false
+           }
++          if (revocation === "preferences read") access.preferencesRead = false
+           race.namespaceFence = lateLease
+           race.applied = !lateLease
+         }
+-        // The callback legitimately authorized the supplied snapshot. The global
+-        // UI lease remains valid; final case and namespace fences must see the change.
++        // The callback authorized the supplied snapshot. Case/namespace races
++        // preserve the lease; lease races revoke it in the later C08 callback.
+         return allowed
+       },
+     })
+@@ -145,9 +150,9 @@
+       expect(ui.requestFor(replacementContext)).toBe(replacementRequest)
+       expect(replacementContext.binding.principalRef).toBe(context.binding.principalRef)
+     }
+-    const after = await state.read(request, "cases", (stored) => stored.cases[caseRef.id])
++    const after = await outside.read(request, "cases", (stored) => stored.cases[caseRef.id])
+     expect(after).toMatchObject({ status: "ok", value: { version: revocation === "membership" ? 3 : 2, participants: revocation === "membership" ? [] : [identity.principalRef], choices: [choice], preparedChanges: [], receipts: [] } })
+-    if (revocation === "preferences read") expect(await state.read(request, "preferences", () => true)).toEqual({ status: "denied", reason: "product-access-unavailable" })
++    if (revocation === "preferences read") expect(await outside.read(request, "preferences", () => true)).toEqual({ status: "denied", reason: "product-access-unavailable" })
+     expect(decision.participants).toEqual([identity.principalRef])
+     expect(unexpectedProducerCalls).toBe(0)
+   } finally {
+diff --git a/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..dd5c155115190cf4af4ab76ec37970e3df268253
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts
+@@ -0,0 +1,248 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { Location } from "@orchestra/core/location"
++import { AbsolutePath } from "@orchestra/core/schema"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { ChoiceRecord, CostCoverageBasis, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
++import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import type { SfProductState, SfProductStatePort } from "../../../product/contracts/state.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { createCurrentChoiceFence, createCurrentChoicePreview, type CurrentChoiceBinding } from "../../../product/decisions/current-choice-preview.ts"
++import { createCurrentChoicePromotion, type CurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
++import { createProposalCoverageRegistry } from "../../../product/decisions/proposal-coverage.ts"
++import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
++import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
++import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
++import { createPlannerConfirmationObserver } from "../../../product/planner/confirmation.ts"
++import { createPlannerProduct } from "../../../product/planner/product.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { resolve } from "../../../src/identity.ts"
++
++type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
++const horizon = { start: "2027-01-01", end: "2027-12-31" }
++const at = "2026-11-14T00:00:00Z"
++
++function unknownResult(id: string, reference: RecordEvidence, alternativeVersion: number): ScenarioResult {
++  return { id, version: 0, currency: "USD", horizon, components: [], sourceRefs: [reference], comparisonStatus: "conditioned", knownSubtotal: null, total: null, unresolvedConditions: ["authority-fixture-no-financial-claim"], restrictions: ["preview-not-applied"], costCoverage: { basisId: "basis", basisVersion: reference.target.version, alternativeId: "selected", alternativeVersion, currency: "USD", horizon, coverageState: "pending", entries: [], derivedMissingCategoryIds: [], issues: ["inventory-unavailable"], evaluatedSourceRefs: [reference] } }
++}
++
++/** Real C08/UI/source adapters, with seeded unknown financial results only.
++ * This fixture proves authorization and snapshot fences, not the financial lifecycle.
++ */
++export async function currentChoiceAuthorityFixture() {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-current-choice-authority-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  try {
++    const clock = { now: Date.parse(at) }
++    const authenticated = { principal: "person", active: true }
++    const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
++    const events = { finalAuthorization: 0, applied: 0, producerCalls: 0 }
++    const hooks: { afterFinalCapture?: () => Promise<void>; afterSources?: () => Promise<void>; afterPromotionWork?: () => Promise<void>; promotionSnapshot?: Snapshot; pendingFinal: boolean; pendingPromotion: boolean } = { pendingFinal: false, pendingPromotion: false }
++    const controller = new AbortController()
++    const request = new Request("https://example.test/current-choice", { headers: { authorization: "cohort-session" }, signal: controller.signal })
++    const writes = new WeakSet<object>()
++    let nextId = 0
++    let product: ReturnType<typeof createSfProductAuthority>
++    const fence = createCurrentChoiceFence({ persistence: store, host: () => product.host,
++      operationIdentity: (context) => context.kind === "ui" ? product.ui.operationIdentity(context) : undefined, identity: () => identity })
++    const sourceOptions = { createId: () => `cohort-source-${++nextId}`, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) }
++    const persistence = createSfSourcePersistence({ ...sourceOptions, persistence: fence.persistence })
++    // A genuinely separate writer for races; it does not borrow the operation scope.
++    const external = createSfSourcePersistence({ ...sourceOptions, persistence: store })
++    for (const surface of ["dashboard", "planner", "procurement"] as const) {
++      await external.initializeSources(surface)
++      await external.transaction(surface, async (snapshot) => {
++        snapshot.data.roleMap = [{ surface, role: surface === "planner" ? "finance" : "viewer", entra: "cohort-group", version: 1, by: "admin" }]
++        if (surface === "planner") snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", name: "Observed source", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
++        return { commit: true, value: undefined }
++      })
++    }
++    const options: Parameters<typeof createSfProductAuthority>[0] = {
++      identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "policy",
++      persistence, proposalCoverageWrites: writes, createId: () => `cohort-state-${++nextId}`, now: () => clock.now,
++      grants: [{ principalRef: "person", namespaces: ["cases", "preferences"], operations: ["sf_case_read"], humanActions: ["decisions.edit", "decisions.promote-alternative"] }],
++      authenticate: async (incoming, context) => {
++        if (hooks.pendingPromotion && context?.surface === "dashboard") {
++          hooks.pendingPromotion = false
++          events.finalAuthorization += 1
++          await hooks.afterPromotionWork?.()
++        }
++        if (hooks.pendingFinal && context?.surface === "dashboard") {
++          hooks.pendingFinal = false
++          events.finalAuthorization += 1
++          await hooks.afterFinalCapture?.()
++        }
++        if (incoming.headers.get("authorization") !== "cohort-session" || !context || !authenticated.active) return null
++        return resolve(authenticated.principal, [...context.roleMap], (group) => group === "cohort-group")
++      },
++      environment: async () => ({ at, id: () => `environment-${++nextId}`, directory: [] }),
++      commandIdentity: async (incoming, operation) => `${incoming.headers.get("x-command") ?? "cohort-command"}:${operation}`,
++      inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
++      providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
++    }
++    product = createSfProductAuthority(options)
++    const outside = createSfProductAuthority({ ...options, persistence: external })
++    const caseRef = { id: "case", incarnation: "case-incarnation", version: 2 }
++    const intentDigest = digestSfValue({ caseRef })
++    const admitted = await product.ui.admit(request, "sf_case_read", intentDigest)
++    if (admitted.status !== "ok" || !await product.ui.validate(admitted.value, "sf_case_read", intentDigest)) throw new Error("Real UI reader admission unavailable")
++    const context = admitted.value
++    const contexts: TrustedUiContext[] = [context]
++    const planner = createPlannerProduct({ host: product.host, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "reader-does-not-calculate" }) })
++    const original = await planner.issueSource("v0", context)
++    if (original.status !== "ok") throw new Error(`Original canonical source unavailable: ${JSON.stringify(original)}`)
++    await external.transaction("planner", async (snapshot) => {
++      const versions = snapshot.data.versions as { lines: { b: number[] }[] }[]
++      versions[0]!.lines[0]!.b[0] = 200
++      return { commit: true, value: undefined }
++    })
++    const current = await planner.issueSource("v0", context)
++    if (current.status !== "ok") throw new Error(`Current canonical source unavailable: ${JSON.stringify(current)}`)
++    const originalSource = original.value.evidence
++    const currentSource = current.value.evidence
++    const continuity = createPlannerConfirmationObserver({ host: product.host, issueSource: planner.issueSource, planner: planner.planner })
++    const proof = await continuity.prepareResimulationContinuity(originalSource, currentSource, context)
++    if (proof.status !== "ok") throw new Error(`Canonical continuity unavailable: ${JSON.stringify(proof)}`)
++    const originalScenario: ScenarioRequest = { baseRef: originalSource.refId, operations: [], assumptions: [] }
++    const currentScenario: ScenarioRequest = { ...originalScenario, baseRef: currentSource.refId }
++    const originalResult = unknownResult("original-preview", originalSource, 1)
++    const choice: ChoiceRecord = { id: "choice", alternativeId: "selected", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [originalSource], principalRef: "person", reason: "Seeded historical reader fixture; no financial or application claim.", at, scenario: originalScenario, result: originalResult, comparison: { baselineResultRef: "retained-baseline", alternativeResultRef: "retained-original", costCoverageRefs: [], criterionResults: [], unresolvedConditions: ["authority-fixture-no-financial-claim"], comparisonStatus: "conditioned", knownDifference: null, completeDifference: null }, comparisonStatus: "conditioned", costCoverage: originalResult.costCoverage }
++    const decision: DecisionCase = { ...caseRef, state: "chosen", objective: "Read an authenticated current-choice binding", currency: "USD", horizon, criteria: [], participants: ["person"], sourceRefs: [originalSource, currentSource], alternatives: [{ id: "selected", version: 1, title: "Historical selection", scenario: originalScenario, result: originalResult }], costCoverageBases: [], assumptions: [], questions: [], choices: [choice], preparedChanges: [], receipts: [], ledger: [] }
++    const seed = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref, targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "seed-reader-case", commandDigest: digestSfValue(decision) }, async (value) => { value.cases[caseRef.id] = decision; return { commit: true, value: true } })
++    if (seed.status !== "ok" || !seed.value) throw new Error(`Real C08 case unavailable: ${JSON.stringify(seed)}`)
++    const authorizeCase = async (value: DecisionCase, trusted: TrustedDomainContext) => value.id === caseRef.id && value.incarnation === caseRef.incarnation && value.participants.includes(trusted.binding.principalRef) && await product.host.revalidate(trusted)
++    const verifyResultSources = async (_value: unknown, refs: readonly BusinessEvidenceRef[], trusted: TrustedDomainContext) => {
++      if (!refs.length || refs.some((ref) => digestSfValue(ref) !== digestSfValue(currentSource))) return false
++      const resolved = await planner.sources.resolveForecastSource(currentSource.refId, trusted)
++      return resolved.status === "ok" && digestSfValue(resolved.value.evidence) === digestSfValue(currentSource) && await product.host.revalidate(trusted)
++    }
++    const results = createSfDecisionResultStore({ state: product.state, host: product.host, authorizeCase, verifySources: verifyResultSources, createId: () => `cohort-result-${++nextId}`, now: () => at })
++    const producer = await results.write({ kind: "scenario", caseRef, requestDigest: digestSfValue(currentScenario), result: unknownResult("producer-preview", currentSource, 2), sourceRefs: [currentSource], idempotencyKey: "cohort-producer" }, context)
++    const reviewed = await results.write({ kind: "scenario", caseRef, requestDigest: digestSfValue(currentScenario), result: unknownResult("reviewed-preview", currentSource, 2), sourceRefs: [currentSource], idempotencyKey: "cohort-reviewed" }, context)
++    if (producer.status !== "ok" || reviewed.status !== "ok" || producer.value.kind !== "scenario" || reviewed.value.kind !== "scenario") throw new Error("Canonical result-store seeding unavailable")
++    const basis: CostCoverageBasis = { id: "basis", version: currentSource.target.version, decisionType: "cohort-unpriced", categoryIds: [], additionalCategoryIds: [], sourceRefs: [currentSource] }
++    const registry = createProposalCoverageRegistry({ state: product.state, host: product.host, authorizeCase, proposalCoverageWrites: writes,
++      operationIdentity: (trusted) => trusted.kind === "ui" ? product.ui.operationIdentity(trusted) : undefined, now: () => at,
++      verifyEvidence: async (record, trusted) => {
++        if (digestSfValue(record.basis) !== digestSfValue(basis) || !await verifyResultSources(record.result, record.sourceRefs, trusted)) return false
++        const assessed = assessCostCoverage({ basis, alternativeId: "selected", alternativeVersion: 2, currency: "USD", horizon, entries: [], components: [],
++          evidence: record.sourceRefs.map((ref) => ({ ref, state: "fresh" as const, accessRevision: trusted.binding.accessRevision, checkedAt: at })),
++          supports: () => { throw new Error("Unknown inventory must not imply applicability") } })
++        return digestSfValue(assessed) === digestSfValue(record.assessment) && digestSfValue(record.result.costCoverage) === digestSfValue(assessed)
++      },
++      verifySnapshot: (snapshot, record) => digestSfValue(record.basis) === digestSfValue(basis) && proof.value.fenceSnapshot(snapshot),
++    })
++    const coverage = await registry.registerProposalCoverage({ caseRef: encodeCaseRef(caseRef), expectedCaseVersion: caseRef.version, basis, assessment: reviewed.value.result.costCoverage, result: reviewed.value.result, scenario: currentScenario }, context)
++    if (coverage.status !== "ok") throw new Error(`Actual pending coverage registry unavailable: ${JSON.stringify(coverage)}`)
++    const resolvedCoverage = await registry.resolveForecastCoverage(coverage.value.coverageRef, context)
++    const retainedCoverage = await product.state.read(request, "preferences", (stored) => stored.preferences[`sf:proposal-coverage:${coverage.value.coverageRef}`])
++    if (resolvedCoverage.status !== "ok" || retainedCoverage.status !== "ok" || !retainedCoverage.value) throw new Error("Canonical coverage binding unavailable")
++    const promotion: CurrentChoicePromotion = { caseRef, choiceId: choice.id, choiceDigest: digestSfValue(choice), alternativeRef: { id: "selected", version: 1 }, resultRef: reviewed.value.resultRef, resultDigest: reviewed.value.resultDigest, scenario: currentScenario, coverageRef: coverage.value.coverageRef }
++    const body = { schema: "sf-current-choice-binding-v1" as const, promotion, originalSource, source: currentSource, producerResultRef: producer.value.resultRef, producerResultDigest: producer.value.resultDigest, coverageDigest: digestSfValue(resolvedCoverage.value), coverageRecordDigest: digestSfValue(retainedCoverage.value) }
++    const binding: CurrentChoiceBinding = { ...body, recordDigest: digestSfValue(body) }
++    const preferences = await product.state.read(request, "preferences", () => null)
++    if (preferences.status !== "ok") throw new Error("Real preference authority unavailable")
++    const put = async (state: SfProductState) => { state.preferences[`sf:proposal-coverage:current-choice:${digestSfValue(promotion.resultRef)}`] = binding; return { commit: true, value: true } }
++    writes.add(put)
++    const bound = await product.state.transaction(request, { namespace: "preferences", expectedStorageVersion: preferences.storageVersion, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "seed-private-reader-binding", commandDigest: digestSfValue(binding) }, put).finally(() => writes.delete(put))
++    if (bound.status !== "ok" || !bound.value) throw new Error("Private binding unavailable")
++    const state: SfProductStatePort = { ...product.state, transaction: (incoming, command, work) => product.state.transaction(incoming, command, async (stored, authority, snapshot) => {
++      const result = await work(stored, authority, snapshot)
++      if (hooks.afterPromotionWork && command.idempotencyKey.endsWith(":promote-current-choice") && result.commit) {
++        // Retain the provider's actual Planner work snapshot. currentSnapshots()
++        // intentionally returns copies and cannot inject this late adapter race.
++        hooks.promotionSnapshot = snapshot
++        hooks.pendingPromotion = true
++      }
++      return result
++    }), read: (incoming, namespace, read) => product.state.read(incoming, namespace, async (stored, authority) => {
++      const value = await read(stored, authority)
++      // A timing probe around the real provider callback, never an authority replacement.
++      if (hooks.afterFinalCapture && namespace === "cases" && value && typeof value === "object" && "decision" in value && "result" in value && "producer" in value && "binding" in value) hooks.pendingFinal = true
++      return value
++    }) }
++    const unused = (): never => { events.producerCalls += 1; throw new Error("Read must not calculate, prepare or promote") }
++    const unusedAsync = async (): Promise<never> => unused()
++    const preview = createCurrentChoicePreview({ state, host: product.host, fence, results, writes,
++      sources: registry, coverageEvidence: { entries: unusedAsync, resolve: unusedAsync, supports: unused, verifySnapshot: unused },
++      authorizePreview: async () => false, resimulate: unusedAsync, registerCoverage: unusedAsync,
++      operationIdentity: (trusted) => trusted.kind === "ui" ? product.ui.operationIdentity(trusted) : undefined,
++      authorizeCase, verifySnapshot: (snapshot, _request, value) => digestSfValue(value) === digestSfValue(binding) && proof.value.fenceSnapshot(snapshot),
++      verifySources: async (value, trusted) => {
++        if (digestSfValue(value) !== digestSfValue(binding)) return false
++        const observed = await continuity.prepareResimulationContinuity(value.originalSource, value.source, trusted)
++        const valid = observed.status === "ok" && await observed.value.revalidate()
++        if (valid && hooks.afterSources) { const work = hooks.afterSources; hooks.afterSources = undefined; await work() }
++        return valid
++      },
++    })
++    const promotionProofs = new WeakMap<TrustedDomainContext, (snapshot: Snapshot) => boolean>()
++    const promote = createCurrentChoicePromotion({ state, host: product.host, fence, sources: registry, authorizeCase,
++      authorizePromotion: (payload, trusted) => product.human.authorize(trusted, "decisions.promote-alternative", payload),
++      verifyProvenance: async (payload, retained, result, trusted, promoted) => {
++        if (digestSfValue(payload) !== digestSfValue(promotion) || digestSfValue(retained) !== digestSfValue(choice) || result.resultDigest !== promotion.resultDigest || result.requestDigest !== digestSfValue(currentScenario)) return false
++        const bound = await preview.read(payload, trusted, promoted)
++        if (bound.status !== "ok" || digestSfValue(bound.value) !== digestSfValue(binding)) return false
++        const observed = await continuity.prepareResimulationContinuity(originalSource, currentSource, trusted)
++        if (observed.status !== "ok" || !await observed.value.revalidate()) return false
++        promotionProofs.set(trusted, observed.value.fenceSnapshot)
++        return true
++      },
++      verifySnapshot: (snapshot, payload, retained, result, trusted) => digestSfValue(payload) === digestSfValue(promotion) && digestSfValue(retained) === digestSfValue(choice) && result.resultDigest === promotion.resultDigest && promotionProofs.get(trusted)?.(snapshot) === true,
++      operationIdentity: (trusted) => trusted.kind === "ui" ? product.ui.operationIdentity(trusted) : undefined, now: () => at,
++    })
++    const snapshot = () => store.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
++    return { store, persistence, external, outside, product, fence, preview, request, controller, context, contexts, intentDigest, identity, authenticated, clock, events, hooks,
++      caseRef, choice, decision, binding, promotion, promote, results, currentSource, originalSource, snapshot, registry, writes, authorizeCase,
++      changePolicy() { options.policyVersion = "policy-replaced" },
++      async admitPromotion(payload: CurrentChoicePromotion = promotion, command = "human-promotes-current") {
++        const post = new Request(request, { method: "POST", headers: { authorization: "cohort-session", origin: "https://example.test", "x-command": command } })
++        const human = await product.human.admit(post, "decisions.promote-alternative", payload)
++        if (human.status !== "ok") throw new Error(`Real human promotion admission unavailable: ${JSON.stringify(human)}`)
++        contexts.push(human.value)
++        return { request: post, context: human.value }
++      },
++      async renew() {
++        const otherRequest = new Request(request, { headers: { authorization: "cohort-session", "x-command": "unrelated-command" } })
++        const otherDigest = digestSfValue({ caseRef, reason: "unrelated request" })
++        const other = await product.ui.admit(otherRequest, "sf_case_read", otherDigest)
++        if (other.status !== "ok" || !await product.ui.validate(other.value, "sf_case_read", otherDigest)) throw new Error("Unrelated real admission unavailable")
++        contexts.push(other.value)
++        return { request: otherRequest, context: other.value }
++      },
++      async changeSource() {
++        await external.transaction("planner", async (snapshot) => {
++          const versions = snapshot.data.versions as { lines: { b: number[] }[] }[]
++          versions[0]!.lines[0]!.b[0] = 300
++          return { commit: true, value: undefined }
++        })
++      },
++      async changeCase() {
++        const loaded = await outside.state.read(request, "cases", (value) => value.cases[caseRef.id])
++        if (loaded.status !== "ok" || !loaded.value) throw new Error("External case unavailable")
++        const saved = await outside.state.transaction(request, { namespace: "cases", expectedStorageVersion: loaded.storageVersion, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "external-case-change", commandDigest: digestSfValue({ caseRef, version: 3 }) }, async (value) => {
++          value.cases[caseRef.id] = { ...value.cases[caseRef.id]!, version: 3, objective: "Changed by separate authorized operation" }
++          return { commit: true, value: true }
++        })
++        if (saved.status !== "ok" || !saved.value) throw new Error("External case edit did not commit")
++      },
++      async cleanup() {
++        contexts.forEach((trusted) => product.ui.finish(trusted))
++        await store.dispose()
++        await rm(directory, { recursive: true, force: true })
++      },
++    }
++  } catch (error) {
++    await store.dispose()
++    await rm(directory, { recursive: true, force: true })
++    throw error
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1f7e6cb2716cb2b17084ab599219f7651961e485
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts
+@@ -0,0 +1,115 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import { currentChoiceAuthorityFixture } from "./real-authority-fixture.ts"
++
++for (const revocation of ["ui.finish", "expired lease", "unrelated renewed lease", "request abort", "request headers"] as const) {
++  test(`current-choice real final provider authorization suppresses output after ${revocation}`, async () => {
++    const fixture = await currentChoiceAuthorityFixture()
++    try {
++      expect(await fixture.preview.read(fixture.promotion, fixture.context)).toEqual({ status: "ok", value: fixture.binding })
++      const before = await fixture.snapshot()
++      fixture.hooks.afterFinalCapture = async () => {
++        fixture.events.applied += 1
++        if (revocation === "expired lease") fixture.clock.now += 300_001
++        if (revocation === "request abort") fixture.controller.abort()
++        if (revocation === "request headers") fixture.request.headers.set("x-command", "substituted-command")
++        if (revocation === "ui.finish" || revocation === "unrelated renewed lease") fixture.product.ui.finish(fixture.context)
++        if (revocation === "unrelated renewed lease") {
++          const renewed = await fixture.renew()
++          expect(fixture.product.ui.requestFor(renewed.context)).toBe(renewed.request)
++          expect(renewed.request).not.toBe(fixture.request)
++          expect(renewed.context.lease).not.toBe(fixture.context.lease)
++          expect(await fixture.product.ui.revalidate(renewed.context)).toBe(true)
++        }
++      }
++      const read = await fixture.preview.read(fixture.promotion, fixture.context)
++      expect(fixture.events.applied).toBe(1)
++      expect(fixture.events.finalAuthorization).toBe(1)
++      expect(read.status).not.toBe("ok")
++      expect(read).not.toHaveProperty("value")
++      expect(fixture.product.ui.requestFor(fixture.context)).toBe(revocation === "request headers" ? fixture.request : undefined)
++      expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(before))
++      expect(fixture.events.producerCalls).toBe(0)
++    } finally { await fixture.cleanup() }
++  })
++}
++
++test("current-choice cannot substitute a serialized context, lease or binding even while its real admission remains active", async () => {
++  const fixture = await currentChoiceAuthorityFixture()
++  try {
++    expect(await fixture.preview.read(fixture.promotion, fixture.context)).toEqual({ status: "ok", value: fixture.binding })
++    const before = await fixture.snapshot()
++    const candidates: TrustedUiContext[] = [
++      structuredClone(fixture.context),
++      { ...fixture.context },
++      { ...fixture.context, lease: {} as TrustedUiContext["lease"] },
++      ...["installationId", "projectId", "principalRef", "policyVersion", "accessRevision", "requestId"].map((field) => ({ ...fixture.context, binding: { ...fixture.context.binding, [field]: "substituted" } })),
++    ]
++    for (const candidate of candidates) {
++      expect(fixture.product.ui.requestFor(candidate)).toBeUndefined()
++      const read = await fixture.preview.read(fixture.promotion, candidate)
++      expect(read.status).not.toBe("ok")
++      expect(read).not.toHaveProperty("value")
++    }
++    expect(await fixture.product.ui.revalidate(fixture.context)).toBe(true)
++    expect(fixture.product.ui.requestFor(fixture.context)).toBe(fixture.request)
++    expect(await fixture.preview.read(fixture.promotion, fixture.context)).toEqual({ status: "ok", value: fixture.binding })
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(before))
++    expect(fixture.events.producerCalls).toBe(0)
++  } finally { await fixture.cleanup() }
++})
++
++for (const changed of ["principal", "authentication revocation", "policy", "installation", "project", "host"] as const) {
++  test(`current-choice real authorization refuses ${changed} changes at final provider egress`, async () => {
++    const fixture = await currentChoiceAuthorityFixture()
++    try {
++      expect((await fixture.preview.read(fixture.promotion, fixture.context)).status).toBe("ok")
++      const before = await fixture.snapshot()
++      fixture.hooks.afterFinalCapture = async () => {
++        fixture.events.applied += 1
++        if (changed === "principal") fixture.authenticated.principal = "another-person"
++        if (changed === "authentication revocation") fixture.authenticated.active = false
++        if (changed === "policy") fixture.changePolicy()
++        if (changed === "installation") fixture.identity.installationId = "other-installation"
++        if (changed === "project") fixture.identity.projectId = "other-project"
++        if (changed === "host") fixture.identity.hostId = "other-host"
++      }
++      const read = await fixture.preview.read(fixture.promotion, fixture.context)
++      expect(fixture.events.applied).toBe(1)
++      expect(fixture.events.finalAuthorization).toBe(1)
++      expect(read.status).not.toBe("ok")
++      expect(read).not.toHaveProperty("value")
++      expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(before))
++      expect(fixture.events.producerCalls).toBe(0)
++    } finally { await fixture.cleanup() }
++  })
++}
++
++for (const changed of ["source", "case"] as const) {
++  test(`current-choice joint fence observes a real ${changed} commit after source verification`, async () => {
++    const fixture = await currentChoiceAuthorityFixture()
++    try {
++      expect((await fixture.preview.read(fixture.promotion, fixture.context)).status).toBe("ok")
++      const originalChoice = digestSfValue(fixture.choice)
++      fixture.hooks.afterSources = async () => {
++        fixture.events.applied += 1
++        if (changed === "source") await fixture.changeSource()
++        if (changed === "case") await fixture.changeCase()
++      }
++      const read = await fixture.preview.read(fixture.promotion, fixture.context)
++      expect(fixture.events.applied).toBe(1)
++      expect(read.status).not.toBe("ok")
++      expect(read).not.toHaveProperty("value")
++      expect(await fixture.product.ui.revalidate(fixture.context)).toBe(true)
++      const after = await fixture.outside.state.read(fixture.request, "cases", (state) => state.cases[fixture.caseRef.id])
++      expect(after.status).toBe("ok")
++      if (after.status !== "ok" || !after.value) throw new Error("Current case unavailable after real race")
++      expect(after.value.version).toBe(changed === "case" ? 3 : 2)
++      expect(digestSfValue(after.value.choices[0])).toBe(originalChoice)
++      expect(after.value.preparedChanges).toEqual([])
++      expect(after.value.receipts).toEqual([])
++      expect(fixture.events.producerCalls).toBe(0)
++    } finally { await fixture.cleanup() }
++  })
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts
+@@ -0,0 +1,157 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { currentChoiceAuthorityFixture } from "./real-authority-fixture.ts"
++
++test("current-choice promotion requires the exact human action, persists atomically, and replays only with current authority", async () => {
++  const fixture = await currentChoiceAuthorityFixture()
++  try {
++    const initial = await fixture.snapshot()
++    const unauthorized = await fixture.promote(fixture.promotion, fixture.context)
++    expect(unauthorized.status).toBe("denied")
++    expect(unauthorized).not.toHaveProperty("value")
++    const human = await fixture.admitPromotion()
++    expect(await fixture.product.human.authorize(human.context, "decisions.promote-alternative", fixture.promotion)).toBe(true)
++    expect(await fixture.product.human.authorize(human.context, "decisions.edit", fixture.promotion)).toBe(false)
++    const changed = { ...fixture.promotion, choiceId: "another-choice" }
++    expect((await fixture.promote(changed, human.context)).status).toBe("denied")
++    expect((await fixture.promote(fixture.promotion, structuredClone(human.context))).status).not.toBe("ok")
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(initial))
++
++    const promoted = await fixture.promote(fixture.promotion, human.context)
++    expect(promoted.status).toBe("ok")
++    if (promoted.status !== "ok") throw new Error(`Real promotion unavailable: ${JSON.stringify(promoted)}`)
++    expect(promoted.value.caseRef).toEqual({ ...fixture.caseRef, version: 3 })
++    const after = await fixture.snapshot()
++    const beforeState = initial.dashboard.data.__sfProductV1 as SfProductState
++    const state = after.dashboard.data.__sfProductV1 as SfProductState
++    const decision = state.cases[fixture.caseRef.id]!
++    expect(decision.version).toBe(3)
++    expect(decision.state).toBe("reconsidering")
++    expect(decision.choices).toEqual(fixture.decision.choices)
++    expect(digestSfValue(decision.choices[0])).toBe(digestSfValue(fixture.choice))
++    expect(decision.alternatives[0]!.version).toBe(2)
++    expect(decision.alternatives[0]!.scenario).toEqual(fixture.promotion.scenario)
++    expect(digestSfValue(decision.alternatives[0]!.result)).toBe(fixture.promotion.resultDigest)
++    expect(decision.alternatives[0]!.result!.knownSubtotal).toBeNull()
++    expect(decision.alternatives[0]!.result!.total).toBeNull()
++    expect(decision.alternatives[0]!.result!.costCoverage.coverageState).toBe("pending")
++    expect(decision.preparedChanges).toEqual([])
++    expect(decision.receipts).toEqual([])
++    expect(decision.ledger).toEqual([])
++    expect(state.decisionResults?.[promoted.value.resultRef]?.caseRef).toEqual(promoted.value.caseRef)
++    expect(state.decisionResults?.[fixture.promotion.resultRef]).toEqual(beforeState.decisionResults?.[fixture.promotion.resultRef])
++    expect(state.versions.cases).toBe(beforeState.versions.cases + 1)
++    expect(state.versions.preferences).toBe(beforeState.versions.preferences)
++    expect(Object.keys(state.transactions).length).toBe(Object.keys(beforeState.transactions).length + 1)
++    expect(Object.keys(state.decisionResults ?? {}).length).toBe(Object.keys(beforeState.decisionResults ?? {}).length + 1)
++    expect(digestSfValue(state.preferences)).toBe(digestSfValue(beforeState.preferences))
++    expect(digestSfValue(after.planner)).toBe(digestSfValue(initial.planner))
++    expect(digestSfValue(after.procurement)).toBe(digestSfValue(initial.procurement))
++
++    expect(await fixture.promote(fixture.promotion, human.context)).toEqual(promoted)
++    const retried = await fixture.admitPromotion()
++    expect(retried.request).not.toBe(human.request)
++    expect(retried.context.lease).not.toBe(human.context.lease)
++    expect(await fixture.promote(fixture.promotion, retried.context)).toEqual(promoted)
++    fixture.product.ui.finish(human.context)
++    const revoked = await fixture.promote(fixture.promotion, human.context)
++    expect(revoked.status).not.toBe("ok")
++    expect(revoked).not.toHaveProperty("value")
++    expect(await fixture.product.ui.revalidate(retried.context)).toBe(true)
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(after))
++    expect(fixture.events.producerCalls).toBe(0)
++  } finally { await fixture.cleanup() }
++})
++
++test("current-choice real command identity rejects the same key with a different authorized payload", async () => {
++  const fixture = await currentChoiceAuthorityFixture()
++  try {
++    const human = await fixture.admitPromotion()
++    const promoted = await fixture.promote(fixture.promotion, human.context)
++    expect(promoted.status).toBe("ok")
++    if (promoted.status !== "ok") throw new Error(`Real promotion unavailable: ${JSON.stringify(promoted)}`)
++    const before = await fixture.snapshot()
++    const changed = { ...fixture.promotion, choiceId: "different-choice-same-command" }
++    const retry = await fixture.admitPromotion(changed)
++    expect(fixture.product.ui.operationIdentity(retry.context)).toBe(fixture.product.ui.operationIdentity(human.context))
++    expect(await fixture.product.human.authorize(retry.context, "decisions.promote-alternative", changed)).toBe(true)
++    expect(await fixture.promote(changed, retry.context)).toEqual({ status: "conflict", reason: "idempotency-content-changed" })
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(before))
++  } finally { await fixture.cleanup() }
++})
++
++test("current-choice durable replay suppresses its receipt when ui.finish runs in the final real read authorization", async () => {
++  const fixture = await currentChoiceAuthorityFixture()
++  try {
++    const human = await fixture.admitPromotion()
++    expect((await fixture.promote(fixture.promotion, human.context)).status).toBe("ok")
++    const before = await fixture.snapshot()
++    fixture.hooks.afterFinalCapture = async () => {
++      fixture.events.applied += 1
++      fixture.product.ui.finish(human.context)
++    }
++    const replay = await fixture.promote(fixture.promotion, human.context)
++    expect(fixture.events.applied).toBe(1)
++    expect(fixture.events.finalAuthorization).toBe(1)
++    expect(replay.status).not.toBe("ok")
++    expect(replay).not.toHaveProperty("value")
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(before))
++  } finally { await fixture.cleanup() }
++})
++
++for (const change of ["ui.finish", "expired lease", "request abort", "request headers", "unrelated renewed lease", "principal", "policy", "installation", "project", "source snapshot", "access snapshot"] as const) {
++  test(`current-choice real promotion rolls back every staged mutation after final ${change}`, async () => {
++    const fixture = await currentChoiceAuthorityFixture()
++    try {
++      const human = await fixture.admitPromotion()
++      expect((await fixture.preview.read(fixture.promotion, human.context)).status).toBe("ok")
++      const before = await fixture.snapshot()
++      fixture.hooks.afterPromotionWork = async () => {
++        fixture.events.applied += 1
++        if (change === "ui.finish" || change === "unrelated renewed lease") fixture.product.ui.finish(human.context)
++        if (change === "expired lease") fixture.clock.now += 300_001
++        if (change === "request abort") fixture.controller.abort()
++        if (change === "request headers") human.request.headers.set("x-command", "substituted-after-work")
++        if (change === "principal") fixture.authenticated.principal = "another-person"
++        if (change === "policy") fixture.changePolicy()
++        if (change === "installation") fixture.identity.installationId = "other-installation"
++        if (change === "project") fixture.identity.projectId = "other-project"
++        if (change === "unrelated renewed lease") {
++          const renewed = await fixture.renew()
++          expect(renewed.context.lease).not.toBe(human.context.lease)
++          expect(renewed.request).not.toBe(human.request)
++          expect(fixture.product.ui.requestFor(renewed.context)).toBe(renewed.request)
++          expect(await fixture.product.ui.revalidate(renewed.context)).toBe(true)
++        }
++        if (change === "source snapshot" || change === "access snapshot") {
++          // The real authentication callback runs after C08 work, while SQLite
++          // still owns the actual work snapshot retained by the timing probe.
++          // An authorized actor cannot bless late source or access-scope drift.
++          const snapshot = fixture.hooks.promotionSnapshot
++          if (!snapshot) throw new Error("Final promotion did not retain its real Planner work snapshot")
++          if (change === "source snapshot") {
++            const versions = snapshot.data.versions as { lines: { b: number[] }[] }[]
++            versions[0]!.lines[0]!.b[0] = 999
++          }
++          if (change === "access snapshot") snapshot.data.access = { person: { assigned: ["changed-after-work"], domains: [] } }
++        }
++      }
++      const promoted = await fixture.promote(fixture.promotion, human.context)
++      expect(fixture.events.applied).toBe(1)
++      expect(fixture.events.finalAuthorization).toBe(1)
++      expect(promoted.status).not.toBe("ok")
++      expect(promoted).not.toHaveProperty("value")
++      const after = await fixture.snapshot()
++      expect(digestSfValue(after)).toBe(digestSfValue(before))
++      const state = after.dashboard.data.__sfProductV1 as SfProductState
++      expect(state.cases[fixture.caseRef.id]?.version).toBe(2)
++      expect(state.cases[fixture.caseRef.id]?.alternatives[0]?.version).toBe(1)
++      expect(state.cases[fixture.caseRef.id]?.choices).toEqual(fixture.decision.choices)
++      expect(state.cases[fixture.caseRef.id]?.preparedChanges).toEqual([])
++      expect(state.cases[fixture.caseRef.id]?.receipts).toEqual([])
++      expect(Object.keys(state.transactions).some((key) => key.endsWith(':promote-current-choice"]'))).toBe(false)
++      expect(fixture.events.producerCalls).toBe(0)
++    } finally { await fixture.cleanup() }
++  })
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..084f7050ca7f45fe22962207f706a5e0d71e3a93
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts
+@@ -0,0 +1,176 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++import type { ChoiceRecord } from "../../../product/contracts/decisions.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
++import { createCurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
++import { createPlannerConfirmationObserver } from "../../../product/planner/confirmation.ts"
++import { createCurrentPlannerChoice } from "../../../product/planner/current-choice.ts"
++import { createPlannerResultPersistence } from "../../../product/planner/persistence.ts"
++import { createPlannerProduct } from "../../../product/planner/product.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { currentChoiceAuthorityFixture } from "./real-authority-fixture.ts"
++
++type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
++
++/** Historical choice and pending baseline coverage come from the authority fixture.
++ * Every newly prepared result is made and replayed by the canonical Planner
++ * through the real product/UI authority; the pre-seeded results are not adopted.
++ */
++test("real product authority prepares the canonical current Planner result, binds real coverage, and promotes only a separate exact human command", async () => {
++  const fixture = await currentChoiceAuthorityFixture()
++  try {
++    const baseline = await fixture.registry.resolveForecastCoverage(fixture.promotion.coverageRef, fixture.context)
++    if (baseline.status !== "ok") throw new Error(`Canonical baseline coverage unavailable: ${JSON.stringify(baseline)}`)
++    const planner = createPlannerProduct({ host: fixture.product.host, scopedSources: fixture.persistence,
++      coverageFor: (reference, context) => fixture.registry.resolveForecastCoverage(reference === fixture.currentSource.refId ? fixture.promotion.coverageRef : reference, context),
++    })
++    // Source continuity observes physical identity, current scope and projection.
++    // Its canonical observer uses the same authority/store without a case-scoped
++    // cost claim: promotion advances the case beyond the original coverage record.
++    // The producer and preview below still require the actual coverage registry.
++    const sourceObserver = createPlannerProduct({ host: fixture.product.host, scopedSources: fixture.persistence,
++      coverageFor: async () => ({ status: "unavailable", reason: "source-continuity-does-not-classify-cost" }),
++    })
++    const continuity = createPlannerConfirmationObserver({ host: fixture.product.host, issueSource: sourceObserver.issueSource, planner: sourceObserver.planner })
++    const proofs = new WeakMap<TrustedDomainContext, (snapshot: Snapshot) => boolean>()
++    const verifyContinuity = async (original: RecordEvidence, current: RecordEvidence, context: TrustedDomainContext) => {
++      if (digestSfValue(original) !== digestSfValue(fixture.originalSource) || digestSfValue(current) !== digestSfValue(fixture.currentSource)) return { status: "unavailable", reason: "unexpected-source-lineage" } as const
++      const proof = await continuity.prepareResimulationContinuity(original, current, context)
++      if (proof.status !== "ok" || !await proof.value.revalidate()) return { status: "unavailable", reason: "source-continuity-unavailable" } as const
++      proofs.set(context, proof.value.fenceSnapshot)
++      return proof
++    }
++    const resolveEvidence = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext): Promise<readonly BusinessEvidenceResolution[]> => {
++      return Promise.all(refs.map(async (ref) => {
++        const resolved = ref.kind === "record" && ref.target.surface === "planner"
++          ? await planner.sources.resolveForecastSource(ref.refId, context) : undefined
++        const current = resolved?.status === "ok" && digestSfValue(resolved.value.evidence) === digestSfValue(ref) && await fixture.product.host.revalidate(context)
++        return { ref, state: current ? "fresh" as const : "unavailable" as const, accessRevision: context.binding.accessRevision, checkedAt: "2026-11-14T00:00:00Z" }
++      }))
++    }
++    const authorizeChoice = async (reference: typeof fixture.caseRef, choice: ChoiceRecord, context: TrustedDomainContext) => {
++      const request = fixture.product.host.requestFor(context)
++      if (!request) return false
++      const current = await fixture.product.state.read(request, "cases", (state) => state.cases[reference.id])
++      return current.status === "ok" && !!current.value && current.value.incarnation === reference.incarnation && current.value.version === reference.version &&
++        current.value.choices.filter((retained) => retained.id === choice.id && digestSfValue(retained) === digestSfValue(choice)).length === 1 &&
++        await fixture.authorizeCase(current.value, context)
++    }
++    const persist = createPlannerResultPersistence({ store: fixture.results, replay: planner.planner,
++      resolveCase: async (context) => {
++        const request = fixture.product.host.requestFor(context)
++        if (!request) return { status: "denied", reason: "case-authority-unavailable" }
++        const current = await fixture.product.state.read(request, "cases", (state) => state.cases[fixture.caseRef.id])
++        if (current.status !== "ok" || !current.value || !await fixture.authorizeCase(current.value, context)) return { status: "denied", reason: "case-authority-unavailable" }
++        return { status: "ok", value: { id: current.value.id, incarnation: current.value.incarnation, version: current.value.version } }
++      },
++    })
++    const operationIdentity = (context: TrustedDomainContext) => context.kind === "ui" ? fixture.product.ui.operationIdentity(context) : undefined
++    const resimulate = createCurrentPlannerChoice({ fence: fixture.fence, host: fixture.product.host, planner: planner.planner, issueSource: planner.issueSource,
++      persist, store: fixture.results, authorizeChoice, verifyContinuity, operationIdentity,
++    })
++    const preview = createCurrentChoicePreview({ state: fixture.product.state, host: fixture.product.host, fence: fixture.fence, results: fixture.results,
++      sources: fixture.registry, writes: fixture.writes, authorizeCase: fixture.authorizeCase,
++      authorizePreview: (request, context) => fixture.product.human.authorize(context, "decisions.edit", request),
++      resimulate, registerCoverage: fixture.registry.registerProposalCoverage, operationIdentity,
++      coverageEvidence: {
++        entries: async (_scenario, assessment, context) => await fixture.product.host.revalidate(context)
++          ? { status: "ok", value: structuredClone(assessment.entries) } : { status: "denied", reason: "coverage-authority-unavailable" },
++        resolve: resolveEvidence,
++        supports: () => { throw new Error("Pending inventory must not manufacture applicable categories") },
++        verifySnapshot: (snapshot, _scenario, basis, context) => digestSfValue(basis) === digestSfValue(baseline.value.basis) && proofs.get(context)?.(snapshot) === true,
++      },
++      verifySnapshot: (snapshot, request, binding, context) => request.choiceId === fixture.choice.id &&
++        digestSfValue(binding.originalSource) === digestSfValue(fixture.originalSource) && digestSfValue(binding.source) === digestSfValue(fixture.currentSource) &&
++        proofs.get(context)?.(snapshot) === true,
++      verifySources: async (binding, context) => (await verifyContinuity(binding.originalSource, binding.source, context)).status === "ok",
++    })
++    const request = { caseRef: fixture.caseRef, choiceId: fixture.choice.id, alternativeRef: fixture.promotion.alternativeRef, coverageRef: fixture.promotion.coverageRef }
++    const before = await fixture.snapshot()
++    expect((await preview.prepare(request, fixture.context)).status).toBe("denied")
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(before))
++    const post = new Request(fixture.request, { method: "POST", headers: { authorization: "cohort-session", origin: "https://example.test", "x-command": "human-prepares-canonical-current" } })
++    const admitted = await fixture.product.human.admit(post, "decisions.edit", request)
++    if (admitted.status !== "ok") throw new Error(`Exact human preview admission unavailable: ${JSON.stringify(admitted)}`)
++    fixture.contexts.push(admitted.value)
++    expect(await fixture.product.human.authorize(admitted.value, "decisions.edit", request)).toBe(true)
++
++    const prepared = await preview.prepare(request, admitted.value)
++    expect(prepared.status).toBe("ok")
++    if (prepared.status !== "ok") throw new Error(`Canonical current-choice preparation unavailable: ${JSON.stringify(prepared)}`)
++    expect(prepared.value.promotion.resultRef).not.toBe(fixture.promotion.resultRef)
++    expect(prepared.value.promotion.scenario).toEqual({ ...fixture.choice.scenario, baseRef: fixture.currentSource.refId })
++    const bound = await preview.read(prepared.value.promotion, admitted.value)
++    if (bound.status !== "ok") throw new Error(`New canonical binding unavailable: ${JSON.stringify(bound)}`)
++    if (!bound.value.coverageDigest) throw new Error("New canonical binding has no coverage digest")
++    expect(digestSfValue(bound.value)).toBe(prepared.value.bindingDigest)
++    expect(bound.value.producerResultRef).not.toBe(fixture.binding.producerResultRef)
++    expect(bound.value.originalSource).toEqual(fixture.originalSource)
++    expect(bound.value.source).toEqual(fixture.currentSource)
++    expect(bound.value.coverageDigest).toMatch(/^[a-f0-9]{64}$/)
++    expect(bound.value.coverageRecordDigest).toMatch(/^[a-f0-9]{64}$/)
++    const produced = await fixture.results.read({ kind: "scenario", resultRef: bound.value.producerResultRef }, admitted.value)
++    const reviewed = await fixture.results.read({ kind: "scenario", resultRef: prepared.value.promotion.resultRef }, admitted.value)
++    if (produced.status !== "ok" || reviewed.status !== "ok" || produced.value.kind !== "scenario" || reviewed.value.kind !== "scenario") throw new Error("Canonical producer or reviewed result unavailable")
++    const replay = await planner.planner.simulateScenario(prepared.value.promotion.scenario, admitted.value)
++    if (replay.status !== "ok") throw new Error(`Canonical producer replay unavailable: ${JSON.stringify(replay)}`)
++    expect(produced.value.result.id).toMatch(/^source-scenario:/)
++    expect(digestSfValue(produced.value.result)).toBe(digestSfValue(replay.value))
++    expect(produced.value.result.components.find((component) => component.id === "line:1")?.amount).toBe(200)
++    expect(produced.value.result.knownSubtotal).toBe(200)
++    expect(reviewed.value.result.knownSubtotal).toBe(200)
++    expect(reviewed.value.result.total).toBeNull()
++    expect(reviewed.value.result.comparisonStatus).toBe("conditioned")
++    expect(reviewed.value.result.costCoverage.coverageState).toBe("pending")
++    expect(reviewed.value.result.costCoverage.issues).toContain("inventory-unavailable")
++    expect(reviewed.value.result.costCoverage.alternativeVersion).toBe(2)
++    expect(prepared.value.promotion.coverageRef).not.toBe(fixture.promotion.coverageRef)
++    const coverage = await fixture.registry.resolveForecastCoverage(prepared.value.promotion.coverageRef, admitted.value)
++    if (coverage.status !== "ok") throw new Error(`New canonical coverage proof unavailable: ${JSON.stringify(coverage)}`)
++    expect(coverage.value.assessment).toEqual(reviewed.value.result.costCoverage)
++    expect(digestSfValue(coverage.value)).toBe(bound.value.coverageDigest)
++    const afterPrepare = await fixture.snapshot()
++    const preparedState = afterPrepare.dashboard.data.__sfProductV1 as SfProductState
++    expect(preparedState.cases[fixture.caseRef.id]).toEqual(fixture.decision)
++    expect(digestSfValue(afterPrepare.planner)).toBe(digestSfValue(before.planner))
++
++    const promote = createCurrentChoicePromotion({ state: fixture.product.state, host: fixture.product.host, fence: fixture.fence, sources: fixture.registry,
++      authorizeCase: fixture.authorizeCase, operationIdentity, now: () => "2026-11-14T00:00:00Z",
++      authorizePromotion: (payload, context) => fixture.product.human.authorize(context, "decisions.promote-alternative", payload),
++      verifyProvenance: async (payload, choice, result, context, receipt) => {
++        if (digestSfValue(payload) !== digestSfValue(prepared.value.promotion) || digestSfValue(choice) !== digestSfValue(fixture.choice) || result.resultDigest !== payload.resultDigest) return false
++        const current = await preview.read(payload, context, receipt)
++        return current.status === "ok" && digestSfValue(current.value) === prepared.value.bindingDigest
++      },
++      verifySnapshot: (snapshot, payload, choice, result, context) => digestSfValue(payload) === digestSfValue(prepared.value.promotion) &&
++        digestSfValue(choice) === digestSfValue(fixture.choice) && result.resultDigest === payload.resultDigest && proofs.get(context)?.(snapshot) === true,
++    })
++    expect((await promote(prepared.value.promotion, admitted.value)).status).toBe("denied")
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(afterPrepare))
++    const human = await fixture.admitPromotion(prepared.value.promotion, "human-promotes-canonical-current")
++    const promoted = await promote(prepared.value.promotion, human.context)
++    expect(promoted.status).toBe("ok")
++    if (promoted.status !== "ok") throw new Error(`Canonical explicit promotion unavailable: ${JSON.stringify(promoted)}`)
++    expect(promoted.value.caseRef).toEqual({ ...fixture.caseRef, version: 3 })
++    const after = await fixture.snapshot()
++    const state = after.dashboard.data.__sfProductV1 as SfProductState
++    const decision = state.cases[fixture.caseRef.id]!
++    expect(decision.choices).toEqual(fixture.decision.choices)
++    expect(decision.alternatives[0]!.version).toBe(2)
++    expect(decision.alternatives[0]!.scenario).toEqual(prepared.value.promotion.scenario)
++    expect(decision.alternatives[0]!.result).toEqual(reviewed.value.result)
++    expect(decision.preparedChanges).toEqual([])
++    expect(decision.receipts).toEqual([])
++    expect(decision.ledger).toEqual([])
++    expect(state.decisionResults?.[promoted.value.resultRef]?.caseRef).toEqual(promoted.value.caseRef)
++    expect(state.decisionResults?.[promoted.value.resultRef]?.resultDigest).toBe(prepared.value.promotion.resultDigest)
++    expect(digestSfValue(after.planner)).toBe(digestSfValue(before.planner))
++    expect(digestSfValue(after.procurement)).toBe(digestSfValue(before.procurement))
++    expect(await promote(prepared.value.promotion, human.context)).toEqual(promoted)
++    expect(digestSfValue(await fixture.snapshot())).toBe(digestSfValue(after))
++    expect(fixture.events.producerCalls).toBe(0)
++  } finally { await fixture.cleanup() }
++})
