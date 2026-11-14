@@ -1,0 +1,177 @@
+{
+  "schema": "sf-memory-original-coherent-closure-v1",
+  "mission": 40,
+  "base": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+  "baseTree": "d34dba1f7eca5a1bce546a0b6fab9d9ec5aef5b7",
+  "record": "9b51c8ee132541ed837eac909611b70c1b991bc3",
+  "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+  "Wtree": "856c1913e383d48d9392ac089722b45cde41a49b",
+  "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+  "Stree": "7fc0b5cd838251166cdcdca8094efdcf0e9c5c34",
+  "branch": "ci-run-linux-astra-wp10-9902a8f2-3f35ec91-m4035",
+  "overlays": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "390bce2594e39a28defce1d47fafa0d7291e940e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353"
+    }
+  ],
+  "runtimeSourceW": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+  "runtimeBlobsIdenticalToSource": true,
+  "testSource": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+  "testBytesAndAssertionsUnchanged": true,
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestBlob": "9dc6a822c8dd0bb53303c2cf7b80ddcb080a699c",
+  "requestSha256": "3f35ec9118fcbebf663c87f9024c8dfcca1bad489eb7c029cb9ca1347a7dbfd9",
+  "sameRequestBytesAs35": true,
+  "onlyEnvelopeDifference": ".ci-run.json",
+  "productDiff": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "status": "modified"
+    }
+  ],
+  "state": "PASS",
+  "composedCompilerAndGuards": "NOT_RUN_NO_AUTHORIZED_WORKFLOW_IN_C10",
+  "stackRefModified": false,
+  "runId": 43651719591,
+  "jobId": 132621440454,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43651719591",
+  "blobVerification": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "expected": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "observed": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "identical": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "expected": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "observed": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "identical": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "expected": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+      "observed": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+      "identical": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "expected": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+      "observed": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+      "identical": true
+    }
+  ],
+  "conclusion": "success",
+  "pass": 2,
+  "fail": 0,
+  "expects": 95,
+  "seconds": 75.19,
+  "testSkipped": 0,
+  "testFileCount": 1,
+  "omni": {
+    "status": "pass",
+    "declared": 2,
+    "spawns": 5,
+    "delegated": 0
+  },
+  "requestValidated": true,
+  "artifacts": [],
+  "requiredArtifacts": "None for the unchanged Bun dispatcher selector.",
+  "jobCleanup": {
+    "id": 132622221412,
+    "name": "cleanup",
+    "status": "completed",
+    "conclusion": "success",
+    "run_id": 43651719591,
+    "logs_url": null,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Delete the snapshot branch",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      }
+    ]
+  },
+  "process": {
+    "parentPid": 4120,
+    "spawnedPid": 4170,
+    "childPid": 4170,
+    "exitCode": 0,
+    "authorized": "ok",
+    "matches": 1,
+    "outsider": "unavailable",
+    "revoked": "unavailable",
+    "replaced": "unavailable",
+    "durableAtlasUnchangedAfterChild": true,
+    "durableAtlasUnchangedAfterDenials": true,
+    "nativeSessionWitness": false
+  },
+  "tests": [
+    {
+      "result": "PASS",
+      "name": "protected Atlas original binds cross-principal continuity after store reopen",
+      "milliseconds": 42975.26
+    },
+    {
+      "result": "PASS",
+      "name": "confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation",
+      "milliseconds": 31906.71
+    }
+  ]
+}

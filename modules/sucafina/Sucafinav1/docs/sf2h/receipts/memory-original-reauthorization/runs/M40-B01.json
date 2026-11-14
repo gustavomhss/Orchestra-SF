@@ -1,0 +1,72 @@
+{
+  "W": "0706b084e87bd78758f445e6283541d8eb79e783",
+  "Wtree": "fbdc07df366bac4e0e81133cbb12f61e7285ab1d",
+  "S": "e8c8916b859e2cbfc281948f225dce223a4b8926",
+  "Stree": "ac91bb7311fdb87f86a322f3e926b2779f34d4e8",
+  "branch": "ci-run-linux-astra-wp10-0706b084-c1663cdf-m40b01",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "c1663cdf178d4270ad3c6c6918f15159da9b27bf035e2021170d3e6758c7c455",
+  "runId": 43648633283,
+  "jobId": 132611922461,
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 2,
+  "expects": 37,
+  "seconds": 13.88,
+  "omni": "pass",
+  "spawns": 4,
+  "declared": 2,
+  "expectedCounterproof": true,
+  "observed": {
+    "changedDocumentBytes": {
+      "canonicalResolutionWithheld": true,
+      "originalReturned": true,
+      "replayStatus": "already-committed"
+    },
+    "corruptedCapture": {
+      "originalReturned": false,
+      "replayStatus": "already-committed"
+    },
+    "dependencyBDeleted": {
+      "originalAReturned": true,
+      "replayStatus": "already-committed"
+    },
+    "recreatedDependencyB": "NOT_REACHED_IN_PREIMAGE_AFTER_FIRST_ASSERTION",
+    "scansPerFixture": 1
+  },
+  "artifacts": [],
+  "requestValidation": "PASS",
+  "expectedFailureAssertions": [
+    "document-replay.test.ts:65",
+    "document-replay.test.ts:95"
+  ],
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648633283",
+  "proofs": [
+    {
+      "marker": "SF_MEMORY_ORIGINAL_C17_DISCRIMINATOR",
+      "payload": {
+        "originalReturned": true,
+        "replayStatus": "already-committed",
+        "corruptedCaptureOriginalReturned": false,
+        "corruptedCaptureReplayStatus": "already-committed",
+        "sameOutboxKeyAndPayload": true,
+        "sameRequestKey": true,
+        "lightCaseAcl": true,
+        "scans": 1,
+        "nativeSessionWitness": false
+      }
+    }
+  ]
+}

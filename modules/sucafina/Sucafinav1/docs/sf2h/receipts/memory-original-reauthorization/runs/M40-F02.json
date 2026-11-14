@@ -1,0 +1,398 @@
+{
+  "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+  "Wtree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+  "S": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+  "Stree": "210c902a04fc114f3f917685ae7f16c31d226715",
+  "branch": "ci-run-linux-astra-wp10-1b2a58c6-1e7ae589-m40f02",
+  "runId": 43650471583,
+  "jobId": 132617571523,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650471583",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "1e7ae589207967d1dcc9fe6bcf722dea0dcc9054eef4b3ac2d09db7a3d5e88ca",
+  "conclusion": "success",
+  "expectedCases": 18,
+  "testFileCount": 4,
+  "envelopeOnly": true,
+  "pass": 18,
+  "fail": 0,
+  "expects": 311,
+  "seconds": 710.19,
+  "testSkipped": 0,
+  "requestValidated": true,
+  "omni": {
+    "status": "pass",
+    "declared": 18,
+    "spawns": 36,
+    "delegated": 0
+  },
+  "artifacts": [],
+  "requiredArtifacts": "None for the unchanged Bun dispatcher selector; check artifacts are recorded separately.",
+  "tests": [
+    {
+      "result": "PASS",
+      "name": "C17 original and settled replay with light case ACL revalidate bytes and immutable captures without effects",
+      "milliseconds": 52616.75
+    },
+    {
+      "result": "PASS",
+      "name": "C17 original A and light replay require every current dependency after B deletion and same-ID reincarnation",
+      "milliseconds": 90299.04
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original accepts intact sources and the real initializeAtlas continuity callback without recursion",
+      "milliseconds": 21441.4
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original keeps legitimate C12 history and refuses a corrupted immutable capture",
+      "milliseconds": 14203.48
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original and exact replay retain committed event A while later event B remains pending",
+      "milliseconds": 29382.83
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original reauthorizes the same admitted call after principal revocation",
+      "milliseconds": 20317.94
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original rejects substituted binding, principal, lease, case and incarnation while retaining the authentic positive",
+      "milliseconds": 20254.58
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences headers after the final real revalidation",
+      "milliseconds": 29135.68
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences request after the final real revalidation",
+      "milliseconds": 28632.13
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences abort after the final real revalidation",
+      "milliseconds": 28474.68
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences finished-lease after the final real revalidation",
+      "milliseconds": 28486.46
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original refuses revocation after the last real source resolution before egress",
+      "milliseconds": 28312.54
+    },
+    {
+      "result": "PASS",
+      "name": "Settled replay fences late headers, Request identity, abort and finished lease after real revalidation",
+      "milliseconds": 150451.45
+    },
+    {
+      "result": "PASS",
+      "name": "Settled replay refuses actual credential revocation after the last real document resolution",
+      "milliseconds": 30790.01
+    },
+    {
+      "result": "PASS",
+      "name": "Settled replay refuses capture corruption after the last real source resolution without repairing it",
+      "milliseconds": 40166.24
+    },
+    {
+      "result": "PASS",
+      "name": "Memory integrity revocation tail refuses producer preparation after an authorized historical positive",
+      "milliseconds": 24578.88
+    },
+    {
+      "result": "PASS",
+      "name": "Memory integrity revocation tail refuses verification after an authorized historical positive",
+      "milliseconds": 25042.15
+    },
+    {
+      "result": "PASS",
+      "name": "Memory integrity revocation tail refuses the same output proof after authorized historical acceptance",
+      "milliseconds": 47084.18
+    }
+  ],
+  "proofs": [
+    {
+      "marker": "SF_MEMORY_ORIGINAL_C17_DISCRIMINATOR",
+      "payload": {
+        "originalReturned": false,
+        "replayStatus": "unavailable",
+        "corruptedCaptureOriginalReturned": false,
+        "corruptedCaptureReplayStatus": "unavailable",
+        "sameOutboxKeyAndPayload": true,
+        "sameRequestKey": true,
+        "lightCaseAcl": true,
+        "scans": 1,
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_C17_PROOF",
+      "payload": {
+        "scenario": "bytes-capture-principal",
+        "auditDigest": "9e078e8bc055c88400f82b16d33430c1a63071e5d52921e2f77b166fb4d9e914",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "intactCaptureRestored": true,
+        "lightCaseAcl": true,
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_ALL_DEPENDENCIES_PROOF",
+      "payload": {
+        "requestedSource": "A",
+        "removedAndRecreatedSource": "B",
+        "sameAssetId": true,
+        "incarnationChanged": true,
+        "independentARead": "fresh",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "auditDigest": "5810ae52051196b94f2c417315254fc77534cb978bfa6e7a304c305134254312",
+        "lightCaseAcl": true,
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_INSTALLED_PROOF",
+      "payload": {
+        "scenario": "historical-corrupt",
+        "historical": "accepted",
+        "corrupted": "refused",
+        "immutableCapture": true,
+        "auditDigest": "70b4c801ea624eea0aacea04e8ccd4e20cb9edc992e3554ba0a5df6709aa08c2",
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_INSTALLED_PROOF",
+      "payload": {
+        "scenario": "committed-A-pending-B",
+        "originalA": "accepted",
+        "replayA": "already-committed",
+        "recall": "unavailable",
+        "eventB": "pending",
+        "atlasUnchanged": true,
+        "outboxUnchanged": true,
+        "auditDigest": "34709cf476c82d34ca4af984248600e9c0778e4a7ec1639b1790379376577907",
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "headers",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "request",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "abort",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "finished-lease",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_CREDENTIAL_REVOCATION",
+      "payload": {
+        "result": "unavailable",
+        "realDocumentResolutions": 3,
+        "sourceWasFreshBeforeRevocation": true,
+        "credentialRevokedAfterLastResolution": true,
+        "sameReferenceAndKey": true,
+        "auditDigest": "aed710d4075e2bc2dec7ae7e04dd676b981e471badb8a5870f3ebe8bc0634199",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_CAPTURE_CORRUPTION",
+      "payload": {
+        "result": "unavailable",
+        "realDocumentResolutions": 3,
+        "corruptionAfterLastResolution": true,
+        "captureDigestsPreserved": true,
+        "noAutomaticRepair": true,
+        "restoredReplay": "already-committed",
+        "corruptedAuditDigest": "90239b760128dff20d1af48dfdbfbd0e5049b00f9d66821ade41a600ecb61c56",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_INTEGRITY_REVOCATION_TAIL",
+      "payload": {
+        "boundary": "producer.prepare",
+        "positive": "ok",
+        "revoked": "unavailable",
+        "completedCanonicalReads": 2,
+        "nativeExecution": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_INTEGRITY_REVOCATION_TAIL",
+      "payload": {
+        "boundary": "verifier.verify",
+        "positive": "ok",
+        "revoked": "unavailable",
+        "completedCanonicalReads": 2,
+        "nativeExecution": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_INTEGRITY_REVOCATION_TAIL",
+      "payload": {
+        "boundary": "proof.acceptsOutput",
+        "positive": "ok",
+        "revoked": "unavailable",
+        "completedCanonicalReads": 4,
+        "nativeExecution": false
+      }
+    }
+  ],
+  "jobCleanup": {
+    "id": 132621213750,
+    "name": "cleanup",
+    "status": "completed",
+    "conclusion": "success",
+    "run_id": 43650471583,
+    "logs_url": null,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Delete the snapshot branch",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      }
+    ]
+  },
+  "unchangedConsumerDependency": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+    "blob": "b737b7f797b880c3e2664f65747ef2bc2c18156f",
+    "previousRun": 43638160793,
+    "limits": "Three focused C12-backed consumers; no direct stale.preflight/preserve, full finance journey, MI07, or native AM05 closure."
+  }
+}

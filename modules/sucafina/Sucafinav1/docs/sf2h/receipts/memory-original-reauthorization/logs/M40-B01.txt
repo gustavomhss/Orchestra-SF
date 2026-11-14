@@ -1,0 +1,8 @@
+SF_MEMORY_ORIGINAL_C17_DISCRIMINATOR {"originalReturned":true,"replayStatus":"already-committed","corruptedCaptureOriginalReturned":false,"corruptedCaptureReplayStatus":"already-committed","sameOutboxKeyAndPayload":true,"sameRequestKey":true,"lightCaseAcl":true,"scans":1,"nativeSessionWitness":false}
+(fail) C17 original and settled replay with light case ACL revalidate bytes and immutable captures without effects [6229.49ms]
+(fail) C17 original A and light replay require every current dependency after B deletion and same-ID reincarnation [6954.19ms]
+ 0 pass
+ 2 fail
+ 37 expect() calls
+Ran 2 tests across 1 file. [13.88s]
+omni positive control [8d39795bdc70d5f749e118532834869b]: pass (declared: 2 test(s) in Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts); 4 omni spawn(s), 0 delegated.
