@@ -56,7 +56,8 @@ async function fixture() {
   const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
   const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
     installationId, origin, policyVersion: "policy", persistence, authenticate, environment, now: Date.now, createId: randomUUID,
-    commandIdentity: async (request, operation) => request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
+    commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() :
+      request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
     authorizeDocument: async () => undefined, proposalCoverageWrites, dashboardHostWrites,
     grants: [{ principalRef, namespaces: ["cases", "preferences", "reviews", "receipts"], operations: ["sf_dashboard_read", "sf_case_read"],
@@ -168,17 +169,19 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
     await panel.getByRole("button", { name: "Carregar opções", exact: true }).click()
     await panel.getByText("Opções carregadas.", { exact: false }).waitFor()
     await panel.getByLabel("Reunião ou retrato preservado").selectOption({ index: 1 })
+    const historyResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-history")
     await panel.getByRole("button", { name: "Abrir histórico", exact: true }).click()
+    expect((await historyResponse).status()).toBe(200)
     await panel.getByText("Histórico aberto com seu acesso atual.", { exact: true }).waitFor()
     expect(await panel.locator("[data-dashboard-history-view]").textContent()).toContain("Original action")
     expect(await panel.locator("[data-dashboard-history-view]").textContent()).not.toContain("Current revised action")
 
-    await panel.getByLabel("Caso", { exact: true }).selectOption({ label: "Review the action" })
-    await panel.getByLabel("Rascunho", { exact: true }).selectOption("new")
-    await panel.getByLabel("Hot Topic de origem", { exact: true }).selectOption({ label: "Current revised action" })
+    await panel.getByLabel(/^Caso/).selectOption({ label: "Review the action" })
+    await panel.getByLabel(/^Rascunho/).selectOption("new")
+    await panel.getByLabel(/^Hot Topic de origem/).selectOption({ label: "Current revised action" })
     await panel.getByLabel("Ação", { exact: true }).fill("Approved new action")
     await panel.getByLabel("Prazo", { exact: true }).fill("2026-12-20")
-    await panel.getByLabel("Prioridade", { exact: true }).selectOption("high")
+    await panel.getByLabel(/^Prioridade/).selectOption("high")
     await panel.getByLabel("Notas", { exact: true }).fill("Reviewed with Operations")
     await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
     await panel.getByText("Rascunho salvo.", { exact: false }).waitFor()
@@ -196,7 +199,7 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
     expect(await panel.locator("[data-dashboard-choice-reason]").textContent()).toContain("no financial claim")
     await panel.getByRole("button", { name: "Preparar escolha", exact: true }).click()
     await panel.getByText("Escolha preparada.", { exact: false }).waitFor()
-    await panel.getByLabel("Alteração preparada", { exact: true }).selectOption({ index: 1 })
+    await panel.getByLabel(/^Alteração preparada/).selectOption({ index: 1 })
     await panel.getByRole("button", { name: "Revisar alterações", exact: true }).click()
     await panel.getByText("Confira os valores atuais e propostos.", { exact: false }).waitFor()
     const review = await panel.locator("[data-dashboard-review-view]").textContent()
@@ -275,6 +278,10 @@ test("Dashboard discovery resolves real ticket months and Executive signal recor
     const ticket = await f.read((context) => f.records.read(operations.value.records[0]!.sourceRef, context))
     expect(ticket.status).toBe("ok")
     expect(ticket.status === "ok" && ticket.value.values.find((value) => value.id.endsWith(encodeURIComponent("Service Desk|Incidents|Open")))?.value).toBe(7)
+    expect(ticket.status === "ok" && ticket.value.context.sourceRefs[0]?.fields).toEqual(["Service Desk|Incidents|Open", "month", "year"])
+    if (!operations.value.agenda) throw new Error("Ticket agenda unavailable")
+    const agenda = await f.read((context) => f.dashboard.agenda({ sections: [operations.value.agenda!.section] }, context))
+    expect(agenda.status === "ok" && agenda.value.sections[0]?.projection.values.find((value) => value.id === "tickets:2026-11:Service Desk|Incidents|Closed")).toMatchObject({ value: null, evidenceState: "absent" })
     const executive = await f.read((context) => f.dashboard.discover({ page: "Executive Dashboard", period }, context))
     expect(executive.status).toBe("ok")
     if (executive.status !== "ok") return
@@ -297,9 +304,9 @@ test("Dashboard contextual draft retains edits when current write authority is w
     const panel = page.locator("[data-dashboard-workbench]")
     await panel.getByRole("button", { name: "Carregar opções", exact: true }).click()
     await panel.getByText("Opções carregadas.", { exact: false }).waitFor()
-    await panel.getByLabel("Caso", { exact: true }).selectOption({ label: "Review the action" })
-    await panel.getByLabel("Rascunho", { exact: true }).selectOption("new")
-    await panel.getByLabel("Hot Topic de origem", { exact: true }).selectOption({ label: "Original action" })
+    await panel.getByLabel(/^Caso/).selectOption({ label: "Review the action" })
+    await panel.getByLabel(/^Rascunho/).selectOption("new")
+    await panel.getByLabel(/^Hot Topic de origem/).selectOption({ label: "Original action" })
     await panel.getByLabel("Ação", { exact: true }).fill("Unsaved operator wording")
     f.policy.writable = false
     await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()

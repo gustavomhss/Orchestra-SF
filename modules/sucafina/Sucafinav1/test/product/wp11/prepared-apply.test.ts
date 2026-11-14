@@ -141,7 +141,11 @@ test("human-approved prepared dashboard command and receipt commit together", as
     expect(race).toEqual({ receiptReads: 2, mutationCalls: 0, published: true })
     const afterRace = await state.read(http, "receipts", (value) => ({ receipt: value.receipts[racedReceipt.id], proof: value.transactions[receiptProofTransactionKey(actor.id, target.id, raceChange.idempotencyKey)], originalProof: value.transactions[receiptProofTransactionKey(actor.id, target.id, change.idempotencyKey)], newReceipt: value.receipts["race-application-receipt"], cases: value.cases }))
     if (afterRace.status !== "ok" || recorded.status !== "ok") throw new Error("receipt proof unavailable")
-    expect(afterRace.value).toEqual({ receipt: racedReceipt, proof: undefined, originalProof: recorded.value, newReceipt: undefined, cases: { ...beforeRace.value, [raceDecision.id]: raceDecision } })
+    expect(afterRace.value.receipt).toEqual(racedReceipt)
+    expect(afterRace.value.proof).toBeUndefined()
+    expect(afterRace.value.originalProof).toEqual(recorded.value)
+    expect(afterRace.value.newReceipt).toBeUndefined()
+    expect(afterRace.value.cases).toEqual({ ...beforeRace.value, [raceDecision.id]: raceDecision })
     expect(await persistence.transaction("dashboard", async (value) => ({ commit: false, value: value.data.opexEntries }))).toEqual(entries)
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

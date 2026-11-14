@@ -1,4 +1,4 @@
-import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
@@ -160,7 +160,7 @@ export function createSfAtlasBusiness(input: {
   procurementResolve: Parameters<typeof createSfProcurementSourceAccess>[0]["resolve"]
   documentRead: Parameters<typeof createSfDocumentSourceAccess>[0]["read"]
   planner?: { sources: PlannerSourceHost; port: PlannerPort }
-  caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<{ id: string; incarnation: string } | undefined>
+  caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<{ id: string; incarnation: string } | readonly { id: string; incarnation: string }[] | undefined>
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
   now: () => string
@@ -182,8 +182,17 @@ export function createSfAtlasBusiness(input: {
     return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projected.value.baseline, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
   }
   const readOriginal = async (digest: string, call: TrustedDomainContext) => {
-    const caseRef = await input.caseForEvidence(digest, call)
-    return caseRef ? memory.readOriginal(caseRef, digest, call) : undefined
+    const selected = await input.caseForEvidence(digest, call)
+    const candidates = selected ? "id" in selected ? [selected] : selected : []
+    if (!candidates.length || candidates.length > 500 || !await input.host.revalidate(call)) return undefined
+    const captures = await Promise.all(candidates.map((caseRef) => memory.readOriginal(caseRef, digest, call)))
+    const originals = captures.filter((ref): ref is BusinessEvidenceRef => ref !== undefined)
+    const original = originals[0]
+    // Several authorized cases can capture one source; each surviving capture must prove the same complete reference.
+    if (!original || original.refDigest !== digest || digestSfEvidenceRef(original) !== digest ||
+      originals.some((ref) => ref.refDigest !== digest || digestSfEvidenceRef(ref) !== digest || digestSfValue(ref) !== digestSfValue(original)) ||
+      !await input.host.revalidate(call)) return undefined
+    return original
   }
   const dashboardRecordProof = async (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => {
     if (original.kind !== "record" || original.target.surface !== "dashboard" || original.target.recordType === "dashboard-page" || digestSfValue(original) !== digestSfValue(current)) return false

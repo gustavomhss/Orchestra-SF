@@ -35,7 +35,16 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   const keys = new Map();
   const scalar = (value) => value === null || value === undefined ? 'Não informado' : typeof value === 'boolean' ? value ? 'Sim' : 'Não' : String(value);
   const choice = (name, list) => find(name).value === '' ? undefined : list[Number(find(name).value)];
-  const fieldLabel = (id) => { if (/effectiveMonthlyBudget\[\d+\]$/.test(String(id))) return 'Orçamento vigente'; let name = String(id).split(/[.:]/).pop(); try { name = decodeURIComponent(name); } catch {} return labels[name] || (name.includes('|') ? name.split('|').join(' · ') : 'Campo'); };
+  const fieldLabel = (id) => {
+    if (/effectiveMonthlyBudget\[\d+\]$/.test(String(id))) return 'Orçamento vigente';
+    const original = String(id).split(/[.:]/).pop();
+    let name = original;
+    try { name = decodeURIComponent(original); } catch {
+      // Malformed encoding keeps the original label, which is rendered only through textContent.
+      name = original;
+    }
+    return labels[name] || (name.includes('|') ? name.split('|').join(' · ') : 'Campo');
+  };
   const announce = (message) => { status.textContent = message; };
   const options = (name, list, empty) => {
     const select = find(name); select.replaceChildren(new Option(empty, ''));

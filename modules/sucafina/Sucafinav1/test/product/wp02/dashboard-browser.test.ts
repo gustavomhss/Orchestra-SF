@@ -105,7 +105,7 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
     const deviation = row.locator('form[data-command="save-deviation"]')
     await deviation.locator("..").locator("summary").click()
     await deviation.getByLabel("Deviation notes").fill("Approved renewal shifted the January forecast.")
-    await deviation.getByLabel("Flag", { exact: true }).selectOption("dev-amber")
+    await deviation.getByLabel(/^Flag/).selectOption("dev-amber")
     const started = new Promise<void>((resolve) => { delayed.started = resolve })
     delayed.next = true
     await deviation.getByRole("button", { name: "Save deviation", exact: true }).click()

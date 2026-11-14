@@ -147,8 +147,9 @@ export function createSfDashboardServices(input: {
           if (typeof year !== "number" || !Number.isInteger(year) || typeof month !== "number" || !Number.isInteger(month) || month < 1 || month > 12) continue
           periodLabel = `${year}-${String(month).padStart(2, "0")}`
           const ticketPrefix = `tickets:${periodLabel}:`
-          // Metric names come from the authorized ticket producer, including its configured categories.
-          fields = ["year", "month", ...selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(ticketPrefix)).map((value) => value.id.slice(ticketPrefix.length))]
+          // Absent metrics remain visible in the agenda, but do not name physical fields that can be captured.
+          // The record issuer rechecks that every observed metric still exists on this authorized ticket row.
+          fields = ["year", "month", ...selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(ticketPrefix) && value.evidenceState === "confirmed").map((value) => value.id.slice(ticketPrefix.length))]
         }
         const signal = request.page === "Executive Dashboard" ? selectedAgenda.value.projection.values.filter((value) => value.drilldown?.kind === "record" && value.drilldown.refId === reference) : []
         if (signal.length) fields = target.fields.filter((field) => field !== "id")

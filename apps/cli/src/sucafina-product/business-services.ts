@@ -187,7 +187,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       if (source.status !== "ok" || source.value.length > 500) return undefined
       const checked = await Promise.all(source.value.map(async (entry) => ({ ...entry, result: await cases.read({ caseRef: encodeCaseRef(entry.ref) }, call) })))
       const matches = checked.filter((entry) => entry.result.status === "ok" && (entry.outbox || entry.result.value.evidenceRefs.some((ref) => ref.refDigest === digest)))
-      return matches.length === 1 && await host.revalidate(call) ? matches[0]!.ref : undefined
+      return matches.length && await host.revalidate(call) ? matches.map((entry) => entry.ref) : undefined
     }
     const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords,
       procurement, procurementResolve: { ...individual, resolve: resolveProcurement }, planner: { sources: plannerSources, port: planner },

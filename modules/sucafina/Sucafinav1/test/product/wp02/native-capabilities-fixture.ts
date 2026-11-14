@@ -71,7 +71,9 @@ export async function withNativeDashboard(work: (fixture: Awaited<ReturnType<typ
   const global = Global.make(Object.fromEntries(["home", "data", "cache", "config", "state", "tmp", "bin", "log", "repos"].map((key) => [key, path.join(directory, "core", key)] as const)))
   await Promise.all(Object.values(global).map((directory) => mkdir(directory, { recursive: true })))
   const fixture = await createNativeFixture(directory)
-  const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionStore.node, LocationServiceMap.node]), [
+  // Native Location tools capture the root's exported Session and execution services.
+  // Export the real coordinator as well as providing it to SessionV2's constructor.
+  const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionExecution.node, SessionStore.node, LocationServiceMap.node]), [
     [Global.node, Global.layerWith(global)],
     [SessionExecution.node, SessionExecutionLocal.node],
   ], fixture.contribution.locationNodes)
