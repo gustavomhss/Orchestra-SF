@@ -63,7 +63,7 @@ export const decisionScriptHelpers = `
       Array.from({ length: sessionStorage.length }, (_, index) => sessionStorage.key(index)).forEach((key) => {
         if (key === storageKey || key?.startsWith(storageKey + ':')) sessionStorage.removeItem(key)
       })
-    } catch {}
+    } catch { /* Clearing blocked storage is best effort; protected DOM is still removed and this controller stays denied. */ }
     const message = document.createElement('p'); message.setAttribute('role', 'status')
     message.textContent = form.hasAttribute('data-decision-edit') ? 'Your access changed. Reload before editing this decision.' : 'Decision access is no longer available. Protected content has been removed.'
     delete form.dataset.context; delete form.dataset.dirty
@@ -108,7 +108,7 @@ export const decisionScriptHelpers = `
   const quarantine = (saved) => {
     if (!present()) return
     saved.quarantine = true
-    try { sessionStorage.setItem(storageKey, JSON.stringify(saved)) } catch {}
+    try { sessionStorage.setItem(storageKey, JSON.stringify(saved)) } catch { /* The original frozen envelope remains retained; this page stays quarantined and offers only an explicit access read. */ }
     quarantined = true; hold()
     const panel = document.createElement('section'); panel.setAttribute('aria-label', 'Decision request awaiting access check')
     const message = document.createElement('p'); message.setAttribute('role', 'alert')
