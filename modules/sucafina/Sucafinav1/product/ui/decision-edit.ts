@@ -15,6 +15,7 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
   let context = JSON.parse(form.dataset.context)
   const status = form.querySelector('[role=status]'); const button = form.querySelector('button'); let inputs = [...form.querySelectorAll('input')]
   const disabled = new Map(inputs.map((input) => [input, input.disabled]))
+  const removedDrafts = new Map()
   context.criteria.forEach((criterion, index) => { const input = form.elements.namedItem('criterion-' + index); if (input) input.dataset.criterionId = criterion.id })
   let intention; let conflictAttempt; let comparison; let reviewed; let needsReview = false; let busy = false; let closed = false; let completed = false
   const active = () => !closed && form.isConnected
@@ -25,7 +26,7 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
     form.querySelectorAll('[data-decision-conflict] button, [data-decision-structure-confirm]').forEach((input) => { input.disabled = busy || completed || !!intention })
   }
   const revoke = () => {
-    closed = true; context = undefined; comparison = undefined; reviewed = undefined
+    closed = true; context = undefined; comparison = undefined; reviewed = undefined; removedDrafts.clear()
     if (intention) { intention.body = ''; intention.values = [] }; intention = undefined
     if (conflictAttempt) { conflictAttempt.body = ''; conflictAttempt.values = [] }; conflictAttempt = undefined
     inputs.forEach((input) => { input.value = ''; input.defaultValue = ''; input.removeAttribute('value'); input.disabled = true }); disabled.clear()
@@ -57,6 +58,10 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
       return { context: currentContext, fields, criteria, signature: JSON.stringify({ context: currentContext, fields, criteria }) }
   }
   const draft = () => ({ fields: Object.fromEntries(inputs.filter((input) => !input.dataset.criterionId).map((input) => [input.name, input.value])), criteria: new Map(inputs.filter((input) => input.dataset.criterionId).map((input) => [input.dataset.criterionId, { value: input.value, disabled: disabled.get(input) }])) })
+  const showRemovedDrafts = (panel) => {
+    panel.querySelectorAll('[data-decision-removed-entry]').forEach((node) => node.remove())
+    removedDrafts.forEach((value, id) => { const detail = document.createElement('p'); detail.dataset.decisionRemovedEntry = id; detail.textContent = 'Previously removed criterion ' + id + ' — your last entry: ' + value; panel.append(detail) })
+  }
   const showComparison = (current) => {
     if (!active()) return
     needsReview = true; reviewed = undefined; comparison = current
@@ -90,7 +95,10 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
           const fresh = await readCurrent(); if (!active() || !fresh) return
           if (fresh.signature !== current.signature) { showComparison(fresh); status.textContent = 'The decision changed again. Review the new comparison before continuing.'; return }
           const retained = draft()
-          retained.criteria.forEach((entry, id) => { if (!fresh.criteria.some((item) => item.id === id)) { const detail = document.createElement('p'); detail.dataset.decisionRemovedEntry = id; detail.textContent = 'Removed criterion ' + id + ' — your last entry: ' + entry.value; panel.append(detail) } })
+          // The comparison panel can be replaced by another authorized read.
+          // Keep removed drafts by criterion ID until the save is confirmed.
+          retained.criteria.forEach((entry, id) => { if (!fresh.criteria.some((item) => item.id === id)) removedDrafts.set(id, entry.value) })
+          showRemovedDrafts(panel)
           const criteria = document.createElement('div'); criteria.dataset.decisionCriteria = 'true'
           fresh.criteria.forEach((item, index) => {
             const label = document.createElement('label'); label.textContent = 'Criterion ' + (index + 1)
@@ -119,7 +127,7 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
       catch { if (active()) { showComparison(undefined); status.textContent = 'Current values are unavailable; your entries and original version remain here.' } }
       finally { busy = false; controls() }
     })
-    form.append(panel); controls()
+    showRemovedDrafts(panel); form.append(panel); controls()
   }
   const conflict = async (attempt) => {
     conflictAttempt = attempt; needsReview = true
@@ -162,7 +170,7 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
       }
       const saved = result?.value?.caseRef
       if (!response.ok || result?.status !== 'ok' || !saved || saved.id !== context.caseRef.id || saved.incarnation !== context.caseRef.incarnation || !Number.isSafeInteger(saved.version) || saved.version <= context.caseRef.version) throw new Error('unconfirmed')
-      intention = undefined; completed = true; delete form.dataset.dirty; status.textContent = 'Decision saved.'; location.reload()
+      intention = undefined; completed = true; removedDrafts.clear(); delete form.dataset.dirty; status.textContent = 'Decision saved.'; location.reload()
     } catch { if (active() && attempt && intention === attempt) { attempt.uncertain = true; status.textContent = 'Could not confirm the save. Your original entries are locked; retry the same request.' } }
     finally {
       busy = false; controls()

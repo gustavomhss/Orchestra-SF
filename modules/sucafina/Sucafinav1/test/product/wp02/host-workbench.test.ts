@@ -15,18 +15,14 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
-import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../product/dashboard/sources.ts"
-import { createDashboardPort } from "../../../product/dashboard/port.ts"
-import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
+import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
 import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { HotTopicDraft } from "../../../product/decisions/hot-topic-draft.ts"
-import { createSfDashboardServices } from "../../../../../../apps/cli/src/sucafina-product/dashboard-services.ts"
-import { createSfDashboardDecisions } from "../../../../../../apps/cli/src/sucafina-product/dashboard-decisions.ts"
+import { createFixtureBusiness } from "./business-services-fixture.ts"
 import { createSfDashboardHttp } from "../../../../../../apps/cli/src/sucafina-product/dashboard-http.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -66,24 +62,14 @@ async function fixture() {
     grants: [{ principalRef, namespaces: ["cases", "preferences", "reviews", "receipts"], operations: ["sf_dashboard_read", "sf_case_read"],
       humanActions: ["reviews.preserve", "decisions.edit", "decisions.choose", "decisions.prepare-changes", "decisions.apply"] }] })
   const records = createDashboardRecordEvidenceHost({ host: authority.host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host: authority.host, scopedSources: persistence }) })
-  const sources = createDashboardSourceHost({ host: authority.host, scopedSources: persistence })
-  const dashboard = createSfDashboardServices({ authority, scopedSources: persistence, dashboard: createDashboardPort({ host: authority.host, sources, recordEvidence: records }), sources, records, dashboardHostWrites })
-  const evidence: BusinessContextService = {
-    resolve: async (ref, context) => {
-      if (ref.kind === "record" && ref.target.surface === "dashboard") {
-        const current = await records.resolve(ref.refId, context), projection = await records.read(ref.refId, context)
-        if (current.status === "ok" && projection.status === "ok" && digestSfValue(current.value) === digestSfValue(ref))
-          return { state: "fresh", ref, currentRef: current.value, authorizedProjection: projection.value, accessRevision: context.binding.accessRevision, checkedAt: clock.at }
-      }
-      return { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: clock.at }
-    },
-    context: (request, context) => Promise.all(request.refs.map((ref) => evidence.resolve(ref, context))), recall: async () => [],
-    emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "test-does-not-publish-memory" }),
-  }
-  const cases = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget, evidence,
-    operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined,
-    authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context), createId: randomUUID, now: () => clock.at })
-  const decisions = createSfDashboardDecisions({ authority, cases, records, issue: dashboard.issue, proposalCoverageWrites, dashboardHostWrites })
+  const business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites }).catch(async (error: unknown) => {
+    const failures: unknown[] = [error]
+    try { await server.stop(true) } catch (failure) { failures.push(failure) }
+    try { await driver.dispose() } catch (failure) { failures.push(failure) }
+    try { await rm(directory, { recursive: true, force: true }) } catch (failure) { failures.push(failure) }
+    throw failures.length === 1 ? error : new AggregateError(failures, "Business fixture setup and cleanup failed")
+  })
+  const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
   const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   routing.handle = async (request) => {
@@ -128,7 +114,7 @@ async function fixture() {
     })
   expect(seeded.status).toBe("ok")
   return { origin, identity, policy, clock, delayed, httpTrace, principalRef, persistence, authority, dashboard, decisions, records, request, read,
-    close: async () => { delayed.release?.(); dashboard.dispose(); await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
+    close: async () => { delayed.release?.(); business.dispose(); await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
 
 async function storeExistingChoice(f: Awaited<ReturnType<typeof fixture>>, draft: HotTopicDraft) {

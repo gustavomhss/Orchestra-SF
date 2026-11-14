@@ -22,6 +22,7 @@ import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { createDecisionEvidenceChecks } from "../../../product/decisions/host-evidence.ts"
 import { createDecisionIntentFences } from "../../../product/decisions/intent-fences.ts"
 import { createDecisionHttp } from "../../../product/decisions/http.ts"
+import { createPortfolioResultBindings } from "../../../product/decisions/portfolio-bindings.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
@@ -34,8 +35,8 @@ afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 type Edit = Parameters<ReturnType<typeof createDecisionCaseManagement>["edit"]>[0]
 
 /** Real operator cookies, C08, admission, case reads, intent fences and CAS edits.
- * Only the private edit HTTP route is exercised here. Other Decision HTTP ports
- * fail explicitly on access; they never supply a simulated domain result.
+ * The case page also loads its real C08 portfolio-result listing. Other Decision
+ * HTTP ports fail explicitly on access; they never supply a simulated result.
  * This is a consumer proof, not acceptance of the complete host router.
  * These source-free cases do not assert source provenance or native execution.
  */
@@ -58,7 +59,7 @@ async function fixture() {
   const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
     installationId, origin, policyVersion: "policy", persistence, authenticate, environment, createId: randomUUID, now: Date.now,
     commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
-    grants: principals.map((principalRef) => ({ principalRef, namespaces: ["cases", "receipts"] as const, operations: ["sf_case_read"], humanActions: ["decisions.edit"] as const })),
+    grants: principals.map((principalRef) => ({ principalRef, namespaces: ["cases", "receipts", "preferences"] as const, operations: ["sf_case_read"], humanActions: ["decisions.edit", "decisions.portfolio.read"] as const })),
     proposalCoverageWrites, dashboardHostWrites, inspectSession: async () => undefined, verifySelection: async () => false,
     verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
   const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
@@ -75,12 +76,32 @@ async function fixture() {
         [...before.assumptions, ...after.assumptions].every((item) => item.evidenceRefs.length === 0)
     } })
   const unmounted = (port: string): never => { throw new Error(`Decision conflict fixture does not mount ${port}`) }
+  // portfolioHistory is an actual initial consumer of the case page. A missing
+  // read grant would return 403 and correctly revoke every protected form before
+  // the first edit. Its empty listing must come from the real C08 case store.
+  const portfolioBindings = createPortfolioResultBindings({ state: authority.state, host: authority.host, results: business.results,
+    get selection() { return unmounted("portfolio.selection") },
+    resolveCandidate: () => unmounted("portfolio.resolveCandidate"),
+    authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context),
+    verifyBinding: () => unmounted("portfolio.verifyBinding"), verifySnapshot: () => unmounted("portfolio.verifySnapshot"),
+    operationIdentity: business.operationIdentity, proposalCoverageWrites, now })
   const editOptions = {
     origin, mount: "/sucafina/dashboard", human: authority.human, management, withCase: business.withCase,
     get admitList() { return unmounted("admitList") },
     get admitComparison() { return unmounted("admitComparison") },
     get admitSelection() { return unmounted("admitSelection") },
-    get portfolio() { return unmounted("portfolio") },
+    portfolio: {
+      list: (caseRef, context) => portfolioBindings.list({ caseRef }, context),
+      get sensitivityUnits() { return unmounted("portfolio.sensitivityUnits") },
+      get catalog() { return unmounted("portfolio.catalog") },
+      get preview() { return unmounted("portfolio.preview") },
+      get evaluate() { return unmounted("portfolio.evaluate") },
+      get read() { return unmounted("portfolio.read") },
+      get sensitivity() { return unmounted("portfolio.sensitivity") },
+      get readSensitivity() { return unmounted("portfolio.readSensitivity") },
+      get promote() { return unmounted("portfolio.promote") },
+      get prepare() { return unmounted("portfolio.prepare") },
+    },
     get history() { return unmounted("history") },
     get choiceCatalog() { return unmounted("choiceCatalog") },
     get coverageCatalog() { return unmounted("coverageCatalog") },
@@ -144,8 +165,12 @@ async function fixture() {
     expect(seeded.status).toBe("ok")
     const url = `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-case", caseRef: encodeCaseRef(decision) })}`
     for (const actor of actors) {
+      const history = actor.page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-portfolio-results")
       expect((await actor.page.goto(url))?.status()).toBe(200)
+      expect((await history).status()).toBe(200)
+      await actor.page.locator("[data-portfolio-history]").getByText("No saved evaluations for this decision version.", { exact: true }).waitFor()
       await actor.page.getByText("Edit decision", { exact: true }).click()
+      expect(await form(actor.page).getByLabel("Decision objective", { exact: true }).inputValue()).toBe(decision.objective)
     }
     const read = async () => {
       const value = await authority.state.read(request(), "cases", (state) => ({ decision: structuredClone(state.cases[decision.id]!), transactions: Object.values(state.transactions) }))
@@ -257,6 +282,72 @@ test("real added and removed criteria require an explicit structural review and 
       { id: "quality", description: "Retained quality criterion", required: false },
       { id: "capacity", description: "Current capacity criterion", required: true },
     ])
+    expect(f.errors).toEqual([])
+  } finally { await f.close() }
+}, 60_000)
+
+test("a removed criterion draft survives another real commit and repeated authorized comparisons before saving", async () => {
+  const f = await fixture()
+  try {
+    const page = f.actors[1].page, editor = form(page)
+    await editor.getByLabel("Decision objective", { exact: true }).fill("Retained across comparisons")
+    await editor.locator('[data-criterion-id="cost"]').fill("Removed cost draft before review")
+    await editor.locator('[data-criterion-id="quality"]').fill("Retained quality across comparisons")
+    expect((await f.post(editBody(f.initial, "First structural commit", [f.initial.criteria[1]!, { id: "capacity", description: "Current capacity criterion", required: true }]))).status()).toBe(200)
+    const removed = await f.read()
+    expect(removed.decision.version).toBe(2)
+    await editor.getByRole("button", { name: "Save decision", exact: true }).click()
+    await editor.getByLabel("I reviewed the added and removed criteria", { exact: true }).waitFor()
+    await editor.locator('[data-criterion-id="cost"]').fill("Latest removed cost draft remains available")
+    await editor.getByLabel("I reviewed the added and removed criteria", { exact: true }).check()
+    await editor.getByRole("button", { name: "Use current version and keep my edits", exact: true }).click()
+    await editor.getByText("Current version adopted. Review your entries, then save explicitly.", { exact: true }).waitFor()
+    const retained = editor.locator('[data-decision-removed-entry="cost"]')
+    expect(await retained.textContent()).toContain("Latest removed cost draft remains available")
+    expect(await editor.locator('[data-criterion-id="cost"]').count()).toBe(0)
+    expect(await openedVersion(page)).toBe(2)
+
+    // The next real commit replaces the comparison panel before this user saves.
+    // A DOM-only copy of the removed entry would be lost at this boundary.
+    expect((await f.post(editBody(removed.decision, "Another actor changed the decision again"))).status()).toBe(200)
+    const changed = await f.read()
+    expect(changed.decision.version).toBe(3)
+    await editor.getByRole("button", { name: "Save decision", exact: true }).click()
+    await editor.getByText("The decision changed after your review. Compare the current version before saving.", { exact: true }).waitFor()
+    expect(await retained.count()).toBe(1)
+    expect(await retained.textContent()).toContain("Latest removed cost draft remains available")
+    expect(await editor.locator('[data-criterion-id="quality"]').inputValue()).toBe("Retained quality across comparisons")
+    expect(await editor.locator('[data-criterion-id="capacity"]').inputValue()).toBe("Current capacity criterion")
+    expect(await openedVersion(page)).toBe(2)
+    expect(f.writes).toHaveLength(3)
+    expect((await f.read()).storageVersion).toBe(changed.storageVersion)
+
+    const reread = page.waitForResponse((response) => response.request().method() === "GET" && new URL(response.url()).searchParams.get("sf") === "workbench-case")
+    await editor.getByRole("button", { name: "Reload current values for comparison", exact: true }).click()
+    expect((await reread).status()).toBe(200)
+    await page.waitForFunction(() => document.querySelector<HTMLButtonElement>("[data-decision-adopt]")?.disabled === false)
+    expect(await retained.count()).toBe(1)
+    expect(await retained.textContent()).toContain("Latest removed cost draft remains available")
+    await editor.getByRole("button", { name: "Use current version and keep my edits", exact: true }).click()
+    await editor.getByText("Current version adopted. Review your entries, then save explicitly.", { exact: true }).waitFor()
+    expect(await retained.textContent()).toContain("Latest removed cost draft remains available")
+    expect(await openedVersion(page)).toBe(3)
+    expect(f.writes).toHaveLength(3)
+    const saved = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-edit")
+    await editor.getByRole("button", { name: "Save decision", exact: true }).click()
+    expect((await saved).status()).toBe(200)
+    await page.getByRole("heading", { name: "Retained across comparisons", exact: true }).waitFor()
+    expect(await page.locator("[data-decision-removed-entry]").count()).toBe(0)
+    const final = await f.read()
+    expect(final.decision.version).toBe(4)
+    expect(final.decision.criteria).toEqual([
+      { id: "quality", description: "Retained quality across comparisons", required: false },
+      { id: "capacity", description: "Current capacity criterion", required: true },
+    ])
+    expect(final.transactions.filter((entry) => entry.principalRef === f.principals[1])).toHaveLength(1)
+    expect(f.writes).toHaveLength(4)
+    expect(f.writes[3]).toMatchObject({ principal: f.principals[1], status: 200, body: { caseRef: { version: 3 } } })
+    expect(f.writes[3]!.key).not.toBe(f.writes[1]!.key)
     expect(f.errors).toEqual([])
   } finally { await f.close() }
 }, 60_000)

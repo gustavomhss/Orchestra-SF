@@ -87,13 +87,28 @@ async function withViews(check: (fixture: Fixture) => Promise<void>) {
     // A live response stream must not keep the domain request or a store scope open.
     const body = await within(response.text(), "materialize the authorized list response")
     hold.status = response.status; hold.body = body
-    await new Promise<void>((resolve) => {
-      const release = () => { releases.delete(release); resolve() }
-      releases.add(release); hold.release = release; hold.entered?.()
-    })
     const headers = new Headers(response.headers)
     headers.set("X-SF-Views-Late", "yes")
-    return new Response(body, { status: response.status, headers })
+    const bytes = new TextEncoder().encode(body), split = Math.max(1, Math.floor(bytes.length / 2))
+    let cancelled = false, release: (() => void) | undefined
+    // Deliver real headers and a partial real body while the authorized reader
+    // is active. Hold the remaining bytes across revocation. If headers alone
+    // arrive after deny(), the reader correctly ignores the unused body and
+    // Playwright may never receive a loading-finished event for that response.
+    const delivery = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(bytes.subarray(0, split))
+        release = () => {
+          if (!release) return
+          releases.delete(release); release = undefined
+          if (cancelled) return
+          controller.enqueue(bytes.subarray(split)); controller.close()
+        }
+        releases.add(release); hold.release = release; hold.entered?.()
+      },
+      cancel() { cancelled = true; if (release) releases.delete(release); release = undefined },
+    })
+    return new Response(delivery, { status: response.status, headers })
   }
   let context: BrowserContext | undefined
   let failure: unknown
@@ -190,12 +205,16 @@ test("an earlier real saved-view response cannot restore private labels after th
     await within(fixture.page.getByRole("button", { name: "PRIVATE-PREVIOUS-TITLE", exact: true }).waitFor(), "observe the authorized private title")
     fixture.hold.nextList = true
     const entered = new Promise<void>((resolve) => { fixture.hold.entered = resolve })
+    const delivered = fixture.page.waitForResponse((response) => response.headers()["x-sf-views-late"] === "yes", { timeout: 5_000 })
     await within(fixture.page.getByRole("button", { name: "Refresh saved views" }).click(), "request the delayed authorized list")
-    await within(entered, "hold the complete authorized list before delivery")
+    await within(entered, "hold the authorized list body before completion")
     expect(fixture.hold.status).toBe(200)
     const authorizedBody = fixture.hold.body
     if (typeof authorizedBody !== "string") throw new Error("The authorized list body was not captured before delivery")
     expect(authorizedBody).toContain("PRIVATE-PREVIOUS-TITLE")
+    const late = await within(delivered, "observe the authorized response headers before revocation")
+    expect(late.status()).toBe(200)
+    await within(fixture.page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))), "allow the authorized reader to await its incomplete body")
     expect((await within(fixture.context.request.post(`${fixture.origin}/sucafina/auth/logout`, { headers: { origin: fixture.origin }, timeout: 5_000 }), "revoke the actual operator session")).status()).toBe(204)
     const [refused] = await Promise.all([
       within(fixture.page.waitForResponse((response) => response.status() === 403 && new URL(response.url()).searchParams.get("sf") === "workbench-views", { timeout: 5_000 }), "observe the real revoked list response"),
@@ -203,10 +222,7 @@ test("an earlier real saved-view response cannot restore private labels after th
     ])
     expect(refused.status()).toBe(403)
     await within(fixture.page.getByText("Your access changed. Reload before opening or changing saved views.", { exact: true }).waitFor(), "observe access revocation before late delivery")
-    const delivered = fixture.page.waitForResponse((response) => response.headers()["x-sf-views-late"] === "yes", { timeout: 5_000 })
     fixture.hold.release?.()
-    const late = await within(delivered, "observe the delayed authorized response headers")
-    expect(late.status()).toBe(200)
     // Reading exact delivered bytes proves completion and the private content
     // available to the old request without an unbounded response.finished wait.
     expect(await within(late.text(), "read the delayed authorized response body")).toBe(authorizedBody)

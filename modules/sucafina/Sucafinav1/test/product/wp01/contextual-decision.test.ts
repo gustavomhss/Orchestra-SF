@@ -12,11 +12,7 @@ import { createSfSourcePersistence } from "../../../product/integration/source-l
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
-import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
-import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
-import { createSfDashboardRecordSourceAccess } from "../../../product/decision-memory/source-access.ts"
-import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
-import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
+import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
 import { createDecisionCapabilities } from "../../../product/decisions/capabilities.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
@@ -49,22 +45,22 @@ test("contract context uses mounted evidence, survives a lost response, and reje
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: driver.secrets, key: randomBytes(32) })
   const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
   const environment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request) })
+  let business: Awaited<ReturnType<typeof createFixtureBusiness>> | undefined
   let failure: unknown
   try {
     phase = "initialize contract sources"
-    await within(persistence.initializeSources("dashboard"), phase)
+    for (const surface of ["dashboard", "planner", "procurement"] as const) await within(persistence.initializeSources(surface), phase)
     await within(persistence.transaction("dashboard", async (snapshot) => {
       snapshot.data.contracts = [{ id: "contract-a", vendor: "Context contract Alpha", amount: 120, currency: "USD" }, { id: "contract-b", vendor: "Context contract Beta", amount: 240, currency: "USD" }]
       return { commit: true, value: undefined }
     }), "seed contracts")
-    const authority = createSfProductAuthority({ identity: () => ({ installationId: operator.installationId, projectId: "project", hostId: "host", location }), installationId: operator.installationId, origin, policyVersion: "policy", persistence, authenticate: identity.authenticate, environment,
+    const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
+    const authority = createSfProductAuthority({ identity: () => ({ installationId: operator.installationId, projectId: "project", hostId: "host", location }), installationId: operator.installationId, origin, policyVersion: "policy", persistence, authenticate: identity.authenticate, environment, proposalCoverageWrites, dashboardHostWrites,
       grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }], createId: randomUUID, now: Date.now,
       commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
-    const records = createDashboardRecordEvidenceHost({ host: authority.host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host: authority.host, scopedSources: persistence }) })
-    const evidence = createSfBusinessContext({ revalidate: authority.host.revalidate, resolveSource: createSfDashboardRecordSourceAccess({ host: authority.host, records }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" } }) })
-    const cases = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined,
-      authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context), evidence, createId: randomUUID, now })
+    business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
+    const cases = business.cases
     const descriptors = createDecisionCapabilities({ cases, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: authority.authority.receiptFor })
     const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors, authority: authority.authority,
       validateInput: (_descriptor, value) => operation === "sf_case_read" ? decodeSfOperationInput("sf_case_read", value).ok : operation === "sf_case_draft" && decodeSfOperationInput("sf_case_draft", value).ok,
@@ -228,6 +224,7 @@ test("contract context uses mounted evidence, survives a lost response, and reje
   } catch (error) { failure = error; console.error("WP01 contextual failure", { phase }); throw error }
   finally {
     const cleanup: unknown[] = []
+    try { business?.dispose() } catch (error) { cleanup.push(error) }
     try { await within(Promise.resolve(server.stop(true)), "stop server") } catch (error) { cleanup.push(error) }
     try { await within(driver.dispose(), "dispose store") } catch (error) { cleanup.push(error) }
     try { await within(rm(directory, { recursive: true, force: true }), "remove directory") } catch (error) { cleanup.push(error) }

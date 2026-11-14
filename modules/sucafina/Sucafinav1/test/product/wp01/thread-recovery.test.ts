@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, expect, test } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
+import { object } from "../../../runtime/contract.ts"
 import { caseQuestionScript, caseQuestionThreads } from "../../../product/ui/work-collaboration.ts"
 import { launchWp01Browser, closeWp01Browser } from "./browser-fixture.ts"
 import { createThreadDomainFixture } from "./thread-domain-fixture.ts"
@@ -8,8 +9,8 @@ import { createThreadDomainFixture } from "./thread-domain-fixture.ts"
 // Transport-component cases below use declared fault envelopes. The real
 // reply cases separately compose C03/C08/source authority and encrypted sessions.
 // Neither lane is WP10's composed host or proof of native execution.
-// Full confirmation still needs the published host's answer selector/observation
-// flow; an HTTP acknowledgement here never proves durable domain idempotence.
+// The real confirmation cases also consume the published answer producer and C06.
+// An HTTP acknowledgement in a transport case never proves durable domain idempotence.
 const projection: AuthorizedCaseProjection = {
   context: { kind: "ui", installationId: "installation", projectId: "project", principalRef: "operator", policyVersion: "policy", accessRevision: "access" },
   case: { id: "private-case", incarnation: "case-incarnation", version: 1, state: "investigating", objective: "Private decision",
@@ -22,7 +23,7 @@ const thread = { state: "open", recipientRef: "recipient", messages: [
   { id: "answer-message", authorRef: "recipient", body: "Private recipient answer" },
 ] }
 // This is an explicit authorized-renderer input for the transport tests only.
-// The composed host still needs to expose the first selector for an open question.
+// A real first selector is separately issued server-side from a current message.
 const answerRef = "published-answer-selector"
 const selectedProjection: AuthorizedCaseProjection = { ...projection, case: { ...projection.case, questions: projection.case.questions.map((question) => ({ ...question, answerRef })) } }
 const preparedAnswer = { answerRef, answer: "Private recipient answer", authorRef: "recipient", observationRef: "producer-observation", observedSourceVersion: 3, expectedScopeFingerprint: "producer-scope-fingerprint" }
@@ -53,9 +54,9 @@ function unfinished() {
   } }
 }
 
-async function browserCase(post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void, view = projection) {
+async function browserCase(post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void, view: AuthorizedCaseProjection | (() => AuthorizedCaseProjection) = projection) {
   const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"
-    ? new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${caseQuestionThreads(view)}<script>${caseQuestionScript}</script></body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
+    ? new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${caseQuestionThreads(typeof view === "function" ? view() : view)}<script>${caseQuestionScript}</script></body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
     : post(request) })
   let context: BrowserContext | undefined
   let failure: unknown
@@ -90,7 +91,8 @@ async function domainBrowserCase(check: (page: Page, fixture: Awaited<ReturnType
     page.setDefaultTimeout(5_000)
     const errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
-    await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)
+    expect((await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`))?.status()).toBe(200)
+    expect(page.url()).toBe(`${fixture.origin}/sucafina/conversation`)
     expect((await page.goto(`${fixture.origin}/sucafina/conversation`))?.status()).toBe(200)
     await check(page, fixture)
     expect(errors).toEqual([])
@@ -197,7 +199,79 @@ test("conversation keeps a real committed reply uncertain when delivery replaces
   })
 }, 30_000)
 
-test("conversation without a published answer selector keeps confirmation disabled after a reply preflight failure", async () => {
+test("conversation obtains its first answer selector from the real issuer and recovers one C06 C08 confirmation after lost delivery", async () => {
+  await domainBrowserCase(async (page, fixture) => {
+    const replied = await fixture.concurrentReply("First authorized answer for this current project")
+    const message = replied.messages.at(-1)
+    if (!message) throw new Error("Real recipient message unavailable")
+    const selection = { questionId: replied.id, messageId: message.id, incarnation: message.incarnation, version: message.version }
+    const rejected = await page.request.post(`${fixture.origin}/sucafina/conversation?sf=collaboration-answer-prepare-message`, {
+      headers: { origin: fixture.origin, "idempotency-key": crypto.randomUUID() }, data: { ...selection, version: message.version + 1 },
+    })
+    expect(rejected.status()).toBe(409)
+    const rejectedBody = await rejected.text()
+    expect(JSON.parse(rejectedBody)).toEqual({ status: "stale", reason: "answer-selection-changed" })
+    expect(rejectedBody).not.toContain(message.body)
+    expect(rejectedBody).not.toContain("answerRef")
+    expect(await page.locator("[data-case-thread]").getAttribute("data-answer")).toBeNull()
+    await page.getByRole("button", { name: "Open conversation", exact: true }).click()
+    const confirm = page.getByRole("button", { name: "Confirm this answer and add to decision", exact: true })
+    await confirm.waitFor({ state: "visible" })
+    expect(await confirm.isDisabled()).toBe(false)
+    const before = await fixture.inspect()
+    if (before.status !== "ok") throw new Error("Real C08 baseline unavailable")
+    fixture.suspended.nextConfirmation = true
+    await confirm.click()
+    await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+    const preparation = fixture.answerAttempts.find((attempt) => attempt.route === "collaboration-answer-prepare-message" && attempt.status === 200)
+    if (!preparation) throw new Error("Real first answer preparation unavailable")
+    expect(JSON.parse(preparation.body)).toEqual(selection)
+    const prepared = object(object(preparation.value).value)
+    expect(typeof prepared.answerRef).toBe("string")
+    expect(typeof prepared.observationRef).toBe("string")
+    expect(typeof prepared.expectedScopeFingerprint).toBe("string")
+    expect(prepared.answer).toBe(message.body)
+    expect(prepared.authorRef).toBe(message.authorRef)
+    expect(object(object(prepared.scope).sourceRef)).toMatchObject({ surface: "dashboard", type: "projects", id: "project" })
+    const confirmed = await fixture.readAnswer()
+    expect(confirmed.status).toBe("ok")
+    if (confirmed.status !== "ok") throw new Error("Real C06 confirmation unavailable")
+    expect(confirmed.value).toEqual({ answerRef: prepared.answerRef, answer: message.body, authorRef: message.authorRef, observedVersion: prepared.observedSourceVersion })
+    const committed = await fixture.inspect()
+    expect(committed.status).toBe("ok")
+    if (committed.status !== "ok") throw new Error("Real confirmation state unavailable")
+    expect(committed.storageVersion).toBe(before.storageVersion + 1)
+    expect(committed.value).toEqual(before.value)
+    expect(fixture.answerAttempts.filter((attempt) => attempt.route === "decision-answer-question")).toHaveLength(0)
+    await confirm.click()
+    await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+    const confirmations = fixture.answerAttempts.filter((attempt) => attempt.route === "collaboration-answer-confirm")
+    expect(confirmations).toHaveLength(2)
+    expect(confirmations[1]).toEqual(confirmations[0])
+    const body = JSON.parse(confirmations[0]!.body)
+    expect(body).toEqual({ questionId: replied.id, answerRef: prepared.answerRef, mutation: { expectedStorageVersion: before.storageVersion, idempotencyKey: confirmations[0]!.key, observationRef: prepared.observationRef, observedSourceVersion: prepared.observedSourceVersion, expectedScopeFingerprint: prepared.expectedScopeFingerprint } })
+    expect(fixture.answerAttempts.filter((attempt) => attempt.route === "collaboration-answer-prepare-message" && attempt.status === 200)).toHaveLength(1)
+    const attachment = fixture.answerAttempts.filter((attempt) => attempt.route === "decision-answer-question")
+    expect(attachment).toHaveLength(1)
+    expect(attachment[0]!.value).toEqual({ status: "unavailable", reason: "decision-attachment-not-mounted-in-c03-component" })
+    // This component proves the producer confirmation, not WP10's decision mount.
+    // An unavailable attachment must not rerun either the preparation or C06 write.
+    await confirm.click()
+    await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+    const retryAttachments = fixture.answerAttempts.filter((attempt) => attempt.route === "decision-answer-question")
+    expect(retryAttachments).toHaveLength(2)
+    expect(retryAttachments[1]).toEqual(retryAttachments[0])
+    expect(fixture.answerAttempts.filter((attempt) => attempt.route === "collaboration-answer-confirm")).toHaveLength(2)
+    const recovered = await fixture.inspect()
+    expect(recovered.status).toBe("ok")
+    if (recovered.status !== "ok") throw new Error("Real confirmation retry unavailable")
+    expect(recovered.storageVersion).toBe(committed.storageVersion)
+    expect(recovered.value).toEqual(committed.value)
+    expect(await fixture.readAnswer()).toEqual(confirmed)
+  })
+}, 30_000)
+
+test("conversation without a selector or complete current message keeps confirmation disabled after a reply preflight failure", async () => {
   const calls: string[] = []
   await browserCase((request) => {
     calls.push(mode(request)!)
@@ -206,7 +280,7 @@ test("conversation without a published answer selector keeps confirmation disabl
     await page.getByRole("button", { name: "Open conversation", exact: true }).click()
     const confirm = page.getByRole("button", { name: "Confirm this answer and add to decision", exact: true })
     expect(await confirm.isDisabled()).toBe(true)
-    await page.getByText("Answer confirmation is unavailable until an authorized answer is available for this decision. You can still send a reply.", { exact: true }).waitFor()
+    await page.getByText("Answer confirmation needs an authorized current message. Reopen the conversation; you can still send a reply.", { exact: true }).waitFor()
     expect(await page.getByRole("button", { name: "Send reply", exact: true }).isDisabled()).toBe(false)
     await page.getByLabel("Reply", { exact: true }).fill("Keep this editable reply")
     await page.getByRole("button", { name: "Send reply", exact: true }).click()
@@ -307,6 +381,7 @@ test("conversation refuses a different prepared answer and does not attach or co
   }, async (page) => {
     await page.getByRole("button", { name: "Open conversation", exact: true }).click()
     const confirm = page.getByRole("button", { name: "Confirm this answer and add to decision", exact: true })
+    await confirm.nth(1).waitFor({ state: "visible" })
     expect(await confirm.count()).toBe(2)
     expect(await confirm.nth(0).isDisabled()).toBe(true)
     expect(await confirm.nth(1).isDisabled()).toBe(false)
@@ -406,6 +481,127 @@ test("conversation confirmation and decision attachment keep producer observatio
     expect(answerReads).toBe(1)
     expect(versionReads).toBe(1)
     expect(namespaces).toEqual([{ namespace: "threads" }])
+  }, undefined, selectedProjection)
+}, 30_000)
+
+test("conversation reopens an edited first answer before requesting another server-issued selector", async () => {
+  const selections: unknown[] = []
+  const calls: string[] = []
+  let edited = false
+  await browserCase(async (request) => {
+    const action = mode(request)!
+    calls.push(action)
+    if (action === "collaboration-thread-read") return ok({ ...thread, messages: [thread.messages[0], { ...thread.messages[1], incarnation: "answer-incarnation", version: edited ? 2 : 1, body: edited ? "Current recipient answer" : thread.messages[1]!.body }] })
+    if (action === "collaboration-answer-prepare-message") {
+      selections.push(await request.json())
+      if (!edited) { edited = true; return Response.json({ status: "stale", reason: "answer-selection-changed" }, { status: 409 }) }
+      return ok({ ...preparedAnswer, answerRef: "new-server-issued-selector", answer: "Current recipient answer" })
+    }
+    if (action === "collaboration-storage-version") return ok(7)
+    if (action === "collaboration-answer-confirm") return Response.json({ status: "unavailable" }, { status: 503 })
+    throw new Error("An unconfirmed selection must not reach attachment")
+  }, async (page) => {
+    await page.getByRole("button", { name: "Open conversation", exact: true }).click()
+    const confirm = page.getByRole("button", { name: "Confirm this answer and add to decision", exact: true })
+    await confirm.click()
+    await page.getByText("The selected answer changed. Reopen the conversation and review the current answer before confirming.", { exact: true }).waitFor()
+    expect(await confirm.isDisabled()).toBe(true)
+    expect(calls).toEqual(["collaboration-thread-read", "collaboration-answer-prepare-message"])
+    await confirm.dispatchEvent("click")
+    expect(selections).toHaveLength(1)
+    await page.getByRole("button", { name: "Open conversation", exact: true }).click()
+    await page.getByText("Current recipient answer", { exact: true }).waitFor()
+    await confirm.click()
+    await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+    expect(selections).toEqual([
+      { questionId: "private-question", messageId: "answer-message", incarnation: "answer-incarnation", version: 1 },
+      { questionId: "private-question", messageId: "answer-message", incarnation: "answer-incarnation", version: 2 },
+    ])
+    expect(calls.filter((action) => action === "collaboration-answer-confirm")).toHaveLength(1)
+    expect(calls).not.toContain("collaboration-answer-evidence")
+    expect(calls).not.toContain("collaboration-answer-reuse")
+  })
+}, 30_000)
+
+test("conversation reviews a first rejected decision attachment and changes only its case version and request identity", async () => {
+  const attachments: { body: string; key: string | null }[] = []
+  let confirmations = 0, preparations = 0, answerReads = 0
+  let current = selectedProjection
+  await browserCase(async (request) => {
+    const action = mode(request)
+    if (action === "collaboration-thread-read") return ok(thread)
+    if (action === "collaboration-answer-prepare") { preparations++; return ok(preparedAnswer) }
+    if (action === "collaboration-storage-version") return ok(7)
+    if (action === "collaboration-answer-confirm") { confirmations++; return ok({ answerRef, observedVersion: preparedAnswer.observedSourceVersion }) }
+    if (action === "collaboration-answer-read") { answerReads++; return ok({ answerRef, answer: preparedAnswer.answer, authorRef: preparedAnswer.authorRef, observedVersion: preparedAnswer.observedSourceVersion }) }
+    if (action === "decision-answer-question") {
+      attachments.push({ body: await request.text(), key: request.headers.get("idempotency-key") })
+      if (attachments.length === 1) {
+        current = { ...selectedProjection, case: { ...selectedProjection.case, version: 2, objective: "Current authorized decision objective" } }
+        return Response.json({ status: "stale", reason: "case-changed" }, { status: 409 })
+      }
+      current = { ...current, case: { ...current.case, version: 3, questions: current.case.questions.map((question) => ({ ...question, state: "answered", answerRef })) } }
+      return ok({ caseRef: { id: "private-case", incarnation: "case-incarnation", version: 3 } })
+    }
+    throw new Error("Unexpected attachment recovery route")
+  }, async (page) => {
+    await page.getByRole("button", { name: "Open conversation", exact: true }).click()
+    const confirm = page.getByRole("button", { name: "Confirm this answer and add to decision", exact: true })
+    await confirm.click()
+    await page.getByText("The decision changed before the answer was attached. Review the current decision.", { exact: true }).waitFor()
+    expect(attachments).toHaveLength(1)
+    expect(await confirm.isDisabled()).toBe(true)
+    expect(await page.getByRole("button", { name: "Open conversation", exact: true }).isDisabled()).toBe(true)
+    await page.getByRole("button", { name: "Review current decision", exact: true }).click()
+    await page.getByText("Current decision version 2: Current authorized decision objective.", { exact: false }).waitFor()
+    expect(attachments).toHaveLength(1)
+    expect(confirmations).toBe(1)
+    expect(preparations).toBe(1)
+    expect(answerReads).toBe(2)
+    const navigation = page.waitForEvent("load")
+    await page.getByRole("button", { name: "Attach confirmed answer to this version", exact: true }).click()
+    await navigation
+    expect(attachments).toHaveLength(2)
+    expect(attachments[1]!.key).toBeTruthy()
+    expect(attachments[1]!.key).not.toBe(attachments[0]!.key)
+    expect(JSON.parse(attachments[0]!.body)).toEqual({ caseRef: { id: "private-case", incarnation: "case-incarnation", version: 1 }, questionId: "private-question", answerRef })
+    expect(JSON.parse(attachments[1]!.body)).toEqual({ caseRef: { id: "private-case", incarnation: "case-incarnation", version: 2 }, questionId: "private-question", answerRef })
+    expect(confirmations).toBe(1)
+    expect(preparations).toBe(1)
+    expect(answerReads).toBe(3)
+    await page.getByText("State: answered", { exact: true }).waitFor()
+  }, undefined, () => current)
+}, 30_000)
+
+test("conversation keeps an uncertain attachment exact when its retry reports that the decision changed", async () => {
+  const attachments: { body: string; key: string | null }[] = []
+  let confirmations = 0, answerReads = 0
+  await browserCase(async (request) => {
+    const action = mode(request)
+    if (action === "collaboration-thread-read") return ok(thread)
+    if (action === "collaboration-answer-prepare") return ok(preparedAnswer)
+    if (action === "collaboration-storage-version") return ok(7)
+    if (action === "collaboration-answer-confirm") { confirmations++; return ok({ answerRef, observedVersion: preparedAnswer.observedSourceVersion }) }
+    if (action === "collaboration-answer-read") { answerReads++; return ok({ answerRef, answer: preparedAnswer.answer, authorRef: preparedAnswer.authorRef, observedVersion: preparedAnswer.observedSourceVersion }) }
+    if (action === "decision-answer-question") {
+      attachments.push({ body: await request.text(), key: request.headers.get("idempotency-key") })
+      return attachments.length === 1 ? new Response("Attachment delivery interrupted") : Response.json({ status: "stale", reason: "case-changed" }, { status: 409 })
+    }
+    throw new Error("Unexpected uncertain attachment route")
+  }, async (page) => {
+    await page.getByRole("button", { name: "Open conversation", exact: true }).click()
+    const confirm = page.getByRole("button", { name: "Confirm this answer and add to decision", exact: true })
+    await confirm.click()
+    await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+    await confirm.click()
+    await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+    expect(attachments).toHaveLength(2)
+    expect(attachments[1]).toEqual(attachments[0])
+    expect(confirmations).toBe(1)
+    expect(answerReads).toBe(1)
+    expect(await page.getByRole("button", { name: "Review current decision", exact: true }).count()).toBe(0)
+    expect(await page.getByRole("button", { name: "Open conversation", exact: true }).isDisabled()).toBe(true)
+    expect(await page.getByLabel("Reply", { exact: true }).isDisabled()).toBe(true)
   }, undefined, selectedProjection)
 }, 30_000)
 

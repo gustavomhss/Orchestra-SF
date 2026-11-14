@@ -11,7 +11,8 @@ export function caseQuestionForm(projection: AuthorizedCaseProjection) {
 export function caseQuestionThreads(projection: AuthorizedCaseProjection) {
   if (!projection.case.questions.length) return ""
   const caseRef = { id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }
-  return `<section><h3>Question conversations</h3>${projection.case.questions.map((question) => `<article data-case-thread data-thread="${esc(question.id)}" data-case="${esc(JSON.stringify(caseRef))}" data-principal="${esc(projection.context.principalRef)}" data-question-state="${esc(question.state)}"${question.answerRef ? ` data-answer="${esc(question.answerRef)}"` : ""}><h4>${esc(question.text)}</h4><p>State: ${esc(question.state)}</p><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status" aria-live="polite"></p></article>`).join("")}</section>`
+  const summary = { objective: projection.case.objective, horizon: projection.case.horizon, currency: projection.case.currency }
+  return `<section><h3>Question conversations</h3>${projection.case.questions.map((question) => `<article data-case-thread data-thread="${esc(question.id)}" data-case="${esc(JSON.stringify(caseRef))}" data-case-summary="${esc(JSON.stringify(summary))}" data-access-revision="${esc(projection.context.accessRevision)}" data-principal="${esc(projection.context.principalRef)}" data-question-state="${esc(question.state)}"${question.answerRef ? ` data-answer="${esc(question.answerRef)}"` : ""}><h4>${esc(question.text)}</h4><p>State: ${esc(question.state)}</p><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status" aria-live="polite"></p></article>`).join("")}</section>`
 }
 
 export const caseQuestionScript = `
@@ -27,7 +28,7 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
     if (!active()) return
     accessRevoked = true; epoch++; controllers.forEach((controller) => controller.abort()); controllers.clear()
     pending = attachment = replyRequest = caseRef = threadRef = answerRef = questionState = principalRef = confirmKey = attachKey = undefined
-    confirmed = false; replyPending = false; replyReview = false; delete guard.dataset.dirty; delete entry.dataset.case; delete entry.dataset.thread; delete entry.dataset.answer; delete entry.dataset.questionState; delete entry.dataset.principal
+    confirmed = false; replyPending = false; replyReview = false; delete guard.dataset.dirty; delete entry.dataset.case; delete entry.dataset.caseSummary; delete entry.dataset.accessRevision; delete entry.dataset.thread; delete entry.dataset.answer; delete entry.dataset.questionState; delete entry.dataset.principal
     output.replaceChildren(); button.disabled = true; entry.replaceChildren(status)
     status.textContent = 'Conversation access changed. Reopen the decision with your current access.'
   }
@@ -44,8 +45,35 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
       // Keep the deadline active through body consumption, not only until headers arrive.
       const result = await response.json()
       if (!active() || ticket !== epoch) throw Object.assign(new Error('closed'), { ignored: true })
-      if (controller.signal.aborted || !response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { beforeCommitConflict: !controller.signal.aborted && response.status === 409 && ['conflict', 'stale'].includes(result.status) && result.reason === 'product-state-changed' })
+      if (controller.signal.aborted || !response.ok || result.status !== 'ok') throw Object.assign(new Error('unavailable'), { beforeCommitConflict: !controller.signal.aborted && response.status === 409 && ['conflict', 'stale'].includes(result.status) && result.reason === 'product-state-changed', selectionChanged: !controller.signal.aborted && response.status === 409 && result.status === 'stale' && result.reason === 'answer-selection-changed', beforeAttachmentCommit: !controller.signal.aborted && mode === 'decision-answer-question' && response.status === 409 && result.status === 'stale' && result.reason === 'case-changed' })
       return result.value
+    } finally { clearTimeout(timeout); controllers.delete(controller) }
+  }
+  const readAttachmentCase = async () => {
+    if (!active() || !confirmed || !pending || !attachment?.rejected || attachment.uncertain) throw new Error('unavailable')
+    const ticket = epoch; const controller = new AbortController(); controllers.add(controller); const timeout = setTimeout(() => controller.abort(), 10000)
+    try {
+      const response = await fetch(location.href, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
+      if (!active() || ticket !== epoch) throw Object.assign(new Error('closed'), { ignored: true })
+      if (response.status === 401 || response.status === 403) { revoke(); throw Object.assign(new Error('access-changed'), { ignored: true }) }
+      if (!response.ok) throw new Error('unavailable')
+      const html = await response.text()
+      if (!active() || ticket !== epoch) throw Object.assign(new Error('closed'), { ignored: true })
+      if (controller.signal.aborted) throw new Error('unavailable')
+      const page = new DOMParser().parseFromString(html, 'text/html')
+      const previousRevision = document.querySelector('meta[name="sf-access-revision"]')?.content
+      const nextRevision = response.headers.get('X-SF-Access-Revision') || page.querySelector('meta[name="sf-access-revision"]')?.content
+      if (page.body.dataset.surface === 'signed-out' || page.querySelector('main[data-drawn="false"]') || previousRevision && previousRevision !== nextRevision) { revoke(); throw Object.assign(new Error('access-changed'), { ignored: true }) }
+      const candidates = [...page.querySelectorAll('[data-case-thread]')].filter((item) => { try { const ref = JSON.parse(item.dataset.case); return item.dataset.thread === threadRef && ref.id === caseRef.id && ref.incarnation === caseRef.incarnation } catch { return false } })
+      if (candidates.length !== 1) throw new Error('unavailable')
+      const candidate = candidates[0]
+      if (candidate.dataset.principal !== principalRef || candidate.dataset.accessRevision !== entry.dataset.accessRevision) { revoke(); throw Object.assign(new Error('access-changed'), { ignored: true }) }
+      const currentRef = JSON.parse(candidate.dataset.case), summary = JSON.parse(candidate.dataset.caseSummary), question = candidate.querySelector('h4')?.textContent
+      if (candidate.dataset.questionState !== 'open' || !Number.isSafeInteger(currentRef.version) || currentRef.version <= caseRef.version || typeof summary.objective !== 'string' || !summary.objective.trim() || typeof summary.currency !== 'string' || typeof summary.horizon?.start !== 'string' || typeof summary.horizon?.end !== 'string' || typeof question !== 'string' || !question.trim()) throw new Error('unavailable')
+      const answer = await send('collaboration-answer-read', { questionId: threadRef })
+      if (!active() || ticket !== epoch) throw Object.assign(new Error('closed'), { ignored: true })
+      if (controller.signal.aborted || answer?.answerRef !== pending.answerRef || answer.answer !== pending.answer || answer.authorRef !== pending.authorRef || answer.observedVersion !== pending.observedSourceVersion) throw new Error('unavailable')
+      return { caseRef: currentRef, summary, question, signature: JSON.stringify({ caseRef: currentRef, summary, question }) }
     } finally { clearTimeout(timeout); controllers.delete(controller) }
   }
   button.addEventListener('click', async () => {
@@ -66,9 +94,31 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
         const item = document.createElement('div'); const paragraph = document.createElement('p'); paragraph.textContent = typeof message.body === 'string' ? message.body : 'Message unavailable'; item.append(paragraph); output.append(item)
         if (index === 0 || !result.recipientRef || message.authorRef !== result.recipientRef || typeof message.id !== 'string') return
         const confirm = document.createElement('button'); confirm.type = 'button'; confirm.textContent = 'Confirm this answer and add to decision'; item.append(confirm)
-        // A question's published selector is opaque. Never derive an answer reference from message IDs.
-        const unavailable = questionState === 'answered' ? 'This answer is already recorded in the decision.' : message !== latestAnswer ? 'Only the most recent recipient answer can be confirmed.' : questionState !== 'open' || typeof answerRef !== 'string' || !answerRef.trim() ? 'Answer confirmation is unavailable until an authorized answer is available for this decision. You can still send a reply.' : undefined
+        // The server issues the opaque answer selector from the exact message
+        // selected in this authorized read. Existing selectors remain opaque.
+        const publishedAnswer = typeof answerRef === 'string' && !!answerRef.trim()
+        const selection = typeof message.incarnation === 'string' && message.incarnation.trim() && Number.isSafeInteger(message.version) && message.version > 0 ? { questionId: threadRef, messageId: message.id, incarnation: message.incarnation, version: message.version } : undefined
+        const unavailable = questionState === 'answered' ? 'This answer is already recorded in the decision.' : message !== latestAnswer ? 'Only the most recent recipient answer can be confirmed.' : questionState !== 'open' || (!publishedAnswer && !selection) ? 'Answer confirmation needs an authorized current message. Reopen the conversation; you can still send a reply.' : undefined
         if (unavailable) { confirm.disabled = true; const reason = document.createElement('p'); reason.textContent = unavailable; item.append(reason) }
+        const showAttachmentReview = (current) => {
+          item.querySelector('[data-answer-attachment-review]')?.remove()
+          const panel = document.createElement('div'); panel.dataset.answerAttachmentReview = 'true'; item.append(panel)
+          const text = document.createElement('p'); text.textContent = current ? 'Current decision version ' + current.caseRef.version + ': ' + current.summary.objective + '. ' + current.summary.horizon.start + ' – ' + current.summary.horizon.end + ', ' + current.summary.currency + '. Question: ' + current.question + '. Confirmed answer: ' + pending.answer : 'The answer is confirmed, but the decision changed before it was attached. Review the current decision before trying a new attachment.'; panel.append(text)
+          const review = document.createElement('button'); review.type = 'button'; review.textContent = current ? 'Attach confirmed answer to this version' : 'Review current decision'; panel.append(review)
+          review.addEventListener('click', async () => {
+            if (!active() || busy || !attachment?.rejected || attachment.uncertain) return
+            busy = true; review.disabled = true; status.textContent = 'Checking the current decision and confirmed answer…'
+            let submit = false
+            try {
+              const fresh = await readAttachmentCase()
+              if (!current || fresh.signature !== current.signature) { showAttachmentReview(fresh); status.textContent = 'Review the current decision before attaching this confirmed answer.'; return }
+              caseRef = fresh.caseRef; entry.dataset.case = JSON.stringify(caseRef); entry.dataset.caseSummary = JSON.stringify(fresh.summary)
+              attachKey = crypto.randomUUID(); attachment = { key: attachKey, body: JSON.stringify({ caseRef, questionId: threadRef, answerRef: pending.answerRef }) }
+              panel.remove(); confirm.disabled = false; submit = true
+            } catch (error) { if (active() && !error?.ignored) status.textContent = 'The current decision or confirmed answer could not be verified. No new attachment was sent; retry the review.' }
+            finally { busy = false; if (active() && review.isConnected) review.disabled = false; if (submit && active()) confirm.click() }
+          })
+        }
         confirm.addEventListener('click', async () => {
           if (!active() || confirm.disabled || unavailable || busy || replyPending) return
           if (output.querySelector('form[data-dirty]') && !window.confirm('Discard your unsent reply and confirm this answer?')) return
@@ -76,8 +126,8 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
           busy = true; confirm.disabled = true; button.disabled = true; output.querySelectorAll('button,textarea').forEach((other) => { other.disabled = true }); status.textContent = 'Confirming answer…'
           try {
             if (!pending) {
-              const prepared = await send('collaboration-answer-prepare', { questionId: threadRef, answerRef })
-              if (prepared?.answerRef !== answerRef || prepared.answer !== message.body || prepared.authorRef !== message.authorRef || typeof prepared.observationRef !== 'string' || !prepared.observationRef.trim() || !Number.isSafeInteger(prepared.observedSourceVersion) || prepared.observedSourceVersion < 1 || typeof prepared.expectedScopeFingerprint !== 'string' || !prepared.expectedScopeFingerprint.trim()) throw new Error('unavailable')
+              const prepared = publishedAnswer ? await send('collaboration-answer-prepare', { questionId: threadRef, answerRef }) : await send('collaboration-answer-prepare-message', selection)
+              if (typeof prepared?.answerRef !== 'string' || !prepared.answerRef.trim() || (publishedAnswer && prepared.answerRef !== answerRef) || prepared.answer !== message.body || prepared.authorRef !== message.authorRef || typeof prepared.observationRef !== 'string' || !prepared.observationRef.trim() || !Number.isSafeInteger(prepared.observedSourceVersion) || prepared.observedSourceVersion < 1 || typeof prepared.expectedScopeFingerprint !== 'string' || !prepared.expectedScopeFingerprint.trim()) throw new Error('unavailable')
               const version = await send('collaboration-storage-version', { namespace: 'threads' })
               if (!Number.isSafeInteger(version) || version < 0) throw new Error('unavailable')
               pending = { key: confirmKey, answerRef: prepared.answerRef, answer: prepared.answer, authorRef: prepared.authorRef, observedSourceVersion: prepared.observedSourceVersion, body: JSON.stringify({ questionId: threadRef, answerRef: prepared.answerRef, mutation: { expectedStorageVersion: version, idempotencyKey: confirmKey, observationRef: prepared.observationRef, observedSourceVersion: prepared.observedSourceVersion, expectedScopeFingerprint: prepared.expectedScopeFingerprint } }) }; guard.dataset.dirty = 'true'
@@ -89,10 +139,12 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
             delete guard.dataset.dirty; status.textContent = 'Answer recorded in the decision.'; location.reload()
           } catch (error) {
             if (!active() || error?.ignored) return
-            if (pending && !pending.uncertain && !confirmed && error?.beforeCommitConflict) { pending = undefined; confirmKey = crypto.randomUUID(); delete guard.dataset.dirty; status.textContent = 'The answer confirmation was not saved because the conversation changed. Review this answer, then confirm again.' }
-            else { if (pending && !confirmed) pending.uncertain = true; status.textContent = 'Could not confirm the answer. Retry this same request.' }
+            if (confirmed && attachment && !attachment.uncertain && error?.beforeAttachmentCommit) { attachment.rejected = true; showAttachmentReview(); status.textContent = 'The decision changed before the answer was attached. Review the current decision.' }
+            else if (!pending && error?.selectionChanged) status.textContent = 'The selected answer changed. Reopen the conversation and review the current answer before confirming.'
+            else if (pending && !pending.uncertain && !confirmed && error?.beforeCommitConflict) { pending = undefined; confirmKey = crypto.randomUUID(); delete guard.dataset.dirty; status.textContent = 'The answer confirmation was not saved because the conversation changed. Review this answer, then confirm again.' }
+            else { if (pending && !confirmed) pending.uncertain = true; if (confirmed && attachment) attachment.uncertain = true; status.textContent = 'Could not confirm the answer. Retry this same request.' }
             if (!pending) { previous.forEach(({ control, disabled }) => { if (control.isConnected) control.disabled = disabled }); button.disabled = false }
-            confirm.disabled = false
+            confirm.disabled = !!attachment?.rejected || !pending && !!error?.selectionChanged
           }
           finally { busy = false }
         })

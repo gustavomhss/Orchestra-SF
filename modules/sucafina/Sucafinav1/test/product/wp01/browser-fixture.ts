@@ -32,6 +32,12 @@ const pool: {
   closing: false, starting: false, disconnected: false, driverClosed: false,
   processExited: false, verified: false, failed: false }
 
+// W8c observed the first Chrome in disk sleep with Browser.getVersion pending
+// through the old 10s acquisition bound; the next independent driver was ready
+// in 337ms. Use the driver's existing 15s ceiling, including PID acquisition.
+// This is one bounded launch, with the same cancellation and physical teardown.
+const startupTimeoutMs = 15_000
+
 async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
   try {
@@ -121,15 +127,15 @@ function shutdownBrowser(): Promise<void> {
 }
 
 async function startBrowser(): Promise<Browser> {
-  const deadline = performance.now() + 10_000
+  const deadline = performance.now() + startupTimeoutMs
   const remaining = () => Math.max(1, Math.ceil(deadline - performance.now()))
   const startup = new AbortController()
-  const timer = setTimeout(() => startup.abort(new Error("WP01 browser timed out: single Node-owned Chromium launch and PID acquisition")), 10_000)
+  const timer = setTimeout(() => startup.abort(new Error("WP01 browser timed out: single Node-owned Chromium launch and PID acquisition")), startupTimeoutMs)
   try {
     await requireLifecycleSelection()
     if (startup.signal.aborted) throw startup.signal.reason
     if (pool.failed || pool.sealed) throw new Error("WP01 browser startup is no longer admitted")
-    console.info("WP01 browser launch phase", { phase: "published Node browser driver through AppProcess" })
+    console.info("WP01 browser launch phase", { phase: "published Node browser driver through AppProcess", startupTimeoutMs })
     // The deadline cancels and awaits the driver's owned AppProcess scope.
     // Racing this await alone would abandon an in-flight driver outside pool.
     const driver = await launchBrowserDriver("wp01-shared-pool", { signal: startup.signal, timeoutMs: remaining() })
