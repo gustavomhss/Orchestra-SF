@@ -70,6 +70,35 @@ test("tampered contribution digest is rejected before publication", async () => 
   expect(await publishSfContribution(input)).toEqual({ status: "failed", reason: "contribution-digest-mismatch" })
 })
 
+test("publication settles an exact output after a stale post-write check using fresh authority", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const scopes: object[] = []
+  const authority = { allowed: true }
+  const observed: { step: string; context: object; output?: unknown }[] = []
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+      const context = { binding: { accessRevision: "access" } }
+      scopes.push(context)
+      return action(context)
+    },
+    revalidate: async (context: object) => { observed.push({ step: "authorize", context }); return { status: "ok", value: true } },
+    result: { write: async (_request: unknown, context: object) => { observed.push({ step: "write", context }); return { status: "stale", reason: "source-changed-after-commit" } } },
+    preserveStale: async (_runRef: string, _reason: string, output: unknown, context: object) => {
+      observed.push({ step: "preserve", context, output })
+      return authority.allowed ? { status: "ok", value: true } : { status: "denied", reason: "access-revoked" }
+    },
+  }
+  const input = { host, output: original.output, skillReceipt: original.receipt, runRef: original.run.runRef } as unknown as Parameters<typeof publishSfContribution>[0]
+  expect(await publishSfContribution(input)).toEqual({ status: "stale", reason: "source-changed-after-commit" })
+  expect(observed.map((item) => item.step)).toEqual(["authorize", "write", "preserve"])
+  expect(new Set(scopes).size).toBe(3)
+  expect(observed[2]!.output).toBe(original.output)
+  authority.allowed = false
+  expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "access-revoked" })
+})
+
 test("a review cannot reuse the author's run or session", async () => {
   const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
   const receipt = {

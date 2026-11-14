@@ -7,6 +7,7 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
 import { sfRunFixture } from "./run-fixture.ts"
 
 test("historical contribution survives SQLite reopen and requires current access to case and sources", async () => {
@@ -14,15 +15,21 @@ test("historical contribution survives SQLite reopen and requires current access
   const request = new Request("https://example.test/history")
   const authority = { principalRef: "principal", policyVersion: "policy-current", accessRevision: "access-current" }
   const context = { kind: "ui", binding: authority } as unknown as TrustedDomainContext
-  const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0 }
+  const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0, mutateAtVerification: 0, mutateAtEgress: false }
+  const retained: { output?: ContributionEnvelope } = {}
   const fixture = sfRunFixture()
   const open = async () => {
     const persistence = await openLocalStore(directory)
     const state = createSfProductState({ persistence, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }),
       authorize: async () => access.case ? authority : undefined })
-    const read = createSfHistoricalContributionReader({ state, requestFor: () => request, revalidate: async () => access.case,
-      verifyHistorical: async () => {
+    const read = createSfHistoricalContributionReader({ state, requestFor: () => request, revalidate: async () => {
+      if (access.mutateAtEgress && access.verifications === 2 && retained.output) retained.output.createdAt = "2026-11-14T00:00:00Z"
+      return access.case
+    },
+      verifyHistorical: async (output) => {
         access.verifications++
+        retained.output = output
+        if (access.mutateAtVerification === access.verifications) output.createdAt = "2026-11-14T00:00:00Z"
         if (!access.source || (access.revokeAtSecondVerification && access.verifications % 2 === 0)) return { status: "denied", reason: "source-access-revoked" }
         return { status: "ok", value: true }
       } })
@@ -65,6 +72,17 @@ test("historical contribution survives SQLite reopen and requires current access
       access.revokeAtSecondVerification = true
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "source-access-revoked" })
       access.revokeAtSecondVerification = false
+      for (const phase of [1, 2]) {
+        access.verifications = 0
+        access.mutateAtVerification = phase
+        expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
+      }
+      access.mutateAtVerification = 0
+      access.verifications = 0
+      access.mutateAtEgress = true
+      expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
+      access.mutateAtEgress = false
+      expect(await reopened.state.read(request, "contributions", (state) => digestSfValue(state.contributions[fixture.output.id]))).toMatchObject({ status: "ok", value: digestSfValue(fixture.output) })
       expect(await reopened.read({ ...selection, currentCase: { ...fixture.caseRef, incarnation: "replacement" } }, context)).toMatchObject({ status: "unavailable" })
       access.case = false
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "contribution-access-unavailable" })

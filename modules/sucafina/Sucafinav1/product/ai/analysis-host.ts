@@ -24,7 +24,7 @@ export function createSfAnalysisHost(input: {
     execution: input.execution,
     analysis: input.analysis,
     routines: input.routines,
-    readRun: input.store.read,
+    readRun: input.store.readLifecycle,
     withRunContext: input.withRunContext,
     revalidate: async (context, request) => {
       const loaded = await input.store.read(request.runRef, context)
@@ -35,14 +35,14 @@ export function createSfAnalysisHost(input: {
       return input.verify(context, run, request)
     },
     fail: async (runRef, reason, context) => {
-      const run = await input.store.read(runRef, context)
+      const run = await input.store.readLifecycle(runRef, context)
       if (run.status !== "ok") return run
       const saved = await input.store.transition(runRef, run.value.version, "failed", reason, context)
       if (saved.status !== "ok") return saved
       return { status: "ok", value: true }
     },
     settle: async (runRef, state, reason, context) => {
-      const run = await input.store.read(runRef, context)
+      const run = await input.store.readLifecycle(runRef, context)
       if (run.status !== "ok") return run
       const saved = await input.store.transition(runRef, run.value.version, state, reason, context)
       if (saved.status !== "ok") return saved

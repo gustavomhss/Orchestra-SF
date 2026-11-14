@@ -61,14 +61,17 @@ test("five profiles register and all eighteen distributed skills load into disti
         expect(loaded?.type === "synthetic" && loaded.text.includes(source!.content.trim())).toBe(true)
         expect(receipt).toMatchObject({ profileId: selected.profile.id, skillId: skill.id, nativeSessionId: created.id,
           sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, manifestDigest: bundle.manifestDigest })
-        if (skill.id === "sf-explicar-forecast") {
-          const forbidden = bundle.skills.find((item) => item.id === "sf-preparar-compra")!
-          const rejected = yield* Effect.result(loadSfSkill({ session, skills, sourceCapability: capability, selected,
-            sessionID: created.id, profile: selected.profile, skill: forbidden, runId: "wp12-forbidden", manifestDigest: bundle.manifestDigest }))
-          expect(rejected._tag).toBe("Failure")
-          if (rejected._tag === "Failure") expect(rejected.failure).toMatchObject({ code: "invalid-skill" })
-          expect(yield* session.messages({ sessionID: created.id })).toEqual(messages)
-        }
+        const forbidden = bundle.selected.find((selection) => !selection.profile.allowedSkills.includes(skill.id) && !skill.allowedProfiles.includes(selection.profile.id))
+        expect(forbidden).toBeDefined()
+        if (!forbidden) throw new Error(`No negative profile boundary for ${skill.id}`)
+        const wrongSession = yield* session.create({ location, agent: AgentV2.ID.make(forbidden.profile.id) })
+        const wrongMessages = yield* session.messages({ sessionID: wrongSession.id })
+        const rejected = yield* Effect.result(loadSfSkill({ session, skills, sourceCapability: capability, selected: forbidden,
+          sessionID: wrongSession.id, profile: forbidden.profile, skill, runId: `wp12-forbidden-${skill.id}`, manifestDigest: bundle.manifestDigest }))
+        expect(rejected._tag).toBe("Failure")
+        if (rejected._tag === "Failure") expect(rejected.failure).toMatchObject({ code: "invalid-skill", reason: "resident-source-capability-invalid" })
+        expect(yield* session.messages({ sessionID: wrongSession.id })).toEqual(wrongMessages)
+        expect(yield* session.messages({ sessionID: created.id })).toEqual(messages)
         return receipt
       }))
     }).pipe(Effect.provide(locations.get(location)))

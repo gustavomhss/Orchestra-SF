@@ -79,14 +79,18 @@ export function createSfHistoricalContributionReader(input: {
     }
     const first = await read()
     if (!first) return { status: "unavailable", reason: "historical-contribution-unavailable" }
+    const historicalDigest = digestSfValue(first)
     const verified = await input.verifyHistorical(first.output, first.run, request.currentCase, context)
     if (verified.status !== "ok") return verified
+    if (digestSfValue(first) !== historicalDigest) return { status: "denied", reason: "historical-verification-mutated-input" }
     const again = await read()
-    if (!again || digestSfValue(again) !== digestSfValue(first)) return { status: "stale", reason: "historical-contribution-changed" }
+    if (!again || digestSfValue(again) !== historicalDigest) return { status: "stale", reason: "historical-contribution-changed" }
     const verifiedAgain = await input.verifyHistorical(again.output, again.run, request.currentCase, context)
     if (verifiedAgain.status !== "ok") return verifiedAgain
+    if (digestSfValue(first) !== historicalDigest || digestSfValue(again) !== historicalDigest) return { status: "denied", reason: "historical-verification-mutated-input" }
     if (!await input.revalidate(context)) return { status: "denied", reason: "contribution-access-unavailable" }
-    return { status: "ok", value: { state: "historical", output: again.output } }
+    if (digestSfValue(first) !== historicalDigest || digestSfValue(again) !== historicalDigest) return { status: "denied", reason: "historical-verification-mutated-input" }
+    return { status: "ok", value: { state: "historical", output: structuredClone(again.output) } }
   }
 }
 

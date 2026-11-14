@@ -123,7 +123,12 @@ export async function publishSfContribution(input: {
     return authorized
   }
   if (authorized.status !== "ok") return authorized
-  return input.host.withRunContext(input.runRef, (context) => input.host.result.write({ runRef: input.runRef, caseRef: input.output.caseRef, output: input.output }, context))
+  const written = await input.host.withRunContext(input.runRef, (context) => input.host.result.write({ runRef: input.runRef, caseRef: input.output.caseRef, output: input.output }, context))
+  if (written.status !== "stale") return written
+  // The result may have committed before its final source check. The store can
+  // retain only that same verified output, never replace a concurrent terminal state.
+  const stale = await input.host.withRunContext(input.runRef, (context) => input.host.preserveStale(input.runRef, written.reason, input.output, context))
+  return stale.status === "ok" ? written : stale
 }
 
 /** Runs one admitted native session; the host owns authentication, durable admission and result collection. */

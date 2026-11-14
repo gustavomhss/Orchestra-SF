@@ -24,7 +24,9 @@ export function createSfRunStore(input: {
   preflight: (record: SfNativeRunRecord, context: TrustedDomainContext, output?: ContributionEnvelope) => Promise<PortResult<{ sourceFence: string }>>
   /** Reads the bridge's private capture; model output is never a capture. */
   readCapturedAlternative?: (runRef: string, callId: string, context: TrustedDomainContext) => Promise<PortResult<AlternativeCapabilityProvenance>>
-  /** Read-only source and authority revalidation under the shared SQLite transaction lock. When alternative is present, also verify its private bridge capture and active lease. */
+  /** Read-only source and authority revalidation under the shared SQLite transaction lock.
+   * Stale lifecycle commits require current access, not equality with superseded source revisions.
+   * When alternative is present, also verify its private bridge capture and active lease. */
   revalidateForCommit: (record: SfNativeRunRecord, context: TrustedDomainContext, snapshot: Readonly<Snapshot>, output?: ContributionEnvelope, alternative?: AlternativeCapabilityProvenance) => Promise<PortResult<true>>
   now: () => string
 }) {
@@ -36,7 +38,8 @@ export function createSfRunStore(input: {
     if (!request || !await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
     const found = await input.state.read(request, "contributions", (state, authority) => {
       const record = state.nativeRuns?.[runRef]
-      if (!record || record.runRef !== runRef || record.principalRef !== authority.principalRef || record.policyVersion !== authority.policyVersion || record.accessRevision !== authority.accessRevision) return undefined
+      if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision ||
+        !record || record.runRef !== runRef || record.principalRef !== authority.principalRef || record.policyVersion !== authority.policyVersion || record.accessRevision !== authority.accessRevision) return undefined
       return record
     })
     if (found.status !== "ok") return "reason" in found ? { status: found.status, reason: found.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
@@ -50,20 +53,50 @@ export function createSfRunStore(input: {
     const recordDigest = digestSfValue(found.value)
     const checked = await input.preflight(found.value, context).catch(() => ({ status: "unavailable", reason: "run-preflight-unavailable" } as const))
     if (checked.status !== "ok") return checked
-    if (digestSfValue(found.value) !== recordDigest) return { status: "denied", reason: "run-input-changed-during-preflight" }
+    if (!matchesDigest(found.value, recordDigest)) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
-    if (digestSfValue(found.value) !== recordDigest) return { status: "denied", reason: "run-input-changed-during-authorization" }
+    if (!matchesDigest(found.value, recordDigest)) return { status: "denied", reason: "run-input-changed-during-authorization" }
     return { status: "ok", value: found.value }
   }
 
-  async function mutate(record: SfNativeRunRecord, expectedVersion: number | null, context: TrustedDomainContext, output?: ContributionEnvelope, alternative?: AlternativeCapabilityProvenance): Promise<PortResult<SfNativeRunRecord>> {
-    const mutation = alternative ? { record, output, alternative } : { record, output }
+  /** Lifecycle metadata remains readable when a source is stale. Current case access is
+   * still mandatory; this read neither returns a contribution nor revives execution. */
+  async function readLifecycle(runRef: string, context: TrustedDomainContext): Promise<PortResult<SfNativeRunRecord>> {
+    const found = await readRecord(runRef, context)
+    if (found.status !== "ok") return found
+    const recordDigest = digestSfValue(found.value)
+    const request = input.requestFor(context)
+    if (!request) return { status: "denied", reason: "invalid-authority" }
+    const readCase = () => input.state.read(request, "cases", (state, authority) => {
+      const current = state.cases[found.value.caseRef.id]
+      if (!current || current.incarnation !== found.value.caseRef.incarnation || !Number.isSafeInteger(current.version) || current.version < found.value.caseRef.version ||
+        !current.participants.includes(authority.principalRef) || authority.principalRef !== found.value.principalRef ||
+        authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
+      return current
+    })
+    const current = await readCase()
+    if (current.status !== "ok" || !current.value) return { status: "denied", reason: "run-case-access-unavailable" }
+    const caseDigest = digestSfValue(current.value)
+    const again = await readRecord(runRef, context)
+    if (again.status !== "ok") return again
+    const currentAgain = await readCase()
+    if (currentAgain.status !== "ok" || !currentAgain.value || !await hasCurrentAuthority(context)) return { status: "denied", reason: "run-case-access-unavailable" }
+    if (!matchesDigest(found.value, recordDigest) || !matchesDigest(again.value, recordDigest) || !matchesDigest(current.value, caseDigest) || !matchesDigest(currentAgain.value, caseDigest)) return { status: "stale", reason: "run-lifecycle-changed" }
+    return { status: "ok", value: structuredClone(again.value) }
+  }
+
+  async function mutate(record: SfNativeRunRecord, expectedVersion: number | null, context: TrustedDomainContext, output?: ContributionEnvelope, alternative?: AlternativeCapabilityProvenance,
+    preservation?: { original: SfNativeRunRecord; outputMode: "append" | "existing" }): Promise<PortResult<SfNativeRunRecord>> {
+    // Bind all values before the first await. A verifier may observe these objects,
+    // but neither it nor a retained caller reference may replace the admitted command.
+    const mutation = { record, output, ...(alternative ? { alternative } : {}), ...(preservation ? { preservation } : {}) }
     const commandDigest = digestSfValue(mutation)
+    const recordDigest = digestSfValue(record)
     const request = input.requestFor(context)
     if (!request || !await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
-    if (digestSfValue(mutation) !== commandDigest) return { status: "denied", reason: "run-input-changed-during-authorization" }
+    if (!matchesDigest(mutation, commandDigest)) return { status: "denied", reason: "run-input-changed-during-authorization" }
     if (!record.runRef || !record.principalRef || !Number.isSafeInteger(record.version) || record.version !== (expectedVersion === null ? 1 : expectedVersion + 1) || record.principalRef !== context.binding.principalRef || record.policyVersion !== context.binding.policyVersion || record.accessRevision !== context.binding.accessRevision || (context.kind === "native" && (context.binding.runId !== record.runRef || context.binding.caseId !== record.caseRef.id || context.binding.caseIncarnation !== record.caseRef.incarnation || (record.native && context.binding.nativeSessionId !== record.native.sessionID)))) return { status: "denied", reason: "invalid-run-identity" }
-    const terminal = record.state === "stale" || record.state === "cancelled"
+    const terminal = ["stale", "cancelled", "failed", "unavailable", "needs-input"].includes(record.state)
     if (terminal && alternative) return { status: "unavailable", reason: "alternative-capture-unavailable" }
     if (!terminal && invalidRequiredNamespaces) return { status: "unavailable", reason: "invalid-run-source-namespaces" }
     const guardedNamespaces = terminal ? [] : alternative ? requiredNamespaces.filter((namespace) => namespace !== "preferences") : requiredNamespaces
@@ -86,9 +119,10 @@ export function createSfRunStore(input: {
     // Pin the C08 versions before the preflight reads other runs and their outputs.
     const checked = terminal ? undefined : await input.preflight(record, context, output).catch(() => ({ status: "unavailable", reason: "run-preflight-unavailable" } as const))
     if (checked && checked.status !== "ok") return checked
-    if (digestSfValue(mutation) !== commandDigest) return { status: "denied", reason: "run-input-changed-during-preflight" }
+    if (!matchesDigest(mutation, commandDigest)) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (checked?.status === "ok" && !/^[a-f0-9]{64}$/.test(checked.value.sourceFence)) return { status: "unavailable", reason: "source-fence-unavailable" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
+    if (!matchesDigest(mutation, commandDigest)) return { status: "denied", reason: "run-input-changed-during-authorization" }
     const saved = await input.state.transaction<PortResult<SfNativeRunRecord> | undefined>(request, {
       namespace: "contributions", expectedStorageVersion: contributions.storageVersion,
       sourceFence: "all",
@@ -97,22 +131,33 @@ export function createSfRunStore(input: {
       idempotencyKey: `run:${record.runRef}:${record.version}`, commandDigest,
       targetRef: `case:${encodeURIComponent(record.caseRef.id)}:${encodeURIComponent(record.caseRef.incarnation)}`, targetIncarnation: record.caseRef.incarnation,
     }, async (state, authority, snapshot) => {
-      if (digestSfValue(mutation) !== commandDigest) return { commit: false, value: { status: "denied", reason: "run-input-changed-before-commit" } as const }
+      if (!matchesDigest(mutation, commandDigest)) return { commit: false, value: { status: "denied", reason: "run-input-changed-before-commit" } as const }
       const previous = state.nativeRuns?.[record.runRef]
       const currentCase = state.cases[record.caseRef.id]
+      const keepsExistingOutput = preservation?.outputMode === "existing"
+      // A publication may have committed before its final freshness check failed.
+      // Only that exact ready run/output can be downgraded; never rewrite content or a concurrent cancellation.
+      const invalidPreservation = preservation && (digestSfValue(previous) !== digestSfValue(preservation.original) ||
+        (keepsExistingOutput && (!output || !previous || previous.state !== "ready" || previous.outputRef !== output.id ||
+          !matchesSfRunOutput(previous, output) || !state.contributions[output.id] || digestSfValue(state.contributions[output.id]) !== digestSfValue(output))))
       if (authority.principalRef !== record.principalRef || authority.policyVersion !== record.policyVersion || authority.accessRevision !== record.accessRevision ||
-          !currentCase || currentCase.incarnation !== record.caseRef.incarnation || ((record.state === "stale" || record.state === "cancelled") ? currentCase.version < record.caseRef.version : currentCase.version !== record.caseRef.version) || !currentCase.participants.includes(record.principalRef) ||
-          (checked?.status === "ok" && sfRunSourceFence(snapshot) !== checked.value.sourceFence) || (output && !!state.contributions[output.id]) || (alternative && !!state.preferences[alternativeProvenanceKey(alternative)]) || (expectedVersion === null ? !!previous : previous?.version !== expectedVersion)) return { commit: false, value: undefined }
+          !currentCase || currentCase.incarnation !== record.caseRef.incarnation || (terminal ? currentCase.version < record.caseRef.version : currentCase.version !== record.caseRef.version) || !currentCase.participants.includes(record.principalRef) ||
+          invalidPreservation || (checked?.status === "ok" && sfRunSourceFence(snapshot) !== checked.value.sourceFence) ||
+          (output && !keepsExistingOutput && !!state.contributions[output.id]) || (alternative && !!state.preferences[alternativeProvenanceKey(alternative)]) ||
+          (expectedVersion === null ? !!previous : previous?.version !== expectedVersion)) return { commit: false, value: undefined }
       const before = structuredClone(snapshot)
       const current = await Promise.resolve().then(() => input.revalidateForCommit(record, context, snapshot, output, alternative)).catch(() => ({ status: "unavailable", reason: "commit-revalidation-unavailable" } as const))
       if (!Bun.deepEquals(snapshot, before)) return { commit: false, value: { status: "denied", reason: "commit-revalidation-mutated-snapshot" } as const }
-      if (digestSfValue(mutation) !== commandDigest) return { commit: false, value: { status: "denied", reason: "commit-revalidation-mutated-input" } as const }
+      if (!matchesDigest(mutation, commandDigest)) return { commit: false, value: { status: "denied", reason: "commit-revalidation-mutated-input" } as const }
       if (current.status !== "ok") return { commit: false, value: { status: current.status, reason: current.reason } as const }
+      // C08 awaits its final authority/target checks after this callback. Never
+      // leave a caller or verifier's retained reference inside its staged state.
+      const admittedRecord = structuredClone(record)
       state.nativeRuns ??= {}
-      state.nativeRuns[record.runRef] = record
-      if (output) state.contributions[output.id] = output
-      if (alternative) state.preferences[alternativeProvenanceKey(alternative)] = alternative
-      return { commit: true, value: { status: "ok", value: record } as const }
+      state.nativeRuns[record.runRef] = admittedRecord
+      if (output && !keepsExistingOutput) state.contributions[output.id] = structuredClone(output)
+      if (alternative) state.preferences[alternativeProvenanceKey(alternative)] = structuredClone(alternative)
+      return { commit: true, value: { status: "ok", value: admittedRecord } as const }
     })
     if (saved.status === "preview") return saved.value ?? { status: "stale", reason: "run-case-or-source-changed" }
     if (saved.status !== "ok") return "reason" in saved ? { status: saved.status, reason: saved.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
@@ -132,14 +177,15 @@ export function createSfRunStore(input: {
     }
     const checkedAgain = terminal ? undefined : await input.preflight(current.value, context, output).catch(() => ({ status: "unavailable", reason: "run-preflight-unavailable" } as const))
     if (checkedAgain && checkedAgain.status !== "ok") return checkedAgain
-    if (digestSfValue(mutation) !== commandDigest || digestSfValue(current.value) !== digestSfValue(record)) return { status: "denied", reason: "run-input-changed-during-preflight" }
+    if (!matchesDigest(mutation, commandDigest) || !matchesDigest(current.value, recordDigest)) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
-    if (digestSfValue(mutation) !== commandDigest || digestSfValue(current.value) !== digestSfValue(record)) return { status: "denied", reason: "run-input-changed-during-authorization" }
+    if (!matchesDigest(mutation, commandDigest) || !matchesDigest(current.value, recordDigest)) return { status: "denied", reason: "run-input-changed-during-authorization" }
     return { status: "ok", value: current.value }
   }
 
   return {
     read,
+    readLifecycle,
     create: (record: SfNativeRunRecord, context: TrustedDomainContext) => {
       const intentDigest = "intentDigest" in record ? record.intentDigest : undefined
       if (record.state !== "preparing" || record.native || record.outputRef || typeof intentDigest !== "string" || !/^[a-f0-9]{64}$/.test(intentDigest) || !/^[a-f0-9]{64}$/.test(record.requestDigest) || !/^[a-f0-9]{64}$/.test(record.skillInputDigest)) return Promise.resolve({ status: "failed", reason: "invalid-run-admission" } as const)
@@ -152,10 +198,19 @@ export function createSfRunStore(input: {
       return mutate({ ...prior.value, version: prior.value.version + 1, updatedAt: input.now(), state: "stale", reason, native: prior.value.native }, prior.value.version, context)
     },
     preserveStale: async (runRef: string, reason: string, output: ContributionEnvelope, context: TrustedDomainContext) => {
+      const captured = structuredClone(output)
       const prior = await readRecord(runRef, context)
       if (prior.status !== "ok") return prior
-      if (!prior.value.native || !["queued", "running"].includes(prior.value.state) || output.kind === "AlternativeDraft" || !matchesSfRunOutput(prior.value, output)) return { status: "conflict", reason: "invalid-stale-run-output" } as const
-      return mutate({ ...prior.value, version: prior.value.version + 1, updatedAt: input.now(), state: "stale", reason, outputRef: output.id, native: prior.value.native }, prior.value.version, context, output)
+      const original = prior.value
+      if (!original.native || !["queued", "running", "ready"].includes(original.state) || !matchesSfRunOutput(original, captured)) return { status: "conflict", reason: "invalid-stale-run-output" } as const
+      const existing = original.state === "ready"
+      if (existing ? original.outputRef !== captured.id : !!original.outputRef) return { status: "conflict", reason: "invalid-stale-run-output" } as const
+      // An unpublished alternative has no authenticated durable capture: settle lifecycle only.
+      // An already-published alternative keeps only its original, atomically captured output.
+      const retained = existing || captured.kind !== "AlternativeDraft" ? captured : undefined
+      return mutate({ ...original, version: original.version + 1, updatedAt: input.now(), state: "stale", reason,
+        ...(retained ? { outputRef: retained.id } : {}), native: original.native }, original.version, context, retained, undefined,
+        { original, outputMode: existing ? "existing" : "append" })
     },
     attach: async (runRef: string, expectedVersion: number, sessionID: string, receipt: SkillLoadReceipt, context: TrustedDomainContext) => {
       const prior = await read(runRef, context)
@@ -165,7 +220,7 @@ export function createSfRunStore(input: {
       return mutate(next, expectedVersion, context)
     },
     transition: async (runRef: string, expectedVersion: number, state: "running" | "failed" | "cancelled" | "stale" | "unavailable" | "needs-input", reason: string | undefined, context: TrustedDomainContext) => {
-      const prior = (state === "stale" || state === "cancelled") ? await readRecord(runRef, context) : await read(runRef, context)
+      const prior = state === "running" ? await read(runRef, context) : await readLifecycle(runRef, context)
       if (prior.status !== "ok") return prior
       if (prior.value.version !== expectedVersion || !["preparing", "queued", "running"].includes(prior.value.state) || (state === "running" && prior.value.state !== "queued") || (state === "stale" && !prior.value.native)) return { status: "conflict", reason: "invalid-run-transition" } as const
       return mutate({ ...prior.value, version: expectedVersion + 1, updatedAt: input.now(), state, reason } as SfNativeRunRecord, expectedVersion, context)
@@ -180,4 +235,8 @@ export function createSfRunStore(input: {
       return mutate(next, expectedVersion, context, output, alternative)
     },
   }
+}
+
+function matchesDigest(value: unknown, expected: string) {
+  try { return digestSfValue(value) === expected } catch { return false }
 }
