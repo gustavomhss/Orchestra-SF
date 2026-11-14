@@ -49,6 +49,9 @@ test("a canonical human choice creates a reviewed Planner proposal and only a se
   const contexts: TrustedUiContext[] = []
   let finish: ((context: TrustedUiContext) => void) | undefined
   try {
+    // C08 uses Dashboard and prepared dispatch spans all three surfaces. Planner is
+    // already initialized by plannerFixture; admit the others through the lifecycle.
+    for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
     const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operationId: string }>()
     const payloads = new WeakMap<TrustedUiContext, { action: SfHumanAction; payload: unknown }>()
     const authorize = async (request: Request) => fixture.access.allowed && intents.has(request) && request.headers.get("authorization") === "finance"
