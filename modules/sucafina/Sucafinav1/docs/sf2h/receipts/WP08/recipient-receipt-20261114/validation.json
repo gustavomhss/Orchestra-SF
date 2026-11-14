@@ -397,6 +397,83 @@
       },
       "validator": "Canonical request validation in GitHub Actions Read request step: success",
       "limit": "Positive compatibility of review resolve and subsequent reuse. Does not independently compare the resolve receipt with C08 or claim resolve replay."
+    },
+    {
+      "selection": "Only two corrected receipt assertions and the real-persistence reissue fixture",
+      "W": "f34edcfff26d0041145e13ea612d8d67f58dcbff",
+      "W_tree": "97e38e84b7500fe520eec2479fc93e8a88703465",
+      "S": "0f11903d2c4a888092dd9e13bcea5c817ef5249d",
+      "S_tree": "0434b0c27efb71525322676500e8b5313792a6c7",
+      "request_path": "ci-request.03.json",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+          "./Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+          "./Sucafinav1/test/product/wp08/reissue.test.ts",
+          "--test-name-pattern",
+          "^(recipient receipt initial reply returns the original C08 value with one exact append|recipient receipt lost response survives SQLite reopen and fresh admission without another append|reissue checks actor access and the live physical incarnation)$",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "request_blob": "e462f9a8cb237384a9ab0e8b319daf216eb897d5",
+      "request_sha256": "e3178f6096fc341ed57f12b5b3aa4c7e80afc2d6d7023760fd0fe96ebf0dc8f0",
+      "W_to_S_files": [
+        ".ci-run.json"
+      ],
+      "preserves_product_tests_fixtures_and_configuration": true,
+      "run_id": 43630483191,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630483191",
+      "test_job": 132555760059,
+      "cleanup_job": 132556159682,
+      "conclusion": "success",
+      "test_job_conclusion": "success",
+      "cleanup_conclusion": "success",
+      "pass": 3,
+      "fail": 0,
+      "filtered": 5,
+      "expects": 36,
+      "files": 3,
+      "duration_seconds": 3.57,
+      "tests": [
+        {
+          "name": "recipient receipt initial reply returns the original C08 value with one exact append",
+          "duration_ms": 1217.12,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt lost response survives SQLite reopen and fresh admission without another append",
+          "duration_ms": 1729.44,
+          "result": "PASS"
+        },
+        {
+          "name": "reissue checks actor access and the live physical incarnation",
+          "duration_ms": 395.41,
+          "result": "PASS"
+        }
+      ],
+      "omni": {
+        "outcome": "not applicable",
+        "reason": "focused: no declaring test ran",
+        "spawns": 0,
+        "delegated": 0,
+        "native_proof": false
+      },
+      "artifacts": [],
+      "log": {
+        "source": "GitHub Actions job log",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630483191/job/132555760059",
+        "bytes": 69855,
+        "sha256": "f03adb2c645f4d60d09a7f793f5e16e41e3a390bc091a349ecdb8a8e61e5e86e",
+        "retained_in_current_tree": false
+      },
+      "validator": "Canonical request validation in GitHub Actions Read request step: success"
     }
   ],
   "required_proofs": [
@@ -406,7 +483,11 @@
       "tests": [
         "recipient receipt initial reply returns the original C08 value with one exact append"
       ],
-      "result": "PASS"
+      "result": "PASS",
+      "runs": [
+        43628901092,
+        43630483191
+      ]
     },
     {
       "requirement": 2,
@@ -414,7 +495,10 @@
       "tests": [
         "recipient receipt equal author and text retain distinct identities and replay the earlier message"
       ],
-      "result": "PASS"
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
     },
     {
       "requirement": 3,
@@ -423,7 +507,11 @@
         "recipient receipt lost response survives SQLite reopen and fresh admission without another append"
       ],
       "result": "PASS",
-      "limit": "Frozen payload stays in test memory; this is not browser intent persistence or UI reload ACK."
+      "limit": "Frozen payload stays in test memory; this is not browser intent persistence or UI reload ACK.",
+      "runs": [
+        43628901092,
+        43630483191
+      ]
     },
     {
       "requirement": 4,
@@ -431,7 +519,10 @@
       "tests": [
         "recipient receipt replay after thread resolution returns the original receipt without reopening"
       ],
-      "result": "PASS"
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
     },
     {
       "requirement": 5,
@@ -439,7 +530,10 @@
       "tests": [
         "recipient receipt same key with changed body or expected storage version conflicts without a write"
       ],
-      "result": "PASS"
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
     },
     {
       "requirement": 6,
@@ -448,7 +542,10 @@
         "recipient receipt legacy Boolean remains inconclusive and is not backfilled"
       ],
       "result": "PASS",
-      "limit": "Explicit legacy compatibility fixture replaces only saved transaction.value; it is not execution of the prior producer."
+      "limit": "Explicit legacy compatibility fixture replaces only saved transaction.value; it is not execution of the prior producer.",
+      "runs": [
+        43628901092
+      ]
     },
     {
       "requirement": 7,
@@ -456,7 +553,10 @@
       "tests": [
         "recipient receipt an edited message version cannot replace the exact original version"
       ],
-      "result": "PASS"
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
     },
     {
       "requirement": 8,
@@ -467,7 +567,10 @@
         "recipient receipt C05 ACL revocation after the final reader cannot be replaced by host authorization",
         "recipient receipt C05 self lease denies ACL revocation after the last asynchronous review fence"
       ],
-      "result": "PASS"
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
     },
     {
       "requirement": 9,
@@ -477,7 +580,10 @@
         "recipient receipt C05 physical source replacement with the same text ID cannot revive a saved reply",
         "a C05 request uses the recipient's current review lease, preserves exact retry and denies a homonym or revoked lease"
       ],
-      "result": "PASS"
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
     }
   ],
   "inherited_c05": {
@@ -505,7 +611,8 @@
     "changed_existing_deadlines": false,
     "changed_existing_assertions": false,
     "guard_not_functional_proof": true,
-    "parallel_product_writers": 0
+    "parallel_product_writers": 0,
+    "new_test_assertion_typing_adjusted_without_semantic_change": true
   },
   "static_checks": {
     "baseline_run": 43627225976,
@@ -523,7 +630,7 @@
       "warnings": 14,
       "errors": 0
     },
-    "final_gate": "Existing Astra WP08 checks will execute on the evidence delivery HEAD. Its exact HEAD/tree/run/job/artifact, diagnostic comparison and guards result are published in PR41 after this commit to avoid recursive evidence commits. No baseline gate is attributed to W.",
+    "final_gate": "Re-run the existing Astra WP08 checks on this final evidence delivery HEAD after the type/fixture and agent-scratch corrections. Publish exact HEAD/tree/run/job/artifact, diagnostic equality and guards result in PR41. The failed first gate remains recorded.",
     "attempts": [
       {
         "schema": "sf2h.collaboration.recipient-receipt.static-attempt.v1",
@@ -638,7 +745,8 @@
       "Match ACK to intent/principal/key/thread/exact message tuple; never use current projection, text, author, position or Boolean as identity.",
       "Qualify composed UI positive ACK, lost response/retry/reload, equal messages, divergence, revocation and source replacement.",
       "Keep ACK separate from human confirmation, attachment/reuse approval and financial authorization."
-    ]
+    ],
+    "tested_candidate_sha": "f34edcfff26d0041145e13ea612d8d67f58dcbff"
   },
   "preserved_handoffs": [
     {
@@ -675,19 +783,74 @@
   ],
   "global_release": false,
   "functional_summary": {
-    "pass": 21,
-    "fail": 0,
-    "expects": 249,
-    "runs": 2,
+    "pass_executions": 24,
+    "fail_executions": 0,
+    "unique_test_names": 22,
+    "expects": 285,
+    "runs": 3,
     "new_cases": 13,
-    "existing_regressions": 8,
-    "product_compiled_by_hosted_bun": true
+    "existing_regressions": 9,
+    "product_compiled_by_hosted_bun": true,
+    "interpretation": "S3 reexecutes two names from S1 and adds one existing reissue case. Counts are executions, not 24 distinct tests."
   },
   "correction": {
-    "status": "TEST_TYPING_AND_FIXTURE_PENDING_SCOPED_HOSTED_RUN",
+    "status": "SCOPED_FUNCTIONAL_PASS",
+    "W": "f34edcfff26d0041145e13ea612d8d67f58dcbff",
+    "tree": "97e38e84b7500fe520eec2479fc93e8a88703465",
     "product_byte_identical_to_W": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
     "request": "ci-request.03.json",
+    "run_id": 43630483191,
+    "pass": 3,
+    "fail": 0,
     "assertions_preserved": true,
-    "existing_deadlines_unchanged": true
+    "existing_deadlines_unchanged": true,
+    "manifest": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+        "bytes": 5094,
+        "blob": "1de693aabb1189678cc4353ab5f34ca7f29e4938",
+        "sha256": "43eae67d7a89356a193cda33e80f0f74221195b411b655a92e6ffd27b4c841e3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+        "bytes": 5670,
+        "blob": "f3f622a95be54f62e167bf3b3cbef31b95aaff9c",
+        "sha256": "6b7de1ca416486f5660c1fecf3410e5f6dd80442632286ed4222eba0ed67b0f1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+        "bytes": 12996,
+        "blob": "dc0c7c770701f64914f91651d4971462a7110b01",
+        "sha256": "16af1d4a215f8a7d9b573edf0a3ad4ac64ab11ea3dc5ae25fb1976869fbbd8fb"
+      }
+    ],
+    "postimages_verified": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+        "blob": "1de693aabb1189678cc4353ab5f34ca7f29e4938",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+        "blob": "f3f622a95be54f62e167bf3b3cbef31b95aaff9c",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+        "blob": "dc0c7c770701f64914f91651d4971462a7110b01",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "blob": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "equal": true
+      }
+    ],
+    "remaining": "Final exact-head static gate must establish removal of the four own diagnostics and raw-log guard findings; report it in PR41."
   }
 }

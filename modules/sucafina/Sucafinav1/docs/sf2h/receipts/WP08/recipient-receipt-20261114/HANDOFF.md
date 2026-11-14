@@ -29,7 +29,7 @@ Além da proposta recebida, o incremento acrescenta liberação final sob snapsh
 
 Cada S é filho direto de W e acrescenta **somente `.ci-run.json`**. Produto, testes, fixtures e configuração são idênticos ao W. Os nove postimages de W foram conferidos por blob no GitHub. As requests foram deduplicadas antes da execução, validadas pelo workflow canônico e executadas sequencialmente. Nenhum teste ou compilação de produto foi executado localmente. Nenhum deadline ou assertion existente mudou.
 
-Nos dois runs, Omni declarou **not applicable**: zero spawns e zero delegações, sem prova de execução nativa. Ambos concluíram SUCCESS, incluindo cleanup, e não produziram artifacts. Os logs exatos foram capturados pelo GitHub MCP. Total funcional: **21 PASS / 0 FAIL / 249 assertions**.
+Nos dois runs, Omni declarou **not applicable**: zero spawns e zero delegações, sem prova de execução nativa. Ambos concluíram SUCCESS, incluindo cleanup, e não produziram artifacts. Os logs exatos foram capturados pelo GitHub MCP. Subtotal S1/S2: **21 PASS / 0 FAIL / 249 assertions**.
 
 A seleção principal contém 13 casos novos e sete regressões existentes. A seleção adicional contém somente:
 
@@ -69,11 +69,15 @@ O consumidor precisa conservar a intenção inteira, incluindo body, thread, cha
 
 O gate [43629952588](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588), no head `3097481a…`, falhou: 69 diagnósticos herdados idênticos ao baseline, quatro erros próprios de tipagem/fixture e dois findings `agent-scratch` nas cópias de log bruto. A falha permanece registrada em [static-attempt.01.json](static-attempt.01.json).
 
-A correção mantém o produto byte a byte: três comparações de igualdade estrutural nos testes novos têm seus lados invertidos para os overloads unknown/readonly; o fixture `reissue` recebe o mesmo SQLite real já utilizado por C08 e mutationFence. Nenhum oráculo ou prazo foi removido. Os dois logs brutos foram removidos; resultados, hashes e links dos jobs permanecem. A seleção `ci-request.03.json` revalida somente os dois casos de recibo com comparações corrigidas e o caso de reissue. Seu resultado será acrescentado após a execução hospedada.
+A correção mantém o produto byte a byte: três comparações de igualdade estrutural nos testes novos têm seus lados invertidos para os overloads unknown/readonly; o fixture `reissue` recebe o mesmo SQLite real já utilizado por C08 e mutationFence. Nenhum oráculo ou prazo foi removido. Os dois logs brutos foram removidos; resultados, hashes e links dos jobs permanecem. A seleção `ci-request.03.json` revalida somente os dois casos de recibo com comparações corrigidas e o caso de reissue. O run [43630483191 / job 132555760059](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630483191/job/132555760059) concluiu **3 PASS / 0 FAIL / 5 filtrados / 36 assertions**, em **3,57 s**; cleanup `132556159682` SUCCESS. Omni: not applicable, zero spawns/delegações. Nenhum artifact foi produzido.
+
+Pins da correção: **W2 `f34edcfff26d0041145e13ea612d8d67f58dcbff`**, tree `97e38e84b7500fe520eec2479fc93e8a88703465`; **S3 `0f11903d2c4a888092dd9e13bcea5c817ef5249d`**, tree `0434b0c27efb71525322676500e8b5313792a6c7`. W2→S3 contém somente `.ci-run.json`, blob `e462f9a8cb237384a9ab0e8b319daf216eb897d5`, request SHA256 `e3178f6096fc341ed57f12b5b3aa4c7e80afc2d6d7023760fd0fe96ebf0dc8f0`. Os dois blobs de produto são exatamente os de W; os três postimages de teste foram conferidos. O consumidor pode usar W2 para intake do produtor e dos testes corrigidos.
+
+Total dos três runs: **24 execuções PASS / 0 FAIL / 285 assertions, com 22 nomes distintos**. S3 repete somente dois nomes de S1 e acrescenta reissue. Os resultados anteriores mantêm seus próprios W/S; a equivalência dos blobs de produto não atribui a W2 uma execução integral inexistente.
 
 ## Gate estático e obrigações preservadas
 
-O gate `Astra WP08 checks` será executado no head deste commit de entrega, usando o workflow existente e sem mudar configuração. **O resultado exato desse head será registrado na PR #41**, com SHA/tree/run/job/artifact, comparação de diagnósticos e guards. Este arquivo não atribui ao novo produtor o gate anterior. Esse registro externo evita criar um novo commit documental depois do gate e exigir outro gate recursivo.
+O gate `Astra WP08 checks` será repetido no head deste commit de entrega para verificar a correção dos quatro diagnósticos próprios e dos dois findings de log, usando o workflow existente e sem mudar configuração. **O resultado exato desse head será registrado na PR #41**, com SHA/tree/run/job/artifact, comparação de diagnósticos e guards. Este arquivo não atribui ao novo produtor o gate anterior. Esse registro externo evita criar um novo commit documental depois do gate e exigir outro gate recursivo.
 
 O baseline `43627225976` no handoff `9ec98ac9…` tem typecheck FAILURE com 69 diagnósticos herdados/zero próprios e guards PASS. Guards e revisão estática não são prova funcional. Uma eventual igualdade ao baseline não transforma o typecheck global em sucesso.
 
