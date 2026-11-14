@@ -1,0 +1,227 @@
+{
+  "schema": "finance-persistence-profile-v1",
+  "mission": 34,
+  "selection": "P0",
+  "W": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+  "Wtree": "22d3dfc65ac1b559680aafe67a09289c46b58be2",
+  "S": "a4d632bcb08d7dd5f9ae64f8eb09ae85af27aec2",
+  "Stree": "6a4c37215e12fc33a9e5148a8dbe90095e5f7649",
+  "runId": 43643802811,
+  "jobId": 132596942830,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643802811",
+  "conclusion": "success",
+  "tests": {
+    "pass": 1,
+    "fail": 0,
+    "assertions": 48,
+    "ms": 63577.54
+  },
+  "profile": {
+    "sizes": {
+      "stateBytes": 1241296,
+      "payloadBytes": 2094712,
+      "payloadCharacters": 2094712,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 10,
+      "transactions": 18,
+      "surfaces": [
+        {
+          "surface": "dashboard",
+          "payloadBytes": 2094712
+        },
+        {
+          "surface": "planner",
+          "payloadBytes": 10375
+        },
+        {
+          "surface": "procurement",
+          "payloadBytes": 162
+        }
+      ]
+    },
+    "counts": [
+      {
+        "mode": "decode",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "transaction",
+        "counts": {
+          "parseCalls": 3,
+          "parsedCharacters": 2105249,
+          "taggedParseCalls": 3,
+          "taggedCharacters": 2105249,
+          "objectAssemblies": 7500,
+          "entryTuples": 36506,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "currentSnapshots",
+        "counts": {
+          "parseCalls": 3,
+          "parsedCharacters": 2105249,
+          "taggedParseCalls": 3,
+          "taggedCharacters": 2105249,
+          "objectAssemblies": 7499,
+          "entryTuples": 36506,
+          "encodedObjectDescriptorReads": 7499
+        }
+      },
+      {
+        "mode": "nestedRead",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 7457
+        }
+      }
+    ],
+    "timings": [
+      {
+        "mode": "decode",
+        "elapsedMs": 23.686629999996512
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 22.906032999999297
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 47.33924699999625
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 42.436737999996694
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 44.51604899999802
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 41.14254499999515
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 26.003377999993972
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 20.077304000005824
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 28.237859000000753
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 21.74139300000388
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 46.36165999999503
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 39.64785500000289
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 46.36832200000208
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 46.31118499999866
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 22.251773000003595
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 24.016231000001426
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 28.225095000001602
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 24.173977999998897
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 46.54385199999524
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 46.401083999997354
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 42.703520000002754
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 45.711386000002676
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 26.054022000003897
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 25.535337000001164
+      }
+    ],
+    "summary": [
+      {
+        "mode": "decode",
+        "samples": 6,
+        "medianMs": 24.775784000001295,
+        "minimumMs": 20.077304000005824,
+        "maximumMs": 28.237859000000753
+      },
+      {
+        "mode": "transaction",
+        "samples": 6,
+        "medianMs": 23.540005499999097,
+        "minimumMs": 21.74139300000388,
+        "maximumMs": 26.054022000003897
+      },
+      {
+        "mode": "currentSnapshots",
+        "samples": 6,
+        "medianMs": 46.33642249999684,
+        "minimumMs": 41.14254499999515,
+        "maximumMs": 47.33924699999625
+      },
+      {
+        "mode": "nestedRead",
+        "samples": 6,
+        "medianMs": 43.60978450000039,
+        "minimumMs": 39.64785500000289,
+        "maximumMs": 46.401083999997354
+      }
+    ],
+    "interpretation": "Direct codec and transaction timings overlap; scoped modes exclude outer admission/load. Do not add these categories or extrapolate a whole-journey speedup.",
+    "disclosure": "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged."
+  },
+  "productChanged": false,
+  "omni": "not applicable",
+  "scope": "Baseline isolation only. No FIN-IND-005 closure."
+}

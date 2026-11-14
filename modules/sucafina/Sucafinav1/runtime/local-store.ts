@@ -78,6 +78,29 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     initial.close()
   }
 
+  // This is a memo of the pure v1 decoder, not of a transaction or authority.
+  // Every caller still observes SQL under the existing lock. Only immutable
+  // strings survive a call; each hit parses a new, fully detached object graph.
+  const materializations = new Map<Surface, SnapshotMaterialization>()
+  const loadSnapshot = (surface: Surface, payload?: string): Snapshot => {
+    const prior = materializations.get(surface)
+    if (payload !== undefined && prior?.payload === payload) return materializeSnapshot(prior)
+    materializations.delete(surface)
+    if (payload === undefined) return { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+    const snapshot = decodeSnapshot(payload)
+    const plan = planSnapshotMaterialization(snapshot, payload)
+    if (plan) {
+      const retained = { units: [...materializations.values()].reduce((sum, entry) => sum + entry.units, 0) }
+      for (const [name, entry] of materializations) {
+        if (retained.units + plan.units <= SNAPSHOT_MATERIALIZATION_UNITS && materializations.size < 3) break
+        materializations.delete(name)
+        retained.units -= entry.units
+      }
+      materializations.set(surface, plan)
+    }
+    return snapshot
+  }
+
   type ReadScope = {
     root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; poisoned: boolean; readers: number }
     parent?: ReadScope
@@ -170,7 +193,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const staged = parent.root.snapshots[surface]
         const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
         const snapshot = staged ? decodeSnapshot(encodeSnapshot(staged)) :
-          row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+          loadSnapshot(surface, row?.payload)
         const blobs: BlobTransaction = {
           get: async (key) => {
             requireScope(scope)
@@ -199,7 +222,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return operation(true, async (db) => {
         const read = (name: Surface) => {
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
-          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+          return loadSnapshot(name, row?.payload)
         }
         const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
         const snapshot = snapshots[surface]
@@ -279,7 +302,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
         const read = (surface: Surface) => {
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+          return loadSnapshot(surface, row?.payload)
         }
         const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
         const generations = Object.fromEntries(surfaces.map((surface) => [surface, structuredClone(snapshots[surface].sfBlobGenerations ?? {})]))
@@ -330,7 +353,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     dispose: () => {
       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
       lifecycle.closed = true
-      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => undefined)
+      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => { materializations.clear() })
       return lifecycle.disposing
     },
   }
@@ -452,4 +475,75 @@ export function decodeSnapshot(payload: string): Snapshot {
 
 export function encodeSnapshot(snapshot: Snapshot): string {
   return JSON.stringify(["sucafina-snapshot", 1, encode(snapshot)])
+}
+
+// At most three entries and 16 MiB of UTF-16 string content per open store.
+// These are optimization limits only: larger/deeper valid v1 snapshots keep
+// using the original decoder. No new persisted format or acceptance limit.
+const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
+type SnapshotMaterialization = Readonly<{ payload: string; json: string; missing: string; units: number }>
+
+function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
+  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return
+  const parts: string[] = []
+  const missing: string[] = []
+  const path: string[] = []
+  const budget = { units: payload.length + 2, nodes: 0 }
+  const append = (text: string) => {
+    budget.units += text.length
+    if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
+    parts.push(text)
+    return true
+  }
+  // The input has just passed decodeSnapshot: all nodes are normalized own
+  // data, with no getters, custom prototypes, functions, aliases or cycles.
+  // Emit JSON directly so a data property called toJSON is never invoked.
+  const visit = (value: unknown): boolean => {
+    if (++budget.nodes > 200000 || path.length > 128) return false
+    if (value === undefined) {
+      if (missing.length >= 4096) return false
+      const location = JSON.stringify(path)
+      budget.units += location.length + (missing.length ? 1 : 0)
+      if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
+      missing.push(location)
+      return append("null")
+    }
+    if (Object.is(value, -0)) return append("-0")
+    if (value === null || typeof value !== "object") {
+      const encoded = JSON.stringify(value)
+      return typeof encoded === "string" && append(encoded)
+    }
+    const array = Array.isArray(value)
+    if (!append(array ? "[" : "{")) return false
+    const keys = Object.keys(value)
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index]!
+      if (index && !append(",")) return false
+      if (!array && (!append(JSON.stringify(key)) || !append(":"))) return false
+      path.push(key)
+      const accepted = visit((value as Record<string, unknown>)[key])
+      path.pop()
+      if (!accepted) return false
+    }
+    return append(array ? "]" : "}")
+  }
+  if (!visit(snapshot)) return
+  const json = parts.join("")
+  const absent = "[" + missing.join(",") + "]"
+  return Object.freeze({ payload, json, missing: absent, units: payload.length + json.length + absent.length })
+}
+
+function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
+  const snapshot = JSON.parse(plan.json) as Snapshot
+  // Null placeholders preserve property order and array density. Only these
+  // known own paths need repair; -0 is preserved by its native JSON literal.
+  if (plan.missing !== "[]") {
+    const paths = JSON.parse(plan.missing) as string[][]
+    for (const path of paths) {
+      let parent: Record<string, unknown> = snapshot
+      for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
+      Object.defineProperty(parent, path[path.length - 1]!, { value: undefined, enumerable: true, writable: true, configurable: true })
+    }
+  }
+  return snapshot
 }

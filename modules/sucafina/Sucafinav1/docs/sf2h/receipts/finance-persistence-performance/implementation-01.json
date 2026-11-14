@@ -1,0 +1,81 @@
+{
+  "schema": "finance-persistence-implementation-v1",
+  "mission": 34,
+  "branch": "finance-resume",
+  "pr": 42,
+  "parent": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+  "baseline": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+  "allowedProductPaths": [
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "modules/sucafina/Sucafinav1/runtime/contract.ts"
+  ],
+  "changedProductPaths": [
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts"
+  ],
+  "sourcePreimageBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+  "hypothesis": "Repeated fresh SQL reads pay the tagged v1 decoder walk despite identical durable bytes. Retain only a bounded immutable native-JSON materialization recipe after original validation; create fresh objects on every hit.",
+  "observationBoundary": "Always SELECT under the unchanged admitted transaction/lock before full payload string equality. Any changed or absent payload evicts the prior entry and follows the original decoder/validation.",
+  "noReuse": [
+    "authorization",
+    "results",
+    "mutable snapshot objects",
+    "callback outputs",
+    "staged/currentSnapshots objects"
+  ],
+  "wireFormat": "Original v1 encoder and public decoder are unchanged. Existing bytes, backup hashes, rollback and reopening stay compatible.",
+  "bounds": {
+    "surfaces": 3,
+    "retainedStringCodeUnits": 8388608,
+    "maximumPlanDepth": 128,
+    "maximumPlanNodes": 200000,
+    "maximumUndefinedPaths": 4096,
+    "overflow": "fall back to original decoder; do not narrow accepted persisted state",
+    "memoryCaveat": "16 MiB bounds retained UTF-16 string content, not total JavaScript heap or transient allocation"
+  },
+  "invariants": [
+    "transactions",
+    "locks",
+    "CAS",
+    "fresh observations",
+    "callback/output isolation",
+    "abort/error rollback",
+    "nested-write poison",
+    "blobs",
+    "reopen",
+    "state validation",
+    "own undefined",
+    "negative zero",
+    "own __proto__",
+    "key order"
+  ],
+  "staticReview": {
+    "independentReviewer": "persistence_review",
+    "conclusion": "No blocker; no code executed locally",
+    "godfile": {
+      "nonemptyLines": 533,
+      "target": 500,
+      "hardLimit": 750,
+      "status": "Static predicted target warning only; no waiver introduced"
+    }
+  },
+  "proofSequence": [
+    "P0 baseline already PASS on real SQLite",
+    "S1 short work reduction plus isolation/concurrency and regressions",
+    "K1 existing typecheck/guards",
+    "S2 unchanged original journey with all assertions and original budgets"
+  ],
+  "acceptance": {
+    "shortPassClosesFIN_IND_005": false,
+    "journeyStatus": "NOT_RUN_ON_CANDIDATE",
+    "fixtureBudgetMs": 180000,
+    "bunPerTestBudgetMs": 300000
+  },
+  "constraints": {
+    "localTests": false,
+    "remote": "GitHub MCP CAS; no force",
+    "otherProductLanesEdited": false,
+    "contractEdited": false,
+    "devMerge": false,
+    "deploy": false
+  }
+}

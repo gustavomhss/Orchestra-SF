@@ -4,7 +4,7 @@ import { join } from "node:path"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import type { SfProductState } from "../../../product/contracts/state.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { decodeSnapshot, encodeSnapshot } from "../../../runtime/local-store.ts"
+import { decodeSnapshot, encodeSnapshot, openLocalStore } from "../../../runtime/local-store.ts"
 import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
 
 type Mode = "decode" | "transaction" | "currentSnapshots" | "nestedRead"
@@ -70,6 +70,22 @@ test("FIN-IND-005 persistence profile isolates real SQLite decode and staged sna
       expect(sizes.stateBytes).toBeGreaterThan(800000)
       expect(sizes.caseBytes).toBeGreaterThan(100000)
       expect(encodeSnapshot(original)).toBe(payload)
+      // A separate store starts with no materialization history. The two reads
+      // observe exactly the same real SQL rows, with distinct callback outputs.
+      const fresh = await openLocalStore(history.fixture.directory)
+      const coldWarm = await (async () => {
+        try {
+          const readFresh = () => fresh.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
+          const cold = await countWork(readFresh)
+          expect(encodeSnapshot(cold.value)).toBe(payload)
+          cold.value.data.__sfProductV1 = { corrupted: true }
+          const warm = await countWork(readFresh)
+          expect(encodeSnapshot(warm.value)).toBe(payload)
+          expect(warm.value).not.toBe(cold.value)
+          expect(warm.value.data).not.toBe(cold.value.data)
+          return { cold: cold.counts, warm: warm.counts }
+        } finally { await fresh.dispose() }
+      })()
       const store = history.fixture.store
       const read = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
       const current = () => {
@@ -114,12 +130,21 @@ test("FIN-IND-005 persistence profile isolates real SQLite decode and staged sna
         return { mode, samples: values.length, medianMs: (values[2]! + values[3]!) / 2, minimumMs: values[0], maximumMs: values.at(-1) }
       })
       console.log("FIN_PERSISTENCE_PROFILE " + JSON.stringify({
-        sizes, counts, timings, summary,
+        sizes, counts, timings, summary, coldWarm,
         interpretation: "Direct codec and transaction timings overlap; scoped modes exclude outer admission/load. Do not add these categories or extrapolate a whole-journey speedup.",
         disclosure: "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged.",
       }))
       expect(counts.find((item) => item.mode === "decode")?.counts.taggedParseCalls).toBe(1)
       expect(counts.find((item) => item.mode === "decode")?.counts.taggedCharacters).toBe(payload.length)
+      expect(counts.find((item) => item.mode === "decode")?.counts.entryTuples).toBeGreaterThan(1000)
+      expect(coldWarm.cold.taggedParseCalls).toBe(persisted.length)
+      expect(coldWarm.cold.taggedCharacters).toBe(persisted.reduce((sum, row) => sum + row.payload.length, 0))
+      expect(coldWarm.warm.taggedParseCalls).toBe(0)
+      expect(coldWarm.warm.encodedObjectDescriptorReads).toBe(0)
+      expect(coldWarm.warm.objectAssemblies).toBeLessThanOrEqual(3)
+      expect(counts.find((item) => item.mode === "transaction")?.counts.taggedParseCalls).toBe(0)
+      expect(counts.find((item) => item.mode === "transaction")?.counts.encodedObjectDescriptorReads).toBe(0)
+      expect(counts.find((item) => item.mode === "transaction")?.counts.objectAssemblies).toBeLessThanOrEqual(3)
     } finally { database.close() }
   } finally { await history.cleanup() }
 }, 120000)
