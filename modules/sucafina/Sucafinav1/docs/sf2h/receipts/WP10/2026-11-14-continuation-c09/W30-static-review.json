@@ -1,0 +1,21 @@
+{
+  "status": "STATIC_ONLY_NOT_FINAL",
+  "sourceSha256": "efc3f0e8109f1ec9bbbbaefbc6238914c54dbcee0426ff94afccf2ba587f2366",
+  "reviewer": "delta_provenance",
+  "assertions": {
+    "before": 17,
+    "after": 17,
+    "preserved": "All conditions, payloads, ready/rejected assertions and throw behavior unchanged."
+  },
+  "http": "Same responses, logging wrapper only.",
+  "timing": {
+    "bunMs": 30000,
+    "actionNavigationMaximumMs": 5000,
+    "cooperativeWorkMs": 18000,
+    "existingReleaseMs": "5000+5000",
+    "limitation": "Work budget is cooperative; forecastPage and browser.newPage are not universally cancelled by it. Do not claim a hard18s upper bound for every asynchronous operation."
+  },
+  "runtimeProductChanges": 0,
+  "newDetachedRaces": 0,
+  "typecheck": "NOT_RUN on this draft; hosted check required."
+}

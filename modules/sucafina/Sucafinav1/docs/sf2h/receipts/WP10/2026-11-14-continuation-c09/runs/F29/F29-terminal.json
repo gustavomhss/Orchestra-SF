@@ -1,0 +1,298 @@
+{
+  "schema": "wp10-w29-source-fences-hosted-observation-v1",
+  "product": {
+    "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+    "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219"
+  },
+  "snapshot": {
+    "S": "e71d4beacdc1309c1affa571454809dce172b8c1",
+    "tree": "c75ec5350874d8e6c0bf7de8c79f099e496578a0",
+    "parents": [
+      "813806af6c2ce74b2a087139c544e90dd1adcbe4"
+    ],
+    "branch": "ci-run-linux-astra-wp10-813806af-cede46b7-01",
+    "requestBlob": "dea0dacd170e18998c7b4b499389a1cfa824df82",
+    "requestSha256": "cede46b79a37583c13ce622322628e3f4851d3cf0d56fa02c640259898ae36b9",
+    "compareFiles": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "sha": "dea0dacd170e18998c7b4b499389a1cfa824df82"
+      }
+    ]
+  },
+  "run": {
+    "id": 43628418430,
+    "head_sha": "e71d4beacdc1309c1affa571454809dce172b8c1",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-14T18:45:58Z",
+    "updated_at": "2026-11-14T18:47:37Z",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628418430"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+      "./Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts",
+      "./Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "jobs": [
+    {
+      "id": 132549392319,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43628418430,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132549821272,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43628418430,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "result": {
+    "pass": 10,
+    "fail": 0,
+    "expects": 132,
+    "tests": 10,
+    "files": 3,
+    "bunMilliseconds": 1044
+  },
+  "executedHeaders": [
+    "2026-11-14T18:47:29.0230927Z Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts:",
+    "2026-11-14T18:47:29.1945264Z Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts:",
+    "2026-11-14T18:47:29.2501426Z Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts:"
+  ],
+  "observedOrder": "source-lifecycle → source-read-fence → source-fence-read, matching explicit ./ path order in request; all three files complete.",
+  "passes": [
+    "2026-11-14T18:47:29.0891057Z (pass) source incarnation survives reopen and deletion/recreation gets a new identity [34.12ms]",
+    "2026-11-14T18:47:29.1040671Z (pass) preview, thrown callback and cancellation leave lifecycle unchanged [15.01ms]",
+    "2026-11-14T18:47:29.1220062Z (pass) dataset replacement renews identity and retains the trusted protected product namespace [17.85ms]",
+    "2026-11-14T18:47:29.1765854Z (pass) authorized projection revisions persist and ignore restricted changes while observing intermediate writes [54.62ms]",
+    "2026-11-14T18:47:29.1943866Z (pass) resolving an old scoped incarnation refuses deletion and recreation between lookup and observation [17.72ms]",
+    "2026-11-14T18:47:29.2374653Z (pass) read-only source fence checks staged material and authorization without refreshing identity [40.20ms]",
+    "2026-11-14T18:47:29.2500161Z (pass) replacing a surface cannot bypass source, audit or restore guards across reopen [12.54ms]",
+    "2026-11-14T18:47:29.8216510Z (pass) source fences join the real C08 read without opening a nested writer or changing stored state [93.28ms]",
+    "2026-11-14T18:47:29.8640408Z (pass) source fences reject every domain revision and unversioned C08 changes across either authorization boundary [42.38ms]",
+    "2026-11-14T18:47:30.0541291Z (pass) source fences reject changed Requests, all headers, aborted calls and revoked real authority before returning a locked proof [190.02ms]"
+  ],
+  "omni": {
+    "nonce": "a1e93437d3e876aa71de81b22665a064",
+    "status": "not applicable",
+    "spawns": 0,
+    "delegated": 0,
+    "proof": "This selection declares no Omni-positive test; not a native/Omni acceptance."
+  },
+  "qualification": {
+    "gate": "Prescribed three-file source lifecycle/C08/fence gate from diagnose-calculation passes on applied product W29.",
+    "priorGate": "Both complete structural calculation cases passed on W29 in C29 run43628006308, separately preserved as a globally failed mixed selection because UI/browser tests failed.",
+    "observedFences": [
+      "Reopen and deletion/recreation incarnation",
+      "Preview/callback failure/cancellation rollback",
+      "Dataset replacement and trusted product namespace retention",
+      "Scoped projection revisions, restricted changes and intermediate writes",
+      "Old scoped incarnation rejected across lookup/observation replacement",
+      "Staged source/material and current auth without identity refresh",
+      "Snapshot replacement cannot bypass source/audit/restore guards",
+      "Real C08 read without nested writer or durable mutation",
+      "All domain revisions and unversioned C08 mutation rejected at both auth boundaries",
+      "Changed Request/all headers/abort/lease/authority rejected before locked proof egress"
+    ],
+    "UI": "FIN-IND-004 UI proof from C29 remains HOLD; it is independent of this F29 source-fence gate and is not reclassified.",
+    "X": "Full exact-threshold journey remains unexecuted on W29 by this observation. Structural and fence gates support the owner's next discriminating X qualification; do not infer its outcome, speedup or final persistence/retry/revocation.",
+    "acceptance": "No full WP10 or GLOBAL_RELEASE claim."
+  }
+}

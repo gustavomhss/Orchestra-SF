@@ -1,0 +1,233 @@
+{
+  "schema": "wp10-w29-hosted-check-observation-v1",
+  "product": {
+    "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+    "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  },
+  "snapshot": {
+    "S": "92319dad2957a023cf1a7c9cfe0e03e77e2242af",
+    "tree": "b3e201d8d0b6873a4fd2c5224a19bfcd8e9d7e78",
+    "parents": [
+      "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+      "66d3a7fc3160a54aad1766e096a6b4cb397ab82b"
+    ],
+    "branch": "astra-check-wp10",
+    "envelope": {
+      "productSha": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "envelopeBlob": "4d60289774cbafc7ac88666c8203f2ccb60bc5d2",
+    "envelopeSha256": "d97e836243420ec99a8d6fe5ae711844857a5412d69b136c69b7547de51e19ef",
+    "compareFiles": [
+      {
+        "filename": ".astra-wp10-check.json",
+        "status": "added",
+        "sha": "4d60289774cbafc7ac88666c8203f2ccb60bc5d2"
+      }
+    ],
+    "history": "Check branch preserves CHECK28 as second parent; exact product/envelope validation passed."
+  },
+  "run": {
+    "id": 43628024706,
+    "head_sha": "92319dad2957a023cf1a7c9cfe0e03e77e2242af",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T18:41:42Z",
+    "updated_at": "2026-11-14T18:45:35Z",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628024706"
+  },
+  "jobs": [
+    {
+      "id": 132548181579,
+      "name": "composition",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43628024706,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Validate exact product and envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Typecheck WP10 test consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Verify canonical Atlas generation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Typecheck Atlas boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Guard subprocess imports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Upload exact-check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14127078300,
+      "name": "astra-wp10-check-1",
+      "size_in_bytes": 4364,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127078300",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127078300/zip",
+      "expired": false,
+      "created_at": "2026-11-14T18:45:31Z",
+      "expires_at": "2026-11-28T18:45:30Z",
+      "updated_at": "2026-11-14T18:45:31Z",
+      "digest": "sha256:b660a75b3b9ea3aa76837c47fbe4abbe4a1c6e96ee2106291333cedae29124f5",
+      "workflow_run": {
+        "id": 43628024706,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp10",
+        "head_sha": "92319dad2957a023cf1a7c9cfe0e03e77e2242af"
+      }
+    }
+  ],
+  "artifactDownload": {
+    "provider": "GitHub MCP download_workflow_artifact",
+    "artifactId": 14127078300,
+    "fileId": "file_000000005384820ebd62e710c00bbd81",
+    "fileName": "astra-wp10-check29-1.zip",
+    "mimeType": "application/zip",
+    "localZipBytes": "NOT_MATERIALIZED; opaque MCP file reference retained, no alternative remote fetch used",
+    "temporarySignedDownloadUrl": "NOT_ARCHIVED"
+  },
+  "results": {
+    "overall": "failure",
+    "sucafinaTypecheck": {
+      "result": "failure",
+      "diagnostics": 13,
+      "externalHistorical": 13,
+      "ownWp10": 0
+    },
+    "wp10ConsumersTypecheck": "success",
+    "cliTypecheck": "success",
+    "atlasGenerationCheckDiff": "success",
+    "atlasTypecheck": "success",
+    "spawnImports": "success",
+    "guardsAgainstOriginDev": "success",
+    "snapshotEnvelope": "success",
+    "artifactUpload": "success",
+    "cleanup": "No dedicated cleanup job in this standing check workflow; post Setup Bun and both checkout cleanup steps succeeded.",
+    "omni": "Not applicable: typecheck/guards workflow does not execute product tests or Omni proof."
+  },
+  "fullTypeDiagnostics": [
+    "2026-11-14T18:43:54.7010191Z ##[error]product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+    "2026-11-14T18:43:54.7020580Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+    "2026-11-14T18:43:54.7026400Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:43:54.7029686Z ##[error]test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+    "2026-11-14T18:43:54.7032503Z ##[error]test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+    "2026-11-14T18:43:54.7035488Z ##[error]test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+    "2026-11-14T18:43:54.7037627Z ##[error]test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+    "2026-11-14T18:43:54.7041730Z ##[error]test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:43:54.7047595Z ##[error]test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:43:54.7053140Z ##[error]test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:43:54.7058811Z ##[error]test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:43:54.7064323Z ##[error]test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+    "2026-11-14T18:43:54.7069724Z ##[error]test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+  ],
+  "ownPreviousFailures": "All three W28 own test diagnostics are absent; the explicit WP10 test-consumer typecheck passed.",
+  "relevantGuardObservations": [
+    "2026-11-14T18:45:26.3822148Z spawn-imports: 4702 files checked, 66 allow-listed sites",
+    "2026-11-14T18:45:30.3166175Z WARN modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W26/W22-D-partial/publication/verified-W22-tree.json [large-file] Large file added (over 1 MB). Check it belongs in git; generated data and media usually do not.",
+    "2026-11-14T18:45:30.3167637Z WARN modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json:5 [local-abs-path] Absolute path into a personal home directory. Use a relative path, an environment variable or os.homedir().",
+    "2026-11-14T18:45:30.3215960Z guards: 78 rules, 2129 changed paths, 0 gate and 53 warn findings, 0 errors."
+  ],
+  "limits": "W29 check only. Overall FAIL due external historical diagnostics remains; no acceptance of whole WP10 or successor W is inferred."
+}
