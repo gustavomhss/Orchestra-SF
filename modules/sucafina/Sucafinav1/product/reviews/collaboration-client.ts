@@ -48,7 +48,7 @@ export function createReviewDiscussionClient(accessLost: () => void, transport: 
     if (!binding || !/^[a-f0-9]{64}$/.test(binding)) throw unverified()
     if (transport.binding() !== binding) throw lost()
     const current = new URL(transport.url())
-    if (current.origin !== endpoint.origin || current.pathname !== endpoint.pathname) throw lost()
+    if (current.origin !== endpoint.origin || current.pathname !== endpoint.pathname || current.searchParams.get("reviewRef") !== endpoint.searchParams.get("reviewRef")) throw lost()
   }
   const post = async (mode: string, payload: unknown, key?: string) => {
     checkBinding()
@@ -72,16 +72,16 @@ export function createReviewDiscussionClient(accessLost: () => void, transport: 
       if (controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
       const result = body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : undefined
       if (result?.status === "denied") throw lost()
-      // C6's reader can mask denial as unavailable. Only this read is terminal;
-      // an action returning the same legacy 503 still has an unknown outcome.
-      if (mode === "collaboration-thread-read" && result?.reason === "thread-access-unavailable") throw lost()
+      // Unavailable is not an authorization verdict. The coherent producer
+      // contract carries real revocation as denied; read drift/failure retains
+      // the attempt and requires an authorized read before an explicit retry.
       if (response.status === 409 || result?.status === "stale" || result?.status === "conflict" || result?.status === "provider-conflict") {
         // Only these producer results establish a precommit CAS rejection.
         // Idempotency/target conflicts can refer to an earlier durable commit.
-        const rejected = result?.reason === "product-state-changed" || result?.reason === "thread-changed"
+        const rejected = key !== undefined && (result?.reason === "product-state-changed" || result?.reason === "thread-changed")
         throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action conflicts with a newer version.", "conflict", rejected ? "rejected" : "unknown")
       }
-      if (response.status >= 500)
+      if (response.status >= 500 || result?.status === "unavailable")
         throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action outcome is unavailable.", "recoverable", "unknown")
       if (!response.ok || result?.status !== "ok")
         throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "Review discussion response unavailable", "invalid", "unknown")
@@ -156,4 +156,5 @@ export function discussionAnswer(value: unknown): ReviewPreparedAnswer {
   if (!Array.isArray(projection.values) || !Array.isArray(projection.components) || !Array.isArray(projection.missing) || !projection.context) throw new Error("Preserved projection unavailable")
   return { answerRef: discussionText(answer.answerRef), answer: discussionText(answer.answer), authorRef: discussionText(answer.authorRef), observationRef: discussionText(answer.observationRef), observedSourceVersion: discussionVersion(answer.observedSourceVersion), expectedScopeFingerprint: discussionText(answer.expectedScopeFingerprint), reviewContext: discussionPin(answer.reviewContext), projection: projection as DomainProjection }
 }
+
 

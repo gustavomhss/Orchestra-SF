@@ -9,6 +9,7 @@ import type { ReportsCollaboration, ReviewAnswer, ReviewBasis, ReviewPin } from 
 import { expectCapturedBudget } from "./review-flow.ts"
 import { recoverLostReplyResponse } from "./lost-reply-response.ts"
 import { recoverFailedEditRequest } from "./failed-edit-request.ts"
+import { recoverLostEditResponse } from "./lost-edit-response.ts"
 
 /** The installed Review controls perform every human mutation. Direct HTTP
  * calls below only read back authority/state or probe negative boundaries.
@@ -120,14 +121,16 @@ export async function expectConfirmedAnswerVisible(page: Page, answer: ReviewAns
   await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === answer.questionId)
 }
 
-export async function editHumanAnswer(page: Page, app: ReportsInstallation, api: ReportsCollaboration, answer: ReviewAnswer, body: string, recovery?: { recoverRequestFailure: true; info: TestInfo }) {
+export async function editHumanAnswer(page: Page, app: ReportsInstallation, api: ReportsCollaboration, answer: ReviewAnswer, body: string, recovery?: { recoverRequestFailure: true; info: TestInfo } | { loseResponse: true; info: TestInfo }) {
   const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
   const article = discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
   await article.getByRole("textbox", { name: "Edited answer", exact: true }).fill(body)
   const beforeEdit = await api.version()
-  const edited = recovery?.recoverRequestFailure
+  const edited = recovery && "recoverRequestFailure" in recovery
     ? await recoverFailedEditRequest({ page, app, api, discussion, article, answer, body, expectedStorageVersion: beforeEdit, info: recovery.info })
-    : await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit")
+    : recovery && "loseResponse" in recovery
+      ? await recoverLostEditResponse({ page, app, api, discussion, article, answer, body, expectedStorageVersion: beforeEdit, info: recovery.info })
+      : await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit")
   expect(edited.payload).toMatchObject({
     id: answer.questionId, messageId: answer.message.id, expectedVersion: answer.message.version, body,
   })

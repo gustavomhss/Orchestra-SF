@@ -80,12 +80,27 @@ test.each([401, 403, 200])("denial status %s closes the client and invokes acces
   } finally { transport.client.dispose() }
 })
 
-test("the C6 masked thread-access denial also closes the client", async () => {
-  const transport = fixture(() => Response.json({ status: "unavailable", reason: "thread-access-unavailable" }, { headers: { "X-SF-Review-Binding": binding } }))
+test.each([200, 503])("ambiguous legacy thread unavailability at HTTP %s retains the client for an authorized read", async (status) => {
+  const state = { unavailable: true }
+  const transport = fixture(() => state.unavailable ? Response.json({ status: "unavailable", reason: "thread-access-unavailable" }, { status, headers: { "X-SF-Review-Binding": binding } }) : ok({ authorizedRead: true }))
   try {
-    await failure(transport.client.thread(payload.id), "access", "rejected")
-    expect(transport.state.accessLost).toBe(1)
+    await failure(transport.client.thread(payload.id), "recoverable", "unknown")
+    expect(transport.state.accessLost).toBe(0)
     expect(transport.requests).toHaveLength(1)
+    state.unavailable = false
+    expect(await transport.client.post("collaboration-thread-read", { id: payload.id })).toEqual({ authorizedRead: true })
+    expect(transport.requests).toHaveLength(2)
+    expect(transport.requests.every((request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read")).toBe(true)
+    expect(transport.state.accessLost).toBe(0)
+  } finally { transport.client.dispose() }
+})
+
+test.each(["thread-content-changed", "thread-changed", "product-state-changed"])("a read conflict %s cannot reject a pending mutation's original intent", async (reason) => {
+  const transport = fixture(() => Response.json({ status: "stale", reason }, { status: 409, headers: { "X-SF-Review-Binding": binding } }))
+  try {
+    await failure(transport.client.thread(payload.id), "conflict", "unknown")
+    expect(transport.requests).toHaveLength(1)
+    expect(transport.state.accessLost).toBe(0)
   } finally { transport.client.dispose() }
 })
 
@@ -182,6 +197,23 @@ test("binding changes during response body consumption still suppress its protec
   } finally { held.resolve(undefined); transport.client.dispose() }
 })
 
+test("a response cannot restore the discussion after navigation to another review", async () => {
+  const entered = Promise.withResolvers<void>()
+  const held = Promise.withResolvers<Response>()
+  const transport = fixture(() => { entered.resolve(); return held.promise })
+  try {
+    const pending = transport.client.post("collaboration-thread-read", { id: payload.id })
+    await entered.promise
+    transport.state.url = address.replace("transport-review", "another-review")
+    held.resolve(ok({ body: "late response for the previous review" }))
+    await failure(pending, "access", "rejected")
+    expect(transport.state.accessLost).toBe(1)
+    expect(transport.requests).toHaveLength(1)
+    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
+    expect(transport.requests).toHaveLength(1)
+  } finally { held.resolve(ok(undefined)); transport.client.dispose() }
+})
+
 test("malformed JSON is an unknown outcome and does not trigger an automatic resend", async () => {
   const transport = fixture(() => new Response("{broken-json", { headers: { "Content-Type": "application/json", "X-SF-Review-Binding": binding } }))
   try {
@@ -196,7 +228,7 @@ function ok(value: unknown) {
 }
 
 function fixture(respond: (request: Request) => Response | Promise<Response>, initial: { binding: string | undefined } = { binding }) {
-  const state: { binding: string | undefined; accessLost: number } = { binding: initial.binding, accessLost: 0 }
+  const state: { binding: string | undefined; accessLost: number; url: string } = { binding: initial.binding, accessLost: 0, url: address }
   const requests: Request[] = []
   const options: RequestInit[] = []
   const send = async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -208,7 +240,7 @@ function fixture(respond: (request: Request) => Response | Promise<Response>, in
   const client = createReviewDiscussionClient(() => { state.accessLost += 1 }, {
     // Only the injected transport is simulated; the production client runs intact.
     fetch: send as typeof fetch,
-    url: () => address,
+    url: () => state.url,
     binding: () => state.binding,
   })
   return { state, requests, options, client }
@@ -223,3 +255,4 @@ async function failure(pending: Promise<unknown>, kind: ReviewDiscussionError["k
   expect(result.error.kind).toBe(kind)
   expect(result.error.outcome).toBe(outcome)
 }
+

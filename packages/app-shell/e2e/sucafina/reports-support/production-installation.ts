@@ -4,6 +4,7 @@ import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
 
 /** This fixture starts the existing CLI installation, never a fixture HTTP server. */
 export type ReportsInstallation = {
@@ -138,7 +139,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
         Stream.splitLines,
         Stream.runForEach((line) => {
           tail.value = `${tail.value}\n${redact(line)}`.slice(-8192)
-          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]):4110\/?$/.test(line.trim())
+          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]|::1):4110\/?$/.test(line.trim())
             ? Deferred.succeed(ready, undefined)
             : Effect.void
         }),
@@ -217,14 +218,13 @@ async function redeemOperatorEnrollment(page: Page, installation: Omit<ReportsIn
     throw new Error("Production operator enrollment transport failed")
   })
   if (response.status !== 303 || response.headers.get("location") !== `${installation.mount}/dashboard`) throw new Error(`Production operator enrollment failed (${response.status})`)
-  const cookies = response.headers.getSetCookie()
-  const match = cookies.length === 1 ? /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=(\/sucafina); HttpOnly; SameSite=Lax; Max-Age=(28800)$/.exec(cookies[0]!) : undefined
-  if (!match) throw new Error("Production operator enrollment did not issue the expected scoped session")
+  // Reuse the transport-normalization fix qualified by Decisions44. It keeps
+  // the exact cookie policy while accepting Effect's attribute serialization.
+  const cookie = readOperatorSessionCookie(response.headers)
   signal.throwIfAborted()
   await page.context().addCookies([{
-    name: match[1]!, value: match[2]!, domain: new URL(installation.origin).hostname,
-    path: match[3]!, httpOnly: true, sameSite: "Lax", secure: false,
-    expires: Math.floor(Date.now() / 1000) + Number(match[4]),
+    ...cookie, domain: new URL(installation.origin).hostname,
+    expires: Math.floor(Date.now() / 1000) + 28_800,
   }])
   signal.throwIfAborted()
   await rm(artifact)

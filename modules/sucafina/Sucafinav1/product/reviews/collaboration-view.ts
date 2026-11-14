@@ -14,7 +14,8 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   const recovery = region("Action recovery")
   const confirmation = region("Answer confirmation"), confirmed = region("Confirmed answer"), history = region("Answer history")
   root.append(heading("Discuss this preserved review"), status, form, recovery, messages, confirmation, confirmed, history)
-  let closed = false, busy = false
+  let closed = false, busy = false, suspended = true
+  let targetThread = new URL(location.href).searchParams.get("reviewThread")
   let thread: ReviewDiscussionThread | undefined
   let prepared: ReviewPreparedAnswer | undefined
   const replies = new Map<string, string>()
@@ -85,6 +86,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
         const url = new URL(location.href)
         url.searchParams.set("reviewThread", created.id)
         for (const key of ["reviewMessage", "reviewIncarnation", "reviewVersion"]) url.searchParams.delete(key)
+        targetThread = created.id
         window.history.replaceState(null, "", url)
         replies.clear(); edits.clear()
         thread = current
@@ -99,7 +101,10 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   ask.disabled = true
   form.append(label("Review section", section), label("Review source", source), label("Recipient", recipient), label("Question", question), ask)
 
-  function live() { if (closed) throw new ReviewDiscussionError("Review discussion closed", "access", "rejected") }
+  function live() {
+    if (closed) throw new ReviewDiscussionError("Review discussion closed", "access", "rejected")
+    if (new URL(location.href).searchParams.get("reviewThread") !== targetThread) return changedScope()
+  }
   function changedScope(): never {
     dispose()
     window.dispatchEvent(new Event("sf-access-revoked"))
@@ -110,9 +115,12 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
     if (!value.messages.length || value.messages.some((message) => message.sourceContext.reviewContext.reviewRef !== input.review.id || message.sourceContext.reviewContext.reviewVersion !== input.review.version || !input.review.sections.some((entry) => entry.id === message.sourceContext.reviewContext.sectionId))) return changedScope()
     if (!newQuestion && thread && (value.id !== thread.id || value.recipientRef !== thread.recipientRef || !samePin(value.messages[0]!.sourceContext.reviewContext, thread.messages[0]!.sourceContext.reviewContext))) return changedScope()
     if (!newQuestion && thread) {
-      const next = value.messages[0]!, previous = thread.messages[0]!
-      const left = next.sourceContext, right = previous.sourceContext
-      if (next.id !== previous.id || next.incarnation !== previous.incarnation || left.sourceRef !== right.sourceRef || left.sourceIncarnation !== right.sourceIncarnation || left.observedVersion !== right.observedVersion || left.period.start !== right.period.start || left.period.end !== right.period.end) return changedScope()
+      for (const previous of thread.messages) {
+        const next = value.messages.find((message) => message.id === previous.id)
+        if (!next || next.incarnation !== previous.incarnation || next.authorRef !== previous.authorRef) return changedScope()
+        const left = next.sourceContext, right = previous.sourceContext
+        if (!samePin(left.reviewContext, right.reviewContext) || left.sourceRef !== right.sourceRef || left.sourceIncarnation !== right.sourceIncarnation || left.observedVersion !== right.observedVersion || left.period.start !== right.period.start || left.period.end !== right.period.end || JSON.stringify(left.evidenceRefs) !== JSON.stringify(right.evidenceRefs)) return changedScope()
+      }
     }
   }
   const editKey = (id: string, message: ReviewDiscussionMessage) => JSON.stringify([id, message.id, message.incarnation])
@@ -201,8 +209,11 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
 
   function lockDrafts() {
     root.querySelectorAll("textarea").forEach((element) => { element.readOnly = !!intent })
-    for (const element of [section, source, recipient]) element.disabled = !!intent
-    ask.disabled = !!intent || !recipient.options.length
+    for (const element of [section, source, recipient]) element.disabled = !!intent || suspended
+    root.querySelectorAll<HTMLButtonElement>("button").forEach((element) => {
+      element.disabled = element.dataset.reviewRecovery !== "true" && (!!intent || suspended)
+    })
+    ask.disabled = !!intent || suspended || !recipient.options.length
   }
 
   async function submitIntent() {
@@ -229,7 +240,11 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
 
   function renderRecovery() {
     recovery.replaceChildren()
-    if (!intent || closed) return
+    if (closed) return
+    if (!intent) {
+      if (suspended) recovery.append(heading("Discussion needs reconciliation"), paragraph("Your drafts are retained. Reconcile access before sending another action."), button("Reconcile discussion", readDiscussion, true))
+      return
+    }
     const current = intent
     recovery.append(heading("Your action is retained"), paragraph(current.text), paragraph("No action is sent by refreshing or reconciling. Resolve this attempt before starting another."))
     recovery.append(button("Reconcile action", async () => {
@@ -245,8 +260,8 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
         await current.reconcileQuestion?.()
         live()
       }
-      current.reconciled = true
-      renderRecovery()
+      suspended = false; current.reconciled = true
+      renderRecovery(); lockDrafts()
       status.textContent = "Action reconciled. Retry the same action explicitly to recover its receipt."
     }, true))
     if (!current.reconciled) return
@@ -363,6 +378,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
         }
         // Keep drafts and the immutable attempt. A transport failure is neither
         // an authorization decision nor permission to send a new command.
+        suspended = true
         prepared = undefined; confirmation.replaceChildren(); confirmed.replaceChildren()
         if (intent) {
           intent.reconciled = false
@@ -376,7 +392,10 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   function button(text: string, action: () => Promise<void>, recoveryAction = false) {
     const element = document.createElement("button")
     element.type = "button"; element.textContent = text
+    element.dataset.reviewRecovery = String(recoveryAction)
     element.addEventListener("click", () => { void run(async () => {
+      live()
+      if (suspended && !recoveryAction) throw new Error("Reconcile the discussion before starting another action")
       if (intent && !recoveryAction) throw new Error("Resolve the retained action before starting another")
       await action()
     }) })
@@ -384,27 +403,41 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   }
 
   async function refresh() {
-    await run(async () => {
-      const people = await client.recipients()
-      live()
-      const chosen = recipient.value
-      if (chosen && !people.some((person) => person.id === chosen)) return changedScope()
-      recipient.replaceChildren(...people.map((person) => new Option(person.name, person.id)))
-      if (people.some((person) => person.id === chosen)) recipient.value = chosen
-      lockDrafts()
-      if (!people.length) status.textContent = "No authorized recipient is available."
-      const id = new URL(location.href).searchParams.get("reviewThread")
-      if (thread && thread.id !== id) return changedScope()
-      prepared = undefined; confirmation.replaceChildren()
-      if (!id) return
+    await run(readDiscussion)
+  }
+
+  async function readDiscussion() {
+    live()
+    const people = await client.recipients()
+    live()
+    const chosen = recipient.value
+    if (chosen && !people.some((person) => person.id === chosen)) return changedScope()
+    recipient.replaceChildren(...people.map((person) => new Option(person.name, person.id)))
+    if (people.some((person) => person.id === chosen)) recipient.value = chosen
+    lockDrafts()
+    if (!people.length) status.textContent = "No authorized recipient is available."
+    const id = new URL(location.href).searchParams.get("reviewThread")
+    if (thread && thread.id !== id) return changedScope()
+    prepared = undefined; confirmation.replaceChildren()
+    if (id) {
       const updated = await client.thread(id)
       live(); checkThread(updated)
       thread = updated
       renderThread(); renderHistory(); await readConfirmed()
-      live(); renderRecovery()
-      // Refresh can update the displayed record but never resolves or sends the
-      // pending intent. Its explicit reconciliation control remains necessary.
-    })
+    } else {
+      const chosen = selected(), reference = references().find((ref) => ref.refId === source.value)
+      if (chosen && reference && recipient.value) {
+        const basis: ReviewDiscussionBasis = { sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period: chosen.period, evidenceRefs: [reference] }
+        const pin = discussionPin(await client.post("review-thread-context", { reviewRef: input.review.id, sectionId: chosen.id, basis }))
+        live()
+        if (pin.reviewRef !== input.review.id || pin.reviewVersion !== input.review.version || pin.sectionId !== chosen.id) return changedScope()
+      }
+    }
+    live()
+    if (people.length && suspended) status.textContent = "Discussion reconciled. Your drafts are retained; send an action explicitly."
+    suspended = false; renderRecovery(); lockDrafts()
+    // Refresh can update the displayed record but never resolves or sends the
+    // pending intent. Its explicit reconciliation control remains necessary.
   }
 
   function accessRevoked() { dispose() }
@@ -432,4 +465,5 @@ function heading(text: string) { const element = document.createElement("h3"); e
 function paragraph(text: string) { const element = document.createElement("p"); element.textContent = text; return element }
 function label(text: string, control: HTMLElement) { const element = document.createElement("label"); element.append(document.createTextNode(text), control); return element }
 function samePin(left: ReviewDiscussionPin, right: ReviewDiscussionPin) { return left.reviewRef === right.reviewRef && left.reviewVersion === right.reviewVersion && left.reviewDigest === right.reviewDigest && left.sectionId === right.sectionId }
+
 
