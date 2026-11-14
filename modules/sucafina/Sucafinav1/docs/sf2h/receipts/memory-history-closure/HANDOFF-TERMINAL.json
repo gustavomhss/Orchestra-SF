@@ -1,0 +1,83 @@
+{
+  "schema": "sf2h.memory-history-closure.terminal.v1",
+  "mission": 51,
+  "state": "HANDOFF",
+  "taskStatus": "MI07_NOT_CLOSED_EXTERNAL_CONTRACT_BLOCKED",
+  "authority": {
+    "epoch": "memory-history-browser51",
+    "state": "ENDED",
+    "activeSourceWriter": false,
+    "effective": "Upon CAS publication of the containing terminal commit. Historical ACTIVE ACK remains immutable and is superseded by this explicit terminal.",
+    "sourceBranch": "astra-wp10",
+    "pr": 29,
+    "expectedParent": "f2794784551e25ce2a2f56f408506cd790fae976",
+    "ack": "3938d50d78e65e4a6fc490c71a079d3fc9142f1b",
+    "integrationOwner": 47,
+    "compilerOwner": 45,
+    "finalAcceptance": "S0"
+  },
+  "evidence": {
+    "result": "runs/M51-MI07-01.json",
+    "run": 43654082252,
+    "job": 132628655525,
+    "W": "4f736943df7916964a231461d33ae0c84e5f2c01",
+    "Wtree": "10e4b9c793c528c2172b08eadd954710386d8dda",
+    "S": "0a0b1a9110bdf2e068745f284c97c86f3d0cd2e4",
+    "Stree": "c32b96f0a9cd9220391166852897bb2331082260",
+    "pass": 0,
+    "fail": 1,
+    "testMs": 843.11,
+    "phase": "procurement.capture-original",
+    "elapsedMs": 825,
+    "reason": "financial-approval-command-unavailable",
+    "omni": "PASS_1_DECLARED_2_SPAWNS",
+    "cleanup": "SUCCESS",
+    "artifacts": []
+  },
+  "finding": {
+    "id": "M51-MI07-PROCUREMENT-CAPTURE-BLOCKED",
+    "related": "M31-FINANCIAL-APPROVAL",
+    "owner": "S0/WP00 + Procurement/C12",
+    "consumer": 47,
+    "ownedSafeFixAvailable": false,
+    "fullExternalPolicyFix": "REQUIRES_EXPLICIT_CONTRACT_DECISION",
+    "retryCondition": "Material released compatible producer/contract patch, reconciled authority, exact new W/S manifest and dedup. No unchanged retry."
+  },
+  "release": {
+    "sourceCodeChangedBy51": false,
+    "sourceTestsChangedBy51": false,
+    "receiptOnly": true,
+    "predecessor40FixPreserved": true,
+    "immutableOriginal35Preserved": true,
+    "completeExistingMemory40Patch": "owner-patch/0001-memory40-preserved.patch",
+    "newFinancialBypassPatch": false,
+    "consumerMayTakeDiagnosisAndExactEvidence": true,
+    "mayClaimMI07Closed": false,
+    "mayTransferOldGreens": false
+  },
+  "latestIntegration": {
+    "C19": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "Memory40Consumed": "ACK47-07",
+    "blockerBytesUnchanged": true,
+    "source51RunWasNotOnC19": true
+  },
+  "boundaries": {
+    "localTests": 0,
+    "epic": 0,
+    "newTestRuns": 1,
+    "unchangedRetries": 0,
+    "budgetIncreases": 0,
+    "skips": 0,
+    "foreignSourceEdits": 0,
+    "stackRefWrites": 0,
+    "wholeTreeSourceImports": 0,
+    "force": false,
+    "merge": false,
+    "deploy": false,
+    "policyChange": false,
+    "AM05": "OPEN",
+    "compilerGuards": "NOT_RUN_THIS_CANDIDATE_OWNER45",
+    "globalRelease": false
+  },
+  "next": "47 route actual failure and exact dependency to S0/WP00+Procurement/C12. After complete released compatible contract/producer and new bounded succession, run original full MI07 on the new pinned composition with original225000/240000 budgets."
+}

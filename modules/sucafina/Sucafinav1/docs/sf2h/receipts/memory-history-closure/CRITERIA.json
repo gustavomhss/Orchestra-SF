@@ -1,0 +1,219 @@
+{
+  "schema": "sf2h.memory-history-closure.criteria.v1",
+  "mission": 51,
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "fullScopePreserved": {
+    "workPackages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "packBlob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+  "fullPackCriterionIds": [
+    "WP00.CMP.01",
+    "WP00.CMP.02",
+    "WP00.CMP.10",
+    "WP00.CMP.40",
+    "WP00.DOD.01",
+    "WP00.DOD.02",
+    "WP00.DOD.10",
+    "WP00.DOD.40",
+    "WP00.INV.01",
+    "WP00.INV.02",
+    "WP00.INV.10",
+    "WP00.INV.40",
+    "WP00.QLT.01",
+    "WP00.QLT.02",
+    "WP00.QLT.10",
+    "WP00.QLT.40",
+    "WP00.SUC.01",
+    "WP00.SUC.02",
+    "WP00.SUC.10",
+    "WP00.SUC.40",
+    "WP00.T04.CHK.01",
+    "WP00.T04.CHK.02",
+    "WP00.T04.CHK.03",
+    "WP00.T04.CHK.04",
+    "WP00.T04.CHK.10",
+    "WP00.T04.CHK.11",
+    "WP00.T04.CHK.12",
+    "WP00.T04.CHK.40",
+    "WP00.T04.CHK.41",
+    "WP00.T04.CHK.42",
+    "WP00.T04.CMP.01",
+    "WP00.T04.CMP.10",
+    "WP00.T04.CMP.40",
+    "WP00.T04.DOD.01",
+    "WP00.T04.DOD.02",
+    "WP00.T04.DOD.10",
+    "WP00.T04.DOD.40",
+    "WP00.T04.INV.01",
+    "WP00.T04.INV.10",
+    "WP00.T04.INV.40",
+    "WP00.T04.QLT.01",
+    "WP00.T04.QLT.10",
+    "WP00.T04.QLT.40",
+    "WP00.T04.SUC.01",
+    "WP00.T04.SUC.10",
+    "WP00.T04.SUC.40",
+    "WP10.CMP.01",
+    "WP10.CMP.02",
+    "WP10.CMP.10",
+    "WP10.CMP.40",
+    "WP10.CMP.60",
+    "WP10.DOD.01",
+    "WP10.DOD.02",
+    "WP10.DOD.10",
+    "WP10.DOD.40",
+    "WP10.DOD.60",
+    "WP10.INV.01",
+    "WP10.INV.02",
+    "WP10.INV.10",
+    "WP10.INV.40",
+    "WP10.INV.60",
+    "WP10.QLT.01",
+    "WP10.QLT.02",
+    "WP10.QLT.10",
+    "WP10.QLT.40",
+    "WP10.QLT.60",
+    "WP10.SUC.01",
+    "WP10.SUC.02",
+    "WP10.SUC.10",
+    "WP10.SUC.40",
+    "WP10.SUC.60",
+    "WP10.T06.CHK.01",
+    "WP10.T06.CHK.02",
+    "WP10.T06.CHK.03",
+    "WP10.T06.CHK.04",
+    "WP10.T06.CHK.05",
+    "WP10.T06.CHK.06",
+    "WP10.T06.CHK.07",
+    "WP10.T06.CHK.08",
+    "WP10.T06.CHK.09",
+    "WP10.T06.CHK.10",
+    "WP10.T06.CHK.40",
+    "WP10.T06.CHK.60",
+    "WP10.T06.CMP.01",
+    "WP10.T06.CMP.40",
+    "WP10.T06.CMP.60",
+    "WP10.T06.DOD.01",
+    "WP10.T06.DOD.40",
+    "WP10.T06.DOD.60",
+    "WP10.T06.INV.01",
+    "WP10.T06.INV.40",
+    "WP10.T06.INV.60",
+    "WP10.T06.QLT.01",
+    "WP10.T06.QLT.40",
+    "WP10.T06.QLT.60",
+    "WP10.T06.SUC.01",
+    "WP10.T06.SUC.40",
+    "WP10.T06.SUC.60"
+  ],
+  "fullCanonicalCriteriaClosedBy51": 0,
+  "rule": "Narrow executable observations do not close whole canonical criteria or native acceptance. All98 assigned pack IDs remain preserved; no inherited result rewritten.",
+  "observations": [
+    {
+      "id": "M51-IDENTITY",
+      "status": "VERIFIED_STATIC",
+      "evidence": "C18 tree + exact two postimages40; S differs only .ci-run.json; source diff receipts only."
+    },
+    {
+      "id": "M51-ORIGINALS",
+      "status": "VERIFIED_STATIC",
+      "evidence": "MI07 spec/helpers and original35 spec/helper unchanged by Git blob."
+    },
+    {
+      "id": "M51-SCANNER",
+      "status": "OBSERVED_SETUP",
+      "evidence": "Real Gitleaks ensure/version phases completed; memory append scan never reached in this run."
+    },
+    {
+      "id": "M51-CAPTURE",
+      "status": "FAIL",
+      "evidence": "Original prepareDomainCommands did not return ok; current canonical financial gate refused before private archive capture."
+    },
+    {
+      "id": "M51-HISTORY-1",
+      "scope": "historical original/current evidence",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "M51-HISTORY-2",
+      "scope": "independent prepare/verify/accept-output observations",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "M51-HISTORY-3",
+      "scope": "overlap/detached-call isolation",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "M51-HISTORY-4",
+      "scope": "source/capture/principal/clock/lease/header races",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "M51-HISTORY-5",
+      "scope": "same Request new proof",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "M51-HISTORY-6",
+      "scope": "stale preserve/replay/cancellation/CAS",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "M51-HISTORY-7",
+      "scope": "final capture corruption",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "M51-HISTORY-8",
+      "scope": "final producer/verifier/output revocation",
+      "status": "BLOCKED_NOT_REACHED",
+      "evidence": "M51-MI07-01 failed before Atlas emission; no green borrowed from short40 or original35."
+    },
+    {
+      "id": "MI07",
+      "status": "NOT_CLOSED",
+      "evidence": "Inherited timeout retained plus new current-composition precondition failure."
+    },
+    {
+      "id": "M35-C17-ORIGINAL-REVALIDATION",
+      "status": "PRIOR_RESOLVED_CLOSURE_PRESERVED",
+      "evidence": "Exact40 runtime/test bytes preserved; source40 proof remains identified separately."
+    },
+    {
+      "id": "AM05",
+      "status": "OPEN",
+      "evidence": "No native Session/provider/Task/SkillLoadReceipt/consumer witness executed."
+    },
+    {
+      "id": "COMPILER-GUARDS",
+      "status": "NOT_RUN_THIS_CANDIDATE",
+      "evidence": "Owner45 request with exact W/tree; source40 diagnostics13 remain historical."
+    }
+  ],
+  "source40Proofs": {
+    "F02": {
+      "run": 43650471583,
+      "pass": 18,
+      "fail": 0
+    },
+    "original35": {
+      "run": 43651719591,
+      "pass": 2,
+      "fail": 0
+    },
+    "notSubstitutesForMI07": true
+  },
+  "sameCandidateFinalGates": "OPEN",
+  "globalRelease": false
+}
