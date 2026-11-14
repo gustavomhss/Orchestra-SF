@@ -37,7 +37,7 @@ import { createProcurementDecisionPreparation } from "../../../../modules/sucafi
 import { createProcurementDecisionHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
 import { createProcurementQueuePageView, procurementQueueIntent } from "../../../../modules/sucafina/Sucafinav1/product/procurement/queue-page.ts"
 import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
-import { prepareSourcingDossier } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
+import { prepareSourcingDossier, type ProcurementPreparation } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { createPlannerProduct, createPlannerCoverageRouter } from "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts"
 import { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
@@ -312,6 +312,17 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     })
   } }
   const prepareProcurement = createProcurementDecisionPreparation(procurement)
+  const prepareDossierProcurement = async (requestRef: string, call: TrustedDomainContext): Promise<PortResult<ProcurementPreparation>> => {
+    const prepared = await prepareProcurement(requestRef, call)
+    if (prepared.status !== "ok") return prepared
+    const source = await sourcingEvidence(requestRef, call)
+    if (source.status !== "ok") return source
+    if (prepared.value.request.version !== source.value.evidence.target.version || digestSfValue(prepared.value.request.context) !== digestSfValue(source.value.context) ||
+      !prepared.value.request.values.length || prepared.value.request.values.some((value) => !value.sourceRefs.length || value.sourceRefs.some((ref) => digestSfValue(ref) !== digestSfValue(source.value.evidence))) ||
+      digestSfValue(prepared.value.comparison) !== digestSfValue(source.value.comparison) || !await host.revalidate(call))
+      return { status: "stale", reason: "dossier-request-projection-changed" }
+    return { status: "ok", value: { ...prepared.value, sourcing: source.value } }
+  }
   const dossierDocuments = async (requestRef: string, call: TrustedDomainContext): Promise<PortResult<readonly Extract<BusinessEvidenceRef, { kind: "document" }>[]>> => {
     const request = host.requestFor(call)
     const source = await resolveProcurement(requestRef, call)
@@ -340,7 +351,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     return { status: "ok", value: refs.map(({ entry }) => entry.ref).sort((a, b) => a.refDigest.localeCompare(b.refDigest)) }
   }
   const procurementDossier = { prepare: (requestRef: string, call: TrustedDomainContext) => prepareSourcingDossier({
-    requestRef, context: call, prepareProcurement, selectedDocuments: dossierDocuments,
+    requestRef, context: call, prepareProcurement: prepareDossierProcurement, selectedDocuments: dossierDocuments,
     reader: input.documentRead ?? (async (_id, binding) => ({ status: "unavailable", accessRevision: binding.binding.accessRevision })),
     revalidate: async (refs) => {
       const request = host.requestFor(call)
@@ -349,7 +360,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return resolved.every((value) => value.state === "fresh" && !!value.authorizedProjection) && !request.signal.aborted && await host.revalidate(call)
     },
     revalidateProcurement: async (material) => {
-      const current = await prepareProcurement(requestRef, call)
+      const current = await prepareDossierProcurement(requestRef, call)
       const stable = (value: typeof material) => ({ ...value, request: { ...value.request, values: value.request.values.filter((field) => field.id !== "ageDays") } })
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },

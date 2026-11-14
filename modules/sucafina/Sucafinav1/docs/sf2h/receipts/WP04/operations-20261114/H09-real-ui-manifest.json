@@ -1,0 +1,70 @@
+{
+  "schema": "astra-operations.wp04.real-procurement-ui-proof.v1",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+  "beforeH09": {
+    "blob": "b65dc1e315f88dd535881b1f8a895661e95e485b",
+    "sha256": "e4ae25d909719b84d26b7926963520b4e858f8d5629264afa0766d4111261c06",
+    "bytes": 52614
+  },
+  "after": {
+    "blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+    "sha256": "1e3c4025a9cda489246cb4309ca157a0248476f15c7ca31bfc45e872c783581c",
+    "bytes": 62958
+  },
+  "scope": [
+    "Add ninth owned host scenario H09; preserve eight original cases and H01 dossier additions",
+    "Make existing fixture origin optional; default unchanged",
+    "Real published decisionApplyForms/decisionApplyScript renders real authorized case projection with htmlPolicy CSP",
+    "Browser POST original Request passed unchanged into real createApplication/Procurement HTTP/producer/SQLite",
+    "Real reviewDigest, explicit checkbox before apply, exact frozen body/key after successful response withheld at delivery",
+    "One domain mutation/history entry and one durable receipt; real receipt body identical on retry after owned review cache clear",
+    "Release owner browser lease then stop own HTTP server and SQLite fixture; actual browser process closed by exact owner finalizer"
+  ],
+  "notProved": [
+    "No process restart; cache clear only",
+    "No model/provider/native session acceptance",
+    "No human timing or usability acceptance",
+    "Controlled fixture page composes published UI; does not prove generic Dashboard/Planner HTTP or complete CLI workbench binding"
+  ],
+  "ciRequired": {
+    "runner": "bun",
+    "cwd": "modules/sucafina",
+    "files": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    },
+    "selection": "Explicit ordered ./ paths: startup owns spawn, H09 leases, lifecycle owns final process proof; no filtering/isolation/reordering flags.",
+    "sourceValidation": "Static source inspection only; no local execution",
+    "status": "pending"
+  },
+  "ownerFixtureRefs": [
+    "audit-ci/owner-refresh/OPS03-intake-manifest.json",
+    "w5-browser-diagnostic-intake.json"
+  ],
+  "deliveryFault": "After the original Application returns HTTP200 with real receipt, fixture withholds that response and sends synthetic HTTP503. Producer result is recorded and asserted separately; no fake domain/receipt response is supplied.",
+  "proofRecord": "SF_PROCUREMENT_UI_PROOF is contextual evidence only; H09 case and owner startup/finalizer must pass.",
+  "review_snapshot_superseded": {
+    "blob": "99be0fb244940c58a8f2e7a5e088d4eae2f3edf7",
+    "sha256": "54da67248f85b134aa680cde803d9f74168342894ca8895b8dfa9c340a7e698f",
+    "bytes": 62355
+  },
+  "review_fixes": [
+    {
+      "finding": "Never alias imports (root AGENTS)",
+      "change": "Only H09 loads const { expect } = await import(\"@playwright/test\"); no import alias and eight previous cases unchanged."
+    },
+    {
+      "finding": "Browser GET lacks Idempotency-Key but ui-authority admission requires commandId",
+      "change": "Explicit H09-only allowCaseNavigation opt-in generates randomUUID for GET sf_case_read without key, following read identity of CLI host. POST/default behavior unchanged; browser initial and reload keys asserted null."
+    }
+  ],
+  "independent_review": {
+    "reviewer": "ci_coordination",
+    "reviewed_blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+    "result": "No additional material source defect confirmed; source review, not execution."
+  }
+}

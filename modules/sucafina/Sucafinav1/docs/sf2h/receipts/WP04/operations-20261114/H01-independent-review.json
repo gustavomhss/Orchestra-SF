@@ -1,0 +1,141 @@
+{
+  "schema": "astra-operations.independent-H01-source-review.v1",
+  "reviewer": "/root/wp06_audit",
+  "author": "/root/wp04_audit",
+  "scope": "Frozen H01-only patch and shared test fixture scheduling, before H09; no review of later H09 code is claimed.",
+  "base": {
+    "product": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "testBlob": "3dbad125693da9898b1435eff2a1108476c09f40"
+  },
+  "reviewed": {
+    "testBlob": "b65dc1e315f88dd535881b1f8a895661e95e485b",
+    "sha256": "e4ae25d909719b84d26b7926963520b4e858f8d5629264afa0766d4111261c06",
+    "bytes": 52614
+  },
+  "reconstruction": "Applied the saved unified diff to the exact saved W4 before-image in this audit directory; each context/removal matched and the resulting Git blob/SHA256 match the author manifest. No product file changed.",
+  "conclusion": "NO_CONFIRMED_MATERIAL_DEFECT_OR_BLOCKER_IN_REVIEWED_SCOPE",
+  "requiresHostedExecution": true,
+  "sourcePins": [
+    {
+      "path": "audit-wp04/patches/OPS-HOST-01B-tests/host-integration.before.ts",
+      "bytes": 46778,
+      "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+      "gitBlob": "3dbad125693da9898b1435eff2a1108476c09f40"
+    },
+    {
+      "path": "audit-wp04/patches/OPS-HOST-01B-tests/host-integration.patch",
+      "bytes": 9557,
+      "sha256": "89e30d4dbdb0ffa38e99342fdd9c4b4fb225e855c31649519b7206c7e1f7d4e0",
+      "gitBlob": "ada6a47d40fc9afce0496b6c81bc8a7a626faa1b"
+    },
+    {
+      "path": "audit-wp04/patches/OPS-HOST-01B-tests/manifest.json",
+      "bytes": 3116,
+      "sha256": "cfb9c670c37085647ad6e92e93cb01b61eb9a84c39600c1ed24646faf1b6604a",
+      "gitBlob": "362b51b7aa01b5dafc2fcf8d49e10456d6d6289b"
+    },
+    {
+      "path": "audit-wp06/H01-independent-review/host-integration.H01-frozen.ts",
+      "bytes": 52614,
+      "sha256": "e4ae25d909719b84d26b7926963520b4e858f8d5629264afa0766d4111261c06",
+      "gitBlob": "b65dc1e315f88dd535881b1f8a895661e95e485b"
+    },
+    {
+      "path": "audit-ci/owner-refresh/OPS-HOST-01B/business-services.after.ts",
+      "bytes": 39083,
+      "sha256": "68217f68873c5f550572e6bbdad7e378626ad3193542f508581a86baa922fb12",
+      "gitBlob": "9aee116a091c684ba467f81316d2fb915b3f8758"
+    },
+    {
+      "path": "audit-wp04/review-intake/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "bytes": 2021,
+      "sha256": "1d1585976b500b5b6e1eb3f99080ae9234aed277b4022691206c61df54d1d530",
+      "gitBlob": "454524fc49ec61c1b8984e7bfe8c1e0a765a242b"
+    },
+    {
+      "path": "audit-wp04/review-intake/modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+      "bytes": 7224,
+      "sha256": "71abb6b0548eff9608875a41f0a20892503aef63178394e1e0528d6bc84aa4ff",
+      "gitBlob": "2eb9ee92719402d137aca96c4861c086c6526971"
+    },
+    {
+      "path": "operations/modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+      "bytes": 13511,
+      "sha256": "887fc25028e7f69fa6cdfec2a5e31eb6be82dc97182045b43adc658084f564fe",
+      "gitBlob": "ed88a6ff4f6c42eecfd80ba13824e8122fcc774e"
+    }
+  ],
+  "preservation": {
+    "originalTitles": [
+      "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+      "real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence",
+      "private original evidence is immutable and a replacement Request cannot revive historical facts or receipts",
+      "Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent",
+      "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+      "a durable application recovers after a lost commit response and cleared review cache",
+      "C12 rejects another review proof, changed human intent and an expired observed review",
+      "C12 rereads the real review producer before the first application and rejects a changed source"
+    ],
+    "count": 8,
+    "changedTestBodies": [
+      "real host composes C06 confirmation, current evidence routing and the WP09 dossier"
+    ],
+    "otherSevenBodiesByteIdentical": true,
+    "addedRuntimeOrPolicyCode": false,
+    "retainedH01Assertions": [
+      "Real C06 issue/observe/human confirm and valid projection",
+      "Different principal routing and current evidence context",
+      "No-comparison dossier limitations and no documents",
+      "Repeated unchanged dossier equality and no procurement mutation",
+      "Unrelated description preserves C06; material subject edit stales it",
+      "Attachment without extraction remains unavailable",
+      "Revoked principal denies C06/context reads"
+    ]
+  },
+  "reviewFindings": [
+    {
+      "id": "H01-R1",
+      "area": "Real consumer and comparison",
+      "result": "SUPPORTED",
+      "evidence": "Test invokes business.procurementDossier.prepare with an individually issued real Request source. The current business wrapper calls actual procurement read/compare and actual sourcingEvidence; the test does not substitute either output. Equality compares dossier.sourcing and dossier.comparison to a separate actual producer observation."
+    },
+    {
+      "id": "H01-R2",
+      "area": "FX and proposal source",
+      "result": "SUPPORTED",
+      "evidence": "The persisted Request has A USD32400 and B EUR28000, submitted base USD and FX EUR1.08 while settings EUR2. The assertions require offers/version, sorted submitted rates, proposalTerms.sourceRef, and B converted30240. A producer mistakenly using current EUR2 would yield56000 and fail. Recorded choiceB with justification is asserted; Supplier register remains not-selected."
+    },
+    {
+      "id": "H01-R3",
+      "area": "Current source binding",
+      "result": "SUPPORTED",
+      "evidence": "Request version, full context, nonempty values, and every value.sourceRefs are checked against the same actual source evidence. Dossier draft sourceRefs must contain that evidence and domainApplied must remain false. Procurement snapshot equality around the read proves no domain write in this fixture."
+    },
+    {
+      "id": "H01-R4",
+      "area": "Interleaving authenticity",
+      "result": "SUPPORTED",
+      "evidence": "The persistence wrapper awaits sources.transaction and returns its original result unchanged. It recognizes the real sourcing facts shape only after the transaction returns. remaining=2 skips the initial facts read and injects before the second producer comparison/reread. Scheduling is cleared before nested work, preventing recursive reuse. Callback flags must be observed, so absence of the wrapper/reread cannot silently pass."
+    },
+    {
+      "id": "H01-R5",
+      "area": "Source edit and revocation fences",
+      "result": "SUPPORTED_WITH_QUALIFICATION",
+      "evidence": "Source edit writes actual quoteA through the same lifecycle/SQLite adapter; revocation removes the actual fixture principal used by authenticate. Neither fabricates a PortResult or revalidation boolean. Canonical dossier calls revalidateProcurement and translates false into denied/access-changed with no value; next old-selector call must be stale/denied. Source mutation can invalidate the reference before comparing sourcing content, so this is a composition fence proof rather than isolation of one equality member."
+    },
+    {
+      "id": "H01-R6",
+      "area": "Regression discrimination",
+      "result": "SUPPORTED_BY_SOURCE",
+      "evidence": "Without OPS-HOST-01B, the dossier lacks sourcing and available proposal terms, and its path does not emit the matching sourcing facts reads; positive equality and callback-hit assertions therefore fail. Existing C06/attachment checks and all other seven test bodies remain unchanged."
+    }
+  ],
+  "limitations": [
+    "Static cold review does not establish a green Actions result. The exact composed candidate must execute H01 with the OPS01B wrapper.",
+    "Controlled Request quotes are seeded directly into the real store while the Request is editable; this does not prove the full legal sourcing approval workflow, covered elsewhere.",
+    "The fixture uses deterministic local bearer principals and real test authority; it is not native login, Entra, human-timing or GNATIVE proof.",
+    "Source-change invalidates the selected Request source as well as its data; the case does not isolate the sourcing field equality condition alone.",
+    "H01 validates business.procurementDossier, distinct from the separately passing CLI dossier runtime/browser consumer.",
+    "No additional test body, assertion, deadline, product policy or source was edited by this reviewer."
+  ]
+}
