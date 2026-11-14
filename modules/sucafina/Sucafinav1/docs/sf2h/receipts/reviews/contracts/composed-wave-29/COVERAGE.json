@@ -1,0 +1,468 @@
+{
+  "schema": "sf2h.mission29.independent-review.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "mission": 29,
+  "actor": "S3-R3",
+  "candidate": {
+    "sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+    "parent": "d81dc320a82044009dd4c39f2e5d062ad46719a9"
+  },
+  "scope": "Revisão delimitada de runtime, provas nativas e evidências; não aprovação final.",
+  "verdict": "REQUEST_CHANGES",
+  "acceptance": "HOLD",
+  "independence": {
+    "product_authorship": false,
+    "reviewer_model_environment_declared": "GPT-6 Astra Pro",
+    "native_effective_model": null,
+    "backend_session_id": null,
+    "backend_session_id_reason": "Não exposto; não substituído por nome lógico de agente.",
+    "logical_reviewer": "/root",
+    "read_only_auxiliaries": [
+      "/root/runtime_mcp",
+      "/root/atlas_native",
+      "/root/ci_gates"
+    ],
+    "independent_review_count": 1,
+    "three_required_final_approvals": "Não concedidas por estes auxiliares."
+  },
+  "constraints": {
+    "remote_access": "GitHub MCP only",
+    "product_writes": 0,
+    "runtime_executions": 0,
+    "product_tests_executed": 0,
+    "typechecks_executed": 0,
+    "guards_executed": 0,
+    "ci_dispatches": 0,
+    "merge": false,
+    "GLOBAL_RELEASE": false,
+    "local_analysis": "Somente leitura de dados/textos, inventário e hashes; não importou/executou código do produto."
+  },
+  "observation_limit": {
+    "actions_inventory_closed_at": "2026-11-14T21:08:32Z",
+    "candidate_fixed": true,
+    "polling": "Consultas delimitadas; sem espera por finalfreeze ou novos runs.",
+    "native_surface": "Nenhuma capability Orchestra/SessionV2/Relay/scanner nativo anunciada na consulta ao catálogo desta superfície. Exercício proibido nesta missão.",
+    "global_host_unavailability_asserted": false,
+    "global_ci_unavailability_asserted": false
+  },
+  "publication": {
+    "branch": "review-contracts",
+    "pr": 51,
+    "initial_head": "097e545ac8dd53e97cae8c12dec47faab5b3f576",
+    "initial_tree": "27aefc85b8e8160d7ec14636153b9254189436f6",
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/contracts/composed-wave-29/",
+    "early_finding_commit": "0490eff57e2cd14b7043377eb5992552b7d529f9",
+    "early_finding_blob": "cd0f5f0de74e3e59be75c29479a3d9beceecb588",
+    "early_finding_readback": "Exact content equality observed",
+    "delivery_kind": "Novos recibos de revisão; NÃO envelope D/G8.",
+    "final_commit_identity": "Informada externamente após publicação; nenhum SHA futuro ou hash próprio é autodeclarado."
+  },
+  "canonical_scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "status": "Preserved; not1610checks executed by this review."
+  },
+  "assignment": {
+    "primary": [
+      "WP10.T03"
+    ],
+    "review_part": "RUN-REVIEW-NATIVE",
+    "branches": [
+      "sf2-review-native"
+    ],
+    "review_wps": [
+      "WP00",
+      "WP01",
+      "WP03",
+      "WP06",
+      "WP08",
+      "WP09",
+      "WP10",
+      "WP11",
+      "WP12",
+      "WP13",
+      "WP14"
+    ]
+  },
+  "review_assignment": [
+    {
+      "id": "RUN-REVIEW-NATIVE",
+      "actor": "S3-R3",
+      "physical_slot": "S3-A",
+      "start_minute": 75,
+      "scope": "IAreal, profile/skill, shipping,8 packsMCP, Atlas/scanner, Relay/Schedule/documentos/isolamento/retomada.",
+      "authoring": "none",
+      "correction_writer": "Owner ativo do WP; WP07=S3 após 75."
+    }
+  ],
+  "assigned_criteria_count": 40,
+  "criteria": [
+    {
+      "id": "WP10.CMP.01",
+      "text": "Todas as capacidades antigas e novas, três superfícies, quatro rotinas, oito gráficos e estados relevantes têm cobertura rastreável.",
+      "text_sha256": "40187535ebf92cf14650b1533e61afc6823ca157749b6479faacabad66b8b76b",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.CMP.02",
+      "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados.",
+      "text_sha256": "71c495fa08cb2ef54482267f6511d6083f11985aa1329b1dea8707776a4ddc99",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "text_sha256": "e6ca5af07c6e43aee0672ea10f784e4028267884df194e2405e18eb257a5a8e6",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.CMP.40",
+      "text": "Incluir empacotamento Atlas, APP src/APP browser separados, provas AM01-AM06, transferências e rechecagem do candidato.",
+      "text_sha256": "fda9575145637d0f6904261e925bed79bec87dfbd9565a17097869ac4739beb5",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.CMP.60",
+      "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+      "text_sha256": "b52d5d52476d152bf5368ad8420026606c642f4683b4838be5ebb31eb46c3df3",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.DOD.01",
+      "text": "Todos os WPs e suas tasks satisfazem os axiomas locais e as jornadas integradas; três pareceres independentes não têm achado obrigatório aberto.",
+      "text_sha256": "506b0d1fa1aabc109a0832ec701b9437a45aff117056b15a59f64e0848808ccb",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.DOD.02",
+      "text": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D.",
+      "text_sha256": "b9ef9ce7fdfcd1845c0b122ab4656ce1bf0811689e02e96ce12e09b810d3c129",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.DOD.10",
+      "text": "As entregas residentes atribuídas a WP10 têm produção, consumo e provas reais completos.",
+      "text_sha256": "ef7b0229c3898b377261e3fe0ef262e3916d6c44166015e66e9f270ac621ee57",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.DOD.40",
+      "text": "Runtime, Atlas, composição, CI e julgamentos têm atores/paths/recibos explícitos; cinco perfis/18 skills/oito packs e Atlas são integrados em G4.",
+      "text_sha256": "ab545367443a6f99c7bd78c62cc95a709b8146b4e3df6befc2a8fcfec66dd66a",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.DOD.60",
+      "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+      "text_sha256": "ba87c2290e1899c5677a3403a0f6029bb8a474d4cbe70f57e614b7eb954f686c",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.INV.01",
+      "text": "Só WP10 escreve composição compartilhada; defeitos em arquivos de domínio retornam ao owner, com revisão do delta.",
+      "text_sha256": "2b61fac4587720e3e4bf6c6949f7aba6f3127c90a439b067bee67fbc666ce513",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.INV.02",
+      "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha.",
+      "text_sha256": "8a84837206258ce531504013fbc375b2a9a933bb04d59e34c9722664395725ca",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.INV.10",
+      "text": "WP10 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "text_sha256": "d79c9e76860bee425e003cff2efcf7ecc162ba583071e14b067916416de7ba39",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.INV.40",
+      "text": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção.",
+      "text_sha256": "0d16fcdbee7cd8c9db1e58d39254705df8c4ff262f6fa953b9ef9fb61c506402",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.INV.60",
+      "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
+      "text_sha256": "f99e1b224b8d6aed72b5f21e273de84f70dd70601389a953f1d1fd59ad645191",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.QLT.01",
+      "text": "Evidências são pequenas e suficientes para julgar cada resultado; validade é do comportamento observado, não da quantidade de testes.",
+      "text_sha256": "8a7921b9eeeee41ac087e68be9e6ddc33528691f1ef5113e73ef10ada0265c53",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.QLT.02",
+      "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números.",
+      "text_sha256": "7000c8a944e04b3469ce05b632ccb45317102e8bf47b134df3426663f2de314f",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "text_sha256": "403165f4c1979410c66639580fc3e4f70352d895c0f3bbbae3440e5f9ac38de2",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.QLT.40",
+      "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
+      "text_sha256": "cb6bf1157d74b92384cd17bb29d1dbe3744d78dca4551b8bd26cfe4f39d96537",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.QLT.60",
+      "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+      "text_sha256": "407f8aec1a15ed2b7eba2304c10a7813b61fc855a4c22f1bd6ce7946bfca973f",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.SUC.01",
+      "text": "As jornadas de contribuição, comparação, decisão, reunião e retomada funcionam com identidades e dados compartilhados no módulo real.",
+      "text_sha256": "28fd807456bb40948f384fff6882878288d413a45bc24222316330b56ddee731",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.SUC.02",
+      "text": "André e o time podem completar suas tarefas sem reconstruir contexto em ferramentas auxiliares para os cenários cobertos.",
+      "text_sha256": "9991ede54acc0ce5da2c62124f0072e145693d61c2087e19a340fe9656b01c6e",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "text_sha256": "06dd2db94e7088ff3beedf93affeccda7784123c96e9e03215dbfb816ffea5ea",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.SUC.40",
+      "text": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou.",
+      "text_sha256": "dddb7a5962653bf5145b12c45625c9a5e513627aac6dc3323f2f4e8b0d715830",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.SUC.60",
+      "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
+      "text_sha256": "eb651497041e7357824a0ca404d9f346f02f557b8bb4c3c5313a7bfb4337e0aa",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.T03.CHK.01",
+      "text": "Juiz identifica se o comparador confunde margem e economia, se o aging usa evento errado ou se dados restritos escapam por relatório.",
+      "text_sha256": "35c42d9892a339062edbebb5f7b8b1bf87798261c4955aa1c6f8f5a86d0a6543",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Cobertura complementar UX/semântica cabe aos pareceres S1-R1/S2-R2. S3-R3 não executou jornada visual/numeral e não concede esses aceites; Finance/Reports têm limites preservados."
+    },
+    {
+      "id": "WP10.T03.CHK.02",
+      "text": "Juiz de UX percorre contribuição e conclusão, não apenas a home de André.",
+      "text_sha256": "793e9ba2abba24b754f7b37e6275433c5b8fb58dbf8ace8f075155d0f506b12d",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Cobertura complementar UX/semântica cabe aos pareceres S1-R1/S2-R2. S3-R3 não executou jornada visual/numeral e não concede esses aceites; Finance/Reports têm limites preservados."
+    },
+    {
+      "id": "WP10.T03.CHK.03",
+      "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada.",
+      "text_sha256": "423917ead948191c0cbe60a40d96a5a1bb5f007be65cb7cbfc37d30553cdf0ea",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.T03.CHK.40",
+      "text": "Cada seção dos três pareceres identifica reviewer e authors; seção com interseção não fecha aceite até ser reatribuída.",
+      "text_sha256": "7907c3239db33d47a9be8dbe6263100f9ac2ee73494ffb67e0cfca9d1444d2e1",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.T03.CMP.01",
+      "text": "Produto/UX cobre tarefa e conclusão; semântica cobre cálculo, estado, papéis, fontes, versões e automações.",
+      "text_sha256": "d991c647d7ec95c0e939ac4f4d958c12d7c5ecc97e357aab1aea917354cde492",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Cobertura complementar UX/semântica cabe aos pareceres S1-R1/S2-R2. S3-R3 não executou jornada visual/numeral e não concede esses aceites; Finance/Reports têm limites preservados."
+    },
+    {
+      "id": "WP10.T03.CMP.02",
+      "text": "Cobrir produto/UX, finanças/permissões/persistência e IA/Relay/integração com três revisores sem autoria nos arquivos julgados; cobrir substituição de revisor caso um assuma WP14.",
+      "text_sha256": "fa8f5ea64f9ba8bd24d07f9c16dafca66e2c3c8a8e1434c8851c90eadde5b3b8",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Cobertura complementar UX/semântica cabe aos pareceres S1-R1/S2-R2. S3-R3 não executou jornada visual/numeral e não concede esses aceites; Finance/Reports têm limites preservados."
+    },
+    {
+      "id": "WP10.T03.CMP.40",
+      "text": "CobrirUX, semântica, IA/MCP/Atlas/Relay/documentos/WP14 e todas as fontes de skills.",
+      "text_sha256": "442267fe8baa8c69a6ac4f4e309cc55ec9b9f7df1cedd8b3c3d76e4cc21ec793",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.T03.DOD.01",
+      "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias.",
+      "text_sha256": "0a430b6b16e02562086b68adb48861f9bf687901053a3e6c1845a12cd1d4a247",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.T03.DOD.40",
+      "text": "Três pareceres consolidados sem autojulgamento no candidato final.",
+      "text_sha256": "7fa33569d5ed453d853d88ef8879b6618ab7f43bd4d753f591b50fbee4a76f0a",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.T03.INV.01",
+      "text": "Nenhum achado que viole axioma obrigatório pode ser reclassificado como opcional só para encerrar.",
+      "text_sha256": "51f143fd5b34a79f0788413b227b9be720f9da9b73d8aa1cacc3024019d9c3d4",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.T03.INV.40",
+      "text": "Escrever uma correção remove o direito de aceitar aquela seção independentemente.",
+      "text_sha256": "f2fbb06a41f156e32b425d5ad42f0c01771b6ac10772dfb3f5d6582a9558a809",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    },
+    {
+      "id": "WP10.T03.QLT.01",
+      "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência.",
+      "text_sha256": "1e874fbbfbb7264bc66d8e6772ed746aa95fd40368de96d22377802cc034357b",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.T03.QLT.40",
+      "text": "Achado registra critério/evidência/impacto/correção/recheck e SHA.",
+      "text_sha256": "3e20cd3baee8ff98b2e8865dbf0321823ff0bc697c2d1202866b320ba8fca1ed",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.T03.SUC.01",
+      "text": "Um revisor sem autoria da implementação consegue sustentar o aceite e explicar seus limites concretos.",
+      "text_sha256": "4a84886864ffec1e093c9628b3da8257f9b023dccfce4773961de287ddaccd74",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Requisito preservado; evidência e limites desta revisão em AM-MATRIX/GATE-MATRIX/FINDINGS. Nenhum aceite de produto concedido."
+    },
+    {
+      "id": "WP10.T03.SUC.40",
+      "text": "Revisão encontra lacunas sem contar S0-A/B builders como revisores livres.",
+      "text_sha256": "5a84f6145294a71bb41929761c97e78e9072363dd0181f6eab45124ede303fb5",
+      "source_status": "NOT_RUN",
+      "review_disposition": "DOCUMENTED_WITHOUT_PRODUCT_ACCEPTANCE",
+      "product_acceptance": "NOT_GRANTED",
+      "note": "Independência/ownership/imutabilidade preservadas nesta revisão; isso não valida a campanha inteira nem transfere aceite para outro SHA."
+    }
+  ],
+  "required_independent_reviews": 3,
+  "this_review_count": 1,
+  "product_completion": "NOT_GRANTED",
+  "bounded_review_completion": "Report and handoff complete; release remains HOLD."
+}
