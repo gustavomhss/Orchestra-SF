@@ -15,6 +15,19 @@ function projection(value: BusinessEvidenceResolution) {
   return value.authorizedProjection
 }
 
+function movingClockProof(clock: { at: string; stepMs: number; environmentReads: number }, before: { at: string; environmentReads: number }, observedAt: readonly string[]) {
+  const observations = [...new Set(observedAt)]
+  const environmentReads = clock.environmentReads - before.environmentReads
+  expect(clock.stepMs).toBe(1)
+  expect(environmentReads).toBeGreaterThan(1)
+  expect(Date.parse(clock.at) - Date.parse(before.at)).toBe(environmentReads * clock.stepMs)
+  expect(observations.length).toBeGreaterThan(1)
+  expect(observations.every((value) => Number.isFinite(Date.parse(value)) && Date.parse(value) > Date.parse(before.at) && Date.parse(value) <= Date.parse(clock.at))).toBe(true)
+  expect(observations.every((value, index) => index === 0 || Date.parse(value) > Date.parse(observations[index - 1]!))).toBe(true)
+  return { stepMs: clock.stepMs, environmentReads, startedAt: before.at, finishedAt: clock.at,
+    distinctSourceObservations: observations.length, firstObservedAt: observations[0]!, lastObservedAt: observations.at(-1)! }
+}
+
 test("C17 real Atlas preserves Dashboard source metadata and durable memory after reopen", async () => {
   expectSpawn(import.meta.path)
   await withAtlasConsumer(async (f) => {
@@ -90,6 +103,8 @@ test("C17 real Atlas preserves Dashboard source metadata and durable memory afte
 test("C17 Atlas capability validates its schema and denies caller-selected ownership and another principal", async () => {
   expectSpawn(import.meta.path)
   await withAtlasConsumer(async (f) => {
+    f.clock.stepMs = 1
+    const beforeClock = { at: f.clock.at, environmentReads: f.clock.environmentReads }
     const sources = await f.sources()
     const altered = { ...sources.topic, target: { ...sources.topic.target, fields: ["status", "notes"] }, refDigest: "" }
     const forged = { ...altered, refDigest: digestSfEvidenceRef(altered) }
@@ -105,7 +120,7 @@ test("C17 Atlas capability validates its schema and denies caller-selected owner
     const owner = deriveSfMemoryOwner(authorizedCase.context, authorizedCase.case)
     if (!owner) throw new Error("Authorized case did not produce a memory owner")
     const request = { selectionRefs: [encodeCaseRef(budget.caseRef)], similarityCriteria: ["decision-type"], period: atlasPeriod, limit: 5 }
-    const beforeWork = { recalls: f.memoryWork.recalls, originals: f.memoryWork.originals }
+    const beforeWork = { recalls: f.memoryWork.recalls, originals: f.memoryWork.originals, observations: f.memoryWork.sourceObservedAt.length }
     const ranked = await f.phase("capability.rank-and-reauthorize", () => f.dispatch("sf_decision_recall", request))
     const work = { protectedReads: f.memoryWork.recalls - beforeWork.recalls, originalReads: f.memoryWork.originals - beforeWork.originals }
     expect(ranked.status).toBe("ok")
@@ -113,6 +128,8 @@ test("C17 Atlas capability validates its schema and denies caller-selected owner
     // Two independent passes, each with a protected observation and a new read at egress.
     expect(work.protectedReads).toBe(4)
     expect(work.originalReads).toBeGreaterThan(0)
+    const movingClock = movingClockProof(f.clock, beforeClock, [...budget.sourceObservedAt, ...f.memoryWork.sourceObservedAt.slice(beforeWork.observations)])
+    expect(movingClock.distinctSourceObservations).toBe(work.protectedReads + 1)
     const output = decodeSfOperationOutput("sf_decision_recall", ranked.result)
     if (!output.ok) throw new Error("Recall output did not match the closed production schema")
     expect(output.value.matches).toHaveLength(1)
@@ -129,7 +146,7 @@ test("C17 Atlas capability validates its schema and denies caller-selected owner
     console.info("SF_ATLAS_DASHBOARD_PROOF", JSON.stringify({ scenario: "capability-authority", write: budgetReceipt,
       matchedMemoryRecordRef: output.value.matches[0]!.memoryRecordRef, matchedCaseRef: output.value.matches[0]!.caseRef,
       schema: "sf_decision_recall", receiptKind: ranked.receipt.kind, referenceForgery: rejected.status,
-      ownerArguments: "needs-input", otherPrincipal: other.status, work }))
+      ownerArguments: "needs-input", otherPrincipal: other.status, work, movingClock }))
   }, "capability-authority")
 }, 180000)
 
@@ -288,6 +305,8 @@ test("C17 the qualified real scanner refuses unsafe memory and fails closed when
 
 async function rejectConcurrentAtlasMutation(mutation: "source" | "access" | "capture") {
   await withAtlasConsumer(async (f) => {
+    f.clock.stepMs = 1
+    const beforeClock = { at: f.clock.at, environmentReads: f.clock.environmentReads }
     const sources = await f.sources()
     const budget = await f.ledger([sources.budget], "Only the unchanged authorized observation may leave the recall boundary.")
     const receipt = await f.call("sf_case_read", { caseRef: encodeCaseRef(budget.caseRef) }, (context) => f.runtime.current.business.context.emitFromLedger(budget.eventRef, context))
@@ -325,6 +344,8 @@ async function rejectConcurrentAtlasMutation(mutation: "source" | "access" | "ca
     expect(JSON.stringify(result)).not.toContain(receipt.eventId)
     expect(JSON.stringify(result)).not.toContain(budget.event.rationale)
     expect(f.memoryWork.recalls - start).toBe(boundary)
+    const movingClock = movingClockProof(f.clock, beforeClock, [...budget.sourceObservedAt, ...f.memoryWork.sourceObservedAt])
+    expect(movingClock.distinctSourceObservations).toBe(boundary + 1)
     const persisted = await f.runtime.current.persistence.transaction("dashboard", async (snapshot) => {
       const state = object(snapshot.data.__sfProductV1)
       const capture = object(object(object(object(state.atlas)[owner]).originals)[sources.budget.refDigest])
@@ -336,7 +357,7 @@ async function rejectConcurrentAtlasMutation(mutation: "source" | "access" | "ca
     if (mutation === "access") expect(persisted.role).toBe("viewer")
     if (mutation === "capture") expect(persisted.captureRefId).toBe(`${sources.budget.refId}:concurrent-change`)
     console.info("SF_ATLAS_RECALL_REGRESSION", JSON.stringify({ mutation, changedAfterProtectedRead: boundary,
-      protectedReads: f.memoryWork.recalls - start, mutationCount: changed.count, result: result.status, persistedMutationPreserved: true }))
+      protectedReads: f.memoryWork.recalls - start, mutationCount: changed.count, result: result.status, persistedMutationPreserved: true, movingClock }))
   }, `recall-concurrent-${mutation}`)
 }
 

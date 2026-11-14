@@ -2,6 +2,7 @@ import { createMemoryEmit, createMemoryRead, versioned } from "@orchestra/atlas-
 import type { MemoryRecord, NamedScanner } from "@orchestra/atlas-boundary/business-memory-ports"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope, MemoryWriteReceipt, SfAtlasProjection } from "../contracts/business-context.ts"
+import type { SourceRef } from "../contracts/context.ts"
 import type { DecisionCasePort, DomainPortHost } from "../contracts/ports.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -154,7 +155,7 @@ export function createSfAtlasMemory(input: {
       for (const record of records) {
         for (const resolution of record.resolutions) {
           const again = await input.evidence.resolve(resolution.ref, call)
-          if (again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(again.authorizedProjection) !== digestSfValue(resolution.authorizedProjection) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call)) return { status: "unavailable" as const }
+          if (again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(projectionForComparison(again)) !== digestSfValue(projectionForComparison(resolution)) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call)) return { status: "unavailable" as const }
         }
       }
       const latest = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
@@ -203,11 +204,23 @@ function expandEvidence(ref: BusinessEvidenceRef): BusinessEvidenceRef[] {
 
 type AtlasRecallRecord = Extract<Awaited<ReturnType<ReturnType<typeof createSfAtlasMemory>["recall"]>>, { status: "ok" }>["records"][number]
 
+/** Only fresh DomainProjection observation metadata is volatile; captures and historical projections stay exact. */
+function projectionForComparison(resolution: BusinessEvidenceResolution) {
+  const projection = resolution.authorizedProjection
+  if (resolution.state !== "fresh" || !projection || !("values" in projection)) return projection
+  const sourceIdentity = (reference: SourceRef) => ({ ...reference, observedAt: "" })
+  return { ...projection,
+    context: { ...projection.context, sourceRefs: projection.context.sourceRefs.map(sourceIdentity) },
+    components: projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(sourceIdentity) })),
+  }
+}
+
 /** Observation timestamps may advance; every field that determines authority, meaning or output must agree. */
 function recallRecordFingerprint(record: { envelope: BusinessMemoryEnvelope; entry: SfAtlasProjection["entry"]; case: AuthorizedCaseProjection; resolutions: readonly BusinessEvidenceResolution[]; recordDigest: string }) {
   return digestSfValue({ envelope: record.envelope, entry: record.entry, recordDigest: record.recordDigest,
     case: Object.fromEntries(Object.entries(record.case).filter(([key]) => key !== "checkedAt")),
-    resolutions: record.resolutions.map((resolution) => Object.fromEntries(Object.entries(resolution).filter(([key]) => key !== "checkedAt"))) })
+    resolutions: record.resolutions.map((resolution) => Object.fromEntries(Object.entries(resolution.authorizedProjection
+      ? { ...resolution, authorizedProjection: projectionForComparison(resolution) } : resolution).filter(([key]) => key !== "checkedAt"))) })
 }
 
 /** Rank only records obtained from the protected reader, with S4's before/egress proofs. */

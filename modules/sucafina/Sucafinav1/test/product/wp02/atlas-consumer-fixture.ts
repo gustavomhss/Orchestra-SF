@@ -26,7 +26,7 @@ import { createDashboardSourceIssuer, createDashboardRecordSourceIssuer } from "
 import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
 import { enqueueSfLedgerEvent } from "../../../product/integration/ledger-outbox.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
 import type { CaseLedgerEvent } from "../../../product/contracts/decisions.ts"
 import type { PortResult } from "../../../product/contracts/ports.ts"
 import type { SfStateResult } from "../../../product/contracts/state.ts"
@@ -87,6 +87,15 @@ export async function prepareAtlasScanner(directory: string) {
 
 type AtlasPhase = <T>(name: string, work: () => T | Promise<T>) => Promise<T>
 
+function observedSourceTimes(resolutions: readonly BusinessEvidenceResolution[]) {
+  return resolutions.flatMap((resolution) => {
+    const projection = resolution.authorizedProjection
+    return resolution.state === "fresh" && projection && "values" in projection
+      ? [...projection.context.sourceRefs, ...projection.components.flatMap((component) => component.sourceRefs)].map((reference) => reference.observedAt)
+      : []
+  })
+}
+
 /** Business ledger text is fixture data; source reads, admission, outbox, Atlas and recall are production. */
 export async function withAtlasConsumer(work: (fixture: Awaited<ReturnType<typeof createFixture>>) => Promise<void>, scenario: string) {
   const started = performance.now()
@@ -113,9 +122,9 @@ async function createFixture(directory: string, phase: AtlasPhase) {
   const stateDirectory = path.join(directory, "product")
   await mkdir(stateDirectory, { mode: 0o700 })
   const installationId = randomUUID(), projectId = randomUUID()
-  const clock = { at: "2026-11-13T08:00:00Z" }
+  const clock = { at: "2026-11-13T08:00:00Z", stepMs: 0, environmentReads: 0 }
   const fault: { stage?: "before-commit" | "after-commit"; trips: number } = { trips: 0 }
-  const memoryWork: { recalls: number; originals: number; afterRecall?: (index: number) => Promise<void> } = { recalls: 0, originals: 0 }
+  const memoryWork: { recalls: number; originals: number; sourceObservedAt: string[]; afterRecall?: (index: number) => Promise<void> } = { recalls: 0, originals: 0, sourceObservedAt: [] }
   const actors = ["dashboard-reviewer-A", "dashboard-reviewer-B"] as const
   const active = new Set<string>(actors)
   const bundleRoot = path.resolve(import.meta.dir, "../../../product/ai")
@@ -174,7 +183,11 @@ async function createFixture(directory: string, phase: AtlasPhase) {
       authenticate: async (incoming, context) => {
         const actor = incoming.headers.get("x-test-principal")
         return actor && active.has(actor) && context ? resolve(actor, [...context.roleMap], (group) => group === "atlas-reviewers") : null
-      }, environment: async () => ({ at: clock.at, id: randomUUID, directory: actors.map((id) => ({ id, name: id })) }),
+      }, environment: async () => {
+        clock.environmentReads++
+        if (clock.stepMs) clock.at = new Date(Date.parse(clock.at) + clock.stepMs).toISOString()
+        return { at: clock.at, id: randomUUID, directory: actors.map((id) => ({ id, name: id })) }
+      },
       grants: actors.map((principalRef) => ({ principalRef, namespaces: ["cases", "preferences", "atlas", "outbox"],
         operations: ["sf_dashboard_read", "sf_case_draft", "sf_case_read", "sf_source_get", "sf_evidence_get", "sf_context_get", "sf_decision_recall", "sf_freshness_check"] } satisfies SfProductGrant)),
       commandIdentity: async (incoming, operation) => incoming.headers.get("idempotency-key") ? digestSfValue({ operation, key: incoming.headers.get("idempotency-key") }) : undefined,
@@ -189,7 +202,10 @@ async function createFixture(directory: string, phase: AtlasPhase) {
       atlas.memory.recall = async (caseRef, call) => {
         const index = ++memoryWork.recalls
         const result = await recall(caseRef, call)
-        if (result.status === "ok") await memoryWork.afterRecall?.(index)
+        if (result.status === "ok") {
+          memoryWork.sourceObservedAt.push(...result.records.flatMap((record) => observedSourceTimes(record.resolutions)))
+          await memoryWork.afterRecall?.(index)
+        }
         return result
       }
       atlas.memory.readOriginal = async (caseRef, digest, call) => {
@@ -244,7 +260,7 @@ async function createFixture(directory: string, phase: AtlasPhase) {
         if (queued.status !== "ok") throw new Error(`Ledger outbox rejected: ${queued.reason}`)
         return { commit: true, value: queued.value }
       }))
-    return { caseRef: event.caseRef, event, ...saved }
+    return { caseRef: event.caseRef, event, ...saved, sourceObservedAt: observedSourceTimes(projections) }
     })
   }
   return { runtime, clock, fault, memoryWork, active, actors, request, call, sources, ledger, scanner: pinned, scannerRelease, versions, phase,
