@@ -1,0 +1,61 @@
+{
+  "schema": "sf-wp12-increment-preparation-v1",
+  "increment": "W18",
+  "phase": "resume-13",
+  "baseCommit": "7fe43d5b12f27f714a2c3208f49568c1013ba7fa",
+  "baseTree": "646e1fa06eaf8b5081c72c12c29d514e6240dfe1",
+  "owner": "WP12",
+  "ownCodeCount": 1,
+  "foreignChangeCount": 0,
+  "foreignEffectiveCount": 338,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+      "blob": "7656809cc7e610d6427cb5df64355d29ecee30a6",
+      "sha256": "72a90a73eddac162a5b5e347c139bec6beb3df6c05336bead869f73dbd60cd7c",
+      "bytes": 18104
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/verifier-negatives-13.json",
+      "blob": "85ecfb5748006d91ca0b40b9b084482240e38922",
+      "sha256": "50c9b76abd0db2832c29b2fde71843cda7a1c31756996f4981b82c6b62924c47",
+      "bytes": 6916
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/verifier-review-13.json",
+      "blob": "1b5a18ec4335201b3931aa26cd90517d4f0c1485",
+      "sha256": "9e99209828fcaa873c2d31ba783ff6897bf86c83e5edf00960d5552ba8c6f493",
+      "bytes": 3597
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/verifier-source-pins-13.json",
+      "blob": "9fc46b3cbcdf1600bcfd592f3853e781e1369370",
+      "sha256": "b25377868886cb5240fd4bb85c59389e978c52226b6dab2776f87f344c548beb",
+      "bytes": 1406
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/owner-refresh-13.json",
+      "blob": "d0619db904b04ff5f84842ab9323cee4588c0af3",
+      "sha256": "409702a613d3234cd11c982afa87570fcda4546af167afea1235227a5beff031",
+      "bytes": 19286
+    }
+  ],
+  "criterion": "WP12.T03.CHK.02",
+  "runtimeObservation": "PENDING",
+  "hostedCheck": {
+    "state": "PENDING",
+    "covers": "Current W18 including W17 cancellation reconciliation; no separate equivalent C17 check was dispatched."
+  },
+  "productSelection": {
+    "state": "PENDING",
+    "scope": "Changed cancellation boundaries plus new domain-verifier negatives; nine names across three explicit files."
+  },
+  "limits": [
+    "No private malicious publication attempted through the installed native publisher.",
+    "No inference/output receipt is fabricated when the installed catalog is empty.",
+    "C08 immutability checks cover only explicitly selected projections and records."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}
