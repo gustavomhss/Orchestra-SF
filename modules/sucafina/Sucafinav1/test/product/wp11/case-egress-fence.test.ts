@@ -104,6 +104,7 @@ for (const variant of variants) test(`${variant.route} suppresses ${variant.chan
     const response = variant.route === "draft" ? await cases.draft(payload, context) : await cases.prepareIntentForCase(payload, caseRef, context)
     // A swallowed callback/transaction failure cannot make this negative pass.
     expect(race.committed).toBe(true)
+    if (!race.before || !race.beforeDigest) throw new Error("Committed race evidence unavailable")
     expect(race.hostChecks).toBe(variant.route === "draft" ? 3 : 5)
     expect(observations.caseReads).toBe(variant.route === "draft" ? 2 : 4)
     expect(response).toEqual(variant.route === "draft" && variant.change !== "same-version content"
