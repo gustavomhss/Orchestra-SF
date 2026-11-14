@@ -134,17 +134,22 @@ export async function createC12Fixture(scenario: string, origin: string, retaine
     authorizePreparedTarget: (value, snapshot, targetRef, current) => mounted.business?.procurementDecisions.authorizeReceiptTarget(value, snapshot, targetRef, current) ?? Promise.resolve(undefined),
   })
   const readState = authority.state.read
-  authority.state.read = (request, namespace, read) => readState(request, namespace, async (state, current) => {
-    const result = await read(state, current)
-    // The executor's final retention read has a boolean result and sees the
-    // actual linked receipt. Revoke before C08 performs its final reauthorization.
-    if (namespace === "cases" && result === true && Object.values(state.cases).some((item) => item.receipts.length && item.preparedChanges.some((change) => change.receipt))) {
-      const work = scheduling.beforeRetentionReadReturn
-      scheduling.beforeRetentionReadReturn = undefined
-      if (work) { receiptReads.finalReadInterleavings++; work() }
-    }
-    return result
-  })
+  authority.state.read = (request, namespace, read) => {
+    // Keep the published provider's selector identity when no retention fault
+    // is scheduled. Only the explicit revocation probe needs this callback hook.
+    if (!scheduling.beforeRetentionReadReturn) return readState(request, namespace, read)
+    return readState(request, namespace, async (state, current) => {
+      const result = await read(state, current)
+      // The executor's final retention read has a boolean result and sees the
+      // actual linked receipt. Revoke before C08 performs its final reauthorization.
+      if (namespace === "cases" && result === true && Object.values(state.cases).some((item) => item.receipts.length && item.preparedChanges.some((change) => change.receipt))) {
+        const work = scheduling.beforeRetentionReadReturn
+        scheduling.beforeRetentionReadReturn = undefined
+        if (work) { receiptReads.finalReadInterleavings++; work() }
+      }
+      return result
+    })
+  }
   const services = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, procurementEvidenceWrites })
   const business = services
   mounted.business = business
@@ -261,5 +266,6 @@ export function readReviewDigest(body: Record<string, unknown>) {
 export function changedReviewDigest(digest: string) {
   return `${digest[0] === "0" ? "1" : "0"}${digest.slice(1)}`
 }
+
 
 
