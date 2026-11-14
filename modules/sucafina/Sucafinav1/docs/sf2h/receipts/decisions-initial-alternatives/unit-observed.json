@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.mission20.unit-observed.v1",
+  "status": "PASS",
+  "run_id": 43638150264,
+  "job_id": 132579438109,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638150264",
+  "product_sha": "0fb6101c2804e8d8e2fa352ca5d09b554a7fd435",
+  "product_tree": "fd1de72c787dd9d3d87db86110781d1f158547e5",
+  "snapshot_sha": "11a8f1a7e9168b7c127e22c24510298f9bd2c9bb",
+  "snapshot_tree": "4b3d9328a79e3c6bb7ff20b9d9b29553fe68de44",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/decisions-initial-alternatives/intention.test.ts",
+      "./Sucafinav1/test/product/decisions-initial-alternatives/forms.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_blob": "0f92f9b5f2e7cf128c7e1bf2ee09c38b4ea51cf2",
+  "request_sha256": "d23fef67bd68d842eede8f3605dca0f10c223003c7195bf69d0b440a1aedbcf3",
+  "only_snapshot_delta": ".ci-run.json",
+  "request_validation": "Read request step succeeded; exact request fetched from S and matched normalized payload",
+  "selected_files": [
+    "Sucafinav1/test/product/decisions-initial-alternatives/intention.test.ts:",
+    "Sucafinav1/test/product/decisions-initial-alternatives/forms.test.ts:"
+  ],
+  "tests": [
+    "(pass) an uncertain promotion retains its original key, case version and nested payload bytes [7.66ms]",
+    "(pass) transport serialization preserves null, confirmed zero, units and an omitted value separately [0.12ms]",
+    "(pass) intention admission rejects other actions and missing or oversized keys [0.14ms]",
+    "(pass) unserializable and oversized intentions fail before a request can be retained [3.07ms]",
+    "(pass) the request budget counts UTF-8 bytes rather than string characters [0.61ms]",
+    "(pass) the emitted browser initializers parse after the intention helper is serialized [2.15ms]",
+    "(pass) decision form context binds identity, current CAS, authority, currency and source horizons [0.29ms]",
+    "(pass) retry scope survives a newer case revision while another principal or incarnation has a different scope [0.08ms]",
+    "(pass) initial alternatives expose the complete supported inventory and reject incomplete or foreign inventories [0.61ms]",
+    "(pass) rendering keeps an empty case empty and does not create financial inputs or mutate authorized evidence [0.43ms]",
+    "(pass) case objective, criterion and reference text cannot break out of their rendered elements [0.14ms]"
+  ],
+  "pass": 11,
+  "fail": 0,
+  "expect_calls": 56,
+  "omni_verdict": "omni positive control [matched job nonce]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+  "omni_scope": "declared; no declaring test ran; no Omni/runtime acceptance granted",
+  "emitted_javascript": "Both actual initializers parsed by Bun.Transpiler in Actions; not a browser interaction proof",
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "package_locator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+  "bunfig_blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+  "run_attempt": 1,
+  "artifacts": "No unit artifact is uploaded by the unchanged test-ci workflow; observed evidence was read from the decoded job log through GitHub MCP.",
+  "local_execution": false,
+  "native_or_browser_acceptance": false
+}
