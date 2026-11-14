@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { launchBrowserDriver } from "./browser-driver-fixture.ts"
 import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -41,6 +43,7 @@ async function fixture() {
   const origin = server.url.origin, installationId = randomUUID(), principalRef = `macos:${installationId}:1000`
   const clock = { at: "2026-11-13T08:00:00Z" }, policy = { writable: true }
   const delayed: { next: boolean; release?: () => void; started?: () => void; calls: number } = { next: false, calls: 0 }
+  const httpTrace: { mode: string; method: string; state: "received" | "returned" | "threw"; status?: number; elapsedMs?: number }[] = []
   const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID, projectScope: createSfSourceScopeProjector(() => clock.at) })
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1000, name: "Dashboard reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
   const authenticate: typeof identity.authenticate = async (request, context) => {
@@ -84,12 +87,23 @@ async function fixture() {
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
   const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   routing.handle = async (request) => {
-    const response = await identity.handle(request) ?? await module(request)
-    if (new URL(request.url).searchParams.get("sf") === "dashboard-hot-topic-apply") {
-      delayed.calls++
-      if (delayed.next) { delayed.next = false; await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() }) }
+    const mode = new URL(request.url).searchParams.get("sf"), started = performance.now()
+    const observation: (typeof httpTrace)[number] | undefined = mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft" ? { mode, method: request.method, state: "received" } : undefined
+    if (observation) httpTrace.push(observation)
+    try {
+      const response = await identity.handle(request) ?? await module(request)
+      if (mode === "dashboard-hot-topic-apply") {
+        delayed.calls++
+        if (delayed.next) { delayed.next = false; await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() }) }
+      }
+      if (observation) { observation.state = "returned"; observation.status = response?.status ?? 503 }
+      return response
+    } catch (error) {
+      if (observation) observation.state = "threw"
+      throw error
+    } finally {
+      if (observation) observation.elapsedMs = Math.round(performance.now() - started)
     }
-    return response
   }
   const login = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
   const cookie = login?.headers.get("set-cookie")?.split(";")[0]
@@ -113,7 +127,7 @@ async function fixture() {
       return { commit: true, value: true }
     })
   expect(seeded.status).toBe("ok")
-  return { origin, identity, policy, clock, delayed, principalRef, persistence, authority, dashboard, decisions, records, request, read,
+  return { origin, identity, policy, clock, delayed, httpTrace, principalRef, persistence, authority, dashboard, decisions, records, request, read,
     close: async () => { delayed.release?.(); dashboard.dispose(); await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
 
@@ -138,9 +152,10 @@ async function storeExistingChoice(f: Awaited<ReturnType<typeof fixture>>, draft
 }
 
 test("Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice", async () => {
+  expectSpawn(import.meta.path)
   const f = await fixture()
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browserDriver = await launchBrowserDriver("host-contextual-controls").catch(async (error) => { await f.close(); throw error })
+  const browser = browserDriver.browser
   try {
     const page = await browser.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
@@ -234,10 +249,12 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
     expect(saved.status === "ok" && saved.value?.preparedChanges[0]?.state).toBe("applied")
     expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Approved new action")
     expect(errors).toEqual([])
-  } finally { await browser.close(); await f.close() }
+  } finally { try { await browserDriver.close() } finally { await f.close() } }
+  browserDriver.report()
 }, 60000)
 
 test("Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed", async () => {
+  expectSpawn(import.meta.path)
   const phase = async <T>(name: string, work: () => Promise<T>) => {
     const started = performance.now()
     console.info("SF_WP02_DRAFT_CONFLICT_PHASE", JSON.stringify({ phase: name, state: "started" }))
@@ -246,13 +263,13 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     finally { console.info("SF_WP02_DRAFT_CONFLICT_PHASE", JSON.stringify({ phase: name, state, elapsedMs: Math.round(performance.now() - started) })) }
   }
   const f = await phase("fixture.create", fixture)
-  const { chromium } = await import("@playwright/test")
-  const browser = await phase("browser.launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 }))
+  const browserDriver = await phase("browser.launch", () => launchBrowserDriver("host-draft-conflict"))
     .catch(async (error) => {
       const [closed] = await Promise.allSettled([phase("fixture.close-after-launch-failure", () => f.close())])
       if (closed?.status === "rejected") throw new AggregateError([error, closed.reason], "Browser launch and fixture cleanup failed")
       throw error
     })
+  const browser = browserDriver.browser
   const failures: unknown[] = []
   try {
     const context = await phase("browser.context", () => browser.newContext())
@@ -260,10 +277,20 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     context.setDefaultNavigationTimeout(15000)
     const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
-    const observe = (tab: typeof page, name: string) => tab.on("response", (response) => {
-      const mode = new URL(response.url()).searchParams.get("sf")
-      if (mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft") console.info("SF_WP02_DRAFT_CONFLICT_HTTP", JSON.stringify({ tab: name, mode, status: response.status() }))
-    })
+    const observe = (tab: typeof page, name: string) => {
+      tab.on("request", (request) => {
+        const mode = new URL(request.url()).searchParams.get("sf")
+        if (mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft") console.info("SF_WP02_DRAFT_CONFLICT_REQUEST", JSON.stringify({ tab: name, mode, method: request.method(), state: "sent" }))
+      })
+      tab.on("requestfailed", (request) => {
+        const mode = new URL(request.url()).searchParams.get("sf")
+        if (mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft") console.info("SF_WP02_DRAFT_CONFLICT_REQUEST", JSON.stringify({ tab: name, mode, method: request.method(), state: "failed" }))
+      })
+      tab.on("response", (response) => {
+        const mode = new URL(response.url()).searchParams.get("sf")
+        if (mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft") console.info("SF_WP02_DRAFT_CONFLICT_HTTP", JSON.stringify({ tab: name, mode, status: response.status() }))
+      })
+    }
     observe(page, "original")
     await page.goto(`${f.origin}/sucafina/auth/local?code=${await f.identity.enroll()}`)
     await page.goto(`${f.origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
@@ -281,7 +308,7 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
       const [written, discovered] = await Promise.all([
         tab.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "dashboard-hot-topic-draft"),
         tab.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "dashboard-workbench"),
-        target.getByRole("button", { name: "Salvar rascunho", exact: true }).click(),
+        phase(`${name}.click`, () => target.getByRole("button", { name: "Salvar rascunho", exact: true }).click()),
       ])
       expect(written.status()).toBe(200)
       expect(object(await written.json()).status).toBe("ok")
@@ -380,22 +407,15 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     // Emit the Playwright call log before cleanup; a closing renderer must not
     // replace the original action failure with the outer Bun timeout.
     console.error("SF_WP02_DRAFT_CONFLICT_FAILURE", error)
+    console.error("SF_WP02_DRAFT_CONFLICT_SERVER_TRACE", JSON.stringify(f.httpTrace))
   }
   finally {
-    const closeBrowser = async () => {
-      let timer: ReturnType<typeof setTimeout> | undefined
-      try {
-        await Promise.race([
-          browser.close(),
-          new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Browser cleanup exceeded 5000 ms")), 5000) }),
-        ])
-      } finally { if (timer !== undefined) clearTimeout(timer) }
-    }
-    const closed = await Promise.allSettled([phase("browser.close", closeBrowser), phase("fixture.close", () => f.close())])
+    const closed = await Promise.allSettled([phase("browser.close", () => browserDriver.close()), phase("fixture.close", () => f.close())])
     for (const result of closed) if (result.status === "rejected") failures.push(result.reason)
   }
   if (failures.length === 1) throw failures[0]
   if (failures.length > 1) throw new AggregateError(failures, "Dashboard draft conflict and cleanup failed")
+  browserDriver.report()
 }, 60000)
 
 test("Dashboard discovery fences participant removal after options were assembled", async () => {
@@ -454,9 +474,10 @@ test("Dashboard discovery resolves real ticket months and Executive signal recor
 })
 
 test("Dashboard contextual draft retains edits when current write authority is withdrawn", async () => {
+  expectSpawn(import.meta.path)
   const f = await fixture()
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browserDriver = await launchBrowserDriver("host-write-authority").catch(async (error) => { await f.close(); throw error })
+  const browser = browserDriver.browser
   try {
     const page = await browser.newPage()
     await page.goto(`${f.origin}/sucafina/auth/local?code=${await f.identity.enroll()}`)
@@ -484,5 +505,6 @@ test("Dashboard contextual draft retains edits when current write authority is w
     const forged = await page.request.post(`${f.origin}/sucafina/dashboard?sf=dashboard-capture`, { headers: { origin: f.origin, "idempotency-key": "forged-after-withdrawal" }, data: { sourceRef: "not-a-grant" } })
     expect(forged.status()).toBe(403)
     expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Original action")
-  } finally { await browser.close(); await f.close() }
+  } finally { try { await browserDriver.close() } finally { await f.close() } }
+  browserDriver.report()
 }, 60000)
