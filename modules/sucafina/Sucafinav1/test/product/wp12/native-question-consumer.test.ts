@@ -139,6 +139,13 @@ test("a focused human pending question is consumed once and its unconfirmed answ
       expect(await storageVersion(context, "threads")).toBe(before)
       const input = { questionRef: initial.thread.id }
       const answer = await dispatchWp12Ui(context, "sf_answer_read", input)
+      console.log("SF_WP12_HUMAN_ANSWER_READ:" + JSON.stringify({ scope: "actual-answer-capability-after-thread-reopen",
+        githubSha: process.env.GITHUB_SHA ?? null, caseRef: initial.caseRef, threadId: initial.thread.id,
+        sources: initial.thread.evidenceRefs.map((ref) => ref.kind === "record"
+          ? { kind: ref.kind, surface: ref.target.surface, recordType: ref.target.recordType, fields: ref.target.fields }
+          : { kind: ref.kind }),
+        status: answer.status, ...(answer.status === "ok" ? {} : { reason: answer.reason }),
+        receiptKind: answer.receipt.kind, inferenceExecuted: false, gnativeAccepted: false }))
       expect(answer.status).toBe("ok")
       if (answer.status !== "ok" || answer.receipt.kind !== "ui") throw new Error("The installed answer reader did not return a bound UI observation")
       const result = decodeSfOperationOutput("sf_answer_read", answer.result)

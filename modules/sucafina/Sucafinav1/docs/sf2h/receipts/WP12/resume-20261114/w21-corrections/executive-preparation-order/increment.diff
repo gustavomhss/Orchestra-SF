@@ -1,0 +1,158 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts
+@@ -63,7 +63,7 @@
+ 
+       const executive: Preparation = { request: missionRequest(context, "sf-preparar-revisao-executiva", caseRef),
+         selection: { selectionRef, sectionRefs, decisionRefs: [caseRef], period, includeConfirmations: false, includeRoutineResults: false } }
+-      const executivePrepared = await prepareThroughHost(context, executive)
++      const executivePrepared = await prepareThroughHost(context, executive, "initial")
+       expect(executivePrepared.response.status).toBe(200)
+       expect(executivePrepared.body.status).toBe("ok")
+       const executiveInput = decodeSfSkillInput("ExecutiveReviewInput", executivePrepared.body.value)
+@@ -73,11 +73,11 @@
+       expect(executiveInput.value.factualRoutineResults).toEqual([])
+       expect(executiveInput.value.confirmations).toEqual([])
+       const c07Executive = await prepareThroughHost(context, { ...executive,
+-        selection: { ...object(executive.selection), includeRoutineResults: true } })
++        selection: { ...object(executive.selection), includeRoutineResults: true } }, "reject-unavailable-routine-results")
+       expect(c07Executive.response.status).toBe(503)
+       expect(c07Executive.body).toMatchObject({ status: "unavailable", reason: "review-result-link-unavailable" })
+       const inventedSection = await prepareThroughHost(context, { ...executive,
+-        selection: { ...object(executive.selection), sectionRefs: ["never-selected-review-section"] } })
++        selection: { ...object(executive.selection), sectionRefs: ["never-selected-review-section"] } }, "reject-unselected-section")
+       expect(inventedSection.body.status).toBe("unavailable")
+ 
+       const preserved = await postReview(context, "review-preserve", { selectionRef, sectionRefs })
+@@ -87,6 +87,31 @@
+       expect(review.sectionRefs).toEqual(sectionRefs)
+       expect(review.valueIds.length).toBeGreaterThan(12)
+       expect(review.sections.every((section) => section.count === 1 && section.valueIds.length > 12)).toBe(true)
++      // Forecast sections contain financial projections, not C09 decision-result
++      // links. The producer must retain that explicit empty decision selection.
++      const meeting: Preparation = { request: missionRequest(context, "sf-produzir-material-reuniao", caseRef),
++        selection: { reviewRef: { id: review.id, version: review.version }, decisionRefs: [], sectionRefs, routineResultRefs: [] } }
++      const meetingPrepared = await prepareThroughHost(context, meeting, "initial")
++      expect(meetingPrepared.response.status).toBe(200)
++      expect(meetingPrepared.body.status).toBe("ok")
++      const meetingInput = decodeSfSkillInput("MeetingMaterialInput", meetingPrepared.body.value)
++      if (!meetingInput.ok) throw new Error("The installed host did not produce MeetingMaterialInput")
++      expect(meetingInput.value).toEqual({ preservedReviewRef: { id: review.id, version: review.version }, decisionRefs: [],
++        factualRoutineResults: [], authorizedSections: sectionRefs })
++      const c07Meeting = await prepareThroughHost(context, { ...meeting,
++        selection: { ...object(meeting.selection), routineResultRefs: ["never-admitted-routine-result"] } }, "reject-unavailable-routine-result")
++      expect(c07Meeting.response.status).toBe(503)
++      expect(c07Meeting.body).toMatchObject({ status: "unavailable", reason: "review-result-link-unavailable" })
++      const unlinkedCase = await prepareThroughHost(context, { ...meeting,
++        selection: { ...object(meeting.selection), decisionRefs: [caseRef] } }, "reject-unlinked-case")
++      expect(unlinkedCase.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
++      const replacedReview = await prepareThroughHost(context, { ...meeting,
++        selection: { ...object(meeting.selection), reviewRef: { id: review.id, version: review.version + 1 } } }, "reject-replaced-review-version")
++      expect(replacedReview.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
++
++      // Input admission and its independent negatives need the preserved review,
++      // not generated Office artifacts. Exercise them before exporting both full
++      // formats; durable download/reopen checks below still include the artifacts.
+       const reports: { artifactRef: string; format: "docx" | "pptx"; digest: string; bytes: number }[] = []
+       for (const format of ["docx", "pptx"] as const) {
+         const report = await postReview(context, "review-report", { reviewRef: review.id, sectionRefs, format })
+@@ -102,28 +127,6 @@
+         assertCompleteArchive(artifact.bytes, format, review)
+         reports.push({ artifactRef, format, digest: artifact.digest, bytes: artifact.bytes.length })
+       }
+-
+-      // Forecast sections contain financial projections, not C09 decision-result
+-      // links. The producer must retain that explicit empty decision selection.
+-      const meeting: Preparation = { request: missionRequest(context, "sf-produzir-material-reuniao", caseRef),
+-        selection: { reviewRef: { id: review.id, version: review.version }, decisionRefs: [], sectionRefs, routineResultRefs: [] } }
+-      const meetingPrepared = await prepareThroughHost(context, meeting)
+-      expect(meetingPrepared.response.status).toBe(200)
+-      expect(meetingPrepared.body.status).toBe("ok")
+-      const meetingInput = decodeSfSkillInput("MeetingMaterialInput", meetingPrepared.body.value)
+-      if (!meetingInput.ok) throw new Error("The installed host did not produce MeetingMaterialInput")
+-      expect(meetingInput.value).toEqual({ preservedReviewRef: { id: review.id, version: review.version }, decisionRefs: [],
+-        factualRoutineResults: [], authorizedSections: sectionRefs })
+-      const c07Meeting = await prepareThroughHost(context, { ...meeting,
+-        selection: { ...object(meeting.selection), routineResultRefs: ["never-admitted-routine-result"] } })
+-      expect(c07Meeting.response.status).toBe(503)
+-      expect(c07Meeting.body).toMatchObject({ status: "unavailable", reason: "review-result-link-unavailable" })
+-      const unlinkedCase = await prepareThroughHost(context, { ...meeting,
+-        selection: { ...object(meeting.selection), decisionRefs: [caseRef] } })
+-      expect(unlinkedCase.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
+-      const replacedReview = await prepareThroughHost(context, { ...meeting,
+-        selection: { ...object(meeting.selection), reviewRef: { id: review.id, version: review.version + 1 } } })
+-      expect(replacedReview.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
+       expect(await plannerDigest(context)).toBe(domainBefore)
+       const noRuns = await context.human("analysis.read", { caseRef }, (call) => context.services.analyses!.list(call, caseRef))
+       expect(noRuns).toEqual({ status: "ok", value: [] })
+@@ -136,16 +139,17 @@
+         c09DecisionResultsLinkedToMaterial: 0, inferenceExecuted: false, nativeContributionRef: null, gnativeAccepted: false }))
+ 
+       const completed: Wp12CompletedNativeMission[] = []
+-      for (const task of [{ incoming: executive, input: executiveInput.value, kind: "DecisionBrief" as const },
+-        { incoming: meeting, input: meetingInput.value, kind: "MeetingMaterialProposal" as const }]) {
+-        const restored = await prepareThroughHost(context, task.incoming)
++      for (const task of [{ incoming: executive, input: executiveInput.value, preparedInput: executivePrepared.body.value, kind: "DecisionBrief" as const },
++        { incoming: meeting, input: meetingInput.value, preparedInput: meetingPrepared.body.value, kind: "MeetingMaterialProposal" as const }]) {
++        if (!context.models.length) {
++          expect(digestSfValue(task.preparedInput)).toBe(digestSfValue(task.input))
++          observeWp12UnavailableMission(context, { request: task.incoming.request, skillInput: task.preparedInput })
++          continue
++        }
++        const restored = await prepareThroughHost(context, task.incoming, "fresh-before-native-execution")
+         expect(restored.response.status).toBe(200)
+         expect(restored.body.status).toBe("ok")
+         expect(digestSfValue(restored.body.value)).toBe(digestSfValue(task.input))
+-        if (!context.models.length) {
+-          observeWp12UnavailableMission(context, { request: task.incoming.request, skillInput: restored.body.value })
+-          continue
+-        }
+         expectSpawn(import.meta.path)
+         const witness = await executeWp12NativeMission(context, { request: task.incoming.request, skillInput: restored.body.value,
+           expectedKind: task.kind, requiredTools: task.kind === "DecisionBrief"
+@@ -178,7 +182,7 @@
+         expect(downloaded.digest).toBe(report.digest)
+         assertCompleteArchive(downloaded.bytes, report.format, opened)
+       }
+-      const currentInput = await prepareThroughHost(context, initial.meeting)
++      const currentInput = await prepareThroughHost(context, initial.meeting, "reopened-current-input")
+       expect(currentInput.response.status).toBe(200)
+       expect(currentInput.body.status).toBe("ok")
+       expect(digestSfValue(currentInput.body.value)).toBe(initial.meetingInputDigest)
+@@ -199,7 +203,7 @@
+       })
+       expect((await getReview(context, initial.review.id)).digest).toBe(initial.review.digest)
+       for (const report of initial.reports) expect((await downloadReview(context, report.artifactRef)).digest).toBe(report.digest)
+-      const staleInput = await prepareThroughHost(context, initial.meeting)
++      const staleInput = await prepareThroughHost(context, initial.meeting, "reject-historical-source")
+       expect(staleInput.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
+       const unauthorized = new Request(new URL(`/sucafina/dashboard?sf=review-download&artifactRef=${encodeURIComponent(initial.reports[0]!.artifactRef)}`, context.origin))
+       const refused = await context.services.productHttp!(unauthorized, "dashboard")
+@@ -236,12 +240,12 @@
+     manifestDigest: profile.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => operations.includes(operation)) }
+ }
+ 
+-async function prepareThroughHost(context: Wp12NativeMissionContext, input: Preparation) {
++async function prepareThroughHost(context: Wp12NativeMissionContext, input: Preparation, purpose: string) {
+   return reviewPhase(`analysis-prepare:${input.request.skillId}`, async () => {
+     const response = await context.services.productHttp?.(context.request({ action: "prepare", input }, "/sucafina/planner?sf=workbench-analysis"), "planner")
+     if (!response) throw new Error("The host did not mount workbench analysis preparation")
+     return { response, body: object(await response.json()) }
+-  })
++  }, purpose)
+ }
+ 
+ async function postReview(context: Wp12NativeMissionContext, action: string, body: unknown) {
+@@ -373,11 +377,11 @@
+ }
+ 
+ let reviewPhaseSequence = 0
+-async function reviewPhase<T>(phase: string, work: () => Promise<T>): Promise<T> {
++async function reviewPhase<T>(phase: string, work: () => Promise<T>, purpose?: string): Promise<T> {
+   const sequence = ++reviewPhaseSequence
+   const started = performance.now()
+   const record = (state: "started" | "returned" | "failed") => console.log("SF_WP12_NATIVE_REVIEW_PHASE:" + JSON.stringify({
+-    githubSha: process.env.GITHUB_SHA ?? null, phase, sequence, state, elapsedMs: Math.round(performance.now() - started),
++    githubSha: process.env.GITHUB_SHA ?? null, phase, ...(purpose ? { purpose } : {}), sequence, state, elapsedMs: Math.round(performance.now() - started),
+   }))
+   record("started")
+   try {

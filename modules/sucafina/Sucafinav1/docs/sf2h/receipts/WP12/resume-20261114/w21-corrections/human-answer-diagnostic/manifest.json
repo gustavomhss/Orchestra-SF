@@ -1,0 +1,45 @@
+{
+  "schema": "wp12-answer-boundary-diagnostic-v1",
+  "status": "FROZEN_DIAGNOSTIC_ONLY_NO_BEHAVIOR_FIX",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+      "before": {
+        "bytes": 17177,
+        "blob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9",
+        "sha256": "a1fa4893693567010c86cc3f38a29b18ee6a9d243e87e2c39ba3553d825fab83"
+      },
+      "after": {
+        "bytes": 17827,
+        "blob": "01021c133717c73a58b7940b9179b62ac89cc7fe",
+        "sha256": "6f48df4d168413eb75cab5786e26239d25d2f93ac2358fbea42c2f213076aaa3"
+      }
+    }
+  ],
+  "runtimeFailure": {
+    "run": 43604476634,
+    "job": 132476041608,
+    "sourceBlob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9",
+    "line": 142,
+    "observed": "unavailable; the prior log did not include the reason",
+    "logSHA256": "9c41d2557d77b625e2cd5dea31794695fbe1034681f299c8e523b48937bc91ef"
+  },
+  "change": "Record actual status, reason, receipt kind and selected source kinds/fields immediately before the unchanged strict answer assertion after real thread reopen.",
+  "preserved": {
+    "allPriorBytesExceptInsertedLog": true,
+    "assertions": true,
+    "realDispatcher": true,
+    "realReceipt": true,
+    "deadlineMs": 180000,
+    "unavailableRemainsFailure": true,
+    "noNewAuthority": true
+  },
+  "sourceDiagnosis": "Published host omits resolveAnswerScope for Planner. The callback absence proves an independent blocking gate; no exclusive dynamic subgate cause is claimed.",
+  "validation": {
+    "syntax": "PASS node --check",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "hostedProduct": "NOT_DISPATCHED_WITHOUT_OWNER_SCOPE_FIX"
+  },
+  "fullWp12Acceptance": false
+}

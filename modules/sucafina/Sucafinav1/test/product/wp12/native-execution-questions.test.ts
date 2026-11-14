@@ -64,8 +64,17 @@ test("QuestionPlanningInput carries real C06 support and its native proposal is 
       expect(decoded.value.relations[0]?.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(preparedCase.source))).toBe(true)
       expect(decoded.value.authorizedDirectoryRefs).toEqual([context.principalRef])
 
-      const unrelated = await context.ui("sf_context_get", { purpose: "question-unrelated-source" }, (call) => context.business.dashboardRecords.issue({
-        page: "Portfolio Dashboard", recordType: "projects", recordId: unrelatedProjectId, fields: ["name", "milestones"], period: projectObservationPeriod(context) }, call))
+      const unrelated = await context.ui("sf_context_get", { purpose: "question-unrelated-source" }, async (call) => {
+        const issued = await context.business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects",
+          recordId: unrelatedProjectId, fields: ["name"], period: projectObservationPeriod(context) }, call)
+        if (issued.status !== "ok") return issued
+        const projection = await context.business.dashboardRecords.read(issued.value.refId, call)
+        if (projection.status !== "ok") throw new Error(`The actual homonymous source is unreadable: ${projection.reason}`)
+        expect(projection.value.values).toHaveLength(1)
+        expect(projection.value.values[0]?.value).toBe("Shared question project")
+        expect(projection.value.values[0]?.sourceRefs).toEqual([issued.value])
+        return issued
+      })
       if (unrelated.status !== "ok") throw new Error("The real homonymous negative source was not issued")
       expect(unrelated.value.target.recordId).toBe(unrelatedProjectId)
       expect(unrelated.value.target.period).toEqual(projectObservationPeriod(context))
@@ -231,8 +240,10 @@ async function prepareQuestionSupport(context: Wp12NativeMissionContext, source:
   expect(directory.filter((person) => object(person).id === context.principalRef)).toHaveLength(1)
   const observationPeriod = projectObservationPeriod(context)
   const sources = await context.ui("sf_context_get", { purpose: "question-confirmed-support" }, async (call) => {
+    // C06 needs the actual endpoint identity. Its current record projection
+    // accepts scalar fields; the raw milestones array is not a readable value.
     const project = await context.business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: projectId,
-      fields: ["name", "milestones"], period: observationPeriod }, call)
+      fields: ["name"], period: observationPeriod }, call)
     if (project.status !== "ok") throw new Error(`The real relation project source was not issued: ${project.reason}`)
     const capex = await context.business.dashboardRecords.issue({ page: "CAPEX Projects", recordType: "capexProjects", recordId: capexId,
       fields: ["name"], period: WP12_QUESTION_PERIOD }, call)
@@ -245,6 +256,14 @@ async function prepareQuestionSupport(context: Wp12NativeMissionContext, source:
     expect(capex.value.target.recordType).toBe("capexProjects")
     expect(capex.value.target.recordId).toBe(capexId)
     expect(capex.value.target.period).toEqual(WP12_QUESTION_PERIOD)
+    for (const ref of [project.value, capex.value]) {
+      const projection = await context.business.dashboardRecords.read(ref.refId, call)
+      if (projection.status !== "ok") throw new Error(`The actual C06 endpoint is unreadable: ${projection.reason}`)
+      expect(projection.value.values).toHaveLength(1)
+      expect(projection.value.values[0]?.value).toBe(ref.target.recordType === "projects" ? "Shared question project" : "Selected question funding")
+      expect(projection.value.values[0]?.sourceRefs).toEqual([ref])
+      expect(projection.value.values[0]?.drilldown).toEqual(ref)
+    }
     console.log("SF_WP12_NATIVE_QUESTION_RELATION_ENDPOINTS:" + JSON.stringify({ scope: "actual-current-project-and-selected-capex-year",
       githubSha: process.env.GITHUB_SHA ?? null, observedAt: context.at, projectObservationPeriod: observationPeriod,
       financialHorizon: WP12_QUESTION_PERIOD, endpoints: [project.value, capex.value].map((ref) => ({ sourceRef: ref.refId,

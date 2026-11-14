@@ -1,0 +1,24 @@
+{
+  "schema": "wp12-independent-static-review-v1",
+  "reviewer": "/root/own_review_resume",
+  "status": "PASS_STATIC",
+  "sourceBlob": "b334b77248ab887647a7b4a15d2362fb769f5c4c",
+  "sourceSha256": "957231db289d9d1610c146e13153282008a20e035539a1d9dc031c497cbfde1e",
+  "baseBlob": "50303355860a26718686f5daf7dddad8978434c3",
+  "findings": [],
+  "checks": [
+    "MCP independently confirmed dashboard/sources.ts c32c973c at71cbf64: read rejects non-null object/array fields and returns one scalar value per selected field with sourceRefs [ref] and drilldown ref.",
+    "C06 pmo-capex selects actual projects/capexProjects endpoint kinds/identities, not a milestones array requirement. Choosing only name preserves that relationship and both current/financial periods.",
+    "Positive and homonymous negative sources are both canonically read before relation/preparation. The homonym remains real/readable but outside the case, so it distinguishes scope rather than unrelated projection failure.",
+    "Raw source fixtures, actual relation create/confirm/consume, grants, native branch and deadlines are untouched; all80 prior expect lines remain and7 lines are added.",
+    "New values/drilldown/ref assertions match the admitted canonical DomainProjection and Extract<BusinessEvidenceRef,{kind:record}> return type. No API/type incompatibility found by static reading."
+  ],
+  "preservation": {
+    "priorExpectLines": 80,
+    "newExpectLines": 7
+  },
+  "limits": [
+    "The changed driver has not run in hosted CI; this review does not infer relation creation, Session/native output or consumer success.",
+    "No local product execution/typecheck and no source edits."
+  ]
+}

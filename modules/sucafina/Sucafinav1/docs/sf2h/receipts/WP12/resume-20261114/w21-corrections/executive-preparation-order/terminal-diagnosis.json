@@ -1,0 +1,217 @@
+{
+  "schema": "wp12-executive-terminal-diagnosis-v1",
+  "runId": 43602247803,
+  "log": "evidence/resume-11-bi-executive.log",
+  "logSha256": "bf4b2d19af97ce7f2acef4a99071afb9bb04104d707d6b636d20f77bb7ce3034",
+  "testSources": {
+    "executive": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+    "bi": "7e29eba6598ce78fe1a8e7416220e229ea4b219c",
+    "executedHarness": "9f61ae11b0f1b630427cda98ff44f229bd72d2b5",
+    "currentHarness": "49300a78a44ac0739791d10a11c386b317f4b51a"
+  },
+  "results": {
+    "biMaestro": "PASS",
+    "biMaestroElapsedMs": 58566.48,
+    "biFinance": "FILTERED_OUT",
+    "executive": "FAIL_TIMEOUT",
+    "executiveElapsedMs": 1173945.28,
+    "executiveDeadlineMs": 420000,
+    "assertionFailureReported": false,
+    "terminalLines": [
+      920,
+      922,
+      924,
+      928
+    ],
+    "inferenceExecuted": false,
+    "executiveReopenedObserved": false
+  },
+  "phases": [
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "source-selection",
+      "sequence": 1,
+      "state": "returned",
+      "elapsedMs": 45,
+      "logLine": 882,
+      "timestamp": "2026-11-14T13:59:02.5620737Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "case-draft",
+      "sequence": 2,
+      "state": "returned",
+      "elapsedMs": 155,
+      "logLine": 884,
+      "timestamp": "2026-11-14T13:59:02.7183738Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "http:review-agenda",
+      "sequence": 3,
+      "state": "returned",
+      "elapsedMs": 95,
+      "logLine": 886,
+      "timestamp": "2026-11-14T13:59:02.8128622Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "http:review-preview",
+      "sequence": 4,
+      "state": "returned",
+      "elapsedMs": 399,
+      "logLine": 888,
+      "timestamp": "2026-11-14T13:59:03.2116073Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+      "sequence": 5,
+      "state": "returned",
+      "elapsedMs": 5213,
+      "logLine": 890,
+      "timestamp": "2026-11-14T13:59:08.4304805Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+      "sequence": 6,
+      "state": "returned",
+      "elapsedMs": 435,
+      "logLine": 892,
+      "timestamp": "2026-11-14T13:59:08.8654474Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+      "sequence": 7,
+      "state": "returned",
+      "elapsedMs": 976,
+      "logLine": 894,
+      "timestamp": "2026-11-14T13:59:09.8414602Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "http:review-preserve",
+      "sequence": 8,
+      "state": "returned",
+      "elapsedMs": 5593,
+      "logLine": 896,
+      "timestamp": "2026-11-14T13:59:15.4345415Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "http:review-report",
+      "sequence": 9,
+      "state": "returned",
+      "elapsedMs": 38760,
+      "logLine": 898,
+      "timestamp": "2026-11-14T13:59:54.2071144Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "http:review-download",
+      "sequence": 10,
+      "state": "returned",
+      "elapsedMs": 28219,
+      "logLine": 900,
+      "timestamp": "2026-11-14T14:00:22.4266940Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "http:review-report",
+      "sequence": 11,
+      "state": "returned",
+      "elapsedMs": 64741,
+      "logLine": 902,
+      "timestamp": "2026-11-14T14:01:27.1765801Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "http:review-download",
+      "sequence": 12,
+      "state": "returned",
+      "elapsedMs": 54306,
+      "logLine": 904,
+      "timestamp": "2026-11-14T14:02:21.4854149Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-produzir-material-reuniao",
+      "sequence": 13,
+      "state": "returned",
+      "elapsedMs": 219628,
+      "logLine": 906,
+      "timestamp": "2026-11-14T14:06:01.1326758Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-produzir-material-reuniao",
+      "sequence": 14,
+      "state": "returned",
+      "elapsedMs": 35460,
+      "logLine": 908,
+      "timestamp": "2026-11-14T14:06:36.5929724Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-produzir-material-reuniao",
+      "sequence": 15,
+      "state": "returned",
+      "elapsedMs": 114676,
+      "logLine": 910,
+      "timestamp": "2026-11-14T14:08:31.2704275Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-produzir-material-reuniao",
+      "sequence": 16,
+      "state": "returned",
+      "elapsedMs": 93235,
+      "logLine": 912,
+      "timestamp": "2026-11-14T14:10:04.5037661Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+      "sequence": 17,
+      "state": "returned",
+      "elapsedMs": 263422,
+      "logLine": 915,
+      "timestamp": "2026-11-14T14:14:51.2524817Z"
+    },
+    {
+      "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "phase": "analysis-prepare:sf-produzir-material-reuniao",
+      "sequence": 18,
+      "state": "returned",
+      "elapsedMs": 223365,
+      "logLine": 918,
+      "timestamp": "2026-11-14T14:18:34.6180837Z"
+    }
+  ],
+  "phaseTotals": {
+    "beforeExportsMs": 12911,
+    "reportAndInitialDownloadMs": 186026,
+    "meetingInputsAndNegativesAfterExportsMs": 462999,
+    "redundantPreparationsBeforeUnavailableMs": 486787
+  },
+  "directOwnCause": [
+    "Two fresh preparations are performed before testing the already observed empty model list. They do not execute a native mission, add a distinct consumer, or strengthen any mutation negative and consumed 486787 ms in this run.",
+    "Meeting input/negative preparations unnecessarily follow persistence of both Office artifacts; the MeetingMaterialInput schema requires preserved review identity/sections, not generated artifact refs. Their temporal order can change while all boundary assertions remain."
+  ],
+  "residualRisk": [
+    "A 5,115,149-byte PPTX and 18,271-byte DOCX were persisted before analysis preparation. Subsequent real host preparation ranged 35,460–263,422ms. Correlation and C08 whole-state cloning support a cost-amplification investigation; no isolated runtime profile proves the sole cause.",
+    "The first host did not finish before the 420000 ms test deadline. No executive reopened-host/historical/unauthorized-download success can be inferred.",
+    "Reordering inputs and skipping redundant unavailable preparations is not product performance proof after export. Full original reload/download/current-input/historical-source/unauthenticated cases remain in the test and must complete in a future hosted run."
+  ],
+  "unchangedHarnessBehavior": "The executed versus current harness differs only by the unused dispatchWp12Ui export. The host assembly, teardown and native polling paths are otherwise byte-identical; native polling was not entered because both catalogs were empty.",
+  "localProductTests": false,
+  "localTypecheck": false,
+  "ciDispatched": false,
+  "productCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+  "ciSnapshot": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+  "productTree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df",
+  "ciSnapshotTree": "66b5739f7c96dc1608379ceb81e66a4835272a82",
+  "jobId": 132469301705
+}

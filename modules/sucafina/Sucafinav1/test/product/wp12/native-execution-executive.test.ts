@@ -12,10 +12,11 @@ import type { Wp12CompletedNativeMission, Wp12NativeMissionContext } from "./nat
 
 type Preparation = Parameters<NonNullable<SfHostServices["analysisInputs"]>["prepare"]>[1]
 type ReviewSnapshot = ReturnType<typeof reviewSnapshot>
-const period = { start: "2027-01-01", end: "2027-12-31" }
-// Two real source lines produce 24 monthly cells per forecast, already beyond
-// the 12-row preview boundary. Extra rows of the same shape do not strengthen the
-// complete-export counterproof and multiply repeated source validation.
+const caseHorizon = { start: "2027-01-01", end: "2027-12-31" }
+const reviewPeriod = { start: "2027-01-01", end: "2027-01-31" }
+// Keep both complete annual source lines. The human-selected January projection
+// contains 22 values per forecast: 2 lines × 8 measures, 5 monthly aggregates and
+// one FX rate. Each full selected section still exceeds the 12-row preview boundary.
 const sourceLineCount = 2
 const operations = ["sf_case_draft", "sf_case_read", "sf_context_get", "sf_source_get", "sf_forecast_compare",
   "sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_work_list"]
@@ -38,14 +39,14 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
         if (base.status !== "ok" || candidate.status !== "ok") throw new Error("The real Planner review sources were not issued")
         return [base.value.evidence, candidate.value.evidence] as const
       }))
-      const draft = { objective, horizon: period, currency: "USD", criteria: ["Keep factual coverage and source gaps visible"], sourceRefs: sources }
+      const draft = { objective, horizon: caseHorizon, currency: "USD", criteria: ["Keep factual coverage and source gaps visible"], sourceRefs: sources }
       const created = await reviewPhase("case-draft", () => context.ui("sf_case_draft", draft, (call) => context.business.cases.draft(draft, call)))
       if (created.status !== "ok") throw new Error(`The executive case was not persisted: ${created.reason}`)
       const caseRef = { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }
       const domainBefore = await plannerDigest(context)
       const agenda = await postReview(context, "review-agenda", { items: [{ id: "wp12-review-forecast", kind: "forecast-comparison",
         title: "Authorized forecasts for the executive meeting", baseRef: sources[0].refId, candidateRef: sources[1].refId,
-        currency: "USD", period, sides: ["baseline", "candidate"], agendaNote: "Human-selected factual comparison; no routine result was selected." }] })
+        currency: "USD", period: reviewPeriod, sides: ["baseline", "candidate"], agendaNote: "Human-selected factual comparison; no routine result was selected." }] })
       expect(agenda.response.status).toBe(200)
       expect(agenda.body.status).toBe("ok")
       const selected = object(agenda.body.value)
@@ -53,7 +54,7 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
         selected.sectionRefs.length !== 2 || selected.sectionRefs.some((ref) => typeof ref !== "string")) throw new Error("The real WP07 agenda was not selected")
       const sectionRefs = selected.sectionRefs.map(String)
       const selectionRef = selected.selectionRef
-      const preview = await postReview(context, "review-preview", { selectionRef, sectionRefs, period })
+      const preview = await postReview(context, "review-preview", { selectionRef, sectionRefs, period: reviewPeriod })
       expect(preview.response.status).toBe(200)
       expect(preview.body.status).toBe("ok")
       const preparedReview = decodeSfOperationOutput("sf_review_prepare", preview.body.result)
@@ -62,22 +63,22 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
       expect(preparedReview.value.sourceRefs.length).toBeGreaterThan(0)
 
       const executive: Preparation = { request: missionRequest(context, "sf-preparar-revisao-executiva", caseRef),
-        selection: { selectionRef, sectionRefs, decisionRefs: [caseRef], period, includeConfirmations: false, includeRoutineResults: false } }
-      const executivePrepared = await prepareThroughHost(context, executive)
+        selection: { selectionRef, sectionRefs, decisionRefs: [caseRef], period: reviewPeriod, includeConfirmations: false, includeRoutineResults: false } }
+      const executivePrepared = await prepareThroughHost(context, executive, "initial")
       expect(executivePrepared.response.status).toBe(200)
       expect(executivePrepared.body.status).toBe("ok")
       const executiveInput = decodeSfSkillInput("ExecutiveReviewInput", executivePrepared.body.value)
       if (!executiveInput.ok) throw new Error("The installed host did not produce ExecutiveReviewInput")
-      expect(executiveInput.value.reviewSelection).toEqual({ selectionRef, sectionRefs, period })
+      expect(executiveInput.value.reviewSelection).toEqual({ selectionRef, sectionRefs, period: reviewPeriod })
       expect(executiveInput.value.decisionRefs).toEqual([caseRef])
       expect(executiveInput.value.factualRoutineResults).toEqual([])
       expect(executiveInput.value.confirmations).toEqual([])
       const c07Executive = await prepareThroughHost(context, { ...executive,
-        selection: { ...object(executive.selection), includeRoutineResults: true } })
+        selection: { ...object(executive.selection), includeRoutineResults: true } }, "reject-unavailable-routine-results")
       expect(c07Executive.response.status).toBe(503)
       expect(c07Executive.body).toMatchObject({ status: "unavailable", reason: "review-result-link-unavailable" })
       const inventedSection = await prepareThroughHost(context, { ...executive,
-        selection: { ...object(executive.selection), sectionRefs: ["never-selected-review-section"] } })
+        selection: { ...object(executive.selection), sectionRefs: ["never-selected-review-section"] } }, "reject-unselected-section")
       expect(inventedSection.body.status).toBe("unavailable")
 
       const preserved = await postReview(context, "review-preserve", { selectionRef, sectionRefs })
@@ -87,6 +88,34 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
       expect(review.sectionRefs).toEqual(sectionRefs)
       expect(review.valueIds.length).toBeGreaterThan(12)
       expect(review.sections.every((section) => section.count === 1 && section.valueIds.length > 12)).toBe(true)
+      expect(review.sections).toHaveLength(2)
+      expect(review.sections.every((section) => section.valueIds.length === 22)).toBe(true)
+      expect(review.valueIds).toHaveLength(44)
+      // Forecast sections contain financial projections, not C09 decision-result
+      // links. The producer must retain that explicit empty decision selection.
+      const meeting: Preparation = { request: missionRequest(context, "sf-produzir-material-reuniao", caseRef),
+        selection: { reviewRef: { id: review.id, version: review.version }, decisionRefs: [], sectionRefs, routineResultRefs: [] } }
+      const meetingPrepared = await prepareThroughHost(context, meeting, "initial")
+      expect(meetingPrepared.response.status).toBe(200)
+      expect(meetingPrepared.body.status).toBe("ok")
+      const meetingInput = decodeSfSkillInput("MeetingMaterialInput", meetingPrepared.body.value)
+      if (!meetingInput.ok) throw new Error("The installed host did not produce MeetingMaterialInput")
+      expect(meetingInput.value).toEqual({ preservedReviewRef: { id: review.id, version: review.version }, decisionRefs: [],
+        factualRoutineResults: [], authorizedSections: sectionRefs })
+      const c07Meeting = await prepareThroughHost(context, { ...meeting,
+        selection: { ...object(meeting.selection), routineResultRefs: ["never-admitted-routine-result"] } }, "reject-unavailable-routine-result")
+      expect(c07Meeting.response.status).toBe(503)
+      expect(c07Meeting.body).toMatchObject({ status: "unavailable", reason: "review-result-link-unavailable" })
+      const unlinkedCase = await prepareThroughHost(context, { ...meeting,
+        selection: { ...object(meeting.selection), decisionRefs: [caseRef] } }, "reject-unlinked-case")
+      expect(unlinkedCase.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
+      const replacedReview = await prepareThroughHost(context, { ...meeting,
+        selection: { ...object(meeting.selection), reviewRef: { id: review.id, version: review.version + 1 } } }, "reject-replaced-review-version")
+      expect(replacedReview.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
+
+      // Input admission and its independent negatives need the preserved review,
+      // not generated Office artifacts. Exercise them before exporting both full
+      // formats; durable download/reopen checks below still include the artifacts.
       const reports: { artifactRef: string; format: "docx" | "pptx"; digest: string; bytes: number }[] = []
       for (const format of ["docx", "pptx"] as const) {
         const report = await postReview(context, "review-report", { reviewRef: review.id, sectionRefs, format })
@@ -102,50 +131,31 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
         assertCompleteArchive(artifact.bytes, format, review)
         reports.push({ artifactRef, format, digest: artifact.digest, bytes: artifact.bytes.length })
       }
-
-      // Forecast sections contain financial projections, not C09 decision-result
-      // links. The producer must retain that explicit empty decision selection.
-      const meeting: Preparation = { request: missionRequest(context, "sf-produzir-material-reuniao", caseRef),
-        selection: { reviewRef: { id: review.id, version: review.version }, decisionRefs: [], sectionRefs, routineResultRefs: [] } }
-      const meetingPrepared = await prepareThroughHost(context, meeting)
-      expect(meetingPrepared.response.status).toBe(200)
-      expect(meetingPrepared.body.status).toBe("ok")
-      const meetingInput = decodeSfSkillInput("MeetingMaterialInput", meetingPrepared.body.value)
-      if (!meetingInput.ok) throw new Error("The installed host did not produce MeetingMaterialInput")
-      expect(meetingInput.value).toEqual({ preservedReviewRef: { id: review.id, version: review.version }, decisionRefs: [],
-        factualRoutineResults: [], authorizedSections: sectionRefs })
-      const c07Meeting = await prepareThroughHost(context, { ...meeting,
-        selection: { ...object(meeting.selection), routineResultRefs: ["never-admitted-routine-result"] } })
-      expect(c07Meeting.response.status).toBe(503)
-      expect(c07Meeting.body).toMatchObject({ status: "unavailable", reason: "review-result-link-unavailable" })
-      const unlinkedCase = await prepareThroughHost(context, { ...meeting,
-        selection: { ...object(meeting.selection), decisionRefs: [caseRef] } })
-      expect(unlinkedCase.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
-      const replacedReview = await prepareThroughHost(context, { ...meeting,
-        selection: { ...object(meeting.selection), reviewRef: { id: review.id, version: review.version + 1 } } })
-      expect(replacedReview.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
       expect(await plannerDigest(context)).toBe(domainBefore)
       const noRuns = await context.human("analysis.read", { caseRef }, (call) => context.services.analyses!.list(call, caseRef))
       expect(noRuns).toEqual({ status: "ok", value: [] })
       console.log("SF_WP12_NATIVE_REVIEW_INPUTS:" + JSON.stringify({ scope: "real-WP07-selection-preservation-export-and-host-inputs",
         githubSha: process.env.GITHUB_SHA ?? null, caseRef, selectionRef, reviewRef: review.id, reviewDigest: review.digest,
-        sectionRefs, capturedValueCount: review.valueIds.length, executiveInputDigest: digestSfValue(executiveInput.value),
+        sectionRefs, capturedValueCount: review.valueIds.length, caseHorizon, reviewPeriod,
+        materialCompletenessScope: "all-values-of-explicit-January-selection", capturedValuesPerSection: review.sections.map((section) => section.valueIds.length),
+        executiveInputDigest: digestSfValue(executiveInput.value),
         meetingInputDigest: digestSfValue(meetingInput.value), reports, c07ResultsObserved: false, c07AdmissionObserved: false,
         executiveReportRoute: { publicReviewRef: review.id, inputCarriesPreservedReviewRef: Object.hasOwn(executiveInput.value, "preservedReviewRef"),
           bindingStatus: "preserved-review-not-selected-by-executive-input", nativeCallObserved: false },
         c09DecisionResultsLinkedToMaterial: 0, inferenceExecuted: false, nativeContributionRef: null, gnativeAccepted: false }))
 
       const completed: Wp12CompletedNativeMission[] = []
-      for (const task of [{ incoming: executive, input: executiveInput.value, kind: "DecisionBrief" as const },
-        { incoming: meeting, input: meetingInput.value, kind: "MeetingMaterialProposal" as const }]) {
-        const restored = await prepareThroughHost(context, task.incoming)
+      for (const task of [{ incoming: executive, input: executiveInput.value, preparedInput: executivePrepared.body.value, kind: "DecisionBrief" as const },
+        { incoming: meeting, input: meetingInput.value, preparedInput: meetingPrepared.body.value, kind: "MeetingMaterialProposal" as const }]) {
+        if (!context.models.length) {
+          expect(digestSfValue(task.preparedInput)).toBe(digestSfValue(task.input))
+          observeWp12UnavailableMission(context, { request: task.incoming.request, skillInput: task.preparedInput })
+          continue
+        }
+        const restored = await prepareThroughHost(context, task.incoming, "fresh-before-native-execution")
         expect(restored.response.status).toBe(200)
         expect(restored.body.status).toBe("ok")
         expect(digestSfValue(restored.body.value)).toBe(digestSfValue(task.input))
-        if (!context.models.length) {
-          observeWp12UnavailableMission(context, { request: task.incoming.request, skillInput: restored.body.value })
-          continue
-        }
         expectSpawn(import.meta.path)
         const witness = await executeWp12NativeMission(context, { request: task.incoming.request, skillInput: restored.body.value,
           expectedKind: task.kind, requiredTools: task.kind === "DecisionBrief"
@@ -178,7 +188,7 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
         expect(downloaded.digest).toBe(report.digest)
         assertCompleteArchive(downloaded.bytes, report.format, opened)
       }
-      const currentInput = await prepareThroughHost(context, initial.meeting)
+      const currentInput = await prepareThroughHost(context, initial.meeting, "reopened-current-input")
       expect(currentInput.response.status).toBe(200)
       expect(currentInput.body.status).toBe("ok")
       expect(digestSfValue(currentInput.body.value)).toBe(initial.meetingInputDigest)
@@ -199,7 +209,7 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
       })
       expect((await getReview(context, initial.review.id)).digest).toBe(initial.review.digest)
       for (const report of initial.reports) expect((await downloadReview(context, report.artifactRef)).digest).toBe(report.digest)
-      const staleInput = await prepareThroughHost(context, initial.meeting)
+      const staleInput = await prepareThroughHost(context, initial.meeting, "reject-historical-source")
       expect(staleInput.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
       const unauthorized = new Request(new URL(`/sucafina/dashboard?sf=review-download&artifactRef=${encodeURIComponent(initial.reports[0]!.artifactRef)}`, context.origin))
       const refused = await context.services.productHttp!(unauthorized, "dashboard")
@@ -236,12 +246,12 @@ function missionRequest(context: Wp12NativeMissionContext, skillId: string, case
     manifestDigest: profile.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => operations.includes(operation)) }
 }
 
-async function prepareThroughHost(context: Wp12NativeMissionContext, input: Preparation) {
+async function prepareThroughHost(context: Wp12NativeMissionContext, input: Preparation, purpose: string) {
   return reviewPhase(`analysis-prepare:${input.request.skillId}`, async () => {
     const response = await context.services.productHttp?.(context.request({ action: "prepare", input }, "/sucafina/planner?sf=workbench-analysis"), "planner")
     if (!response) throw new Error("The host did not mount workbench analysis preparation")
     return { response, body: object(await response.json()) }
-  })
+  }, purpose)
 }
 
 async function postReview(context: Wp12NativeMissionContext, action: string, body: unknown) {
@@ -267,15 +277,30 @@ function reviewSnapshot(value: unknown) {
   const review = object(value)
   if (typeof review.id !== "string" || !Number.isSafeInteger(review.version) || !Array.isArray(review.sections)) throw new Error("The preserved review identity is incomplete")
   const sections = review.sections.map((item) => {
-    const section = object(item), projection = object(section.content)
+    const section = object(item), projection = object(section.content), projectionContext = object(projection.context)
     if (typeof section.id !== "string" || typeof section.title !== "string" || typeof section.count !== "number" ||
-      !Array.isArray(projection.values) || !projection.values.length) throw new Error("A selected preserved section has no complete captured values")
-    const valueIds = projection.values.map((entry) => {
+      !Array.isArray(projection.values) || !projection.values.length || !Array.isArray(projection.components)) throw new Error("A selected preserved section has no complete captured values")
+    expect(section.period).toEqual(reviewPeriod)
+    expect(projectionContext.period).toEqual(reviewPeriod)
+    for (const component of projection.components) expect(object(component).period).toEqual(reviewPeriod)
+    const values = projection.values.map((entry) => {
       const value = object(entry)
       if (typeof value.id !== "string" || !value.id.trim()) throw new Error("A captured review value has no identity")
-      return value.id
+      expect(value.period).toEqual(reviewPeriod)
+      if (value.granularity === "month") {
+        const januaryIdentity = /^(.+):1:([^:]+)$/.exec(value.id)
+        if (!januaryIdentity) throw new Error("A monthly review value is outside the selected January scope")
+        return { id: value.id, excludedValueIds: Array.from({ length: 11 }, (_, index) => `${januaryIdentity[1]}:${index + 2}:${januaryIdentity[2]}`) }
+      }
+      expect(value.granularity).toBe("aggregate")
+      expect(value.id).toBe("fx:USD")
+      return { id: value.id, excludedValueIds: [] }
     })
-    return { id: section.id, title: section.title, count: section.count, valueIds }
+    const valueIds = values.map((value) => value.id), excludedValueIds = values.flatMap((value) => value.excludedValueIds)
+    expect(valueIds).toHaveLength(22)
+    expect(new Set(valueIds).size).toBe(22)
+    expect(valueIds.some((id) => excludedValueIds.includes(id))).toBe(false)
+    return { id: section.id, title: section.title, count: section.count, valueIds, excludedValueIds }
   })
   return { id: review.id, version: Number(review.version), digest: digestSfValue(value), sections,
     sectionRefs: sections.map((section) => section.id), valueIds: sections.flatMap((section) => section.valueIds) }
@@ -363,21 +388,44 @@ function assertCompleteArchive(bytes: Buffer, format: "docx" | "pptx", review: R
     offset += 46 + nameLength + extraLength + commentLength
   }
   expect(texts.length).toBeGreaterThan(0)
+  // Only captured-value table cells count as rendered occurrences. Shared FX and
+  // monthly aggregate IDs must appear once for each selected section, and a
+  // budget-usd cell must not stand in for a missing budget cell.
+  const namespace = format === "docx" ? "w" : "a"
+  const rowPattern = new RegExp(`<${namespace}:tr(?:\\s[^>]*)?>([\\s\\S]*?)</${namespace}:tr>`, "g")
+  const firstCellPattern = new RegExp(`<${namespace}:tc(?:\\s[^>]*)?>([\\s\\S]*?)</${namespace}:tc>`)
+  const expectedValueIds = [...new Set(review.valueIds)]
+  const renderedValueIds: string[] = []
+  for (const xml of texts) {
+    for (const row of xml.matchAll(rowPattern)) {
+      const firstCell = firstCellPattern.exec(row[1]!)
+      if (!firstCell) throw new Error("A captured value table row has no first cell")
+      const cell = firstCell[1]!.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/\s+/g, "")
+      if (!cell || cell === "Capturedvalue") continue
+      const matches = expectedValueIds.filter((id) => cell.startsWith(`${id.replace(/\s+/g, "")}:`))
+      if (matches.length !== 1) throw new Error("A rendered table cell has an unexpected or ambiguous captured value ID")
+      renderedValueIds.push(matches[0]!)
+    }
+  }
+  expect(renderedValueIds).toHaveLength(44)
+  expect(new Set(renderedValueIds).size).toBe(38)
+  expect([...renderedValueIds].sort()).toEqual([...review.valueIds].sort())
   const text = texts.join("").replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/\s+/g, "")
   for (const section of review.sections) {
     expect(text).toContain(section.title.replace(/\s+/g, ""))
     for (const id of section.valueIds) expect(text).toContain(id.replace(/\s+/g, ""))
+    for (const id of section.excludedValueIds) expect(text).not.toContain(id.replace(/\s+/g, ""))
   }
-  expect(text).toContain(period.start)
-  expect(text).toContain(period.end)
+  expect(text).toContain(reviewPeriod.start)
+  expect(text).toContain(reviewPeriod.end)
 }
 
 let reviewPhaseSequence = 0
-async function reviewPhase<T>(phase: string, work: () => Promise<T>): Promise<T> {
+async function reviewPhase<T>(phase: string, work: () => Promise<T>, purpose?: string): Promise<T> {
   const sequence = ++reviewPhaseSequence
   const started = performance.now()
   const record = (state: "started" | "returned" | "failed") => console.log("SF_WP12_NATIVE_REVIEW_PHASE:" + JSON.stringify({
-    githubSha: process.env.GITHUB_SHA ?? null, phase, sequence, state, elapsedMs: Math.round(performance.now() - started),
+    githubSha: process.env.GITHUB_SHA ?? null, phase, ...(purpose ? { purpose } : {}), sequence, state, elapsedMs: Math.round(performance.now() - started),
   }))
   record("started")
   try {

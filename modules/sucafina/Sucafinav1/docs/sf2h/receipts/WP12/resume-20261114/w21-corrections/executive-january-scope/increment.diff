@@ -1,0 +1,156 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts
+@@ -12,10 +12,11 @@
+ 
+ type Preparation = Parameters<NonNullable<SfHostServices["analysisInputs"]>["prepare"]>[1]
+ type ReviewSnapshot = ReturnType<typeof reviewSnapshot>
+-const period = { start: "2027-01-01", end: "2027-12-31" }
+-// Two real source lines produce 24 monthly cells per forecast, already beyond
+-// the 12-row preview boundary. Extra rows of the same shape do not strengthen the
+-// complete-export counterproof and multiply repeated source validation.
++const caseHorizon = { start: "2027-01-01", end: "2027-12-31" }
++const reviewPeriod = { start: "2027-01-01", end: "2027-01-31" }
++// Keep both complete annual source lines. The human-selected January projection
++// contains 22 values per forecast: 2 lines × 8 measures, 5 monthly aggregates and
++// one FX rate. Each full selected section still exceeds the 12-row preview boundary.
+ const sourceLineCount = 2
+ const operations = ["sf_case_draft", "sf_case_read", "sf_context_get", "sf_source_get", "sf_forecast_compare",
+   "sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_work_list"]
+@@ -38,14 +39,14 @@
+         if (base.status !== "ok" || candidate.status !== "ok") throw new Error("The real Planner review sources were not issued")
+         return [base.value.evidence, candidate.value.evidence] as const
+       }))
+-      const draft = { objective, horizon: period, currency: "USD", criteria: ["Keep factual coverage and source gaps visible"], sourceRefs: sources }
++      const draft = { objective, horizon: caseHorizon, currency: "USD", criteria: ["Keep factual coverage and source gaps visible"], sourceRefs: sources }
+       const created = await reviewPhase("case-draft", () => context.ui("sf_case_draft", draft, (call) => context.business.cases.draft(draft, call)))
+       if (created.status !== "ok") throw new Error(`The executive case was not persisted: ${created.reason}`)
+       const caseRef = { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }
+       const domainBefore = await plannerDigest(context)
+       const agenda = await postReview(context, "review-agenda", { items: [{ id: "wp12-review-forecast", kind: "forecast-comparison",
+         title: "Authorized forecasts for the executive meeting", baseRef: sources[0].refId, candidateRef: sources[1].refId,
+-        currency: "USD", period, sides: ["baseline", "candidate"], agendaNote: "Human-selected factual comparison; no routine result was selected." }] })
++        currency: "USD", period: reviewPeriod, sides: ["baseline", "candidate"], agendaNote: "Human-selected factual comparison; no routine result was selected." }] })
+       expect(agenda.response.status).toBe(200)
+       expect(agenda.body.status).toBe("ok")
+       const selected = object(agenda.body.value)
+@@ -53,7 +54,7 @@
+         selected.sectionRefs.length !== 2 || selected.sectionRefs.some((ref) => typeof ref !== "string")) throw new Error("The real WP07 agenda was not selected")
+       const sectionRefs = selected.sectionRefs.map(String)
+       const selectionRef = selected.selectionRef
+-      const preview = await postReview(context, "review-preview", { selectionRef, sectionRefs, period })
++      const preview = await postReview(context, "review-preview", { selectionRef, sectionRefs, period: reviewPeriod })
+       expect(preview.response.status).toBe(200)
+       expect(preview.body.status).toBe("ok")
+       const preparedReview = decodeSfOperationOutput("sf_review_prepare", preview.body.result)
+@@ -62,13 +63,13 @@
+       expect(preparedReview.value.sourceRefs.length).toBeGreaterThan(0)
+ 
+       const executive: Preparation = { request: missionRequest(context, "sf-preparar-revisao-executiva", caseRef),
+-        selection: { selectionRef, sectionRefs, decisionRefs: [caseRef], period, includeConfirmations: false, includeRoutineResults: false } }
++        selection: { selectionRef, sectionRefs, decisionRefs: [caseRef], period: reviewPeriod, includeConfirmations: false, includeRoutineResults: false } }
+       const executivePrepared = await prepareThroughHost(context, executive, "initial")
+       expect(executivePrepared.response.status).toBe(200)
+       expect(executivePrepared.body.status).toBe("ok")
+       const executiveInput = decodeSfSkillInput("ExecutiveReviewInput", executivePrepared.body.value)
+       if (!executiveInput.ok) throw new Error("The installed host did not produce ExecutiveReviewInput")
+-      expect(executiveInput.value.reviewSelection).toEqual({ selectionRef, sectionRefs, period })
++      expect(executiveInput.value.reviewSelection).toEqual({ selectionRef, sectionRefs, period: reviewPeriod })
+       expect(executiveInput.value.decisionRefs).toEqual([caseRef])
+       expect(executiveInput.value.factualRoutineResults).toEqual([])
+       expect(executiveInput.value.confirmations).toEqual([])
+@@ -87,6 +88,9 @@
+       expect(review.sectionRefs).toEqual(sectionRefs)
+       expect(review.valueIds.length).toBeGreaterThan(12)
+       expect(review.sections.every((section) => section.count === 1 && section.valueIds.length > 12)).toBe(true)
++      expect(review.sections).toHaveLength(2)
++      expect(review.sections.every((section) => section.valueIds.length === 22)).toBe(true)
++      expect(review.valueIds).toHaveLength(44)
+       // Forecast sections contain financial projections, not C09 decision-result
+       // links. The producer must retain that explicit empty decision selection.
+       const meeting: Preparation = { request: missionRequest(context, "sf-produzir-material-reuniao", caseRef),
+@@ -132,7 +136,9 @@
+       expect(noRuns).toEqual({ status: "ok", value: [] })
+       console.log("SF_WP12_NATIVE_REVIEW_INPUTS:" + JSON.stringify({ scope: "real-WP07-selection-preservation-export-and-host-inputs",
+         githubSha: process.env.GITHUB_SHA ?? null, caseRef, selectionRef, reviewRef: review.id, reviewDigest: review.digest,
+-        sectionRefs, capturedValueCount: review.valueIds.length, executiveInputDigest: digestSfValue(executiveInput.value),
++        sectionRefs, capturedValueCount: review.valueIds.length, caseHorizon, reviewPeriod,
++        materialCompletenessScope: "all-values-of-explicit-January-selection", capturedValuesPerSection: review.sections.map((section) => section.valueIds.length),
++        executiveInputDigest: digestSfValue(executiveInput.value),
+         meetingInputDigest: digestSfValue(meetingInput.value), reports, c07ResultsObserved: false, c07AdmissionObserved: false,
+         executiveReportRoute: { publicReviewRef: review.id, inputCarriesPreservedReviewRef: Object.hasOwn(executiveInput.value, "preservedReviewRef"),
+           bindingStatus: "preserved-review-not-selected-by-executive-input", nativeCallObserved: false },
+@@ -271,15 +277,30 @@
+   const review = object(value)
+   if (typeof review.id !== "string" || !Number.isSafeInteger(review.version) || !Array.isArray(review.sections)) throw new Error("The preserved review identity is incomplete")
+   const sections = review.sections.map((item) => {
+-    const section = object(item), projection = object(section.content)
++    const section = object(item), projection = object(section.content), projectionContext = object(projection.context)
+     if (typeof section.id !== "string" || typeof section.title !== "string" || typeof section.count !== "number" ||
+-      !Array.isArray(projection.values) || !projection.values.length) throw new Error("A selected preserved section has no complete captured values")
+-    const valueIds = projection.values.map((entry) => {
++      !Array.isArray(projection.values) || !projection.values.length || !Array.isArray(projection.components)) throw new Error("A selected preserved section has no complete captured values")
++    expect(section.period).toEqual(reviewPeriod)
++    expect(projectionContext.period).toEqual(reviewPeriod)
++    for (const component of projection.components) expect(object(component).period).toEqual(reviewPeriod)
++    const values = projection.values.map((entry) => {
+       const value = object(entry)
+       if (typeof value.id !== "string" || !value.id.trim()) throw new Error("A captured review value has no identity")
+-      return value.id
++      expect(value.period).toEqual(reviewPeriod)
++      if (value.granularity === "month") {
++        const januaryIdentity = /^(.+):1:([^:]+)$/.exec(value.id)
++        if (!januaryIdentity) throw new Error("A monthly review value is outside the selected January scope")
++        return { id: value.id, excludedValueIds: Array.from({ length: 11 }, (_, index) => `${januaryIdentity[1]}:${index + 2}:${januaryIdentity[2]}`) }
++      }
++      expect(value.granularity).toBe("aggregate")
++      expect(value.id).toBe("fx:USD")
++      return { id: value.id, excludedValueIds: [] }
+     })
+-    return { id: section.id, title: section.title, count: section.count, valueIds }
++    const valueIds = values.map((value) => value.id), excludedValueIds = values.flatMap((value) => value.excludedValueIds)
++    expect(valueIds).toHaveLength(22)
++    expect(new Set(valueIds).size).toBe(22)
++    expect(valueIds.some((id) => excludedValueIds.includes(id))).toBe(false)
++    return { id: section.id, title: section.title, count: section.count, valueIds, excludedValueIds }
+   })
+   return { id: review.id, version: Number(review.version), digest: digestSfValue(value), sections,
+     sectionRefs: sections.map((section) => section.id), valueIds: sections.flatMap((section) => section.valueIds) }
+@@ -367,13 +388,36 @@
+     offset += 46 + nameLength + extraLength + commentLength
+   }
+   expect(texts.length).toBeGreaterThan(0)
++  // Only captured-value table cells count as rendered occurrences. Shared FX and
++  // monthly aggregate IDs must appear once for each selected section, and a
++  // budget-usd cell must not stand in for a missing budget cell.
++  const namespace = format === "docx" ? "w" : "a"
++  const rowPattern = new RegExp(`<${namespace}:tr(?:\\s[^>]*)?>([\\s\\S]*?)</${namespace}:tr>`, "g")
++  const firstCellPattern = new RegExp(`<${namespace}:tc(?:\\s[^>]*)?>([\\s\\S]*?)</${namespace}:tc>`)
++  const expectedValueIds = [...new Set(review.valueIds)]
++  const renderedValueIds: string[] = []
++  for (const xml of texts) {
++    for (const row of xml.matchAll(rowPattern)) {
++      const firstCell = firstCellPattern.exec(row[1]!)
++      if (!firstCell) throw new Error("A captured value table row has no first cell")
++      const cell = firstCell[1]!.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/\s+/g, "")
++      if (!cell || cell === "Capturedvalue") continue
++      const matches = expectedValueIds.filter((id) => cell.startsWith(`${id.replace(/\s+/g, "")}:`))
++      if (matches.length !== 1) throw new Error("A rendered table cell has an unexpected or ambiguous captured value ID")
++      renderedValueIds.push(matches[0]!)
++    }
++  }
++  expect(renderedValueIds).toHaveLength(44)
++  expect(new Set(renderedValueIds).size).toBe(38)
++  expect([...renderedValueIds].sort()).toEqual([...review.valueIds].sort())
+   const text = texts.join("").replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/\s+/g, "")
+   for (const section of review.sections) {
+     expect(text).toContain(section.title.replace(/\s+/g, ""))
+     for (const id of section.valueIds) expect(text).toContain(id.replace(/\s+/g, ""))
++    for (const id of section.excludedValueIds) expect(text).not.toContain(id.replace(/\s+/g, ""))
+   }
+-  expect(text).toContain(period.start)
+-  expect(text).toContain(period.end)
++  expect(text).toContain(reviewPeriod.start)
++  expect(text).toContain(reviewPeriod.end)
+ }
+ 
+ let reviewPhaseSequence = 0

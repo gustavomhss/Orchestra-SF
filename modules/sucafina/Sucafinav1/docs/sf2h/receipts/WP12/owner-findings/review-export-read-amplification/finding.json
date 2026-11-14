@@ -1,0 +1,120 @@
+{
+  "schema": "wp12-owner-performance-delta-v1",
+  "id": "WP12-REVIEW-POST-EXPORT-READ-COST",
+  "owners": [
+    "WP10 host composition",
+    "WP00 C08 integration",
+    "WP07 review/report consumer"
+  ],
+  "status": "OBSERVED_TIMEOUT_WITH_STATIC_COST_PATH_OWNER_INVESTIGATION_REQUIRED",
+  "classification": "Observed phase costs plus exact static data/read amplification path; not an isolated profiler attribution or an executed corrected-performance proof.",
+  "observed": {
+    "runId": 43602247803,
+    "log": "evidence/resume-11-bi-executive.log",
+    "logSha256": "bf4b2d19af97ce7f2acef4a99071afb9bb04104d707d6b636d20f77bb7ce3034",
+    "logLines": {
+      "firstHostCatalog": 880,
+      "phases": [
+        881,
+        918
+      ],
+      "capturedMaterial": 913,
+      "timeout": [
+        920,
+        922
+      ],
+      "summary": [
+        924,
+        928
+      ]
+    },
+    "testBlob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+    "executedHarnessBlob": "9f61ae11b0f1b630427cda98ff44f229bd72d2b5",
+    "deadlineMs": 420000,
+    "elapsedMs": 1173945.28,
+    "catalogState": "empty",
+    "inferenceExecuted": false,
+    "reopenedHostObserved": false,
+    "sourceLineCount": 2,
+    "capturedValueCount": 506,
+    "reports": [
+      {
+        "format": "docx",
+        "bytes": 18271
+      },
+      {
+        "format": "pptx",
+        "bytes": 5115149
+      }
+    ],
+    "phaseTotals": {
+      "beforeExportsMs": 12911,
+      "reportAndInitialDownloadMs": 186026,
+      "meetingInputsAndNegativesAfterExportsMs": 462999,
+      "redundantPreparationsBeforeUnavailableMs": 486787
+    },
+    "productCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "ciSnapshot": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+    "productTree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df",
+    "ciSnapshotTree": "66b5739f7c96dc1608379ceb81e66a4835272a82",
+    "jobId": 132469301705
+  },
+  "facts": [
+    "The test reached all 18 logged returns but failed its unchanged 420000 ms budget before opening the second host. No executive after-reload, historical-source or unauthenticated-download acceptance can be inferred.",
+    "The original driver performed two full fresh preparations before testing an already observed empty installed model list; those calls consumed 486787 ms and are an independently removable own-driver cost.",
+    "The four Meeting input/negative preparations occurred after DOCX/PPTX persistence and took 462999 ms in total. Before export, initial Executive preparation took 5213 ms. These are different operations/shapes; the comparison does not isolate one performance cause.",
+    "Published report storage writes full bytes as base64 into state.documents[ref]. The executed C08 state provider passes structuredClone(state) to every read callback, including a case/review-only callback; its clone contains the report document data.",
+    "The executed Meeting producer composes twice. Each composition reads the case and the preserved review; the current protected review wrapper invokes the canonical reader twice plus two C08 receipt reads. Those reads preserve necessary authority/integrity semantics but repeat the whole-state cloning path.",
+    "Latest WP10 head 532da498 publishes request-local review read scope in review-read-integrity 2a04d865. However review-services c07d55c7 enables localSnapshotReaders only when readers is absent or entirely undefined. Final host bdf6d4e2 supplies residentReviewReaders.readers with actual contributions/outcome and extended-business-services a57e9d39 forwards it. This installed path therefore uses legacyRead; it must not be made to appear local by dropping the real readers.",
+    "The latest protectedApplication wraps Review HTTP in readScope.run. The analysis HTTP path calls the input producer with the review reader directly; no readScope.run appears in the inspected final host or producer. The disabled localSnapshotReaders gate already suffices to exclude that optimization here.",
+    "Latest review-resident-readers d5b1a0cb only extracts the same contribution/outcome composition. It does not change report storage, Meeting input preparation or C08 copying. Latest storage bf91209e changes the creation-policy stamp check, while the base64 storage remains. C08 2fd55c73 and Meeting producer 672a24c3 are unchanged."
+  ],
+  "ownCorrection": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+    "originalReorderCandidateBlob": "811b91fc94e73689518fff8092ff8d10dd59fa56",
+    "candidateBlob": "fbac0c8e04cdab45ecf3be21810b48e57b102b83",
+    "status": "FROZEN_STATIC_REVIEW_PASSED_NOT_HOSTED",
+    "changes": [
+      "Move Meeting input and its refusal checks before manual report exports.",
+      "Use the original real admitted input for an empty actual-model catalog observation; retain fresh preparation before any actual native execution.",
+      "Keep raw annual sources and annual case horizon unchanged; select January explicitly for this review through the real public producer.",
+      "Require all 22 captured values per section, all 44 rendered occurrences across two sections, exact monthly periods and absence of February–December value IDs in both Office formats.",
+      "Preserve both formats, all original refusal/reload/current-input/historical/download checks and the 420000 ms deadline."
+    ],
+    "scope": {
+      "caseHorizon": {
+        "start": "2027-01-01",
+        "end": "2027-12-31"
+      },
+      "reviewPeriod": {
+        "start": "2027-01-01",
+        "end": "2027-01-31"
+      },
+      "selectedValueCount": 44,
+      "annualFullMaterialProof": false
+    },
+    "originalAnnualReproducer": {
+      "productCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "testBlob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+      "capturedValueCount": 506,
+      "remainsPinnedForOwnerInvestigation": true
+    },
+    "notClaimed": "The legitimate narrower selected mission does not resolve or prove product performance for the original annual post-export/reopen flow. That published original fixture remains the owner reproduction, and the current selected flow still requires hosted execution."
+  },
+  "ownerRequest": [
+    "Reproduce/profile the actual installed host with its real resident contribution/outcome readers and the same two-line/506-value preserved review plus both Office artifacts. Measure analysis.prepare after persistence and after opening a fresh host; keep the canonical deadlines.",
+    "Bound redundant copying/replay while retaining exact receipt, source, snapshot, live Request/lease and current authority checks. The default-reader optimization must not be enabled by hiding real readers or treating their checks as cached authority.",
+    "If the optimization requires a changed C08 snapshot projection or durable blob representation, publish the smallest reviewed owner closure and its negative regressions; WP12 will consume the pins. No such foreign code is applied here.",
+    "Retain negatives for source change, incomplete export, replacement review/version, unlinked case, unavailable routine result, unauthenticated download and current revocation. Exercise the real full post-export consumer rather than only a bare Review fixture."
+  ],
+  "sourcePins": "source-pins.json",
+  "verification": {
+    "exactMcpSourceFiles": 14,
+    "sourceBlobHashesRecomputed": true,
+    "foreignSourcesEdited": false,
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false,
+    "claim": "Observed original hosted timeout and static paths only; no corrected runtime performance or GNATIVE acceptance."
+  }
+}
