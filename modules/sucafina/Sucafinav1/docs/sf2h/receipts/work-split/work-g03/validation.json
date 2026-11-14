@@ -1,0 +1,205 @@
+{
+  "schema": "sf2h.work-g03.validation.v1",
+  "status": "G03_SCOPED_VERIFIED_READY_FOR_INTEGRATION",
+  "pr": 53,
+  "branch": "work-g03",
+  "target": "ui-work",
+  "base": {
+    "sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "tree": "d0508747f0818b3467f44bac845ca6a878bdb7ea"
+  },
+  "productCandidate": {
+    "sha": "bbebc56623f326572dd25d0e0d20655da4904eba",
+    "tree": "ada91397233d12b9a6ee2bafaac3f85cf51a3c46"
+  },
+  "initialCandidate": {
+    "sha": "034d03c4721367a00fb0f546eed98b3ad047b0f9",
+    "tree": "3ccd6bfa9311adf20ab341a519af3c1e2f3c648b"
+  },
+  "productIdentity": "W1 and W2 have identical product sources. Only the exclusive test changes in W2; S1/S2 preserve their own W inputs and add only .ci-run.json.",
+  "pins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+      "blob": "cc0bfcdbd7b31d1aa31d65300251b574aaad4fb9",
+      "consumedBlob": "cc0bfcdbd7b31d1aa31d65300251b574aaad4fb9",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "175ff36fe09405e0f31dd55207d751e3753f6ffb",
+      "consumedBlob": "175ff36fe09405e0f31dd55207d751e3753f6ffb",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+      "blob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+      "consumedBlob": "cd9a67887f41986243809672572c972440c832ec",
+      "unchanged": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "blob": "85ee6b0c7111023fc58576c1ad227907daed18a4",
+      "consumedBlob": "85ee6b0c7111023fc58576c1ad227907daed18a4",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "blob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "consumedBlob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "blob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "consumedBlob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "consumedBlob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts",
+      "blob": "70c56df6b32d64b23a5ceb8f1819aca6e385749e",
+      "consumedBlob": "70c56df6b32d64b23a5ceb8f1819aca6e385749e",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "blob": "d4f71cf3e3aac27b5554bb6b856628f3a17576d0",
+      "consumedBlob": "d4f71cf3e3aac27b5554bb6b856628f3a17576d0",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "blob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "consumedBlob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "consumedBlob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "blob": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+      "consumedBlob": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+      "blob": "8e43041300f452a83d6b8f1895e73188a81138a3",
+      "consumedBlob": "8e43041300f452a83d6b8f1895e73188a81138a3",
+      "unchanged": true
+    }
+  ],
+  "configurationPins": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "0fabcdd9148286629ba67bcbda4860783ab9c487"
+    },
+    {
+      "path": "script/module-registry.json",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob": "a10c7b04ca6633f688b62069a9a9832aaa4543dd"
+    }
+  ],
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-g03/g03-conflict-review.test.ts",
+    "W1Blob": "49d98234ee97ff79a632cfd17ff4093bc9247561",
+    "W2Blob": "38042d9ad60e65c411c0024c77faf0194bb6163f"
+  },
+  "snapshots": [
+    {
+      "W": "034d03c4721367a00fb0f546eed98b3ad047b0f9",
+      "S": "4a63cfecb426dcca14ed8d55a3790f25eab6e6fa",
+      "STree": "299df80b88f87e75dfe7848d644fd5bb2534f926",
+      "run": 43624801241,
+      "job": 132538140988,
+      "requestOnly": true
+    },
+    {
+      "W": "bbebc56623f326572dd25d0e0d20655da4904eba",
+      "S": "3a278f0bafd7cb9e255b28b0babce45a6c9d05a0",
+      "STree": "b4c6de249a60aa234058865bd47c5b323ba53d25",
+      "run": 43625362178,
+      "job": 132539863339,
+      "requestOnly": true
+    }
+  ],
+  "producerFinalReadback": {
+    "branch": "collab-resume",
+    "head": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "tree": "ac88fa893a3b8b9f36c4373c2889652025fcf0f3",
+    "blob": "cd9a67887f41986243809672572c972440c832ec",
+    "unchangedConsumedBlob": true,
+    "deltaSinceInitialObservation": "One receipt and two answer tests; no case-selection producer change.",
+    "additionalClosureConsumed": []
+  },
+  "deliveryEnvelope": {
+    "parent": "bbebc56623f326572dd25d0e0d20655da4904eba",
+    "allowedNewPaths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-g03/README.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-g03/run-02.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-g03/criteria.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-g03/validation.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-g03/ci-request.03.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-g03/patches/g03-published-intake.APPLIED.patch"
+    ],
+    "allExistingInputsPreserved": true,
+    "newExecutableInputs": false,
+    "identity": "The commit containing this file is the evidence delivery. Its head/tree and final guards snapshot/run are recorded externally in PR53, avoiding self-reference."
+  },
+  "acceptance": {
+    "g03": "SCOPED_COMPONENT_PASS_R02",
+    "staticTypecheck": "FAIL_NINE_PREEXISTING_FOREIGN_DIAGNOSTICS_ZERO_OWN",
+    "guardsProductSnapshot": "PASS_S2",
+    "finalEvidenceGuard": {
+      "request": "ci-request.03.json",
+      "reportLocation": "https://github.com/gustavomhss/Orchestra-SF/pull/53",
+      "scope": "Same mandatory repository guards against origin/dev; no product-journey rerun."
+    },
+    "legacyTestPatch": "NOT_APPLIED_NOT_RUN_OWNER_UI_WORK",
+    "installedHost": "NOT_PROVED",
+    "globalRelease": false
+  },
+  "permissions": {
+    "producerConsumption": "Verbatim only",
+    "newTestAndReceiptPrefixesOnly": true,
+    "sharedDriverOrFixtureChanges": false,
+    "workflowOrPolicyChanges": false,
+    "localProductTests": false,
+    "remoteOperations": "GitHub MCP",
+    "ownerBranchMutation": false,
+    "forcePushOrMerge": false
+  },
+  "next": [
+    "S0/ui-work review and integrate PR53 without merging unrelated producer snapshots.",
+    "ui-work owner reconcile the readonly legacy observation patch before including that old test in a wider run.",
+    "Composition/WP10 and WP07 resolve the existing nine static diagnostics in their own paths.",
+    "Keep C03 recipient/confirmation and installed-host acceptance with their original owners; no inherited PASS expansion."
+  ]
+}
