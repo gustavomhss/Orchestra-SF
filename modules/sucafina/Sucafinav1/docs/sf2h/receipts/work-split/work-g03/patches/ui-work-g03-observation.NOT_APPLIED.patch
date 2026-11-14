@@ -1,0 +1,21 @@
+NOT_APPLIED — owner ui-work follow-up for the inherited G03 test observation.
+Preimage commit 79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244; blob 70c56df6b32d64b23a5ceb8f1819aca6e385749e.
+This path is readonly to work-g03. The equivalent corrected observation is tested in the exclusive work-g03 file.
+The older assertions below remain intact; the early copies expose an incorrect 503 before waiting for the rejected UI state.
+NO PRODUCT CHANGE; NOT_RUN on the inherited test file. Owner must apply/reconcile before selecting it in a wider CI run.
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts b/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts
+@@ -82,7 +82,10 @@
+     const pending = app.page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-selection-create")
+     await form.getByRole("button", { name: "Save work selection", exact: true }).click()
+     const response = await pending, payload = await response.json()
+-    await app.page.waitForFunction(() => !document.querySelector<HTMLButtonElement>('[data-case-work-selection] button[type="submit"]')?.disabled)
++    expect(response.status()).toBe(409)
++    expect(payload).toEqual({ status: "conflict", reason: "selection-not-committed" })
++    await app.page.waitForFunction(() => document.querySelector('[data-case-work-selection] [role="status"]')?.textContent?.startsWith("The selection was not saved because its protected state changed."))
++    expect(await form.getByRole("button", { name: "Save work selection", exact: true }).isDisabled()).toBe(true)
+     expect(await form.getByRole("checkbox").isChecked()).toBe(true)
+     expect(await form.getByLabel("Work start", { exact: true }).inputValue()).toBe("2026-03-01")
+     expect(await form.getByLabel("Work end", { exact: true }).inputValue()).toBe("2026-03-31")

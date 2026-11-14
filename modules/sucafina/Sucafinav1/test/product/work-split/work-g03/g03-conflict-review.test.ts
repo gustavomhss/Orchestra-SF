@@ -165,7 +165,10 @@ test("G03 acceptance requires the real precommit CAS conflict and preserves the 
     expect(await app.page.locator("html").getAttribute("data-work-revocations")).toBe("1")
     expect(writes()).toHaveLength(4)
     // Retry remains subject to the revoked real session even for an existing receipt.
-    expect((await app.post("collaboration-selection-create", JSON.parse(reviewed.body), reviewed.key!)).status).toBe(403)
+    if (!reviewed.key) throw new Error("Reviewed mutation key unavailable")
+    const replayHeaders = app.request().headers
+    replayHeaders.set("idempotency-key", reviewed.key)
+    expect((await fetch(app.origin + app.mount + "?sf=collaboration-selection-create", { method: "POST", headers: replayHeaders, body: reviewed.body })).status).toBe(403)
     expect(writes()).toHaveLength(5)
     expect(writes()[4]!.status).toBe(403)
 
@@ -177,14 +180,27 @@ test("G03 acceptance requires the real precommit CAS conflict and preserves the 
     const audit = app.request()
     audit.headers.set("cookie", cookie)
     expect(await stored(app, audit)).toEqual(committed)
-    expect((await app.page.reload())?.status()).toBe(403)
+    // Chromium may reject navigation for an empty 403. Observe the actual
+    // server response and forward it unchanged before judging that rejection.
+    let revokedReloadHttp: number | undefined
+    await app.page.route(app.origin + app.mount, async (route) => {
+      const response = await route.fetch()
+      revokedReloadHttp = response.status()
+      await route.fulfill({ response })
+    })
+    const deniedReload = await app.page.reload().catch((error) => {
+      expect(String(error)).toContain("net::ERR_HTTP_RESPONSE_CODE_FAILURE")
+      return undefined
+    })
+    expect(revokedReloadHttp).toBe(403)
+    if (deniedReload) expect(deniedReload.status()).toBe(403)
     expect(app.errors).toEqual([])
     console.info("WORK_G03_REVIEW_REPLAY_REVOKE", JSON.stringify({
       caseRef: app.caseRef, sourceRef: app.source.refId, period: draft.period, selectionRef,
       createHttp: writes().map((attempt) => attempt.status), storageVersions: [initial.storageVersion, won.storageVersion, committed.storageVersion],
       effects: { competitor: 1, rejected: 0, reviewed: 1, retry: 0, reload: 0, revokedReplay: 0 },
       exactRetryBody: writes()[3]!.body === reviewed.body, exactRetryKey: writes()[3]!.key === reviewed.key,
-      reviewedCaseReads: caseReads - readsBeforeReview, sessionRevoked: true, revokedReloadHttp: 403,
+      caseReadsSinceReview: caseReads - readsBeforeReview, sessionRevoked: true, revokedReloadHttp,
     }))
   } finally { await app.close() }
 }, 45_000)
