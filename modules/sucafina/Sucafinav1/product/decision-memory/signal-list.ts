@@ -7,7 +7,8 @@ import type { ChangeImpact } from "../contracts/decisions.ts"
 import { reconcileSfSignal } from "./signals.ts"
 import type { SfStoredSignalBinding } from "./signal-registry.ts"
 import type { createSfSignalRegistry } from "./signal-registry.ts"
-import type { createSfMaterialityAccess } from "./materiality.ts"
+import type { createSfMaterialityAccess, ReconsiderationSignal } from "./materiality.ts"
+import { sfReconsiderationFingerprint, sfReconsiderationObservationsAdvance } from "./materiality.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type MaterialityAccess = ReturnType<typeof createSfMaterialityAccess>
@@ -31,7 +32,7 @@ export function createSfAuthorizedSignalList(input: {
       const listed = await input.registry.list(caseRef, call)
       if (listed.status !== "ok" || !validBindings(listed.records, caseRef, projection, call) || !await input.host.revalidate(call)) return { status: "unavailable" }
       const bindings = listed.records
-      const signals: { label: string; impact: Pick<ChangeImpact, "state" | "chosen" | "current" | "reason">; action: "open" | "update" | "none"; conditionId: string; fingerprint: string }[] = []
+      const signals: { label: string; impact: Pick<ChangeImpact, "state" | "chosen" | "current" | "reason">; action: "open" | "update" | "none"; conditionId: string; fingerprint: string; observedSignal: ReconsiderationSignal }[] = []
       const expectedStates = new Map(bindings.map((binding) => [binding.id, binding.signalState]))
       for (const binding of bindings) {
         const selection = binding.selection
@@ -57,14 +58,14 @@ export function createSfAuthorizedSignalList(input: {
         if (saved.status !== "ok") return { status: "unavailable" }
         expectedStates.set(binding.id, saved.record.signalState)
         if (next.state.status === "resolved") continue
-        signals.push({ label: selection.label, impact: { state: current.impact.state, chosen: current.impact.chosen, current: current.impact.current, reason: current.impact.reason }, action: next.action, conditionId: binding.id, fingerprint: digestSfValue([current.signal, current.impact]) })
+        signals.push({ label: selection.label, impact: { state: current.impact.state, chosen: current.impact.chosen, current: current.impact.current, reason: current.impact.reason }, action: next.action, conditionId: binding.id, fingerprint: sfReconsiderationFingerprint(current.signal, current.impact), observedSignal: current.signal })
       }
       const again = await readAuthorizedCase(input.cases, caseRef, call)
       const refreshed = await input.registry.list(caseRef, call)
       if (!again || digestSfValue(again.case) !== digestSfValue(projection.case) || refreshed.status !== "ok" || bindingFingerprint(refreshed.records) !== bindingFingerprint(bindings) || !validBindings(refreshed.records, caseRef, again, call) || refreshed.records.some((binding) => digestSfValue(binding.signalState) !== digestSfValue(expectedStates.get(binding.id))) || request.signal.aborted || bindingDigest !== digestSfValue([call.kind, call.binding]) || !await input.host.revalidate(call)) return { status: "unavailable" }
       for (const signal of signals) {
         const current = await input.materiality(signal.conditionId, call)
-        if (current.status !== "ok" || !current.signal || digestSfValue([current.signal, current.impact]) !== signal.fingerprint || request.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" }
+        if (current.status !== "ok" || !current.signal || sfReconsiderationFingerprint(current.signal, current.impact) !== signal.fingerprint || !sfReconsiderationObservationsAdvance(signal.observedSignal, current.signal) || request.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" }
       }
       return { status: "ok", signals: signals.map(({ label, impact, action }) => ({ label, impact, action })).sort((left, right) => left.label.localeCompare(right.label) || left.impact.reason.localeCompare(right.impact.reason)) }
     } catch {
@@ -86,7 +87,8 @@ function isCaseRef(value: CaseRef): boolean {
 }
 
 function validBindings(bindings: readonly SfStoredSignalBinding[], caseRef: CaseRef, projection: AuthorizedCaseProjection, call: TrustedDomainContext): boolean {
-  return Array.isArray(bindings) && bindings.every((binding) => {
+  if (!Array.isArray(bindings)) return false
+  return bindings.every((binding: SfStoredSignalBinding) => {
     const selection = binding?.selection
     if (binding?.schema !== "sf-memory-condition-v1" || !binding.id.trim() || !Number.isSafeInteger(binding.revision) || binding.revision < 1 || selection.recipientRef !== call.binding.principalRef || (selection.caseRef.id !== caseRef.id || selection.caseRef.incarnation !== caseRef.incarnation || selection.caseRef.version > caseRef.version) || !projection.case.choices.some((choice) => choice.id === selection.choiceId && choice.criteria.includes(selection.criterionId) && digestSfValue(choice) === binding.choiceDigest) || !projection.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(selection.evidence)) || selection.evidence.refDigest !== digestSfEvidenceRef(selection.evidence) || selection.evidence.target.surface !== selection.source.surface || selection.evidence.target.recordType !== selection.source.type || selection.evidence.target.recordId !== selection.source.id || selection.evidence.target.incarnation !== selection.source.incarnation || selection.evidence.target.version !== selection.source.version || selection.fields.some((field) => !selection.evidence.target.fields.includes(field) || !selection.source.fields.includes(field)) || !selection.evidence.target.period || selection.evidence.target.period.start > selection.period.start || selection.evidence.target.period.end < selection.period.end || selection.source.period.start > selection.period.start || selection.source.period.end < selection.period.end || !selection.label.trim() || !binding.principalRef.trim() || !selection.destination.trim() || (binding.signalState && binding.signalState.conditionId !== binding.id)) return false
     return true

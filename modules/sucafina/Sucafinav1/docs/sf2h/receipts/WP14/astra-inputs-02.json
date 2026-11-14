@@ -1,0 +1,46 @@
+{
+  "schema": "sf2h-wp14-input-intake-v1",
+  "owner": "WP14",
+  "parent": "44bfe3533f22f263a9e6973d135c7223aa8cd088",
+  "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "previousReceipt": "astra-inputs-01.json",
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "sourceBlob": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+      "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "owner": "WP10",
+      "reason": "Published current BCS consumed by Atlas recovery"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "sourceBlob": "a7395e072db32bec6aa72d1e2dba9a9400c9c6c9",
+      "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "owner": "WP10",
+      "reason": "Scoped persisted Atlas/BCS/scanner consumer test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "sourceBlob": "6de0459d3897490b89b85d7f375a4234f554025f",
+      "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "owner": "WP10",
+      "reason": "Scoped persisted Atlas/BCS/scanner consumer test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+      "sourceBlob": "03b4d7673aa3c40761b0568f6704d78b588a28bc",
+      "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "owner": "WP10",
+      "reason": "Scoped persisted Atlas/BCS/scanner consumer test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "sourceBlob": "e366d37c1f31217744e800263d9dcc514e2db755",
+      "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "owner": "WP10",
+      "reason": "Scoped persisted Atlas/BCS/scanner consumer test"
+    }
+  ],
+  "policy": "Exact published blobs; no edits to producer-owned paths or source branches.",
+  "validation": "UNVERIFIED until scoped GitHub Actions consumes this product."
+}

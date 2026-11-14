@@ -30,7 +30,7 @@ import { createSfCaseEventSourceAccess, createSfDashboardContinuityProof, create
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { DecisionCase, CaseLedgerEvent } from "../../../product/contracts/decisions.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
-import type { TrustedDomainContext, TrustedUiLease } from "../../../product/contracts/sf-execution.ts"
+import type { TrustedCallLease, TrustedDomainContext, TrustedExecutionBinding, TrustedUiLease } from "../../../product/contracts/sf-execution.ts"
 
 const binding = (id: string): TrustedDomainContext => ({ kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: id, requestId: "r", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease })
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -95,6 +95,62 @@ test("protected Atlas original binds cross-principal continuity after store reop
       expect((await first.cases.read({ caseRef: encodeCaseRef({ id: "case", incarnation: "case-inc" }) }, binding("alice"))).status).toBe("ok")
       expect((await first.eventAccess(nestedRef, binding("alice"))).state).toBe("fresh")
       expect((await first.eventAccess(eventRef, binding("alice"), new Set([eventRef.refDigest]))).state).toBe("unavailable")
+      // The host registry/current case below are synthetic. These assertions test
+      // the scoped source callback; the process restart below is the Atlas proof.
+      const native: TrustedDomainContext = { kind: "native", binding: {
+        installationId: "i", projectId: "p", principalRef: "alice", hostId: "host", locationId: "location", nativeSessionId: "session", runId: "run",
+        caseId: "current-case", caseIncarnation: "current-inc", caseVersion: 1, profileId: "sf_finance", profileVersion: "1", manifestDigest: "manifest", skillReceipts: [],
+        accessRevision: "1", policyVersion: "1", providerGeneration: 1, expiresAt: "2099-01-01T00:00:00Z", entryMode: "interactive",
+      } as TrustedExecutionBinding, lease: {} as TrustedCallLease }
+      const nativeDigest = digestSfValue(native)
+      expect((await first.eventAccess(nestedRef, native)).state).toBe("unavailable")
+      const selected = { incarnation: "case-inc", version: 1, allowed: true, revokeOnAwait: false, reads: 0 }
+      let scopedEvents: ReturnType<typeof createSfCaseEventSourceAccess>
+      scopedEvents = createSfCaseEventSourceAccess({ host: first.host, state: first.state,
+        authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef),
+        authorizeRecallCase: async (value, context) => {
+          selected.reads += 1
+          await Promise.resolve()
+          if (selected.revokeOnAwait && selected.reads > 1) selected.allowed = false
+          return selected.allowed && context === native && digestSfValue(context) === nativeDigest && value.id === "case" && value.incarnation === selected.incarnation && value.version === selected.version
+        },
+        authorizeEvidence: async (refs, context, ancestors) => (await Promise.all(refs.map((ref) => ref.kind === "case-event" ? scopedEvents(ref, context, ancestors) : first.source(ref, context)))).every((value) => value.state === "fresh"),
+      })
+      expect((await scopedEvents(nestedRef, native)).state).toBe("fresh")
+      for (const change of [{ incarnation: "case-inc", version: 2 }, { incarnation: "replaced", version: 1 }]) {
+        Object.assign(selected, change)
+        const denied = await scopedEvents(nestedRef, native)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+      }
+      Object.assign(selected, { incarnation: "case-inc", version: 1, reads: 0, revokeOnAwait: true })
+      const revokedPrecedent = await scopedEvents(nestedRef, native)
+      expect(revokedPrecedent.state).toBe("unavailable")
+      expect(revokedPrecedent.authorizedProjection).toBeUndefined()
+      expect(revokedPrecedent.currentRef).toBeUndefined()
+      expect(digestSfValue(native)).toBe(nativeDigest)
+      for (const mutation of ["reference", "binding"] as const) {
+        const incoming = structuredClone(eventRef)
+        const checks = { count: 0 }
+        const raceAccess = createSfCaseEventSourceAccess({ state: first.state, host: { ...first.host, revalidate: async (context) => {
+          checks.count += 1
+          const allowed = await first.host.revalidate(context)
+          if (checks.count === 3 && mutation === "binding") Object.assign(native.binding, { providerGeneration: 2 })
+          if (checks.count === 3 && mutation === "reference") incoming.target.outputDigest = "a".repeat(64)
+          return allowed
+        } }, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef),
+        authorizeRecallCase: async (value, context) => context === native && digestSfValue(context) === nativeDigest && value.id === "case" && value.incarnation === "case-inc" && value.version === 1,
+        authorizeEvidence: async (refs, context) => (await Promise.all(refs.map((ref) => first.source(ref, context)))).every((value) => value.state === "fresh"),
+        })
+        const denied = await raceAccess(incoming, native)
+        expect(checks.count).toBe(3)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+        Object.assign(native.binding, { providerGeneration: 1 })
+      }
+      expect(digestSfValue(native)).toBe(nativeDigest)
       session.evidence = false
       expect((await first.eventAccess(eventRef, binding("alice"))).state).toBe("unavailable")
       session.evidence = true
@@ -142,6 +198,12 @@ test("protected Atlas original binds cross-principal continuity after store reop
       expect(await proof(original, current.currentRef, binding("bob"))).toBe(false)
       expect((await reopened.atlas.recall({ id: "case", incarnation: "case-inc" }, binding("bob"))).status).toBe("unavailable")
       expect(await reopened.atlas.readOriginal({ id: "case", incarnation: "case-inc" }, source.refDigest, binding("bob"))).toBeUndefined()
+      const scannerSha256 = new Bun.CryptoHasher("sha256").update(new Uint8Array(await Bun.file(spec.command).arrayBuffer())).digest("hex")
+      console.log(`SF_WP14_ATLAS_RESTART_RECEIPT:${JSON.stringify({ kind: "sqlite-atlas-process-restart", nativeSessionWitness: false,
+        scanner: { name: scanner.name, version, sha256: scannerSha256 },
+        committed: { status: committed.status, eventId: committed.eventId, recordDigest: committed.recordDigest },
+        replayed: { status: replayed.status, eventId: replayed.eventId, recordDigest: replayed.recordDigest },
+        parentPid: process.pid, childPid: receipt.pid, authorized: receipt.authorized, matches: receipt.matches, outsider: receipt.outsider, revoked: receipt.revoked })}`)
     } finally { await store.dispose() }
   } finally { await rm(directory, { recursive: true, force: true }) }
 }, 180_000)

@@ -29,6 +29,10 @@ if (!directory || !scannerPath || !scannerVersion || !pinned) throw new Error("R
 const store = await openLocalStore(directory, { lockTimeoutMs: 500 })
 try {
   const session = { id: "bob", evidence: true }
+  const authorizedStages: Record<string, { status: string; reason?: string }> = {}
+  const recordStage = (stage: string, result: { status: string; reason?: string }) => {
+    if (session.id === "bob" && session.evidence) authorizedStages[stage] = { status: result.status, ...(result.reason ? { reason: result.reason } : {}) }
+  }
   const time = "2026-11-13T12:00:00Z"
   const call = (): TrustedDomainContext => ({ kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: session.id, requestId: "restart", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease })
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => time) })
@@ -51,7 +55,12 @@ try {
     const value = ref && (snapshot.data.__sfProductV1 as { cases?: Record<string, DecisionCase> } | undefined)?.cases?.[ref.id]
     return value && value.participants.includes(request.headers.get("authorization") ?? "") ? { incarnation: value.incarnation } : undefined
   } })
-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "unused", incarnation: "unused" }, operationIdentity: () => "read-only", authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), evidence, createId: randomUUID, now: () => time })
+  const casePort = createDecisionCasePort({ state, host, creationTarget: { ref: "unused", incarnation: "unused" }, operationIdentity: () => "read-only", authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), verifyScenarioOperations: async (value) => value.alternatives.every((item) => item.scenario.operations.length === 0) && value.choices.every((item) => item.scenario.operations.length === 0) && value.preparedChanges.length === 0, evidence, createId: randomUUID, now: () => time })
+  const cases = { ...casePort, read: async (...args: Parameters<typeof casePort.read>) => {
+    const result = await casePort.read(...args)
+    recordStage("caseRead", result)
+    return result
+  } }
   eventAccess = createSfCaseEventSourceAccess({ host, state, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), authorizeEvidence: async (refs, context, ancestors) => session.evidence && (await Promise.all(refs.map((ref) => resolveNested(ref, context, new Set(ancestors))))).every((result) => result.state === "fresh" || result.state === "historical") })
   const caseRef = { id: "case", incarnation: "case-inc", version: 1 }
   let memory: ReturnType<typeof createSfAtlasMemory>
@@ -59,8 +68,17 @@ try {
   const dashboardProof = createSfDashboardContinuityProof({ host, issue, dashboard, readOriginal })
   const eventProof = createSfSourceContinuityProof({ host, readOriginal, readCurrent: eventAccess })
   const proveContinuity = (original: BusinessEvidenceRef, current: BusinessEvidenceRef, context: TrustedDomainContext) => original.kind === "record" && original.target.surface === "dashboard" ? dashboardProof(original, current, context) : original.kind === "case-event" ? eventProof(original, current, context) : Promise.resolve(false)
-  memory = createSfAtlasMemory({ state, cases, host, evidence, scanner: createSfAtlasScanner({ scanners: [{ ...pinned, command: scannerPath }] }), scannerVersion, now: () => time, proveContinuity })
-  const recall = createSfCaseRecall({ host, cases, memory, selectCandidates: async () => [caseRef], featuresForCase: async (value, context) => deriveAuthorizedRecallFeatures(value, context), runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" }, proveContinuity, rank: rankSfAtlasRecall })
+  const atlas = createSfAtlasMemory({ state, cases, host, evidence, scanner: createSfAtlasScanner({ scanners: [{ ...pinned, command: scannerPath }] }), scannerVersion, now: () => time, proveContinuity })
+  memory = { ...atlas, recall: async (...args: Parameters<typeof atlas.recall>) => {
+    const result = await atlas.recall(...args)
+    recordStage("atlasRead", result)
+    return result
+  } }
+  const recall = createSfCaseRecall({ host, cases, memory, selectCandidates: async () => [caseRef], featuresForCase: async (value, context) => deriveAuthorizedRecallFeatures(value, context), runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" }, proveContinuity, rank: async (request) => {
+    const result = await rankSfAtlasRecall(request)
+    recordStage("rank", result)
+    return result
+  } })
   const request = { caseRef, limit: 10, scope: { query: "renewal", recallScope: { cases: [caseRef], period: { start: "2026-01-01", end: "2026-12-31" }, includeHistorical: false } } }
   const authorized = await recall(request, call())
   session.id = "carol"
@@ -68,7 +86,7 @@ try {
   session.id = "bob"
   session.evidence = false
   const revoked = await recall(request, call())
-  console.log(`SF_ATLAS_RESTART_PROBE:${JSON.stringify({ pid: process.pid, authorized: authorized.status, matches: authorized.status === "ok" ? authorized.matches.length : null, outsider: outsider.status, revoked: revoked.status })}`)
+  console.log(`SF_ATLAS_RESTART_PROBE:${JSON.stringify({ pid: process.pid, authorized: authorized.status, matches: authorized.status === "ok" ? authorized.matches.length : null, outsider: outsider.status, revoked: revoked.status, authorizedStages })}`)
 } finally {
   await store.dispose()
 }

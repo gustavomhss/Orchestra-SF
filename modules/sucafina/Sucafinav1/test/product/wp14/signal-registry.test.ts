@@ -80,17 +80,21 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     expect(again.status).toBe("ok")
     if (again.status === "ok") expect(again.records[0]?.signalState).toEqual(next)
     // The comparison is a fixture; C08, the case, source reads and the list producer are real.
+    // Each reread advances observedAt, which must not become a different material event.
+    const clock: { reads: number; rewindAfter?: number } = { reads: 0 }
     const materiality = createSfMaterialityAccess({ load: async (id, context) => {
+      clock.reads += 1
       const bindings = await registry.list(caseRef, context)
       const found = bindings.status === "ok" ? bindings.records.find((item) => item.id === id) : undefined
       if (!found) return undefined
-      return { condition: { id, source: found.selection.source, fields: found.selection.fields, period: found.selection.period, criterionId: found.selection.criterionId, choice }, change: { source, fields: ["status"], period, before: [issued.value], after: [issued.value], availability: "available" as const, comparison: { before: comparison, after: { ...comparison, criterionResults: [{ criterionId: "cost", state: "failed" as const, reason: "changed" }] }, resultBefore: result, resultAfter: result } } }
+      return { condition: { id, source: found.selection.source, fields: found.selection.fields, period: found.selection.period, criterionId: found.selection.criterionId, choice }, change: { source: { ...source, observedAt: new Date(Date.parse(at) + clock.reads * 1000 - (clock.rewindAfter !== undefined && clock.reads > clock.rewindAfter ? 60_000 : 0)).toISOString() }, fields: ["status"], period, before: [issued.value], after: [issued.value], availability: "available" as const, comparison: { before: comparison, after: { ...comparison, criterionResults: [{ criterionId: "cost", state: "failed" as const, reason: "changed" }] }, resultBefore: result, resultAfter: result } } }
     }, authorizeEvidence: async (refs, context) => (await Promise.all(refs.map((ref) => sourceAccess(ref, context)))).every((item) => item.state === "fresh"), revalidate: host.revalidate })
     const listSignals = createSfAuthorizedSignalList({ host, cases, registry, materiality })
     const output = await listSignals(caseRef, call)
     expect(output.status).toBe("ok")
     if (output.status === "ok") { expect(output.signals).toHaveLength(1); expect(Object.keys(output.signals[0]!).sort()).toEqual(["action", "impact", "label"]) }
     const repeated = await listSignals(caseRef, call)
+    expect(repeated.status).toBe("ok")
     if (repeated.status === "ok") expect(repeated.signals[0]?.action).toBe("none")
     // C16 selection is a fixture; source and C08 state remain real.
     const issueWorkRef = createSfWorkRefIssuer({ key: new Uint8Array(32).fill(7), revalidate: host.revalidate })
@@ -98,7 +102,14 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     const work = createSfWorkSignalList({ host, cases, registry, materiality, issueWorkRef, resolveSelection: async (ref) => ref === "selected-work" ? { status: "ok", caseRef } : { status: "unavailable" }, authorizeBinding: async (item, _projection, refs, context) => item.selection.recipientRef === context.binding.principalRef && (await Promise.all(refs.map((ref) => sourceAccess(ref, context)))).every((value) => value.state === "fresh") })
     const workResult = await work("selected-work", period, call)
     expect(workResult.status).toBe("ok")
+    expect(clock.reads).toBeGreaterThanOrEqual(12)
     if (workResult.status === "ok") { expect(workResult.signals).toHaveLength(1); expect(workResult.signals[0]?.destination).toBe("case-work"); expect(JSON.stringify(workResult)).not.toContain(record.id) }
+    clock.rewindAfter = clock.reads + 2
+    expect((await listSignals(caseRef, call)).status).toBe("unavailable")
+    clock.rewindAfter = undefined
+    clock.rewindAfter = clock.reads + 2
+    expect((await work("selected-work", period, call)).status).toBe("unavailable")
+    clock.rewindAfter = undefined
     expect((await work("unselected-work", period, call)).status).toBe("unavailable")
     const outside = await work("selected-work", { start: "2027-01-01", end: "2027-01-31" }, call)
     expect(outside).toEqual({ status: "ok", signals: [] })

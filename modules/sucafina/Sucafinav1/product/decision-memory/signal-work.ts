@@ -9,7 +9,8 @@ import { encodeCaseRef } from "../decisions/case-port.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { reconcileSfSignal } from "./signals.ts"
 import type { SfStoredSignalBinding, createSfSignalRegistry } from "./signal-registry.ts"
-import type { createSfMaterialityAccess } from "./materiality.ts"
+import type { createSfMaterialityAccess, ReconsiderationSignal } from "./materiality.ts"
+import { sfReconsiderationFingerprint, sfReconsiderationObservationsAdvance } from "./materiality.ts"
 
 type CaseRef = SfStoredSignalBinding["selection"]["caseRef"]
 type SignalRegistry = Pick<ReturnType<typeof createSfSignalRegistry>, "list" | "reconcile">
@@ -43,7 +44,7 @@ export function createSfWorkSignalList(input: {
       if (listed.status !== "ok" || !validBindings(listed.records, selected.caseRef, projection, call) || !await input.host.revalidate(call)) return { status: "unavailable" }
       const bindings = listed.records
       const expectedStates = new Map(bindings.map((record) => [record.id, record.signalState]))
-      const signals: { label: string; workRef: string; impact: Pick<ChangeImpact, "state" | "reason">; recipientRef: string; destination: string; sourceRefs: WorkSourceRefs; bindingId: string; fingerprint: string }[] = []
+      const signals: { label: string; workRef: string; impact: Pick<ChangeImpact, "state" | "reason">; recipientRef: string; destination: string; sourceRefs: WorkSourceRefs; bindingId: string; fingerprint: string; observedSignal: ReconsiderationSignal }[] = []
       for (const record of bindings) {
         if (record.selection.period.end < period.start || record.selection.period.start > period.end) continue
         const current = await input.materiality(record.id, call)
@@ -75,7 +76,7 @@ export function createSfWorkSignalList(input: {
         if (saved.status !== "ok") return { status: "unavailable" }
         expectedStates.set(record.id, saved.record.signalState)
         if (next.state.status === "resolved") continue
-        signals.push({ label: selection.label, workRef, impact: { state: current.impact.state, reason: current.impact.reason }, recipientRef: selection.recipientRef, destination: selection.destination, sourceRefs, bindingId: record.id, fingerprint: digestSfValue([current.signal, current.impact]) })
+        signals.push({ label: selection.label, workRef, impact: { state: current.impact.state, reason: current.impact.reason }, recipientRef: selection.recipientRef, destination: selection.destination, sourceRefs, bindingId: record.id, fingerprint: sfReconsiderationFingerprint(current.signal, current.impact), observedSignal: current.signal })
       }
       if (new Set(signals.map((signal) => signal.workRef)).size !== signals.length) return { status: "unavailable" }
       const selectedAgain = await input.resolveSelection(selectionRef, period, call)
@@ -85,7 +86,7 @@ export function createSfWorkSignalList(input: {
       for (const signal of signals) {
         const current = await input.materiality(signal.bindingId, call)
         const record = refreshed.records.find((item) => item.id === signal.bindingId)
-        if (!record || current.status !== "ok" || !matchesRegisteredScope(current.scope, record) || !current.signal || current.signal.conditionId !== signal.bindingId || current.signal.choiceId !== record.selection.choiceId || current.signal.source.surface !== record.selection.source.surface || current.signal.source.type !== record.selection.source.type || current.signal.source.id !== record.selection.source.id || digestSfValue([current.signal, current.impact]) !== signal.fingerprint || !await input.authorizeBinding(record, projectionAgain, signal.sourceRefs, call) || await input.issueWorkRef(record, call) !== signal.workRef || request.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" }
+        if (!record || current.status !== "ok" || !matchesRegisteredScope(current.scope, record) || !current.signal || current.signal.conditionId !== signal.bindingId || current.signal.choiceId !== record.selection.choiceId || current.signal.source.surface !== record.selection.source.surface || current.signal.source.type !== record.selection.source.type || current.signal.source.id !== record.selection.source.id || sfReconsiderationFingerprint(current.signal, current.impact) !== signal.fingerprint || !sfReconsiderationObservationsAdvance(signal.observedSignal, current.signal) || !await input.authorizeBinding(record, projectionAgain, signal.sourceRefs, call) || await input.issueWorkRef(record, call) !== signal.workRef || request.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" }
       }
       return { status: "ok", signals: signals.map(({ label, workRef, impact, recipientRef, destination, sourceRefs }) => ({ label, workRef, impact, recipientRef, destination, sourceRefs })).sort((left, right) => left.label.localeCompare(right.label) || left.destination.localeCompare(right.destination)) }
     } catch {
@@ -118,7 +119,8 @@ function matchesRegisteredScope(scope: { source: SfStoredSignalBinding["selectio
 }
 
 function validBindings(records: readonly SfStoredSignalBinding[], caseRef: CaseRef, projection: AuthorizedCaseProjection, call: TrustedDomainContext): boolean {
-  return Array.isArray(records) && records.every((record) => {
+  if (!Array.isArray(records)) return false
+  return records.every((record: SfStoredSignalBinding) => {
     const selection = record?.selection
     if (record?.schema !== "sf-memory-condition-v1" || !record.id.trim() || !record.principalRef.trim() || !Number.isSafeInteger(record.revision) || record.revision < 1 || selection.recipientRef !== call.binding.principalRef || (selection.caseRef.id !== caseRef.id || selection.caseRef.incarnation !== caseRef.incarnation || selection.caseRef.version > caseRef.version) || !projection.case.choices.some((choice) => choice.id === selection.choiceId && choice.criteria.includes(selection.criterionId) && digestSfValue(choice) === record.choiceDigest) || !projection.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(selection.evidence)) || selection.evidence.refDigest !== digestSfEvidenceRef(selection.evidence) || selection.evidence.target.surface !== selection.source.surface || selection.evidence.target.recordType !== selection.source.type || selection.evidence.target.recordId !== selection.source.id || selection.evidence.target.incarnation !== selection.source.incarnation || selection.evidence.target.version !== selection.source.version || selection.fields.some((field) => !selection.evidence.target.fields.includes(field) || !selection.source.fields.includes(field)) || !selection.evidence.target.period || selection.evidence.target.period.start > selection.period.start || selection.evidence.target.period.end < selection.period.end || selection.source.period.start > selection.period.start || selection.source.period.end < selection.period.end || !selection.label.trim() || !selection.destination.trim() || (record.signalState && record.signalState.conditionId !== record.id)) return false
     return true

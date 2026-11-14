@@ -3,6 +3,7 @@ import type { Period } from "../contracts/context.ts"
 import type { ChoiceRecord, ObservedResultProjection } from "../contracts/decisions.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import { isSfObservationTime, sfObservationTimeAdvances } from "./observation-time.ts"
 
 /** Metadata must be supplied by the authorized observation producer, never inferred from totals. */
 export function compareSfExpectedObserved(input: {
@@ -22,7 +23,7 @@ export function compareSfExpectedObserved(input: {
     : digestSfValue(input.choice.costCoverage) !== digestSfValue(input.choice.result.costCoverage) || input.choice.result.currency !== value.currency || input.choice.result.horizon.start > input.metric.period.start || input.choice.result.horizon.end < input.metric.period.end ? "baseline-mismatch"
     : value.value === null || observation.expected === null || observation.observed === null ? "observation-incomplete"
     : !Number.isFinite(value.value) || !Number.isFinite(observation.expected) || !Number.isFinite(observation.observed) || value.value !== observation.expected ? "baseline-mismatch"
-    : !observation.sourceRefs.length || !Number.isFinite(Date.parse(observation.cutoff)) ? "observation-unavailable"
+    : !observation.sourceRefs.length || !isSfObservationTime(observation.cutoff) ? "observation-unavailable"
     : undefined
   const compatibility = { metric: !!value, unit: !!value && value.unit === input.metric.unit && !!input.metric.unit, period: !!value && digestSfValue(value.horizon) === digestSfValue(input.metric.period), currency: !!value && value.currency === observation.currency, coverage: input.metric.coverage, compatible: !reason }
   if (reason || !value || value.value === null || observation.observed === null) return { status: "unavailable" as const, reason: reason ?? "observation-unavailable", compatibility, limitations: [...observation.limitations, "Observação não estabelece causalidade."] }
@@ -37,12 +38,22 @@ export function createSfObservedOutcomeAccess(input: {
 }) {
   return async (request: { caseRef: ObservedResultProjection["caseRef"]; choiceId: string }, call: TrustedDomainContext) => {
     try {
+      const wanted = structuredClone(request)
+      const requestDigest = digestSfValue(wanted)
       const binding = digestSfValue([call.kind, call.binding])
-      if (!await input.revalidate(call)) return { status: "unavailable" as const }
-      const loaded = await input.load(request.caseRef, request.choiceId, call)
-      if (!loaded || digestSfValue(loaded.caseRef) !== digestSfValue(request.caseRef) || loaded.choice.id !== request.choiceId || !await input.authorizeEvidence(outcomeEvidence(loaded), call) || !await input.revalidate(call)) return { status: "unavailable" as const }
-      const again = await input.load(request.caseRef, request.choiceId, call)
-      if (!again || digestSfValue({ ...again, observation: { ...again.observation, cutoff: "" } }) !== digestSfValue({ ...loaded, observation: { ...loaded.observation, cutoff: "" } }) || !Number.isFinite(Date.parse(loaded.observation.cutoff)) || !Number.isFinite(Date.parse(again.observation.cutoff)) || Date.parse(again.observation.cutoff) < Date.parse(loaded.observation.cutoff) || !await input.authorizeEvidence(outcomeEvidence(again), call) || digestSfValue([call.kind, call.binding]) !== binding || !await input.revalidate(call)) return { status: "unavailable" as const }
+      if (!wanted.caseRef.id.trim() || !wanted.caseRef.incarnation.trim() || !Number.isSafeInteger(wanted.caseRef.version) || wanted.caseRef.version < 1 || !wanted.choiceId.trim() || !await input.revalidate(call)) return { status: "unavailable" as const }
+      const read = async () => {
+        const loaded = await input.load(wanted.caseRef, wanted.choiceId, call)
+        const value = loaded && structuredClone(loaded)
+        if (!value || digestSfValue(value.caseRef) !== digestSfValue(wanted.caseRef) || value.choice.id !== wanted.choiceId) return undefined
+        const evidence = outcomeEvidence(value)
+        if (evidence.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(evidence, call)) return undefined
+        return value
+      }
+      const loaded = await read()
+      if (!loaded || !await input.revalidate(call)) return { status: "unavailable" as const }
+      const again = await read()
+      if (!again || digestSfValue({ ...again, observation: { ...again.observation, cutoff: "" } }) !== digestSfValue({ ...loaded, observation: { ...loaded.observation, cutoff: "" } }) || !sfObservationTimeAdvances(loaded.observation.cutoff, again.observation.cutoff) || digestSfValue(wanted) !== requestDigest || digestSfValue([call.kind, call.binding]) !== binding || !await input.revalidate(call)) return { status: "unavailable" as const }
       const result = compareSfExpectedObserved(again)
       return result.status === "comparable" ? { ...result, observation: structuredClone(again.observation) } : result
     } catch {

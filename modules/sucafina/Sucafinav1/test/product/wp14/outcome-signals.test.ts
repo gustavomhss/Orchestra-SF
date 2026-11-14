@@ -96,4 +96,27 @@ test("outcome access tolerates an advancing clock but rejects changed values", a
   if (current.status === "comparable") expect(current.cutoff).toBe("2026-12-31T00:00:01Z")
   clock.changed = true
   expect(await access({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
+  const rewind = { reads: 0 }
+  const stale = createSfObservedOutcomeAccess({ load: async () => {
+    rewind.reads += 1
+    return { caseRef: observation.caseRef, choice, observation: { ...observation, cutoff: rewind.reads === 1 ? "2026-12-31T00:00:01Z" : "2026-12-31T00:00:00Z" }, metric }
+  }, authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await stale({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
+  expect(compareSfExpectedObserved({ caseRef: observation.caseRef, choice, observation: { ...observation, cutoff: "December 31, 2026" }, metric }).status).toBe("unavailable")
+})
+
+test("outcome access snapshots reused producer objects and refuses foreign evidence", async () => {
+  const { createSfObservedOutcomeAccess } = await import("../../../product/decision-memory/outcome.ts")
+  const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "p", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+  const shared = { caseRef: observation.caseRef, choice, observation: { ...observation }, metric }
+  const reads = { count: 0 }
+  const access = createSfObservedOutcomeAccess({ load: async () => {
+    reads.count += 1
+    if (reads.count === 2) shared.observation.observed = 80
+    return shared
+  }, authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await access({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
+  expect(reads.count).toBe(2)
+  const foreign = createSfObservedOutcomeAccess({ load: async () => ({ caseRef: observation.caseRef, choice, observation: { ...observation, sourceRefs: [{ ...ref, projectId: "other-project" }] }, metric }), authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await foreign({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
 })

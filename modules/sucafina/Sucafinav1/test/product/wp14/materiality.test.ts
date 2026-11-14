@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { classifySfMaterialChange } from "../../../product/decision-memory/materiality.ts"
+import { classifySfMaterialChange, sfReconsiderationFingerprint } from "../../../product/decision-memory/materiality.ts"
 import type { MaterialChangeEvent, MaterialCondition } from "../../../product/decision-memory/materiality.ts"
 
 const source = { surface: "planner" as const, type: "quote", id: "quote-1", incarnation: "one", version: 1, fields: ["price"], period: { start: "2027-01-01", end: "2027-12-31" }, observedAt: "2026-01-01" }
@@ -27,8 +27,12 @@ describe("decision reconsideration", () => {
     expect(first.impact.state).toBe("material")
     expect(refreshed.signal?.correlationKey).toBe(first.signal?.correlationKey)
     expect(refreshed.impact.changeDigest).toBe(first.impact.changeDigest)
+    if (!first.signal || !refreshed.signal) throw new Error("material change must produce a signal")
+    expect(sfReconsiderationFingerprint(refreshed.signal, refreshed.impact)).toBe(sfReconsiderationFingerprint(first.signal, first.impact))
     const changed = classifySfMaterialChange(condition, { ...withComponent, source: { ...change.source, version: 3, observedAt: "2026-11-14T12:00:00Z" } })
     expect(changed.signal?.correlationKey).not.toBe(first.signal?.correlationKey)
+    if (!changed.signal) throw new Error("new source version must remain material")
+    expect(sfReconsiderationFingerprint(changed.signal, changed.impact)).not.toBe(sfReconsiderationFingerprint(first.signal, first.impact))
   })
   test("a conditioned choice becomes material when a missing cost resolves and breaks the criterion", () => {
     const before = { ...comparison("satisfied", 30000), comparisonStatus: "conditioned" as const, completeDifference: null, criterionResults: [{ criterionId: "advantage", state: "unknown" as const, reason: "training missing" }], unresolvedConditions: ["training"] }
@@ -111,4 +115,12 @@ test("materiality access distinguishes an advancing observation clock from a mut
   reads = 0
   const mutating = createSfMaterialityAccess({ load: async () => { reads += 1; if (reads > 1) shared.change.comparison!.resultAfter.knownSubtotal = 999999; return shared }, authorizeEvidence: async () => true, revalidate: async () => true })
   expect(await mutating(condition.id, call)).toEqual({ status: "unavailable" })
+  const rewind = { reads: 0 }
+  const stale = createSfMaterialityAccess({ load: async () => {
+    rewind.reads += 1
+    return { condition, change: { ...change, source: { ...change.source, observedAt: rewind.reads === 1 ? "2026-11-14T12:00:01Z" : "2026-11-14T12:00:00Z" } } }
+  }, authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await stale(condition.id, call)).toEqual({ status: "unavailable" })
+  const malformed = createSfMaterialityAccess({ load: async () => ({ condition, change: { ...change, source: { ...change.source, observedAt: "2026-02-30T12:00:00Z" } } }), authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await malformed(condition.id, call)).toEqual({ status: "unavailable" })
 })

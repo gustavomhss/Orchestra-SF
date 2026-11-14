@@ -31,7 +31,8 @@ test("review outcome reads the actual closed Planner month and rechecks its C08 
   try {
     await store.transaction("planner", async (snapshot) => { snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]; snapshot.data.versions = [{ id: "v0", year: 2027, closed: 1, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [45000, ...Array(11).fill(0)], a: [40000, ...Array(11).fill(null)], f: Array(12).fill(null) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]; return { commit: true, value: true } })
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => "2028-01-01T00:00:00Z") })
-    await persistence.initializeSources("planner")
+    // C08 selection writes fence all three persisted surfaces, including an otherwise empty one.
+    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     const session = { active: true, approved: false }
     const host: DomainPortHost = { persistence, authenticate: async (_request, context) => resolve("finance", [...context!.roleMap], (group) => session.active && group === "finance-group"), environment: async () => ({ at: "2028-01-01T00:00:00Z", id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: "finance" } }), revalidate: async () => session.active && await store.transaction("planner", async () => ({ commit: false, value: true })) }
     const planner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "fixture has no forecast coverage" }) })
@@ -69,6 +70,19 @@ test("review outcome reads the actual closed Planner month and rechecks its C08 
     const outcome = await review({ caseRef, choiceId: "choice" }, call)
     expect(outcome.status).toBe("ready")
     if (outcome.status === "ready") { expect(outcome.observation.observed).toBe(40000); expect(outcome.comparison.delta).toBe(-5000); expect(outcome.observation.cutoff).toBe("2027-01-31T23:59:59.999Z") }
+    const authorized = await cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+    expect(authorized.status).toBe("ok")
+    if (authorized.status !== "ok") return
+    const reused = structuredClone(authorized.value)
+    // A producer alias must not rewrite the baseline already inspected by the adapter.
+    // Source resolution, Planner observation and durable selection remain the real paths.
+    const racing = createSfDomainOutcomeAccess({ host, cases: { read: async () => ({ status: "ok", value: reused }) }, select: registry.select, readProjection: async (selected, context) => {
+      const observed = await observe(selected, context)
+      reused.case.choices[0]!.reason = "Changed after the authorized case read"
+      return observed
+    }, authorizeEvidence: async (refs, context) => (await Promise.all(refs.map((item) => resolveEvidence(item, context)))).every((item) => item.state === "fresh") })
+    expect(await racing({ caseRef, choiceId: "choice" }, call)).toEqual({ status: "unavailable" })
+    expect((await review({ caseRef, choiceId: "choice" }, call)).status).toBe("ready")
     await persistence.transaction("planner", async (snapshot) => { const versions = snapshot.data.versions as { lines: { a: (number | null)[] }[] }[]; versions[0]!.lines[0]!.a[0] = 41000; return { commit: true, value: true } })
     expect((await review({ caseRef, choiceId: "choice" }, call)).status).toBe("unavailable")
     session.active = false
