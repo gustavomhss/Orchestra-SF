@@ -32,6 +32,9 @@ test("review outcome reads the actual closed Planner month and rechecks its C08 
     await store.transaction("planner", async (snapshot) => { snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]; snapshot.data.versions = [{ id: "v0", year: 2027, closed: 1, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [45000, ...Array(11).fill(0)], a: [40000, ...Array(11).fill(null)], f: Array(12).fill(null) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]; return { commit: true, value: true } })
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => "2028-01-01T00:00:00Z") })
     await persistence.initializeSources("planner")
+    // Product metadata is stored on Dashboard; initialize its real source identities
+    // before the first protected case transaction as the installation bootstrap does.
+    await persistence.initializeSources("dashboard")
     const session = { active: true, approved: false }
     const host: DomainPortHost = { persistence, authenticate: async (_request, context) => resolve("finance", [...context!.roleMap], (group) => session.active && group === "finance-group"), environment: async () => ({ at: "2028-01-01T00:00:00Z", id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: "finance" } }), revalidate: async () => session.active && await store.transaction("planner", async () => ({ commit: false, value: true })) }
     const planner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "fixture has no forecast coverage" }) })

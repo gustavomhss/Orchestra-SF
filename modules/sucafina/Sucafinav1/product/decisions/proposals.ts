@@ -95,7 +95,7 @@ export function createChangeProposalService(input: {
     if (new Set(resolved.value.changes.map((item) => item.command.idempotencyKey)).size !== resolved.value.changes.length) return { status: "conflict", reason: "change-identity-conflict" }
     const previews = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: scopedCase, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
     const failedPreview = previews.find((item) => item.status !== "ok")
-    if (failedPreview && failedPreview.status !== "ok") return failedPreview
+    if (failedPreview) return failedPreview
     const changes = resolved.value.changes.map((item, index) => {
       const target = item.command.target
       const evidence = item.targetEvidence

@@ -97,3 +97,33 @@ test("outcome access tolerates an advancing clock but rejects changed values", a
   clock.changed = true
   expect(await access({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
 })
+
+test("outcome access detects a loader mutating and reusing its original observation", async () => {
+  const { createSfObservedOutcomeAccess } = await import("../../../product/decision-memory/outcome.ts")
+  const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "p", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+  const shared = structuredClone({ caseRef: observation.caseRef, choice, observation, metric })
+  const state = { reads: 0 }
+  const access = createSfObservedOutcomeAccess({ load: async () => { state.reads += 1; if (state.reads === 2) shared.observation.observed = 91; return shared }, authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await access({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
+  expect(state.reads).toBe(2)
+})
+
+test("outcome access snapshots evidence borrowed by an authorization callback", async () => {
+  const { createSfObservedOutcomeAccess } = await import("../../../product/decision-memory/outcome.ts")
+  const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "p", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+  const shared = structuredClone({ caseRef: observation.caseRef, choice, observation, metric })
+  const access = createSfObservedOutcomeAccess({ load: async () => shared, authorizeEvidence: async (refs) => { const source = refs[0]; if (source?.kind === "record") Object.assign(source.target, { recordId: "borrower-mutated" }); return true }, revalidate: async () => true })
+  const found = await access({ caseRef: observation.caseRef, choiceId: choice.id }, call)
+  expect(found.status).toBe("comparable")
+  if (found.status === "comparable") expect(found.sourceRefs).toEqual([ref])
+  expect(shared.observation.sourceRefs).toEqual([ref])
+})
+
+test("outcome access rejects a principal changed by the final revalidation", async () => {
+  const { createSfObservedOutcomeAccess } = await import("../../../product/decision-memory/outcome.ts")
+  const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "p", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+  const state = { checks: 0 }
+  const access = createSfObservedOutcomeAccess({ load: async () => ({ caseRef: observation.caseRef, choice, observation, metric }), authorizeEvidence: async () => true, revalidate: async (current) => { state.checks += 1; if (state.checks === 3) Object.assign(current.binding, { principalRef: "other" }); return true } })
+  expect(await access({ caseRef: observation.caseRef, choiceId: choice.id }, call)).toEqual({ status: "unavailable" })
+  expect(state.checks).toBe(3)
+})

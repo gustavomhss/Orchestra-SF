@@ -1,6 +1,12 @@
 import { digestSfContribution } from "../../../product/contracts/canonical.ts"
 import type { ContributionEnvelope, ResidentProfile, SkillLoadReceipt, SkillManifest } from "../../../product/contracts/resident-ai.ts"
 import type { SfNativeRunRecord } from "../../../product/contracts/state.ts"
+import type { DecisionCase } from "../../../product/contracts/decisions.ts"
+
+export function sfCaseFixture(caseRef: SfNativeRunRecord["caseRef"], participants: readonly string[]): DecisionCase {
+  return { ...caseRef, state: "draft", objective: "Verify an authorized persisted analysis", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "BRL",
+    criteria: [], participants, sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+}
 
 /** Test records for durable provenance boundaries; these are not native/provider witnesses. */
 export function sfRunFixture() {

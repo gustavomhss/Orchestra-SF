@@ -48,6 +48,21 @@ describe("portfolio historical provenance", () => {
     expect(await createPortfolioHistoricalProvenance(harness())(stored, context)).toBe(true)
   })
 
+  test("allows preserved evidence after a source change while the case remains at the original version", async () => {
+    const input = harness()
+    input.caseFor = async () => ({ status: "ok", value: originalCase })
+    input.cases.read = async () => ({ status: "ok", value: { case: { ...originalCase, alternatives: [alternative] } } } as never)
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(true)
+    input.evidence.context = async ({ refs }) => refs.map((ref) => ({ ref, state: "revoked", accessRevision: "access-7", checkedAt: "now" }))
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+  })
+
+  test("rejects a preserved result from a future case version", async () => {
+    const input = harness()
+    input.caseFor = async () => ({ status: "ok", value: { ...originalCase, version: 2 } })
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+  })
+
   test("rejects a candidate whose case incarnation was replaced", async () => {
     const input = harness()
     input.cases.read = async () => ({ status: "ok", value: { case: { id: "case-a", incarnation: "inc-replaced", version: 9 } } } as never)
@@ -121,7 +136,7 @@ describe("portfolio historical provenance", () => {
   })
 })
 
-function harness() {
+function harness(): Parameters<typeof createPortfolioHistoricalProvenance>[0] {
   return {
     readHistoricalBinding: async () => ({ status: "ok", value: { binding: makeBinding(), selection: { selectionDigest: "selection-a" } } } as never),
     caseFor: async () => ({ status: "ok", value: currentCase } as PortResult<typeof currentCase>),

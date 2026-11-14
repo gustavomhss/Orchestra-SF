@@ -34,7 +34,7 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
       return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
     const resolved = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
     const failure = resolved.find((item) => item.status !== "ok")
-    if (failure && failure.status !== "ok") return failure
+    if (failure) return failure
     const candidates = resolved.flatMap((item) => item.status === "ok" ? [structuredClone(item.value)] : [])
     if (candidates.some((item) => !item.operations.length || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
     if (candidates.some((item, index) => item.ref !== request.candidateRefs[index] || digestSfValue(item.operations) !== digestSfValue(item.scenario.operations))) return { status: "stale", reason: "candidate-reference-changed" }
@@ -76,7 +76,9 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
       const common = { ...(analysis ? { analysis } : {}), id, caseRefs: selected.map((candidate) => candidate.caseRef), components: scenario.components, costCoverageRefs: evaluated.value.costCoverageRefs, conflicts: [], restrictions }
       evidenceRefs.push(...selected.flatMap((candidate) => candidate.result ? [...candidate.result.sourceRefs, ...candidate.result.costCoverage.evaluatedSourceRefs, ...candidate.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)] : []), ...scenario.sourceRefs, ...scenario.costCoverage.evaluatedSourceRefs, ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs))
       const candidateComplete = selected.every((candidate) => !!candidate.result && candidate.result.comparisonStatus === "complete" && candidate.result.costCoverage.coverageState === "complete" && !candidate.result.unresolvedConditions.length && !candidate.result.restrictions.length && !candidate.result.costCoverage.issues.length && candidate.result.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidate.result.costCoverage.entries.length > 0 && candidate.result.costCoverage.evaluatedSourceRefs.length > 0 && candidate.result.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0))
-      if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || (candidateComplete && scenario.comparisonStatus === "complete" && analysis?.comparison.comparisonStatus === "complete" && (analysis.comparison.criterionResults.some((item) => item.state === "failed") || checks.some((check) => check.state === "failed")))) {
+      // A producer's definitive failed constraint makes the combination infeasible even while
+      // financial coverage remains pending. Provisional financial metrics must be "unknown".
+      if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || analysis?.comparison.criterionResults.some((item) => item.state === "failed") || checks.some((check) => check.state === "failed")) {
         combinations.push({ ...common, eligibility: "ineligible", comparisonStatus: analysis?.comparison.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") ? "incompatible" : scenario.comparisonStatus })
         continue
       }
@@ -91,16 +93,17 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
       const financialStatus = scenario.comparisonStatus === "complete" && candidateComplete && analysis?.comparison.comparisonStatus === "complete" ? "complete" : scenario.comparisonStatus === "complete" ? "conditioned" : scenario.comparisonStatus
       combinations.push({ ...common, eligibility: "conditioned", comparisonStatus: financialStatus })
     }
-    if (!(await host.revalidate(context)) || !(await Promise.all(evaluatedSources.map((item) => host.revalidateEvaluation(item.scenario, item.costCoverageRefs, item.analysis, context, item.candidates)))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }
+    if (!(await host.revalidate(context)) || !(await Promise.all(evaluatedSources.map((item) => host.revalidateEvaluation(structuredClone(item.scenario), structuredClone(item.costCoverageRefs), structuredClone(item.analysis), context, structuredClone(item.candidates))))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }
     const latest = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
     if (latest.some((item, index) => item.status !== "ok" || digestSfValue(item.value) !== digestSfValue(candidates[index]))) return { status: "stale", reason: "candidate-changed-or-revoked" }
     return { status: "ok", value: { combinations, evidenceRefs: evidenceRefs.filter((ref, index) => evidenceRefs.findIndex((item) => item.refDigest === ref.refDigest) === index), limitations: ["Finite exploration; no global optimum is asserted.", ...(queue.length ? [`Exploration limit ${request.explorationLimit} reached.`] : [])] } }
   }
-  const sensitivity: PortfolioPort["sensitivity"] = async (request, context) => {
+  const sensitivity: PortfolioPort["sensitivity"] = async (incoming, context) => {
+    const request = structuredClone(incoming)
     if (!(await host.revalidate(context))) return { status: "denied", reason: "invalid-binding" }
     const bounds = request.parameterBounds
     if (!Number.isFinite(bounds.minimum) || !Number.isFinite(bounds.maximum) || bounds.minimum > bounds.maximum || !Number.isSafeInteger(bounds.steps) || bounds.steps < 1 || bounds.steps > 1024 || !Number.isFinite(request.criterion.value)) return { status: "needs-input", reason: "invalid-parameter-bounds" }
-    const result = await host.sensitivity(request, context)
+    const result = structuredClone(await host.sensitivity(structuredClone(request), context))
     if (result.status !== "ok") return result
     const validated = attachSensitivityV6({ result: result.value, costCoverageRefs: result.value.costCoverageRefs, unit: result.value.unit, engineVersion: result.value.engineVersion, thresholdEvidence: result.value.thresholdEvidence })
     if (validated.status !== "ok") return validated

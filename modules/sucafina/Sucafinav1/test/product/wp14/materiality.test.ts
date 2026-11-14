@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import { classifySfMaterialChange } from "../../../product/decision-memory/materiality.ts"
+import { classifySfMaterialChange, sfReconsiderationFingerprint } from "../../../product/decision-memory/materiality.ts"
+import { reconcileSfSignal } from "../../../product/decision-memory/signals.ts"
 import type { MaterialChangeEvent, MaterialCondition } from "../../../product/decision-memory/materiality.ts"
 
 const source = { surface: "planner" as const, type: "quote", id: "quote-1", incarnation: "one", version: 1, fields: ["price"], period: { start: "2027-01-01", end: "2027-12-31" }, observedAt: "2026-01-01" }
@@ -63,6 +64,23 @@ describe("decision reconsideration", () => {
     const event = { ...change, comparison: { ...change.comparison, after: condition.choice.comparison, resultBefore: before, resultAfter: { ...before, version: 2, costCoverage: { ...coverage, entries: [...entries].reverse() } } } }
     expect(classifySfMaterialChange(scope, event).impact.state).toBe("irrelevant")
     expect(classifySfMaterialChange(scope, { ...event, comparison: { ...event.comparison, resultAfter: { ...before, costCoverage: { ...coverage, entries: [entries[0]!, entries[0]!] } } } }).impact.state).toBe("unknown")
+  })
+  test("reordering coverage for the same material cause neither updates nor reopens its signal", () => {
+    const entries = [{ status: "included" as const, categoryId: "a", componentRefs: ["a"], evidenceRefs: [evidence], scopeNote: "included" }, { status: "included" as const, categoryId: "b", componentRefs: ["b"], evidenceRefs: [evidence], scopeNote: "included" }]
+    const before = { ...resultBefore, costCoverage: { ...coverage, entries } }
+    const scope = { ...condition, choice: { ...condition.choice, result: before } }
+    const event = { ...change, comparison: { ...change.comparison, resultBefore: before, resultAfter: { ...resultAfter, costCoverage: { ...coverage, entries } } } }
+    const first = classifySfMaterialChange(scope, event)
+    const repeated = classifySfMaterialChange(scope, { ...event, comparison: { ...event.comparison, resultAfter: { ...event.comparison.resultAfter, costCoverage: { ...coverage, entries: [...entries].reverse() } } } })
+    expect(first.impact.state).toBe("material")
+    expect(repeated.impact).toEqual(first.impact)
+    if (!first.signal || !repeated.signal) throw new Error("material signals required")
+    expect(sfReconsiderationFingerprint(repeated.signal, repeated.impact)).toBe(sfReconsiderationFingerprint(first.signal, first.impact))
+    const opened = reconcileSfSignal(undefined, { kind: "signal", signal: first.signal })
+    if (!("state" in opened) || !opened.state) throw new Error("open signal state required")
+    expect(reconcileSfSignal(opened.state, { kind: "signal", signal: repeated.signal }).action).toBe("none")
+    const changed = classifySfMaterialChange(scope, { ...event, comparison: { ...event.comparison, resultAfter: { ...event.comparison.resultAfter, knownSubtotal: 250001, total: 250001 } } })
+    expect(changed.signal?.correlationKey).not.toBe(first.signal.correlationKey)
   })
   test("refuses a mismatched saved baseline and ignores result metadata alone", () => {
     expect(classifySfMaterialChange(condition, { ...change, comparison: { ...change.comparison!, resultBefore: { ...resultBefore, knownSubtotal: 1, total: 1 } } }).impact.state).toBe("unknown")

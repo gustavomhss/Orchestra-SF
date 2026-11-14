@@ -51,7 +51,7 @@ try {
     const value = ref && (snapshot.data.__sfProductV1 as { cases?: Record<string, DecisionCase> } | undefined)?.cases?.[ref.id]
     return value && value.participants.includes(request.headers.get("authorization") ?? "") ? { incarnation: value.incarnation } : undefined
   } })
-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "unused", incarnation: "unused" }, operationIdentity: () => "read-only", authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), evidence, createId: randomUUID, now: () => time })
+  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "unused", incarnation: "unused" }, operationIdentity: () => "read-only", authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), verifyScenarioOperations: async (value) => value.alternatives.every((item) => item.scenario.operations.length === 0) && value.choices.every((item) => item.scenario.operations.length === 0) && value.preparedChanges.length === 0, evidence, createId: randomUUID, now: () => time })
   eventAccess = createSfCaseEventSourceAccess({ host, state, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), authorizeEvidence: async (refs, context, ancestors) => session.evidence && (await Promise.all(refs.map((ref) => resolveNested(ref, context, new Set(ancestors))))).every((result) => result.state === "fresh" || result.state === "historical") })
   const caseRef = { id: "case", incarnation: "case-inc", version: 1 }
   let memory: ReturnType<typeof createSfAtlasMemory>
