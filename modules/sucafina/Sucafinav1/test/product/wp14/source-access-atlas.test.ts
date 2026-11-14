@@ -149,8 +149,9 @@ test("confirmed C17 document is published and recalled by real Atlas, then withh
     if (probe.exitCode !== 0 || probe.stdoutTruncated || !version) throw new Error("Could not determine the Atlas scanner version")
 
     // These are the actual local credentials and C08 grants. Native admission is deliberately absent.
+    const procurementEvidenceWrites = new WeakSet<object>()
     const authority = createSfProductAuthority({ identity: () => app.installation, installationId: app.operator.installationId,
-      origin: app.origin, policyVersion: "policy", persistence: app.store, authenticate: app.runtime.authenticate, environment: app.runtime.environment,
+      origin: app.origin, policyVersion: "policy", persistence: app.store, procurementEvidenceWrites, authenticate: app.runtime.authenticate, environment: app.runtime.environment,
       grants: [{ principalRef: app.principal.id, namespaces: ["documents", "receipts", "cases", "outbox", "atlas"],
         operations: ["sf_document_extract", "sf_evidence_get", "sf_case_draft", "sf_case_read", "sf_decision_recall"],
         humanActions: ["documents.schema", "documents.confirm"] }],
@@ -164,7 +165,7 @@ test("confirmed C17 document is published and recalled by real Atlas, then withh
     documents = createSfDocumentServices({ runtime: app.runtime, authority })
     if (!documents) throw new Error("Actual document services unavailable")
     const service = documents
-    business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), documentRead: service.documents.reader })
+    business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites, documentRead: service.documents.reader })
     const product = business
     const host = authority.host
     let selectedCase: { id: string; incarnation: string } | undefined

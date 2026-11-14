@@ -16,7 +16,7 @@ import type { Store } from "../src/procurement.ts"
 import { visibleRequests, requestStageGuidance, orderSourceGuidance } from "../src/requests.ts"
 import { quoteAssessment, quoteComparisonPresentation } from "../src/form.ts"
 import type { FormSettings } from "../src/form.ts"
-import { approvalDecision, approvalQueue, approvalStageEntry, exportRegister, requestValue } from "../src/procurement-screen.ts"
+import { approvalDecision, approvalQueue, approvalStageEntry, exportRegister } from "../src/procurement-screen.ts"
 import type { RequestView } from "../src/procurement-screen.ts"
 import { initialProcurementSettings } from "../src/initial-settings.ts"
 import { activateSupplier, open, seal, supplierActivationRequirements } from "../src/supplier.ts"
@@ -883,13 +883,7 @@ export const domain: Domain = {
         ...structuredClone(row.request),
         status: text(row.request.status),
         createdBy: text(row.request.createdBy),
-        value: requestValue(row.request as RequestView, {
-          currency: text(store.settings.currency),
-          fxRates: rows(store.settings.fxRates).map((rate) => ({
-            code: text(rate.code),
-            rate: finite(rate.rate),
-          })),
-        }),
+        value: procurementMonetaryFacts(row.request, text(store.settings.currency), store.settings).baseAmount,
         ...(row.rank ? { ranking: structuredClone(row.rank) } : {}),
       })),
       actor,
@@ -1430,6 +1424,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         const projected = queueView?.rows.find((row) => row.id === request.number)
         const status = projected ? projected.status ?? "" : text(request.status)
         const holder = projected ? projected.holder : text(pending(request).step?.holderId)
+        const money = procurementMonetaryFacts(request, text(settings.currency), settings)
         return [
           projected ? queueRequestLink(projected, `?page=Requests&request=${encodeURIComponent(projected.id)}&q=${encodeURIComponent(projected.id)}#${encodeURIComponent(projected.id)}`) : `<a href="#${encodeURIComponent(String(request.number ?? ""))}">${esc(String(request.number ?? ""))}</a>`,
           esc(projected ? projected.subject ?? "Unavailable" : text(object(request.pr).title)),
@@ -1437,8 +1432,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           esc(requestStageGuidance(status).stage),
           esc(projected ? projected.nextStep ?? "Unavailable" : requestStageGuidance(status).next),
           esc(`Requester: ${text(request.requesterName) || text(directory.find((person) => person.id === request.createdBy)?.name) || text(request.createdBy) || "Unavailable"}; buyer: ${text(directory.find((person) => person.id === request.buyerId)?.name) || text(request.buyerId) || "Unassigned"}; current holder: ${status.endsWith("_pending") ? text(directory.find((person) => person.id === holder)?.name) || holder || "Unassigned" : "Not awaiting approval"}`),
-          projected ? esc(projected.monetaryState?.replaceAll("-", " ") ?? "Unavailable") : rows(object(request.po).lines).length ? "Purchase order lines" : rows(object(request.sourcing).quotes).some((quote) => quote.id === object(request.sourcing).selectedId) ? "Selected sourcing proposal" : "Requisition estimate",
-          projected ? projected.baseAmount === null ? "Unavailable" : `${projected.baseAmount} ${esc(projected.baseCurrency)}` : amount(request) == null ? "Unavailable" : `${amount(request)} ${esc(text(settings.currency))}`,
+          esc((projected ? projected.monetaryState : money.monetaryState)?.replaceAll("-", " ") ?? "Unavailable"),
+          projected ? projected.baseAmount === null ? "Unavailable" : `${projected.baseAmount} ${esc(projected.baseCurrency)}` : money.baseAmount == null ? "Unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`,
         ]
       }),
     ) +
@@ -1521,13 +1516,24 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         const discrepancy = `<p role="status">Selection: ${selectedQuote ? esc(text(selectedQuote.supplier) || "Supplier unavailable") : "No proposal selected"}. Reason: ${esc(selectionReason)}</p>${rankingReason}` + (typeof quotedTotal === "number" && typeof quoteQuantity === "number" && typeof quoteUnitPrice === "number" && [quotedTotal, quoteQuantity, quoteUnitPrice].every(Number.isFinite) && Math.abs(quotedTotal - quoteQuantity * quoteUnitPrice) > 0.005
           ? `<p role="status">Selected proposal: stated total ${quotedTotal}; quantity × unit price ${quoteQuantity * quoteUnitPrice} ${esc(text(selectedQuote?.currency))}. Review the difference before preparing the order.</p>` : "")
         const approvedSourcing = object(source.approval).amount
-        const orderValue = amount(request)
-        const orderDifference = typeof approvedSourcing !== "number" || !Number.isFinite(approvedSourcing) || orderValue == null ? "" : source.approvalBaseCurrency !== settings.currency
-          ? `<p role="status">Order and approved sourcing values cannot be compared because the submitted base currency is missing or changed.</p>`
-          : Math.abs(orderValue - approvedSourcing) > 0.005 ? `<p role="status">Order value ${orderValue} ${esc(text(settings.currency))}; approved sourcing value ${approvedSourcing} ${esc(text(settings.currency))}. Review the difference.</p>` : ""
         const money = procurementMonetaryFacts(request, text(settings.currency), settings)
-        const poMoneyState = status === "po_approved" ? "Approved" : status === "po_issued" ? "Issued internally" : status === "po_pending" ? "Pending approval" : status === "po_draft" ? "PO draft" : status === "po_rejected" ? "PO rejected" : "Estimate"
-        const poMoneySummary = `<p role="status">${esc(poMoneyState)} value: ${money.original == null || !money.currency ? "Unavailable" : `${money.original} ${esc(money.currency)}`}; base value: ${money.baseAmount == null ? "Unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}; FX: ${money.validRate == null ? "Unavailable" : `${money.validRate} (${esc(money.fxSource ?? "unavailable")})`}.</p>`
+        // select_quote creates a future PO while the request still belongs to sourcing.
+        // Project that PO separately for PO-only text, without changing the request or its stored status.
+        const orderMoney = request.po == null || (!["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(status) &&
+          (!Array.isArray(po.lines) || !po.lines.length || rows(po.lines).length !== po.lines.length)) ? undefined : procurementMonetaryFacts(
+          { ...request, status: ["sourcing", "src_pending", "src_rejected"].includes(status) ? "po_draft" : status },
+          text(settings.currency),
+          settings,
+        )
+        const orderValue = orderMoney?.baseAmount
+        const orderDifference = request.po == null || source.approval == null ? ""
+          : !/^[A-Z]{3}$/.test(text(source.approvalBaseCurrency)) || source.approvalBaseCurrency !== settings.currency
+            ? '<p role="status">Order and approved sourcing values cannot be compared because the submitted base currency is missing or changed.</p>'
+            : typeof approvedSourcing !== "number" || !Number.isFinite(approvedSourcing) || orderValue == null
+              ? '<p role="status">Order and approved sourcing values cannot be compared because an amount or applicable FX is unavailable.</p>'
+              : Math.abs(orderValue - approvedSourcing) > 0.005 ? `<p role="status">Order value ${orderValue} ${esc(text(settings.currency))}; approved sourcing value ${approvedSourcing} ${esc(text(settings.currency))}. Review the difference.</p>` : ""
+        const poMoneyState = status === "po_approved" ? "Approved" : status === "po_issued" ? "Issued internally" : status === "po_pending" ? "Pending approval" : status === "po_draft" ? "PO draft" : status === "po_rejected" ? "PO rejected" : status === "cancelled" ? "Cancelled" : "Estimate"
+        const poMoneySummary = `<p role="status">${esc(poMoneyState)} value: ${orderMoney?.original == null || !orderMoney.currency ? "Unavailable" : `${orderMoney.original} ${esc(orderMoney.currency)}`}; base value: ${orderMoney?.baseAmount == null ? "Unavailable" : `${orderMoney.baseAmount} ${esc(text(settings.currency))}`}; FX: ${orderMoney?.validRate == null ? "Unavailable" : `${orderMoney.validRate} (${esc(orderMoney.fxSource ?? "unavailable")})`}.</p>`
         const sourceGuidance = orderSourceGuidance(request)
         const orderSourceComparison = sourceGuidance.state === "unavailable"
           ? `<p role="status">Current PO comparison with the selected proposal is unavailable (${esc(sourceGuidance.reason)}).</p>`
@@ -1594,7 +1600,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         ]
         const pendingBeside = (prefix: string) => pendingErrors.filter((error) => error.field === prefix).map((error) => `<p role="status">${esc(error.message)}</p>`).join("")
         const requestControls = (page: string, action: string, id: string, body: string, label = action) => controls(page, action, id, presentProcurementFieldErrors(body, pendingErrors.map((error) => ({ ...error, field: action === "select_quote" && error.field === "sourcing.selectedId" ? "quoteId" : error.field })), `${id}-${action}`), label)
-        const summary = `<p data-request-summary="${esc(id)}">${esc(requestStageGuidance(status).stage)} · ${esc(requestStageGuidance(status).next)} · Version ${version(`requests:${id}`)} · ${money.baseAmount == null ? "Value unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}</p>`
+        const summary = `<p data-request-summary="${esc(id)}">${esc(requestStageGuidance(status).stage)} · ${esc(requestStageGuidance(status).next)} · Version ${version(`requests:${id}`)} · ${money.baseAmount == null ? "Value unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}</p><p data-request-money="${esc(id)}">Current request value: ${money.original == null || !money.currency ? "Unavailable" : `${money.original} ${esc(money.currency)}`}; base value: ${money.baseAmount == null ? "Unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}; FX: ${money.validRate == null ? "Unavailable" : `${money.validRate} (${esc(money.fxSource ?? "unavailable")})`}.</p>`
         return `<details id="${esc(id)}"${request === requestedRequest ? " open" : ""}><summary>${esc(id)} · ${esc(text(object(request.pr).title))}</summary>${summary}<ol class="stepper">${["Requisition", "PR approval", "Sourcing", "Sourcing approval", "Purchase order", "PO approval", "Approved", "Issued internally"].map((step) => `<li>${esc(step)}</li>`).join("")}</ol><nav><a href="#${esc(id)}-pr">Requisition</a><a href="#${esc(id)}-sourcing"${request.sourcing == null ? ' aria-disabled="true"' : ""}>Sourcing</a><a href="#${esc(id)}-po"${request.po == null ? ' aria-disabled="true"' : ""}>Purchase order</a><a href="#${esc(id)}-history">History</a></nav><section id="${esc(id)}-pr"><h3>Requisition</h3>${pendingBeside("pr")}${prEditable ? "" : "<p>Editing is unavailable for this stage or role.</p>"}<fieldset${prEditable ? "" : " disabled"}>${requestControls(
           page,
           "save",
@@ -1615,7 +1621,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             source.selectedId,
             rows(source.quotes).map((quote) => ({
               value: String(quote.id ?? ""),
-              label: `${text(quote.supplier)} · ${text(quote.currency)} ${finite(quote.total)}`,
+              label: `${text(quote.supplier)} · ${text(quote.currency) || "Currency unavailable"} ${typeof quote.total === "number" && Number.isFinite(quote.total) ? quote.total : "Unavailable"}`,
             })),
           ),
           "Select quote",
@@ -1623,8 +1629,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           ["Description", "Quantity", "Unit price"],
           rows(po.lines).map((line) => [
             esc(text(line.desc ?? line.description)),
-            String(finite(line.qty)),
-            String(finite(line.unitPrice)),
+            typeof line.qty === "number" && Number.isFinite(line.qty) ? String(line.qty) : "Unavailable",
+            typeof line.unitPrice === "number" && Number.isFinite(line.unitPrice) ? String(line.unitPrice) : "Unavailable",
           ]),
         )}</article><section id="${esc(id)}-history"><h3>History</h3><p>PO issuance is internal; legacy labels do not establish delivery to a supplier.</p>${table(
           ["At", "By", "Action", "Note"],
