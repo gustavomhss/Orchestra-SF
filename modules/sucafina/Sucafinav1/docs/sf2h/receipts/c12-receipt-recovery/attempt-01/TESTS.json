@@ -1,0 +1,253 @@
+{
+  "schema": "sf2h-c12-receipt-recovery-tests-v1",
+  "mission": "19 / C12 / I-OPS-02",
+  "attempt": 1,
+  "status": "FAIL",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "procurement-apply",
+  "pullRequest": 60,
+  "product": {
+    "sha": "3f333173780756a42b90b5e1c6dd99de2c5fe40f",
+    "tree": "13838599e3ef6c54f1d4831b0c6f27c888cacf9e",
+    "parent": "8e23e592602fb9f2fae9ce8f824322a073073e23"
+  },
+  "snapshot": {
+    "sha": "d1f40b84d99a69507022e3d1d3422bb28a92d880",
+    "tree": "cb94ba6285dee54cf881025855e8bc2ed1ad7d98",
+    "parent": "3f333173780756a42b90b5e1c6dd99de2c5fe40f",
+    "ref": "ci-run-linux-c12-recovery-3f333173-d8e01dc2-01",
+    "differenceFromProduct": [
+      {
+        "status": "added",
+        "path": ".ci-run.json"
+      }
+    ],
+    "allOtherBlobsIdentical": true,
+    "comparison": "GitHub MCP compare W...S: ahead_by=1; only .ci-run.json"
+  },
+  "request": {
+    "content": {
+      "package": "sucafina",
+      "packageSelector": "packages/sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+        "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+        "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+        "./Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "serialization": "compact JSON, no final newline",
+    "bytes": 634,
+    "sha256": "d8e01dc22ababf12c280a31b2c0bcacda572fe86d8f190cc99ada925d2dce198",
+    "gitBlob": "c754a798caabb3fd167e33565aa41c7b9f7c75be"
+  },
+  "deduplication": {
+    "method": "GitHub MCP GET Actions latest 100 before snapshot ref; no C12 equivalent run; one in-flight run for this mission",
+    "rerun": false
+  },
+  "workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "runId": 43635717762,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43635717762",
+    "headSha": "d1f40b84d99a69507022e3d1d3422bb28a92d880",
+    "conclusion": "failure",
+    "runAttempt": 1,
+    "createdAt": "2026-11-14T20:06:41Z",
+    "updatedAt": "2026-11-14T20:11:31Z"
+  },
+  "jobs": [
+    {
+      "id": 132571953924,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 132573261320,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "runtime": {
+    "os": "ubuntu-24.04",
+    "bun": "1.3.14 (0d9b296a)",
+    "selectedFiles": 7,
+    "tests": 19,
+    "pass": 16,
+    "fail": 3,
+    "expectCalls": 373,
+    "seconds": 183.36,
+    "exitCode": 1
+  },
+  "omni": {
+    "status": "pass",
+    "nonce": "04b1962ab04d4fbd55fed05285895d36",
+    "declaredTests": 2,
+    "spawns": 2,
+    "delegated": 0,
+    "meaning": "Driver positive control only; does not turn failed product tests into PASS"
+  },
+  "artifacts": [],
+  "logs": {
+    "jobId": 132571953924,
+    "decodedFullUtf8": {
+      "bytes": 89145,
+      "sha256": "91b37fb4b5226d4b7e17a2efb7591f2aff41cf54e8efd9f8d19536c78d5cff72"
+    },
+    "durableExcerpt": {
+      "path": "TESTS.log",
+      "bytes": 20308,
+      "sha256": "09ccbdd4c4863b08fc3e7282a1e0c814ae5485c2b9157c726cbb54a1e1c9ea5b",
+      "scope": "From bun test banner through exit-code failure; exact dated lines, excludes dependency setup/cleanup"
+    }
+  },
+  "results": [
+    {
+      "test": "normal Apply historical CAS",
+      "status": "PASS"
+    },
+    {
+      "test": "second case edit during recovery, next retry200",
+      "status": "PASS",
+      "marker": "SF_C12_RECOVERY_CONCURRENT_EDIT"
+    },
+    {
+      "test": "missing receipt before application",
+      "status": "PASS",
+      "marker": "SF_C12_MISSING_RECEIPT"
+    },
+    {
+      "test": "durable intent without receipt prevents redispatch",
+      "status": "PASS",
+      "marker": "SF_C12_INTENT_WITHOUT_RECEIPT"
+    },
+    {
+      "test": "digest/payload/principal/case/target/incarnation negatives",
+      "status": "PASS",
+      "marker": "SF_C12_RECOVERY_IDENTITY"
+    },
+    {
+      "test": "receipt-read/final-state-read revocation and physical replacement",
+      "status": "PASS",
+      "marker": "SF_C12_REVOKED_OR_REPLACED"
+    },
+    {
+      "test": "partial other domain",
+      "status": "FAIL",
+      "failure": "partial.ts:17 requested sf_context_read with unadmitted Planner payload; fixture UI admission failed before partial scenario assertions"
+    },
+    {
+      "test": "UI lost response + edit + reopen/new admission",
+      "status": "FAIL",
+      "failure": "recovery-ui.test.ts:131 repeated.json(): Network.getResponseBody: No resource with given identifier found after real successful200 and page reload; no positive completion marker"
+    },
+    {
+      "test": "UI committed200 response lost",
+      "status": "FAIL",
+      "failure": "recovery-ui.test.ts:179 response.json(): Network.getResponseBody: No resource with given identifier found after real successful200 and page reload; no positive completion marker"
+    },
+    {
+      "test": "OPS-REV-02 refusals + real Apply",
+      "status": "PASS",
+      "count": 7,
+      "paths": [
+        "test/product/review-fixes/procurement-apply/refusals.test.ts",
+        "test/product/review-fixes/procurement-apply/real-apply.test.ts"
+      ]
+    },
+    {
+      "test": "WP04 prepared production + prepared aliases",
+      "status": "PASS",
+      "count": 3,
+      "paths": [
+        "test/product/wp04/prepared-production.test.ts",
+        "test/product/wp04/finance-prepared-alias.test.ts"
+      ]
+    }
+  ],
+  "candidateFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "gitBlob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
+      "sha256": "e194c4b2d92cddee7f2e6c2e87d272d7111cc3b13033cb83fff4204a4f30227e",
+      "bytes": 17355
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "gitBlob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+      "sha256": "18919bf9a422f7023061264f896ff7385a513c1402eef5ec1328628afd032594",
+      "bytes": 50653
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "gitBlob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+      "sha256": "8da5bada6de1df90dea00eb0eff048948abdd06b51224188b928d45029e51cfb",
+      "bytes": 7858
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "gitBlob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+      "sha256": "49438dc778c06ba5e162bf74685178f9aaeb61e48e79b03b80f5c6dd20a3cad8",
+      "bytes": 10564
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+      "gitBlob": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+      "sha256": "ad6ce70432c80dff91b04317d3ffbbec359ce4758c1c07cad1e2762358bcba32",
+      "bytes": 5213
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "gitBlob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+      "sha256": "ea84988e1a612e763f5c495810a2e2d74ff28ffac292d5b36e91fec50632e8e9",
+      "bytes": 22110
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "gitBlob": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+      "sha256": "979ef4b8655fcc5c8c896a6b4b10a67c1bdf86ca353c23780b61a09d9f161a94",
+      "bytes": 4141
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/partial.ts",
+      "gitBlob": "53514a4f79ab66d73a9ecc1febba95a50187122b",
+      "sha256": "3ca0527aa3ed8b0eae28265856669086a6680a1673663fc7208010faf7cc6a78",
+      "bytes": 4583
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "gitBlob": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+      "sha256": "9bc66aace0a7112b0ee91a35d9ff06a38052fff99b760cc207074f5948aeae7c",
+      "bytes": 17125
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "gitBlob": "cb73308322a0e21a6aab59ad1abcd3f610b1ba67",
+      "sha256": "425859ef95165dda18335b7d6828fd0a14a01d4a01d85a5d84e67724943c30ff",
+      "bytes": 12642
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-01/IMPLEMENTATION.md",
+      "gitBlob": "659140bbc6d8bac30d6fbb73d032bfa2aa93c54f",
+      "sha256": "8ef35562f4a4b37aaa82352a4755f5291252843f3f0ec1fbd2e901b33a3bb667",
+      "bytes": 7581
+    }
+  ],
+  "nextAction": "Correct only the exclusive partial/browser test support; keep product unchanged unless new evidence demands a product fix. New checkpoint and affected hosted selection required. This run is not positive closure.",
+  "limits": [
+    "No product tests or typecheck executed locally.",
+    "No full suite/epic, process restart, native model, integrated AM01–AM06 or global acceptance.",
+    "Real renderer/script and HTTP/C08/SQLite under minimal authorized GET test shell.",
+    "One failed aggregate run; individual passing tests are recorded without relabeling the run."
+  ]
+}

@@ -5,6 +5,7 @@ import type { ScenarioOperation, SensitivityRequest } from "../contracts/operati
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
+import { readHistoricalScenarios } from "../decisions/result-store.ts"
 import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import { projectionDigest, resolvePlannerScenarioBatch } from "./scenario-comparison-port.ts"
@@ -26,6 +27,12 @@ export function createPlannerSensitivityUnits(input: {
   rules: { resolve: (request: { caseRef: CaseRef; criterionId: string }, context: TrustedDomainContext) => Promise<PortResult<PlannerSensitivityRule>> }
 }) {
   const readScenario = async (resultRef: string, context: TrustedDomainContext) => structuredClone(await (input.store.readHistoricalScenario ? input.store.readHistoricalScenario({ resultRef }, context) : input.store.read({ resultRef, kind: "scenario" }, context)))
+  const readScenarios = async (references: readonly string[], context: TrustedDomainContext) => {
+    const store = input.store
+    const observed = await readHistoricalScenarios(store, references, context, "parallel")
+    if (input.store !== store) return references.map(() => ({ status: "denied" as const, reason: "historical-reader-changed" }))
+    return structuredClone(observed)
+  }
   // Retain identities only. Every source, case and authority check still runs in
   // its own phase; this closure does not retain an authorization result.
   const retainIdentity = (incoming: unknown, context: TrustedDomainContext) => {
@@ -54,7 +61,7 @@ export function createPlannerSensitivityUnits(input: {
     // resolve() already observed this selected result and case before reading
     // its rule. Use those detached snapshots only as this invocation's first
     // observation; all later case, scenario, evidence and result reads stay fresh.
-    const [stored, baselineStored] = await Promise.all([initial ? initial.stored : readScenario(request.scenarioRef, context), readScenario(request.baselineRef, context)])
+    const [stored, baselineStored] = initial ? [initial.stored, await readScenario(request.baselineRef, context)] : await readScenarios([request.scenarioRef, request.baselineRef], context)
     if (stored.status !== "ok") return stored
     if (baselineStored.status !== "ok") return baselineStored
     if (stored.value.kind !== "scenario" || baselineStored.value.kind !== "scenario" || stored.value.caseRef.id !== baselineStored.value.caseRef.id || stored.value.caseRef.incarnation !== baselineStored.value.caseRef.incarnation) return { status: "denied", reason: "sensitivity-case-mismatch" } as const
@@ -85,7 +92,7 @@ export function createPlannerSensitivityUnits(input: {
     const again = structuredClone(await input.cases.read({ caseRef: encodeCaseRef(stored.value.caseRef) }, context))
     const [selectedAgain, baselineAgain] = await resolvePlannerScenarioBatch(input.scenarios, [request.scenarioRef, request.baselineRef], context)
     const evidenceAgain = await Promise.all(sourceRefs.map((ref) => input.evidence.resolve(ref, context)))
-    const [storedAgain, baselineStoredAgain] = await Promise.all([readScenario(request.scenarioRef, context), readScenario(request.baselineRef, context)])
+    const [storedAgain, baselineStoredAgain] = await readScenarios([request.scenarioRef, request.baselineRef], context)
     if (storedAgain.status !== "ok" || baselineStoredAgain.status !== "ok" || digestSfValue(storedAgain.value) !== digestSfValue(stored.value) || digestSfValue(baselineStoredAgain.value) !== digestSfValue(baselineStored.value) || again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(decision) || selectedAgain.status !== "ok" || digestSfValue(selectedAgain.value.result) !== digestSfValue(selected.value.result) || selectedAgain.value.source.refDigest !== selected.value.source.refDigest || selectedAgain.value.coverageRef !== selected.value.coverageRef || projectionDigest(selectedAgain.value.projection) !== projectionDigest(selected.value.projection) || baselineAgain.status !== "ok" || digestSfValue(baselineAgain.value.result) !== digestSfValue(baseline.value.result) || baselineAgain.value.source.refDigest !== baseline.value.source.refDigest || baselineAgain.value.coverageRef !== baseline.value.coverageRef || projectionDigest(baselineAgain.value.projection) !== projectionDigest(baseline.value.projection) || evidenceAgain.some((resolution, index) => resolution.state !== "fresh" || resolution.ref.refDigest !== sourceRefs[index].refDigest || digestSfEvidenceRef(resolution.ref) !== resolution.ref.refDigest || resolution.accessRevision !== context.binding.accessRevision) || !await input.host.revalidate(context)) return { status: "stale", reason: "sensitivity-source-changed" } as const
     if (!unchanged()) return { status: "stale", reason: "sensitivity-authority-changed" } as const
     const units: PlannerSensitivityUnits = { baselineRef: request.baselineRef, parameterRef: request.parameterRef, parameterUnit: unitData.parameterUnit, resultUnit: unitData.resultUnit, engineVersion: selected.value.projection.engineVersion, sourceRefs }

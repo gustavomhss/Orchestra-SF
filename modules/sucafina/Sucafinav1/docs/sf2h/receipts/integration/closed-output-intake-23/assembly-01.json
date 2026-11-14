@@ -1,0 +1,43 @@
+{
+  "schema": "sf2-selective-assembly-v1",
+  "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+  "target_preimage": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+  "source_commit": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+  "source_file_blob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
+  "instruction_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-01/INTEGRATION.md",
+  "instruction_blob": "136765e9267c8e1cfd5bf044c13bb2820666d13f",
+  "integrated_blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+  "replacements": [
+    {
+      "id": "C12-MODE",
+      "old": "  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {",
+      "new": "  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext, mode: \"apply\" | \"recover\" = \"apply\"): Promise<PortResult<CommandReceipt>> => {"
+    },
+    {
+      "id": "C12-NO-REDISPATCH",
+      "old": "    if (lookup.status !== \"ok\") return lookup\n",
+      "new": "    if (lookup.status !== \"ok\") return lookup\n    // Historical admission can only reconcile an existing domain receipt.\n    if (mode === \"recover\" && lookup.value.state !== \"found\") return { status: \"unavailable\", reason: \"original-receipt-unavailable\" }\n"
+    },
+    {
+      "id": "C12-UNIQUE-RECEIPT",
+      "old": "    const retainReceipt = async (expectedCase: DecisionCase, receipt: CommandReceipt) => {\n",
+      "new": "    const retainReceipt = async (expectedCase: DecisionCase, receipt: CommandReceipt) => {\n      if (expectedCase.preparedChanges.filter((item) => item.receipt?.id === receipt.id).length !== 1 || expectedCase.preparedChanges.find((item) => item.receipt?.id === receipt.id)?.id !== change.id || expectedCase.receipts.filter((item) => item.id === receipt.id).length !== 1 || digestSfValue(expectedCase.receipts.find((item) => item.id === receipt.id)) !== digestSfValue(receipt)) return false\n"
+    },
+    {
+      "id": "C12-TRANSACTION-METADATA",
+      "old": "function receiptSnapshotMatches(state: SfProductState, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, principalRef: string) {\n  const stored = state.receipts[receipt.id]\n  const proof = state.transactions[receiptProofTransactionKey(principalRef, change.target.id, change.idempotencyKey)]\n  const matches = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.targetIncarnation === change.target.incarnation && item.idempotencyKey === change.idempotencyKey && item.principalRef === principalRef)\n  return matches.length === 1 && !!stored && !!proof && digestSfValue(stored) === digestSfValue(receipt) && proof.commandDigest === receiptReviewBinding(change, reviewDigest) && digestSfValue(proof.value) === digestSfValue(receipt)\n}",
+      "new": "function receiptSnapshotMatches(state: SfProductState, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, principalRef: string) {\n  const stored = state.receipts[receipt.id]\n  const proof = state.transactions[receiptProofTransactionKey(principalRef, change.target.id, change.idempotencyKey)]\n  const matches = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.targetIncarnation === change.target.incarnation && item.idempotencyKey === change.idempotencyKey && item.principalRef === principalRef)\n  const scope = change.target.surface === \"dashboard\" ? [\"cases\", \"receipts\"] : { namespaces: [\"cases\", \"receipts\"], domainSurface: change.target.surface }\n  return matches.length === 1 && !!stored && !!proof && proof.namespace === \"receipts\" && proof.scopeDigest === digestSfValue(scope) && proof.principalRef === principalRef && proof.targetRef === change.target.id && proof.targetIncarnation === change.target.incarnation && proof.incarnation === state.incarnation && digestSfValue(stored) === digestSfValue(receipt) && proof.commandDigest === receiptReviewBinding(change, reviewDigest) && digestSfValue(proof.value) === digestSfValue(receipt)\n}"
+    }
+  ],
+  "verification": "Each preimage substring occurs exactly once. Reverse replacements reproduce original target bytes. All source instructions outside these four deltas remain inert.",
+  "preserved": [
+    "Initial Finance version guard",
+    "application-attempt import and helper",
+    "createdHere reservation",
+    "fresh latest CAS after confirmApplication",
+    "clones and authoritative receipt re-reads",
+    "all final retainReceipt calls",
+    "fresh reconciliation preserving unrelated edits"
+  ],
+  "execution": "NOT_RUN"
+}

@@ -14,6 +14,7 @@ type Result = { [K in keyof ResultMap]: { kind: K; result: ResultMap[K] } }[keyo
 type CaseRef = { id: string; incarnation: string; version: number }
 export type StoredDecisionResult = Result & { schema: "sf-decision-result-v1"; resultRef: string; caseRef: CaseRef; principalRef: string; accessRevision: string; policyVersion: string; requestDigest: string; resultDigest: string; sourceRefs: readonly BusinessEvidenceRef[]; createdAt: string }
 type Write = Result & { caseRef: CaseRef; requestDigest: string; sourceRefs: readonly BusinessEvidenceRef[]; idempotencyKey: string }
+type StoredResultReceipt = { schema: "sf-decision-result-receipt-v1"; resultRef: string; kind: keyof ResultMap; caseRef: CaseRef; requestDigest: string; storedDigest: string }
 
 type HistoricalScenarioReader = (request: { resultRef: string }, context: TrustedDomainContext) => Promise<PortResult<StoredDecisionResult>>
 type HistoricalScenarioBatch = (references: readonly string[], context: TrustedDomainContext) => Promise<PortResult<StoredDecisionResult>[]>
@@ -27,6 +28,7 @@ export async function readHistoricalScenarios(
   store: Pick<ReturnType<typeof createSfDecisionResultStore>, "read"> & { readHistoricalScenario?: HistoricalScenarioReader },
   incoming: readonly string[],
   context: TrustedDomainContext,
+  scalarConcurrency: "serial" | "parallel" = "serial",
 ): Promise<PortResult<StoredDecisionResult>[]> {
   const references = [...incoming]
   if (!references.length) return []
@@ -39,12 +41,14 @@ export async function readHistoricalScenarios(
     if (store.readHistoricalScenario !== scalar) return references.map(() => ({ status: "denied", reason: "historical-reader-changed" }))
     return observed
   }
-  const observed: PortResult<StoredDecisionResult>[] = []
-  // Overriding scalar readers may add checks/interleavings. Forward every
-  // occurrence in the original order; even duplicates keep their callbacks.
-  for (const resultRef of references) observed.push(structuredClone(await (store.readHistoricalScenario
+  const read = async (resultRef: string) => structuredClone(await (store.readHistoricalScenario
     ? store.readHistoricalScenario({ resultRef }, context)
-    : store.read({ resultRef, kind: "scenario" }, context))))
+    : store.read({ resultRef, kind: "scenario" }, context)))
+  // Opaque facades retain every callback and the caller's original scheduling.
+  // Units used concurrent pairs; stored-scenarios keeps its serial ordering.
+  if (scalarConcurrency === "parallel") return Promise.all(references.map(read))
+  const observed: PortResult<StoredDecisionResult>[] = []
+  for (const resultRef of references) observed.push(await read(resultRef))
   return observed
 }
 
@@ -212,11 +216,11 @@ export function createSfDecisionResultStore(input: {
       if (!again || again.status !== "ok" || !again.value || again.value.prior || !allowedCase(again.value.decision, request.caseRef, context) || !await authorizeCase(again.value.decision!, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "result-state-changed" }
       return { status: "ok", value: { state: "not-found" } }
     }
-    const saved = current.value.prior.value
-    if (!saved || typeof saved !== "object" || !("resultRef" in saved) || typeof saved.resultRef !== "string" || !("requestDigest" in saved) || saved.requestDigest !== request.requestDigest || !("kind" in saved) || saved.kind !== request.kind || current.value.prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
+    const saved = resultReceipt(current.value.prior.value)
+    if (!saved || saved.requestDigest !== request.requestDigest || saved.kind !== request.kind || digestSfValue(saved.caseRef) !== digestSfValue(request.caseRef) || current.value.prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
     const result = await read({ resultRef: saved.resultRef, kind: request.kind }, context)
     if (result.status !== "ok") return result
-    if (result.value.requestDigest !== request.requestDigest || digestSfValue(result.value.caseRef) !== digestSfValue(request.caseRef) || digestSfValue(result.value) !== digestSfValue(saved)) return { status: "conflict", reason: "idempotency-content-changed" }
+    if (result.value.requestDigest !== request.requestDigest || digestSfValue(result.value.caseRef) !== digestSfValue(request.caseRef) || digestSfValue(result.value) !== saved.storedDigest) return { status: "conflict", reason: "idempotency-content-changed" }
     return { status: "ok", value: { state: "found", result: result.value } }
   }
   const write = async (incoming: Write, context: TrustedDomainContext): Promise<PortResult<StoredDecisionResult>> => {
@@ -236,13 +240,32 @@ export function createSfDecisionResultStore(input: {
       results.decisionResults ??= {}
       if (results.decisionResults[stored.resultRef]) return { commit: false, value: null }
       results.decisionResults[stored.resultRef] = structuredClone(stored)
-      return { commit: true, value: stored }
+      // C08 already retains the full result above. Its idempotency receipt binds
+      // that immutable envelope without serializing a second copy on every read.
+      const receipt: StoredResultReceipt = { schema: "sf-decision-result-receipt-v1", resultRef: stored.resultRef, kind: stored.kind, caseRef: structuredClone(stored.caseRef), requestDigest: stored.requestDigest, storedDigest: digestSfValue(stored) }
+      return { commit: true, value: receipt }
     }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (saved.status !== "ok") return { status: saved.status === "preview" ? "conflict" : saved.status, reason: "result-write-unavailable" }
     if (!saved.value) return { status: "conflict", reason: "result-identity-conflict" }
-    return read({ resultRef: saved.value.resultRef, kind: request.kind }, context)
+    // The provider may replay an older full receipt after a real restart.
+    const receipt = resultReceipt(saved.value)
+    if (!receipt || receipt.kind !== request.kind || receipt.requestDigest !== request.requestDigest || digestSfValue(receipt.caseRef) !== digestSfValue(request.caseRef)) return { status: "conflict", reason: "idempotency-content-changed" }
+    const result = await read({ resultRef: receipt.resultRef, kind: request.kind }, context)
+    if (result.status !== "ok") return result
+    return digestSfValue(result.value) === receipt.storedDigest ? result : { status: "conflict", reason: "idempotency-content-changed" }
   }
   return { write, read, readForCalculation, readHistoricalCalculation, readHistoricalScenario, readByRequest }
+}
+
+/** Old full receipts remain readable; no migration rewrites accepted history. */
+function resultReceipt(value: unknown): StoredResultReceipt | undefined {
+  if (!value || typeof value !== "object" || !("schema" in value) || !("resultRef" in value) || typeof value.resultRef !== "string" || !value.resultRef.trim() || !("kind" in value) || typeof value.kind !== "string" || !["scenario", "comparison", "sensitivity", "portfolio"].includes(value.kind) || !("requestDigest" in value) || typeof value.requestDigest !== "string" || !/^[a-f0-9]{64}$/.test(value.requestDigest) || !("caseRef" in value)) return undefined
+  const caseRef = value.caseRef
+  if (!caseRef || typeof caseRef !== "object" || !("id" in caseRef) || typeof caseRef.id !== "string" || !caseRef.id.trim() || !("incarnation" in caseRef) || typeof caseRef.incarnation !== "string" || !caseRef.incarnation.trim() || !("version" in caseRef) || typeof caseRef.version !== "number" || !Number.isSafeInteger(caseRef.version) || caseRef.version < 0) return undefined
+  const storedDigest = value.schema === "sf-decision-result-v1" ? digestSfValue(value)
+    : value.schema === "sf-decision-result-receipt-v1" && "storedDigest" in value && typeof value.storedDigest === "string" && /^[a-f0-9]{64}$/.test(value.storedDigest) ? value.storedDigest : undefined
+  if (!storedDigest) return undefined
+  return { schema: "sf-decision-result-receipt-v1", resultRef: value.resultRef, kind: value.kind as keyof ResultMap, caseRef: { id: caseRef.id, incarnation: caseRef.incarnation, version: caseRef.version }, requestDigest: value.requestDigest, storedDigest }
 }
 
 function calculationSources(value: Extract<StoredDecisionResult, { kind: "scenario" }>) {
@@ -264,3 +287,4 @@ function validResult(value: Result) {
   if (value.kind === "portfolio") return decodeSfOperationOutput("sf_portfolio_evaluate", value.result).ok
   return false
 }
+

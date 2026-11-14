@@ -22,7 +22,7 @@ export function createPreparedExecution(input: {
   reviewDigestFor: ReviewDigestFor
   revalidateProducer: (request: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext) => Promise<PortResult<{ reviewDigest: string }>>
 }) {
-  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
+  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext, mode: "apply" | "recover" = "apply"): Promise<PortResult<CommandReceipt>> => {
     const request = structuredClone(incoming)
     const source = input.host.requestFor(context)
     const operation = input.operationIdentity(context)
@@ -38,9 +38,12 @@ export function createPreparedExecution(input: {
     if (!await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
     const lookup = structuredClone(await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)))
     if (lookup.status !== "ok") return lookup
+    // Historical admission can only reconcile an existing domain receipt.
+    if (mode === "recover" && lookup.value.state !== "found") return { status: "unavailable", reason: "original-receipt-unavailable" }
     const reviewDigest = input.reviewDigestFor(context, request, change)
     if (!isReviewDigest(reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
     const retainReceipt = async (expectedCase: DecisionCase, receipt: CommandReceipt) => {
+      if (expectedCase.preparedChanges.filter((item) => item.receipt?.id === receipt.id).length !== 1 || expectedCase.preparedChanges.find((item) => item.receipt?.id === receipt.id)?.id !== change.id || expectedCase.receipts.filter((item) => item.id === receipt.id).length !== 1 || digestSfValue(expectedCase.receipts.find((item) => item.id === receipt.id)) !== digestSfValue(receipt)) return false
       // This is a consistency fence for a receipt already authorized by its
       // canonical reader, never a substitute for that reader's authority.
       const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, change, receipt, reviewDigest, context.binding.principalRef)).catch(() => undefined)
@@ -147,7 +150,8 @@ function receiptSnapshotMatches(state: SfProductState, change: PreparedChange, r
   const stored = state.receipts[receipt.id]
   const proof = state.transactions[receiptProofTransactionKey(principalRef, change.target.id, change.idempotencyKey)]
   const matches = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.targetIncarnation === change.target.incarnation && item.idempotencyKey === change.idempotencyKey && item.principalRef === principalRef)
-  return matches.length === 1 && !!stored && !!proof && digestSfValue(stored) === digestSfValue(receipt) && proof.commandDigest === receiptReviewBinding(change, reviewDigest) && digestSfValue(proof.value) === digestSfValue(receipt)
+  const scope = change.target.surface === "dashboard" ? ["cases", "receipts"] : { namespaces: ["cases", "receipts"], domainSurface: change.target.surface }
+  return matches.length === 1 && !!stored && !!proof && proof.namespace === "receipts" && proof.scopeDigest === digestSfValue(scope) && proof.principalRef === principalRef && proof.targetRef === change.target.id && proof.targetIncarnation === change.target.incarnation && proof.incarnation === state.incarnation && digestSfValue(stored) === digestSfValue(receipt) && proof.commandDigest === receiptReviewBinding(change, reviewDigest) && digestSfValue(proof.value) === digestSfValue(receipt)
 }
 
 async function callDomain<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {

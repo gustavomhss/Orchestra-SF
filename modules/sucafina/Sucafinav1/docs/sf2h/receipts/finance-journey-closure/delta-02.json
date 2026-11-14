@@ -1,0 +1,26 @@
+{
+  "schema": "finance-journey-closure-delta-v1",
+  "parent": "9a2ab893be9f2af2078f67ca867c13892452752e",
+  "sourceProduct": "454b97daf614176507711df889bd45743467f7af",
+  "state": "IMPLEMENTED_AWAITING_ACTIONS",
+  "scope": [
+    "product/planner/sensitivity-units.ts",
+    "product/decisions/result-store.ts"
+  ],
+  "changes": [
+    "Coalesce the direct sibling result envelopes within each units observation; retain per-occurrence authority/source checks, final observations, rule chronology and concurrent opaque scalar fallback.",
+    "Persist one full canonical result and a compact transaction receipt binding its whole digest; preserve original CAS/command digest and read old full receipts without migration."
+  ],
+  "review": "Read-only supporting static review found no blocker; not the campaign's independent approval.",
+  "preserved": [
+    "coverage-preview.ts unchanged including original predicate, current/qualify/revalidate/verify and cleanup",
+    "Existing six producer fixes and all old receipts unchanged",
+    "No source grants, proof budgets, assertions or engine changes"
+  ],
+  "compatibility": "New producer reads both legacy full transaction receipts and new versioned compact receipts. Older producer readByRequest does not understand compact receipts and fails closed; rolling back the producer after new writes is not demonstrated.",
+  "proof": {
+    "before": "S1-result.json",
+    "next": "Revalidate affected prior S5 selection and own targeted tests, then original long journey only after material delta validated."
+  },
+  "limits": "No native/AM evidence, installed integration or global acceptance claimed."
+}
