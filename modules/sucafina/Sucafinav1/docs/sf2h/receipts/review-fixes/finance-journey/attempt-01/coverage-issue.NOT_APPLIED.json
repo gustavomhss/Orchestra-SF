@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h.finance-journey.owner-proposal.v1",
+  "finding": "FIN-IND-005",
+  "status": "NOT_APPLIED",
+  "qualification": "PROPOSED_NOT_RUN",
+  "owner": {
+    "producer": "WP13 / S4-C portfolio coverage",
+    "consumer": "finance-resume",
+    "composition": "WP10 / S0"
+  },
+  "preimage": {
+    "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+    "git_blob_sha": "9f7e12113b38e73befb64f99a94fb8ca28d05eee"
+  },
+  "patch": "coverage-issue.NOT_APPLIED.patch.txt",
+  "cause": "Interval issue repeats complete authority resolution/validity before and after a structurally authorized read-only proof. In the finance fixture, the validity callback reruns the complete sensitivity resolver. The proposal removes only the redundant eager full callback on the successful path.",
+  "proposed_change": [
+    "Detach and hash the initial authority as before; retain the initial mutable-object digest check.",
+    "Keep all remaining eligibility, classification, source, rule, structural proof, certificate, issued-map insertion, final current() and failure cleanup inside a local prepare() boundary.",
+    "Successful prepare still executes original final current(): fresh authority read, validity predicate, authority and certificate equality, context scope and existing TTL handling.",
+    "Every non-ok prepare result checks the ORIGINAL authority predicate and original mutable-object digest before returning. Invalid authority returns stale, preventing unavailable from entering the caller's conditioned fallback.",
+    "After every prepare result also check the original mutable-object digest. If an ok interval must be rejected, delete its provisional issued-map entry.",
+    "Do not catch exceptions into success or unavailable; do not cache authority across operations."
+  ],
+  "withdrawn_approach": "A one-line deletion of eager isStillValid without a non-ok exit guard is unsafe: createPlannerSensitivity permits unavailable fallback. That deletion is not the delivered patch.",
+  "unchanged": [
+    "Canonical financial arithmetic",
+    "Source/case/incarnation/rule/classification/evidence identities",
+    "Qualify/revalidate/verify implementations",
+    "All test assertions and budgets",
+    "Production authority callback implementation"
+  ],
+  "validation": {
+    "textual_applicability": {
+      "status": "PASS_TEXTUAL_ONLY",
+      "preimage_blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "applied": false,
+      "product_tests_executed": false
+    },
+    "runtime_tests": "NOT_RUN_ON_PROPOSED_PATCH",
+    "performance_gain": "NOT_MEASURED; at most one duplicate full validity callback avoided per successful issue by this change. This is not a claim that the entire journey fits its deadline.",
+    "static_review": "Read-only review identified and corrected the unavailable-fallback gap; it is not formal campaign acceptance."
+  },
+  "required_owner_counterproofs": [
+    {
+      "id": "OWNER-01",
+      "case": "Valid complete same-case financial journey",
+      "expected": "250000/-10000; exact15000; witness15000 passes and15001 fails; history/replay/restart; original budgets; record actual call reduction and timing."
+    },
+    {
+      "id": "OWNER-02",
+      "case": "Invalid authority plus pre-proof or structural unavailable",
+      "expected": "Hard refusal (stale/denied), no conditioned fallback and no new sample writes."
+    },
+    {
+      "id": "OWNER-03",
+      "case": "Valid authority plus genuine incomplete coverage",
+      "expected": "Existing conditioned behavior remains; no false authority error."
+    },
+    {
+      "id": "OWNER-04",
+      "case": "Case/incarnation/source/classification/basis/criterion/access changes during proof",
+      "expected": "No complete interval or result escapes, including same scalar values with changed identity."
+    },
+    {
+      "id": "OWNER-05",
+      "case": "Mutable original authority object changes across await",
+      "expected": "Post-await digest rejects both non-ok fallback and successful interval release; a rejected provisional interval cannot be reused."
+    },
+    {
+      "id": "OWNER-06",
+      "case": "Revoked context, wrong scope, expired interval and token reuse",
+      "expected": "Existing scope/TTL/qualify/revalidate/verify rejection remains; do not claim a newly implemented post-await TTL fence."
+    }
+  ],
+  "scope_limits": [
+    "The producer and canonical financial ports are real; source grants and the coverage-authority composition in the diagnostic are synthetic fixture inputs.",
+    "compose-resume at ad7fcdef7739e1bc471e42fac082452799de751b has no product/portfolio/coverage-preview.ts and uses older product.ts8fc915379f153fdb437be09c2c84924d7d59b6ed; this patch is not applicable there until the finance dependency is consumed.",
+    "The sampled mounted portfolio-services.ts83c525e733b2cb21637734e3b1e07950e72f4f97 supplies neither resolveCoverageAuthority nor exactThreshold. No mounted/native performance result is inferred.",
+    "Speculative read-only structural proof precedes the delayed coverage-authority check. Its canonical units/preview must independently authorize their reads. An opaque host callback requires owner review.",
+    "Existing current() prunes TTL at entry, not explicitly after every await; this proposal preserves that behavior."
+  ],
+  "next_action": "WP13 verifies preimage and reviews the candidate. S0 consumes the required finance dependency and composes authenticated authority in its own namespace. Only the owner applies a chosen correction and runs the targeted counterproofs and full preserved financial selection. Do not rerun the unchanged long diagnostic merely for another timeout."
+}
+

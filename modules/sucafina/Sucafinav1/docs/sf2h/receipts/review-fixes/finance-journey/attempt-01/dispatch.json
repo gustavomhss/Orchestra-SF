@@ -1,0 +1,27 @@
+{
+  "schema": "sf2h.finance-journey.dispatch.v1",
+  "finding": "FIN-IND-005",
+  "attempt": 1,
+  "state": "PREPARED_NOT_RUN",
+  "supersedes_request_only": "attempt-01/selection.json",
+  "reason": "Reading the original S11 .ci-run.json established CLI default120000ms. Preserve that exact default as well as the unchanged test override300000ms and fixture guard180000ms. The initial draft envelope was never attached to a ci-run ref or executed.",
+  "original_request_blob": "e3ff03c5fec4f5303529147d7e49ec4c96e1052a",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-fixes/finance-journey/journey-phase.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "cli_default_ms": 120000,
+  "outer_test_ms": 300000,
+  "fixture_guard_ms": 180000,
+  "original_W": "a7c886ececeb9ea63c58e85f5eed8884021af97d",
+  "unused_snapshot_draft": "a55cb06d17aadbb0aded8199029dacbe3b8e6056",
+  "no_runtime_or_test_change": true
+}

@@ -1,0 +1,229 @@
+2026-11-14T18:19:55.2007038Z bun test v1.3.14 (0d9b296a)
+2026-11-14T18:19:55.2132191Z 
+2026-11-14T18:19:55.2132724Z Sucafinav1/test/product/review-fixes/finance-journey/journey-phase.test.ts:
+2026-11-14T18:19:55.2513016Z [finance-journey-phase] {"elapsedMs":1,"event":"start","id":1,"label":"fixture.create","active":[]}
+2026-11-14T18:19:55.2518758Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"bootstrap-start","elapsedMs":0,"budgetMs":180000,"counts":{}}
+2026-11-14T18:19:55.3078366Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"bootstrap-complete","elapsedMs":56,"budgetMs":180000,"counts":{"c08.read.cases":{"calls":1,"elapsedMs":2,"maximumMs":2}},"stateBytes":38210,"transactionsBytes":415,"casesBytes":37395,"resultBytes":2,"transactions":1,"cases":1,"results":0}
+2026-11-14T18:19:55.3106327Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"prepare:transition-omitted:start","elapsedMs":59,"budgetMs":180000,"counts":{"c08.read.cases":{"calls":2,"elapsedMs":4,"maximumMs":2}},"stateBytes":38210,"transactionsBytes":415,"casesBytes":37395,"resultBytes":2,"transactions":1,"cases":1,"results":0}
+2026-11-14T18:20:06.5974093Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"prepare:transition-omitted:complete","elapsedMs":11345,"budgetMs":180000,"counts":{"c08.read.cases":{"calls":546,"elapsedMs":5937,"maximumMs":29},"host.revalidate":{"calls":2962,"elapsedMs":76,"maximumMs":4},"operation-source":{"calls":846,"elapsedMs":33,"maximumMs":2},"operation-coverage":{"calls":462,"elapsedMs":12,"maximumMs":1},"c08.read.preferences":{"calls":96,"elapsedMs":872,"maximumMs":15},"c08.transaction.preferences":{"calls":3,"elapsedMs":111,"maximumMs":60},"classified-source":{"calls":39,"elapsedMs":0,"maximumMs":0},"classified-coverage":{"calls":41,"elapsedMs":1599,"maximumMs":62},"c08.transaction.cases":{"calls":5,"elapsedMs":207,"maximumMs":51},"planner.verifySourceOnly":{"calls":96,"elapsedMs":242,"maximumMs":6},"planner.verifyOperation":{"calls":96,"elapsedMs":1221,"maximumMs":20},"planner.verifySourceProjection":{"calls":192,"elapsedMs":183,"maximumMs":5}},"stateBytes":540335,"transactionsBytes":159999,"casesBytes":53809,"resultBytes":111960,"transactions":9,"cases":1,"results":5}
+2026-11-14T18:20:06.5979804Z [finance-journey-phase] {"elapsedMs":11346,"event":"complete","id":1,"label":"fixture.create","durationMs":11345}
+2026-11-14T18:20:06.5980933Z [finance-journey-phase] {"elapsedMs":11347,"event":"start","id":2,"label":"omitted.evaluate","active":[]}
+2026-11-14T18:20:06.5982422Z [finance-journey-phase] {"elapsedMs":11347,"event":"start","id":3,"label":"omitted.units.resolve","active":[2]}
+2026-11-14T18:20:07.8619527Z [finance-journey-phase] {"elapsedMs":12611,"event":"complete","id":3,"label":"omitted.units.resolve","durationMs":1264,"status":"ok"}
+2026-11-14T18:20:07.8620531Z [finance-journey-phase] {"elapsedMs":12611,"event":"start","id":4,"label":"omitted.units.revalidate","active":[2]}
+2026-11-14T18:20:09.1029447Z [finance-journey-phase] {"elapsedMs":13852,"event":"complete","id":4,"label":"omitted.units.revalidate","durationMs":1241,"status":true}
+2026-11-14T18:20:09.1030870Z [finance-journey-phase] {"elapsedMs":13852,"event":"start","id":5,"label":"omitted.results.readHistoricalScenario","active":[2]}
+2026-11-14T18:20:09.1462445Z [finance-journey-phase] {"elapsedMs":13895,"event":"complete","id":5,"label":"omitted.results.readHistoricalScenario","durationMs":43,"status":"ok"}
+2026-11-14T18:20:09.1463944Z [finance-journey-phase] {"elapsedMs":13896,"event":"start","id":6,"label":"omitted.results.readHistoricalScenario","active":[2]}
+2026-11-14T18:20:09.1882946Z [finance-journey-phase] {"elapsedMs":13938,"event":"complete","id":6,"label":"omitted.results.readHistoricalScenario","durationMs":42,"status":"ok"}
+2026-11-14T18:20:09.1901503Z [finance-journey-phase] {"elapsedMs":13940,"event":"start","id":7,"label":"omitted.preview","active":[2]}
+2026-11-14T18:20:10.2027819Z [finance-journey-phase] {"elapsedMs":14952,"event":"complete","id":7,"label":"omitted.preview","durationMs":1012,"status":"ok"}
+2026-11-14T18:20:10.2030392Z [finance-journey-phase] {"elapsedMs":14952,"event":"start","id":8,"label":"omitted.results.readByRequest","active":[2]}
+2026-11-14T18:20:10.2298435Z [finance-journey-phase] {"elapsedMs":14979,"event":"complete","id":8,"label":"omitted.results.readByRequest","durationMs":27,"status":"ok"}
+2026-11-14T18:20:10.2301769Z [finance-journey-phase] {"elapsedMs":14979,"event":"start","id":9,"label":"omitted.results.write","active":[2]}
+2026-11-14T18:20:10.3925653Z [finance-journey-phase] {"elapsedMs":15142,"event":"complete","id":9,"label":"omitted.results.write","durationMs":163,"status":"ok"}
+2026-11-14T18:20:10.3942841Z [finance-journey-phase] {"elapsedMs":15144,"event":"start","id":10,"label":"omitted.preview","active":[2]}
+2026-11-14T18:20:11.5016859Z [finance-journey-phase] {"elapsedMs":16251,"event":"complete","id":10,"label":"omitted.preview","durationMs":1107,"status":"ok"}
+2026-11-14T18:20:11.5018664Z [finance-journey-phase] {"elapsedMs":16251,"event":"start","id":11,"label":"omitted.results.readByRequest","active":[2]}
+2026-11-14T18:20:11.5304228Z [finance-journey-phase] {"elapsedMs":16280,"event":"complete","id":11,"label":"omitted.results.readByRequest","durationMs":29,"status":"ok"}
+2026-11-14T18:20:11.5305689Z [finance-journey-phase] {"elapsedMs":16280,"event":"start","id":12,"label":"omitted.results.write","active":[2]}
+2026-11-14T18:20:11.6600117Z [finance-journey-phase] {"elapsedMs":16409,"event":"complete","id":12,"label":"omitted.results.write","durationMs":129,"status":"ok"}
+2026-11-14T18:20:11.6621284Z [finance-journey-phase] {"elapsedMs":16411,"event":"start","id":13,"label":"omitted.exact","active":[2]}
+2026-11-14T18:20:11.6627415Z [finance-journey-phase] {"elapsedMs":16412,"event":"start","id":14,"label":"omitted.units.issue","active":[2,13]}
+2026-11-14T18:20:12.9034873Z [finance-journey-phase] {"elapsedMs":17653,"event":"complete","id":14,"label":"omitted.units.issue","durationMs":1241,"status":"ok"}
+2026-11-14T18:20:12.9037808Z [finance-journey-phase] {"elapsedMs":17653,"event":"start","id":15,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:14.1244149Z [finance-journey-phase] {"elapsedMs":18874,"event":"complete","id":15,"label":"omitted.preview","durationMs":1221,"status":"ok"}
+2026-11-14T18:20:14.1245630Z [finance-journey-phase] {"elapsedMs":18874,"event":"start","id":16,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:15.3091026Z [finance-journey-phase] {"elapsedMs":20058,"event":"complete","id":16,"label":"omitted.preview","durationMs":1184,"status":"ok"}
+2026-11-14T18:20:15.3104540Z [finance-journey-phase] {"elapsedMs":20060,"event":"start","id":17,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:16.5050718Z [finance-journey-phase] {"elapsedMs":21254,"event":"complete","id":17,"label":"omitted.preview","durationMs":1194,"status":"ok"}
+2026-11-14T18:20:16.5058939Z [finance-journey-phase] {"elapsedMs":21255,"event":"start","id":18,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:17.7221052Z [finance-journey-phase] {"elapsedMs":22471,"event":"complete","id":18,"label":"omitted.preview","durationMs":1216,"status":"ok"}
+2026-11-14T18:20:17.7228195Z [finance-journey-phase] {"elapsedMs":22472,"event":"start","id":19,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:18.9310145Z [finance-journey-phase] {"elapsedMs":23680,"event":"complete","id":19,"label":"omitted.preview","durationMs":1208,"status":"ok"}
+2026-11-14T18:20:18.9318260Z [finance-journey-phase] {"elapsedMs":23681,"event":"start","id":20,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:20.1260524Z [finance-journey-phase] {"elapsedMs":24875,"event":"complete","id":20,"label":"omitted.preview","durationMs":1194,"status":"ok"}
+2026-11-14T18:20:20.1266636Z [finance-journey-phase] {"elapsedMs":24876,"event":"start","id":21,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:21.3274835Z [finance-journey-phase] {"elapsedMs":26077,"event":"complete","id":21,"label":"omitted.preview","durationMs":1201,"status":"ok"}
+2026-11-14T18:20:21.3284945Z [finance-journey-phase] {"elapsedMs":26078,"event":"start","id":22,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:22.5186701Z [finance-journey-phase] {"elapsedMs":27268,"event":"complete","id":22,"label":"omitted.preview","durationMs":1190,"status":"ok"}
+2026-11-14T18:20:22.5194318Z [finance-journey-phase] {"elapsedMs":27269,"event":"start","id":23,"label":"omitted.preview","active":[2,13]}
+2026-11-14T18:20:23.6963190Z [finance-journey-phase] {"elapsedMs":28446,"event":"complete","id":23,"label":"omitted.preview","durationMs":1177,"status":"ok"}
+2026-11-14T18:20:23.6969465Z [finance-journey-phase] {"elapsedMs":28446,"event":"start","id":24,"label":"omitted.units.issue","active":[2,13]}
+2026-11-14T18:20:24.9621505Z [finance-journey-phase] {"elapsedMs":29711,"event":"complete","id":24,"label":"omitted.units.issue","durationMs":1265,"status":"ok"}
+2026-11-14T18:20:24.9622927Z [finance-journey-phase] {"elapsedMs":29712,"event":"complete","id":13,"label":"omitted.exact","durationMs":13301,"status":"ok"}
+2026-11-14T18:20:24.9631756Z [finance-journey-phase] {"elapsedMs":29713,"event":"start","id":25,"label":"omitted.preview","active":[2]}
+2026-11-14T18:20:26.1496683Z [finance-journey-phase] {"elapsedMs":30899,"event":"complete","id":25,"label":"omitted.preview","durationMs":1186,"status":"ok"}
+2026-11-14T18:20:26.1497921Z [finance-journey-phase] {"elapsedMs":30899,"event":"start","id":26,"label":"omitted.preview","active":[2]}
+2026-11-14T18:20:27.3388730Z [finance-journey-phase] {"elapsedMs":32088,"event":"complete","id":26,"label":"omitted.preview","durationMs":1189,"status":"ok"}
+2026-11-14T18:20:27.3408542Z [finance-journey-phase] {"elapsedMs":32090,"event":"start","id":27,"label":"omitted.units.resolve","active":[2]}
+2026-11-14T18:20:28.8617868Z [finance-journey-phase] {"elapsedMs":33611,"event":"complete","id":27,"label":"omitted.units.resolve","durationMs":1521,"status":"ok"}
+2026-11-14T18:20:28.8619550Z [finance-journey-phase] {"elapsedMs":33611,"event":"start","id":28,"label":"omitted.units.revalidate","active":[2]}
+2026-11-14T18:20:30.3924653Z [finance-journey-phase] {"elapsedMs":35142,"event":"complete","id":28,"label":"omitted.units.revalidate","durationMs":1531,"status":true}
+2026-11-14T18:20:30.3925520Z [finance-journey-phase] {"elapsedMs":35142,"event":"start","id":29,"label":"omitted.results.readHistoricalScenario","active":[2]}
+2026-11-14T18:20:30.4462080Z [finance-journey-phase] {"elapsedMs":35195,"event":"complete","id":29,"label":"omitted.results.readHistoricalScenario","durationMs":53,"status":"ok"}
+2026-11-14T18:20:30.4464081Z [finance-journey-phase] {"elapsedMs":35196,"event":"start","id":30,"label":"omitted.results.readHistoricalScenario","active":[2]}
+2026-11-14T18:20:30.4972107Z [finance-journey-phase] {"elapsedMs":35246,"event":"complete","id":30,"label":"omitted.results.readHistoricalScenario","durationMs":50,"status":"ok"}
+2026-11-14T18:20:30.4984773Z [finance-journey-phase] {"elapsedMs":35248,"event":"start","id":31,"label":"omitted.results.read","active":[2]}
+2026-11-14T18:20:30.4985435Z [finance-journey-phase] {"elapsedMs":35248,"event":"start","id":32,"label":"omitted.results.read","active":[2,31]}
+2026-11-14T18:20:30.5971638Z [finance-journey-phase] {"elapsedMs":35346,"event":"complete","id":31,"label":"omitted.results.read","durationMs":98,"status":"ok"}
+2026-11-14T18:20:30.6009611Z [finance-journey-phase] {"elapsedMs":35350,"event":"start","id":33,"label":"omitted.preview","active":[2,32]}
+2026-11-14T18:20:30.6171108Z [finance-journey-phase] {"elapsedMs":35366,"event":"complete","id":32,"label":"omitted.results.read","durationMs":118,"status":"ok"}
+2026-11-14T18:20:30.6208698Z [finance-journey-phase] {"elapsedMs":35370,"event":"start","id":34,"label":"omitted.preview","active":[2,33]}
+2026-11-14T18:20:32.9717582Z [finance-journey-phase] {"elapsedMs":37721,"event":"complete","id":33,"label":"omitted.preview","durationMs":2371,"status":"ok"}
+2026-11-14T18:20:32.9888433Z [finance-journey-phase] {"elapsedMs":37738,"event":"complete","id":34,"label":"omitted.preview","durationMs":2368,"status":"ok"}
+2026-11-14T18:20:32.9900066Z [finance-journey-phase] {"elapsedMs":37739,"event":"start","id":35,"label":"omitted.units.revalidate","active":[2]}
+2026-11-14T18:20:34.4980587Z [finance-journey-phase] {"elapsedMs":39247,"event":"complete","id":35,"label":"omitted.units.revalidate","durationMs":1508,"status":true}
+2026-11-14T18:20:34.4990343Z [finance-journey-phase] {"elapsedMs":39247,"event":"start","id":36,"label":"omitted.exact","active":[2]}
+2026-11-14T18:20:34.4991214Z [finance-journey-phase] {"elapsedMs":39248,"event":"start","id":37,"label":"omitted.units.issue","active":[2,36]}
+2026-11-14T18:20:35.7565259Z [finance-journey-phase] {"elapsedMs":40506,"event":"complete","id":37,"label":"omitted.units.issue","durationMs":1258,"status":"ok"}
+2026-11-14T18:20:35.7566451Z [finance-journey-phase] {"elapsedMs":40506,"event":"start","id":38,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:36.9503975Z [finance-journey-phase] {"elapsedMs":41700,"event":"complete","id":38,"label":"omitted.preview","durationMs":1194,"status":"ok"}
+2026-11-14T18:20:36.9505701Z [finance-journey-phase] {"elapsedMs":41700,"event":"start","id":39,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:38.1331571Z [finance-journey-phase] {"elapsedMs":42882,"event":"complete","id":39,"label":"omitted.preview","durationMs":1182,"status":"ok"}
+2026-11-14T18:20:38.1342124Z [finance-journey-phase] {"elapsedMs":42884,"event":"start","id":40,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:39.2994470Z [finance-journey-phase] {"elapsedMs":44049,"event":"complete","id":40,"label":"omitted.preview","durationMs":1165,"status":"ok"}
+2026-11-14T18:20:39.3002933Z [finance-journey-phase] {"elapsedMs":44050,"event":"start","id":41,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:40.4727980Z [finance-journey-phase] {"elapsedMs":45222,"event":"complete","id":41,"label":"omitted.preview","durationMs":1172,"status":"ok"}
+2026-11-14T18:20:40.4734726Z [finance-journey-phase] {"elapsedMs":45223,"event":"start","id":42,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:41.6449139Z [finance-journey-phase] {"elapsedMs":46394,"event":"complete","id":42,"label":"omitted.preview","durationMs":1171,"status":"ok"}
+2026-11-14T18:20:41.6456347Z [finance-journey-phase] {"elapsedMs":46395,"event":"start","id":43,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:42.8107894Z [finance-journey-phase] {"elapsedMs":47560,"event":"complete","id":43,"label":"omitted.preview","durationMs":1165,"status":"ok"}
+2026-11-14T18:20:42.8115200Z [finance-journey-phase] {"elapsedMs":47561,"event":"start","id":44,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:43.9995320Z [finance-journey-phase] {"elapsedMs":48749,"event":"complete","id":44,"label":"omitted.preview","durationMs":1188,"status":"ok"}
+2026-11-14T18:20:44.0005131Z [finance-journey-phase] {"elapsedMs":48750,"event":"start","id":45,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:45.1955282Z [finance-journey-phase] {"elapsedMs":49945,"event":"complete","id":45,"label":"omitted.preview","durationMs":1195,"status":"ok"}
+2026-11-14T18:20:45.1963572Z [finance-journey-phase] {"elapsedMs":49946,"event":"start","id":46,"label":"omitted.preview","active":[2,36]}
+2026-11-14T18:20:46.4084861Z [finance-journey-phase] {"elapsedMs":51158,"event":"complete","id":46,"label":"omitted.preview","durationMs":1212,"status":"ok"}
+2026-11-14T18:20:46.4090945Z [finance-journey-phase] {"elapsedMs":51158,"event":"start","id":47,"label":"omitted.units.issue","active":[2,36]}
+2026-11-14T18:20:47.6580681Z [finance-journey-phase] {"elapsedMs":52407,"event":"complete","id":47,"label":"omitted.units.issue","durationMs":1249,"status":"ok"}
+2026-11-14T18:20:47.6582020Z [finance-journey-phase] {"elapsedMs":52408,"event":"complete","id":36,"label":"omitted.exact","durationMs":13160,"status":"ok"}
+2026-11-14T18:20:47.6585335Z [finance-journey-phase] {"elapsedMs":52408,"event":"start","id":48,"label":"omitted.preview","active":[2]}
+2026-11-14T18:20:48.8548751Z [finance-journey-phase] {"elapsedMs":53604,"event":"complete","id":48,"label":"omitted.preview","durationMs":1196,"status":"ok"}
+2026-11-14T18:20:48.8550086Z [finance-journey-phase] {"elapsedMs":53604,"event":"start","id":49,"label":"omitted.preview","active":[2]}
+2026-11-14T18:20:50.0408099Z [finance-journey-phase] {"elapsedMs":54790,"event":"complete","id":49,"label":"omitted.preview","durationMs":1186,"status":"ok"}
+2026-11-14T18:20:50.0420284Z [finance-journey-phase] {"elapsedMs":54791,"event":"start","id":50,"label":"omitted.units.revalidate","active":[2]}
+2026-11-14T18:20:51.5727010Z [finance-journey-phase] {"elapsedMs":56322,"event":"complete","id":50,"label":"omitted.units.revalidate","durationMs":1531,"status":true}
+2026-11-14T18:20:51.5760939Z [finance-journey-phase] {"elapsedMs":56325,"event":"complete","id":2,"label":"omitted.evaluate","durationMs":44978,"status":"ok"}
+2026-11-14T18:20:51.5764331Z [finance-journey-phase] {"elapsedMs":56326,"event":"checkpoint","label":"omitted.assertions-complete","caseRef":{"id":"case","incarnation":"case-incarnation","version":3},"knownSubtotal":210000,"threshold":55000.000000000015,"comparisonStatus":"conditioned"}
+2026-11-14T18:20:51.5766587Z [finance-journey-phase] {"elapsedMs":56326,"event":"start","id":51,"label":"choice.record","active":[]}
+2026-11-14T18:21:02.4123117Z [finance-journey-phase] {"elapsedMs":67162,"event":"complete","id":51,"label":"choice.record","durationMs":10836}
+2026-11-14T18:21:02.4127811Z [finance-journey-phase] {"elapsedMs":67162,"event":"checkpoint","label":"choice.persisted","caseRef":{"id":"case","incarnation":"case-incarnation","version":4},"choiceDigest":"077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"}
+2026-11-14T18:21:02.4129583Z [finance-journey-phase] {"elapsedMs":67162,"event":"start","id":52,"label":"training.confirm","active":[]}
+2026-11-14T18:21:02.4542943Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"prepare:transition-confirmed:start","elapsedMs":67202,"budgetMs":180000,"counts":{"c08.read.cases":{"calls":2606,"elapsedMs":36755,"maximumMs":38},"host.revalidate":{"calls":15348,"elapsedMs":1217,"maximumMs":17},"operation-source":{"calls":4482,"elapsedMs":204,"maximumMs":4},"operation-coverage":{"calls":2402,"elapsedMs":85,"maximumMs":14},"c08.read.preferences":{"calls":472,"elapsedMs":6905,"maximumMs":35},"c08.transaction.preferences":{"calls":3,"elapsedMs":111,"maximumMs":60},"classified-source":{"calls":301,"elapsedMs":58,"maximumMs":11},"classified-coverage":{"calls":275,"elapsedMs":17676,"maximumMs":156},"c08.transaction.cases":{"calls":8,"elapsedMs":420,"maximumMs":94},"planner.verifySourceOnly":{"calls":520,"elapsedMs":1297,"maximumMs":8},"planner.verifyOperation":{"calls":520,"elapsedMs":6903,"maximumMs":26},"planner.verifySourceProjection":{"calls":1040,"elapsedMs":997,"maximumMs":7},"c08.read.outbox":{"calls":1,"elapsedMs":16,"maximumMs":16}},"stateBytes":831840,"transactionsBytes":331727,"casesBytes":102163,"resultBytes":180162,"transactions":12,"cases":1,"results":7}
+2026-11-14T18:21:53.1132780Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"prepare:transition-confirmed:complete","elapsedMs":117861,"budgetMs":180000,"counts":{"c08.read.cases":{"calls":3269,"elapsedMs":60259,"maximumMs":80},"host.revalidate":{"calls":20169,"elapsedMs":1847,"maximumMs":27},"operation-source":{"calls":5096,"elapsedMs":1928,"maximumMs":31},"operation-coverage":{"calls":2504,"elapsedMs":85,"maximumMs":14},"c08.read.preferences":{"calls":554,"elapsedMs":9377,"maximumMs":42},"c08.transaction.preferences":{"calls":6,"elapsedMs":401,"maximumMs":126},"classified-source":{"calls":323,"elapsedMs":299,"maximumMs":27},"classified-coverage":{"calls":301,"elapsedMs":21752,"maximumMs":204},"c08.transaction.cases":{"calls":13,"elapsedMs":1437,"maximumMs":371},"planner.verifySourceOnly":{"calls":776,"elapsedMs":2360,"maximumMs":8},"planner.verifyOperation":{"calls":520,"elapsedMs":6903,"maximumMs":26},"planner.verifySourceProjection":{"calls":1552,"elapsedMs":1403,"maximumMs":7},"c08.read.outbox":{"calls":1,"elapsedMs":16,"maximumMs":16}},"stateBytes":1504375,"transactionsBytes":636765,"casesBytes":115934,"resultBytes":319129,"transactions":20,"cases":1,"results":12}
+2026-11-14T18:21:53.1138529Z [finance-journey-phase] {"elapsedMs":117862,"event":"complete","id":52,"label":"training.confirm","durationMs":50700}
+2026-11-14T18:21:53.1140776Z [finance-journey-phase] {"elapsedMs":117862,"event":"checkpoint","label":"confirmed.assertions-complete","caseRef":{"id":"case","incarnation":"case-incarnation","version":6},"total":250000,"advantage":-10000,"choiceDigest":"077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"}
+2026-11-14T18:21:53.1142552Z [finance-journey-phase] {"elapsedMs":117863,"event":"start","id":53,"label":"confirmed.evaluate","active":[]}
+2026-11-14T18:21:53.1143597Z [finance-journey-phase] {"elapsedMs":117863,"event":"start","id":54,"label":"confirmed.units.resolve","active":[53]}
+2026-11-14T18:21:57.5278814Z [finance-journey-phase] {"elapsedMs":122276,"event":"complete","id":54,"label":"confirmed.units.resolve","durationMs":4413,"status":"ok"}
+2026-11-14T18:21:57.5285743Z [finance-journey-phase] {"elapsedMs":122277,"event":"start","id":55,"label":"confirmed.units.revalidate","active":[53]}
+2026-11-14T18:22:01.8879383Z [finance-journey-phase] {"elapsedMs":126637,"event":"complete","id":55,"label":"confirmed.units.revalidate","durationMs":4360,"status":true}
+2026-11-14T18:22:01.8912502Z [finance-journey-phase] {"elapsedMs":126641,"event":"start","id":56,"label":"confirmed.results.readHistoricalScenario","active":[53]}
+2026-11-14T18:22:02.0602395Z [finance-journey-phase] {"elapsedMs":126809,"event":"complete","id":56,"label":"confirmed.results.readHistoricalScenario","durationMs":168,"status":"ok"}
+2026-11-14T18:22:02.0604330Z [finance-journey-phase] {"elapsedMs":126810,"event":"start","id":57,"label":"confirmed.results.readHistoricalScenario","active":[53]}
+2026-11-14T18:22:02.2338325Z [finance-journey-phase] {"elapsedMs":126983,"event":"complete","id":57,"label":"confirmed.results.readHistoricalScenario","durationMs":173,"status":"ok"}
+2026-11-14T18:22:02.2346230Z [finance-journey-phase] {"elapsedMs":126984,"event":"start","id":58,"label":"confirmed.coverage.issue","active":[53]}
+2026-11-14T18:22:02.2351567Z [finance-journey-phase] {"elapsedMs":126985,"event":"start","id":59,"label":"confirmed.authority.resolve","active":[53,58]}
+2026-11-14T18:22:02.2354169Z [finance-journey-phase] {"elapsedMs":126985,"event":"start","id":60,"label":"confirmed.units.resolve","active":[53,58,59]}
+2026-11-14T18:22:06.6028852Z [finance-journey-phase] {"elapsedMs":131351,"event":"complete","id":60,"label":"confirmed.units.resolve","durationMs":4366,"status":"ok"}
+2026-11-14T18:22:06.6030364Z [finance-journey-phase] {"elapsedMs":131351,"event":"start","id":61,"label":"confirmed.authority.read-case","active":[53,58,59]}
+2026-11-14T18:22:06.6356652Z [finance-journey-phase] {"elapsedMs":131385,"event":"complete","id":61,"label":"confirmed.authority.read-case","durationMs":34}
+2026-11-14T18:22:06.6357946Z [finance-journey-phase] {"elapsedMs":131385,"event":"start","id":62,"label":"confirmed.authority.read-classifications","active":[53,58,59]}
+2026-11-14T18:22:06.6716002Z [finance-journey-phase] {"elapsedMs":131421,"event":"complete","id":62,"label":"confirmed.authority.read-classifications","durationMs":36,"status":"ok"}
+2026-11-14T18:22:06.6730768Z [finance-journey-phase] {"elapsedMs":131422,"event":"start","id":63,"label":"confirmed.authority.evidence-context","active":[53,58,59]}
+2026-11-14T18:22:06.7013867Z [finance-journey-phase] {"elapsedMs":131449,"event":"complete","id":63,"label":"confirmed.authority.evidence-context","durationMs":27}
+2026-11-14T18:22:06.7038453Z [finance-journey-phase] {"elapsedMs":131453,"event":"complete","id":59,"label":"confirmed.authority.resolve","durationMs":4468,"status":"ok"}
+2026-11-14T18:22:06.7079332Z [finance-journey-phase] {"elapsedMs":131457,"event":"start","id":64,"label":"confirmed.authority.is-still-valid","active":[53,58]}
+2026-11-14T18:22:06.7080621Z [finance-journey-phase] {"elapsedMs":131457,"event":"start","id":65,"label":"confirmed.authority.read-classifications","active":[53,58,64]}
+2026-11-14T18:22:06.7434486Z [finance-journey-phase] {"elapsedMs":131493,"event":"complete","id":65,"label":"confirmed.authority.read-classifications","durationMs":36,"status":"ok"}
+2026-11-14T18:22:06.7443860Z [finance-journey-phase] {"elapsedMs":131494,"event":"start","id":66,"label":"confirmed.authority.read-case","active":[53,58,64]}
+2026-11-14T18:22:06.7781037Z [finance-journey-phase] {"elapsedMs":131527,"event":"complete","id":66,"label":"confirmed.authority.read-case","durationMs":33}
+2026-11-14T18:22:06.7790227Z [finance-journey-phase] {"elapsedMs":131528,"event":"start","id":67,"label":"confirmed.units.revalidate","active":[53,58,64]}
+2026-11-14T18:22:11.1455895Z [finance-journey-phase] {"elapsedMs":135895,"event":"complete","id":67,"label":"confirmed.units.revalidate","durationMs":4367,"status":true}
+2026-11-14T18:22:11.1456830Z [finance-journey-phase] {"elapsedMs":135895,"event":"complete","id":64,"label":"confirmed.authority.is-still-valid","durationMs":4438,"status":true}
+2026-11-14T18:22:11.1670910Z [finance-journey-phase] {"elapsedMs":135916,"event":"start","id":68,"label":"confirmed.units.issue","active":[53,58]}
+2026-11-14T18:22:14.7726352Z [finance-journey-phase] {"elapsedMs":139522,"event":"complete","id":68,"label":"confirmed.units.issue","durationMs":3606,"status":"ok"}
+2026-11-14T18:22:14.7728372Z [finance-journey-phase] {"elapsedMs":139522,"event":"start","id":69,"label":"confirmed.preview","active":[53,58]}
+2026-11-14T18:22:18.2838555Z [finance-journey-phase] {"elapsedMs":143033,"event":"complete","id":69,"label":"confirmed.preview","durationMs":3511,"status":"ok"}
+2026-11-14T18:22:18.2841898Z [finance-journey-phase] {"elapsedMs":143034,"event":"start","id":70,"label":"confirmed.preview","active":[53,58]}
+2026-11-14T18:22:21.8038563Z [finance-journey-phase] {"elapsedMs":146553,"event":"complete","id":70,"label":"confirmed.preview","durationMs":3519,"status":"ok"}
+2026-11-14T18:22:21.8050561Z [finance-journey-phase] {"elapsedMs":146554,"event":"start","id":71,"label":"confirmed.units.issue","active":[53,58]}
+2026-11-14T18:22:25.4288485Z [finance-journey-phase] {"elapsedMs":150178,"event":"complete","id":71,"label":"confirmed.units.issue","durationMs":3624,"status":"ok"}
+2026-11-14T18:22:25.4436858Z [finance-journey-phase] {"elapsedMs":150193,"event":"start","id":72,"label":"confirmed.authority.resolve","active":[53,58]}
+2026-11-14T18:22:25.4438028Z [finance-journey-phase] {"elapsedMs":150193,"event":"start","id":73,"label":"confirmed.units.resolve","active":[53,58,72]}
+2026-11-14T18:22:29.9310895Z [finance-journey-phase] {"elapsedMs":154680,"event":"complete","id":73,"label":"confirmed.units.resolve","durationMs":4487,"status":"ok"}
+2026-11-14T18:22:29.9313100Z [finance-journey-phase] {"elapsedMs":154681,"event":"start","id":74,"label":"confirmed.authority.read-case","active":[53,58,72]}
+2026-11-14T18:22:29.9645770Z [finance-journey-phase] {"elapsedMs":154714,"event":"complete","id":74,"label":"confirmed.authority.read-case","durationMs":34}
+2026-11-14T18:22:29.9646669Z [finance-journey-phase] {"elapsedMs":154714,"event":"start","id":75,"label":"confirmed.authority.read-classifications","active":[53,58,72]}
+2026-11-14T18:22:30.0010618Z [finance-journey-phase] {"elapsedMs":154750,"event":"complete","id":75,"label":"confirmed.authority.read-classifications","durationMs":36,"status":"ok"}
+2026-11-14T18:22:30.0025513Z [finance-journey-phase] {"elapsedMs":154752,"event":"start","id":76,"label":"confirmed.authority.evidence-context","active":[53,58,72]}
+2026-11-14T18:22:30.0271508Z [finance-journey-phase] {"elapsedMs":154776,"event":"complete","id":76,"label":"confirmed.authority.evidence-context","durationMs":24}
+2026-11-14T18:22:30.0301124Z [finance-journey-phase] {"elapsedMs":154779,"event":"complete","id":72,"label":"confirmed.authority.resolve","durationMs":4586,"status":"ok"}
+2026-11-14T18:22:30.0343582Z [finance-journey-phase] {"elapsedMs":154784,"event":"start","id":77,"label":"confirmed.authority.is-still-valid","active":[53,58]}
+2026-11-14T18:22:30.0344894Z [finance-journey-phase] {"elapsedMs":154784,"event":"start","id":78,"label":"confirmed.authority.read-classifications","active":[53,58,77]}
+2026-11-14T18:22:30.0707911Z [finance-journey-phase] {"elapsedMs":154820,"event":"complete","id":78,"label":"confirmed.authority.read-classifications","durationMs":36,"status":"ok"}
+2026-11-14T18:22:30.0715192Z [finance-journey-phase] {"elapsedMs":154821,"event":"start","id":79,"label":"confirmed.authority.read-case","active":[53,58,77]}
+2026-11-14T18:22:30.1045251Z [finance-journey-phase] {"elapsedMs":154854,"event":"complete","id":79,"label":"confirmed.authority.read-case","durationMs":33}
+2026-11-14T18:22:30.1054502Z [finance-journey-phase] {"elapsedMs":154855,"event":"start","id":80,"label":"confirmed.units.revalidate","active":[53,58,77]}
+2026-11-14T18:22:34.5630321Z [finance-journey-phase] {"elapsedMs":159312,"event":"complete","id":80,"label":"confirmed.units.revalidate","durationMs":4457,"status":true}
+2026-11-14T18:22:34.5631632Z [finance-journey-phase] {"elapsedMs":159312,"event":"complete","id":77,"label":"confirmed.authority.is-still-valid","durationMs":4528,"status":true}
+2026-11-14T18:22:34.5818524Z [finance-journey-phase] {"elapsedMs":159331,"event":"complete","id":58,"label":"confirmed.coverage.issue","durationMs":32347,"status":"ok"}
+2026-11-14T18:22:34.5822478Z [finance-journey-phase] {"elapsedMs":159332,"event":"start","id":81,"label":"confirmed.preview","active":[53]}
+2026-11-14T18:22:38.0978481Z [finance-journey-phase] {"elapsedMs":162847,"event":"complete","id":81,"label":"confirmed.preview","durationMs":3515,"status":"ok"}
+2026-11-14T18:22:38.0982074Z [finance-journey-phase] {"elapsedMs":162848,"event":"start","id":82,"label":"confirmed.coverage.qualify","active":[53]}
+2026-11-14T18:22:38.0989663Z [finance-journey-phase] {"elapsedMs":162848,"event":"start","id":83,"label":"confirmed.authority.resolve","active":[53,82]}
+2026-11-14T18:22:38.0990850Z [finance-journey-phase] {"elapsedMs":162848,"event":"start","id":84,"label":"confirmed.units.resolve","active":[53,82,83]}
+2026-11-14T18:22:42.5028102Z [finance-journey-phase] {"elapsedMs":167252,"event":"complete","id":84,"label":"confirmed.units.resolve","durationMs":4404,"status":"ok"}
+2026-11-14T18:22:42.5029569Z [finance-journey-phase] {"elapsedMs":167252,"event":"start","id":85,"label":"confirmed.authority.read-case","active":[53,82,83]}
+2026-11-14T18:22:42.5403011Z [finance-journey-phase] {"elapsedMs":167290,"event":"complete","id":85,"label":"confirmed.authority.read-case","durationMs":38}
+2026-11-14T18:22:42.5404223Z [finance-journey-phase] {"elapsedMs":167290,"event":"start","id":86,"label":"confirmed.authority.read-classifications","active":[53,82,83]}
+2026-11-14T18:22:42.5726966Z [finance-journey-phase] {"elapsedMs":167322,"event":"complete","id":86,"label":"confirmed.authority.read-classifications","durationMs":32,"status":"ok"}
+2026-11-14T18:22:42.5741559Z [finance-journey-phase] {"elapsedMs":167324,"event":"start","id":87,"label":"confirmed.authority.evidence-context","active":[53,82,83]}
+2026-11-14T18:22:42.5995500Z [finance-journey-phase] {"elapsedMs":167348,"event":"complete","id":87,"label":"confirmed.authority.evidence-context","durationMs":24}
+2026-11-14T18:22:42.6014247Z [finance-journey-phase] {"elapsedMs":167351,"event":"complete","id":83,"label":"confirmed.authority.resolve","durationMs":4503,"status":"ok"}
+2026-11-14T18:22:42.6080606Z [finance-journey-phase] {"elapsedMs":167357,"event":"start","id":88,"label":"confirmed.authority.is-still-valid","active":[53,82]}
+2026-11-14T18:22:42.6081498Z [finance-journey-phase] {"elapsedMs":167357,"event":"start","id":89,"label":"confirmed.authority.read-classifications","active":[53,82,88]}
+2026-11-14T18:22:42.6410204Z [finance-journey-phase] {"elapsedMs":167390,"event":"complete","id":89,"label":"confirmed.authority.read-classifications","durationMs":33,"status":"ok"}
+2026-11-14T18:22:42.6420136Z [finance-journey-phase] {"elapsedMs":167391,"event":"start","id":90,"label":"confirmed.authority.read-case","active":[53,82,88]}
+2026-11-14T18:22:42.6794124Z [finance-journey-phase] {"elapsedMs":167429,"event":"complete","id":90,"label":"confirmed.authority.read-case","durationMs":38}
+2026-11-14T18:22:42.6802633Z [finance-journey-phase] {"elapsedMs":167430,"event":"start","id":91,"label":"confirmed.units.revalidate","active":[53,82,88]}
+2026-11-14T18:22:47.1063878Z [finance-journey-phase] {"elapsedMs":171856,"event":"complete","id":91,"label":"confirmed.units.revalidate","durationMs":4426,"status":true}
+2026-11-14T18:22:47.1065480Z [finance-journey-phase] {"elapsedMs":171856,"event":"complete","id":88,"label":"confirmed.authority.is-still-valid","durationMs":4499,"status":true}
+2026-11-14T18:22:47.1207339Z [finance-journey-phase] {"elapsedMs":171870,"event":"start","id":92,"label":"confirmed.preview","active":[53,82]}
+2026-11-14T18:22:50.7638136Z [finance-journey-phase] {"elapsedMs":175513,"event":"complete","id":92,"label":"confirmed.preview","durationMs":3643,"status":"ok"}
+2026-11-14T18:22:50.7746943Z [finance-journey-phase] {"elapsedMs":175524,"event":"start","id":93,"label":"confirmed.authority.resolve","active":[53,82]}
+2026-11-14T18:22:50.7748528Z [finance-journey-phase] {"elapsedMs":175524,"event":"start","id":94,"label":"confirmed.units.resolve","active":[53,82,93]}
+2026-11-14T18:22:55.2184859Z [finance-journey-phase] {"elapsedMs":179968,"event":"complete","id":94,"label":"confirmed.units.resolve","durationMs":4444,"status":"ok"}
+2026-11-14T18:22:55.2186210Z [finance-journey-phase] {"elapsedMs":179968,"event":"start","id":95,"label":"confirmed.authority.read-case","active":[53,82,93]}
+2026-11-14T18:22:55.2548679Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"prepare:transition-confirmed:complete","elapsedMs":180003,"budgetMs":180000,"status":"deadline-exceeded","counts":{"c08.read.cases":{"calls":4059,"elapsedMs":89322,"maximumMs":116},"host.revalidate":{"calls":26399,"elapsedMs":2684,"maximumMs":29},"operation-source":{"calls":5928,"elapsedMs":3643,"maximumMs":31},"operation-coverage":{"calls":2608,"elapsedMs":85,"maximumMs":14},"c08.read.preferences":{"calls":644,"elapsedMs":12620,"maximumMs":51},"c08.transaction.preferences":{"calls":6,"elapsedMs":401,"maximumMs":126},"classified-source":{"calls":359,"elapsedMs":1023,"maximumMs":36},"classified-coverage":{"calls":333,"elapsedMs":28427,"maximumMs":293},"c08.transaction.cases":{"calls":13,"elapsedMs":1437,"maximumMs":371},"planner.verifySourceOnly":{"calls":1140,"elapsedMs":3717,"maximumMs":9},"planner.verifyOperation":{"calls":520,"elapsedMs":6903,"maximumMs":26},"planner.verifySourceProjection":{"calls":2280,"elapsedMs":1900,"maximumMs":7},"c08.read.outbox":{"calls":1,"elapsedMs":16,"maximumMs":16}}}
+2026-11-14T18:22:55.2553158Z [finance-journey-phase] {"elapsedMs":180004,"event":"error","id":95,"label":"confirmed.authority.read-case","durationMs":36,"error":"WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000"}
+2026-11-14T18:22:55.2554525Z [finance-journey-phase] {"elapsedMs":180004,"event":"error","id":93,"label":"confirmed.authority.resolve","durationMs":4480,"error":"WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000"}
+2026-11-14T18:22:55.2555864Z [finance-journey-phase] {"elapsedMs":180004,"event":"error","id":82,"label":"confirmed.coverage.qualify","durationMs":17156,"error":"WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000"}
+2026-11-14T18:22:55.2557217Z [finance-journey-phase] {"elapsedMs":180004,"event":"error","id":53,"label":"confirmed.evaluate","durationMs":62141,"error":"WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000"}
+2026-11-14T18:22:55.3389694Z 10 |     if (Date.now() - started <= budgetMs) return
+2026-11-14T18:22:55.3390154Z 11 |     if (!progress.reported) {
+2026-11-14T18:22:55.3390429Z 12 |       progress.reported = true
+2026-11-14T18:22:55.3391154Z 13 |       console.error("[wp11-fixture-trace]", JSON.stringify({ label, phase: progress.phase, elapsedMs: Date.now() - started, budgetMs, status: "deadline-exceeded", counts }))
+2026-11-14T18:22:55.3391737Z 14 |     }
+2026-11-14T18:22:55.3392121Z 15 |     throw new Error(`WP11_FIXTURE_DEADLINE_EXCEEDED:${label}:${progress.phase}:${budgetMs}`)
+2026-11-14T18:22:55.3392471Z                    ^
+2026-11-14T18:22:55.3392928Z error: WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000
+2026-11-14T18:22:55.3393625Z       at guard (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts:15:15)
+2026-11-14T18:22:55.3394367Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts:24:7)
+2026-11-14T18:22:55.3395152Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts:47:34)
+2026-11-14T18:22:55.3396017Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/phase-trace.ts:17:27)
+2026-11-14T18:22:55.3397363Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/observed-coverage.ts:23:28)
+2026-11-14T18:22:55.3398277Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/phase-trace.ts:17:27)
+2026-11-14T18:22:55.3399148Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts:96:34)
+2026-11-14T18:22:55.3400167Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/phase-trace.ts:17:27)
+2026-11-14T18:22:55.3410897Z [finance-journey-phase] {"elapsedMs":180088,"event":"summary","counts":{"fixture.create":{"calls":1,"completed":1,"failed":0,"inclusiveMs":11345},"omitted.evaluate":{"calls":1,"completed":1,"failed":0,"inclusiveMs":44978},"omitted.units.resolve":{"calls":2,"completed":2,"failed":0,"inclusiveMs":2785},"omitted.units.revalidate":{"calls":4,"completed":4,"failed":0,"inclusiveMs":5811},"omitted.results.readHistoricalScenario":{"calls":4,"completed":4,"failed":0,"inclusiveMs":191},"omitted.preview":{"calls":26,"completed":26,"failed":0,"inclusiveMs":33044},"omitted.results.readByRequest":{"calls":2,"completed":2,"failed":0,"inclusiveMs":56},"omitted.results.write":{"calls":2,"completed":2,"failed":0,"inclusiveMs":292},"omitted.exact":{"calls":2,"completed":2,"failed":0,"inclusiveMs":26462},"omitted.units.issue":{"calls":4,"completed":4,"failed":0,"inclusiveMs":5013},"omitted.results.read":{"calls":2,"completed":2,"failed":0,"inclusiveMs":216},"choice.record":{"calls":1,"completed":1,"failed":0,"inclusiveMs":10836},"training.confirm":{"calls":1,"completed":1,"failed":0,"inclusiveMs":50700},"confirmed.evaluate":{"calls":1,"completed":0,"failed":1,"inclusiveMs":62141},"confirmed.units.resolve":{"calls":5,"completed":5,"failed":0,"inclusiveMs":22114},"confirmed.units.revalidate":{"calls":4,"completed":4,"failed":0,"inclusiveMs":17610},"confirmed.results.readHistoricalScenario":{"calls":2,"completed":2,"failed":0,"inclusiveMs":342},"confirmed.coverage.issue":{"calls":1,"completed":1,"failed":0,"inclusiveMs":32347},"confirmed.authority.resolve":{"calls":4,"completed":3,"failed":1,"inclusiveMs":18037},"confirmed.authority.read-case":{"calls":7,"completed":6,"failed":1,"inclusiveMs":246},"confirmed.authority.read-classifications":{"calls":6,"completed":6,"failed":0,"inclusiveMs":209},"confirmed.authority.evidence-context":{"calls":3,"completed":3,"failed":0,"inclusiveMs":76},"confirmed.authority.is-still-valid":{"calls":3,"completed":3,"failed":0,"inclusiveMs":13465},"confirmed.units.issue":{"calls":2,"completed":2,"failed":0,"inclusiveMs":7230},"confirmed.preview":{"calls":4,"completed":4,"failed":0,"inclusiveMs":14188},"confirmed.coverage.qualify":{"calls":1,"completed":0,"failed":1,"inclusiveMs":17156}},"active":[]}
+2026-11-14T18:22:55.3418283Z (fail) FIN-IND-005 locates confirmed sensitivity cost and preserves the 15000/15001 journey through replay and real restart [180091.77ms]
+2026-11-14T18:22:55.4587806Z 
+2026-11-14T18:22:55.4589129Z omni positive control [ca55248738359b75ab85babf5e51669a]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T18:22:55.4590417Z  0 pass
+2026-11-14T18:22:55.4590655Z  1 fail
+2026-11-14T18:22:55.4590939Z  18 expect() calls
+2026-11-14T18:22:55.4591282Z Ran 1 test across 1 file. [180.26s]
+2026-11-14T18:22:55.4803047Z ##[error]Process completed with exit code 1.
+
