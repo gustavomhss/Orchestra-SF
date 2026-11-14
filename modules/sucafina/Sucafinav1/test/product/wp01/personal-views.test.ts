@@ -17,6 +17,8 @@ import { createModule } from "../../../index.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 
 test("personal views isolate authenticated principals and reconcile exact retries", async () => {
+  const started = Date.now()
+  const checkpoint = (phase: string) => console.info(`WP01 personal views: ${phase} (${Date.now() - started}ms)`)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-personal-views-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -68,26 +70,35 @@ test("personal views isolate authenticated principals and reconcile exact retrie
     expect(await (await post(firstCookie, "open", { id: filtered.view.id }, "filtered-open-key"))!.json()).toMatchObject({ status: "ok", value: { view: { density: "compact", filters: filtered.view.filters } } })
     const invalid = { view: { ...filtered.view, id: "invalid-view-1", filters: { selections: { supplier: "not-allowed-on-opex" } } }, expectedVersion: null }
     expect((await post(firstCookie, "save", invalid, "invalid-intention"))?.status).toBe(400)
+    checkpoint("principal isolation and exact retries verified")
     await store.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
     const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 10_000 })
     try {
       const tab = await browser.newPage()
+      tab.setDefaultTimeout(10_000)
+      tab.setDefaultNavigationTimeout(10_000)
       await tab.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`)
       await tab.goto(`${origin}/sucafina/planner?page=OPEX`)
+      checkpoint("browser authenticated and Planner rendered")
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
       await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id)
       expect(new URL(tab.url()).searchParams.get("year")).toBe("2027")
       expect(new URL(tab.url()).searchParams.get("mode")).toBe("forecast")
       expect(new URL(tab.url()).searchParams.get("q")).toBe("renewal")
       await tab.locator('html[data-sf-density="compact"]').waitFor()
+      checkpoint("saved filters and density restored")
       await tab.evaluate(async () => { await (window as unknown as { sucafinaRefresh: () => Promise<void> }).sucafinaRefresh() })
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).waitFor()
+      await tab.evaluate(() => { const url = new URL(location.href); url.searchParams.set("q", "changed-after-refresh"); history.replaceState(null, "", url) })
+      expect(new URL(tab.url()).searchParams.get("q")).toBe("changed-after-refresh")
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
       await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id && url.searchParams.get("q") === "renewal")
+      checkpoint("refreshed view restored the changed query")
     } finally { await browser.close() }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
-})
+  // This journey includes durable authority, Chrome startup and real page refreshes.
+}, 60_000)

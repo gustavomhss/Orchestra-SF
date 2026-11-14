@@ -53,7 +53,10 @@ const initial = (): Snapshot => ({
   versions: {}, sequences: {}, audit: [], notices: [],
 })
 
+// The full Planner/SQLite/C08 replay and revocation path needs a scoped integration budget.
 test("real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08", async () => {
+  const started = performance.now()
+  const trace = (stage: string) => console.info(`[sensitivity-boundary] ${stage}: ${Math.round(performance.now() - started)}ms`)
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-sensitivity-boundary-"))
   await chmod(directory, 0o700)
   const request = new Request("https://example.test")
@@ -116,6 +119,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     if (selectedStored.status !== "ok" || baselineStored.status !== "ok") return
     const selectedRef = selectedStored.value.resultRef
     const baselineRef = baselineStored.value.resultRef
+    trace("Planner scenarios persisted")
     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "case-op", authorizeCase: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     coverageAccess.resolve = createDecisionCoverageAccess({ state, host, authorizeCase: async () => access.allowed, verifyEvidence: async () => access.allowed })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
@@ -146,6 +150,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const orphanComparison = await results.write({ kind: "comparison", result: compared.value.analysis.comparison, caseRef, requestDigest: digestSfValue({ scenarioRefs: [baselineRef, selectedRef], criteria: ["renewal-difference"] }), sourceRefs: [evidence], idempotencyKey: "orphan-comparison" }, context)
     expect(orphanComparison.status).toBe("ok")
     if (orphanComparison.status === "ok") expect(await analysis.revalidate({ ...compared.value.analysis, comparisonRef: orphanComparison.value.resultRef }, context)).toBe(false)
+    trace("C08 comparison evaluated and revalidated")
     const resolveCandidate = createDecisionCandidateResolver(cases)
     const portfolioBindingOperation = { id: "portfolio-binding" }
     const portfolioBindings = createPortfolioResultBindings({ state, host, results, selection, resolveCandidate, authorizeCase: async () => access.allowed, verifyBinding: async (_binding, value, trusted) => value.kind === "portfolio" && (await Promise.all(value.result.combinations.map((item) => item.analysis ? analysis.revalidate(item.analysis, trusted) : Promise.resolve(true)))).every(Boolean), verifySnapshot: () => access.allowed, operationIdentity: () => portfolioBindingOperation.id, proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
@@ -191,6 +196,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const changedCase = await state.transaction(request, { namespace: "cases", expectedStorageVersion: caseState.storageVersion, idempotencyKey: "change-other", commandDigest: "d".repeat(64), targetRef: otherCase.id, targetIncarnation: otherCase.incarnation }, async (value) => { value.cases.other = { ...value.cases.other, version: 2 }; return { commit: true, value: true } })
     expect(changedCase.status).toBe("ok")
     expect((await contribution.persistent.read(crossSaved.value.portfolioResultRef, context)).status).toBe("stale")
+    trace("Portfolio roundtrip and stale-case refusal")
     let exactCalls = 0
     const evaluate = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted), exactThreshold: async () => { exactCalls++; return { status: "ok", value: { value: 110000, evidenceRefs: [evidence] } } }, idempotencyKey: async (digest) => `sensitivity-${digest}` })
     const portfolio: PortfolioPort = { evaluate: async () => ({ status: "unavailable", reason: "unused-by-sensitivity-test" }), sensitivity: evaluate }
@@ -217,6 +223,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const beforeRead = ids.value
     expect((await product.http.readSensitivity(saved.value.sensitivityResultRef, caseRef, context)).status).toBe("ok")
     expect(ids.value).toBe(beforeRead)
+    trace("Sensitivity evaluated, stored and read")
     const transactionAll = store.transactionAll
     if (!transactionAll) throw new Error("Portfolio proof requires atomic cross-surface persistence")
     const verifier = createPortfolioProofVerifier({ cases, planner: plannerWithCriteria, sources, evidence: evidenceService, results, revalidate: host.revalidate, readSourceFences: async () => access.allowed ? transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } })) : undefined, lockedSourceFences: () => { const snapshots = store.currentSnapshots?.(); return snapshots ? { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } : undefined }, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async (digest) => `verify-${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "unused" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async (candidate) => { const ref = parseCaseRef(candidate.caseRef); return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) } : { status: "unavailable", reason: "candidate-unavailable" } }, revalidateAnalysis: analysis.revalidate, units: issuer, sensitivityPreview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
@@ -229,8 +236,11 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     if (portfolioProof.status !== "ok" || portfolioRecord.status !== "ok" || comparisonProof.status !== "ok" || comparisonRecord.status !== "ok" || sensitivityProof.status !== "ok" || sensitivityRecord.status !== "ok") throw new Error("proof unavailable")
     const beforeVerification = ids.value
     expect(await verifier.verifyPortfolio(portfolioProof.value, portfolioRecord.value, context)).toBe(true)
+    trace("Portfolio proof replayed")
     expect(await verifier.verifyComparison(comparisonProof.value, comparisonRecord.value, context)).toBe(true)
+    trace("Comparison proof replayed")
     expect(await verifier.verifySensitivity(sensitivityProof.value, sensitivityRecord.value, context)).toBe(true)
+    trace("Sensitivity proof replayed")
     const fence = await transactionAll(async (snapshots) => ({ commit: false, value: { current: verifier.verifySnapshot(snapshots.planner, portfolioProof.value, context), changed: verifier.verifySnapshot({ ...snapshots.planner, data: { ...snapshots.planner.data, changed: true } }, portfolioProof.value, context) } }))
     expect(fence).toEqual({ current: true, changed: false })
     expect(ids.value).toBe(beforeVerification)
@@ -249,8 +259,10 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     access.allowed = false
     expect((await contribution.catalog({ caseRefs: [encodeCaseRef(caseRef)] }, context)).status).toBe("denied")
     expect((await persistent.read(saved.value.sensitivityResultRef, context)).status).toBe("denied")
+    trace("Exact retry, criterion revision and access revocation")
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
+    trace("Store disposed and fixture removed")
   }
-})
+}, 360_000)
