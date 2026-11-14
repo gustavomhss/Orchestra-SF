@@ -5,7 +5,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import type { Application } from "../../../runtime/application.ts"
 import { object, rows } from "../../../runtime/contract.ts"
-import type { Actor, Persistence } from "../../../runtime/contract.ts"
+import type { Actor } from "../../../runtime/contract.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { domain } from "../../../runtime/procurement.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -174,7 +174,7 @@ test("Planner applies and Procurement conflicts in one durable case; ordered rec
   }
 })
 
-async function createSession(store: Persistence, reviewed: ReadonlyMap<string, ReviewedIntent>) {
+async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, reviewed: ReadonlyMap<string, ReviewedIntent>) {
   const projector = createSfSourceScopeProjector(() => at)
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: (surface, snapshot, scope) => surface === "procurement" ? projectProcurementScope(surface, snapshot, scope) : projector(surface, snapshot, scope) })
   const controls = { confirmed: false, racePending: false, races: 0, producerReviews: 0, executions: [] as string[] }

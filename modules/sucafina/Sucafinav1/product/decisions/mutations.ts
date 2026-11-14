@@ -93,9 +93,9 @@ export function createDecisionMutations(input: MutationHost) {
       if (entries && entries.status !== "ok") return entries
       const result = !reassessed ? attributed : input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : undefined
       if (!result) return { status: "unavailable", reason: "scenario-coverage-reassessment-unavailable" }
-      if (result.comparisonStatus === "complete" && !input.coverageEvidence) return { status: "unavailable", reason: "scenario-source-fence-unavailable" }
       const coverageError = validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)
       if (coverageError) return { status: "conflict", reason: coverageError }
+      if (result.comparisonStatus === "complete" && !input.coverageEvidence) return { status: "unavailable", reason: "scenario-source-fence-unavailable" }
       const existingBasis = loaded.value.case.costCoverageBases.find((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version)
       if (existingBasis && digestSfValue(existingBasis) !== digestSfValue(coverage.value.basis)) return { status: "conflict", reason: "coverage-inventory-version-conflict" }
       const alternative = { id: result.costCoverage.alternativeId, version: result.costCoverage.alternativeVersion, title: request.title, scenario: request.scenario, result }

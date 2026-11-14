@@ -1,0 +1,107 @@
+{
+  "status": "UNEXECUTED_OWNER_PROPOSAL",
+  "foreignFilesAppliedToWorkingRepository": false,
+  "localProductTestsRun": false,
+  "localProductTypecheckRun": false,
+  "patches": [
+    {
+      "file": "WP10-C17-current-ancestry.patch",
+      "sha256": "c89a51b4c04688b354ee6e23b67bdc5c916b1787502af2dfdb0eba4e8d542dbe",
+      "status": "UNEXECUTED_OWNER_PROPOSAL",
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "sourceRef": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+          "sourceBlob": "34a491f859f7b57b0883a122f816803df43c74c8",
+          "proposedBlob": "e66eca63dea05e397c640951869b88b1b4801e32"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "sourceRef": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+          "sourceBlob": "6898b08eb4b018f5a83167555836ac876d288976",
+          "proposedBlob": "6992fa3b004c1e3cbd5556e204d5df43c176f698"
+        }
+      ],
+      "textualApplicability": {
+        "tool": "git apply --check",
+        "target": "isolated exact published source copies",
+        "exitCode": 0,
+        "productValidation": false
+      }
+    },
+    {
+      "file": "WP13-history-same-version.patch",
+      "sha256": "1ca074f342f5f2e7c4931d044feb9df29c875117dab43bba3ba6c7b3acaf9c94",
+      "status": "UNEXECUTED_OWNER_PROPOSAL",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+          "sourceRef": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "sourceBlob": "18c18eeaf6b0aca408d934771a3a95db4c1e7d0f",
+          "proposedBlob": "29981a792db2b0e857920971b44fa4e9d1628d25"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "sourceRef": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "sourceBlob": "2c4887d711ff636754b7aed9638b0681fe3fc334",
+          "proposedBlob": "72283a87f56088f9774c681eb3c7c561a98cc03c"
+        }
+      ],
+      "textualApplicability": {
+        "tool": "git apply --check",
+        "target": "isolated exact published source copies",
+        "exitCode": 0,
+        "productValidation": false
+      }
+    }
+  ],
+  "referenceSources": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "sourceRef": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "blob": "6898b08eb4b018f5a83167555836ac876d288976"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceRef": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "blob": "34a491f859f7b57b0883a122f816803df43c74c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "sourceRef": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "blob": "18c18eeaf6b0aca408d934771a3a95db4c1e7d0f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+      "sourceRef": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "blob": "6834ac4460c8f98fa3b6c2db0743e0d1e39769c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "sourceRef": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "blob": "2a8111a810d878a4cf6133c3842c5320fb1f5b9e"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+      "sourceRef": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "blob": "012c83ed8b6382bebc0046526985f2f900f04035"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "sourceRef": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "blob": "2c4887d711ff636754b7aed9638b0681fe3fc334"
+    }
+  ],
+  "verification": {
+    "publishedSourceBlobsVerified": true,
+    "patchChecksAreTextualOnly": true,
+    "hostedRunIdsForAppliedProposals": [],
+    "foreignProductFilesRemainUnmodifiedByProposals": true
+  },
+  "remainingOwnerWork": [
+    "WP10 apply/publish/typecheck and actual-host nested ancestry integration",
+    "WP10 historical nested review authentication and replay",
+    "WP13 integrated same-case-version domain-source-change evidence",
+    "Current-choice consumer/native mount and GNATIVE proof"
+  ]
+}
