@@ -1,6 +1,7 @@
 import type { DomainProjection } from "../contracts/context.ts"
 import type { BiSelection } from "./catalog.ts"
 import { waterfallGeometry } from "./geometry.ts"
+import { appendBiSourceButtons, biSourceChoices, createBiSourceChooser } from "./source-navigation.ts"
 
 /** All endpoints and deltas come from the domain projection; BI does not accumulate them. */
 export type WaterfallPlan = {
@@ -53,6 +54,8 @@ export function renderWaterfall(projection: DomainProjection, selectionRef: stri
     ...data.segments.map((segment) => ({ ...segment, total: false })),
     { label: "Total final", componentValueId: plan.finalValueId, start: 0, end: data.final, amount: data.final, source: data.finalSource, total: true },
   ]
+  const chooseSource = createBiSourceChooser(section, open)
+  const selectionFor = (source: DomainProjection["values"][number]): BiSelection => ({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: source.id, reference: source.drilldown })
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
   svg.setAttribute("viewBox", "-8 -8 616 176")
   svg.setAttribute("width", "100%")
@@ -68,12 +71,13 @@ export function renderWaterfall(projection: DomainProjection, selectionRef: stri
     group.setAttribute("data-bi-kind", segment.total ? "total" : "contribution")
     const amount = !segment.total && segment.amount > 0 ? `+${segment.amount}` : String(segment.amount)
     const description = `${segment.label}: ${amount} ${projection.context.currency}`
-    if (segment?.source.drilldown) {
+    const origins = biSourceChoices(segment.source, selectionFor(segment.source))
+    if (origins.length) {
       group.setAttribute("tabindex", "0")
       group.setAttribute("data-bi-focus", segment.componentValueId)
       group.setAttribute("role", "button")
-      group.setAttribute("aria-label", `${description}; abrir origem`)
-      const select = () => open({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: segment.componentValueId, reference: segment.source.drilldown })
+      group.setAttribute("aria-label", `${description}; ${origins.length === 1 ? "abrir origem" : "escolher origem"}`)
+      const select = () => chooseSource(segment.label, origins, group)
       group.addEventListener("click", select)
       group.addEventListener("keydown", (event) => {
         if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
@@ -123,16 +127,7 @@ export function renderWaterfall(projection: DomainProjection, selectionRef: stri
     row.insertCell().textContent = segment.total ? "—" : segment.amount === null ? "indisponível" : segment.amount > 0 ? `+${segment.amount}` : String(segment.amount)
     row.insertCell().textContent = String(segment.end ?? "indisponível")
     const cell = row.insertCell()
-    if (!segment.source.drilldown) {
-      cell.textContent = "Indisponível"
-      continue
-    }
-    const button = document.createElement("button")
-    button.type = "button"
-    button.setAttribute("data-bi-focus", segment.componentValueId)
-    button.textContent = `Abrir ${segment.label}`
-    button.addEventListener("click", () => open({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: segment.componentValueId, reference: segment.source.drilldown }))
-    cell.append(button)
+    appendBiSourceButtons(cell, biSourceChoices(segment.source, selectionFor(segment.source)), open, `Abrir ${segment.label}`)
   }
   const tableContainer = document.createElement("div")
   tableContainer.style.overflowX = "auto"
