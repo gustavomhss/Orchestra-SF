@@ -1,0 +1,187 @@
+{
+  "schema": "sf2h.work-ack.run.v1",
+  "attempt": 2,
+  "W": "6efc22ad55ceb646026d92b80aadd6192ecd033a",
+  "WTree": "c0df2145715bae65aded22d54b6c59b62054cae4",
+  "S": "d68be8e7735489a7fc6d3c5518a53ea28a45a87c",
+  "STree": "22cbd51be1475ed9a9e00f34fc4b35ea81113912",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/work-split/work-ack/recipient-boundary.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "requestSha256": "c6aca28b69e689878cf930068da2fbcb8e4a5c15f9d62851d729f29f4c6b8c74",
+  "snapshotEquivalence": {
+    "status": "VERIFIED",
+    "completeCompareFiles": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "b1cb18d98c40bf0eff05a20049bdcb95ed2874f5"
+      }
+    ],
+    "allExistingBlobsUnchanged": true
+  },
+  "run": {
+    "id": 43625483916,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625483916",
+    "headSha": "d68be8e7735489a7fc6d3c5518a53ea28a45a87c",
+    "conclusion": "failure",
+    "jobId": 132540241299,
+    "cleanupJobId": 132540896537,
+    "cleanup": "success",
+    "logSha256": "a6c29f3d86b761dd7eff97b8a7970cdebc5fba6b349876b12964565f4abb4b6b",
+    "artifacts": []
+  },
+  "counts": {
+    "pass": 4,
+    "fail": 1,
+    "assertions": 84,
+    "tests": 5,
+    "files": 4,
+    "elapsedSeconds": 53.11
+  },
+  "browser": {
+    "lostDeliveryRevocation": "PASS",
+    "projectionMarkerAndBoolean": "PASS",
+    "events": [
+      {
+        "event": "WORK_ACK_REVOKED_PENDING_REPLY",
+        "payload": {
+          "threadId": "a6dba217-7685-4e73-9202-be34f7d189f6",
+          "message": {
+            "id": "6ec11e1f-2589-40bc-b046-3830f3d6f41b",
+            "incarnation": "732f46f2-1bb2-4922-be79-b490432eb267",
+            "version": 1
+          },
+          "attempts": 2,
+          "statuses": [
+            200,
+            403
+          ],
+          "storageVersion": 2,
+          "freshAccessRevision": "b2",
+          "caseReloadStatus": null,
+          "caseReloadFailure": "ERR_HTTP_RESPONSE_CODE_FAILURE",
+          "caseReadStatus": 503,
+          "freshThreadReadStatus": 200,
+          "acknowledged": false,
+          "reloadResent": false
+        }
+      },
+      {
+        "event": "WORK_ACK_PROJECTION_NOT_RECEIPT",
+        "payload": {
+          "threadId": "3a5d0061-7972-4cac-a664-db681a977673",
+          "message": {
+            "id": "4d46233d-de24-4d36-94f5-a9e29d3958af",
+            "incarnation": "fe02b325-bd5d-4a11-8ddb-b4eeaa107bb2",
+            "version": 1
+          },
+          "deliveryForms": [
+            "current-field-removed",
+            "legacy-Boolean"
+          ],
+          "equalTextReplies": 2,
+          "attempts": 2,
+          "storageVersion": 3,
+          "acknowledged": false
+        }
+      }
+    ],
+    "meaning": "Negative UI safety and retained-producer reproduction only. Both observed event payloads explicitly record acknowledged=false.",
+    "reload": "Fresh b2 case navigation fails with ERR_HTTP_RESPONSE_CODE_FAILURE; corroborating GET proves503. Fresh recipient read independently returns200/current; no resend, pending intent recovery or exact ACK is claimed."
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "status": "FAIL",
+    "exitCode": 2,
+    "totalDiagnostics": 9,
+    "ownDiagnostics": 0,
+    "externalDiagnostics": 9,
+    "diagnostics": [
+      "../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+    ],
+    "previousEquivalent": {
+      "run": 43622153636,
+      "job": 132529996818,
+      "diagnosticsExactlyEqual": true
+    }
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "status": "PASS_WITH_WARNINGS",
+    "exitCode": 0,
+    "baseFetchExitCode": 0,
+    "rules": 78,
+    "changedPaths": 937,
+    "gateFindings": 0,
+    "warnings": 53,
+    "errors": 0,
+    "scope": "The W2-equivalent S2 checkout; not a later evidence-only delivery commit.",
+    "ownFinding": {
+      "id": "GUARD-ACK-01",
+      "status": "REPORTED_FALSE_POSITIVE_NONBLOCKING",
+      "owner": "Guardrail maintenance via S0",
+      "rule": "test-timeout-raised",
+      "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-ack/recipient-boundary.test.ts",
+      "line": 74,
+      "sourceLine": "const blockedCase = await app.context.request.get(`${app.origin}/product`, { timeout: 5_000 })",
+      "ruleBlob": "f625a8ddcb51e4723141b2b06809db9b9bc57d3e",
+      "reason": "The rule matches one digit plus four or more digit/underscore characters; 5_000 has five characters but equals 5000 ms, below the advertised 10000 ms threshold. No deadline was increased.",
+      "requestedCorrection": "Guardrail owner should parse/normalize numeric separators before comparing the threshold.",
+      "ignoreAdded": false,
+      "approvalLabelAdded": false,
+      "ruleModified": false
+    },
+    "remainingWarnings": "The other 52 warning strings are identical to run01; outside this new test path. No approval/ignore was added."
+  },
+  "lifecycle": {
+    "status": "PASS",
+    "startup": "PASS",
+    "finalProcessExit": "PASS"
+  },
+  "omni": {
+    "status": "pass",
+    "nonce": "2241e5b5aee4791d069b03c5034bbde5",
+    "scope": "declared",
+    "declaredTests": 2,
+    "spawns": 4,
+    "delegated": 0
+  },
+  "correctionFrom": {
+    "run": 43624884278,
+    "paths": [
+      "modules/sucafina/Sucafinav1/test/product/work-split/work-ack/recipient-boundary.test.ts"
+    ],
+    "cause": "The saved case retains b1 source references. With fresh b2 authority the minimal case resolver cannot reissue them, so the real GET is unavailable. Chromium rejects the empty error document. The test incorrectly expected a successful reload before reaching the independently reissuing recipient reader.",
+    "sourceWrites": false,
+    "fixtureWrites": false,
+    "deadlineChanges": false
+  },
+  "acceptance": {
+    "recipientPositiveAck": false,
+    "ownerPatchApplied": false,
+    "globalRelease": false
+  }
+}

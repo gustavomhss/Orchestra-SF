@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.work-ack.inputs.v1",
+  "handoff": {
+    "sha": "09a06b412ca624339b3634cf27d205a930e8f02e",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/work-split/work-ack.md"
+  },
+  "norm": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "criteriaCounts": {
+      "WP01": 75,
+      "WP02": 78
+    }
+  },
+  "base": {
+    "branch": "work-ack",
+    "sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "tree": "d0508747f0818b3467f44bac845ca6a878bdb7ea",
+    "prBaseBranch": "ui-work"
+  },
+  "producer": {
+    "branch": "collab-resume",
+    "sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+    "blob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+    "observation": "The active producer persists true and returns input.read(id, context); it does not publish a durable mutation receipt.",
+    "consumedIntoProduction": false
+  },
+  "retained": {
+    "recipientActions": "9054624ad9cc632f4ba945bdc75b1034a5da16a6",
+    "consumer": "175ff36fe09405e0f31dd55207d751e3753f6ffb",
+    "stateProvider": "2fd55c7304add0829d7434917c80664fe86356b9",
+    "browserHost": "e3effb10d7fb734528aeaff8c12d8fd064c1dcd7",
+    "actors": "5d0feb74e3a41424afa5c94ef09178dac80caecf"
+  },
+  "scope": {
+    "productionChanges": [],
+    "newTestsPrefix": "modules/sucafina/Sucafinav1/test/product/work-split/work-ack/",
+    "receiptsPrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-ack/",
+    "producerWrites": false,
+    "sharedFixtureWrites": false,
+    "workflowWrites": false,
+    "localProductExecution": false,
+    "merge": false
+  },
+  "inheritedProof": {
+    "run": 43621603578,
+    "job": 132528304173,
+    "W": "639636280859f5f21f44813658d5d9a0c207fff0",
+    "S": "aebd6ee7bf597fd6cd742af347e60846f58e5cfc",
+    "status": "PARTIAL_RUN_5_PASS_2_FAIL",
+    "reusedObservations": [
+      "direct C08 snapshot: three equal-text replies, exact same-body/key replay, no new append after retry/reload",
+      "recipient current projection remains unconfirmed; original same-body/key retry and fresh read",
+      "first-cycle selection lost-response retry and reload"
+    ],
+    "use": "Reattached historical scoped observations only; not rerun and not reassigned to work-ack. UI product blob remains identical."
+  },
+  "boundaries": {
+    "fixture": "Real Collaboration HTTP, C03/C06/C08, source issuers and SQLite; fixture actor authentication and recipient leases; case question link seeded; answer attachment unmounted.",
+    "reload": "Fresh authorized reading with no automatic write. The current UI does not persist the unresolved reply key/body across reload and does not reconcile its exact ACK.",
+    "patch": "Owner proposal only; NOT_APPLIED, NOT_COMPILED, NOT_RUN until actual producer publication and hosted validation."
+  },
+  "patch": {
+    "file": "c03-recipient-receipt.NOT_APPLIED.patch",
+    "sha256": "8e056e78914b0287dfd54d330e5e9e03358fd65f0591699dfeba563c4cb1ec71",
+    "preimageBlob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+    "postimageBlob": "29ba733fd88814cfc4f872cc9c6c6bde66a814c3",
+    "postimageSha256": "ce70802c8301eaf763e8462f338db321bf49c9a8b1043862e8eafed508403021",
+    "applicability": "git apply --check and disposable preimage application reproduce the proposed postimage byte for byte",
+    "status": "NOT_APPLIED_NOT_COMPILED_NOT_RUN"
+  }
+}

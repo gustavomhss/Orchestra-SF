@@ -1,0 +1,121 @@
+{
+  "schema": "sf2h.work-ack.run.v1",
+  "attempt": 1,
+  "W": "1c2b923d27c0cd1a6949fa189fe4a0149622b247",
+  "WTree": "5dc24bab5a57832d6b5e577bde41d10156ca31ba",
+  "S": "5f30d11ba44f1384f08199df0b29c911f4e3d662",
+  "STree": "8c9298c5c95d225af3aa9121d722f538ef2ae616",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/work-split/work-ack/recipient-boundary.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "requestSha256": "c6aca28b69e689878cf930068da2fbcb8e4a5c15f9d62851d729f29f4c6b8c74",
+  "snapshotEquivalence": {
+    "status": "VERIFIED",
+    "completeCompareFiles": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "b1cb18d98c40bf0eff05a20049bdcb95ed2874f5"
+      }
+    ],
+    "allExistingBlobsUnchanged": true
+  },
+  "run": {
+    "id": 43624884278,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624884278",
+    "headSha": "5f30d11ba44f1384f08199df0b29c911f4e3d662",
+    "conclusion": "failure",
+    "jobId": 132538401035,
+    "logSha256": "194962c4c6c3e893b0d5884cebd2fad746815534b97e4901d1002b7db55660d6",
+    "artifacts": []
+  },
+  "counts": {
+    "pass": 3,
+    "fail": 2,
+    "assertions": 72,
+    "files": 4
+  },
+  "browser": {
+    "projectionMarkerAndBoolean": "PASS",
+    "lostDeliveryRevocation": "FAIL_AT_RELOAD",
+    "failure": "reload: net::ERR_HTTP_RESPONSE_CODE_FAILURE",
+    "reachedBeforeFailure": [
+      "real append and damaged response",
+      "pending body preserved",
+      "same-body/key retry HTTP 403",
+      "protected DOM/context purged",
+      "new b2 admission"
+    ],
+    "limits": "No PASS for the complete first journey or fresh thread read in this attempt."
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "status": "FAIL",
+    "exitCode": 2,
+    "totalDiagnostics": 10,
+    "ownDiagnostics": 1,
+    "ownDiagnostic": "recipient-boundary.test.ts(109,78) TS2769: readonly expected messages cannot be assigned to mutable slice comparison overload.",
+    "externalDiagnostics": 9,
+    "externalFamilies": [
+      "apps/cli/src/sucafina-product/host-context.ts: five TS2322",
+      "test/product/wp07/review-port.test.ts: four TS2739"
+    ]
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "status": "PASS",
+    "exitCode": 0,
+    "rules": 78,
+    "changedPaths": 936,
+    "gateFindings": 0,
+    "warnings": 52,
+    "errors": 0
+  },
+  "lifecycle": {
+    "status": "PASS",
+    "startup": "PASS",
+    "finalProcessExit": "PASS"
+  },
+  "omni": {
+    "status": "pass",
+    "scope": "declared",
+    "declaredTests": 2,
+    "spawns": 4,
+    "delegated": 0
+  },
+  "correction": {
+    "status": "PREPARED_NOT_RUN",
+    "kind": "test oracle and assertion typing only",
+    "cause": "The saved case retains b1 source references. With fresh b2 authority the minimal case resolver cannot reissue them, so the real GET is unavailable. Chromium rejects the empty error document. The test incorrectly expected a successful reload before reaching the independently reissuing recipient reader.",
+    "paths": [
+      "modules/sucafina/Sucafinav1/test/product/work-split/work-ack/recipient-boundary.test.ts"
+    ],
+    "changes": [
+      "Require the actual case HTTP 503 and explicit empty-document navigation behavior; preserve b2 and verify no disclosure or resend.",
+      "Separately observe the real authorized recipient reader under b2; never interpret its current projection as ACK.",
+      "Copy the readonly baseline array for Bun's typed toEqual overload; keep the same full equality assertion."
+    ],
+    "sourceWrites": false,
+    "fixtureWrites": false,
+    "deadlineChanges": false
+  },
+  "acceptance": {
+    "recipientPositiveAck": false,
+    "ownerPatchApplied": false,
+    "globalRelease": false
+  }
+}
