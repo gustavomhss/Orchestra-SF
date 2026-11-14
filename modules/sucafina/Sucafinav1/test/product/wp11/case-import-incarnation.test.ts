@@ -141,7 +141,12 @@ test("real JSON import preserves the private C08 choice and cannot revive a dele
     // A confirmed backup restore is the supported producer that can reintroduce that ID.
     expect((await current.app(request({ page: "All Projects", action: "save", version: 0, values: project }))).status).toBe(409)
     const restoredBusiness = { projects: [project], roleMap: [{ surface: "dashboard", role: "admin", entra: "attacker", version: 999, by: "attacker" }], access: { attacker: { assigned: [project.id] } } }
-    expect((await current.app(request(backup(restoredBusiness, 1)))).status).toBe(200)
+    // The successful HTTP delete advanced the dataset CAS independently of the
+    // immutable C08 history. Read that current revision for the confirmed restore.
+    const afterDelete = await current.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.versions.dataset?.version }))
+    expect(afterDelete).toBe(2)
+    if (afterDelete === undefined) throw new Error("Dataset revision unavailable after delete")
+    expect((await current.app(request(backup(restoredBusiness, afterDelete)))).status).toBe(200)
     expect(await current.state.read(fixture.request, "cases", (state) => structuredClone(state))).toEqual(trusted)
     const recreated = await current.records.issue(selection, fixture.context)
     if (recreated.status !== "ok") throw new Error(`Recreated Dashboard source unavailable: ${recreated.reason}`)

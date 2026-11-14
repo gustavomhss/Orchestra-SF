@@ -167,12 +167,13 @@ test("hot-topic list refuses a draft replaced during its last case authorization
 
 async function hotTopicFixture() {
   const fixture = await plannerFixture()
+  // The first Dashboard transaction and later C08 transactionAll require initialized registries.
+  for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
   await fixture.persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admin-group", version: 1, by: actor.id }]
     snapshot.data.hotTopics = [{ id: "topic", action: "Review renewal", owner: actor.id, due: "2026-12-01", status: "Open", priority: "normal", notes: "Original official topic" }]
     return { commit: true, value: undefined }
   })
-  await fixture.persistence.initializeSources("dashboard")
   const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operation: string }>()
   const contexts: TrustedUiContext[] = []
   const authorize = async (request: Request) => fixture.access.allowed && intents.has(request) && request.headers.get("authorization") === actor.id
