@@ -1,0 +1,37 @@
+{
+  "mission": 39,
+  "id": "review-first-agenda",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "edee66d9a22ab4a3090e6b461953e783b9910ca8",
+  "lease_epoch": "review-agenda-browser39",
+  "actor": "S3-A independent disjoint UI sublane",
+  "state": "IN_PROGRESS",
+  "branch": "review-agenda",
+  "base": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "observed_at": "2026-11-14T22:17:08Z",
+  "reconciliation": {
+    "branch_preexisting": false,
+    "prior_pr_count": 0,
+    "integration_head": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "reports36_head": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+    "control_head": "98e6c9c4847d0f3239a0f9cf1fcc1afd6fbb338b",
+    "workspace_blob_in_C9_and_observed_integration": "8530268bff37cad2f9158a78f80a3dc4529d32aa",
+    "decision": "Use explicit C9 base; current integration workspace identical. Reports36 is active and owns browser/discussion/spec paths. Shared changes delivered as inert complete patches to33; nominal spec/fixture changes as proposals to36."
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+    "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts (new)",
+    "apps/cli/src/sucafina-product/review-agenda-services.ts (new)",
+    "modules/sucafina/Sucafinav1/test/product/review-first-agenda/",
+    "packages/app-shell/e2e/sucafina/review-agenda-support/ (new)",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/"
+  ],
+  "helpers": {
+    "agenda_backend": "Owned discovery service plus inert host/router proposals; no remote writes",
+    "agenda_tests": "Owned surgical tests; no dispatch/local execution",
+    "agenda_proof": "CI/source reading plus own E2E helper and inert Reports36 proposal; no remote writes"
+  },
+  "release": false
+}
