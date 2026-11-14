@@ -1,6 +1,7 @@
 import { expect } from "bun:test"
 import type { Page, Route } from "@playwright/test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { documentHtml } from "../../../../src/screen-shell.ts"
 import type { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
 
 type BrowserRequest = ReturnType<Route["request"]>
@@ -118,14 +119,18 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
         if (mode === "bi" && response.status === 200) {
           const asset = await ready(input.biAsset())
           const inline = asset.replace(/<\/script/gi, "<\\/script")
-          const scripts = [...forwarded.body.toString("utf8").matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)]
+          const html = forwarded.body.toString("utf8")
+          const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)]
+          const canonicalShell = [...documentHtml("BI lifecycle", "dashboard", "", "", "").matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)]
+          const shellMatches = canonicalShell.length === 1 && scripts[0]?.[1] === canonicalShell[0]?.[1]
+          const retainsView = html.includes("<section data-sf-bi data-sf-retain-view>")
           const inserted = scripts.at(-1)?.[1]
           const matches = inserted === inline
           const digest = (value: string) => new Bun.CryptoHasher("sha256").update(value).digest("hex")
-          console.info("SF_BI_BROWSER_ASSET", JSON.stringify({ matches, scriptCount: scripts.length,
+          console.info("SF_BI_BROWSER_ASSET", JSON.stringify({ matches, shellMatches, retainsView, scriptCount: scripts.length,
             assetBytes: Buffer.byteLength(asset), inlineBytes: Buffer.byteLength(inline), insertedBytes: inserted === undefined ? null : Buffer.byteLength(inserted),
             assetSha256: digest(asset), inlineSha256: digest(inline), insertedSha256: inserted === undefined ? null : digest(inserted) }))
-          if (!matches || scripts.length !== 1) throw new Error("WP10_BI_BROWSER_LIFECYCLE_ASSET_MISMATCH")
+          if (!matches || !shellMatches || !retainsView || scripts.length !== 2) throw new Error("WP10_BI_BROWSER_LIFECYCLE_ASSET_MISMATCH")
         }
         if (watch) watch.handledStatus = response.status
         watch?.handled.resolve({ status: response.status, body: forwarded.body })

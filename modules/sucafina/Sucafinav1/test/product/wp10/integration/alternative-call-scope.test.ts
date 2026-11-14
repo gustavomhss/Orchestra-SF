@@ -171,7 +171,8 @@ for (const mutation of ["case", "planner"] as const) {
         // It uses the actual store queue, not a nested read or a simulated lock.
         writer = mutation === "case" ? fixture.store.transaction("dashboard", async (snapshot) => {
           enteredWriter = true
-          (snapshot.data.__sfProductV1 as SfProductState).cases[caseRef.id]!.participants = []
+          const state = snapshot.data.__sfProductV1 as SfProductState
+          state.cases[caseRef.id]!.participants = []
           return { commit: true, value: undefined }
         }) : persistence.transaction("planner", async (snapshot) => {
           enteredWriter = true
