@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.rolling-intake-42.candidate.v1",
+  "candidate": "C12",
+  "mission": 42,
+  "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+  "tree": "18217d590d6c009f6a9a4381c18124a359799d88",
+  "parent": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+  "priorCandidate": {
+    "id": "C11",
+    "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712"
+  },
+  "authority": {
+    "epoch": "S0-C-e8-browser42",
+    "ack": "c5ab23fd7c9b231917bf70123958c9ff03e7d420"
+  },
+  "materialPaths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "blob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+      "sourceRelease": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "blob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+      "sourceRelease": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "blob": "33650407123163ea881eca9d4940fde364b27c54",
+      "sourceRelease": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+      "mode": "100644"
+    }
+  ],
+  "sourceReceipts": 45,
+  "provenanceDocs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/increment-01.json",
+      "sha": "8d84537ba1c9d4680550486d24ff589a99d18099",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/dependency-closure-01.json",
+      "sha": "7d19e7ba55f6a3f5253fedcc77b1e0a2e6d7d1fc",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+      "sha": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/finding-routing.json",
+      "sha": "3b80df7170d3a3c983f99e4bf2ff81085ad56682",
+      "exact": true
+    }
+  ],
+  "integrationStatus": "PUBLISHED_STATIC_INTEGRITY_VERIFIED",
+  "gates": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "C_G7": "NOT_ACCEPTED",
+    "D_G8": "NOT_RUN_NOT_CLAIMED",
+    "globalRelease": false,
+    "finalDispatcher": "S0",
+    "finalAcceptance": "S0"
+  },
+  "newCandidateRequiredAfterMaterialChange": true,
+  "finalDispatcherAndAcceptance": "S0",
+  "globalRelease": false
+}

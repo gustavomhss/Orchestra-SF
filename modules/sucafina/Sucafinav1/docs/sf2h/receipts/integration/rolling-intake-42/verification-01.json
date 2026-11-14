@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h.rolling-intake-42.verification.v1",
+  "mission": 42,
+  "candidate": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+  "tree": "18217d590d6c009f6a9a4381c18124a359799d88",
+  "parent": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+  "observedHead": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+  "method": "GitHub MCP readback of commit/ref/tree/compare, exact fetched document bytes, selected Git blobs/modes; static text reconstruction only",
+  "deltaFromParent": {
+    "paths": 52,
+    "materialModified": 3,
+    "sourceEvidenceAdded": 45,
+    "provenanceAdded": 4,
+    "deleted": 0,
+    "unexpected": 0
+  },
+  "deltaFromTerminal33": {
+    "paths": 53,
+    "materialModified": 3,
+    "added": 50,
+    "deleted": 0
+  },
+  "sourceBlobChecks": {
+    "count": 48,
+    "exact": true
+  },
+  "preservation": {
+    "originalSucafinaBlobSetCompared": true,
+    "allOutsideSelectionPreserved": true,
+    "rootOutsideModulesUnchanged": true,
+    "priorAuthorityAckUnchanged": true,
+    "priorReceiptsUnchanged": true,
+    "testsFixturesSkillsPromptsGuidesPreserved": true,
+    "C17Section": {
+      "unchanged": true,
+      "bytes": 20558,
+      "gitBlob": "fb742163bd102cb455b669f2e9f200ed4a56fda3",
+      "sha256": "ba60a5d4d8ffd8bbc743d3030db473ad9350b03a001a5f0a9a07eb93e876cc1c",
+      "extraction": "Preceding newline before second C17 test through EOF; same exact bytes at target and Atlas35 release.",
+      "sourceFailureRun": 43645747336,
+      "sourceFailureLine": 444,
+      "originalTargetStartLine": 127,
+      "postStartLine": 228,
+      "failurePreserved": "Public atlas.memory.readOriginal returns old documentRef after actual blob replacement; preceding canonical resolve refuses. Later recall/replay/no-change assertions NOT_REACHED.",
+      "semanticOwner": "Memory40 / WP10 PR29",
+      "requiredCorrection": "Owner must qualify public original-reference current-source reauthorization and replay current case/evidence gates, preserving private capture primitive and valid historical access; no altered C17 oracle.",
+      "newOwnerAcceptance": false
+    }
+  },
+  "docs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/increment-01.json",
+      "sha": "8d84537ba1c9d4680550486d24ff589a99d18099",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/dependency-closure-01.json",
+      "sha": "7d19e7ba55f6a3f5253fedcc77b1e0a2e6d7d1fc",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+      "sha": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/finding-routing.json",
+      "sha": "3b80df7170d3a3c983f99e4bf2ff81085ad56682",
+      "exact": true
+    }
+  ],
+  "CAS": {
+    "expected": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "newHead": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "force": false,
+    "succeeded": true
+  },
+  "notFunctionalQualification": true,
+  "tests": 0,
+  "typechecks": 0,
+  "guards": 0,
+  "CI": 0,
+  "AM": 0,
+  "workflowRefMutations": 0,
+  "globalRelease": false
+}
