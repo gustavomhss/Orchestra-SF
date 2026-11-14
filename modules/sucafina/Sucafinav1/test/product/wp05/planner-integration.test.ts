@@ -144,19 +144,29 @@ test("real planner comparison supplies the same reconciled waterfall to BI and d
   expect(zero.start).not.toBeNull()
   expect(zero.end).toBe(zero.start)
   expect(zero.source.evidenceState).not.toBe("absent")
-  await inspectBiProjection(request, uiProjection.value, async (page) => {
+  await inspectBiProjection(request, uiProjection.value, async (page, phase) => {
+    page.on("crash", () => console.error("WP05 BI02 page crashed", { valueId: zero.componentValueId }))
+    page.on("pageerror", (error) => console.error("WP05 BI02 page error", { valueId: zero.componentValueId, name: error.name, message: error.message }))
+    const observe = async <T>(label: string, read: () => Promise<T>) => {
+      phase(`waterfall:${label}:start`)
+      const value = await read()
+      phase(`waterfall:${label}:done`)
+      console.info("WP05 BI02 locator observation", { label, value: typeof value === "string" && value.length > 300 ? { characters: value.length } : value })
+      return value
+    }
+    console.info("WP05 BI02 zero contribution selector", { valueId: zero.componentValueId, label: zero.label, selector: `svg g[data-bi-value="${zero.componentValueId}"]` })
     const mark = page.locator(`svg g[data-bi-value="${zero.componentValueId}"]`)
-    expect(await mark.count()).toBe(1)
-    expect(await mark.locator("circle").count()).toBe(1)
+    expect(await observe("mark-count", () => mark.count())).toBe(1)
+    expect(await observe("circle-count", () => mark.locator("circle").count())).toBe(1)
     const line = mark.locator("line")
-    expect(await line.getAttribute("y1")).toBe(await line.getAttribute("y2"))
-    expect(await mark.locator("title").textContent()).toBe(`${zero.label}: 0 USD`)
+    expect(await observe("line-y1", () => line.getAttribute("y1"))).toBe(await observe("line-y2", () => line.getAttribute("y2")))
+    expect(await observe("mark-title", () => mark.locator("title").textContent())).toBe(`${zero.label}: 0 USD`)
     const composition = page.locator("table").filter({ has: page.locator("caption", { hasText: "Composição e origens" }) })
     const row = composition.getByRole("row").filter({ has: page.getByRole("cell", { name: zero.label, exact: true }) })
-    expect(await row.getByRole("cell").nth(2).textContent()).toBe("0")
+    expect(await observe("composition-amount", () => row.getByRole("cell").nth(2).textContent())).toBe("0")
     const equivalent = page.locator("table").filter({ has: page.locator("caption", { hasText: "Dados e referências" }) })
-    expect(await equivalent.getByRole("row").filter({ has: page.getByRole("cell", { name: zero.componentValueId, exact: true }) }).getByRole("cell").nth(1).textContent()).toBe("0")
-    expect(await page.locator("body").textContent()).toContain("Reconciliação: reconciled")
+    expect(await observe("equivalent-amount", () => equivalent.getByRole("row").filter({ has: page.getByRole("cell", { name: zero.componentValueId, exact: true }) }).getByRole("cell").nth(1).textContent())).toBe("0")
+    expect(await observe("reconciliation-text", () => page.locator("body").textContent())).toContain("Reconciliação: reconciled")
   })
 }, 180000)
 

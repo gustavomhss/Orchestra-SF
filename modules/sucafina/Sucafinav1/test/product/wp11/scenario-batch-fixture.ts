@@ -23,12 +23,12 @@ export async function scenarioBatchFixture() {
   const fixture = await plannerFixture()
   try {
     for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
-    const context = await fixture.admit("sf-human:planner.read", {})
+    const context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
     const request = fixture.host.requestFor(context)
     if (!request) throw new Error("UI source request unavailable")
     const admissions = new Map<Request, TrustedDomainContext>([[request, context]])
     const admit = async (principal = "finance") => {
-      const admitted = await fixture.admit("sf-human:planner.read", {}, principal)
+      const admitted = await fixture.admit("sf-human:planner.read", {}, principal, true)
       const request = fixture.host.requestFor(admitted)
       if (!request) throw new Error("Independent UI request unavailable")
       admissions.set(request, admitted)
