@@ -1,0 +1,121 @@
+{
+  "schema": "sf2-source-census-v1",
+  "mission": 23,
+  "observation_time": "2026-11-14 21:16:09 UTC",
+  "method": "Bounded read-only GitHub MCP census. Source commits are immutable; later advances require a subsequent intake, not continuous polling.",
+  "candidate": {
+    "id": "C4",
+    "commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a"
+  },
+  "record_head_before_final": "402a091485e11d60dff433049c7dedd7fcead687",
+  "control": {
+    "head": "86dfe5cd709a4d1701a21b877c2feb92924b08c8",
+    "read_completely": [
+      "validation-wave COMMON and missions26-32"
+    ],
+    "records": [
+      "authority-reconciliation-01.json",
+      "authority-reconciliation-02.json",
+      "authority-reconciliation-final.json"
+    ],
+    "only_stack_writer": 23,
+    "final_dispatcher": "S0",
+    "final_acceptance": "S0"
+  },
+  "lanes": [
+    {
+      "lane": "C12/session19",
+      "pr": 60,
+      "consumed": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "status": "CONSUMED_SELECTIVELY",
+      "later_authority": {
+        "mission": 32,
+        "state": "PREPARED_NOT_STARTED",
+        "expected_head": "c8a03c4f689025ca70a1c815fd292af22b6261cd"
+      },
+      "note": "Authority32 published afterC4; no new output32 observed in the authority file."
+    },
+    {
+      "lane": "Finance18 + Finance22",
+      "pr": 42,
+      "head": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "updated_at": "2026-11-14T20:53:08Z",
+      "consumed": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "status": "18_CONSUMED_22_IMPLEMENTATION_PREPARED_VALIDATION_PENDING",
+      "finding": "FIN-IND-005 OPEN_IMPLEMENTED_NOT_CLOSED; source22 legacy fixture/provider reconciliation pending",
+      "terminal22_observed": false
+    },
+    {
+      "lane": "Memory13",
+      "pr": 29,
+      "head": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "updated_at": "2026-11-14T20:48:08Z",
+      "consumed": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "status": "TERMINAL_FOCUSED_IMPLEMENTATION_CONSUMED_HISTORY_AND_NATIVE_PROOFS_OPEN"
+    },
+    {
+      "lane": "Decisions20 + Decisions31",
+      "pr": 40,
+      "head": "556079fe2fb97c824504ec60a47798c6e0553539",
+      "updated_at": "2026-11-14T20:50:41Z",
+      "consumed": "556079fe2fb97c824504ec60a47798c6e0553539",
+      "status": "20_CONSUMED_WITH_HTTP_MOUNT_31_PREPARED_NOT_STARTED"
+    },
+    {
+      "lane": "Portfolio21",
+      "pr": 67,
+      "head": "ac7d29397db0f639237cdb39fb0754d59c1a929d",
+      "updated_at": "2026-11-14T20:52:34Z",
+      "consumed": "ac7d29397db0f639237cdb39fb0754d59c1a929d",
+      "status": "P01_CONSUMED_P02_P03_P04_HELD",
+      "current_choice": "HELD"
+    },
+    {
+      "lane": "Operations24",
+      "pr": 23,
+      "head": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "updated_at": "2026-11-14T21:07:51Z",
+      "consumed": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "status": "0042_EXPLICIT_PARTIAL_ASSEMBLY_CONSUMED_49_REVISION_PENDING_TERMINAL_PROVENANCE",
+      "revision_disposition": "operations24-revision-disposition.json",
+      "terminal24_observed": false
+    },
+    {
+      "lane": "Reports25",
+      "pr": 27,
+      "head": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "updated_at": "2026-11-14T21:01:43Z",
+      "consumed_new25": null,
+      "status": "ACTIVE_CODE_ADVANCES_NO_CLOSED25_OUTPUT",
+      "previous_terminal": "dbc5e803050052909316562ad4c1dc579f5f453a",
+      "delta_note": "56772767 adds/changes collaboration UI/helpers/spec; bc587ceb adds browser export/build selection. No new manifest/shared patch/handoff in those deltas or current PR body.",
+      "terminal25_observed": false
+    },
+    {
+      "lane": "Tooling26",
+      "pr": 32,
+      "head": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+      "updated_at": "2026-11-14T19:32:26Z",
+      "status": "NO_NEW26_OUTPUT_PREVIOUS_PREPARATION_ONLY",
+      "gate": "Complete graph of all3nominal specs+transitive helpers in canonical E2E gate remains open"
+    },
+    {
+      "lane": "Routines30",
+      "pr": 30,
+      "head": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "updated_at": "2026-11-14T08:53:17Z",
+      "status": "PREPARED_NOT_STARTED_NO_NEW30_OUTPUT"
+    },
+    {
+      "lane": "Independent reviews27/28/29",
+      "status": "PREPARED_SOURCE_AUTHORITY_TARGETS_C2",
+      "required": "Recheck material deltas and issue final independent verdicts on the same accepted exact candidate; none supplied by this integrator"
+    }
+  ],
+  "source_green_transferred": false,
+  "source_writes": false,
+  "ci_dispatched": false,
+  "tests_executed": false,
+  "global_release": false
+}

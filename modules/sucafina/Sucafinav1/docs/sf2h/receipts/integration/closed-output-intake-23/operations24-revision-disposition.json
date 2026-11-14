@@ -1,0 +1,231 @@
+{
+  "schema": "sf2-observed-output-disposition-v1",
+  "mission": 23,
+  "source_pr": 23,
+  "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "source_tree": "fbaf5fe4762cd8d68a71d8600c28f4afb0774dd5",
+  "observed_at": "2026-11-14 21:15:06 UTC",
+  "source_predecessor": "0042a95967ad651fe65ac0da216db6af86ed804c",
+  "current_candidate": {
+    "id": "C4",
+    "commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a"
+  },
+  "status": "SHARED_PATCH_READY_SOURCE_TERMINAL_PROVENANCE_PENDING_NOT_CONSUMED",
+  "consumed_predecessor": {
+    "commit": "0042a95967ad651fe65ac0da216db6af86ed804c",
+    "integrated_commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "ack": "consumer-acks-04.json",
+    "preserved": true
+  },
+  "evidence": {
+    "readme_blob": "c03789a79969247cae26ac3ca300d9ca2b2ff48c",
+    "manifest_blob": "43870a84cc0a4288a38f6e05c33de325d8997a89",
+    "patch_blob": "4c02d343f3de4af9ec36e4b612be3435c46fada6",
+    "state": "READY_PATCH_PENDING_SESSION23_ASSEMBLY_AND_ACTIONS_QUALIFICATION",
+    "readme_requirement": "Consume own files by the exact blobs of the terminal handoff.",
+    "manifest_requirement": "Intake the five own source files by exact terminal delivery path/blob identities.",
+    "new_test_source_commit_field": "Pinned by terminal handoff after this fix is committed",
+    "terminal_handoff_observed": false,
+    "pr_body_terminal": "Still39b50786 prior mission output; no mission24 terminal section in the bounded observation."
+  },
+  "decision": "Do not treat Git byte location alone as the terminal delivery required by the revised source manifest. Preserve the valid0042 partial intake; hold revised host/test/config coherently. No source writer takeover and no candidate C5 created.",
+  "required_owner_action": "Operations24 publishes the terminal handoff pinning corrected test eddc60289524c374f970ea226632a030fc9b994d and revision49, or explicitly releases this revision as a partial output independently of that handoff. Integrator then rechecks the actual expected head and applies the complete incremental unit as a new candidate.",
+  "scope": {
+    "effective_runtime_test_config_targets": 3,
+    "already_matching": [
+      "wp04/selection.ts@1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "operations-support/installation.ts@d60be2f87aa210c9700fba276932a6f443264e4f"
+    ],
+    "hunks": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "preimage": "8ba8d97ec138265454507852a5ab50b600b96c60",
+        "postimage": "8230eb28f322dde255382b74280192f39844724d",
+        "old_start_line": 79,
+        "new_start_line": 79,
+        "before": "  if (!reset.ok) throw new Error(\"Baseline Procurement settings could not be initialized\")\n  const holders = ProcurementModule.domain.execute(snapshot, actor, {\n    page: \"Settings\", action: \"save\", version: snapshot.versions.settings!.version,\n    values: { levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })) },\n  }, context)\n  if (!holders.ok) throw new Error(\"Synthetic approval holder could not be configured\")\n  const execute = (command: Command) => {\n    const result = ProcurementModule.domain.execute(snapshot, actor, command, context)\n    if (!result.ok) throw new Error(`Fixture command ${command.page}/${command.action} was refused (${result.status})`)",
+        "after": "  if (!reset.ok) throw new Error(\"Baseline Procurement settings could not be initialized\")\n  const holders = ProcurementModule.domain.execute(snapshot, actor, {\n    page: \"Settings\", action: \"save\", version: snapshot.versions.settings!.version,\n    values: {\n      levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })),\n      // The real private upload path requires a configured limit in bytes before scanning.\n      uploadCap: 16 * 1024 * 1024,\n    },\n  }, context)\n  if (!holders.ok) throw new Error(\"Synthetic approval holder and attachment limit could not be configured\")\n  const execute = (command: Command) => {\n    const result = ProcurementModule.domain.execute(snapshot, actor, command, context)\n    if (!result.ok) throw new Error(`Fixture command ${command.page}/${command.action} was refused (${result.status})`)",
+        "exact_context": true,
+        "unique_context": true,
+        "exact_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+        "preimage": "508f4580d0decb1d5c97208fed650f51d8566045",
+        "postimage": "eddc60289524c374f970ea226632a030fc9b994d",
+        "old_start_line": 58,
+        "new_start_line": 58,
+        "before": "    const result = ProcurementModule.domain.execute(snapshot, { id: principalRef, roles: [\"admin\", \"buyer\"], canWrite: true },\n      { page: \"Settings\", action: \"reset\", version: 0, values: {} }, await environment())\n    expect(result.ok).toBe(true)\n    return { commit: result.ok, value: undefined }\n  })\n  const admitted = await identity.handle(new Request(origin + mount + \"/auth/local?code=\" + await identity.enroll()))\n  expect(admitted?.status).toBe(303)",
+        "after": "    const result = ProcurementModule.domain.execute(snapshot, { id: principalRef, roles: [\"admin\", \"buyer\"], canWrite: true },\n      { page: \"Settings\", action: \"reset\", version: 0, values: {} }, await environment())\n    expect(result.ok).toBe(true)\n    // Fixture policy is expressed in bytes and applied through the real Settings command.\n    // A configured cap lets the no-scanner regression reach the scanner boundary.\n    const uploadCap = 16 * 1024 * 1024\n    const configured = ProcurementModule.domain.execute(snapshot, { id: principalRef, roles: [\"admin\", \"buyer\"], canWrite: true },\n      { page: \"Settings\", action: \"save\", version: snapshot.versions.settings!.version, values: { uploadCap } }, await environment())\n    expect(configured.ok).toBe(true)\n    expect(object(object(snapshot.data.store).settings).uploadCap).toBe(uploadCap)\n    return { commit: result.ok && configured.ok, value: undefined }\n  })\n  const admitted = await identity.handle(new Request(origin + mount + \"/auth/local?code=\" + await identity.enroll()))\n  expect(admitted?.status).toBe(303)",
+        "exact_context": true,
+        "unique_context": true,
+        "exact_postimage": true
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "preimage": "8364221434311400cae3007ea74cc67ddcfde765",
+        "postimage": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+        "old_start_line": 30,
+        "new_start_line": 30,
+        "before": "    \"../../core/src/flag/flag.ts\",\n    \"../playwright.config.ts\",\n    \"./playwright.production.config.ts\",\n    \"./orchestra/**/*.ts\",\n    \"./orchestra-screenshots/**/*.ts\",\n    \"./orchestra/theme-first-paint.fixture.tsx\",",
+        "after": "    \"../../core/src/flag/flag.ts\",\n    \"../playwright.config.ts\",\n    \"./playwright.production.config.ts\",\n    \"./sucafina/operations.spec.ts\",\n    \"./sucafina/operations-support/**/*.ts\",\n    \"./sucafina/wp04/host.ts\",\n    \"./orchestra/**/*.ts\",\n    \"./orchestra-screenshots/**/*.ts\",\n    \"./orchestra/theme-first-paint.fixture.tsx\",",
+        "exact_context": true,
+        "unique_context": true,
+        "exact_postimage": true
+      }
+    ],
+    "method": "Complete current C4 texts and source postimages compared; each minimal contextual replacement is unique and reconstructs exactly the pinned source postimage. No code execution. The original shared.patch starts from pre-C4 host3dd5760d and must not be reapplied wholesale."
+  },
+  "source_receipts": {
+    "boundary_attempt2": {
+      "run_id": 43640551629,
+      "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "S": "0142facd1367eadaaf8f11a5e192b195c439cfa4",
+      "passed": 2,
+      "failed": 3,
+      "executed": 5,
+      "qualifies_candidate": false
+    },
+    "source_checks": {
+      "run_id": 43640212098,
+      "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "conclusion": "success",
+      "qualifies_49_or_candidate": false
+    },
+    "limits": "Original failures and checks copied as observed source receipts; no green transfer. New49 fixture not validated here."
+  },
+  "tooling26": "Proposed three includes cover Operations only. They do not close coverage of Decisions/Reports, transitive graph or canonical gate connection required by26.",
+  "scanner": "No approved real Actions ClamD endpoint observed. Source README says workflow does not provision it and current .ci-run.json allowlist does not accept SF_OPERATIONS_CLAMD_PORT. Do not install services, invent positive verdicts or claim scanner proof.",
+  "preserved_observed_files": [
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/advanced-input-disposition.json",
+      "source_blob": "d23a870d6d283b517e0fbc529393c93f265a7e51",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/advanced-input-disposition.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/README.md",
+      "source_blob": "c03789a79969247cae26ac3ca300d9ca2b2ff48c",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/README.md.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/manifest.json",
+      "source_blob": "43870a84cc0a4288a38f6e05c33de325d8997a89",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/manifest.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "source_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "source_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/tsconfig.json.txt.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "source_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/preimages/packages/app-shell/e2e/tsconfig.json.txt.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/regression-request.json",
+      "source_blob": "41f46f41a06a50e41271f9c4965002aab6359878",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/regression-request.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/shared.patch",
+      "source_blob": "4c02d343f3de4af9ec36e4b612be3435c46fada6",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/shared.patch.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/boundary-attempt-01.json",
+      "source_blob": "a1f8644c087f13f988e8f9ef02eed78c55c7f509",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/boundary-attempt-01.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/boundary-attempt-02.json",
+      "source_blob": "196982e2a9079e8ef44c9d6be80eb1698cf9c780",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/boundary-attempt-02.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/criteria.json",
+      "source_blob": "2f9035adac40854513e6e5f064d097195145d071",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/criteria.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/boundary-attempt-02-summary.log",
+      "source_blob": "13e409fdc3ec143bd982c86501c807eef61cf744",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/boundary-attempt-02-summary.log.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/guards.log",
+      "source_blob": "3d97fd6a2bd925ca55b75d70ce437b4f5e527597",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/guards.log.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/revisions.txt",
+      "source_blob": "60ecac4b73177fa5eecd97424f39732d12ceedc6",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/revisions.txt.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/typecheck.log",
+      "source_blob": "20e434565b59f38fefb6df6bb56015db7e7a7a12",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/typecheck.log.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/nominal-run.json",
+      "source_blob": "d77c15224842c002d66f2e78942c9c899d378820",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/nominal-run.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/source-checks-01.json",
+      "source_blob": "d10819932a6c8cd92881d3e8c8a11522ddceebb3",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/source-checks-01.json.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    },
+    {
+      "source_path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "source_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "mode": "100644",
+      "kind": "INERT_OBSERVED_SOURCE_COPY_NOT_CONSUMED"
+    }
+  ],
+  "tests": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "global_release": false
+}
