@@ -11,9 +11,11 @@ import { renderWaterfall, resolveWaterfall } from "./waterfall.ts"
 import { renderTimeline } from "./milestones.ts"
 import { hasBiDecision } from "./projection.ts"
 import { renderDecisionView } from "./decision-view.ts"
+import { renderScenarioAdvantage } from "./advantage-view.ts"
 import { renderPortfolioView } from "./portfolio-view.ts"
 import { renderBiFilters } from "./filter-controls.ts"
 import type { BiFilterControls } from "./filter-controls.ts"
+import { appendBiSourceButtons, biSourceChoices, createBiSourceChooser } from "./source-navigation.ts"
 
 export type BiDecisionNavigation = {
   openSource?: (source: SourceRef) => void
@@ -55,6 +57,8 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       }
     }
     section.append(renderDecisionView(decision.scenario, decision.comparison, decision.sensitivity, navigation?.openSource, navigation?.openEvidence, navigation?.openCoverage, navigation?.openQuestion, navigation?.openResult))
+    const advantage = renderScenarioAdvantage(projection, navigation?.openResult, navigation?.openEvidence)
+    if (advantage) section.append(advantage)
   }
   if (decision?.kind === "portfolio") {
     const ref = document.createElement("p")
@@ -74,6 +78,19 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     const heading = document.createElement("h2")
     heading.textContent = view.question
     section.prepend(heading)
+    const context = document.createElement("p")
+    context.textContent = `${projection.context.period.start} – ${projection.context.period.end} · ${projection.context.currency} · v${projection.version}`
+    section.append(context)
+    if (presentation?.viewId === request.viewId && resolveBiPresentation(projection, presentation).status === "ok") {
+      const limitations = document.createElement("ul")
+      limitations.setAttribute("aria-label", "Limitações da visualização")
+      for (const limitation of presentation.limitations) {
+        const item = document.createElement("li")
+        item.textContent = limitation
+        limitations.append(item)
+      }
+      section.append(limitations)
+    }
     return section
   }
   const data = presentProjection(projection, request.selectionRef)
@@ -182,6 +199,7 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     status.textContent = ""
     chart.replaceChildren()
     body.replaceChildren()
+    const chooseSource = createBiSourceChooser(chart, openSelected)
     const undatedIds = new Set((request.viewId === "BI08" || request.viewId === "BI10") && semantic?.status === "ok" ? presentation?.timeline?.items.flatMap((item) => {
       const row = data.rows.find((value) => value.id === item.dateValueId)
       return row && (typeof row.value !== "string" || !isSfPeriod({ start: row.value, end: row.value })) ? [row.id] : []
@@ -330,13 +348,14 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
         const row = rows.find((item) => item.id === mark.id)
         const group = document.createElementNS(svg.namespaceURI, "g")
         const description = row ? `${seriesId} · ${mark.id}: ${mark.value} ${unit}; ${row.period.start} – ${row.period.end}` : `${mark.id}: ${mark.value} ${unit}`
-        if (row?.selection.reference) {
+        const origins = row ? biSourceChoices(row, row.selection) : []
+        if (row && origins.length) {
           group.setAttribute("tabindex", "0")
           group.setAttribute("data-bi-focus", row.id)
           group.setAttribute("data-bi-series", seriesId)
           group.setAttribute("role", "button")
-          group.setAttribute("aria-label", `${description}. Abrir origem`)
-          const select = () => openSelected(row.selection)
+          group.setAttribute("aria-label", `${description}. ${origins.length === 1 ? "Abrir origem" : "Escolher origem"}`)
+          const select = () => chooseSource(row.id, origins, group)
           group.addEventListener("click", select)
           group.addEventListener("keydown", (event) => {
             if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
@@ -390,15 +409,7 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       line.insertCell().textContent = row.granularity
       line.insertCell().textContent = row.evidenceState
       const cell = line.insertCell()
-      if (row.selection.reference) {
-        const button = document.createElement("button")
-        button.type = "button"
-        button.setAttribute("data-bi-focus", row.id)
-        button.textContent = "Abrir origem"
-        button.addEventListener("click", () => openSelected(row.selection))
-        cell.append(button)
-      }
-      if (!row.selection.reference) cell.textContent = "Indisponível"
+      appendBiSourceButtons(cell, biSourceChoices(row, row.selection), openSelected)
     }
   }
   apply.addEventListener("click", draw)
@@ -425,10 +436,15 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
 /** The host calls this after returning from a detail screen. */
 export function restoreBiFocus(container: HTMLElement, selection: BiSelection | string) {
   const valueId = typeof selection === "string" ? selection : selection.valueId
-  const target = Array.from(container.querySelectorAll("[data-bi-focus]"))
-    .find((element) => element.getAttribute("data-bi-focus") === valueId)
-    ?? container.querySelector("[data-bi-focus-fallback]")
-  if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) return false
-  target.focus()
-  return true
+  const candidates = [
+    ...Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId),
+    ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
+  ]
+  for (const target of candidates) {
+    if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) continue
+    if (!target.isConnected || target.closest("[hidden], [inert]") || !target.getClientRects().length || getComputedStyle(target).visibility === "hidden") continue
+    target.focus()
+    if (target.ownerDocument.activeElement === target) return true
+  }
+  return false
 }

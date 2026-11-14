@@ -1,0 +1,1318 @@
+diff --git a/apps/cli/src/sucafina-product/bi-services.ts b/apps/cli/src/sucafina-product/bi-services.ts
+index b6a84dd807207e9b6791dc10f1419ec756ea1167..280627cbb683c2f401a8c37f90b6c727f9de7b94 100644
+--- a/apps/cli/src/sucafina-product/bi-services.ts
++++ b/apps/cli/src/sucafina-product/bi-services.ts
+@@ -10,6 +10,8 @@
+ import { createStoredScenarioBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts"
+ import type { StoredScenarioSelection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts"
+ import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
++import { bindStoredScenarioBiPort, createScenarioCostBiHost } from "../../../../modules/sucafina/Sucafinav1/product/analytics/scenario.ts"
++import type { PortfolioBiBundle } from "../../../../modules/sucafina/Sucafinav1/product/analytics/portfolio.ts"
+ import { resolveBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/analytics/semantics.ts"
+ import { createStoredPortfolioProjection } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/projection.ts"
+ import { dashboardBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/bi.ts"
+@@ -76,6 +78,21 @@
+   const decisionPresentation = (request: BiViewRequest): BiPresentation => ({ viewId: request.viewId === "BI09" ? "BI09" : request.viewId === "BI10" ? "BI10" : "BI11",
+     series: [], limitations: ["The persisted decision result supplies the detailed cost, period and sensitivity tables.",
+       ...(request.viewId === "BI09" || request.viewId === "BI10" ? ["A producer-owned waterfall or timeline plan is not available for this selection."] : [])] })
++  const scenarioHost: Parameters<typeof bindStoredScenarioBiPort>[0] = {
++    readProjection: (selection, call) => selection.advantageComparisonRef === undefined
++      ? callScope.read(selection, call, () => scenarioProjection(selection, call)) : scenarioProjection(selection, call),
++    revalidate,
++    resolve: async (request) => {
++      const selected = readSfDecisionBiSelection(request.selectionRef)
++      return selected && "scenarioResultRef" in selected ? { status: "ok", value: { ...selected, present: () => decisionPresentation(request) } }
++        : { status: "needs-input", reason: "scenario-bi-selection-unavailable" }
++    },
++  }
++  const scenarios = business.plannerProduct.scenarios
++  const scenarioCosts = scenarios ? createScenarioCostBiHost({ host, results: business.results, scenarios,
++    scenario: bindStoredScenarioBiPort(scenarioHost) }) : undefined
++  const portfolioCosts = portfolioProjection && scenarios ? createPortfolioCostProjection({ host, results: business.results,
++    scenarios, readProjection: portfolioProjection }) : undefined
+   const factory = createSfBiFactory({ authority: authority.authority,
+     select: async (request, call, candidates) => {
+       if (!await host.revalidate(call)) return { status: "denied", reason: "bi-authority-unavailable" }
+@@ -112,19 +129,16 @@
+       },
+     } },
+     procurement: { views: ["BI05", "BI06"], host: { list: business.procurement.list, revalidate } },
+-    scenario: { views: ["BI09", "BI10", "BI11"], host: { readProjection: (selection, call) => selection.advantageComparisonRef === undefined
+-      ? callScope.read(selection, call, () => scenarioProjection(selection, call)) : scenarioProjection(selection, call), revalidate,
+-      resolve: async (request) => {
+-        const selected = readSfDecisionBiSelection(request.selectionRef)
+-        return selected && "scenarioResultRef" in selected ? { status: "ok", value: { ...selected, present: () => decisionPresentation(request) } }
+-          : { status: "needs-input", reason: "scenario-bi-selection-unavailable" }
+-      },
+-    } },
++    scenario: { views: scenarioCosts ? ["BI10", "BI11"] : ["BI09", "BI10", "BI11"], host: scenarioHost },
++    ...(scenarioCosts ? { projectedScenario: { views: ["BI09"] as const, host: scenarioCosts } } : {}),
+     ...(portfolioProjection ? { portfolio: { views: ["BI09", "BI10"] as const, host: { readProjection: portfolioProjection,
+       revalidate: (request: BiViewRequest, call: TrustedDomainContext, _bundle?: unknown, projection?: DomainProjection) => revalidate(request, call, projection),
+       resolve: async (request: BiViewRequest) => {
+         const selected = readSfDecisionBiSelection(request.selectionRef)
+-        return selected && "portfolioResultRef" in selected ? { status: "ok" as const, value: { portfolioResultRef: selected.portfolioResultRef, present: () => decisionPresentation(request) } }
++        return selected && "portfolioResultRef" in selected ? { status: "ok" as const, value: { portfolioResultRef: selected.portfolioResultRef,
++          present: () => decisionPresentation(request),
++          ...(request.viewId === "BI09" && portfolioCosts ? { project: (projection: DomainProjection, call: TrustedDomainContext) => portfolioCosts(request, projection, call) } : {}),
++        } }
+           : { status: "needs-input" as const, reason: "portfolio-bi-selection-unavailable" }
+       },
+     } } } : {}),
+@@ -169,7 +183,62 @@
+       !await factory.source.revalidate(request, call, projectedCopy) || !await host.revalidate(call)) return { status: "stale", reason: "bi-review-source-changed" }
+     return { status: "ok", value: { projection: projectedCopy, presentation: structuredClone(presentation.value) } }
+   }
+-  return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: ["decision-bi-waterfall-plan-unavailable", "decision-bi-timeline-plan-unavailable"] }
++  return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: [
++    ...(!scenarioCosts || (portfolioProjection && !portfolioCosts) ? ["decision-bi-waterfall-plan-unavailable"] : []),
++    "decision-bi-timeline-plan-unavailable",
++  ] }
++}
++
++/** Reuse the paired Planner producer for one exact persisted portfolio combination.
++ * The portfolio envelope and its unknown external costs remain authoritative. */
++function createPortfolioCostProjection(input: {
++  host: DomainPortHost
++  results: Parameters<typeof createScenarioCostBiHost>[0]["results"]
++  scenarios: Parameters<typeof createScenarioCostBiHost>[0]["scenarios"]
++  readProjection: ReturnType<typeof createStoredPortfolioProjection>
++}) {
++  return async (incoming: BiViewRequest, original: DomainProjection, context: TrustedDomainContext): Promise<PortResult<PortfolioBiBundle>> => {
++    const request = structuredClone(incoming), selected = readSfDecisionBiSelection(request.selectionRef)
++    const expected = structuredClone(original)
++    if (request.viewId !== "BI09" || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
++      expected.decision.portfolioResultRef !== selected.portfolioResultRef) return { status: "denied", reason: "portfolio-waterfall-selection-mismatch" }
++    const portfolioResult = expected.decision.portfolio
++    const matches = portfolioResult.combinations.filter((entry) => entry.analysis?.scenarioResultRef === selected.sourceScenarioRef)
++    if (matches.length !== 1 || !matches[0]?.analysis) return { status: "unavailable", reason: "portfolio-waterfall-combination-ambiguous" }
++    const combination = matches[0], analysis = combination.analysis!
++    if (!analysis.comparisonRef.trim() || analysis.comparison.alternativeResultRef !== selected.sourceScenarioRef ||
++      digestSfValue(combination.components) !== digestSfValue(analysis.scenario.components)) return { status: "stale", reason: "portfolio-waterfall-analysis-mismatch" }
++    const scenario = createScenarioCostBiHost({ host: input.host, results: input.results, scenarios: input.scenarios, scenario: {
++      revalidate: (_request, call) => input.host.revalidate(call),
++      readView: async (forwarded, call) => {
++        if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "portfolio-waterfall-request-changed" }
++        const portfolio = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selected.portfolioResultRef }, call)
++        if (portfolio.status !== "ok") return portfolio
++        if (!sameBiProjection(portfolio.value, expected)) return { status: "stale", reason: "portfolio-waterfall-source-changed" }
++        const resolved = await input.scenarios.resolve(selected.sourceScenarioRef, call)
++        if (resolved.status !== "ok") return resolved
++        if (digestSfValue(resolved.value.result) !== digestSfValue(analysis.scenario)) return { status: "stale", reason: "portfolio-waterfall-scenario-changed" }
++        const source = resolved.value.projection
++        const missing = portfolioResult.combinations.filter((entry) => !entry.analysis)
++          .map((entry) => ({ field: `portfolio:${entry.id}:analysis`, reason: "unavailable" as const }))
++        if (!sameBiProjection(expected, { ...source, missing: [...source.missing, ...missing], decision: expected.decision })) return { status: "stale", reason: "portfolio-waterfall-projection-mismatch" }
++        return { status: "ok", value: {
++          projection: { ...source, decision: { kind: "scenario", scenarioResultRef: selected.sourceScenarioRef, scenario: analysis.scenario,
++            comparisonRef: analysis.comparisonRef, comparison: analysis.comparison } },
++          presentation: { viewId: "BI09", series: [], limitations: [] },
++        } }
++      },
++    } })
++    const planned = await scenario.readView(request, context)
++    if (planned.status !== "ok") return planned
++    if (digestSfValue(incoming) !== digestSfValue(request) || !sameBiProjection(original, expected)) return { status: "stale", reason: "portfolio-waterfall-input-changed" }
++    return { status: "ok", value: {
++      projection: { ...expected, values: planned.value.projection.values, components: planned.value.projection.components },
++      presentation: { ...planned.value.presentation, limitations: [...planned.value.presentation.limitations,
++        `Combinação ${combination.id}; cenário ${selected.sourceScenarioRef}; comparação ${analysis.comparisonRef}.`,
++        "A composição mostra os custos conhecidos da combinação selecionada. Cobertura, total completo e custos externos não quantificados conservam os estados da tabela do portfólio."] },
++    } }
++  }
+ }
+ 
+ /** Binds the producer's two persisted observations to one exact selection and Request. */
+diff --git a/modules/sucafina/Sucafinav1/product/analytics/scenario.ts b/modules/sucafina/Sucafinav1/product/analytics/scenario.ts
+index b7174b16b485323f767d63e6842f3d61284245eb..c116831c71e2df3e30c6b058f4eff8d26ce6ce07 100644
+--- a/modules/sucafina/Sucafinav1/product/analytics/scenario.ts
++++ b/modules/sucafina/Sucafinav1/product/analytics/scenario.ts
+@@ -1,12 +1,18 @@
+ import type { DomainProjection } from "../contracts/context.ts"
+ import type { BiViewRequest } from "../contracts/operations.ts"
+-import type { PortResult } from "../contracts/ports.ts"
++import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { BiPresentationPort } from "./capabilities.ts"
+ import type { BiPresentation } from "./semantics.ts"
+ import type { StoredScenarioSelection } from "./stored-scenario.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import { sameBiProjection } from "./projection.ts"
++import { readHistoricalScenarios } from "../decisions/result-store.ts"
++import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
++import { plannerScenarioBiPresentation } from "../planner/scenario-bi.ts"
++import { projectionDigest, resolvePlannerScenarioBatch } from "../planner/scenario-comparison-port.ts"
++import type { PlannerScenarioHost, ResolvedScenario } from "../planner/scenario-comparison-port.ts"
++import { readPortfolioSnapshot } from "../portfolio/read-snapshot.ts"
+ 
+ export type ScenarioBiHost = {
+   readView: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>>
+@@ -64,3 +70,77 @@
+     },
+   }
+ }
++
++/** Mount the canonical cost producer over persisted C08 observations. Earlier
++ * baseline case versions remain historical; their identities are never rewritten. */
++export function createScenarioCostBiHost(input: {
++  host: DomainPortHost
++  results: Pick<ReturnType<typeof createSfDecisionResultStore>, "read" | "readHistoricalScenario">
++  scenarios: PlannerScenarioHost
++  scenario: ScenarioBiHost
++}): ScenarioBiHost {
++  type Pair = { baseline: ResolvedScenario; candidate: ResolvedScenario }
++  type Observation = { pair: Pair; receipts: string }
++  type View = { projection: DomainProjection; presentation: BiPresentation }
++  const readView = (incoming: BiViewRequest, context: TrustedDomainContext): Promise<PortResult<View>> => readPortfolioSnapshot<PortResult<View>>(input.host, context, incoming, async () => {
++    const request = structuredClone(incoming)
++    if (request.viewId !== "BI09") return { status: "unavailable", reason: "unsupported-cost-view" }
++    if (!await input.host.revalidate(context)) return { status: "denied", reason: "scenario-cost-authority-unavailable" }
++    const readSource = async () => {
++      const forwarded = structuredClone(request)
++      const source = structuredClone(await input.scenario.readView(forwarded, context))
++      return digestSfValue(forwarded) === digestSfValue(request) ? source : { status: "stale" as const, reason: "scenario-cost-selection-changed" }
++    }
++    const source = await readSource()
++    if (source.status !== "ok") return source
++    const projection = source.value.projection, decision = projection.decision
++    if (decision?.kind !== "scenario" || decision.comparison.alternativeResultRef !== decision.scenarioResultRef ||
++      decision.comparison.baselineResultRef === decision.scenarioResultRef) return { status: "stale", reason: "scenario-cost-pair-mismatch" }
++    if ((["installationId", "projectId", "principalRef", "accessRevision", "policyVersion"] as const).some((field) => projection.context[field] !== context.binding[field]) ||
++      digestSfValue(projection.context.period) !== digestSfValue(request.period)) return { status: "denied", reason: "scenario-cost-context-mismatch" }
++    const references = [decision.comparison.baselineResultRef, decision.scenarioResultRef]
++    const observe = async (): Promise<PortResult<Observation>> => {
++      const comparison = structuredClone(await input.results.read({ kind: "comparison", resultRef: decision.comparisonRef }, context))
++      if (comparison.status !== "ok") return comparison
++      if (comparison.value.kind !== "comparison" || comparison.value.resultRef !== decision.comparisonRef ||
++        digestSfValue(comparison.value.result) !== digestSfValue(decision.comparison)) return { status: "stale", reason: "scenario-cost-comparison-changed" }
++      const records = await readHistoricalScenarios(input.results, references, context)
++      const first = records[0], second = records[1]
++      if (records.length !== 2 || !first || !second) return { status: "unavailable", reason: "scenario-cost-pair-unavailable" }
++      if (first.status !== "ok") return first
++      if (second.status !== "ok") return second
++      const currentCase = comparison.value.caseRef
++      if (first.value.kind !== "scenario" || second.value.kind !== "scenario" || first.value.resultRef !== references[0] || second.value.resultRef !== references[1] ||
++        first.value.caseRef.id !== currentCase.id || first.value.caseRef.incarnation !== currentCase.incarnation || first.value.caseRef.version > currentCase.version ||
++        digestSfValue(second.value.caseRef) !== digestSfValue(currentCase) || digestSfValue(second.value.result) !== digestSfValue(decision.scenario)) return { status: "stale", reason: "scenario-cost-case-mismatch" }
++      const resolved = await resolvePlannerScenarioBatch(input.scenarios, references, context)
++      const baseline = resolved[0], candidate = resolved[1]
++      if (resolved.length !== 2 || !baseline || !candidate) return { status: "unavailable", reason: "scenario-cost-pair-unavailable" }
++      if (baseline.status !== "ok") return baseline
++      if (candidate.status !== "ok") return candidate
++      if (digestSfValue(baseline.value.result) !== digestSfValue(first.value.result) || digestSfValue(candidate.value.result) !== digestSfValue(second.value.result)) return { status: "stale", reason: "scenario-cost-results-changed" }
++      return { status: "ok", value: { pair: { baseline: baseline.value, candidate: candidate.value }, receipts: digestSfValue([first.value, second.value, comparison.value]) } }
++    }
++    const observed = await observe()
++    if (observed.status !== "ok") return observed
++    // All financial values, deltas and running endpoints come from this producer.
++    const planned = plannerScenarioBiPresentation(projection, observed.value.pair, "BI09")
++    if (planned.status !== "ok") return planned
++    const again = await readSource()
++    if (again.status !== "ok") return again
++    const latest = await observe()
++    if (latest.status !== "ok") return latest
++    const stamp = (pair: Pair) => digestSfValue(Object.fromEntries(Object.entries(pair).map(([key, value]) => [key, { ...value, projection: projectionDigest(value.projection) }])))
++    if (!sameBiProjection(projection, again.value.projection) || observed.value.receipts !== latest.value.receipts || stamp(observed.value.pair) !== stamp(latest.value.pair))
++      return { status: "stale", reason: "scenario-cost-observation-changed" }
++    return planned
++  }, { status: "denied", reason: "scenario-cost-read-scope-unavailable" })
++  return {
++    readView,
++    async revalidate(request, context, projection) {
++      if (!projection) return input.host.revalidate(context)
++      const observed = await readView(structuredClone(request), context)
++      return observed.status === "ok" && sameBiProjection(observed.value.projection, projection)
++    },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts b/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts
+index 4fd2a1ec2fc8cc78b21699e5a008362fec588444..fda4f51c8ccc8e45c959e8531f0cd63435c24d57 100644
+--- a/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts
++++ b/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts
+@@ -82,7 +82,11 @@
+ /** The host resolves a scoped BI selection to a persisted portfolio result, never a fabricated reference. */
+ export function bindStoredPortfolioBiPort(input: {
+   readProjection: (request: { selectionRef: string; portfolioResultRef: string }, context: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
+-  resolve: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{ portfolioResultRef: string; present: (projection: DomainProjection) => BiPresentation }>>
++  resolve: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{
++    portfolioResultRef: string
++    present: (projection: DomainProjection) => BiPresentation
++    project?: (projection: DomainProjection, context: TrustedDomainContext) => Promise<PortResult<PortfolioBiBundle>>
++  }>>
+   revalidate: PortfolioBiHost["revalidate"]
+ }): PortfolioBiHost {
+   return {
+@@ -90,18 +94,40 @@
+     async readView(incoming, context) {
+       const request = structuredClone(incoming)
+       const forwarded = structuredClone(request)
++      const readProjection = input.readProjection
++      const authority = digestSfValue({ kind: context.kind, binding: context.binding })
+       const resolved = await input.resolve(forwarded, context)
+       if (resolved.status !== "ok") return resolved
+       if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "selection-changed" }
+       const selection = { selectionRef: request.selectionRef, portfolioResultRef: resolved.value.portfolioResultRef }
+       const present = resolved.value.present
++      const project = resolved.value.project
+       if (!selection.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
+       const selected = structuredClone(selection)
+-      const projection = structuredClone(await input.readProjection(selected, context))
++      const projection = structuredClone(await readProjection(selected, context))
+       if (projection.status !== "ok") return projection
+       if (digestSfValue(selected) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
+       if (projection.value.context.period.start !== request.period.start || projection.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
+       if (projection.value.decision?.kind !== "portfolio" || projection.value.decision.portfolioResultRef !== selection.portfolioResultRef) return { status: "stale", reason: "portfolio-reference-mismatch" }
++      if (project) {
++        const projectedInput = structuredClone(projection.value)
++        const projected = structuredClone(await project(projectedInput, context))
++        if (digestSfValue(projectedInput) !== digestSfValue(projection.value)) return { status: "stale", reason: "projection-changed-by-projector" }
++        if (authority !== digestSfValue({ kind: context.kind, binding: context.binding })) return { status: "denied", reason: "portfolio-projection-authority-changed" }
++        if (digestSfValue(incoming) !== digestSfValue(request) || digestSfValue(forwarded) !== digestSfValue(request) || digestSfValue(selected) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
++        if (projected.status !== "ok") return projected
++        // The canonical producer may replace visual values/components only. In
++        // particular it cannot erase portfolio gaps or change persisted results.
++        if (projected.value.presentation.viewId !== request.viewId) return { status: "unavailable", reason: "view-mismatch" }
++        if (digestSfValue({ ...projected.value.projection, values: [], components: [] }) !== digestSfValue({ ...projection.value, values: [], components: [] })) return { status: "stale", reason: "portfolio-projection-envelope-changed" }
++        const rereadSelection = structuredClone(selection)
++        const latest = structuredClone(await readProjection(rereadSelection, context))
++        if (authority !== digestSfValue({ kind: context.kind, binding: context.binding })) return { status: "denied", reason: "portfolio-projection-authority-changed" }
++        if (digestSfValue(incoming) !== digestSfValue(request) || digestSfValue(forwarded) !== digestSfValue(request) || digestSfValue(selected) !== digestSfValue(selection) || digestSfValue(rereadSelection) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
++        if (latest.status !== "ok") return latest
++        if (!sameBiProjection(latest.value, projection.value)) return { status: "stale", reason: "portfolio-source-changed-during-projection" }
++        return projected
++      }
+       const presentationInput = structuredClone(projection.value)
+       const presentation = structuredClone(present(presentationInput))
+       if (!sameBiProjection(presentationInput, projection.value)) return { status: "stale", reason: "projection-changed-by-presentation" }
+diff --git a/modules/sucafina/Sucafinav1/product/analytics/view.ts b/modules/sucafina/Sucafinav1/product/analytics/view.ts
+index 4a6d481a8c7de805d7e13a3d3ab334beffd5692e..85480f85cf36f20ab7ba7ac7e142d457653ae292 100644
+--- a/modules/sucafina/Sucafinav1/product/analytics/view.ts
++++ b/modules/sucafina/Sucafinav1/product/analytics/view.ts
+@@ -78,6 +78,19 @@
+     const heading = document.createElement("h2")
+     heading.textContent = view.question
+     section.prepend(heading)
++    const context = document.createElement("p")
++    context.textContent = `${projection.context.period.start} – ${projection.context.period.end} · ${projection.context.currency} · v${projection.version}`
++    section.append(context)
++    if (presentation?.viewId === request.viewId && resolveBiPresentation(projection, presentation).status === "ok") {
++      const limitations = document.createElement("ul")
++      limitations.setAttribute("aria-label", "Limitações da visualização")
++      for (const limitation of presentation.limitations) {
++        const item = document.createElement("li")
++        item.textContent = limitation
++        limitations.append(item)
++      }
++      section.append(limitations)
++    }
+     return section
+   }
+   const data = presentProjection(projection, request.selectionRef)
+diff --git a/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts b/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts
+index fef3b0546384fcb0739fcf11ef531406c60ad760..cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab 100644
+--- a/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts
++++ b/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts
+@@ -29,7 +29,9 @@
+   const final = number(plan.finalValueId)
+   const incomplete = final === null || segments.some((segment) => segment.start === null || segment.end === null || segment.amount === null)
+   const continuous = segments.every((segment, index) => index === 0 || segments[index - 1]?.end === segment.start)
+-  const endpointsMatch = segments.length > 0 && continuous && segments.at(-1)?.end === final
++  // Validate the supplied geometry; never repair a producer's inconsistent delta.
++  const contributionsMatch = segments.every((segment) => segment.start !== null && segment.amount !== null && segment.end === segment.start + segment.amount)
++  const endpointsMatch = segments.length > 0 && continuous && contributionsMatch && segments.at(-1)?.end === final
+   const reconciliation = incomplete || plan.reconciliation === "unavailable" ? "unavailable" : !endpointsMatch || plan.reconciliation === "unreconciled" ? "unreconciled" : "reconciled"
+   const initialId = plan.segments[0]?.startValueId
+   return { status: "ok", segments, initial: initialId ? number(initialId) : null, initialSource: initialId ? values.get(initialId) : undefined, final, finalSource: values.get(plan.finalValueId)!, reconciliation } as const
+@@ -47,13 +49,13 @@
+     section.append(status)
+     return section
+   }
+-  status.textContent = `Reconciliação: ${data.reconciliation}; valor inicial: ${data.initial ?? "indisponível"}; valor final: ${data.final ?? "indisponível"} ${projection.context.currency}; ${projection.context.period.start} – ${projection.context.period.end}; v${projection.version}.`
++  const knownSubtotal = projection.decision?.kind === "portfolio" || projection.decision?.kind === "scenario" && projection.decision.comparison.comparisonStatus !== "complete"
++  status.textContent = `${knownSubtotal ? "Composição dos subtotais conhecidos; custos pendentes permanecem na tabela. " : ""}Reconciliação: ${data.reconciliation}; valor inicial: ${data.initial ?? "indisponível"}; valor final: ${data.final ?? "indisponível"} ${projection.context.currency}; ${projection.context.period.start} – ${projection.context.period.end}; v${projection.version}.`
+   section.append(status)
+-  const conditioned = projection.decision?.kind === "scenario" && projection.decision.comparison.comparisonStatus !== "complete"
+   const rows = [
+-    ...(data.initialSource ? [{ label: conditioned ? "Subtotal conhecido inicial" : "Total inicial", componentValueId: data.initialSource.id, start: 0, end: data.initial, amount: data.initial, source: data.initialSource, total: true }] : []),
++    ...(data.initialSource ? [{ label: knownSubtotal ? "Subtotal conhecido inicial" : "Total inicial", componentValueId: data.initialSource.id, start: 0, end: data.initial, amount: data.initial, source: data.initialSource, total: true }] : []),
+     ...data.segments.map((segment) => ({ ...segment, total: false })),
+-    { label: conditioned ? "Subtotal conhecido final" : "Total final", componentValueId: plan.finalValueId, start: 0, end: data.final, amount: data.final, source: data.finalSource, total: true },
++    { label: knownSubtotal ? "Subtotal conhecido final" : "Total final", componentValueId: plan.finalValueId, start: 0, end: data.final, amount: data.final, source: data.finalSource, total: true },
+   ]
+   const chooseSource = createBiSourceChooser(section, open)
+   const selectionFor = (source: DomainProjection["values"][number]): BiSelection => ({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: source.id, reference: source.drilldown })
+diff --git a/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..807a51590a516d62e9586ce7475ecf4599cd2642
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts
+@@ -0,0 +1,165 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { BiViewRequest, ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { PortResult } from "../../../product/contracts/ports.ts"
++import type { BaselineCoverageRequest } from "../../../product/decisions/baseline-coverage.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
++import { createSfBiServices } from "../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
++import { sfDecisionBiSelection } from "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
++import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++
++export function ok<T>(result: PortResult<T>, label: string): T {
++  if (result.status !== "ok") throw new Error(`${label}: ${JSON.stringify(result)}`)
++  return result.value
++}
++
++// Real SQLite, UI/human authority, Planner, C08 promotions and comparison.
++// The annual source rows and empty case are fixtures; no financial result,
++// comparison, coverage assessment, persisted reference or binding is invented.
++// A one-month horizon keeps this acceptance surgical. In the default fixture,
++// pending human categories stay pending even when known components reconcile.
++// The complete fixture supplies its own quantified source row per category.
++export async function waterfallFixture(deadline: ReturnType<typeof compositionTestDeadline>, options: {
++  missing?: boolean
++  cancellation?: boolean
++  complete?: boolean
++} = {}) {
++  const fixture = await deadline.phase("fixture.initialize", async () => {
++    const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
++    deadline.own(() => value.dispose())
++    return value
++  })
++  const { authority, business, portfolio, persistence } = fixture
++  const period = { start: "2026-01-01", end: "2026-01-31" }
++  const version = (index: number) => {
++    const rows: { id: string; name: string; amount: number | null }[] = options.complete
++      ? RENEWAL_TRANSITION_CATEGORIES.map((category, position) => ({ id: category,
++        name: `Confirmed ${category} cost`, amount: category === "service" ? index ? 80 : 100 : (position + 1) * 10 }))
++      : [
++        { id: "service", name: "Private license service", amount: index ? options.cancellation ? 110 : 80 : 100 },
++        { id: "fee", name: "Explicit service fee", amount: 10 },
++        { id: "zero", name: "Recorded zero cost", amount: 0 },
++        { id: "credit", name: "Recorded credit", amount: -5 },
++        ...(options.missing ? [{ id: "missing", name: "Cost awaiting evidence", amount: null }] : []),
++      ]
++    return { id: `waterfall-v${index}`, name: index ? "Waterfall candidate" : "Waterfall baseline", year: 2026, closed: options.complete ? 1 : 0,
++      lines: rows.map((row) => ({ id: row.id, name: row.name, sec: "opex", el: "licenses", cur: "USD",
++        b: Array(12).fill(row.amount), a: options.complete ? [row.amount, ...Array(11).fill(null)] : Array(12).fill(null),
++        f: options.complete ? [null, ...Array(11).fill(row.amount)] : Array(12).fill(row.amount) })),
++      fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }
++  }
++  await persistence.transaction("planner", async (snapshot) => {
++    snapshot.data.versions = [version(0), version(1)]
++    return { commit: true, value: undefined }
++  })
++  await persistence.transaction("procurement", async (snapshot) => {
++    snapshot.data.store = { requests: {}, suppliers: [], settings: { currency: "USD" } }
++    return { commit: true, value: undefined }
++  })
++  await persistence.initializeSources("planner")
++  const call = await fixture.read()
++  deadline.own(() => authority.ui.finish(call))
++  const sources: BaselineCoverageRequest["source"][] = []
++  const forecasts: Awaited<ReturnType<typeof business.planner.compareForecast>>[] = []
++  for (const index of [0, 1]) {
++    const issued = ok(await deadline.phase(`source.${index}`, () => business.plannerProduct.issueSource(`waterfall-v${index}`, call)), "Issue actual source")
++    sources.push(issued.evidence)
++    forecasts.push(await deadline.phase(`forecast.${index}`, () => business.planner.compareForecast({
++      baseRef: issued.evidence.refId, candidateRef: issued.evidence.refId, period, currency: "USD",
++    }, call)))
++  }
++  const initialRef = { id: "waterfall-case", incarnation: "waterfall-incarnation", version: 1 }
++  const basis: BaselineCoverageRequest["basis"] = { id: "waterfall-renewal", version: 1, decisionType: "renewal-transition-v1",
++    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: sources }
++  const initial: DecisionCase = { ...initialRef, state: "draft", objective: "Explain a persisted cost comparison", horizon: period, currency: "USD",
++    criteria: [], participants: ["person"], sourceRefs: sources, alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++  const seeded = await authority.state.transaction(fixture.request("waterfall-empty-case"), { namespace: "cases", expectedStorageVersion: 0,
++    targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
++    idempotencyKey: "waterfall-empty-case", commandDigest: digestSfValue(initial) }, async (state) => {
++    state.cases[initial.id] = initial
++    return { commit: true, value: true }
++  })
++  if (seeded.status !== "ok") throw new Error(`Empty case fixture: ${JSON.stringify(seeded)}`)
++  const coverageRefs: string[] = []
++  for (const [index, source] of sources.entries()) {
++    const forecast = ok(forecasts[index]!, "Actual forecast")
++    const coverage: BaselineCoverageRequest = { caseRef: initialRef, source, basis, expectedVersion: 0,
++      entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => options.complete || categoryId === "service"
++        ? { categoryId, status: "included", componentRefs: forecast.baseline.components
++          .filter((component) => !options.complete || component.id.startsWith(`${categoryId}:`)).map((component) => component.id),
++          evidenceRefs: [source], scopeNote: options.complete ? `Human classifies the separately recorded, quantified ${categoryId} cost in the closed month`
++            : "Human identifies the recorded service costs; other categories await evidence" }
++        : { categoryId, status: "pending", reason: "Awaiting human evidence" }) }
++    const human = ok(await authority.human.admit(fixture.request(`waterfall-coverage-${index}`), "decisions.coverage", coverage), "Admit human coverage")
++    try {
++      const registered = ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () =>
++        business.baselineCoverage.register(coverage, human))), "Register actual coverage")
++      coverageRefs.push(registered.coverageRef)
++    } finally { authority.human.finish(human) }
++  }
++  const candidateForecast = ok(forecasts[1]!, "Candidate forecast")
++  const fee = candidateForecast.baseline.components.find((component) => component.amount === 10)
++  if (!options.complete && !fee) throw new Error("Real candidate fee component unavailable")
++  const requests: ScenarioRequest[] = [
++    { baseRef: sources[0]!.refId, operations: [], assumptions: [] },
++    { baseRef: sources[1]!.refId, operations: options.complete ? [] : [{ kind: "exclude", targetRef: fee!.id, currency: fee!.currency, period: fee!.period }], assumptions: [] },
++  ]
++  const mutationHttp = portfolio.http({ origin: "https://example.test", mount: "/product" })
++  const promote = async (index: number, caseRef: typeof initialRef) => {
++    const payload = { caseRef, title: index ? "Waterfall candidate" : "Waterfall baseline", scenario: requests[index]!, coverageRef: coverageRefs[index]! }
++    const response = await deadline.phase(`promotion.${index}`, () => mutationHttp(new Request("https://example.test/product/planner?sf=decision-promote", {
++      method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": `waterfall-promote-${index}` }, body: JSON.stringify(payload),
++    }), "planner"))
++    if (response?.status !== 200) throw new Error(`Actual human promotion ${index}: ${response?.status} ${response ? await response.text() : "no response"}`)
++    const receipt = ok(await response.json() as PortResult<{ caseRef: typeof initialRef; resultRef?: string }>, "Persist promoted scenario")
++    if (!receipt.resultRef) throw new Error("Actual promotion did not persist its scenario")
++    return { caseRef: receipt.caseRef, resultRef: receipt.resultRef }
++  }
++  const baseline = await promote(0, initialRef)
++  const candidate = await promote(1, baseline.caseRef)
++  const snapshot = await authority.state.read(fixture.request(), "cases", (state) => state.cases[initialRef.id])
++  if (snapshot.status !== "ok" || !snapshot.value || snapshot.value.alternatives.length !== 2) throw new Error("Promoted alternatives unavailable")
++  const caseValue = snapshot.value
++  const compared = ok(await deadline.phase("comparison.persist", () => business.withCase(call, candidate.caseRef, {}, async () => {
++    const selected = await portfolio.compare({ caseRef: candidate.caseRef, baselineAlternativeId: caseValue.alternatives[0]!.id,
++      alternativeId: caseValue.alternatives[1]!.id, criteria: [] }, call)
++    if (selected.status !== "ok") return selected
++    return business.calculations.persist({ kind: "comparison", request: selected.value.request, result: selected.value.comparison }, "waterfall-comparison", call)
++  })), "Persist actual comparison")
++  const selectionRef = sfDecisionBiSelection({ scenarioResultRef: candidate.resultRef, comparisonRef: compared.resultRef })
++  const bi = createSfBiServices({ authority, business, portfolio })
++  const admit = async (request: BiViewRequest, signal: AbortSignal = deadline.signal) => {
++    const context = ok(await authority.ui.admit(new Request(fixture.request(), { signal }), "sf_bi_view", digestSfValue(request)), "Admit actual BI request")
++    deadline.own(() => authority.ui.finish(context))
++    return context
++  }
++  const dispatch = async (viewId = "BI09", selected = selectionRef, requestedPeriod = period) => {
++    const request: BiViewRequest = { viewId, selectionRef: selected, period: { ...requestedPeriod } }
++    return bi.dispatchPresentation(request, await admit(request))
++  }
++  const preparePortfolio = async () => {
++    const request = { caseRef: candidate.caseRef, baselineAlternativeId: caseValue.alternatives[0]!.id,
++      alternativeId: caseValue.alternatives[1]!.id, criteria: [], expectedVersion: 0 }
++    const human = ok(await authority.human.admit(fixture.request("waterfall-select-portfolio"), "decisions.select-portfolio", request), "Admit actual portfolio selection")
++    try {
++      ok(await deadline.phase("portfolio.select", () => business.withCase(human, candidate.caseRef, {}, () =>
++        portfolio.selection.register(request, human))), "Register actual portfolio selection")
++    } finally { authority.human.finish(human) }
++    const persistent = portfolio.product?.contribution.persistent
++    if (!persistent) throw new Error("Actual persistent Portfolio unavailable")
++    const evaluation = { scope: { horizon: period, currency: "USD" }, candidateRefs: [portfolioCandidateRef({ caseRef: encodeCaseRef(candidate.caseRef),
++      caseVersion: candidate.caseRef.version, alternativeId: caseValue.alternatives[1]!.id, alternativeVersion: caseValue.alternatives[1]!.version })],
++    operations: [], constraints: [], priorities: [], explorationLimit: 1 }
++    const bundle = ok(await deadline.phase("portfolio.persist", () => business.withCase(call, candidate.caseRef, {}, () =>
++      persistent.evaluateAndStore(evaluation, candidate.caseRef, call))), "Persist actual Portfolio")
++    const analyses = bundle.portfolio.combinations.flatMap((combination) => combination.analysis ? [combination.analysis] : [])
++    if (analyses.length !== 1) throw new Error(`Expected one actually produced Portfolio analysis; received ${analyses.length}`)
++    const analysis = analyses[0]!
++    return { bundle, analysis, selectionRef: sfDecisionBiSelection({ portfolioResultRef: bundle.portfolioResultRef, sourceScenarioRef: analysis.scenarioResultRef }) }
++  }
++  return { ...fixture, call, caseRef: candidate.caseRef, caseValue, sources, period, baseline, candidate,
++    comparisonRef: compared.resultRef, selectionRef, bi, admit, dispatch, preparePortfolio }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..68db3d81dee9d557434c925d2ad446ae9a145284
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts
+@@ -0,0 +1,164 @@
++import { expect, test } from "bun:test"
++import { bindStoredPortfolioBiPort } from "../../../product/analytics/portfolio.ts"
++import type { PortfolioBiBundle } from "../../../product/analytics/portfolio.ts"
++import type { DomainProjection } from "../../../product/contracts/context.ts"
++import type { PortResult } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext, TrustedUiLease } from "../../../product/contracts/sf-execution.ts"
++
++type Project = (projection: DomainProjection, context: TrustedDomainContext) => Promise<PortResult<PortfolioBiBundle>>
++
++// Adapter-only fixture: supplied observations exercise the binding boundary. It
++// does not claim real host admission, persistence or financial calculation.
++function fixture(project?: Project) {
++  const period = { start: "2027-01-01", end: "2027-12-31" }
++  const source: { current: DomainProjection } = { current: {
++    context: { installationId: "i", projectId: "p", principalRef: "finance", policyVersion: "1", accessRevision: "a", surface: "planner", period, currency: "USD", capabilities: [], sourceRefs: [{ surface: "planner", type: "planner-version", id: "forecast", incarnation: "forecast-inc", version: 2, fields: ["cost"], period, observedAt: "2027-01-01T00:00:00Z" }] },
++    version: 2, engineVersion: "planner-v1", values: [], components: [],
++    decision: { kind: "portfolio", portfolioResultRef: "portfolio-ref", portfolio: { combinations: [], evidenceRefs: [], limitations: ["external-operation-cost-unresolved"] } },
++    missing: [{ field: "portfolio:unresolved:analysis", reason: "unavailable" }],
++  } }
++  const context = { kind: "ui" as const, lease: {} as TrustedUiLease, binding: { installationId: "i", projectId: "p", principalRef: "finance", requestId: "request", policyVersion: "1", accessRevision: "a", expiresAt: "2030-01-01T00:00:00Z" } }
++  const request = { viewId: "BI09", selectionRef: "selection", period }
++  const calls = { read: 0, present: 0 }
++  const input: Parameters<typeof bindStoredPortfolioBiPort>[0] = {
++    readProjection: async (selection) => {
++      calls.read++
++      return selection.selectionRef === request.selectionRef && selection.portfolioResultRef === "portfolio-ref"
++        ? { status: "ok", value: source.current } : { status: "denied", reason: "selection-unavailable" }
++    },
++    resolve: async () => ({ status: "ok", value: { portfolioResultRef: "portfolio-ref", present: () => {
++      calls.present++
++      return { viewId: "BI09", series: [], limitations: ["legacy-table"] }
++    }, ...(project ? { project } : {}) } }),
++    revalidate: async () => true,
++  }
++  return { source, context, request, calls, input, host: bindStoredPortfolioBiPort(input) }
++}
++
++function bundle(projection: DomainProjection): PortfolioBiBundle {
++  return {
++    projection: { ...projection, components: [{ id: "producer-zero", amount: 0, currency: "USD", period: projection.context.period, sourceRefs: projection.context.sourceRefs, evidenceState: "confirmed" }], values: [{ id: "producer-zero", value: 0, currency: "USD", unit: "money", period: projection.context.period, granularity: "aggregate", sourceRefs: [], drilldown: null, evidenceState: "confirmed" }] },
++    presentation: { viewId: "BI09", series: [{ id: "producer-cost", label: "Supplied producer observation", role: "cost", unit: "USD", valueIds: ["producer-zero"] }], limitations: ["external-operation-cost-unresolved"] },
++  }
++}
++
++test("portfolio projection seam preserves the original envelope and isolates callback output", async () => {
++  const retained: { value?: PortfolioBiBundle; input?: DomainProjection } = {}
++  const f = fixture(async (projection, context) => {
++    expect(context).toBe(f.context)
++    retained.input = projection
++    retained.value = bundle(projection)
++    return { status: "ok", value: retained.value }
++  })
++  const original = structuredClone(f.source.current)
++  const result = await f.host.readView(f.request, f.context)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(f.calls).toEqual({ read: 2, present: 0 })
++  expect(result.value.projection.decision).toEqual(original.decision)
++  expect(result.value.projection.missing).toEqual(original.missing)
++  expect(result.value.projection.context).toEqual(original.context)
++  expect(result.value.projection.values).toEqual(bundle(original).projection.values)
++  expect(f.source.current).toEqual(original)
++  expect(retained.input).not.toBe(f.source.current)
++  retained.value!.projection.values = []
++  retained.value!.presentation.limitations = []
++  expect(result.value.projection.values).toHaveLength(1)
++  expect(result.value.presentation.limitations).toEqual(["external-operation-cost-unresolved"])
++})
++
++test("portfolio projection seam keeps the existing presentation path when project is absent", async () => {
++  const f = fixture()
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "ok", value: { projection: f.source.current, presentation: { viewId: "BI09", series: [], limitations: ["legacy-table"] } } })
++  expect(f.calls).toEqual({ read: 1, present: 1 })
++})
++
++test("portfolio projection seam withholds an input-mutating projector", async () => {
++  const f = fixture(async (projection) => {
++    projection.missing = []
++    return { status: "ok", value: bundle(projection) }
++  })
++  const original = structuredClone(f.source.current)
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "stale", reason: "projection-changed-by-projector" })
++  expect(f.source.current).toEqual(original)
++  expect(f.calls.read).toBe(1)
++})
++
++const alteredEnvelopes: [string, (projection: DomainProjection) => DomainProjection][] = [
++  ["currency", (projection) => ({ ...projection, context: { ...projection.context, currency: "EUR" } })],
++  ["horizon", (projection) => ({ ...projection, context: { ...projection.context, period: { start: "2026-01-01", end: "2026-12-31" } } })],
++  ["scope", (projection) => ({ ...projection, context: { ...projection.context, projectId: "foreign-project" } })],
++  ["version", (projection) => ({ ...projection, version: projection.version + 1 })],
++  ["engine", (projection) => ({ ...projection, engineVersion: "other-engine" })],
++  ["persisted result", (projection) => ({ ...projection, decision: { kind: "portfolio", portfolioResultRef: "forged-result", portfolio: { combinations: [], evidenceRefs: [], limitations: [] } } })],
++  ["missing costs", (projection) => ({ ...projection, missing: [] })],
++]
++
++for (const [label, change] of alteredEnvelopes) test(`portfolio projection seam refuses changed ${label}`, async () => {
++  const f = fixture(async (projection) => ({ status: "ok", value: bundle(change(projection)) }))
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "stale", reason: "portfolio-projection-envelope-changed" })
++  expect(f.calls.read).toBe(1)
++})
++
++test("portfolio projection seam refuses a presentation for a different BI view", async () => {
++  const f = fixture(async (projection) => ({ status: "ok", value: { ...bundle(projection), presentation: { viewId: "BI10", series: [], limitations: [] } } }))
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "unavailable", reason: "view-mismatch" })
++})
++
++test("portfolio projection seam rereads and refuses a changed original source", async () => {
++  const f = fixture(async (projection) => {
++    f.source.current = { ...f.source.current, engineVersion: "changed-while-projecting" }
++    return { status: "ok", value: bundle(projection) }
++  })
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "stale", reason: "portfolio-source-changed-during-projection" })
++  expect(f.calls.read).toBe(2)
++})
++
++test("portfolio projection seam treats reread observation time as non-material", async () => {
++  const f = fixture(async (projection) => {
++    f.source.current = { ...f.source.current, context: { ...f.source.current.context, sourceRefs: f.source.current.context.sourceRefs.map((source) => ({ ...source, observedAt: "2027-01-02T00:00:00Z" })) } }
++    return { status: "ok", value: bundle(projection) }
++  })
++  const result = await f.host.readView(f.request, f.context)
++  expect(result.status).toBe("ok")
++  expect(f.calls.read).toBe(2)
++})
++
++test("portfolio projection seam propagates source revocation on the final read without a result", async () => {
++  const f = fixture(async (projection) => ({ status: "ok", value: bundle(projection) }))
++  f.input.readProjection = async () => ++f.calls.read === 1 ? { status: "ok", value: f.source.current } : { status: "denied", reason: "source-revoked" }
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "denied", reason: "source-revoked" })
++  expect(f.calls.read).toBe(2)
++})
++
++test("portfolio projection seam pins the original reader across the projector await", async () => {
++  const replacement = { reads: 0 }
++  const f = fixture(async (projection) => {
++    f.source.current = { ...f.source.current, version: 3 }
++    f.input.readProjection = async () => {
++      replacement.reads++
++      return { status: "ok", value: projection }
++    }
++    return { status: "ok", value: bundle(projection) }
++  })
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "stale", reason: "portfolio-source-changed-during-projection" })
++  expect(f.calls.read).toBe(2)
++  expect(replacement.reads).toBe(0)
++})
++
++test("portfolio projection seam refuses a request changed while its callback was awaited", async () => {
++  const f = fixture(async (projection) => {
++    await Promise.resolve()
++    f.request.selectionRef = "different-selection"
++    return { status: "ok", value: bundle(projection) }
++  })
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "stale", reason: "selection-changed" })
++})
++
++test("portfolio projection seam refuses a binding changed by the projector", async () => {
++  const f = fixture(async (projection) => {
++    f.context.binding.accessRevision = "revoked"
++    return { status: "ok", value: bundle(projection) }
++  })
++  expect(await f.host.readView(f.request, f.context)).toEqual({ status: "denied", reason: "portfolio-projection-authority-changed" })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..75191a84a15c93c6a990c4b098ab25a6e9baea77
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts
+@@ -0,0 +1,278 @@
++import { expect, test } from "bun:test"
++import { resolveWaterfall } from "../../../product/analytics/waterfall.ts"
++import { sameBiContext } from "../../../product/analytics/projection.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { BiViewRequest } from "../../../product/contracts/operations.ts"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { plannerScenarioBiPresentation } from "../../../product/planner/scenario-bi.ts"
++import { sfDecisionBiSelection } from "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { ok, waterfallFixture } from "./fixture.ts"
++
++test("installed BI09 mounts the canonical waterfall for sequential human promotions and preserves pending totals", async () => {
++  const deadline = compositionTestDeadline("bi09-installed-persisted-pair")
++  try {
++    const fixture = await waterfallFixture(deadline)
++    expect(fixture.baseline.caseRef.version).toBeLessThan(fixture.candidate.caseRef.version)
++    const output = ok(await deadline.phase("BI09.dispatch", () => fixture.dispatch()), "Installed BI09 presentation")
++    const decision = output.projection.decision
++    if (decision?.kind !== "scenario") throw new Error("Installed BI09 lost its scenario decision")
++    expect(decision.scenarioResultRef).toBe(fixture.candidate.resultRef)
++    expect(decision.comparisonRef).toBe(fixture.comparisonRef)
++    expect(decision.comparison.baselineResultRef).toBe(fixture.baseline.resultRef)
++    expect(decision.scenario).toEqual(fixture.caseValue.alternatives[1]!.result)
++    expect(decision.scenario).toMatchObject({ comparisonStatus: "conditioned", total: null, costCoverage: { coverageState: "pending" } })
++    expect(decision.comparison.completeDifference).toBeNull()
++    expect(output.projection.components).toEqual(decision.scenario.components)
++    const scenarios = fixture.business.plannerProduct.scenarios
++    if (!scenarios) throw new Error("Actual Planner scenario resolver unavailable")
++    const pair = ok(await deadline.phase("canonical.pair", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, async () => {
++      const baseline = await scenarios.resolve(fixture.baseline.resultRef, fixture.call)
++      if (baseline.status !== "ok") return baseline
++      const candidate = await scenarios.resolve(fixture.candidate.resultRef, fixture.call)
++      if (candidate.status !== "ok") return candidate
++      return { status: "ok", value: { baseline: baseline.value, candidate: candidate.value } }
++    })), "Actual canonical pair")
++    const canonical = ok(plannerScenarioBiPresentation({ ...pair.candidate.projection, decision,
++      ...(output.projection.comparison ? { comparison: output.projection.comparison } : {}) }, pair, "BI09"), "Canonical cost producer")
++    // Compare the actual producer output, rather than reimplementing its sums,
++    // matching rules or reconciliation in either this test or the BI adapter.
++    expect(output.presentation).toEqual(canonical.presentation)
++    expect(output.projection.values).toEqual(canonical.projection.values)
++    expect(output.projection.components).toEqual(canonical.projection.components)
++    expect(output.projection.version).toBe(pair.candidate.projection.version)
++    expect(output.projection.engineVersion).toBe(pair.candidate.projection.engineVersion)
++    expect(output.projection.context).toMatchObject({ currency: "USD", period: fixture.period,
++      installationId: "installation", projectId: "project", principalRef: "person" })
++    const plan = output.presentation.waterfall
++    if (!plan) throw new Error("Installed BI09 still lacks its canonical waterfall plan")
++    expect(output.presentation.series.length).toBeGreaterThan(0)
++    const waterfall = resolveWaterfall(output.projection, plan)
++    if (waterfall.status !== "ok") throw new Error(`Supplied waterfall: ${waterfall.reason}`)
++    expect(waterfall.reconciliation).toBe("reconciled")
++    expect(waterfall.initial).toBe(pair.baseline.result.knownSubtotal)
++    expect(waterfall.final).toBe(decision.scenario.knownSubtotal)
++    expect(waterfall.segments.some((segment) => segment.amount === 0)).toBe(true)
++    expect(waterfall.segments.some((segment) => typeof segment.amount === "number" && segment.amount < 0)).toBe(true)
++    expect(decision.scenario.components.some((component) => typeof component.amount === "number" && component.amount < 0)).toBe(true)
++    expect(plan.segments.every((segment, index) => segment.componentValueId === `difference:component:${index}`)).toBe(true)
++    expect(output.projection.values.find((value) => value.id === "scenario:candidate-complete-total")).toMatchObject({ value: null, evidenceState: "absent" })
++    expect(output.projection.values.find((value) => value.id === "scenario:complete-difference")).toMatchObject({ value: null, evidenceState: "absent" })
++    for (const value of output.projection.values) {
++      expect(value.period).toEqual(fixture.period)
++      expect(value.currency).toBe("USD")
++      expect(value.sourceRefs.length).toBeGreaterThan(0)
++      for (const ref of value.sourceRefs) expect([...pair.baseline.result.sourceRefs, ...pair.candidate.result.sourceRefs,
++        ...pair.baseline.result.costCoverage.evaluatedSourceRefs, ...pair.candidate.result.costCoverage.evaluatedSourceRefs].some((source) =>
++        digestSfValue(source) === digestSfValue(ref))).toBe(true)
++    }
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("installed BI09 preserves a complete comparison supported by separate confirmed costs for every category", async () => {
++  const deadline = compositionTestDeadline("bi09-complete-covered-costs")
++  try {
++    // These are declared synthetic source records, each with a genuine nonzero
++    // quantity in the closed month. Human coverage registers every category as
++    // included; only the actual producer may conclude that coverage is complete.
++    const fixture = await waterfallFixture(deadline, { complete: true })
++    const output = ok(await deadline.phase("BI09.dispatch", () => fixture.dispatch()), "Complete-cost presentation")
++    const decision = output.projection.decision
++    if (decision?.kind !== "scenario" || !output.presentation.waterfall) throw new Error("Complete-cost waterfall unavailable")
++    expect(decision.scenario.comparisonStatus).toBe("complete")
++    expect(decision.comparison.comparisonStatus).toBe("complete")
++    expect(decision.scenario.costCoverage.coverageState).toBe("complete")
++    expect(decision.scenario.costCoverage.entries.map((entry) => entry.categoryId)).toEqual([...RENEWAL_TRANSITION_CATEGORIES])
++    expect(decision.scenario.costCoverage.entries.every((entry) => entry.status === "included" && entry.componentRefs.length === 1 && entry.evidenceRefs.length > 0)).toBe(true)
++    expect(decision.scenario.components.every((component) => component.evidenceState === "confirmed" && component.amount !== null && component.amount !== 0)).toBe(true)
++    expect(decision.scenario.components).toHaveLength(RENEWAL_TRANSITION_CATEGORIES.length)
++    expect(decision.scenario.total).toBe(decision.scenario.knownSubtotal)
++    expect(decision.comparison.completeDifference).toBe(decision.comparison.knownDifference)
++    const waterfall = resolveWaterfall(output.projection, output.presentation.waterfall)
++    if (waterfall.status !== "ok") throw new Error(`Complete-cost waterfall: ${waterfall.reason}`)
++    expect(waterfall.reconciliation).toBe("reconciled")
++    expect(waterfall.final).toBe(decision.scenario.total)
++    expect(output.projection.values.find((value) => value.id === "scenario:candidate-complete-total")).toMatchObject({
++      value: decision.scenario.total, evidenceState: "confirmed", currency: "USD", period: fixture.period,
++    })
++    expect(decision.scenario.sourceRefs).toEqual(fixture.caseValue.alternatives[1]!.result.sourceRefs)
++    expect(output.projection.components).toEqual(decision.scenario.components)
++    expect(fixture.baseline.caseRef.version).toBeLessThan(fixture.candidate.caseRef.version)
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("installed BI09 keeps real zero and opposing contributions when the known difference cancels", async () => {
++  const deadline = compositionTestDeadline("bi09-zero-cancellation")
++  try {
++    const fixture = await waterfallFixture(deadline, { cancellation: true })
++    const output = ok(await deadline.phase("BI09.dispatch", () => fixture.dispatch()), "Cancellation presentation")
++    const plan = output.presentation.waterfall
++    if (!plan) throw new Error("Cancellation lost the waterfall")
++    const waterfall = resolveWaterfall(output.projection, plan)
++    if (waterfall.status !== "ok") throw new Error(`Cancellation waterfall: ${waterfall.reason}`)
++    expect(waterfall.reconciliation).toBe("reconciled")
++    expect(waterfall.initial).toBe(waterfall.final)
++    expect(waterfall.segments.some((segment) => segment.amount === 0)).toBe(true)
++    expect(waterfall.segments.some((segment) => typeof segment.amount === "number" && segment.amount > 0)).toBe(true)
++    expect(waterfall.segments.some((segment) => typeof segment.amount === "number" && segment.amount < 0)).toBe(true)
++    expect(output.projection.values.find((value) => value.id === "scenario:known-difference")?.value).toBe(0)
++    expect(output.projection.values.find((value) => value.id === "scenario:complete-difference")?.value).toBeNull()
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("installed BI09 preserves missing costs as null without manufacturing a closing residual", async () => {
++  const deadline = compositionTestDeadline("bi09-missing-cost")
++  try {
++    const fixture = await waterfallFixture(deadline, { missing: true })
++    const output = ok(await deadline.phase("BI09.dispatch", () => fixture.dispatch()), "Missing-cost presentation")
++    const decision = output.projection.decision
++    if (decision?.kind !== "scenario" || !output.presentation.waterfall) throw new Error("Missing-cost presentation unavailable")
++    expect(decision.scenario.components.some((component) => component.amount === null && component.evidenceState === "absent")).toBe(true)
++    expect(output.projection.components).toEqual(decision.scenario.components)
++    const waterfall = resolveWaterfall(output.projection, output.presentation.waterfall)
++    if (waterfall.status !== "ok") throw new Error(`Missing-cost waterfall: ${waterfall.reason}`)
++    expect(waterfall.reconciliation).toBe("unavailable")
++    expect(waterfall.segments.some((segment) => segment.amount === null)).toBe(true)
++    expect(waterfall.initial).toBeNull()
++    expect(waterfall.final).toBeNull()
++    expect(output.projection.values.find((value) => value.id === "scenario:candidate-known-subtotal")?.value).toBe(decision.scenario.knownSubtotal)
++    expect(output.projection.values.find((value) => value.id === "scenario:candidate-complete-total")?.value).toBeNull()
++    expect(output.presentation.waterfall.segments.every((segment) => /^difference:component:\d+$/.test(segment.componentValueId))).toBe(true)
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("installed BI09 consumes the equivalent persisted Portfolio analysis without replacing its decision", async () => {
++  const deadline = compositionTestDeadline("bi09-portfolio-equivalence")
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const selected = await fixture.preparePortfolio()
++    const scenarioSelection = sfDecisionBiSelection({ scenarioResultRef: selected.analysis.scenarioResultRef, comparisonRef: selected.analysis.comparisonRef })
++    const scenario = ok(await deadline.phase("BI09.scenario", () => fixture.dispatch("BI09", scenarioSelection)), "Equivalent scenario presentation")
++    const portfolio = ok(await deadline.phase("BI09.portfolio", () => fixture.dispatch("BI09", selected.selectionRef)), "Installed Portfolio presentation")
++    expect(portfolio.projection.decision).toEqual({ kind: "portfolio", portfolioResultRef: selected.bundle.portfolioResultRef, portfolio: selected.bundle.portfolio })
++    expect(portfolio.presentation.waterfall).toBeDefined()
++    expect(portfolio.presentation.waterfall).toEqual(scenario.presentation.waterfall)
++    expect(portfolio.presentation.series).toEqual(scenario.presentation.series)
++    expect(portfolio.projection.values).toEqual(scenario.projection.values)
++    expect(portfolio.projection.components).toEqual(scenario.projection.components)
++    expect(sameBiContext(portfolio.projection.context, scenario.projection.context)).toBe(true)
++    expect(portfolio.projection.version).toBe(scenario.projection.version)
++    expect(portfolio.projection.engineVersion).toBe(scenario.projection.engineVersion)
++    const forged = sfDecisionBiSelection({ portfolioResultRef: selected.bundle.portfolioResultRef, sourceScenarioRef: fixture.baseline.resultRef })
++    const rejected = await fixture.dispatch("BI09", forged)
++    expect(rejected.status).not.toBe("ok")
++    expect(rejected).not.toHaveProperty("value")
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("installed BI09 rejects changed selections, scope, result identity, authority and cancellation", async () => {
++  const deadline = compositionTestDeadline("bi09-selection-authority")
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const refuses = async (read: ReturnType<typeof fixture.dispatch>) => {
++      const result = await read
++      expect(result.status).not.toBe("ok")
++      expect(result).not.toHaveProperty("value")
++    }
++    await refuses(fixture.dispatch("BI09", sfDecisionBiSelection({ scenarioResultRef: fixture.baseline.resultRef, comparisonRef: fixture.comparisonRef })))
++    await refuses(fixture.dispatch("BI09", sfDecisionBiSelection({ scenarioResultRef: fixture.candidate.resultRef, comparisonRef: "not-a-persisted-comparison" })))
++    await refuses(fixture.dispatch("BI09", fixture.selectionRef, { start: "2026-02-01", end: "2026-02-28" }))
++    const request: BiViewRequest = { viewId: "BI09", selectionRef: fixture.selectionRef, period: fixture.period }
++    const controller = new AbortController()
++    const cancelled = await fixture.admit(request, controller.signal)
++    controller.abort(new Error("Caller cancelled BI09"))
++    await refuses(fixture.bi.dispatchPresentation(request, cancelled))
++    const preserved = await fixture.authority.state.read(fixture.request(), "cases", (state) => structuredClone(state.decisionResults?.[fixture.candidate.resultRef]))
++    if (preserved.status !== "ok" || preserved.value?.kind !== "scenario") throw new Error("Actual candidate unavailable for scope counterproof")
++    const candidateRecord = preserved.value
++    for (const scope of ["currency", "horizon"] as const) {
++      await fixture.store.transaction("dashboard", async (snapshot) => {
++        const state = snapshot.data.__sfProductV1 as SfProductState
++        const candidate = state.decisionResults?.[fixture.candidate.resultRef]
++        if (candidate?.kind !== "scenario") throw new Error("Stored candidate unavailable for counterproof")
++        if (scope === "currency") candidate.result.currency = "EUR"
++        else candidate.result.horizon = { start: "2026-02-01", end: "2026-02-28" }
++        candidate.resultDigest = digestSfValue(candidate.result)
++        return { commit: true, value: undefined }
++      })
++      await refuses(fixture.dispatch())
++      await fixture.store.transaction("dashboard", async (snapshot) => {
++        const state = snapshot.data.__sfProductV1 as SfProductState
++        if (!state.decisionResults) throw new Error("Actual result store unavailable")
++        state.decisionResults[fixture.candidate.resultRef] = structuredClone(candidateRecord)
++        return { commit: true, value: undefined }
++      })
++    }
++    const storedComparison = await fixture.authority.state.read(fixture.request(), "cases", (state) => structuredClone(state.decisionResults?.[fixture.comparisonRef]))
++    if (storedComparison.status !== "ok" || storedComparison.value?.kind !== "comparison") throw new Error("Actual comparison unavailable for counterproof")
++    const comparisonRecord = storedComparison.value
++    await fixture.store.transaction("dashboard", async (snapshot) => {
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      const comparison = state.decisionResults?.[fixture.comparisonRef]
++      if (comparison?.kind !== "comparison") throw new Error("Stored comparison unavailable")
++      comparison.result.baselineResultRef = fixture.candidate.resultRef
++      comparison.resultDigest = digestSfValue(comparison.result)
++      return { commit: true, value: undefined }
++    })
++    await refuses(fixture.dispatch())
++    await fixture.store.transaction("dashboard", async (snapshot) => {
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      if (!state.decisionResults) throw new Error("Actual comparison store unavailable")
++      state.decisionResults[fixture.comparisonRef] = structuredClone(comparisonRecord)
++      return { commit: true, value: undefined }
++    })
++    await fixture.store.transaction("dashboard", async (snapshot) => {
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      state.cases[fixture.caseRef.id]!.participants = []
++      return { commit: true, value: undefined }
++    })
++    await refuses(fixture.dispatch())
++    await fixture.store.transaction("dashboard", async (snapshot) => {
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      state.cases[fixture.caseRef.id]!.participants = ["person"]
++      return { commit: true, value: undefined }
++    })
++    const admitted = await fixture.admit(request)
++    fixture.active.value = false
++    await refuses(fixture.bi.dispatchPresentation(request, admitted))
++    fixture.active.value = true
++    // An older version is legitimate; another incarnation of that baseline is
++    // not. Mutating persisted fixture data is an adversarial counterproof only.
++    await fixture.store.transaction("dashboard", async (snapshot) => {
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      const baseline = state.decisionResults?.[fixture.baseline.resultRef]
++      if (!baseline) throw new Error("Stored baseline unavailable for counterproof")
++      baseline.caseRef.incarnation = "forged-baseline-incarnation"
++      return { commit: true, value: undefined }
++    })
++    await refuses(fixture.dispatch())
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("installed BI09 rejects current source mutation and leaves BI10 and BI11 contracts intact", async () => {
++  const deadline = compositionTestDeadline("bi09-source-and-other-views")
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const timeline = ok(await deadline.phase("BI10.dispatch", () => fixture.dispatch("BI10")), "Existing BI10 table presentation")
++    expect(timeline.presentation).toMatchObject({ viewId: "BI10", series: [] })
++    expect(timeline.presentation.waterfall).toBeUndefined()
++    expect(timeline.presentation.timeline).toBeUndefined()
++    expect(timeline.projection.decision?.kind).toBe("scenario")
++    const sensitivity = await fixture.dispatch("BI11")
++    expect(sensitivity.status).not.toBe("ok")
++    expect(sensitivity).not.toHaveProperty("value")
++    // A BI11 sensitivity result is still required. This mission must not turn a
++    // plain comparison into sensitivity or claim the BI10 timeline completed.
++    await fixture.persistence.transaction("planner", async (snapshot) => {
++      const versions = snapshot.data.versions as { id: string; lines: { id: string; f: (number | null)[] }[] }[]
++      const service = versions.find((version) => version.id === "waterfall-v1")?.lines.find((line) => line.id === "service")
++      if (!service) throw new Error("Actual source unavailable for mutation")
++      service.f[0] = 81
++      return { commit: true, value: undefined }
++    })
++    const stale = await fixture.dispatch()
++    expect(stale.status).not.toBe("ok")
++    expect(stale).not.toHaveProperty("value")
++  } finally { await deadline.close() }
++}, 120_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b04f95fe9159af96308115598effda649534d57b
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts
+@@ -0,0 +1,152 @@
++import { test } from "bun:test"
++import { chromium, expect } from "@playwright/test"
++import path from "node:path"
++import { resolveWaterfall } from "../../../product/analytics/waterfall.ts"
++import type { BiSelection } from "../../../product/analytics/catalog.ts"
++import { captureChromiumCleanup } from "../wp07/chromium-cleanup.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { ok, waterfallFixture } from "./fixture.ts"
++
++// This consumes createSfBiServices through its real authenticated dispatcher.
++// Only the view transport is about:blank; the module, plan and financial data are
++// the actual installed renderer and domain output. No server or financial mock.
++test("installed BI09 renders persisted components, equivalent table and exact origins with keyboard access", async () => {
++  const deadline = compositionTestDeadline("bi09-installed-browser")
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const output = ok(await deadline.phase("BI09.dispatch", () => fixture.dispatch()), "Installed browser presentation")
++    const plan = output.presentation.waterfall
++    if (!plan) throw new Error("Installed BI09 returned no waterfall")
++    const resolved = resolveWaterfall(output.projection, plan)
++    if (resolved.status !== "ok") throw new Error(`Supplied waterfall: ${resolved.reason}`)
++    const built = await deadline.phase("browser.bundle", () => Bun.build({
++      entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm",
++    }))
++    if (!built.success || !built.outputs[0]) throw new Error("Actual BI renderer bundle failed")
++    const moduleUrl = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
++    const browser = await deadline.phase("browser.launch", async () => {
++      const value = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
++      let close: (() => Promise<void>) | undefined
++      deadline.own(() => close ? close() : value.close())
++      close = await captureChromiumCleanup(value)
++      return value
++    })
++    const page = await browser.newPage({ viewport: { width: 1024, height: 900 } })
++    const errors: string[] = []
++    page.on("pageerror", (error) => errors.push(error.message))
++    await page.goto("about:blank")
++    await deadline.phase("browser.render", () => page.evaluate(async ({ moduleUrl, output }) => {
++      const renderer = await import(moduleUrl)
++      const open = (selection: BiSelection) => { document.body.dataset.selection = JSON.stringify(selection) }
++      const rendered = renderer.renderBiView(output.request, output.projection, open, output.presentation)
++      rendered.id = "installed-bi09"
++      document.body.replaceChildren(rendered)
++    }, { moduleUrl, output }))
++    const view = page.locator("#installed-bi09")
++    const chart = view.getByRole("group", { name: "Waterfall de componentes; valores e fontes estão na tabela equivalente" })
++    await expect(chart.locator("[data-bi-value]")).toHaveCount(plan.segments.length + 2)
++    await expect(chart.locator('[data-bi-value="difference:baseline"]')).toHaveAttribute("aria-label", /Subtotal conhecido inicial/)
++    await expect(chart.locator('[data-bi-value="difference:candidate-total"]')).toHaveAttribute("aria-label", /Subtotal conhecido final/)
++    await expect(view).toContainText("Reconciliação: reconciled")
++    await expect(view).toContainText("custos pendentes permanecem na tabela")
++    await expect(view).toContainText(fixture.candidate.resultRef)
++    await expect(view).toContainText(fixture.baseline.resultRef)
++    await expect(view).toContainText(fixture.comparisonRef)
++    const table = view.getByRole("table", { name: "Composição e origens", exact: true })
++    const rows = table.locator("tbody tr")
++    await expect(rows).toHaveCount(plan.segments.length + 2)
++    await expect(rows.first()).toContainText(String(resolved.initial))
++    await expect(rows.last()).toContainText(String(resolved.final))
++    for (const [index, segment] of resolved.segments.entries()) {
++      const row = rows.nth(index + 1)
++      await expect(row.locator("td").nth(0)).toHaveText(segment.label)
++      await expect(row.locator("td").nth(1)).toHaveText(String(segment.start ?? "indisponível"))
++      await expect(row.locator("td").nth(2)).toHaveText(segment.amount === null ? "indisponível" : segment.amount > 0 ? `+${segment.amount}` : String(segment.amount))
++      await expect(row.locator("td").nth(3)).toHaveText(String(segment.end ?? "indisponível"))
++      const mark = chart.locator(`[data-bi-value="${segment.componentValueId}"]`)
++      const description = `${segment.label}: ${segment.amount !== null && segment.amount > 0 ? `+${segment.amount}` : String(segment.amount)} USD`
++      await expect(mark.locator("title")).toHaveText(description)
++      await expect(mark).toHaveAttribute("aria-label", `${description}; ${segment.source.drilldown || segment.source.sourceRefs.length === 1 ? "abrir origem" : "escolher origem"}`)
++    }
++    const decision = output.projection.decision
++    if (decision?.kind !== "scenario") throw new Error("Actual scenario decision unavailable")
++    await expect(view.getByRole("table", { name: "Componentes fornecidos pelo domínio", exact: true }).locator("tbody tr")).toHaveCount(decision.scenario.components.length)
++    const values = view.getByRole("table", { name: "Dados e referências", exact: true })
++    await expect(values.getByRole("row").filter({ hasText: "scenario:candidate-complete-total" })).toContainText("Indisponível")
++    await expect(values.getByRole("row").filter({ hasText: "scenario:complete-difference" })).toContainText("Indisponível")
++    await expect(view.getByRole("list", { name: "Cobertura de custos e condições" })).toContainText("pendente")
++    const zero = resolved.segments.find((segment) => segment.amount === 0)
++    if (!zero) throw new Error("Producer omitted the explicit zero contribution")
++    await expect(chart.locator(`[data-bi-value="${zero.componentValueId}"] circle`)).toHaveCount(1)
++    const selected = resolved.segments.find((segment) => segment.source.sourceRefs.length > 1)
++    if (!selected) throw new Error("Actual comparison lost its two explicit origins")
++    const mark = chart.locator(`[data-bi-value="${selected.componentValueId}"]`)
++    await mark.focus()
++    await page.keyboard.press("Enter")
++    const chooser = view.locator("[data-bi-source-chooser]:visible")
++    await expect(chooser).toHaveCount(1)
++    expect(await page.locator("body").getAttribute("data-selection")).toBeNull()
++    await page.keyboard.press("Escape")
++    await expect(mark).toBeFocused()
++    await mark.press("Enter")
++    const firstReference = selected.source.sourceRefs[0]!
++    const origin = chooser.locator(`[data-bi-origin="${firstReference.refDigest}"]`)
++    await origin.focus()
++    await page.keyboard.press("Enter")
++    const opened = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null") as BiSelection
++    expect(opened).toMatchObject({ valueId: selected.componentValueId, selectionRef: fixture.selectionRef,
++      projectionVersion: output.projection.version, engineVersion: output.projection.engineVersion,
++      context: { currency: "USD", period: fixture.period }, reference: firstReference })
++    const tableOrigin = rows.nth(resolved.segments.indexOf(selected) + 1).locator(`[data-bi-origin="${firstReference.refDigest}"]`)
++    await tableOrigin.click()
++    expect(JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")).toEqual(opened)
++    await page.setViewportSize({ width: 320, height: 800 })
++    await expect(chart).toBeVisible()
++    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
++    expect(errors).toEqual([])
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("installed BI09 renderer keeps unavailable endpoints and table rows without drawing null as zero", async () => {
++  const deadline = compositionTestDeadline("bi09-missing-browser")
++  try {
++    const fixture = await waterfallFixture(deadline, { missing: true })
++    const output = ok(await deadline.phase("BI09.dispatch", () => fixture.dispatch()), "Missing-cost browser presentation")
++    const plan = output.presentation.waterfall
++    if (!plan) throw new Error("Installed BI09 returned no missing-cost plan")
++    const resolved = resolveWaterfall(output.projection, plan)
++    if (resolved.status !== "ok") throw new Error(`Missing-cost waterfall: ${resolved.reason}`)
++    const built = await deadline.phase("browser.bundle", () => Bun.build({
++      entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm",
++    }))
++    if (!built.success || !built.outputs[0]) throw new Error("Actual BI renderer bundle failed")
++    const moduleUrl = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
++    const browser = await deadline.phase("browser.launch", async () => {
++      const value = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
++      let close: (() => Promise<void>) | undefined
++      deadline.own(() => close ? close() : value.close())
++      close = await captureChromiumCleanup(value)
++      return value
++    })
++    const page = await browser.newPage()
++    const errors: string[] = []
++    page.on("pageerror", (error) => errors.push(error.message))
++    await page.goto("about:blank")
++    await page.evaluate(async ({ moduleUrl, output }) => {
++      const renderer = await import(moduleUrl)
++      document.body.replaceChildren(renderer.renderBiView(output.request, output.projection, () => undefined, output.presentation))
++    }, { moduleUrl, output })
++    await expect(page.getByRole("table", { name: "Composição e origens", exact: true }).locator("tbody tr")).toHaveCount(plan.segments.length + 2)
++    await expect(page.locator("body")).toContainText("Reconciliação: unavailable")
++    await expect(page.getByRole("table", { name: "Composição e origens", exact: true })).toContainText("indisponível")
++    await expect(page.locator('svg [data-bi-value="difference:baseline"]')).toHaveCount(0)
++    await expect(page.locator('svg [data-bi-value="difference:candidate-total"]')).toHaveCount(0)
++    for (const segment of resolved.segments.filter((segment) => segment.amount === null)) {
++      await expect(page.locator(`svg [data-bi-value="${segment.componentValueId}"]`)).toHaveCount(0)
++    }
++    const missing = output.projection.components.find((component) => component.amount === null)
++    if (!missing) throw new Error("Canonical missing component disappeared")
++    await expect(page.getByRole("table", { name: "Componentes fornecidos pelo domínio", exact: true }).getByRole("row").filter({ hasText: missing.id })).toContainText("Indisponível")
++    expect(errors).toEqual([])
++  } finally { await deadline.close() }
++}, 120_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..33e2bc8fac3c8396355f38656096b4f81e22e469
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts
+@@ -0,0 +1,186 @@
++import { expect, test } from "bun:test"
++import { resolveWaterfall } from "../../../product/analytics/waterfall.ts"
++import type { WaterfallPlan } from "../../../product/analytics/waterfall.ts"
++import type { DomainProjection, ProjectionValue } from "../../../product/contracts/context.ts"
++
++type Observations = { initial: number | null; first: number | null; firstEnd: number | null; second: number | null; secondEnd: number | null; final: number | null }
++
++// Resolver contract fixture only. Every amount and endpoint is declared as an
++// independent producer observation; this fixture does not calculate costs.
++function fixture(observations: Observations = { initial: 100, first: 20, firstEnd: 120, second: -5, secondEnd: 115, final: 115 }) {
++  const period = { start: "2027-01-01", end: "2027-12-31" }
++  const supplied: [string, number | null][] = [
++    ["baseline", observations.initial],
++    ["first-contribution", observations.first],
++    ["first-end", observations.firstEnd],
++    ["second-contribution", observations.second],
++    ["second-end", observations.secondEnd],
++    ["candidate-total", observations.final],
++  ]
++  const projection: DomainProjection = {
++    context: { installationId: "installation", projectId: "project", principalRef: "finance", policyVersion: "policy-1", accessRevision: "access-1", surface: "planner", period, currency: "USD", capabilities: [], sourceRefs: [{ surface: "planner", type: "planner-version", id: "forecast", incarnation: "forecast-incarnation", version: 3, fields: ["cost"], period, observedAt: "2027-01-01T00:00:00Z" }] },
++    version: 3,
++    engineVersion: "producer-v1",
++    values: supplied.map(([id, value]) => ({ id, value, unit: "money", currency: "USD", period, granularity: "aggregate", sourceRefs: [], drilldown: null, evidenceState: value === null ? "absent" : "confirmed" })),
++    components: [],
++    missing: [],
++  }
++  const plan: WaterfallPlan = {
++    segments: [
++      { label: "Freight", startValueId: "baseline", componentValueId: "first-contribution", endValueId: "first-end" },
++      { label: "Storage", startValueId: "first-end", componentValueId: "second-contribution", endValueId: "second-end" },
++    ],
++    finalValueId: "candidate-total",
++    reconciliation: "reconciled",
++  }
++  return { projection, plan }
++}
++
++function changeValue(projection: DomainProjection, id: string, change: Partial<ProjectionValue>): DomainProjection {
++  return { ...projection, values: projection.values.map((value) => value.id === id ? { ...value, ...change } : value) }
++}
++
++test("waterfall resolves the supplied 100 +20 -5 composition without changing its table or envelope", () => {
++  const { projection, plan } = fixture()
++  const original = structuredClone({ projection, plan })
++  const result = resolveWaterfall(projection, plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("reconciled")
++  expect(result.initial).toBe(100)
++  expect(result.final).toBe(115)
++  expect(result.segments.map(({ start, amount, end }) => ({ start, amount, end }))).toEqual([
++    { start: 100, amount: 20, end: 120 },
++    { start: 120, amount: -5, end: 115 },
++  ])
++  expect(result.segments.map((segment) => segment.componentValueId)).toEqual(["first-contribution", "second-contribution"])
++  expect(result.segments[0]!.source).toBe(projection.values[1])
++  expect(result.segments[1]!.source).toBe(projection.values[3])
++  expect(result.initialSource).toBe(projection.values[0])
++  expect(result.finalSource).toBe(projection.values[5])
++  expect({ projection, plan }).toEqual(original)
++})
++
++test("waterfall reports a tampered delta without repairing it or inserting a residual", () => {
++  const { projection, plan } = fixture()
++  const changed = changeValue(projection, "first-contribution", { value: 21 })
++  const original = structuredClone(changed)
++  const result = resolveWaterfall(changed, plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("unreconciled")
++  expect(result.segments).toHaveLength(2)
++  expect(result.segments[0]!.amount).toBe(21)
++  expect(result.segments[0]!.end).toBe(120)
++  expect(result.final).toBe(115)
++  expect(changed).toEqual(original)
++})
++
++test("waterfall keeps the producer's inconsistent final endpoint explicit without a balancing component", () => {
++  const { projection, plan } = fixture()
++  const result = resolveWaterfall(changeValue(projection, "candidate-total", { value: 116 }), plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("unreconciled")
++  expect(result.segments.map(({ amount, end }) => ({ amount, end }))).toEqual([{ amount: 20, end: 120 }, { amount: -5, end: 115 }])
++  expect(result.final).toBe(116)
++})
++
++test("waterfall reports discontinuous supplied endpoints even when both deltas individually match", () => {
++  const { projection, plan } = fixture({ initial: 100, first: 20, firstEnd: 120, second: -5, secondEnd: 114, final: 114 })
++  const changed: DomainProjection = { ...projection, values: [...projection.values, { ...projection.values[2]!, id: "separate-start", value: 119 }] }
++  const separated: WaterfallPlan = { ...plan, segments: [plan.segments[0]!, { ...plan.segments[1]!, startValueId: "separate-start" }] }
++  const result = resolveWaterfall(changed, separated)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("unreconciled")
++  expect(result.segments.map(({ start, amount, end }) => ({ start, amount, end }))).toEqual([{ start: 100, amount: 20, end: 120 }, { start: 119, amount: -5, end: 114 }])
++})
++
++test("waterfall retains negative endpoints and cancelling contributions", () => {
++  const { projection, plan } = fixture({ initial: 10, first: -20, firstEnd: -10, second: 20, secondEnd: 10, final: 10 })
++  const result = resolveWaterfall(projection, plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("reconciled")
++  expect(result.initial).toBe(10)
++  expect(result.final).toBe(10)
++  expect(result.segments.map(({ start, amount, end }) => ({ start, amount, end }))).toEqual([{ start: 10, amount: -20, end: -10 }, { start: -10, amount: 20, end: 10 }])
++})
++
++test("waterfall retains a confirmed zero contribution", () => {
++  const { projection, plan } = fixture({ initial: 100, first: 0, firstEnd: 100, second: -5, secondEnd: 95, final: 95 })
++  const result = resolveWaterfall(projection, plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("reconciled")
++  expect(result.segments[0]!.amount).toBe(0)
++  expect(result.segments[0]!.start).toBe(100)
++  expect(result.segments[0]!.end).toBe(100)
++})
++
++for (const id of ["baseline", "first-contribution", "first-end", "candidate-total"]) test(`waterfall keeps absent ${id} unavailable instead of substituting zero`, () => {
++  const { projection, plan } = fixture()
++  const changed = changeValue(projection, id, { value: null, evidenceState: "absent" })
++  const result = resolveWaterfall(changed, plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("unavailable")
++  expect(changed.values.find((value) => value.id === id)?.value).toBeNull()
++  if (id === "baseline") expect(result.initial).toBeNull()
++  if (id === "first-contribution") expect(result.segments[0]!.amount).toBeNull()
++  if (id === "first-end") expect(result.segments[0]!.end).toBeNull()
++  if (id === "candidate-total") expect(result.final).toBeNull()
++})
++
++test("waterfall does not treat an absent zero observation as a confirmed cost", () => {
++  const { projection, plan } = fixture({ initial: 100, first: 0, firstEnd: 100, second: -5, secondEnd: 95, final: 95 })
++  const result = resolveWaterfall(changeValue(projection, "first-contribution", { evidenceState: "absent" }), plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("unavailable")
++  expect(result.segments[0]!.amount).toBeNull()
++  expect(result.segments[0]!.source.value).toBe(0)
++  expect(result.segments[0]!.source.evidenceState).toBe("absent")
++})
++
++test("waterfall accepts the producer's finite floating-point addition without subtractive reconstruction", () => {
++  const { projection, plan } = fixture({ initial: 0.1, first: 0.2, firstEnd: 0.30000000000000004, second: 0, secondEnd: 0.30000000000000004, final: 0.30000000000000004 })
++  const result = resolveWaterfall(projection, plan)
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe("reconciled")
++  expect(result.segments[0]!.amount).toBe(0.2)
++  expect(result.final).toBe(0.30000000000000004)
++})
++
++for (const [label, change, reason] of [
++  ["currency", { currency: "EUR" }, "incompatible-unit-or-currency"],
++  ["unit", { unit: "fte" }, "incompatible-unit-or-currency"],
++  ["horizon", { period: { start: "2027-01-01", end: "2027-06-30" } }, "incompatible-period"],
++] satisfies [string, Partial<ProjectionValue>, string][]) test(`waterfall withholds incompatible ${label} without converting the supplied values`, () => {
++  const { projection, plan } = fixture()
++  const changed = changeValue(projection, "first-contribution", change)
++  const original = structuredClone(changed)
++  expect(resolveWaterfall(changed, plan)).toEqual({ status: "unavailable", reason })
++  expect(changed).toEqual(original)
++})
++
++test("waterfall cannot invent a missing referenced observation", () => {
++  const { projection, plan } = fixture()
++  expect(resolveWaterfall({ ...projection, values: projection.values.filter((value) => value.id !== "first-contribution") }, plan)).toEqual({ status: "unavailable", reason: "missing-waterfall-value" })
++})
++
++test("waterfall refuses duplicate value identities rather than choosing one observation", () => {
++  const { projection, plan } = fixture()
++  expect(resolveWaterfall({ ...projection, values: [...projection.values, { ...projection.values[1]!, value: 999 }] }, plan)).toEqual({ status: "unavailable", reason: "duplicate-value-id" })
++})
++
++for (const reconciliation of ["unavailable", "unreconciled"] as const) test(`waterfall preserves the producer's ${reconciliation} reconciliation claim`, () => {
++  const { projection, plan } = fixture()
++  const result = resolveWaterfall(projection, { ...plan, reconciliation })
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error(JSON.stringify(result))
++  expect(result.reconciliation).toBe(reconciliation)
++  expect(result.segments).toHaveLength(2)
++})

@@ -1,0 +1,46 @@
+{
+  "finding": "M27-BI09-WATERFALL-MOUNT",
+  "state": "IMPLEMENTED_NOT_EXECUTED",
+  "literal_criteria": [
+    {
+      "id": "WP05.DOD.04",
+      "text": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP05.CMP.04",
+      "text": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP05.T05.CHK.03",
+      "text": "Tabela e marcas retornam exatamente os mesmos valores autorizados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP05.T05.CHK.20",
+      "text": "A mesma revisão de AI-RENEWAL-OMITTED-CATEGORY aparece no gráfico e tabela: pending sem barra zero; training = 40000 altera total210000→250000 e diferença 30000→-10000, com fontes e snapshot histórico preservados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP05.T05.DOD.01",
+      "text": "As três perguntas analíticas novas e as oito antigas são respondidas com produtores reais e valores reconciliados.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP05.T05.DOD.20",
+      "text": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "scope": "New tests target this BI09 mount only. Full 8+3 acceptance and the specific historical AI training=40000 revision remain unproven.",
+  "planned_tests": {
+    "portfolio_binding": 17,
+    "waterfall_contract": 19,
+    "installed_presentation": 7,
+    "installed_renderer": 2
+  },
+  "static_review": "Root and parallel helpers reviewed source, actual canonical producer, human promotion fixture and DOM assertions. This is not test execution or independent bundle approval.",
+  "local_product_tests": "NOT_RUN_BY_POLICY",
+  "local_servers": "NOT_RUN_BY_POLICY"
+}
