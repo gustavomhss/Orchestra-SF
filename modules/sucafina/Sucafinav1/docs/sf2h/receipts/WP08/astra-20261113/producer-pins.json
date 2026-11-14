@@ -1,0 +1,39 @@
+[
+  {
+    "owner": "WP02",
+    "surface": "dashboard",
+    "commit": "4c36e6fc6e69e4dd1e98b5d0d5c2e50962ccfe80",
+    "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+    "blob": "5227c12b5d9d2259fc75c31bc64c78ab9b7dc506",
+    "observed_exports": [
+      "return { status: \"ok\", value: { fence: () => fence(scope, observation, context) } }",
+      "return { status: \"ok\", value: { fence: async () => { const snapshot = input.host.persistence.currentSnapshots?.()?.dashboard; return !!snapshot && !request.signal.aborted && await validate(snapshot) } } }",
+      "return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareHistoricalReissue }"
+    ],
+    "qualification": "READ_ONLY_SOURCE_INSPECTION_NOT_ADMITTED_IN_WP08_PRODUCT_TREE"
+  },
+  {
+    "owner": "WP03",
+    "surface": "planner",
+    "commit": "815921f41636c449aa5966f43935771bb4d39e39",
+    "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+    "blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b",
+    "observed_exports": [
+      "return { status: \"ok\", value: { fence: () => fence(scope, observation, context) } }",
+      "return { status: \"ok\", value: { fence: checkCurrent, fenceSnapshot, revalidate: async () => !!input.host.persistence.transactionAll && await input.host.revalidate(context) && await input.host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: fenceSnapshot(snapshots.planner) })).catch(() => false) && await input.host.revalidate(context) } }",
+      "return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareResimulationContinuity }"
+    ],
+    "qualification": "READ_ONLY_SOURCE_INSPECTION_NOT_ADMITTED_IN_WP08_PRODUCT_TREE"
+  },
+  {
+    "owner": "WP04",
+    "surface": "procurement",
+    "commit": "5cde6bbb3122e0511f0eed4a8b617c958bcd72ef",
+    "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+    "blob": "4fcda499e060bd77d595e4d567d7e9daed671fc4",
+    "observed_exports": [
+      "return { issue, resolve, manifestFor, verifyManifest, fenceManifest, observe, fence }"
+    ],
+    "qualification": "READ_ONLY_SOURCE_INSPECTION_NOT_ADMITTED_IN_WP08_PRODUCT_TREE"
+  }
+]

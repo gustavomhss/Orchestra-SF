@@ -1,0 +1,100 @@
+{
+  "schema": "sf-wp07-hosted-test-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product_sha": "dcde725380e76ff3180b1415e3c0838b9ca7df34",
+  "ci_snapshot_sha": "1a2b5cdd71a401d07a6abbaa36e8753e4207fc04",
+  "run_id": "43537439411",
+  "job_id": "132269744477",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537439411",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537439411/job/132269744477",
+  "overall_status": "PASS",
+  "process_exit_code": 0,
+  "counts": {
+    "passed": 2,
+    "failed": 0,
+    "tests": 2,
+    "files": 2,
+    "assertions": null
+  },
+  "log": {
+    "source": "wp07-context/test-13.log",
+    "sha256": "7d62b47f560374b9a543fad097aebe7ddaf300df0bcad21f9298d43831ec34ac",
+    "lines": 1058
+  },
+  "omni_control": {
+    "status": "NOT_APPLICABLE_VALIDATED",
+    "nonce": "2d34bf34aa9e3fbaf89296c4f0fb3a95",
+    "scope": "No declaring test, no omni spawn or delegation. This proves no omni/native execution."
+  },
+  "proof_policy": "Exact hosted assertions only, with producer/fixture boundaries explicit. W/S mapping is supplied by the root publisher; the log independently identifies S. No local product execution.",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "name": "Chromium preserves the annual agenda, recovers a lost response and removes revoked content",
+      "status": "PASS",
+      "log_line": 987,
+      "duration_ms": 42962.19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-contribution.test.ts",
+      "name": "Chromium reauthorizes contribution navigation and discards revoked or superseded results",
+      "status": "PASS",
+      "log_line": 1025,
+      "duration_ms": 3756.91
+    }
+  ],
+  "product_tree": "c9c97786a5fa8692d861d87663f66e7803440514",
+  "ci_snapshot_tree": "e2a128a8c33b6b407bd43ecfc0d874ff392bbb1d",
+  "request_sha256": "fc6ee7ee2cb0888378ff6e88b7c46700856792c3fdc6e41a3064fdd5a3eebe3f",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "Sucafinav1/test/product/wp07/browser-contribution.test.ts"
+    ],
+    "env": {}
+  },
+  "snapshot_proof": {
+    "attempt": 13,
+    "product_sha": "dcde725380e76ff3180b1415e3c0838b9ca7df34",
+    "snapshot_sha": "1a2b5cdd71a401d07a6abbaa36e8753e4207fc04",
+    "snapshot_tree": "e2a128a8c33b6b407bd43ecfc0d874ff392bbb1d",
+    "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/dcde725380e76ff3180b1415e3c0838b9ca7df34...1a2b5cdd71a401d07a6abbaa36e8753e4207fc04",
+    "commits": 2,
+    "only_changed_paths": [
+      {
+        "path": ".ci-run.json",
+        "blob_sha": "7ffcbc5eb8bad0d48ae8c56a08b056e17597ebcf",
+        "status": "added"
+      }
+    ],
+    "product_test_config_fixture_blobs_identical": true,
+    "metadata_only_retry": {
+      "initial_snapshot_sha": "66071da10fce65e51cf47b218d019386aef29485",
+      "final_snapshot_sha": "1a2b5cdd71a401d07a6abbaa36e8753e4207fc04",
+      "tree": "e2a128a8c33b6b407bd43ecfc0d874ff392bbb1d",
+      "parent_sha": "66071da10fce65e51cf47b218d019386aef29485",
+      "commits": 1,
+      "changed_paths": [],
+      "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/66071da10fce65e51cf47b218d019386aef29485...1a2b5cdd71a401d07a6abbaa36e8753e4207fc04"
+    }
+  },
+  "canonical_omni_validation": {
+    "attempt": 13,
+    "valid": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "nonce": "2d34bf34aa9e3fbaf89296c4f0fb3a95"
+  },
+  "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43537439411.json",
+  "proof_scope": "Full 2027 period in the actual Chromium/Bun/SQLite/Planner test host, with the original 5000 ms interaction assertions. Own agenda, preservation, retry, comparison, source navigation and revocation consumers are exercised. Source/history catalog, C06 messages and source/review host callbacks in this browser journey are controlled. This is a functional regression witness, not a general performance benchmark, native installation mount, physical historical continuity or C16 native/MCP parity. Actual Chromium, browser client and contribution view over an HTTP display/navigation fixture with a complete shared-schema envelope explicitly labelled fixture-not-native-evidence. Each navigation reauthorizes the output and expected digest; revoke, stale output, changed links, superseded requests and disposal refuse disclosure. Retry access preserves request digest pins, missing runProvenance is rejected, provenance/source fields render and denial clears them. The complete fixture envelope is neither a verified native run nor a C11 producer/reader or installation-mount witness.",
+  "scope_period": {
+    "start": "2027-01-01",
+    "end": "2027-12-31"
+  },
+  "individual_scopes": {
+    "Chromium preserves the annual agenda, recovers a lost response and removes revoked content": "Full 2027 period in the actual Chromium/Bun/SQLite/Planner test host, with the original 5000 ms interaction assertions. Own agenda, preservation, retry, comparison, source navigation and revocation consumers are exercised. Source/history catalog, C06 messages and source/review host callbacks in this browser journey are controlled. This is a functional regression witness, not a general performance benchmark, native installation mount, physical historical continuity or C16 native/MCP parity.",
+    "Chromium reauthorizes contribution navigation and discards revoked or superseded results": "Actual Chromium, browser client and contribution view over an HTTP display/navigation fixture with a complete shared-schema envelope explicitly labelled fixture-not-native-evidence. Each navigation reauthorizes the output and expected digest; revoke, stale output, changed links, superseded requests and disposal refuse disclosure. Retry access preserves request digest pins, missing runProvenance is rejected, provenance/source fields render and denial clears them. The complete fixture envelope is neither a verified native run nor a C11 producer/reader or installation-mount witness."
+  }
+}

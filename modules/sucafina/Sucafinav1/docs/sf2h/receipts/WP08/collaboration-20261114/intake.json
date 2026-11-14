@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "status": "IMPLEMENTING",
+  "base": {
+    "branch": "sf2-stack",
+    "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "branch": "astra-collaboration",
+  "sources": [
+    {
+      "wp": "WP07",
+      "pr": 27,
+      "head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "tree": "4aaf22d1b5726623d8ac31893faab3c6825fbce2"
+    },
+    {
+      "wp": "WP08",
+      "pr": 28,
+      "head": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "tree": "e4973f3c30237a7dcb8605d7aa2be45c44883dcd"
+    },
+    {
+      "wp": "WP09",
+      "pr": 30,
+      "head": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "tree": "d55821143e3f522c3a3ea7ad6c076bd8cfac6bfb"
+    }
+  ],
+  "composition": "Start with the complete published WP09 tree and its recorded external dependency pins, then take WP07 and WP08 owned subtrees and seed exceptions verbatim from each current owner head. Historical receipts remain unchanged. Parent ancestry retains all three original PR heads.",
+  "validation": "No new validation claimed by this composition. Prior receipts bind only their exact W/S, config, fixtures and selection. Changed composition will receive affected hosted checks.",
+  "pending": [
+    "Close C06/C07 product readers and historical ACL behavior.",
+    "Preserve all 330 canonical criteria and add exact implementation/evidence mappings.",
+    "Consume current published producers; propose owner deltas for host/contracts/UI.",
+    "Run only change-scoped GitHub Actions selections, typecheck and guards. No epic."
+  ],
+  "foreignInputs": "The eleven WP08 archived inputs stay excluded and are not promoted to canonical code.",
+  "native": "No claim of Relay/Session/SkillLoadReceipt execution without actual receipts."
+}

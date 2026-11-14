@@ -89,15 +89,9 @@ export function createReviewPort(host: ReviewHost) {
         commandDigest: createHash("sha256").update(JSON.stringify({ id: input.id, selectionRef: input.selectionRef, sectionRefs: input.sectionRefs, previousReviewRef: input.previousReviewRef, targetIncarnation: input.targetIncarnation, principalRef: binding.binding.principalRef })).digest("hex"), targetRef: host.creationTarget.ref, targetIncarnation: input.targetIncarnation,
       }
       // Probe the durable idempotency record before consulting mutable source data.
-      const prior = await host.state.transaction(request, command, async () => ({ commit: false, value: null as PreservedReview | null }))
+      const prior = await host.state.transaction<unknown>(request, command, async () => ({ commit: false, value: null }))
       if ("reason" in prior) return prior
-      if (prior.status === "ok") {
-        if (!prior.value) return { status: "unavailable", reason: "receipt-unavailable" } as const
-        const existing = await this.read(input.id, binding)
-        if (existing.status !== "ok" || !existing.value) return existing
-        if (digestSfValue(existing.value) !== digestSfValue(prior.value)) return { status: "conflict", reason: "preserved-review-changed" } as const
-        return existing
-      }
+      if (prior.status === "ok") return reopenReviewReceipt(prior.value, input.id, (id) => this.read(id, binding))
       if (input.previousReviewRef) {
         const previous = await this.read(input.previousReviewRef, binding)
         if (previous.status !== "ok") return previous
@@ -113,36 +107,19 @@ export function createReviewPort(host: ReviewHost) {
         sections: selected.value.map((section) => ({ id: section.id, title: section.title, period: section.period, content: { ...section.projection, ...(section.chart ? { reviewChart: section.chart } : {}), ...(section.agendaNote !== undefined ? { reviewAgendaNote: section.agendaNote } : {}), ...(section.outcome ? { reviewOutcome: section.outcome } : {}), ...(section.outcomeComparison ? { reviewOutcomeComparison: section.outcomeComparison } : {}) }, count: section.recordCount, sourceRefs: section.projection.context.sourceRefs })),
         comments: [...new Map(selected.value.flatMap((section) => section.comments ?? []).map((comment) => [JSON.stringify([comment.id, comment.version]), comment] as const)).values()], ...(input.previousReviewRef ? { previousReviewRef: input.previousReviewRef } : {}),
       }
-      const result = await host.state.transaction(request, command, async (state) => {
+      const result = await host.state.transaction<unknown>(request, command, async (state) => {
         if (state.reviews[input.id]) return { commit: false, value: null }
         state.reviews[input.id] = structuredClone(review)
-        return { commit: true, value: review }
+        // The immutable body lives once in reviews. C08 persists this result as
+        // its idempotency value, so store only its exact identity and full digest.
+        return { commit: true, value: { schema: "sf-review-receipt-v1", reviewRef: input.id, reviewDigest: digestSfValue(state.reviews[input.id]) } }
       })
       if ("reason" in result) return result
       if (result.status !== "ok") return { status: "unavailable", reason: "not-committed" }
       if (!result.value) return { status: "conflict", reason: "review-exists" } as const
-      if (!Array.isArray(result.value.sections) || !Array.isArray(result.value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
-      if (!(await host.authorizeSections(binding, result.value.sections)) || !(await host.authorizeComments(binding, result.value.comments))) return { status: "denied", reason: "access-unavailable" } as const
-      if (!validReviewSources(result.value)) return { status: "unavailable", reason: "invalid-review-sources" } as const
-      const comparisons = result.value.sections.flatMap((section) => {
-        const comparison = (section.content as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
-        return comparison ? [comparison] : []
-      })
-      if (!(await host.authorizeOutcomeComparison(binding, comparisons))) return { status: "denied", reason: "access-unavailable" } as const
-      const outcomes = result.value.sections.flatMap((section) => {
-        const outcome = (section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
-        return outcome ? [outcome] : []
-      })
-      if (!(await host.authorizeOutcome(binding, outcomes))) return { status: "denied", reason: "access-unavailable" } as const
-      const decisions = result.value.sections.flatMap((section) => (section.content as DomainProjection).decision ? [(section.content as DomainProjection).decision!] : [])
-      if (!(await host.authorizeDecision(binding, decisions))) return { status: "denied", reason: "access-unavailable" } as const
-      const charts = result.value.sections.map((section) => (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)
-      if (!(await host.authorizeSensitivity(binding, charts.flatMap((chart) => chart?.status === "ok" && chart.sensitivity ? [chart.sensitivity.result] : [])))) return { status: "denied", reason: "access-unavailable" } as const
-      if (!(await host.revalidate(binding, [...result.value.sourceRefs, ...decisions.flatMap(reviewDecisionSources)]))) return { status: "denied", reason: "access-unavailable" } as const
-      const projections = result.value.sections.map((section) => section.content as DomainProjection)
-      if (projections.some((projection) => !projection || !Array.isArray(projection.values) || projection.values.some((value: DomainProjection["values"][number]) => !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
-      if (!(await host.revalidateEvidence(binding, projections.flatMap((projection) => [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence((projection as DomainProjection & { reviewChart?: ReviewChart }).reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])])))) return { status: "denied", reason: "access-unavailable" } as const
-      return { status: "ok", value: result.value } as const
+      // Another identical call may have committed between the probe and this
+      // transaction. Reopen the receipt C08 actually returned, not our candidate.
+      return reopenReviewReceipt(result.value, input.id, (id) => this.read(id, binding))
     },
     async read(id: string, binding: TrustedDomainContext): Promise<PortResult<PreservedReview>> {
       const request = host.requestFor(binding)
@@ -176,6 +153,25 @@ export function createReviewPort(host: ReviewHost) {
       return { status: "ok", value: result.value } as const
     },
   }
+}
+
+async function reopenReviewReceipt(value: unknown, expectedId: string, read: (id: string) => Promise<PortResult<PreservedReview>>): Promise<PortResult<PreservedReview>> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return { status: "unavailable", reason: "receipt-unavailable" }
+  const receipt = "schema" in value
+    ? value.schema === "sf-review-receipt-v1" && Object.keys(value).length === 3 && "reviewRef" in value && typeof value.reviewRef === "string" && !!value.reviewRef.trim() && "reviewDigest" in value && typeof value.reviewDigest === "string" && /^[a-f0-9]{64}$/.test(value.reviewDigest)
+      ? { reviewRef: value.reviewRef, reviewDigest: value.reviewDigest }
+      : undefined
+    // Legacy C08 receipts contain the whole review. They remain readable; no
+    // migration or rewrite is needed, and their body is never returned directly.
+    : "id" in value && typeof value.id === "string" && !!value.id.trim() && "version" in value && Number.isSafeInteger(value.version) && Number(value.version) > 0 && "createdAt" in value && typeof value.createdAt === "string" && Number.isFinite(Date.parse(value.createdAt)) && "sourceRefs" in value && Array.isArray(value.sourceRefs) && "sections" in value && Array.isArray(value.sections) && "comments" in value && Array.isArray(value.comments)
+      ? { reviewRef: value.id, reviewDigest: digestSfValue(value) }
+      : undefined
+  if (!receipt) return { status: "unavailable", reason: "receipt-unavailable" }
+  if (receipt.reviewRef !== expectedId) return { status: "conflict", reason: "preserved-review-changed" }
+  const result = await read(expectedId)
+  if (result.status !== "ok") return result
+  if (digestSfValue(result.value) !== receipt.reviewDigest) return { status: "conflict", reason: "preserved-review-changed" }
+  return result
 }
 
 function validReviewSources(review: PreservedReview) {
