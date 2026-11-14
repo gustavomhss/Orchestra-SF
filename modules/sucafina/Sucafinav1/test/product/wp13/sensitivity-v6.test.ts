@@ -40,3 +40,19 @@ test("v6 revalidates coverage before returning enriched output", async () => {
 test("legacy sensitivity without both units is unavailable", () => {
   expect(attachSensitivityV6({ result: { ...result, resultUnit: undefined }, costCoverageRefs: ["coverage-v1"], unit: "days", engineVersion: "planner-v1", thresholdEvidence: { state: "exact", value: 55000, evidenceRefs: evidence } })).toEqual({ status: "unavailable", reason: "sensitivity-units-unavailable" })
 })
+
+test("v6 rejects callbacks that mutate the validated result during enrichment or revalidation", async () => {
+  for (const phase of ["describe", "revalidate"] as const) {
+    const borrowed = structuredClone(result)
+    const evaluate = createSensitivityV6Evaluator({
+      evaluate: async () => ({ status: "ok", value: borrowed }),
+      describe: async (value) => {
+        if (phase === "describe") value.threshold = 15000
+        return { status: "ok", value: { costCoverageRefs: ["coverage-v1"], unit: "USD", engineVersion: "planner-v1", thresholdEvidence: { state: "exact", value: 55000, evidenceRefs: evidence } } }
+      },
+      revalidate: async (value) => { if (phase === "revalidate") value.threshold = 15000; return true },
+    })
+    expect(await evaluate({} as SensitivityRequest, {} as TrustedDomainContext)).toEqual({ status: "stale", reason: "source-or-authority-changed" })
+    expect(borrowed.threshold).toBe(55000)
+  }
+})

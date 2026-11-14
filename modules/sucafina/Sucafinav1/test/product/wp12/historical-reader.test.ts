@@ -50,6 +50,13 @@ test("historical contribution survives SQLite reopen and requires current access
       expect(historical).toMatchObject({ status: "ok", value: { state: "historical", output: { accessRevision: "access", caseRef: fixture.caseRef } } })
       expect(access.verifications).toBe(2)
       expect(historical.status === "ok" && digestSfValue(historical.value.output)).toBe(digestSfValue(fixture.output))
+      const native = { kind: "native", binding: { ...authority, caseId: fixture.caseRef.id, caseIncarnation: fixture.caseRef.incarnation, caseVersion: fixture.caseRef.version } } as unknown as TrustedDomainContext
+      const beforeMismatches = access.verifications
+      for (const changed of [{ caseId: "another-case" }, { caseIncarnation: "replacement" }, { caseVersion: 2 }]) {
+        expect(await reopened.read(selection, { ...native, binding: { ...native.binding, ...changed } } as TrustedDomainContext)).toEqual({ status: "denied", reason: "historical-case-binding-mismatch" })
+      }
+      expect(access.verifications).toBe(beforeMismatches)
+      expect(await reopened.read(selection, native)).toMatchObject({ status: "ok", value: { state: "historical" } })
       access.source = false
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "source-access-revoked" })
       access.source = true

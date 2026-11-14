@@ -1,33 +1,25 @@
 import { expect, test } from "bun:test"
 import path from "node:path"
 import { AgentV2 } from "@orchestra/core/agent"
-import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
-import { SessionExecution } from "@orchestra/core/session/execution"
-import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SkillV2 } from "@orchestra/core/skill"
-import { SkillDiscovery } from "@orchestra/core/skill/discovery"
-import { Effect, Layer } from "effect"
+import { Effect } from "effect"
+import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
-import { registerSfResidentAgents, validSfSelection } from "../../../product/host-binding/resident-agents.ts"
+import { validSfSelection } from "../../../product/host-binding/resident-agents.ts"
 import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
+import { createResidentNativeFixture } from "./resident-native-fixture.ts"
 
 const root = path.resolve(import.meta.dir, "../../../product/ai")
-const discovery = Layer.succeed(SkillDiscovery.Service, SkillDiscovery.Service.of({ pull: () => Effect.succeed([]) }))
-// Location Task services capture this process-global executor from the root's exports.
-// Keeping it only as a private dependency of SessionV2 does not export the service.
-const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionExecution.node, LocationServiceMap.node]), [
-  [SessionExecution.node, SessionExecutionLocal.node],
-  [SkillDiscovery.node, discovery],
-])
 
 // This exercises real AgentV2 registration and SessionV2.skill loading. No inference,
 // domain operation, persisted contribution or consumer witness is implied by a load.
 test("five profiles register and all eighteen distributed skills load into distinct native sessions", async () => {
+  // Resolving the real Git Location invokes canonical Git/AppProcess discovery.
+  expectSpawn(import.meta.path)
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
   expect(bundle.selected).toHaveLength(5)
   expect(bundle.selected.every(validSfSelection)).toBe(true)
@@ -38,6 +30,7 @@ test("five profiles register and all eighteen distributed skills load into disti
   expect(portfolio.profile.outputTypes).toContain("AlternativeDraft")
   expect(portfolio.skills.find((skill) => skill.id === "sf-compor-portfolio")!.outputSchemaRefs).toContain("AlternativeDraft")
 
+  const fixture = createResidentNativeFixture(bundle)
   const location = Location.Ref.make({ directory: AbsolutePath.make(root) })
   const receipts = await Effect.gen(function* () {
     const session = yield* SessionV2.Service
@@ -45,7 +38,15 @@ test("five profiles register and all eighteen distributed skills load into disti
     return yield* Effect.gen(function* () {
       const agents = yield* AgentV2.Service
       const skills = yield* SkillV2.Service
-      const capability = yield* registerSfResidentAgents({ agents, skills, selected: bundle.selected, source: bundle.source })
+      const capability = fixture.capabilityFor(skills)
+      yield* Effect.forEach(bundle.selected, (selection) => Effect.gen(function* () {
+        const registered = yield* agents.get(AgentV2.ID.make(selection.profile.id))
+        expect(registered?.engine).toBe("orchestra")
+        expect(registered?.steps).toBe(selection.profile.maxSteps)
+        expect(registered?.permissions).toContainEqual({ action: "*", resource: "*", effect: "deny" })
+        expect(registered?.permissions.filter((rule) => rule.effect === "allow" && rule.action.startsWith("sf_"))
+          .map((rule) => rule.action).sort()).toEqual([...selection.operationIds].sort())
+      }))
       const registered = yield* agents.get(AgentV2.ID.make("sf_maestro"))
       expect(registered?.engine).toBe("orchestra")
       expect(registered?.permissions).toContainEqual({ action: "*", resource: "*", effect: "deny" })
@@ -55,7 +56,9 @@ test("five profiles register and all eighteen distributed skills load into disti
         const selected = bundle.selected.find((selection) => selection.skills.some((item) => item.id === skill.id))!
         const created = yield* session.create({ location, agent: AgentV2.ID.make(selected.profile.id) })
         const receipt = yield* loadSfSkill({ session, skills, sourceCapability: capability, selected,
-          sessionID: created.id, profile: selected.profile, skill, runId: `wp12-load-${skill.id}`, manifestDigest: bundle.manifestDigest })
+          sessionID: created.id, profile: selected.profile, skill, runId: `wp12-load-${skill.id}`, manifestDigest: bundle.manifestDigest }).pipe(
+          Effect.tapError((error) => Effect.sync(() => console.error("WP12 native skill load failed:", JSON.stringify({ profileId: selected.profile.id, skillId: skill.id, sessionID: created.id, error })))),
+        )
         const messages = yield* session.messages({ sessionID: created.id })
         const loaded = messages.find((message) => message.id === receipt.loadedMessageId)
         const source = yield* skills.get(skill.id)
@@ -74,7 +77,7 @@ test("five profiles register and all eighteen distributed skills load into disti
         return receipt
       }))
     }).pipe(Effect.provide(locations.get(location)))
-  }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
+  }).pipe(Effect.scoped, Effect.provide(fixture.layer), Effect.runPromise)
   expect(receipts).toHaveLength(18)
   expect(new Set(receipts.map((receipt) => receipt.nativeSessionId)).size).toBe(18)
   expect(new Set(receipts.map((receipt) => receipt.loadedMessageId)).size).toBe(18)

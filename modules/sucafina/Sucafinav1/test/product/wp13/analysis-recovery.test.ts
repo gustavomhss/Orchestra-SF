@@ -11,10 +11,10 @@ import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../..
 import { createPlannerSensitivity } from "../../../product/portfolio/planner-sensitivity.ts"
 import { createPersistentSensitivityPort } from "../../../product/portfolio/sensitivity-store.ts"
 import { createProductionPortfolio } from "../../../product/portfolio/production.ts"
-import { createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
+import { createWp13AnalysisFixture, createWp13SensitivityRuntimeFixture } from "./sensitivity-fixture.ts"
 
 test("reconciles an unbound C08 comparison on retry without writing a second result", async () => {
-  const world = await createWp13SensitivityFixture()
+  const world = await createWp13AnalysisFixture()
   try {
     expect((await world.selection.register({ caseRef: world.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: ["renewal-difference"], expectedVersion: 0 }, world.context)).status).toBe("ok")
     let bindAttempts = 0
@@ -33,6 +33,7 @@ test("reconciles an unbound C08 comparison on retry without writing a second res
     expect(await analysis.evaluate(world.analysisRequest, world.context)).toEqual({ status: "unavailable", reason: "comparison-persisted-but-binding-unavailable" })
     const compare = { scenarioRefs: [world.baselineRef, world.selectedRef], criteria: ["renewal-difference"] }
     const requestDigest = digestSfValue(compare)
+    world.stage("recovery-first-attempt-ready")
     const partial = await world.results.readByRequest({ caseRef: world.caseRef, kind: "comparison", idempotencyKey: `portfolio-comparison:analysis-retry:${requestDigest}`, requestDigest }, world.context)
     expect(partial.status === "ok" && partial.value.state).toBe("found")
     if (partial.status !== "ok" || partial.value.state !== "found") return
@@ -56,7 +57,7 @@ test("reconciles an unbound C08 comparison on retry without writing a second res
 })
 
 test("reconciles a persisted portfolio after its binding fails without duplicating the calculation result", async () => {
-  const world = await createWp13SensitivityFixture()
+  const world = await createWp13AnalysisFixture()
   try {
     expect((await world.selection.register({ caseRef: world.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: ["renewal-difference"], expectedVersion: 0 }, world.context)).status).toBe("ok")
     const analysis = createPortfolioAnalysis({ planner: world.plannerWithCriteria, results: world.results, bindings: world.comparisonBindings, persist: createPlannerResultPersistence({ store: world.results, scenarios: world.scenarios, comparisonBindings: world.comparisonBindings, replay: world.plannerWithCriteria, resolveCase: async () => ({ status: "ok", value: world.caseRef }) }), select: world.selectPortfolio, idempotencyKey: async () => "portfolio-retry-analysis" })
@@ -77,25 +78,29 @@ test("reconciles a persisted portfolio after its binding fails without duplicati
     if (!contribution.persistent) throw new Error("portfolio persistence unavailable")
     const request = { ...world.analysisRequest.portfolio, candidateRefs: [portfolioCandidateRef({ caseRef: encodeCaseRef(world.caseRef), caseVersion: world.caseRef.version, alternativeId: "selected", alternativeVersion: 1 })] }
     expect(await contribution.persistent.evaluateAndStore(request, world.caseRef, world.context)).toEqual({ status: "unavailable", reason: "injected-before-portfolio-binding" })
+    world.stage("recovery-first-attempt-ready")
     const partial = await world.results.readByRequest({ caseRef: world.caseRef, kind: "portfolio", idempotencyKey: "portfolio-result-retry", requestDigest: digestSfValue(request) }, world.context)
     expect(partial.status === "ok" && partial.value.state).toBe("found")
     if (partial.status !== "ok" || partial.value.state !== "found") return
     const resultRef = partial.value.result.resultRef
     const allocated = world.ids.value
+    world.stage("portfolio-recovery-retry-start")
     const retried = await contribution.persistent.evaluateAndStore(request, world.caseRef, world.context)
     expect(retried.status).toBe("ok")
     if (retried.status !== "ok") return
     expect(retried.value.portfolioResultRef).toBe(resultRef)
     expect(world.ids.value).toBe(allocated)
     expect(bindAttempts).toBe(2)
+    world.stage("portfolio-recovery-bound-read-start")
     expect((await contribution.persistent.read(resultRef, world.context)).status).toBe("ok")
+    world.stage("portfolio-recovery-bound-read-ready")
     world.access.allowed = false
     expect((await contribution.persistent.read(resultRef, world.context)).status).toBe("denied")
   } finally { await world.cleanup() }
 })
 
 test("reconciles a persisted sensitivity after its criterion binding fails without duplicating samples", async () => {
-  const world = await createWp13SensitivityFixture()
+  const world = await createWp13SensitivityRuntimeFixture()
   try {
     const registry = createCriterionResultBindings({ state: world.state, host: world.host, rules: world.rules, results: world.results, authorizeCase: async () => world.access.allowed, verifyBinding: async () => world.access.allowed, verifySnapshot: () => world.access.allowed, operationIdentity: () => "sensitivity-retry-binding", proposalCoverageWrites: world.proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
     let bindAttempts = 0
@@ -103,6 +108,7 @@ test("reconciles a persisted sensitivity after its criterion binding fails witho
     const evaluate = createPlannerSensitivity({ results: world.results, resolve: world.issuer.resolve, revalidate: world.issuer.revalidate, preview: (input, context) => comparePlannerPreview({ host: world.host, sources: world.sources, scenarios: world.scenarios, planner: world.planner }, input, context), idempotencyKey: async () => "sensitivity-retry-sample" })
     const persistent = createPersistentSensitivityPort({ portfolio: { evaluate: async () => ({ status: "unavailable", reason: "not-used-by-recovery-test" }), sensitivity: evaluate }, results: world.results, bindings, resolveBinding: world.issuer.resolve, idempotencyKey: async () => "sensitivity-result-retry" })
     expect(await persistent.evaluateAndStore(world.sensitivityRequest, world.caseRef, world.context)).toEqual({ status: "unavailable", reason: "injected-before-sensitivity-binding" })
+    world.stage("recovery-first-attempt-ready")
     const partial = await world.results.readByRequest({ caseRef: world.caseRef, kind: "sensitivity", idempotencyKey: "sensitivity:sensitivity-result-retry", requestDigest: digestSfValue(world.sensitivityRequest) }, world.context)
     expect(partial.status === "ok" && partial.value.state).toBe("found")
     if (partial.status !== "ok" || partial.value.state !== "found") return

@@ -1,9 +1,10 @@
 import type { SensitivityResult } from "../contracts/outputs.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { SensitivityRequest } from "../contracts/operations.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 
-// The v6 output distinguishes threshold precision from business coverage completeness.
+// C07 keeps mathematical threshold precision separate from C10 decision completeness.
 export type SensitivityThresholdEvidence = SensitivityResult["thresholdEvidence"]
 export type SensitivityResultV6 = SensitivityResult
 export type SensitivityLegacyResult = Omit<SensitivityResult, "costCoverageRefs" | "unit" | "engineVersion" | "thresholdEvidence">
@@ -24,20 +25,25 @@ export function attachSensitivityV6(input: {
   return { status: "ok", value: { ...input.result, costCoverageRefs: input.costCoverageRefs, unit: input.unit, engineVersion: input.engineVersion, thresholdEvidence: evidence } }
 }
 
-/** Compose only after the v6 schema is published and the host can resolve current coverage. */
+/** Attach the published C07 metadata and revalidate current coverage before disclosure. */
 export function createSensitivityV6Evaluator(input: {
   evaluate: (request: SensitivityRequest, context: TrustedDomainContext) => Promise<PortResult<SensitivityLegacyResult>>
   describe: (result: SensitivityLegacyResult, context: TrustedDomainContext) => Promise<PortResult<{ costCoverageRefs: readonly string[]; unit: string; engineVersion: string; thresholdEvidence: SensitivityThresholdEvidence }>>
   revalidate: (result: SensitivityResultV6, context: TrustedDomainContext) => Promise<boolean>
 }) {
   return async (request: SensitivityRequest, context: TrustedDomainContext): Promise<PortResult<SensitivityResultV6>> => {
-    const result = await input.evaluate(request, context)
+    const result = structuredClone(await input.evaluate(structuredClone(request), context))
     if (result.status !== "ok") return result
-    const description = await input.describe(result.value, context)
+    const described = structuredClone(result.value)
+    const describedDigest = digestSfValue(described)
+    const description = structuredClone(await input.describe(described, context))
+    if (digestSfValue(described) !== describedDigest) return { status: "stale", reason: "source-or-authority-changed" }
     if (description.status !== "ok") return description
     const enriched = attachSensitivityV6({ result: result.value, ...description.value })
     if (enriched.status !== "ok") return enriched
-    if (!await input.revalidate(enriched.value, context)) return { status: "stale", reason: "source-or-authority-changed" }
-    return enriched
+    const observed = structuredClone(enriched.value)
+    const observedDigest = digestSfValue(observed)
+    if (!await input.revalidate(observed, context) || digestSfValue(observed) !== observedDigest) return { status: "stale", reason: "source-or-authority-changed" }
+    return { status: "ok", value: structuredClone(enriched.value) }
   }
 }

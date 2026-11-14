@@ -32,7 +32,7 @@ export function createPreparedExecution(input: {
     if (!value || value.incarnation !== request.caseRef.incarnation || !value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
     const change = value.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
     if (!change || !value.choices.some((choice) => choice.id === request.choiceId)) return { status: "unavailable", reason: "prepared-change-unavailable" }
-    if (value.version !== request.caseRef.version && !change.receipt) return { status: "stale", reason: "case-changed" }
+    if (value.version < request.caseRef.version) return { status: "stale", reason: "case-changed" }
     if (change.state !== "planned" && !change.receipt) return { status: "conflict", reason: "change-not-applicable" }
     if (!await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
     const lookup = await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context))
@@ -52,6 +52,7 @@ export function createPreparedExecution(input: {
     if (!await input.host.revalidate(context) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
     if (lookup.value.state === "not-found" && change.receipt) return { status: "unavailable", reason: "authoritative-receipt-unavailable" }
     if (lookup.value.state === "not-found") {
+      if (value.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }
       const proof = await input.revalidateProducer(request, context).catch(() => undefined)
       if (!proof || proof.status !== "ok" || proof.value.reviewDigest !== reviewDigest) return proof && proof.status !== "ok" ? proof : { status: proof ? "stale" : "unavailable", reason: proof ? "review-proof-mismatch" : "review-producer-unavailable" }
       if (!await input.confirmApplication(request, context).catch(() => false)) return { status: "denied", reason: "application-confirmation-required" }
@@ -76,9 +77,19 @@ export function createPreparedExecution(input: {
       if (!await input.authorizeCase(value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
       return { status: "ok", value: observed.value }
     }
-    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
+    // The producer may have advanced the cases namespace while committing its receipt.
+    // Reopen it after the domain result and preserve unrelated, versioned case edits.
+    const reconciliation = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[value.id] : undefined).catch(() => undefined)
+    if (!reconciliation || reconciliation.status !== "ok" || !reconciliation.value) return { status: "unavailable", reason: "case-reconciliation-pending" }
+    const fresh = reconciliation.value
+    const selected = fresh.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId)
+    if (fresh.incarnation !== value.incarnation || fresh.version < value.version || !fresh.participants.includes(context.binding.principalRef) || !fresh.choices.some((choice) => choice.id === request.choiceId) || !selected || !await input.authorizeCase(fresh, context).catch(() => false) || !await input.authorizeApplication(request, selected, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
+    if (selected.receipt) return digestSfValue(selected) === digestSfValue(reconciled.change) ? { status: "ok", value: observed.value } : { status: "unavailable", reason: "receipt-identity-collision" }
+    if (digestSfValue(selected) !== digestSfValue(change)) return { status: "stale", reason: "prepared-change-changed" }
+    if (fresh.preparedChanges.some((item) => item.id !== change.id && item.receipt?.id === observed.value.id) || fresh.receipts.some((receipt) => receipt.id === observed.value.id && digestSfValue(receipt) !== digestSfValue(observed.value))) return { status: "unavailable", reason: "receipt-identity-collision" }
+    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: reconciliation.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
       const actual = state.cases[value.id]
-      if (!actual || actual.incarnation !== value.incarnation || actual.version !== value.version || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: false }
+      if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: false }
       const changes = actual.preparedChanges.map((item) => item.id === change.id ? reconciled.change : item)
       state.cases[value.id] = { ...actual, version: actual.version + 1, preparedChanges: changes, receipts: actual.receipts.some((receipt) => receipt.id === observed.value.id) ? actual.receipts : [...actual.receipts, observed.value], sourceRefs: [...actual.sourceRefs, result.evidence].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index), state: caseApplicationState(changes) }
       return { commit: true, value: true }

@@ -84,20 +84,27 @@ describe("portfolio composition", () => {
     expect(await createPortfolioPort(input).evaluate(request, context)).toEqual({ status: "stale", reason: "source-or-authority-changed" })
   })
 
-  test("egress callbacks cannot rewrite retained components or coverage references", async () => {
-    const input = host()
-    const calculated: ScenarioResult = { ...scenario, components: [{ id: "component", amount: 100, currency: "USD", period, sourceRefs: [], evidenceState: "hypothetical" }] }
-    input.evaluate = async () => ({ status: "ok", value: { scenario: calculated, costCoverageRefs: ["coverage-a"], constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } })
-    input.revalidateEvaluation = async (value, refs) => {
-      Object.assign(value.components[0]!, { amount: 999 })
-      Object.assign(refs, { 0: "forged-coverage" })
-      return true
+  test("egress validation retains admitted values and rejects a validator that mutates its observed proof", async () => {
+    for (const mutate of [false, true]) {
+      const input = host()
+      const calculated: ScenarioResult = { ...scenario, components: [{ id: "component", amount: 100, currency: "USD", period, sourceRefs: [], evidenceState: "hypothetical" }] }
+      const coverageRefs = ["coverage-a"]
+      input.evaluate = async () => ({ status: "ok", value: { scenario: calculated, costCoverageRefs: coverageRefs, constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } })
+      input.revalidateEvaluation = async (value, refs) => {
+        if (mutate) { Object.assign(value.components[0]!, { amount: 999 }); Object.assign(refs, { 0: "forged-coverage" }) }
+        return true
+      }
+      const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)
+      if (mutate) expect(result).toEqual({ status: "stale", reason: "source-or-authority-changed" })
+      else {
+        expect(result.status).toBe("ok")
+        if (result.status !== "ok") throw new Error(result.reason)
+        expect(result.value.combinations[0]!.components[0]!.amount).toBe(100)
+        expect(result.value.combinations[0]!.costCoverageRefs).toEqual(["coverage-a"])
+      }
+      expect(calculated.components[0]!.amount).toBe(100)
+      expect(coverageRefs).toEqual(["coverage-a"])
     }
-    const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)
-    expect(result.status).toBe("ok")
-    if (result.status !== "ok") return
-    expect(result.value.combinations[0]!.components[0]!.amount).toBe(100)
-    expect(result.value.combinations[0]!.costCoverageRefs).toEqual(["coverage-a"])
   })
 
   test("does not claim eligibility if a required constraint was not assessed", async () => {
@@ -118,6 +125,24 @@ describe("portfolio composition", () => {
     expect(result.value.combinations[0]!.restrictions).toContain("delivery:Current confirmed delivery exceeds the required deadline.")
   })
 
+
+  test("a definitive failed deadline preserves unavailable financial evidence", async () => {
+    for (const missing of ["candidate", "analysis"] as const) {
+      const input = host()
+      const constraints = [{ ref: "ceiling", state: "unknown", reason: "Financial evidence is unavailable." }, { ref: "delivery", state: "failed", reason: "Confirmed delivery exceeds the required deadline." }] as const
+      if (missing === "candidate") {
+        const resolve = input.resolveCandidate
+        input.resolveCandidate = async (ref, trusted) => {
+          const candidate = await resolve(ref, trusted)
+          return candidate.status === "ok" ? { status: "ok", value: { ...candidate.value, result: { ...scenario, comparisonStatus: "unavailable" as const, knownSubtotal: null, total: null } } } : candidate
+        }
+      }
+      input.evaluate = async () => ({ status: "ok", value: { scenario, costCoverageRefs: ["coverage-a"], constraints, ...(missing === "analysis" ? { analysis: { scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison: { baselineResultRef: "baseline-ref", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-a"], criterionResults: constraints.map((item) => ({ criterionId: item.ref, state: item.state, reason: item.reason })), unresolvedConditions: ["financial-source-unavailable"], comparisonStatus: "unavailable" as const, knownDifference: null, completeDifference: null } } } : {}) } })
+      const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"], constraints: ["ceiling", "delivery"] }, context)
+      if (result.status !== "ok") throw new Error(`Unavailable financial comparison: ${JSON.stringify(result)}`)
+      expect(result.value.combinations[0]).toMatchObject({ eligibility: "ineligible", comparisonStatus: "unavailable" })
+    }
+  })
 
   test("preserves the domain's failed ceiling after coverage resolves", async () => {
     const input = host()

@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
 import { createPlannerSensitivity } from "../../../product/portfolio/planner-sensitivity.ts"
-import { createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
+import { createWp13SensitivityRuntimeFixture } from "./sensitivity-fixture.ts"
 
 test("sensitivity retains the admitted request when a provider mutates its borrowed input", async () => {
-  const world = await createWp13SensitivityFixture()
+  const world = await createWp13SensitivityRuntimeFixture()
   try {
     const request = structuredClone(world.sensitivityRequest)
     const evaluate = createPlannerSensitivity({
@@ -29,7 +29,7 @@ test("sensitivity retains the admitted request when a provider mutates its borro
 })
 
 test("sensitivity detects a provider reusing and changing the original source record", async () => {
-  const world = await createWp13SensitivityFixture()
+  const world = await createWp13SensitivityRuntimeFixture()
   try {
     const original = await world.results.readHistoricalScenario({ resultRef: world.selectedRef }, world.context)
     if (original.status !== "ok") throw new Error("source scenario unavailable")

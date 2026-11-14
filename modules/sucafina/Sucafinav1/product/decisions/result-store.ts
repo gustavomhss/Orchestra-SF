@@ -6,6 +6,8 @@ import type { SfOperationOutputMap } from "../contracts/outputs.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
+import { historicalCalculationMatches } from "./calculation-history.ts"
+import type { HistoricalCalculationRead } from "./calculation-history.ts"
 
 type ResultMap = { scenario: SfOperationOutputMap["sf_scenario_simulate"]; comparison: SfOperationOutputMap["sf_scenario_compare"]; sensitivity: SfOperationOutputMap["sf_sensitivity_evaluate"]; portfolio: SfOperationOutputMap["sf_portfolio_evaluate"] }
 type Result = { [K in keyof ResultMap]: { kind: K; result: ResultMap[K] } }[keyof ResultMap]
@@ -46,8 +48,9 @@ export function createSfDecisionResultStore(input: {
       return !!input.verifyCalculationSources && await input.verifyCalculationSources(candidate, sources, context) && digestSfValue({ candidate, sources }) === expected
     } catch { return false }
   }
-  const readResult = async (incoming: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext, historical: boolean, calculation = false): Promise<PortResult<StoredDecisionResult>> => {
+  const readResult = async (incoming: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext, historical: boolean, calculation = false, ledger?: HistoricalCalculationRead): Promise<PortResult<StoredDecisionResult>> => {
     const request = structuredClone(incoming)
+    const historicalRequest = ledger ? structuredClone(ledger) : undefined
     const source = input.host.requestFor(context)
     if (!source || !request.resultRef.trim() || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
     const current = await input.state.read(source, "cases", (state, authority) => {
@@ -58,12 +61,14 @@ export function createSfDecisionResultStore(input: {
     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "result-unavailable" }
     const value = structuredClone(current.value)
     if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
+    if (historicalRequest && !historicalCalculationMatches(value.current, value.stored, historicalRequest, context)) return { status: "denied", reason: "historical-calculation-unavailable" }
     if (calculation && (value.stored.kind !== "scenario" || !input.verifyCalculationSources && calculationSources(value.stored).some((ref) => ref.kind !== "record"))) return { status: "unavailable", reason: "calculation-source-unsupported" }
     if (!allowedCase(value.current, value.stored.caseRef, context, historical) || !await authorizeCase(value.current!, context).catch(() => false) || !await verifySources(value.stored, calculation && value.stored.kind === "scenario" ? calculationSources(value.stored) : value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (calculation && value.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(value.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
     const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
     const latest = structuredClone(again.value)
+    if (historicalRequest && (!latest?.stored || !historicalCalculationMatches(latest.current, latest.stored, historicalRequest, context) || digestSfValue(latest.current) !== digestSfValue(value.current))) return { status: "denied", reason: "historical-calculation-changed" }
     if (!latest || !allowedCase(latest.current, value.stored.caseRef, context, historical) || latest.current?.version !== value.current?.version || !latest.stored || digestSfValue(latest.stored) !== digestSfValue(value.stored) || !await authorizeCase(latest.current!, context).catch(() => false) || !await verifySources(latest.stored, calculation && latest.stored.kind === "scenario" ? calculationSources(latest.stored) : latest.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (calculation && latest.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(latest.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
     if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
@@ -71,6 +76,7 @@ export function createSfDecisionResultStore(input: {
   }
   const read = (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext) => readResult(request, context, false)
   const readForCalculation = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, false, true)
+  const readHistoricalCalculation = (request: HistoricalCalculationRead, context: TrustedDomainContext) => readResult({ resultRef: request.reference.target.runId, kind: "scenario" }, context, true, true, request)
   const readHistoricalScenario = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, true)
   const readByRequest = async (incoming: { caseRef: CaseRef; kind: keyof ResultMap; idempotencyKey: string; requestDigest: string }, context: TrustedDomainContext): Promise<PortResult<{ state: "found"; result: StoredDecisionResult } | { state: "not-found" }>> => {
     const request = structuredClone(incoming)
@@ -114,7 +120,7 @@ export function createSfDecisionResultStore(input: {
     if (!saved.value) return { status: "conflict", reason: "result-identity-conflict" }
     return read({ resultRef: saved.value.resultRef, kind: request.kind }, context)
   }
-  return { write, read, readForCalculation, readHistoricalScenario, readByRequest }
+  return { write, read, readForCalculation, readHistoricalCalculation, readHistoricalScenario, readByRequest }
 }
 
 function calculationSources(value: Extract<StoredDecisionResult, { kind: "scenario" }>) {

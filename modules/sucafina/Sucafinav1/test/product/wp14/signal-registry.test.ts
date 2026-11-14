@@ -16,13 +16,14 @@ import { createSfWorkRefIssuer, createSfWorkSignalList } from "../../../product/
 import { createSfAuthorizedSignalList } from "../../../product/decision-memory/signal-list.ts"
 import { createSfMaterialityAccess } from "../../../product/decision-memory/materiality.ts"
 import { createSfSignalRegistry, SF_SIGNAL_REGISTRY_PREFIX } from "../../../product/decision-memory/signal-registry.ts"
+import type { SfSignalSelection } from "../../../product/decision-memory/signal-registry.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createDecisionCasePort, encodeCaseRef, parseCaseRef } from "../../../product/decisions/case-port.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
+import type { AuthorizedCaseProjection, BusinessContextService } from "../../../product/contracts/business-context.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
-import type { TrustedDomainContext, TrustedUiLease } from "../../../product/contracts/sf-execution.ts"
+import type { TrustedCallLease, TrustedDomainContext, TrustedExecutionBinding, TrustedUiLease } from "../../../product/contracts/sf-execution.ts"
 
 const at = "2026-11-13T00:00:00Z"
 const period = { start: "2026-11-13", end: "2026-11-13" }
@@ -55,38 +56,129 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     const comparison = { comparisonStatus: "complete", knownDifference: 1, completeDifference: 1, baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: [], criterionResults: [{ criterionId: "cost", state: "satisfied", reason: "within bound" }], unresolvedConditions: [] } as const
     const choice = { id: "choice", alternativeId: "a", alternativeVersion: 1, basisVersion: 1, criteria: ["cost"], values: [], evidenceRefs: [issued.value], principalRef: "alice", reason: "review", at, scenario: { baseRef: "base", operations: [], assumptions: [] }, result, comparison, comparisonStatus: "complete", costCoverage: coverage } as const
     const decision: DecisionCase = { id: "case", incarnation: "inc", version: 1, state: "chosen", objective: "Review", horizon: period, currency: "USD", criteria: [{ id: "cost", description: "Cost", required: true }], participants: ["alice"], sourceRefs: [issued.value], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [choice], preparedChanges: [], receipts: [], ledger: [] }
-    const seed = await state.transaction(host.requestFor(call)!, { namespace: "cases", expectedStorageVersion: 0, targetRef: "seed", targetIncarnation: "seed", idempotencyKey: "seed", commandDigest: digestSfValue(decision) }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
+    const emptyDecision: DecisionCase = { ...decision, id: "empty-case", incarnation: "empty-inc" }
+    const seed = await state.transaction(host.requestFor(call)!, { namespace: "cases", expectedStorageVersion: 0, targetRef: "seed", targetIncarnation: "seed", idempotencyKey: "seed", commandDigest: digestSfValue([decision, emptyDecision]) }, async (value) => { value.cases.case = decision; value.cases[emptyDecision.id] = emptyDecision; return { commit: true, value: true } })
     expect(seed.status).toBe("ok")
-    const registry = createSfSignalRegistry({ state, host, cases, signalRegistryWrites, createId: randomUUID, operationIdentity: () => "human-selection", approveSelection: async () => session.approved, authorizeSelection: async (value, context) => { const current = await records.resolve(value.evidence.refId, context); return current.status === "ok" && digestSfValue(current.value) === digestSfValue(value.evidence) }, approveReconcile: async () => session.active, checkSourceFence: async (snapshot, value) => { const scoped = Object.values(snapshot.sfSources?.scopes ?? {}).find((item) => item.incarnation === value.source.incarnation); const physical = snapshot.sfSources?.records[JSON.stringify([value.source.type, value.source.id])]; return !!scoped && !!physical?.alive && scoped.alive && scoped.version === value.source.version && scoped.sourceIncarnation === physical.incarnation && scoped.inputDigest === value.evidence.target.projectionDigest } })
+    const registryInput: Parameters<typeof createSfSignalRegistry>[0] = { state, host, cases, signalRegistryWrites, createId: randomUUID, operationIdentity: () => "human-selection", approveSelection: async () => session.approved, authorizeSelection: async (value, context) => { const current = await records.resolve(value.evidence.refId, context); return current.status === "ok" && digestSfValue(current.value) === digestSfValue(value.evidence) }, approveReconcile: async () => session.active, checkSourceFence: async (snapshot, value) => { const scoped = Object.values(snapshot.sfSources?.scopes ?? {}).find((item) => item.incarnation === value.source.incarnation); const physical = snapshot.sfSources?.records[JSON.stringify([value.source.type, value.source.id])]; return !!scoped && !!physical?.alive && scoped.alive && scoped.version === value.source.version && scoped.sourceIncarnation === physical.incarnation && scoped.inputDigest === value.evidence.target.projectionDigest } }
+    const registry = createSfSignalRegistry(registryInput)
     const caseRef = { id: "case", incarnation: "inc", version: 1 }
     const selection = { caseRef, choiceId: "choice", scenarioRefs: ["base", "result"] as const, source, evidence: issued.value, fields: ["status"], period, criterionId: "cost", recipientRef: "alice", destination: "case-work", label: "Review cost" }
     session.approved = false
     expect((await registry.register(selection, call)).status).toBe("unavailable")
     session.approved = true
     expect((await registry.register({ ...selection, recipientRef: "other" }, call)).status).toBe("unavailable")
+    // Approval and source-fence callbacks may not rewrite the selection being committed.
+    const mutatingApproval = createSfSignalRegistry({ ...registryInput, approveSelection: async (value) => { value.label = "Unapproved label"; return true } })
+    expect((await mutatingApproval.register(selection, call)).status).toBe("unavailable")
+    const fenceCalls = { count: 0 }
+    const mutatingFence = createSfSignalRegistry({ ...registryInput, checkSourceFence: async (snapshot, value, authority) => {
+      const authorized = await registryInput.checkSourceFence(snapshot, value, authority)
+      fenceCalls.count += 1
+      value.destination = "unapproved-destination"
+      return authorized
+    } })
+    expect((await mutatingFence.register(selection, call)).status).toBe("unavailable")
+    expect(fenceCalls.count).toBe(1)
+    const rejected = await state.read(host.requestFor(call)!, "preferences", (value) => Object.keys(value.preferences).filter((key) => key.startsWith(SF_SIGNAL_REGISTRY_PREFIX)))
+    expect(rejected.status).toBe("ok")
+    if (rejected.status === "ok") expect(rejected.value).toEqual([])
     expect((await registry.register(selection, call)).status).toBe("ok")
     const listed = await registry.list(caseRef, call)
     expect(listed.status).toBe("ok")
     if (listed.status !== "ok" || !listed.records[0]) return
     const record = listed.records[0]
+    expect((await mutatingApproval.revise(record, selection, call)).status).toBe("unavailable")
+    // The wrapper counts only registry revalidations; C08 and Dashboard use the real host.
+    for (const mutation of ["authority", "request", "approval"] as const) {
+      const probeCall = structuredClone(call)
+      const wanted = structuredClone(caseRef)
+      const retained: { selection?: SfSignalSelection } = {}
+      const race = finalRevalidation(host, 3, () => {
+        if (mutation === "authority") Object.assign(probeCall.binding, { accessRevision: "changed" })
+        if (mutation === "request") wanted.version += 1
+        if (mutation === "approval" && retained.selection) retained.selection.label = "Changed at egress"
+      })
+      const probe = createSfSignalRegistry({ ...registryInput, host: race.host, authorizeSelection: async (value, context) => {
+        retained.selection = value
+        return registryInput.authorizeSelection(value, context)
+      } })
+      expect((await probe.list(wanted, probeCall)).status).toBe("unavailable")
+      expect(race.progress.checks).toBe(3)
+    }
+    // B is a divergent alias from a delegated real C08 read; restoring that
+    // alias during the final authority await must not erase the observed change.
+    const restoration: { reads: number; checks: number; restored: boolean; original?: AuthorizedCaseProjection["case"]; latest?: AuthorizedCaseProjection } = { reads: 0, checks: 0, restored: false }
+    const restoringList = createSfSignalRegistry({ ...registryInput,
+      cases: { ...cases, read: async (request, context) => {
+        const value = await cases.read(request, context)
+        if (value.status !== "ok") return value
+        restoration.reads += 1
+        const detached = structuredClone(value.value)
+        if (restoration.reads === 1) restoration.original = structuredClone(detached.case)
+        if (restoration.reads === 2) {
+          expect(detached.case.choices.some((item) => item.id === selection.choiceId)).toBe(true)
+          detached.case.choices = []
+          restoration.latest = detached
+          expect(digestSfValue(detached.case)).not.toBe(digestSfValue(restoration.original))
+        }
+        return { status: "ok", value: detached }
+      } },
+      host: { ...host, revalidate: async (context) => {
+        const authorized = await host.revalidate(context)
+        restoration.checks += 1
+        if (restoration.checks === 3) {
+          expect(restoration.reads).toBe(2)
+          if (!restoration.latest || !restoration.original) throw new Error("Final signal registry read was not reached")
+          expect(restoration.latest.case.choices).toEqual([])
+          Object.assign(restoration.latest.case, structuredClone(restoration.original))
+          restoration.restored = true
+          expect(digestSfValue(restoration.latest.case)).toBe(digestSfValue(restoration.original))
+        }
+        return authorized
+      } },
+    })
+    expect(await restoringList.list(caseRef, structuredClone(call))).toEqual({ status: "unavailable" })
+    expect({ reads: restoration.reads, checks: restoration.checks, restored: restoration.restored }).toEqual({ reads: 2, checks: 3, restored: true })
+    const durableAfterRestoration = await state.read(host.requestFor(call)!, "cases", (value) => value.cases[caseRef.id]?.choices)
+    expect(durableAfterRestoration.status).toBe("ok")
+    if (durableAfterRestoration.status === "ok") expect(durableAfterRestoration.value).toEqual(restoration.original?.choices)
+    expect(await registry.list(caseRef, call)).toEqual({ status: "ok", records: [record] })
+    const registerCall = structuredClone(call)
+    const registerRace = finalRevalidation(host, 3, () => Object.assign(registerCall.binding, { accessRevision: "changed" }))
+    // A retry preserves the existing durable record even when its result loses authority.
+    expect((await createSfSignalRegistry({ ...registryInput, host: registerRace.host }).register(selection, registerCall)).status).toBe("unavailable")
+    expect(registerRace.progress.checks).toBe(3)
+    const afterRaces = await registry.list(caseRef, call)
+    expect(afterRaces.status).toBe("ok")
+    if (afterRaces.status === "ok") expect(afterRaces.records).toEqual([record])
     const preferences = await state.read(host.requestFor(call)!, "preferences", () => null)
     expect(preferences.status).toBe("ok")
     if (preferences.status !== "ok") return
     const forged = await state.transaction(host.requestFor(call)!, { namespace: "preferences", expectedStorageVersion: preferences.storageVersion, targetRef: encodeCaseRef(caseRef), targetIncarnation: caseRef.incarnation, idempotencyKey: "unauthorized-binding", commandDigest: digestSfValue("forged") }, async (value) => { value.preferences[`${SF_SIGNAL_REGISTRY_PREFIX}${record.id}`] = { ...record, selection: { ...record.selection, recipientRef: "other" } }; return { commit: true, value: true } })
     expect(forged.status).toBe("denied")
     const next = { conditionId: record.id, correlationKey: "change", seenKeys: ["change"], status: "open" as const }
+    const mutatingReconcile = createSfSignalRegistry({ ...registryInput, approveReconcile: async (_record, candidate) => { candidate.status = "resolved"; return true } })
+    expect((await mutatingReconcile.reconcile(record, next, call)).status).toBe("unavailable")
     expect((await registry.reconcile(record, next, call)).status).toBe("ok")
     const again = await registry.list(caseRef, call)
     expect(again.status).toBe("ok")
-    if (again.status === "ok") expect(again.records[0]?.signalState).toEqual(next)
+    if (again.status === "ok") {
+      expect(again.records[0]?.signalState).toEqual(next)
+      const current = again.records[0]!
+      const probeCall = structuredClone(call)
+      const race = finalRevalidation(host, 2, () => Object.assign(probeCall.binding, { accessRevision: "changed" }))
+      expect((await createSfSignalRegistry({ ...registryInput, host: race.host }).reconcile(current, next, probeCall)).status).toBe("unavailable")
+      expect(race.progress.checks).toBe(2)
+    }
     // The comparison is a fixture; C08, the case, source reads and the list producer are real.
-    let observations = 0
+    // Each reread advances observedAt, which must not become a different material event.
+    const clock: { reads: number; rewindAfter?: number } = { reads: 0 }
     const materiality = createSfMaterialityAccess({ load: async (id, context) => {
+      clock.reads += 1
       const bindings = await registry.list(caseRef, context)
       const found = bindings.status === "ok" ? bindings.records.find((item) => item.id === id) : undefined
       if (!found) return undefined
-      observations += 1
-      return { condition: { id, source: found.selection.source, fields: found.selection.fields, period: found.selection.period, criterionId: found.selection.criterionId, choice }, change: { source: { ...source, observedAt: new Date(Date.parse(at) + observations * 1000).toISOString() }, fields: ["status"], period, before: [issued.value], after: [issued.value], availability: "available" as const, comparison: { before: comparison, after: { ...comparison, criterionResults: [{ criterionId: "cost", state: "failed" as const, reason: "changed" }] }, resultBefore: result, resultAfter: result } } }
+      return { condition: { id, source: found.selection.source, fields: found.selection.fields, period: found.selection.period, criterionId: found.selection.criterionId, choice }, change: { source: { ...source, observedAt: new Date(Date.parse(at) + clock.reads * 1000 - (clock.rewindAfter !== undefined && clock.reads > clock.rewindAfter ? 60_000 : 0)).toISOString() }, fields: ["status"], period, before: [issued.value], after: [issued.value], availability: "available" as const, comparison: { before: comparison, after: { ...comparison, criterionResults: [{ criterionId: "cost", state: "failed" as const, reason: "changed" }] }, resultBefore: result, resultAfter: result } } }
     }, authorizeEvidence: async (refs, context) => (await Promise.all(refs.map((ref) => sourceAccess(ref, context)))).every((item) => item.state === "fresh"), revalidate: host.revalidate })
     const listSignals = createSfAuthorizedSignalList({ host, cases, registry, materiality })
     const output = await listSignals(caseRef, call)
@@ -98,13 +190,138 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     // C16 selection is a fixture; source and C08 state remain real.
     const issueWorkRef = createSfWorkRefIssuer({ key: new Uint8Array(32).fill(7), revalidate: host.revalidate })
     expect(await issueWorkRef(record, { ...call, binding: { ...call.binding, principalRef: "other" } })).toBeUndefined()
-    const work = createSfWorkSignalList({ host, cases, registry, materiality, issueWorkRef, resolveSelection: async (ref) => ref === "selected-work" ? { status: "ok", caseRef } : { status: "unavailable" }, authorizeBinding: async (item, _projection, refs, context) => item.selection.recipientRef === context.binding.principalRef && (await Promise.all(refs.map((ref) => sourceAccess(ref, context)))).every((value) => value.state === "fresh") })
+    const workInput: Parameters<typeof createSfWorkSignalList>[0] = { host, cases, registry, materiality, issueWorkRef, resolveSelection: async (ref) => ref === "selected-work" ? { status: "ok", caseRef } : { status: "unavailable" }, authorizeBinding: async (item, _projection, refs, context) => item.selection.recipientRef === context.binding.principalRef && (await Promise.all(refs.map((ref) => sourceAccess(ref, context)))).every((value) => value.state === "fresh") }
+    const work = createSfWorkSignalList(workInput)
     const workResult = await work("selected-work", period, call)
     expect(workResult.status).toBe("ok")
+    expect(clock.reads).toBeGreaterThanOrEqual(12)
     if (workResult.status === "ok") { expect(workResult.signals).toHaveLength(1); expect(workResult.signals[0]?.destination).toBe("case-work"); expect(JSON.stringify(workResult)).not.toContain(record.id) }
+    // Final consumer callbacks must not release results under a changed binding or request.
+    const listCall = structuredClone(call)
+    const listRace = finalRevalidation(host, 5, () => Object.assign(listCall.binding, { accessRevision: "changed" }))
+    expect((await createSfAuthorizedSignalList({ host: listRace.host, cases, registry, materiality })(caseRef, listCall)).status).toBe("unavailable")
+    expect(listRace.progress.checks).toBe(5)
+    const materialityCall = structuredClone(call)
+    const materialityReads = { count: 0 }
+    const finalMateriality = createSfAuthorizedSignalList({ host, cases, registry, materiality: async (id, context) => {
+      const value = await materiality(id, context)
+      materialityReads.count += 1
+      if (materialityReads.count === 2) Object.assign(context.binding, { accessRevision: "changed" })
+      return value
+    } })
+    expect((await finalMateriality(caseRef, materialityCall)).status).toBe("unavailable")
+    expect(materialityReads.count).toBe(2)
+    for (const mutation of ["cancel", "period"] as const) {
+      const controller = new AbortController()
+      const wantedPeriod = structuredClone(period)
+      const requestHost = { ...host, requestFor: () => new Request("https://example.test", { headers: { authorization: "alice" }, signal: controller.signal }) }
+      const race = finalRevalidation(requestHost, 5, () => {
+        if (mutation === "cancel") controller.abort()
+        if (mutation === "period") wantedPeriod.end = "2026-11-14"
+      })
+      expect((await createSfWorkSignalList({ ...workInput, host: race.host })("selected-work", wantedPeriod, structuredClone(call))).status).toBe("unavailable")
+      expect(race.progress.checks).toBe(5)
+    }
+    const authorizationCalls = { count: 0 }
+    const finalAuthorization = createSfWorkSignalList({ ...workInput, authorizeBinding: async (item, projection, refs, context) => {
+      const authorized = await workInput.authorizeBinding(item, projection, refs, context)
+      authorizationCalls.count += 1
+      if (authorizationCalls.count === 2) item.selection.destination = "Changed after authorization"
+      return authorized
+    } })
+    expect((await finalAuthorization("selected-work", period, call)).status).toBe("unavailable")
+    expect(authorizationCalls.count).toBe(2)
+    const issueCalls = { count: 0 }
+    const finalIssue = createSfWorkSignalList({ ...workInput, issueWorkRef: async (item, context) => {
+      const reference = await issueWorkRef(item, context)
+      issueCalls.count += 1
+      if (issueCalls.count === 2) Object.assign(context.binding, { accessRevision: "changed" })
+      return reference
+    } })
+    expect((await finalIssue("selected-work", period, structuredClone(call))).status).toBe("unavailable")
+    expect(issueCalls.count).toBe(2)
+    const issuerCall = structuredClone(call)
+    const issuerRace = finalRevalidation(host, 2, () => Object.assign(issuerCall.binding, { principalRef: "other" }))
+    expect(await createSfWorkRefIssuer({ key: new Uint8Array(32).fill(7), revalidate: issuerRace.host.revalidate })(record, issuerCall)).toBeUndefined()
+    expect(issuerRace.progress.checks).toBe(2)
+    expect((await work("selected-work", period, call)).status).toBe("ok")
+    clock.rewindAfter = clock.reads + 2
+    expect((await listSignals(caseRef, call)).status).toBe("unavailable")
+    clock.rewindAfter = undefined
+    clock.rewindAfter = clock.reads + 2
+    expect((await work("selected-work", period, call)).status).toBe("unavailable")
+    clock.rewindAfter = undefined
     expect((await work("unselected-work", period, call)).status).toBe("unavailable")
     const outside = await work("selected-work", { start: "2027-01-01", end: "2027-01-31" }, call)
     expect(outside).toEqual({ status: "ok", signals: [] })
+    // These race injections still delegate each authority check to the SQLite
+    // host and use the real case, source, C08 registry and materiality ports.
+    // The native call shape isolates binding fences; it is not a session bootstrap proof.
+    const nativeCall = (selected: typeof caseRef): TrustedDomainContext => ({ kind: "native", binding: {
+      installationId: "i", projectId: "p", principalRef: "alice", hostId: "host", locationId: "location",
+      nativeSessionId: "session", runId: "run", caseId: selected.id, caseIncarnation: selected.incarnation, caseVersion: selected.version,
+      profileId: "sf_finance", profileVersion: "1", manifestDigest: "manifest", skillReceipts: [], providerGeneration: 1,
+      accessRevision: "1", policyVersion: "1", expiresAt: "2099-01-01T00:00:00Z", entryMode: "interactive",
+    } as TrustedExecutionBinding, lease: {} as TrustedCallLease })
+    const invokeList = async (consumer: "case" | "work", selected: typeof caseRef, context: TrustedDomainContext, authority: Pick<DomainPortHost, "requestFor" | "revalidate">) => {
+      if (consumer === "case") return createSfAuthorizedSignalList({ host: authority, cases, registry, materiality })(selected, context)
+      return createSfWorkSignalList({ host: authority, cases, registry, materiality, issueWorkRef,
+        resolveSelection: async (ref) => ref === "selected-work" ? { status: "ok", caseRef: selected } : { status: "unavailable" },
+        authorizeBinding: async (item, _projection, refs, current) => item.selection.recipientRef === current.binding.principalRef && (await Promise.all(refs.map((ref) => sourceAccess(ref, current)))).every((value) => value.state === "fresh"),
+      })("selected-work", period, context)
+    }
+    for (const consumer of ["case", "work"] as const) {
+      for (const selected of [caseRef, { id: emptyDecision.id, incarnation: emptyDecision.incarnation, version: emptyDecision.version }]) {
+        const expectedSignals = selected.id === caseRef.id ? 1 : 0
+        const finalCheck = expectedSignals ? 5 : 4
+        let controls = 0
+        const control = await invokeList(consumer, selected, nativeCall(selected), { ...host, revalidate: async (context) => { controls += 1; return host.revalidate(context) } })
+        expect(control.status).toBe("ok")
+        if (control.status === "ok") expect(control.signals).toHaveLength(expectedSignals)
+        expect(controls).toBe(finalCheck)
+        for (const mutation of ["principal", "access-revision", "provider-generation", "abort"] as const) {
+          const racedCall = nativeCall(selected)
+          const controller = new AbortController()
+          const request = new Request(host.requestFor(racedCall)!, { signal: controller.signal })
+          let checks = 0
+          const racedHost = { ...host, requestFor: () => request, revalidate: async (context: TrustedDomainContext) => {
+            checks += 1
+            const authorized = await host.revalidate(context)
+            if (checks === finalCheck) {
+              if (mutation === "principal") Object.assign(context.binding, { principalRef: "other" })
+              if (mutation === "access-revision") Object.assign(context.binding, { accessRevision: "2" })
+              if (mutation === "provider-generation") Object.assign(context.binding, { providerGeneration: 2 })
+              if (mutation === "abort") controller.abort()
+            }
+            return authorized
+          } }
+          expect(await invokeList(consumer, selected, racedCall, racedHost)).toEqual({ status: "unavailable" })
+          expect(checks).toBe(finalCheck)
+        }
+      }
+    }
+    const issuerControl = await issueWorkRef(record, nativeCall(caseRef))
+    expect(issuerControl).toMatch(/^work-v1-[a-f0-9]{64}$/)
+    for (const mutationAt of [1, 2]) {
+      for (const mutation of ["principal", "access-revision", "provider-generation", "record"] as const) {
+        const racedCall = nativeCall(caseRef)
+        const racedRecord = structuredClone(record)
+        let checks = 0
+        const issuer = createSfWorkRefIssuer({ key: new Uint8Array(32).fill(7), revalidate: async (context) => {
+          checks += 1
+          const authorized = await host.revalidate(context)
+          if (checks === mutationAt) {
+            if (mutation === "principal") Object.assign(context.binding, { principalRef: "other" })
+            if (mutation === "access-revision") Object.assign(context.binding, { accessRevision: "2" })
+            if (mutation === "provider-generation") Object.assign(context.binding, { providerGeneration: 2 })
+            if (mutation === "record") racedRecord.selection.caseRef.id = "changed-case"
+          }
+          return authorized
+        } })
+        expect(await issuer(racedRecord, racedCall)).toBeUndefined()
+        expect(checks).toBe(mutationAt)
+      }
+    }
     const caseState = await state.read(host.requestFor(call)!, "cases", () => null)
     expect(caseState.status).toBe("ok")
     if (caseState.status !== "ok") return
@@ -126,3 +343,13 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     expect((await registry.reconcile(record, next, call)).status).toBe("unavailable")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
+
+function finalRevalidation(host: Pick<DomainPortHost, "requestFor" | "revalidate">, finalCheck: number, mutate: () => void) {
+  const progress = { checks: 0 }
+  return { progress, host: { requestFor: host.requestFor, revalidate: async (context: TrustedDomainContext) => {
+    const authorized = await host.revalidate(context)
+    progress.checks += 1
+    if (progress.checks === finalCheck) mutate()
+    return authorized
+  } } }
+}

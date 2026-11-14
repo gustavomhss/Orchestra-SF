@@ -9,6 +9,7 @@ import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../co
 import type { Snapshot } from "../../runtime/contract.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import type { createDecisionCandidateResolver } from "./candidates.ts"
+import type { createPortfolioCandidateHistoryReader } from "./proof.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Fences = { dashboard: string; planner: string; procurement: string }
@@ -62,11 +63,12 @@ export function createPortfolioCampaign(input: {
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   verifyProposal?: (proposalRef: string, context: TrustedDomainContext) => Promise<PortResult<{ outputDigest: string }>>
   verifyHistoricalProposal?: (proposalRef: string, context: TrustedDomainContext) => Promise<PortResult<{ outputDigest: string }>>
+  readHistoricalCandidate?: ReturnType<typeof createPortfolioCandidateHistoryReader>
   proposalCoverageWrites: WeakSet<object>
   now: () => string
 }) {
   const owner = async (ownerCase: CaseRef, context: TrustedDomainContext) => {
-    const decision = await input.cases.read({ caseRef: `case:${encodeURIComponent(ownerCase.id)}:${encodeURIComponent(ownerCase.incarnation)}` }, context)
+    const decision = structuredClone(await input.cases.read({ caseRef: `case:${encodeURIComponent(ownerCase.id)}:${encodeURIComponent(ownerCase.incarnation)}` }, context))
     if (decision.status !== "ok") return decision
     if (!allowed(decision.value.case, ownerCase, context)) return { status: "denied" as const, reason: "campaign-access-unavailable" }
     return decision
@@ -75,9 +77,9 @@ export function createPortfolioCampaign(input: {
     const before = await input.readSourceFences(context)
     if (!before || digestSfValue(before) !== campaign.sourceFingerprint) return { status: "stale", reason: "campaign-source-changed" }
     for (const candidate of campaign.candidates) {
-      const resolved = await input.resolveCandidate(candidate.ref, context)
+      const resolved = structuredClone(await input.resolveCandidate(candidate.ref, context))
       if (resolved.status !== "ok") return resolved
-      const supported = await input.validateCandidate(resolved.value, context)
+      const supported = await input.validateCandidate(structuredClone(resolved.value), context)
       if (supported.status !== "ok" || supported.value !== true) return { status: "unavailable", reason: "campaign-candidate-unavailable" }
       const parsed = parseCaseRef(resolved.value.caseRef)
       const pinned = pinnedCase(candidate.ref)
@@ -135,13 +137,17 @@ export function createPortfolioCampaign(input: {
     const campaign = stored.value
     const inspect = async () => {
       const candidates = await Promise.all(campaign.candidates.map(async (candidate) => {
-        const current = await input.cases.read({ caseRef: `case:${encodeURIComponent(candidate.caseRef.id)}:${encodeURIComponent(candidate.caseRef.incarnation)}` }, context)
+        const current = structuredClone(await input.cases.read({ caseRef: `case:${encodeURIComponent(candidate.caseRef.id)}:${encodeURIComponent(candidate.caseRef.incarnation)}` }, context))
         if (current.status !== "ok" || current.value.case.id !== candidate.caseRef.id || current.value.case.incarnation !== candidate.caseRef.incarnation || current.value.case.version < candidate.caseRef.version) return false
         const match = /^portfolio-candidate:([^:]+):([1-9]\d*):([^:]+):([1-9]\d*)$/.exec(candidate.ref)
         if (!match) return false
         const identity = decodeURIComponent(match[3]!)
-        const alternative = current.value.case.alternatives.find((item) => item.id === identity && item.version === Number(match[4]))
-        return !!alternative && digestSfValue({ ref: candidate.ref, caseRef: `case:${encodeURIComponent(candidate.caseRef.id)}:${encodeURIComponent(candidate.caseRef.incarnation)}`, operations: alternative.scenario.operations, scenario: alternative.scenario, result: alternative.result }) === candidate.candidateDigest
+        const alternatives = current.value.case.alternatives.filter((item) => item.id === identity && item.version === Number(match[4]))
+        const alternative = alternatives[0]
+        if (alternatives.length === 1 && alternative) return digestSfValue({ ref: candidate.ref, caseRef: `case:${encodeURIComponent(candidate.caseRef.id)}:${encodeURIComponent(candidate.caseRef.incarnation)}`, operations: alternative.scenario.operations, scenario: alternative.scenario, result: alternative.result }) === candidate.candidateDigest
+        if (alternatives.length || !input.readHistoricalCandidate) return false
+        const historical = await input.readHistoricalCandidate({ ref: candidate.ref, candidateDigest: candidate.candidateDigest }, context)
+        return historical.status === "ok" && !!historical.value.scenarioResultRef.trim() && /^[a-f0-9]{64}$/.test(historical.value.provenanceDigest) && digestSfValue(historical.value.originalCaseRef) === digestSfValue(candidate.caseRef) && digestSfValue(historical.value.currentCaseRef) === digestSfValue({ id: current.value.case.id, incarnation: current.value.case.incarnation, version: current.value.case.version }) && digestSfValue(historical.value.candidate) === candidate.candidateDigest
       }))
       if (!candidates.every(Boolean)) return false
       for (const proposal of campaign.proposals) {
@@ -202,6 +208,7 @@ export function createPortfolioCampaign(input: {
     const contributions = request.proposalRefs.length ? await input.state.read(source, "contributions", (_state, authority) => sameAuthority(authority, context)) : undefined
     if (decision.status !== "ok" || cases.status !== "ok" || preferences.status !== "ok" || (contributions && (contributions.status !== "ok" || !contributions.value)) || !preferences.value || !allowed(cases.value, request.ownerCase, context) || !cases.value || !await input.authorizeCase(cases.value, context)) return { status: "denied", reason: "campaign-access-unavailable" }
     if (request.scope.currency !== decision.value.case.currency || digestSfValue(request.scope.horizon) !== digestSfValue(decision.value.case.horizon)) return { status: "needs-input", reason: "campaign-scope-mismatch" }
+    if (request.constraints.some((ref) => decision.value.case.criteria.filter((criterion) => criterion.id === ref).length !== 1)) return { status: "needs-input", reason: "campaign-constraint-unavailable" }
     if (preferences.value.prior) {
       if (preferences.value.prior.commandDigest !== commandDigest) return { status: "conflict", reason: "idempotency-content-changed" }
       return readOriginal({ ownerCase: request.ownerCase, commandDigest }, context)
@@ -213,9 +220,10 @@ export function createPortfolioCampaign(input: {
     if (!opened) return { status: "unavailable", reason: "campaign-source-fence-unavailable" }
     const candidates: Candidate[] = []
     for (const requested of request.candidateRefs) {
-      const resolved = await input.resolveCandidate(requested.ref, context)
+      const resolved = structuredClone(await input.resolveCandidate(requested.ref, context))
       if (resolved.status !== "ok") return resolved
-      const supported = await input.validateCandidate(resolved.value, context)
+      if (resolved.value.ref !== requested.ref || !resolved.value.result || resolved.value.result.currency !== request.scope.currency || digestSfValue(resolved.value.result.horizon) !== digestSfValue(request.scope.horizon)) return { status: "needs-input", reason: "campaign-candidate-scope-mismatch" }
+      const supported = await input.validateCandidate(structuredClone(resolved.value), context)
       if (supported.status !== "ok") return supported
       if (supported.value !== true) return { status: "unavailable", reason: "campaign-candidate-unavailable" }
       const parsed = parseCaseRef(resolved.value.caseRef)
@@ -238,7 +246,7 @@ export function createPortfolioCampaign(input: {
       if (commitment.kind === "contract") {
         const issued = await input.contracts.issueContract({ id: commitment.id, fields: commitment.fields, period: commitment.period }, context)
         if (issued.status !== "ok") return issued
-        const projection = await input.contracts.readContractSource({ contractRef: issued.value, fields: commitment.fields }, context)
+        const projection = structuredClone(await input.contracts.readContractSource({ contractRef: issued.value, fields: commitment.fields }, context))
         if (projection.status !== "ok") return projection
         const source = projection.value.values[0]?.sourceRefs[0]
         if (!source || source.kind !== "record" || source.target.recordType !== "contracts" || source.target.recordId !== commitment.id || source.refId !== issued.value || source.refDigest !== digestSfEvidenceRef(source)) return { status: "denied", reason: "contract-source-mismatch" }
@@ -249,7 +257,7 @@ export function createPortfolioCampaign(input: {
         const issued = await input.records.issue({ page: commitment.page, recordType: "projects", recordId: commitment.recordId, fields: commitment.fields, period: commitment.period }, context)
         if (issued.status !== "ok") return issued
         if (issued.value.target.recordType !== "projects" || issued.value.refDigest !== digestSfEvidenceRef(issued.value)) return { status: "denied", reason: "project-source-mismatch" }
-        const projection = await input.records.read(issued.value.refId, context)
+        const projection = structuredClone(await input.records.read(issued.value.refId, context))
         if (projection.status !== "ok") return projection
         const again = await input.records.read(issued.value.refId, context)
         if (again.status !== "ok" || projectionFingerprint(again.value) !== projectionFingerprint(projection.value)) return { status: "stale", reason: "campaign-source-changed" }
@@ -266,8 +274,9 @@ export function createPortfolioCampaign(input: {
       const existing = state.preferences[campaignKey(request.ownerCase)]
       if (!fences || digestSfValue(fences) !== campaign.sourceFingerprint || !sameAuthority(authority, context) || !allowed(state.cases[request.ownerCase.id], request.ownerCase, context) || (isCampaign(existing) ? existing.version : existing === undefined ? 0 : -1) !== priorVersion || state.preferences[historyKey(commandDigest)] !== undefined) return { commit: false, value: null }
       const index = state.preferences[indexKey(request.ownerCase)]
+      if (index !== undefined && !Array.isArray(index)) return { commit: false, value: null }
       const entries = Array.isArray(index) ? index.filter(isIndexEntry) : []
-      if (index !== undefined && (!Array.isArray(index) || entries.length !== index.length)) return { commit: false, value: null }
+      if (Array.isArray(index) && entries.length !== index.length) return { commit: false, value: null }
       state.preferences[historyKey(commandDigest)] = campaign
       state.preferences[campaignKey(request.ownerCase)] = campaign
       state.preferences[indexKey(request.ownerCase)] = [...entries, { campaignRef: campaign.campaignRef, version: campaign.version, createdAt: campaign.createdAt, commandDigest }]

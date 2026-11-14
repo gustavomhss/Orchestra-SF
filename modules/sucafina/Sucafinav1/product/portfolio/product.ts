@@ -17,6 +17,7 @@ import { createPortfolioAnalysis } from "./analysis.ts"
 import { createProductionPortfolio } from "./production.ts"
 import { createPlannerSensitivity } from "./planner-sensitivity.ts"
 import { createPortfolioSelectionResolver } from "./selection.ts"
+import { createPortfolioCoveragePreview } from "./coverage-preview.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 
@@ -37,10 +38,12 @@ export function createPortfolioProduct(input: {
   caseFor: (context: TrustedDomainContext) => Promise<PortResult<CaseRef>>
   idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
   exactThreshold?: Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]
+  resolveCoverageAuthority?: Parameters<typeof createPortfolioCoveragePreview>[0]["resolveAuthority"]
 }) {
   const units = createPlannerSensitivityUnits({ host: input.host, cases: input.cases, scenarios: input.planner.scenarios, store: input.results, evidence: input.evidence, rules: input.rules })
   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host: input.host, sources: input.planner.sources, scenarios: input.planner.scenarios, planner: input.planner.planner }, request, context)
-  const sensitivity = createPlannerSensitivity({ results: input.results, resolve: units.resolve, revalidate: units.revalidate, preview, exactThreshold: input.exactThreshold, idempotencyKey: input.idempotencyKey })
+  const coveragePreview = input.resolveCoverageAuthority ? createPortfolioCoveragePreview({ units, preview, resolveAuthority: input.resolveCoverageAuthority }) : undefined
+  const sensitivity = createPlannerSensitivity({ results: input.results, resolve: units.resolve, revalidate: units.revalidate, preview, coveragePreview, exactThreshold: input.exactThreshold, idempotencyKey: input.idempotencyKey })
   const analysis = createPortfolioAnalysis({ planner: input.planner.planner, results: input.results, bindings: input.comparisonBindings, persist: createPlannerResultPersistence({ store: input.results, scenarios: input.planner.scenarios, comparisonBindings: input.comparisonBindings, replay: input.planner.planner, resolveCase: input.caseFor }), select: createPortfolioSelectionResolver({ selection: input.selection, results: input.results, caseFor: input.caseFor }), idempotencyKey: input.idempotencyKey })
   const contribution = createProductionPortfolio({ cases: input.cases, planner: input.planner.planner, sources: input.planner.sources, evidence: input.evidence, revalidate: input.host.revalidate, analysis, sensitivity, candidateCoverageRefFor: async (candidate) => {
     const ref = parseCaseRef(candidate.caseRef)

@@ -3,7 +3,7 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { sfRunSourceFence } from "../../../product/ai/run-store.ts"
 import { createPlannerSensitivity } from "../../../product/portfolio/planner-sensitivity.ts"
 import { createPortfolioProofVerifier } from "../../../product/portfolio/verification.ts"
-import { createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
+import { createWp13SensitivityFixture, createWp13SensitivityRuntimeFixture } from "./sensitivity-fixture.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { AppProcess } from "@orchestra/core/process"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
@@ -11,12 +11,17 @@ import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 
+const stage = (name: string) => process.stderr.write(`SF_WP13_RENEWAL_STAGE:${name}\n`)
+
 type World = Awaited<ReturnType<typeof createWp13SensitivityFixture>>
 const at = (world: World, amount: number) => world.preview({ baselineRef: world.baselineRef, scenario: { ...world.scenario, operations: world.scenario.operations.map((operation) => operation.targetRef === world.sensitivityRequest.parameterBounds.parameterRef ? { ...operation, amount } : operation) } }, world.context)
 
 test("C10 omitted training keeps an exact real 55000 subtotal boundary conditioned, including replay and restart", async () => {
   expectSpawn(import.meta.path)
+  const childDeadline = Date.now() + 55000
+  stage("fixture-start")
   const world = await createWp13SensitivityFixture({ renewal: {} })
+  stage("fixture-ready")
   try {
     expect(world.baselineResult.knownSubtotal).toBe(240000)
     expect(world.selectedResult.knownSubtotal).toBe(210000)
@@ -50,7 +55,9 @@ test("C10 omitted training keeps an exact real 55000 subtotal boundary condition
     const stored = await world.results.read({ kind: "sensitivity", resultRef: world.saved.sensitivityResultRef }, world.context)
     if (binding.status !== "ok" || stored.status !== "ok" || stored.value.kind !== "sensitivity") throw new Error("bound sensitivity unavailable")
     const ids = world.ids.value
+    stage("replay-start")
     expect(await verifier.verifySensitivity(binding.value, stored.value, world.context)).toBe(true)
+    stage("replay-ready")
     const forged = { ...stored.value, result: { ...stored.value.result, threshold: 55001, thresholdEvidence: { state: "exact" as const, value: 55001, evidenceRefs: stored.value.result.evidenceRefs } } }
     expect(await verifier.verifySensitivity(binding.value, { ...forged, resultDigest: digestSfValue(forged.result) }, world.context)).toBe(false)
     expect(world.ids.value).toBe(ids)
@@ -60,15 +67,20 @@ test("C10 omitted training keeps an exact real 55000 subtotal boundary condition
     if (orphan.status !== "ok") throw new Error("orphan counterexample could not be persisted")
     await world.store.dispose()
     const reader = new URL("./renewal-restart-reader.ts", import.meta.url).pathname
-    const restart = async (ref: string, permission: "allowed" | "revoked") => {
-      const child = await Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(Bun.argv[0]!, [reader, world.directory, ref, permission], { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+    const restart = async (ref: string, permission: "allowed" | "revoked" | "revoked-during-proof") => {
+      stage(`restart-${permission}-start`)
+      const child = await Effect.runPromise(AppProcess.Service.use((runner) => runner.run(
+        ChildProcess.make(Bun.argv[0]!, [reader, world.directory, ref, permission], { extendEnv: true, stdin: "ignore" }),
+        { timeout: Math.max(1, childDeadline - Date.now()), inspect: (chunk) => { process.stderr.write(chunk) } },
+      )).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+      stage(`restart-${permission}-returned`)
       expect(child.exitCode).toBe(0)
       const line = child.stdout.toString("utf8").split("\n").find((value) => value.startsWith("SF_WP13_RESTART_PROBE:"))
       if (child.exitCode !== 0 || !line) throw new Error(`Restart reader failed: ${child.stderr.toString("utf8")}`)
       return JSON.parse(line.slice("SF_WP13_RESTART_PROBE:".length))
     }
     const observed = await restart(world.saved.sensitivityResultRef, "allowed")
-    expect(observed.status).toBe("ok")
+    expect(observed.status, JSON.stringify(observed)).toBe("ok")
     expect(observed.proof).toBe("bound-reader-and-current-producer-replay")
     expect(observed.pid).not.toBe(process.pid)
     expect(observed.resultDigest).toBe(stored.value.resultDigest)
@@ -77,6 +89,11 @@ test("C10 omitted training keeps an exact real 55000 subtotal boundary condition
     expect(observed.comparisonStatus).toBe("conditioned")
     expect((await restart(orphan.value.resultRef, "allowed")).status).toBe("unavailable")
     expect((await restart(world.saved.sensitivityResultRef, "revoked")).status).toBe("denied")
+    const revokedDuringProof = await restart(world.saved.sensitivityResultRef, "revoked-during-proof")
+    expect(revokedDuringProof.revocationInjected).toBe(true)
+    expect(revokedDuringProof.operationProofHits).toBeGreaterThan(0)
+    expect(revokedDuringProof.status).not.toBe("ok")
+    expect(revokedDuringProof.resultDigest).toBeUndefined()
   } finally { await world.cleanup() }
 }, 60000)
 
@@ -106,7 +123,7 @@ test("C10 priced training changes real subtotal 210000 to 250000 and the boundar
 }, 60000)
 
 test("a false scalar certificate cannot replace real boundary evidence; sampled fallback remains conditioned", async () => {
-  const world = await createWp13SensitivityFixture({ renewal: {} })
+  const world = await createWp13SensitivityRuntimeFixture({ renewal: {} })
   try {
     const evaluated = createPlannerSensitivity({ results: world.results, resolve: world.issuer.resolve, revalidate: world.issuer.revalidate, preview: world.preview, exactThreshold: async () => ({ status: "ok", value: { value: 55001, evidenceRefs: [world.evidence] } }), idempotencyKey: async (digest) => `invalid-certificate-${digest}` })
     const result = await evaluated(world.sensitivityRequest, world.context)

@@ -55,6 +55,7 @@ export function createSfHistoricalContributionReader(input: {
   return async (request: { outputRef: string; currentCase: ContributionEnvelope["caseRef"] }, context: TrustedDomainContext): Promise<PortResult<{ state: "historical"; output: ContributionEnvelope }>> => {
     const source = input.requestFor(context)
     if (!source || !request.outputRef.trim() || !await input.revalidate(context)) return { status: "denied", reason: "contribution-access-unavailable" }
+    if (context.kind === "native" && (context.binding.caseId !== request.currentCase.id || context.binding.caseIncarnation !== request.currentCase.incarnation || context.binding.caseVersion !== request.currentCase.version)) return { status: "denied", reason: "historical-case-binding-mismatch" }
     const read = async () => {
       const cases = await input.state.read(source, "cases", (state, authority) => {
         const current = state.cases[request.currentCase.id]

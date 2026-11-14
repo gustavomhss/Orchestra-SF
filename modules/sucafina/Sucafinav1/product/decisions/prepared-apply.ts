@@ -7,6 +7,8 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
 import { isReviewDigest, receiptProofKey, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
 
+type PreparedOutcome = CommandReceipt | { existing: CommandReceipt } | { failure: "unavailable" | "conflict" } | null
+
 /** The callbacks resolve current host authority and domain data; none are supplied by a capability caller. */
 export function createSfPreparedApply(input: {
   state: SfProductStatePort
@@ -82,7 +84,7 @@ export function createSfPreparedApply(input: {
       if (!receipts || receipts.status !== "ok" || !receipts.value) return { status: "unavailable", reason: "receipt-unavailable" }
       const id = input.createId()
       if (!id.trim()) return { status: "unavailable", reason: "receipt-identity-unavailable" }
-      const applied = await input.state.transaction<CommandReceipt | { existing: CommandReceipt } | { failure: "unavailable" | "conflict" } | null>(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
+      const applied = await input.state.transaction<PreparedOutcome>(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
         const actual = state.cases[request.caseRef.id]
         const selected = actual?.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
         if (!sameAuthority(authority, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !actual.choices.some((choice) => choice.id === request.choiceId) || !selected || selected.state !== "planned" || digestSfValue(selected) !== digestSfValue(change)) return { commit: false, value: null }

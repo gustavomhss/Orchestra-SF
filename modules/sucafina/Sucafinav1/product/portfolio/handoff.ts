@@ -47,8 +47,9 @@ export async function preparePortfolioChoice(input: {
   const current = structuredClone(await input.cases.read({ caseRef }, context))
   if (current.status !== "ok") return current
   if (current.value.case.id !== input.caseRef.id || current.value.case.incarnation !== input.caseRef.incarnation || current.value.case.version !== input.caseRef.version) return { status: "stale", reason: "case-changed" }
-  const choice = current.value.case.choices.find((item) => item.id === input.choiceId)
-  if (!choice || digestSfValue(choice.scenario.operations) !== digestSfValue(operations) || candidates.some((candidate) => candidate.scenario.baseRef !== choice.scenario.baseRef || candidate.scenario.assumptions.some((assumption) => !choice.scenario.assumptions.some((item) => digestSfValue(item) === digestSfValue(assumption))))) return { status: "conflict", reason: "choice-does-not-match-combination" }
+  const choices = current.value.case.choices.filter((item) => item.id === input.choiceId)
+  const choice = choices[0]
+  if (choices.length !== 1 || !choice || digestSfValue(choice.scenario.operations) !== digestSfValue(operations) || candidates.some((candidate) => candidate.scenario.baseRef !== choice.scenario.baseRef || candidate.scenario.assumptions.some((assumption) => !choice.scenario.assumptions.some((item) => digestSfValue(item) === digestSfValue(assumption))))) return { status: "conflict", reason: "choice-does-not-match-combination" }
   if (plannerComponentDigest(choice.result.components) !== plannerComponentDigest(selected.components) || choice.result.currency !== input.request.scope.currency || choice.result.horizon.start !== input.request.scope.horizon.start || choice.result.horizon.end !== input.request.scope.horizon.end) return { status: "stale", reason: "choice-result-changed" }
   const checked = await revalidateCandidates(input.host, input.selectedCandidateRefs, candidates, context)
   if (checked.status !== "ok") return checked

@@ -29,26 +29,26 @@ export function createPersistentSensitivityPort(input: {
   const read = async (resultRef: string, context: TrustedDomainContext) => {
     const stored = structuredClone(await input.results.read({ kind: "sensitivity", resultRef }, context))
     if (stored.status !== "ok") return stored
-    if (stored.value.kind !== "sensitivity") return { status: "unavailable", reason: "sensitivity-reference-mismatch" } as const
-    const binding = structuredClone(await input.bindings.read({ caseRef: stored.value.caseRef, resultRef }, context))
-    if (binding.status !== "ok") return binding
-    const request = binding.value.request
-    if (stored.value.requestDigest !== digestSfValue(request)) return { status: "stale", reason: "sensitivity-request-changed" } as const
+    if (stored.value.kind !== "sensitivity" || stored.value.resultRef !== resultRef || stored.value.resultDigest !== digestSfValue(stored.value.result)) return { status: "unavailable", reason: "sensitivity-reference-mismatch" } as const
     const samples = await validateSamples(stored.value.result, stored.value.caseRef, context)
     if (samples.status !== "ok") return samples
     const latest = structuredClone(await input.results.read({ kind: "sensitivity", resultRef }, context))
     if (latest.status !== "ok") return latest
     if (latest.value.kind !== "sensitivity" || digestSfValue(latest.value) !== digestSfValue(stored.value)) return { status: "stale", reason: "sensitivity-result-changed" } as const
-    const bindingAgain = await input.bindings.read({ caseRef: latest.value.caseRef, resultRef }, context)
-    if (bindingAgain.status !== "ok") return bindingAgain
-    if (digestSfValue(bindingAgain.value) !== digestSfValue(binding.value)) return { status: "stale", reason: "sensitivity-binding-changed" } as const
+    // The C08 binding reader itself checks the rule/result/binding twice and replays
+    // the producer on both observations. Finish with that current proof, after the
+    // sample/result rereads; an earlier identical bound read would replay it twice more.
+    const binding = structuredClone(await input.bindings.read({ caseRef: latest.value.caseRef, resultRef }, context))
+    if (binding.status !== "ok") return binding
+    const request = binding.value.request
+    if (binding.value.resultRef !== resultRef || binding.value.resultDigest !== latest.value.resultDigest || digestSfValue(binding.value.caseRef) !== digestSfValue(latest.value.caseRef) || latest.value.requestDigest !== digestSfValue(request)) return { status: "stale", reason: "sensitivity-request-changed" } as const
     return { status: "ok", value: { sensitivityResultRef: latest.value.resultRef, sensitivity: latest.value.result, caseRef: latest.value.caseRef } } as const
   }
   return {
     read,
-    evaluateAndStore: async (incoming: SensitivityRequest, incomingCase: { id: string; incarnation: string; version: number }, context: TrustedDomainContext) => {
+    evaluateAndStore: async (incoming: SensitivityRequest, caseIdentity: { id: string; incarnation: string; version: number }, context: TrustedDomainContext) => {
       const request = structuredClone(incoming)
-      const caseRef = structuredClone(incomingCase)
+      const caseRef = structuredClone(caseIdentity)
       const requestDigest = digestSfValue(request)
       const key = await input.idempotencyKey(requestDigest, context)
       if (!key?.trim()) return { status: "denied", reason: "operation-identity-unavailable" } as const
@@ -63,12 +63,13 @@ export function createPersistentSensitivityPort(input: {
       const idempotencyKey = `sensitivity:${key}`
       const existing = input.results.readByRequest ? await input.results.readByRequest({ caseRef, kind: "sensitivity", idempotencyKey, requestDigest }, context) : undefined
       if (existing && existing.status !== "ok") return existing
-      const saved = existing?.status === "ok" && existing.value.state === "found" ? { status: "ok" as const, value: existing.value.result } : await input.results.write({ kind: "sensitivity", result: evaluated.value, caseRef, requestDigest, sourceRefs, idempotencyKey }, context)
+      const saved = structuredClone(existing?.status === "ok" && existing.value.state === "found" ? { status: "ok" as const, value: existing.value.result } : await input.results.write(structuredClone({ kind: "sensitivity", result: evaluated.value, caseRef, requestDigest, sourceRefs, idempotencyKey }), context))
       if (saved.status !== "ok") return saved
       if (saved.value.kind !== "sensitivity" || saved.value.requestDigest !== requestDigest || digestSfValue(saved.value.caseRef) !== digestSfValue(caseRef) || digestSfValue(saved.value.result) !== digestSfValue(evaluated.value)) return { status: "conflict", reason: "sensitivity-result-mismatch" } as const
-      const previous = existing?.status === "ok" && existing.value.state === "found" ? await input.bindings.read({ caseRef, resultRef: saved.value.resultRef }, context) : undefined
-      if (!previous || previous.status !== "ok") {
-        const binding = await input.bindings.bind({ caseRef: structuredClone(caseRef), resultRef: saved.value.resultRef, criterionId: request.criterion.id, expectedRuleRef: proof.value.ruleRef, expectedRuleVersion: proof.value.ruleVersion, expectedRuleDigest: proof.value.ruleDigest, request: structuredClone(request) }, context)
+      const previousBinding = existing?.status === "ok" && existing.value.state === "found" ? await input.bindings.read({ caseRef, resultRef: saved.value.resultRef }, context) : undefined
+      if (previousBinding && previousBinding.status !== "ok" && previousBinding.status !== "unavailable") return previousBinding
+      if (!previousBinding || previousBinding.status !== "ok") {
+        const binding = await input.bindings.bind(structuredClone({ caseRef, resultRef: saved.value.resultRef, criterionId: request.criterion.id, expectedRuleRef: proof.value.ruleRef, expectedRuleVersion: proof.value.ruleVersion, expectedRuleDigest: proof.value.ruleDigest, request }), context)
         if (binding.status !== "ok") return binding
       }
       return read(saved.value.resultRef, context)

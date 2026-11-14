@@ -28,8 +28,12 @@ describe("decision reconsideration", () => {
     expect(first.impact.state).toBe("material")
     expect(refreshed.signal?.correlationKey).toBe(first.signal?.correlationKey)
     expect(refreshed.impact.changeDigest).toBe(first.impact.changeDigest)
+    if (!first.signal || !refreshed.signal) throw new Error("material change must produce a signal")
+    expect(sfReconsiderationFingerprint(refreshed.signal, refreshed.impact)).toBe(sfReconsiderationFingerprint(first.signal, first.impact))
     const changed = classifySfMaterialChange(condition, { ...withComponent, source: { ...change.source, version: 3, observedAt: "2026-11-14T12:00:00Z" } })
     expect(changed.signal?.correlationKey).not.toBe(first.signal?.correlationKey)
+    if (!changed.signal) throw new Error("new source version must remain material")
+    expect(sfReconsiderationFingerprint(changed.signal, changed.impact)).not.toBe(sfReconsiderationFingerprint(first.signal, first.impact))
   })
   test("a conditioned choice becomes material when a missing cost resolves and breaks the criterion", () => {
     const before = { ...comparison("satisfied", 30000), comparisonStatus: "conditioned" as const, completeDifference: null, criterionResults: [{ criterionId: "advantage", state: "unknown" as const, reason: "training missing" }], unresolvedConditions: ["training"] }
@@ -129,4 +133,47 @@ test("materiality access distinguishes an advancing observation clock from a mut
   reads = 0
   const mutating = createSfMaterialityAccess({ load: async () => { reads += 1; if (reads > 1) shared.change.comparison!.resultAfter.knownSubtotal = 999999; return shared }, authorizeEvidence: async () => true, revalidate: async () => true })
   expect(await mutating(condition.id, call)).toEqual({ status: "unavailable" })
+  const rewind = { reads: 0 }
+  const stale = createSfMaterialityAccess({ load: async () => {
+    rewind.reads += 1
+    return { condition, change: { ...change, source: { ...change.source, observedAt: rewind.reads === 1 ? "2026-11-14T12:00:01Z" : "2026-11-14T12:00:00Z" } } }
+  }, authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await stale(condition.id, call)).toEqual({ status: "unavailable" })
+  const malformed = createSfMaterialityAccess({ load: async () => ({ condition, change: { ...change, source: { ...change.source, observedAt: "2026-02-30T12:00:00Z" } } }), authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await malformed(condition.id, call)).toEqual({ status: "unavailable" })
+})
+
+test("materiality fences final binding changes and isolates retained authorization evidence", async () => {
+  const { createSfMaterialityAccess } = await import("../../../product/decision-memory/materiality.ts")
+  for (const mutation of ["binding", "final-evidence", "authorize-evidence"] as const) {
+    const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+    const original = structuredClone({ condition, change })
+    const captured: (readonly import("../../../product/contracts/business-context.ts").BusinessEvidenceRef[])[] = []
+    let checks = 0
+    const read = createSfMaterialityAccess({ load: async () => original, authorizeEvidence: async (refs) => {
+      captured.push(refs)
+      if (mutation === "authorize-evidence") Object.assign(refs[0]!, { refId: "changed-during-evidence-authorization" })
+      return true
+    }, revalidate: async () => {
+      checks += 1
+      await Promise.resolve()
+      if (checks === 3 && mutation === "binding") Object.assign(call.binding, { accessRevision: "changed" })
+      if (checks === 3 && mutation === "final-evidence") for (const refs of captured) Object.assign(refs[0]!, { refId: "changed-during-final-authorization" })
+      return true
+    } })
+    const output = await read(condition.id, call)
+    if (mutation === "binding") expect(output).toEqual({ status: "unavailable" })
+    else {
+      // W2 intentionally lends a copy to the authorizer. Mutating that copy
+      // cannot change the source snapshots or the material result being released.
+      expect(output.status).toBe("ok")
+      if (output.status === "ok") {
+        expect(output.snapshot).toEqual({ condition, change })
+        expect(output.impact.current).toEqual(change.after)
+        expect(output.signal?.after?.result.knownSubtotal).toBe(250000)
+      }
+    }
+    expect(original).toEqual({ condition, change })
+    expect(checks).toBe(3)
+  }
 })

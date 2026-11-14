@@ -21,9 +21,8 @@ import { createPlannerSensitivityUnits } from "../../../product/planner/sensitiv
 import { createPortfolioSelectionResolver } from "../../../product/portfolio/selection.ts"
 import { createDecisionComparisonService } from "../../../product/decisions/comparison.ts"
 import { createDecisionPortfolioSelection } from "../../../product/decisions/portfolio-selection.ts"
-import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
-import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
+import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
 import { createCriterionResultBindings, createCriterionRuleRegistry } from "../../../product/decisions/criterion-rules.ts"
 import { createCriterionComparisonBindings } from "../../../product/decisions/criterion-comparison.ts"
@@ -43,12 +42,16 @@ type FixtureOptions = { renewal?: { training?: 40000 } }
 const initial = (options: FixtureOptions): Snapshot => ({
   data: {
     roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
-    versions: [{ id: "v0", year: 2027, closed: 9, lines: options.renewal ? ["service", "implementation", "migration", ...(options.renewal.training === undefined ? [] : ["training"])].map((id) => ({ id, sec: "opex", el: "licenses", cur: "USD", b: Array.from({ length: 12 }, (_, month) => id === "service" && month === 10 ? 240000 : 0), a: Array(12).fill(0), f: Array(12).fill(null) })) : [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: options.renewal ? [] : [{ cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+    versions: [{ id: "v0", year: 2027, closed: 9, lines: options.renewal ? ["service", "implementation", "migration", ...(options.renewal.training === undefined ? [] : ["training"])].map((id) => ({ id, sec: "opex", el: "licenses", cur: "USD", b: Array.from({ length: 12 }, (_, month) => id === "service" && month === 10 ? 240000 : 0), a: Array(12).fill(0), f: Array(12).fill(null) })) : [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: options.renewal ? [] : [{ id: "EUR", cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
   },
   versions: {}, sequences: {}, audit: [], notices: [],
 })
 
-export async function createWp13SensitivityFixture(options: FixtureOptions = {}) {
+/** Seed only the real Planner scenarios and their durable case/result evidence. */
+export async function createWp13PortfolioFixture(options: FixtureOptions = {}) {
+  const started = Date.now()
+  const stage = (name: string) => process.stderr.write(`SF_WP13_FIXTURE_STAGE:${name}:elapsedMs=${Date.now() - started}\n`)
+  stage("base-start")
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-sensitivity-boundary-"))
   await chmod(directory, 0o700)
   const request = new Request("https://example.test")
@@ -97,7 +100,7 @@ export async function createWp13SensitivityFixture(options: FixtureOptions = {})
     const selectedResult: ScenarioResult = { ...selectedPreview.value, costCoverage: options.renewal ? classify(selectedPreview.value, "selected", false) : { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
     const baselineResult: ScenarioResult = { ...baselinePreview.value, costCoverage: options.renewal ? classify(baselinePreview.value, "baseline", true) : { ...baselinePreview.value.costCoverage, alternativeId: "baseline", alternativeVersion: 1 } }
     const decision = { ...caseRef, state: "comparing" as const, objective: "renewal", currency: "USD", horizon, criteria: [{ id: "renewal-difference", description: "Explicit criterion", required: true }], participants: ["finance"], sourceRefs: [evidence], alternatives: [{ id: "selected", version: 1, title: "Selected", scenario, result: selectedResult }, { id: "baseline", version: 1, title: "Baseline", scenario: baselineScenario, result: baselineResult }], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
-    const seededCase = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case", commandDigest: "c".repeat(64), targetRef: caseRef.id, targetIncarnation: caseRef.incarnation }, async (value) => { value.cases[caseRef.id] = decision; value.cases.other = { ...decision, id: "other" }; return { commit: true, value: true } })
+    const seededCase = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case", commandDigest: "c".repeat(64), targetRef: caseRef.id, targetIncarnation: caseRef.incarnation }, async (value) => { value.cases[caseRef.id] = decision; return { commit: true, value: true } })
     if (seededCase.status !== "ok") throw new Error("case was not seeded")
     if (options.renewal) {
       const baselineCoverage = createDecisionBaselineCoverage({ state, host, resolveCase: async () => ({ status: "ok", value: caseRef }), authorizeCase: async () => access.allowed, authorizeCoverage: async () => access.allowed, projectForecast: async (reference, _case, trusted) => { const current = await planner.compareForecast({ baseRef: reference, candidateRef: reference, period: horizon, currency: "USD" }, trusted); return current.status === "ok" ? { status: "ok", value: current.value.baseline } : current }, resolveEvidence: (refs, trusted) => evidenceService.context({ refs }, trusted), supports: (entry, resolutions) => sourceCoverage.entries.some((accepted) => digestSfValue(accepted) === digestSfValue(entry)) && entry.evidenceRefs.every((ref) => resolutions.some((resolution) => resolution.state === "fresh" && digestSfValue(resolution.ref) === digestSfValue(ref))), verifySnapshot: (snapshot, request) => { const projection = projectPlannerSource(snapshot, actor, "v0"); return access.allowed && !!projection && digestSfValue({ versionId: "v0", projection }) === request.source.target.projectionDigest }, operationIdentity: () => "renewal-baseline-coverage", proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
@@ -115,6 +118,19 @@ export async function createWp13SensitivityFixture(options: FixtureOptions = {})
     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "case-op", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     coverageAccess.resolve = createDecisionCoverageAccess({ state, host, authorizeCase: async () => access.allowed, verifyEvidence: async () => access.allowed })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+    const preview = (request: Parameters<typeof comparePlannerPreview>[1], trusted: Parameters<typeof comparePlannerPreview>[2]) => comparePlannerPreview({ host, sources, scenarios, planner }, request, trusted)
+    const analysisRequest = { portfolio: { scope: { horizon, currency: "USD" }, candidateRefs: ["selected"], operations: [], constraints: ["renewal-difference"], priorities: [], explorationLimit: 1 }, candidates: [], scenario, result: selectedResult, costCoverageRefs: [] }
+    stage("base-ready")
+    return { cleanup, directory, stage, scenario, baselineScenario, selectedResult, baselineResult, results, selectedRef, baselineRef, caseRef, context, request, store, ids, access, evidence, evidenceService, host, sources, planner, scenarios, cases, state, proposalCoverageWrites, parameterRef, criterion, analysisRequest, preview, classifyFixtureCoverage: classify, forecastMissingFx: forecast.value.baseline.missing.some((item) => item.reason === "missing-fx") }
+  } catch (error) { await cleanup(); throw error }
+}
+
+/** Add the real rule, unit issuer and comparison services, without calculating unused results. */
+export async function createWp13AnalysisFixture(options: FixtureOptions = {}) {
+  const world = await createWp13PortfolioFixture(options)
+  const { state, host, access, proposalCoverageWrites, evidenceService, results, cases, scenarios, selectedRef, baselineRef, caseRef, context, parameterRef, criterion, evidence, planner, sources, preview } = world
+  try {
+    world.stage("criteria-start")
     const ruleOperation = { id: "criterion-op" }
     let metric: ReturnType<typeof createPlannerCriterionMetric> | undefined
     const rules = createCriterionRuleRegistry({ state, host, authorizeCase: async () => access.allowed, authorizeRule: async () => access.allowed, verifyEvidence: async () => access.allowed, verifySnapshot: () => access.allowed, readMetric: async (request, trusted) => metric ? metric(request, trusted) : { status: "unavailable", reason: "not-needed-for-unit-issuance" }, verifyMetric: async () => access.allowed, operationIdentity: () => ruleOperation.id, proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
@@ -123,7 +139,6 @@ export async function createWp13SensitivityFixture(options: FixtureOptions = {})
     if (issued.status !== "ok") throw new Error("sensitivity units unavailable")
     const registered = await rules.register({ caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: criterion.operator, value: criterion.value, unit: "USD", period: horizon, evidenceRefs: [evidence], expectedRuleVersion: 0, sensitivity: issued.value.units }, context)
     if (registered.status !== "ok") throw new Error("criterion rule was not registered")
-    const preview = (request: Parameters<typeof comparePlannerPreview>[1], trusted: Parameters<typeof comparePlannerPreview>[2]) => comparePlannerPreview({ host, sources, scenarios, planner }, request, trusted)
     if (options.renewal) metric = createPlannerCriterionMetric({ host, rules, units: issuer, preview })
     const plannerWithCriteria = createPlannerPort({ host, sources, scenarios, criteria: { evaluate: (input, trusted) => rules.evaluate({ caseRef, ...input }, trusted) } })
     const comparisonOperation = { id: "portfolio-comparison-binding" }
@@ -131,28 +146,36 @@ export async function createWp13SensitivityFixture(options: FixtureOptions = {})
     const compareCases = createDecisionComparisonService({ cases, state, results, planner: plannerWithCriteria, host })
     const selectionOperation = { id: "portfolio-selection" }
     const selection = createDecisionPortfolioSelection({ state, host, compare: compareCases, authorizeCase: async () => access.allowed, authorizeSelection: async () => access.allowed, verifySnapshot: () => access.allowed, operationIdentity: () => selectionOperation.id, proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
-    const expectedRules = await comparisonBindings.proofs(caseRef, ["renewal-difference"], context)
-    if (expectedRules.status !== "ok") throw new Error("comparison rules unavailable")
-    const derived = await compareCases({ caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: ["renewal-difference"] }, context)
-    if (derived.status !== "ok" || derived.value.request.scenarioRefs[0] !== baselineRef || derived.value.request.scenarioRefs[1] !== selectedRef || derived.value.comparison.baselineResultRef !== baselineRef || derived.value.comparison.alternativeResultRef !== selectedRef) throw new Error("comparison was not bound to the stored scenario refs")
-    const storedComparison = await results.write({ kind: "comparison", result: derived.value.comparison, caseRef, requestDigest: digestSfValue(derived.value.request), sourceRefs: [evidence], idempotencyKey: "bound-comparison" }, context)
-    if (storedComparison.status !== "ok") throw new Error("comparison was not stored")
-    const boundComparison = await comparisonBindings.bind({ caseRef, resultRef: storedComparison.value.resultRef, request: derived.value.request, expectedRules: expectedRules.value }, context)
-    if (boundComparison.status !== "ok") throw new Error("comparison was not bound")
-    comparisonOperation.id = "portfolio-comparison-binding-analysis"
-    const sensitivityBindingOperation = { id: "sensitivity-binding-op" }
-    const bindings = createCriterionResultBindings({ state, host, rules, results, authorizeCase: async () => access.allowed, verifyBinding: async () => access.allowed, verifySnapshot: () => access.allowed, operationIdentity: () => sensitivityBindingOperation.id, proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
-    const exact = createPlannerExactThreshold({ units: issuer, preview })
-    let exactCalls = 0
-    const evaluate = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview, exactThreshold: async (request, binding, trusted) => { exactCalls += 1; return exact(request, binding.baselineRef, trusted) }, idempotencyKey: async (digest) => `sensitivity-${digest}` })
-    const portfolio: PortfolioPort = { evaluate: async () => ({ status: "unavailable", reason: "unused-by-sensitivity-test" }), sensitivity: evaluate }
-    const persistent = createPersistentSensitivityPort({ portfolio, results, bindings, resolveBinding: issuer.resolve, idempotencyKey: async (digest) => `persisted-${digest}` })
-    const sensitivityRequest: SensitivityRequest = { scenarioRef: selectedRef, parameterBounds: { parameterRef, minimum: options.renewal ? 0 : 100000, maximum: options.renewal ? 100000 : 120000, steps: 2 }, criterion }
-    const saved = await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)
-    if (saved.status !== "ok") throw new Error(`sensitivity was not stored: ${saved.reason}`)
     const portfolioBindingOperation = { id: "portfolio-binding" }
-    const analysisRequest = { portfolio: { scope: { horizon, currency: "USD" }, candidateRefs: ["selected"], operations: [], constraints: ["renewal-difference"], priorities: [], explorationLimit: 1 }, candidates: [], scenario, result: selectedResult, costCoverageRefs: [] }
     const selectPortfolio = createPortfolioSelectionResolver({ selection, results, caseFor: async () => ({ status: "ok", value: caseRef }) })
-    return { cleanup, directory, preview, evaluate, scenario, baselineScenario, selectedResult, baselineResult, results, persistent, saved: saved.value, selectedRef, baselineRef, caseRef, context, request, store, ids, access, evidence, evidenceService, host, sources, planner, plannerWithCriteria, scenarios, cases, state, proposalCoverageWrites, issuer, issued, rules, ruleOperation, comparisonBindings, comparisonRef: storedComparison.value.resultRef, boundComparison: boundComparison.value, bindings, sensitivityRequest, exact, get exactCalls() { return exactCalls }, portfolioBindingOperation, analysisRequest, selectPortfolio, selection, forecastMissingFx: forecast.value.baseline.missing.some((item) => item.reason === "missing-fx"), issuedUnits: issued.value.units, reviseRule: async () => { ruleOperation.id = "criterion-revision"; return rules.register({ caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: criterion.operator, value: criterion.value + 1, unit: "USD", period: horizon, evidenceRefs: [evidence], expectedRuleVersion: 1, sensitivity: issued.value.units }, context) } }
-  } catch (error) { await cleanup(); throw error }
+    world.stage("criteria-ready")
+    return { ...world, plannerWithCriteria, issuer, issued, rules, ruleOperation, comparisonBindings, portfolioBindingOperation, selectPortfolio, selection, issuedUnits: issued.value.units, reviseRule: async () => { ruleOperation.id = "criterion-revision"; return rules.register({ caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: criterion.operator, value: criterion.value + 1, unit: "USD", period: horizon, evidenceRefs: [evidence], expectedRuleVersion: 1, sensitivity: issued.value.units }, context) } }
+  } catch (error) { await world.cleanup(); throw error }
+}
+
+/** Compose real sensitivity services without performing an unrelated positive calculation first. */
+export async function createWp13SensitivityRuntimeFixture(options: FixtureOptions = {}) {
+  const world = await createWp13AnalysisFixture(options)
+  const { state, host, access, rules, results, proposalCoverageWrites, issuer, preview, selectedRef, parameterRef, criterion } = world
+  const sensitivityBindingOperation = { id: "sensitivity-binding-op" }
+  const bindings = createCriterionResultBindings({ state, host, rules, results, authorizeCase: async () => access.allowed, verifyBinding: async () => access.allowed, verifySnapshot: () => access.allowed, operationIdentity: () => sensitivityBindingOperation.id, proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
+  const exact = createPlannerExactThreshold({ units: issuer, preview })
+  let exactCalls = 0
+  const evaluate = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview, exactThreshold: async (request, binding, trusted) => { exactCalls += 1; return exact(request, binding.baselineRef, trusted) }, idempotencyKey: async (digest) => `sensitivity-${digest}` })
+  const portfolio: PortfolioPort = { evaluate: async () => ({ status: "unavailable", reason: "unused-by-sensitivity-test" }), sensitivity: evaluate }
+  const persistent = createPersistentSensitivityPort({ portfolio, results, bindings, resolveBinding: issuer.resolve, idempotencyKey: async (digest) => `persisted-${digest}` })
+  const sensitivityRequest: SensitivityRequest = { scenarioRef: selectedRef, parameterBounds: { parameterRef, minimum: options.renewal ? 0 : 100000, maximum: options.renewal ? 100000 : 120000, steps: 2 }, criterion }
+  return { ...world, evaluate, persistent, bindings, sensitivityRequest, exact, get exactCalls() { return exactCalls } }
+}
+
+/** The positive fixture deliberately computes and persists the requested real sensitivity. */
+export async function createWp13SensitivityFixture(options: FixtureOptions = {}) {
+  const world = await createWp13SensitivityRuntimeFixture(options)
+  try {
+    world.stage("sensitivity-start")
+    const saved = await world.persistent.evaluateAndStore(world.sensitivityRequest, world.caseRef, world.context)
+    if (saved.status !== "ok") throw new Error(`sensitivity was not stored: ${saved.reason}`)
+    world.stage("sensitivity-ready")
+    return { ...world, saved: saved.value, get exactCalls() { return world.exactCalls } }
+  } catch (error) { await world.cleanup(); throw error }
 }
