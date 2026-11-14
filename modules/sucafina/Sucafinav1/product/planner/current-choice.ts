@@ -36,7 +36,7 @@ export function createCurrentPlannerChoice(input: {
     const simulated = await input.planner.simulateScenario(scenario, context)
     if (simulated.status !== "ok") return simulated
     if (!simulated.value.sourceRefs.some((ref) => ref.refDigest === current.value.evidence.refDigest) || !await continuity.value.revalidate() || !await input.authorizeChoice(caseRef, choice, context)) return { status: "stale", reason: "choice-or-source-changed" } as const
-    const saved = await input.persist({ kind: "scenario", request: scenario, result: simulated.value }, callId, context)
+    const saved = await input.persist({ kind: "scenario", request: scenario, result: simulated.value }, callId, context, input.planner)
     if (saved.status !== "ok") return saved
     const stored = await input.store.read({ resultRef: saved.value.resultRef, kind: "scenario" }, context)
     if (stored.status !== "ok" || stored.value.kind !== "scenario" || stored.value.caseRef.id !== caseRef.id || stored.value.caseRef.incarnation !== caseRef.incarnation || stored.value.caseRef.version !== caseRef.version || stored.value.requestDigest !== digestSfValue(scenario) || stored.value.resultDigest !== digestSfValue(simulated.value)) return { status: "stale", reason: "choice-result-unavailable" } as const

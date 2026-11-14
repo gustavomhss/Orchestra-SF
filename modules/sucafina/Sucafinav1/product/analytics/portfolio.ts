@@ -34,7 +34,11 @@ export async function readPortfolioBi(request: BiViewRequest, context: TrustedDo
       if (!state.bundle) return { status: "unavailable", reason: "bundle-unavailable" }
       return { status: "ok", value: state.bundle.presentation }
     },
-    revalidate: (input, binding) => host.revalidate(input, binding, state.bundle),
+    async revalidate(input, binding) {
+      const bundle = structuredClone(state.bundle)
+      const digest = digestSfValue(bundle ?? null)
+      return await host.revalidate(input, binding, bundle) && digestSfValue(bundle ?? null) === digest
+    },
   }
   const result = await readBiPresentation(request, context, source, authority)
   if (result.status !== "ok") return result
@@ -50,13 +54,22 @@ export function bindPortfolioBiPort(input: {
 }): PortfolioBiHost {
   return {
     revalidate: input.revalidate,
-    async readView(request, context) {
-      const binding = await input.resolve(request, context)
+    async readView(incoming, context) {
+      const request = structuredClone(incoming)
+      const forwarded = structuredClone(request)
+      const binding = await input.resolve(forwarded, context)
       if (binding.status !== "ok") return binding
-      if (binding.value.request.scope.horizon.start !== request.period.start || binding.value.request.scope.horizon.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
-      const portfolio = await input.portfolio.evaluate(binding.value.request, context)
+      if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "selection-changed" }
+      const selected = structuredClone(binding.value.request)
+      const project = binding.value.project
+      if (selected.scope.horizon.start !== request.period.start || selected.scope.horizon.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
+      const evaluated = structuredClone(selected)
+      const portfolio = structuredClone(await input.portfolio.evaluate(evaluated, context))
       if (portfolio.status !== "ok") return portfolio
-      const projected = binding.value.project(portfolio.value)
+      if (digestSfValue(evaluated) !== digestSfValue(selected)) return { status: "stale", reason: "selection-changed" }
+      const projectedInput = structuredClone(portfolio.value)
+      const projected = structuredClone(project(projectedInput))
+      if (digestSfValue(projectedInput) !== digestSfValue(portfolio.value)) return { status: "stale", reason: "portfolio-changed-by-projection" }
       if (projected.projection.context.period.start !== request.period.start || projected.projection.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
       const decision = projected.projection.decision
       if (decision?.kind !== "portfolio" || !decision.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
@@ -74,15 +87,25 @@ export function bindStoredPortfolioBiPort(input: {
 }): PortfolioBiHost {
   return {
     revalidate: input.revalidate,
-    async readView(request, context) {
-      const selection = await input.resolve(request, context)
-      if (selection.status !== "ok") return selection
-      if (!selection.value.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
-      const projection = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selection.value.portfolioResultRef }, context)
+    async readView(incoming, context) {
+      const request = structuredClone(incoming)
+      const forwarded = structuredClone(request)
+      const resolved = await input.resolve(forwarded, context)
+      if (resolved.status !== "ok") return resolved
+      if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "selection-changed" }
+      const selection = { selectionRef: request.selectionRef, portfolioResultRef: resolved.value.portfolioResultRef }
+      const present = resolved.value.present
+      if (!selection.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
+      const selected = structuredClone(selection)
+      const projection = structuredClone(await input.readProjection(selected, context))
       if (projection.status !== "ok") return projection
+      if (digestSfValue(selected) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
       if (projection.value.context.period.start !== request.period.start || projection.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
-      if (projection.value.decision?.kind !== "portfolio" || projection.value.decision.portfolioResultRef !== selection.value.portfolioResultRef) return { status: "stale", reason: "portfolio-reference-mismatch" }
-      return { status: "ok", value: { projection: projection.value, presentation: selection.value.present(projection.value) } }
+      if (projection.value.decision?.kind !== "portfolio" || projection.value.decision.portfolioResultRef !== selection.portfolioResultRef) return { status: "stale", reason: "portfolio-reference-mismatch" }
+      const presentationInput = structuredClone(projection.value)
+      const presentation = structuredClone(present(presentationInput))
+      if (!sameBiProjection(presentationInput, projection.value)) return { status: "stale", reason: "projection-changed-by-presentation" }
+      return { status: "ok", value: { projection: projection.value, presentation } }
     },
   }
 }
