@@ -8,7 +8,8 @@ import { revokeReportsSession } from "./reports-support/revocation.ts"
 
 // Nominal CI-UI-REPORTS: e2e/playwright.production.config.ts, this file only,
 // workers=1, retries=0. The fixture launches the real CLI installation in Actions.
-// Missing producer composition fails the assertions; it is never skip/xfail or PASS.
+// These four scenarios exercise coherent C6 plus the owned Reports changes.
+// Missing authority resources fail the assertions; no scenario becomes skip/xfail.
 reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest.describe.configure({ retries: 0, timeout: 180_000 })
   // Real operator credentials must never enter retained Playwright API/network traces.
@@ -34,7 +35,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     const { saved } = await prepareReview(page, app, corpus, info)
     await changeForecast(page, app, corpus)
     await openAndReopenMeeting(page, app, saved)
-    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info))
+    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info, { loseReplyResponse: true }))
     const beforeReload = await api.version()
     const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
     const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
@@ -54,7 +55,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       await expectConfirmedAnswerVisible(page, answer)
     })
     const edited = await reportsTest.step("Edit once through Review; reject old selector/reuse and read the exact original through history", () => editHumanAnswer(page, app, api, answer,
-      `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`))
+      `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`, { recoverRequestFailure: true, info }))
     expect(edited.incarnation).toBe(answer.message.incarnation)
     expect(edited.version).toBe(answer.message.version + 1)
     expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)

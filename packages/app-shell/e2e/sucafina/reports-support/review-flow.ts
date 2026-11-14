@@ -23,10 +23,10 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
     await form.getByRole("checkbox", { name: title, exact: true }).check()
   await form.getByRole("button", { name: "Generate Report", exact: true }).click()
 
-  // WP07 already exports this exact view. WP10 must mount it from the existing entry;
-  // a legacy live-data download is not accepted as a preserved-review journey.
+  // C6 mounts the delivered preparation view from the existing Reports entry.
+  // This journey uses that installed composition and its preserved selection.
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  await expect(preparation, "BLOCKED_COMPOSITION: Generate Report must mount the real ReviewPreparationView").toBeVisible()
+  await expect(preparation, "Generate Report opens the installed ReviewPreparationView").toBeVisible()
   const load = preparation.getByRole("button", { name: "Load selection", exact: true })
   await expect(load).toBeEnabled()
   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
@@ -224,6 +224,11 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
   const link = preparation.getByRole("link", { name: "Download generated report", exact: true })
   await expect(link).toHaveCount(1)
+  const expectedDownload = new URL(app.dashboardURL)
+  expectedDownload.search = new URLSearchParams({ sf: "review-download", artifactRef: artifact }).toString()
+  // A previous format remains visible while this response is processed. Wait
+  // for this artifact, not merely the already existing download link.
+  await expect(link).toHaveAttribute("href", expectedDownload.toString())
   const href = new URL(text(await link.getAttribute("href")), page.url())
   expect(href.origin).toBe(app.origin)
   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
@@ -283,8 +288,29 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
   const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+  const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
   await link.click()
   expect(object(await (await read).json()).value).toEqual(saved)
+  const resolved = await resolution
+  expect(resolved.status()).toBe(200)
+  expect(resolved.headers()["cache-control"]).toBe("no-store")
+  const links = object(await resolved.json()).links
+  expect(Array.isArray(links)).toBe(true)
+  expect(links).toHaveLength(1)
+  const authorized = object((links as unknown[])[0])
+  const destination = new URL(text(authorized.url), app.dashboardURL)
+  expect(destination.origin).toBe(app.origin)
+  expect(destination.pathname).toBe(new URL(app.dashboardURL).pathname)
+  expect(destination.searchParams.get("page")).toBe("Budget Overview")
+  expect(destination.searchParams.get("year")).toBe(String(corpus.year))
+  // The host offers the producer-authorized destination for an explicit choice.
+  // Opening the evidence button alone does not navigate away from the review.
+  const sources = page.getByRole("navigation", { name: "Origens autorizadas da revisão", exact: true })
+  const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
+  await expect(open).toHaveCount(1)
+  await expect(open).toHaveAttribute("href", destination.toString())
+  await open.click()
+  await expect(page).toHaveURL(destination.toString())
   await expect(page.locator("#content").getByRole("heading", { name: "Budget Overview", exact: true })).toBeVisible()
   const target = new URL(page.url())
   expect(target.origin).toBe(app.origin)

@@ -7,32 +7,92 @@ export type ReviewDiscussionMessage = { id: string; incarnation: string; version
 export type ReviewDiscussionThread = { id: string; recipientRef: string; state: string; messages: ReviewDiscussionMessage[] }
 export type ReviewPreparedAnswer = { answerRef: string; answer: string; authorRef: string; observationRef: string; observedSourceVersion: number; expectedScopeFingerprint: string; reviewContext: ReviewDiscussionPin; projection: DomainProjection }
 
-/** Presentation transport only. Every call is admitted by the installed host;
- * neither URL selections nor the principal shown by the UI confer authority.
+export type ReviewDiscussionTransport = {
+  fetch: typeof fetch
+  url: () => string
+  binding: () => string | undefined
+}
+
+export class ReviewDiscussionError extends Error {
+  constructor(message: string, readonly kind: "access" | "recoverable" | "conflict" | "invalid", readonly outcome: "rejected" | "unknown") {
+    super(message)
+    this.name = "ReviewDiscussionError"
+  }
+}
+
+/** Presentation transport only. The binding is an equality guard, never a grant.
+ * The installed host must check it before invoking an action and echo it.
+ * Missing support closes this discussion, including its recipients preflight.
  */
-export function createReviewDiscussionClient(accessLost: () => void) {
+export function createReviewDiscussionClient(accessLost: () => void, transport: ReviewDiscussionTransport = {
+  fetch: (...args) => fetch(...args),
+  url: () => location.href,
+  binding: () => document.querySelector<HTMLMetaElement>('meta[name="sf-access-revision"]')?.content,
+}) {
   const pending = new Set<AbortController>()
+  const binding = transport.binding()
+  const endpoint = new URL(transport.url())
   let disposed = false
+  const dispose = () => { disposed = true; pending.forEach((controller) => controller.abort()); pending.clear() }
+  const lost = () => {
+    if (!disposed) { dispose(); accessLost() }
+    return new ReviewDiscussionError("Review discussion access changed. Reopen an authorized review.", "access", "rejected")
+  }
+  const unverified = () => {
+    // An unsupported host is not evidence that the independent meeting was revoked.
+    dispose()
+    return new ReviewDiscussionError("Review discussion binding could not be verified. Reopen an authorized review.", "access", "rejected")
+  }
+  const checkBinding = () => {
+    if (disposed) throw new ReviewDiscussionError("Review discussion unavailable", "access", "rejected")
+    if (!binding || !/^[a-f0-9]{64}$/.test(binding)) throw unverified()
+    if (transport.binding() !== binding) throw lost()
+    const current = new URL(transport.url())
+    if (current.origin !== endpoint.origin || current.pathname !== endpoint.pathname) throw lost()
+  }
   const post = async (mode: string, payload: unknown, key?: string) => {
-    if (disposed) throw new Error("Review discussion unavailable")
-    const url = new URL(location.href)
+    checkBinding()
+    const url = new URL(transport.url())
     url.search = new URLSearchParams({ sf: mode }).toString()
     url.hash = ""
     const controller = new AbortController()
     const bodyText = JSON.stringify(payload)
     pending.add(controller)
     const deadline = setTimeout(() => controller.abort(), 30_000)
-    const response = await fetch(url, { method: "POST", credentials: "same-origin", cache: "no-store", signal: controller.signal,
-      headers: { "Content-Type": "application/json", ...(key ? { "Idempotency-Key": key } : {}) }, body: bodyText,
-    }).catch(() => undefined)
-    const body: unknown = await response?.json().catch(() => undefined)
-    clearTimeout(deadline)
-    pending.delete(controller)
-    if (disposed || controller.signal.aborted) throw new Error("Review discussion unavailable")
-    if (response?.status === 401 || response?.status === 403) accessLost()
-    const result = discussionObject(body)
-    if (!response?.ok || result.status !== "ok") throw new Error(typeof result.reason === "string" ? result.reason : "Review discussion unavailable")
-    return result.value
+    try {
+      const response = await transport.fetch(url, { method: "POST", credentials: "same-origin", cache: "no-store", signal: controller.signal,
+        headers: { "Content-Type": "application/json", "X-SF-Review-Binding": binding!, ...(key ? { "Idempotency-Key": key } : {}) }, body: bodyText,
+      }).catch(() => undefined)
+      checkBinding()
+      if (!response || controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
+      const destination = response.url ? new URL(response.url, url) : undefined
+      if (response.status === 401 || response.status === 403 || (response.redirected && (destination?.origin !== url.origin || /\/auth\/login\/?$/.test(destination.pathname)))) throw lost()
+      const body: unknown = await response.json().catch(() => undefined)
+      checkBinding()
+      if (controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
+      const result = body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : undefined
+      if (result?.status === "denied") throw lost()
+      // C6's reader can mask denial as unavailable. Only this read is terminal;
+      // an action returning the same legacy 503 still has an unknown outcome.
+      if (mode === "collaboration-thread-read" && result?.reason === "thread-access-unavailable") throw lost()
+      if (response.status === 409 || result?.status === "stale" || result?.status === "conflict" || result?.status === "provider-conflict") {
+        // Only these producer results establish a precommit CAS rejection.
+        // Idempotency/target conflicts can refer to an earlier durable commit.
+        const rejected = result?.reason === "product-state-changed" || result?.reason === "thread-changed"
+        throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action conflicts with a newer version.", "conflict", rejected ? "rejected" : "unknown")
+      }
+      if (response.status >= 500)
+        throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action outcome is unavailable.", "recoverable", "unknown")
+      if (!response.ok || result?.status !== "ok")
+        throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "Review discussion response unavailable", "invalid", "unknown")
+      const echo = response.headers.get("X-SF-Review-Binding")
+      if (echo === null) throw unverified()
+      if (echo !== binding) throw lost()
+      return result.value
+    } finally {
+      clearTimeout(deadline)
+      pending.delete(controller)
+    }
   }
   const mutation = async () => ({ expectedStorageVersion: discussionVersion(await post("collaboration-storage-version", { namespace: "threads" }), 0), idempotencyKey: crypto.randomUUID() })
   return {
@@ -45,10 +105,10 @@ export function createReviewDiscussionClient(accessLost: () => void) {
     },
     async thread(id: string) {
       const thread = discussionThread(await post("collaboration-thread-read", { id }))
-      if (thread.id !== id) throw new Error("Review discussion unavailable")
+      if (thread.id !== id) throw lost()
       return thread
     },
-    dispose() { disposed = true; pending.forEach((controller) => controller.abort()); pending.clear() },
+    dispose,
   }
 }
 
@@ -96,3 +156,4 @@ export function discussionAnswer(value: unknown): ReviewPreparedAnswer {
   if (!Array.isArray(projection.values) || !Array.isArray(projection.components) || !Array.isArray(projection.missing) || !projection.context) throw new Error("Preserved projection unavailable")
   return { answerRef: discussionText(answer.answerRef), answer: discussionText(answer.answer), authorRef: discussionText(answer.authorRef), observationRef: discussionText(answer.observationRef), observedSourceVersion: discussionVersion(answer.observedSourceVersion), expectedScopeFingerprint: discussionText(answer.expectedScopeFingerprint), reviewContext: discussionPin(answer.reviewContext), projection: projection as DomainProjection }
 }
+

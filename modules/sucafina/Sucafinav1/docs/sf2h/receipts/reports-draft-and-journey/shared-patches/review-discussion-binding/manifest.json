@@ -1,0 +1,125 @@
+{
+  "schema": "sf-mission36-shared-patch-v1",
+  "mission": "missao36",
+  "recipient": "session33",
+  "status": "PROPOSED_NOT_APPLIED",
+  "base": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+    "composition": "C6"
+  },
+  "purpose": "Bind preserved-review discussion reads and explicit writes to the original authenticated principal and scope, expose edit conflicts accurately, and purge on a focus probe that observes an authority change.",
+  "contract": {
+    "header": "X-SF-Review-Binding",
+    "encoding": "Exact lowercase 64-hex accessRevision from meta[name=sf-access-revision].content; no JSON, base64 or browser-produced identity.",
+    "request": "The owned client sends the initial access revision on all discussion POSTs and requires a successful recipients read with a matching echo before mutation. A present malformed or different expected revision receives HTTP403 before route invocation.",
+    "success": "An admitted collaboration result echoes the admitted accessRevision when the request supplied the header. The review-thread-context route echoes it on success. The client accepts successful data only if the echo matches its original revision and its view generation is live.",
+    "failure": {
+      "status": 403,
+      "body": {
+        "status": "denied",
+        "reason": "review-discussion-binding-changed"
+      }
+    },
+    "compatibility": "Header absence preserves existing consumers. The new Reports client fails closed without a matching echo and therefore cannot mutate against an unpatched C6 boundary.",
+    "authority": "The header selects an expected identity; it never grants access or replaces current admission, C05/source/recipient authorization, C08 CAS, human intent or final release checks."
+  },
+  "provenance": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "fact": "accessRevision digest includes installationId, projectId, principalRef, roles, scopes, canWrite, namespaces, operations, humanActions and policyVersion."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "fact": "documentHtml writes sf-access-revision meta; shell refresh compares the matching response header."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "fact": "C08 replay checks the authenticated principal/namespace/target/key, command identity and current authority before returning the durable result without executing the write callback."
+    }
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+      "preimage_blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+      "preimage": "preimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+      "postimage": "postimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+      "postimage_blob": "956ff69dbe8941ec50b2b29c9b923327379c269d",
+      "preimage_sha256": "eb9dcaee2e9c2fc314c28f6b22a9f2044ad2d450a8811fd3d2a9fc6824631c55",
+      "postimage_sha256": "8e4981e266cead721561fcdd7e1a88e743b6c1d395f174d1b6e155e5a9ed59df",
+      "preimage_bytes": 4683,
+      "postimage_bytes": 5331
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "preimage_blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+      "preimage": "preimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+      "postimage": "postimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+      "postimage_blob": "42ca69647984e4bc1d4afc22f3fa11deeeeea6a5",
+      "preimage_sha256": "1fc0be8b40f4ea036080987c67619d8f8480dc3dc74c399897534dae95abab0c",
+      "postimage_sha256": "800bfc74f34edcc170ca881e2b809ccae2ffb73a867f01427ac6e2adcf5a7716",
+      "preimage_bytes": 19480,
+      "postimage_bytes": 19946
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+      "preimage_blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+      "preimage": "preimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+      "postimage": "postimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+      "postimage_blob": "7c6d585a6245ad95b0948b8ca3d6b0c8f45f810f",
+      "preimage_sha256": "048039ee0b9397325731932487bfe4ff4ea72fcf2182c8cf19d94c62732ac751",
+      "postimage_sha256": "9925f33be30c9858d182a6686799a45a010062d684319e22271683a328f78848",
+      "preimage_bytes": 11104,
+      "postimage_bytes": 11180
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "preimage_blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "preimage": "preimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "postimage": "postimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "postimage_blob": "fcf5a23b44eb4bcbea135858bfa6326eb9e6b10c",
+      "preimage_sha256": "4c28afeb113132ce7836f2d247d175418c9c5ef3be25323cb55e4161efb7d3f2",
+      "postimage_sha256": "394626cd227efc8fb0d101010398ab445bc0c50fd586bef7dc74181c08a70549",
+      "preimage_bytes": 17497,
+      "postimage_bytes": 17788
+    }
+  ],
+  "application": {
+    "owner": "session33",
+    "method": "Compare all current blobs with preimage_blob at one coherent candidate, then apply the complete diff through the owner's normal GitHub MCP CAS path. If any preimage differs, reconcile with that owner's current candidate before editing.",
+    "diff": "review-discussion-binding.patch",
+    "not_applied_to": [
+      "shared product sources",
+      "C6",
+      "astra-wp07 working source",
+      "dev",
+      "any running installation"
+    ],
+    "approval": "This bundle is a proposed input. It does not claim session33 consumption, permission to merge, deployment or acceptance.",
+    "diff_sha256": "23d799f3bbf7df3d293fb41c714edab5ec92d569486dd383c7a0492f2e700ce8",
+    "artifact_format": "Complete source images use .ts.txt suffixes and are inert documentation; path remains the real .ts application target."
+  },
+  "verification": {
+    "local_tests": "NOT_RUN: prohibited by mission36",
+    "remote_tests": "NOT_RUN_FOR_SHARED_PATCH: session33 must execute surgical existing-dispatcher gates after consumption",
+    "performed": "Preimage Git blob and postimage SHA256/Git blob identity plus complete unified diff generated as artifact processing only.",
+    "required": [
+      "Old expected revision under an independently changed authenticated principal or scope is rejected before invoking reads or writes.",
+      "Matching admitted revision returns the exact X-SF-Review-Binding echo; no header consumer remains compatible.",
+      "Reply response loss retains the original serialized payload and idempotency key; authorized reconciliation alone performs no write; retry is explicit and C08 does not append twice.",
+      "Thread edit CAS returns conflict/product-state-changed rather than unavailable; denied read/commit/final-reread results reach HTTP403.",
+      "Focus probe with changed or missing revision on HTTP2xx clears the view and dispatches sf-access-revoked; network/HTTP5xx does not manufacture a denial.",
+      "Run the four nominal Reports E2Es over the owner's real composed candidate; do not replace them with a browser bundle check."
+    ]
+  },
+  "limitations": [
+    "C6 lacks a distinct real recipient authority and some external C05 source authorities. This patch does not provide principals, provider identity, ACL, native witness or test-only grants.",
+    "Existing thread readers may report source/recipient unavailability as HTTP503; callers must not infer current authorization from a generic unavailable result.",
+    "Existing edit replay after a later edit may remain unavailable because the producer requires the committed version to be current. The original key remains safe against duplicate writes; this patch adds no receipt lookup or automatic resend.",
+    "These pre/post images are proposed shared code stored only inside mission-owned receipts. All shared production paths remain read-only."
+  ]
+}

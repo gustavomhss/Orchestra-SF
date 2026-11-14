@@ -7,13 +7,15 @@ import type { ReportsCorpus } from "./corpus.ts"
 import { expectConfirmedReviewAnswer, expectCreatedReviewQuestion, expectEditedReviewAnswer, expectPreparedReviewAnswer, expectRepliedReviewQuestion, reportsCollaboration } from "./confirmation.ts"
 import type { ReportsCollaboration, ReviewAnswer, ReviewBasis, ReviewPin } from "./confirmation.ts"
 import { expectCapturedBudget } from "./review-flow.ts"
+import { recoverLostReplyResponse } from "./lost-reply-response.ts"
+import { recoverFailedEditRequest } from "./failed-edit-request.ts"
 
 /** The installed Review controls perform every human mutation. Direct HTTP
  * calls below only read back authority/state or probe negative boundaries.
  * The real local operator is the recipient; distinct-person authority is not
  * asserted without a genuinely admitted second identity.
  */
-export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo) {
+export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo, options: { loseReplyResponse?: boolean } = {}) {
   const sections = saved.sections.filter((section) => section.title === "Budget")
   expect(sections).toHaveLength(1)
   const section = sections[0]!
@@ -37,6 +39,8 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
 
   const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
   await expect(discussion).toBeVisible()
+  await expect(discussion.getByLabel("Recipient", { exact: true }),
+    "The installed host must provide its authorized recipient and verifiable X-SF-Review-Binding before a C05 mutation").toHaveValue(app.actorId)
   await discussion.getByLabel("Review section", { exact: true }).selectOption(section.id)
   await discussion.getByLabel("Review source", { exact: true }).selectOption(source.refId)
   await discussion.getByLabel("Recipient", { exact: true }).selectOption(app.actorId)
@@ -55,11 +59,13 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   const replyBody = `Human answer: this review retains ${corpus.before} for ${corpus.annual.start} through ${corpus.annual.end}. REPORTS_HUMAN_ORIGINAL`
   await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(replyBody)
   const beforeReply = await api.version()
-  const replied = await submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply")
+  const replied = options.loseReplyResponse
+    ? await recoverLostReplyResponse({ page, app, api, discussion, question, body: replyBody, expectedStorageVersion: beforeReply, info })
+    : await submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply")
   expect(replied.payload).toMatchObject({ id: question.id, body: replyBody })
   expectMutation(replied.payload.mutation, beforeReply)
   const message = await expectRepliedReviewQuestion(api, question, { principalRef: app.actorId, body: replyBody }, replied.value)
-  await expect(discussion.getByRole("status")).toHaveText("Reply saved. Review and confirm the exact answer before reusing it.")
+  await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
   const article = discussion.getByRole("article", { name: `Message ${message.id}`, exact: true })
   await expect(article).toContainText(message.body)
   const prepared = await submit(page, app, article.getByRole("button", { name: "Review this answer", exact: true }), "collaboration-answer-prepare-message")
@@ -114,12 +120,14 @@ export async function expectConfirmedAnswerVisible(page: Page, answer: ReviewAns
   await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === answer.questionId)
 }
 
-export async function editHumanAnswer(page: Page, app: ReportsInstallation, api: ReportsCollaboration, answer: ReviewAnswer, body: string) {
+export async function editHumanAnswer(page: Page, app: ReportsInstallation, api: ReportsCollaboration, answer: ReviewAnswer, body: string, recovery?: { recoverRequestFailure: true; info: TestInfo }) {
   const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
   const article = discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
   await article.getByRole("textbox", { name: "Edited answer", exact: true }).fill(body)
   const beforeEdit = await api.version()
-  const edited = await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit")
+  const edited = recovery?.recoverRequestFailure
+    ? await recoverFailedEditRequest({ page, app, api, discussion, article, answer, body, expectedStorageVersion: beforeEdit, info: recovery.info })
+    : await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit")
   expect(edited.payload).toMatchObject({
     id: answer.questionId, messageId: answer.message.id, expectedVersion: answer.message.version, body,
   })
@@ -128,7 +136,7 @@ export async function editHumanAnswer(page: Page, app: ReportsInstallation, api:
   await expect(discussion.getByRole("status")).toHaveText("Answer edited. Its previous version remains protected history; review the new answer before confirming again.")
   await expect(article).toContainText(body)
   const unavailable = discussion.getByRole("region", { name: "Confirmed answer", exact: true })
-  await expect(unavailable).toHaveText("No currently reusable confirmed answer.")
+  await expect(unavailable).toHaveText("No confirmed answer is currently available to read or reuse.")
   await expect(unavailable.getByRole("heading")).toHaveCount(0)
   await expect(unavailable).not.toContainText(answer.message.body)
   const history = discussion.getByRole("region", { name: "Answer history", exact: true })
