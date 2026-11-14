@@ -56,20 +56,22 @@ test("Memory integrity rejects an in-place source change after the real Atlas re
     try {
       expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("ok")
       const before = await f.readAtlas()
-      f.business.context.recall = async (selection, trusted) => {
-        const result = await recall(selection, trusted)
-        if (f.driver.currentSnapshots?.() && !reached) {
-          expect(result).toHaveLength(1)
-          reached = true
-          await f.persistence.transaction("procurement", async (snapshot) => {
-            const request = object(object(object(snapshot.data.store).requests)["PR-1"])
+      if (!f.persistence.transactionAll) throw new Error("Real C08 scope unavailable")
+      const checked = await f.persistence.transactionAll(async (snapshots) => {
+        f.business.context.recall = async (selection, trusted) => {
+          const result = await recall(selection, trusted)
+          if (f.driver.currentSnapshots?.() && !reached) {
+            expect(result).toHaveLength(1)
+            reached = true
+            // Fault the actual open C08 snapshot, not the cloned reader view.
+            const request = object(object(object(snapshots.procurement.data.store).requests)["PR-1"])
             object(object(request.request).pr).estAmount = 190
-            return { commit: true, value: undefined }
-          })
+          }
+          return result
         }
-        return result
-      }
-      expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("denied")
+        return { commit: false, value: await f.stale.preflight(f.record, call, f.output) }
+      })
+      expect(checked.status).toBe("denied")
       expect(reached).toBe(true)
       expect(await f.readAtlas()).toEqual(before)
     } finally { f.business.context.recall = recall; f.authority.human.finish(call) }

@@ -1,0 +1,51 @@
+{
+  "mission": "memory-integrity-preflight",
+  "attempt": "MI02",
+  "status": "FAIL",
+  "productW": "f511f30b73289c2f21c843254569d31c02eb9608",
+  "productTree": "ee2964cd6cc96ee2697e9d05835777870a843f65",
+  "snapshotS": "9294efc1ec5a2f0fdd02f3eb0544b92b2b77a6b8",
+  "snapshotTree": "a48f9fdaf0bbf68961de600603739e306784ec9a",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "4f81d73bde795435b6b2e659b879fec3a5796b02d35afdecb15b35fb8e2ca914",
+  "requestBlob": "91feeef7b6fe9e7925ddba2cdbe70319fe33fb62",
+  "run": 43633110221,
+  "job": 132563879756,
+  "cleanupJob": 132565315515,
+  "cleanup": "success",
+  "artifacts": [],
+  "pass": 11,
+  "fail": 1,
+  "expects": 76,
+  "tests": 12,
+  "files": 3,
+  "elapsedSeconds": 201.14,
+  "omni": {
+    "verdict": "pass",
+    "nonce": "869587fd7c280d5d2cf2dbfceff22737",
+    "spawns": 24,
+    "delegated": 0
+  },
+  "failure": {
+    "test": "Memory integrity rejects an in-place source change after the real Atlas reader awaited",
+    "error": "Nested local write attempted",
+    "location": "runtime/local-store.ts:292",
+    "injection": "authority.test.ts:64 invoked nested transaction(commit:true) from an active C08 scope",
+    "assertionReached": false,
+    "remediation": "Correct only own fault injection to mutate the existing active snapshot after the real reader; retain expected denied/reached/no-capture-rewrite assertions. Product unchanged."
+  }
+}
