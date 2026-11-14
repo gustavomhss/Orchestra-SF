@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import type { Snapshot } from "../../../runtime/contract.ts"
+import type { BlobTransaction } from "../../../runtime/assets.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfProductState } from "../../../product/contracts/state.ts"
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
@@ -40,7 +42,7 @@ test("FIN-IND-005 case materialization keeps two fresh reads while skipping unre
     const revalidate = history.fixture.host.revalidate
     history.fixture.host.revalidate = (context) => { observation.hostChecks++; return revalidate(context) }
     const transaction = history.fixture.store.transaction
-    history.fixture.store.transaction = (surface, work, options) => transaction(surface, async (snapshot, blobs) => {
+    history.fixture.store.transaction = (surface, work, options) => transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
       if (!observation.instrument || surface !== "dashboard") return work(snapshot, blobs)
       const state = snapshot.data.__sfProductV1 as SfProductState
       const key = Object.keys(state.preferences)[0]
