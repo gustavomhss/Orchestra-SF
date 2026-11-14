@@ -148,7 +148,11 @@ function conflictReview(result, attempt, form) {
       if (!response.ok) { message.textContent = "The current record could not be read. Your entries remain here; review again when access is available."; return }
       const next = new DOMParser().parseFromString(await response.text(), "text/html")
       if (next.body.dataset.surface !== document.body.dataset.surface) { message.textContent = "Your access changed. Reopen the record with your current access."; return }
-      const candidates = [...next.querySelectorAll("form[data-command]")].filter((candidate) => candidate.dataset.page === form.dataset.page && candidate.dataset.record === form.dataset.record && candidate.dataset.command === form.dataset.command)
+      // A Procurement record has separate save forms for PR, sourcing and PO.
+      // Review only the same stable section; a missing section stays unavailable.
+      const section = form.closest("section[id]")
+      const scope = section ? next.getElementById(section.id) : next
+      const candidates = [...(scope?.querySelectorAll("form[data-command]") || [])].filter((candidate) => candidate.dataset.page === form.dataset.page && candidate.dataset.record === form.dataset.record && candidate.dataset.command === form.dataset.command)
       const latest = candidates.length === 1 ? candidates[0] : null
       const version = latest?.dataset.version === undefined ? NaN : Number(latest.dataset.version)
       if (!latest || !Number.isSafeInteger(version) || version < 0 || latest.closest("fieldset[disabled]") || latest.querySelector('button[type="submit"]')?.disabled) {
