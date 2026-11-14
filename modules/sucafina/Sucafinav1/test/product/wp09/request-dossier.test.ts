@@ -9,6 +9,8 @@ import { createSfRequestDocumentEvidence } from "../../../product/documents/requ
 import { createSourcingDossierPreparation } from "../../../product/routines/dossier-host.ts"
 import { prepareDossierEvidence } from "../../../product/routines/dossier.ts"
 import { decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { StoredDocumentEvidence } from "../../../product/documents/store.ts"
 import type { ProductContext } from "../../../product/contracts/context.ts"
 import type { PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -70,6 +72,25 @@ test.each(["txt", "docx", "pdf"] as const)("%s Request evidence reaches the real
     if (pending.status !== "ok") throw new Error(pending.reason)
     expect(pending.value.draft.sourceRefs.some((ref) => ref.kind === "document")).toBe(false)
     expect(pending.value.draft.sourceRefs.some((ref) => ref.refId === requestRef)).toBe(true)
+    // WP06 has no public reject command. This is an explicit producer-state fixture over an actual extraction,
+    // exercising C14 rejection consumption without claiming a human rejection route.
+    const setCandidateStatus = async (status: "extracted" | "rejected") => {
+      const before = await fixture.authority.state.read(fixture.request(), "documents", (state) => state.documents[candidate.value.id] as StoredDocumentEvidence)
+      if (before.status !== "ok" || !before.value) throw new Error("Candidate state unavailable")
+      const evidence = { ...before.value.evidence, status }
+      const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "documents", expectedStorageVersion: before.storageVersion, idempotencyKey: `fixture-${status}`, commandDigest: digestSfValue({ id: candidate.value.id, status }), targetRef: fixture.authority.creationTarget.ref, targetIncarnation: fixture.authority.creationTarget.incarnation }, async (state) => {
+        state.documents[candidate.value.id] = { ...before.value, evidence, snapshot: { ...before.value.snapshot, evidence } }
+        return { commit: true, value: true }
+      })
+      if (saved.status !== "ok") throw new Error("Candidate fixture transition failed")
+    }
+    await setCandidateStatus("rejected")
+    const rejected = await prepareNow()
+    expect(rejected).toMatchObject({ status: "ok", value: { documents: [{ state: "rejected", fieldCandidate: "Price" }], summary: { confirmedDocumentCount: 0, pendingDocumentCount: 0, rejectedDocumentCount: 1 }, draft: { gaps: expect.arrayContaining(["document-rejected"]) }, complete: false } })
+    if (rejected.status !== "ok") throw new Error(rejected.reason)
+    expect(rejected.value.draft.sourceRefs.some((ref) => ref.kind === "document")).toBe(false)
+    expect(rejected.value.documents[0]).not.toHaveProperty("evidence")
+    await setCandidateStatus("extracted")
     const confirmed = await fixture.documentRequest("document-confirm", candidate.value)
     expect(confirmed.status).toBe(200)
     const confirmedEvidence = decodeSfOperationOutput("sf_document_extract", (await confirmed.json()).value)
@@ -103,5 +124,30 @@ test.each(["txt", "docx", "pdf"] as const)("%s Request evidence reaches the real
     const revoked = await fixture.uiCall("sf_evidence_get", { evidenceRef: confirmedEvidence.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmedEvidence.value.ref], context, reader: fixture.documents.documents.reader, revalidate: async (_, call) => fixture.authority.host.revalidate(call) }))
     expect(revoked).toEqual({ status: "ok", value: { entries: [{ state: "unavailable" }] } })
     expect(await fixture.store.transaction("procurement", async (snapshot) => ({ commit: false, value: object(object(object(object(snapshot.data.store).requests).r1).request).status }))).toBe("sourcing")
+    if (format === "pdf") {
+      const empty = await documentFormatFixture("pdf", "")
+      const uploadedEmpty = await fixture.store.transaction("procurement", async (snapshot, blobs) => {
+        const value = await uploadAsset(snapshot, blobs, { id: fixture.principal.id, roles: ["buyer"], canWrite: true, assigned: [], domains: [] }, { page: "Requests", action: "upload", id: "r1", version: snapshot.versions["requests:r1"]?.version ?? 0, values: {} }, { at: fixture.at, id: () => "asset-empty", directory: [] }, fixture.runtime.assets.services, "quote", { name: "empty.pdf", type: empty.mediaType, bytes: empty.bytes })
+        return { commit: value.ok, value }
+      })
+      expect(uploadedEmpty.ok).toBe(true)
+      const sources = await (await fixture.documentRequest("document-sources")).json() as { value: { selectionRef: string }[] }
+      expect(sources.value).toHaveLength(1)
+      const unavailable = await fixture.documentRequest("document-admit", { selectionRef: sources.value[0]!.selectionRef })
+      expect(unavailable.status).not.toBe(200)
+      const failure = await unavailable.json() as { status: string; reason: string }
+      expect(failure.status).not.toBe("ok")
+      expect(failure.reason).toMatch(/text/i)
+      const emptyDossier = await fixture.uiCall("sf_evidence_get", { purpose: "empty-document-dossier" }, async (context) => {
+        const selection = await registry.createSelection(context)
+        if (selection.status !== "ok") throw new Error(selection.reason)
+        const requests = await registry.resolveRequestCollection(selection.value, context)
+        if (requests.status !== "ok") throw new Error(requests.reason)
+        const fresh = requests.value.requests.find((entry) => entry.target.recordId === "r1")
+        if (!fresh) throw new Error("Request unavailable")
+        return prepare(fresh.refId, context)
+      })
+      expect(emptyDossier).toMatchObject({ status: "ok", value: { documents: [], complete: false, draft: { gaps: expect.arrayContaining(["document-evidence-unavailable"]) } } })
+    }
   } finally { await fixture.dispose() }
 }, 120_000)

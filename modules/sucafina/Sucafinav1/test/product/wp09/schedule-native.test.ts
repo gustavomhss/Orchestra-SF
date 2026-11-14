@@ -15,16 +15,17 @@ import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionProjector } from "@orchestra/core/session/projector"
 import { SessionInputTable } from "@orchestra/core/session/sql"
 import { SessionStore } from "@orchestra/core/session/store"
-import { testEffect } from "../../../../../../packages/core/test/lib/effect"
+import { testEffect } from "@orchestra/core/test/lib/effect"
 import { readNativeRoutineSchedule } from "../../../product/routines/schedule-native.ts"
 import type { NativeRoutineScheduleHost } from "../../../product/routines/schedule-native.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { RoutineResult } from "../../../product/contracts/context.ts"
 import type { Capability } from "@orchestra/schema/capability"
-import type { ScheduledTaskCapability } from "@orchestra/core/scheduled-task/capability"
+import type { CapabilityScheduleManagement } from "@orchestra/schema/capability-schedule-management"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createRoutineResultAccess, routineArtifactDigest } from "../../../product/routines/result-access.ts"
 import type { RoutineArtifact, RoutineExecutionSnapshot } from "../../../product/routines/result-access.ts"
+import { createRoutineUiFixture } from "./ui-authority-fixture.ts"
 
 // Exercises actual SQLite schedule/session admission only. Provider execution and C07 approval are outside this proof.
 const execution = Layer.succeed(SessionExecution.Service, SessionExecution.Service.of({
@@ -51,11 +52,12 @@ it.effect("native Schedule controls and deduped prompt receipts remain distinct 
   const owner = { projectID: session.projectID, location, sessionID: session.id, agentID }
   const native = yield* tasks.capability.create(owner, { name: "Preparar revisão", prompt: "Reautenticar a solicitação opaca wp09-request antes de preparar a revisão.", cadence: { kind: "daily", time: "09:00" }, timezone: "America/Sao_Paulo", catchUp: "skip" })
   const authority = { allowed: true }
-  const context = { kind: "ui", binding: { principalRef: "owner", projectId: session.projectID } } as TrustedDomainContext
+  const ui = yield* Effect.promise(() => createRoutineUiFixture(session.projectID, "owner"))
+  const context = ui.context
   const host: NativeRoutineScheduleHost = {
     schedules: tasks.capability,
     resolve: async () => ({ status: "ok", value: { nativeId: native.id, owner, principalRef: "owner", projectId: session.projectID } }),
-    revalidate: async () => authority.allowed,
+    revalidate: async (call) => authority.allowed && call.kind === "ui" && await ui.authority.revalidate(call),
     readRoutine: async () => ({ status: "ok", value: null }),
   }
   const initial = yield* Effect.promise(() => readNativeRoutineSchedule("schedule-ref", context, host))
@@ -73,13 +75,14 @@ it.effect("native Schedule controls and deduped prompt receipts remain distinct 
   expect(JSON.stringify(read)).not.toContain("wp09-request")
   authority.allowed = false
   expect(yield* Effect.promise(() => readNativeRoutineSchedule("schedule-ref", context, host))).toEqual({ status: "denied", reason: "schedule-access-unavailable" })
+  ui.authority.finish(context)
 }))
 
 // The following contract probes use synthetic native snapshots. They prove the projection fences, not Relay execution.
 function lifecycleFixture() {
   const owner = { projectID: "project", sessionID: "owner-session", agentID: "sf_maestro", location: { directory: "/synthetic-schedule" } } as Capability.Owner
-  const native: ScheduledTaskCapability.Schedule = {
-    id: "native-schedule" as ScheduledTaskCapability.Schedule["id"], revision: 1, name: "Preparar revisão", prompt: "private-prompt-sentinel",
+  const native: CapabilityScheduleManagement.Schedule = {
+    id: "native-schedule" as CapabilityScheduleManagement.Schedule["id"], revision: 1, name: "Preparar revisão", prompt: "private-prompt-sentinel",
     cadence: { kind: "daily", time: "09:00" }, timezone: "UTC", catchUp: "skip", enabled: true, next: 2, runs: 1, skipped: 0,
     last: { outcome: "started", time: 1, sessionID: "child-session" as Capability.Owner["sessionID"] },
   }

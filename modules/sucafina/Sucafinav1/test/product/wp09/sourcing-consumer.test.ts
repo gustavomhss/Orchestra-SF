@@ -56,6 +56,8 @@ test("dossier keeps the real WP04 ranking, submitted FX, technical exclusion, mi
         expect(result.value.synthesisIncluded).toBe(false)
         expect(result.value.draft.domainApplied).toBe(false)
         expect(result.value.draft.gaps).toContain("document-evidence-unavailable")
+        expect(result.value.commercialSources.supplierRegister).toEqual({ status: "not-selected" })
+        expect(result.value.commercialSources.proposalTerms).toMatchObject({ status: "available", sourceRef: { refId: ref }, offers: quotes.map((quote) => expect.objectContaining({ offerRef: quote.id, amount: quote.total, currency: quote.currency })) })
         if (scenario === "three") {
           expect(result.value.comparison?.proposals).toHaveLength(3)
           expect(result.value.comparison?.ranking).not.toContain("C")

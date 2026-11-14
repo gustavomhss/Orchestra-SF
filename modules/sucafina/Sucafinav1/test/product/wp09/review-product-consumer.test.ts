@@ -54,7 +54,7 @@ test("routine review returns a real WP07 selection consumed by human preservatio
     if (preserved.status !== "ok") throw new Error(`first preservation failed: ${preserved.reason}`)
     const original = structuredClone(preserved.value)
     expect(await reviews.read(preserved.value.id, fixture.context)).toEqual({ status: "ok", value: original })
-    expect(preserved.value.sections.map((section) => ({ id: section.id, count: section.count, content: section.content }))).toEqual(first.value.draft.sections.map((section) => ({ id: section.id, count: section.count, content: section.content })))
+    expect(digestSfValue(preserved.value.sections.map((section) => ({ id: section.id, count: section.count, content: section.content })))).toBe(digestSfValue(first.value.draft.sections.map((section) => ({ id: section.id, count: section.count, content: section.content }))))
     await fixture.editActual("v1", 0, 42000)
     expect(await reviews.preview(first.value.reviewSelection.selectionRef, first.value.reviewSelection.sectionRefs, fixture.context, routineJanuary)).toMatchObject({ status: "stale" })
     expect(await reviews.read(preserved.value.id, fixture.context)).toEqual({ status: "ok", value: original })

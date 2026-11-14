@@ -4,7 +4,7 @@ import { prepareForecastReview } from "../../../product/routines/forecast.ts"
 import { prepareSourcingDossier } from "../../../product/routines/dossier.ts"
 import type { ConfirmationValidityProjection, DomainProjection } from "../../../product/contracts/context.ts"
 import type { ForecastCompareRequest } from "../../../product/contracts/operations.ts"
-import type { FinancialAnalysis, PlannerPort } from "../../../product/contracts/ports.ts"
+import type { FinancialAnalysis } from "../../../product/contracts/ports.ts"
 import type { CommercialComparison } from "../../../product/contracts/outputs.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
@@ -55,11 +55,23 @@ test("review coverage declares unavailable topics and unknown record counts with
   expect(JSON.stringify(result)).not.toContain("private")
 })
 
+test("review declares empty selections and omits a section whose producer supplied no usable period", async () => {
+  const host = {
+    readTopic: async () => ({ status: "ok" as const, value: { projection: { version: 1, values: [], components: [], missing: [] } as unknown as DomainProjection, recordCount: 0, confirmation: null } }),
+    revalidate: async () => true,
+  }
+  expect(await prepareFactualReview({ topicRefs: [], context, host })).toMatchObject({ status: "ok", value: { topics: [], draft: { sections: [], pendencies: [], coverage: { selectedTopics: 0, includedTopics: 0, unavailableTopics: 0, omittedTopics: 0, includedRecordCount: 0 } } } })
+  expect(await prepareFactualReview({ topicRefs: ["no-period"], context, host })).toMatchObject({ status: "ok", value: { draft: { sections: [], coverage: { selectedTopics: 1, includedTopics: 0, unavailableTopics: 0, omittedTopics: 1, includedRecordCount: 0 } } } })
+})
+
 test("forecast suppresses a comparison changed while confirmation was being read", async () => {
-  let reads = 0
+  const mutable = structuredClone(comparison)
   const result = await prepareForecastReview({ request, context, host: {
-    planner: { compareForecast: async () => ({ status: "ok", value: ++reads === 1 ? comparison : { ...comparison, knownDifference: 6000, completeDifference: 6000 } }) } as PlannerPort,
-    confirmations: async () => ({ status: "ok", value: [confirmation] }),
+    planner: { compareForecast: async () => ({ status: "ok", value: mutable }) },
+    confirmations: async () => {
+      mutable.candidate.version = 9
+      return { status: "ok", value: [confirmation] }
+    },
     revalidate: async () => true,
   } })
   expect(result).toEqual({ status: "stale", reason: "forecast-source-changed" })
@@ -68,7 +80,7 @@ test("forecast suppresses a comparison changed while confirmation was being read
 test("forecast rechecks C06 validity and never releases the old fingerprint after revocation", async () => {
   let reads = 0
   const result = await prepareForecastReview({ request, context, host: {
-    planner: { compareForecast: async () => ({ status: "ok", value: comparison }) } as PlannerPort,
+    planner: { compareForecast: async () => ({ status: "ok", value: comparison }) },
     confirmations: async () => ({ status: "ok", value: ++reads === 1 ? [confirmation] : [{ confirmationId: "jan", state: "unavailable", reason: "access-unavailable", evaluatedSourceVersion: 8, evaluatedAt: "2027-01-03" }] }),
     revalidate: async () => true,
   } })

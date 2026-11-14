@@ -11,7 +11,7 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import type { DomainPortHost, PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
-import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
+import { createCollaborationHumanAuthority } from "../../../product/collaboration/human.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
 import { createCollaborationMutationFence } from "../../../product/collaboration/mutation-fence.ts"
@@ -38,7 +38,7 @@ async function fixture() {
   const source: BusinessEvidenceRef = { schema: "sf-evidence-v1", kind: "record", refId: "review-note", installationId: identity.installationId, projectId: identity.projectId, refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "dashboard", recordType: "projects", recordId: "project", incarnation: "source-inc", version: 1, fields: ["notes"], projectionDigest: "b".repeat(64) } }
   const request = () => new Request("https://example.test/followup", { method: "POST", headers: { origin: "https://example.test", actor: person.id } })
   const ui = createSfUiAuthority({ authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? identity : undefined, commandIdentity: async (_request, _operation, digest) => digest, createId: randomUUID, now: () => Date.parse(at), privateCommands: ["sf-human:collaboration.handoff.confirm"] })
-  const human = createSfHumanAuthority({ origin: "https://example.test", ui })
+  const human = createCollaborationHumanAuthority({ origin: "https://example.test", ui })
   const readDigest = digestSfValue({ runRef: "run" })
   const read = available(await ui.admit(request(), "sf_routine_status", readDigest))
   if (!await ui.validate(read, "sf_routine_status", readDigest)) throw new Error("Read admission unavailable")

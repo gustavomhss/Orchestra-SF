@@ -60,6 +60,10 @@ export async function prepareSourcingDossier(input: SourcingDossierHost & {
   return { status: "ok", value: {
     ...prepared.value,
     documents: evidence.value.entries,
+    commercialSources: {
+      proposalTerms: prepared.value.sourcing ? { status: "available" as const, sourceRef: prepared.value.sourcing.evidence, offers: prepared.value.sourcing.offers, submittedBaseCurrency: prepared.value.sourcing.submittedBaseCurrency, submittedFx: prepared.value.sourcing.submittedFx } : { status: "unavailable" as const },
+      supplierRegister: { status: "not-selected" as const },
+    },
     summary: { proposalCount: comparison?.proposals.length ?? 0, comparisonAvailable: comparison !== null, ranking: comparison?.ranking ?? [], confirmedDocumentCount: evidence.value.entries.filter((entry) => entry.state === "confirmed").length, pendingDocumentCount: evidence.value.entries.filter((entry) => entry.state === "pending").length, rejectedDocumentCount: evidence.value.entries.filter((entry) => entry.state === "rejected").length, unavailableDocumentCount: evidence.value.entries.filter((entry) => entry.state === "unavailable").length },
     draft: { requestRef: input.requestRef, requestVersion: prepared.value.request.version, alternatives: comparison?.ranking ?? [], conditions: comparison?.conditions ?? [], sourceRefs: sourceRefs.filter((ref, index) => sourceRefs.findIndex((candidate) => candidate.refId === ref.refId && candidate.refDigest === ref.refDigest) === index), gaps, domainApplied: false as const },
     complete: comparison !== null && comparison.proposals.length >= 2 && comparison.conditions.length === 0 && gaps.length === 0,

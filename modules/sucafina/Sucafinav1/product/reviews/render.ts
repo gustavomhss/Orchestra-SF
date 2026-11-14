@@ -1,3 +1,13 @@
+import type { ReviewOutcomeComparison } from "./outcome.ts"
+import { reviewOutcomeComparisonLines, validOutcomeComparison, reviewOutcomeLines, validReviewOutcome } from "./outcome.ts"
+import type { ObservedResultProjection } from "../contracts/decisions.ts"
+import { reviewDecisionLines, validReviewDecision } from "./decision.ts"
+import { addReportTextSlides, addReportValueSlides, fitSlideText, reviewCoverageLines, SLIDE_HEADING } from "./report-layout.ts"
+import { createHash } from "node:crypto"
+import { reviewInclusion } from "./inclusion.ts"
+import type { ReviewInclusion } from "./inclusion.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+import type { Artifact } from "../../runtime/artifact.ts"
 import { matchesSelectedSources } from "./references.ts"
 import { renderReviewBars, renderReviewChart, renderReviewTimeline, renderReviewWaterfall, renderReviewSensitivity } from "./chart.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -22,7 +32,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     const bars = renderReviewBars(projection, chart)
     const timeline = renderReviewTimeline(projection, chart)
     const waterfall = renderReviewWaterfall(projection, chart)
-    const scatter = renderReviewSensitivity(chart)
+    const scatter = renderReviewSensitivity(projection, chart)
     const images = lineImage ? [lineImage] : bars ?? timeline ?? waterfall ?? (scatter ? [scatter] : [])
     const chartValues = images.length && chart?.status === "ok" ? chart.series.flatMap((series) => series.values.filter((value) => typeof value.value === "number")) : []
     const range = waterfall && chart?.status === "ok" && chart.waterfall?.status === "ok" ? chart.waterfall.segments.flatMap((segment) => [segment.start, segment.end].filter((value): value is number => value !== null)) : chartValues.map((entry) => Number(entry.value))
@@ -39,8 +49,14 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     const waterfallUnit = waterfallValues.find((value) => value.currency)?.currency ?? waterfallValues.find((value) => value.unit)?.unit ?? "unit unavailable"
     return [{
       images,
+      table: projection.values.map((value) => ({ value: `${value.id}: ${value.value === null ? "unavailable" : String(value.value)}${value.unit ? ` ${value.unit}` : ""}${value.currency ? ` ${value.currency}` : ""}`, period: `${value.period.start} – ${value.period.end}`, sources: value.sourceRefs.map((ref: BusinessEvidenceRef) => ref.refId).join(", ") || "unavailable" })),
+      figureCaption: chart?.status === "ok" ? `${chart.viewId} · ${timeline ? "dates" : scatter ? `${chart.sensitivity?.parameterUnit ?? "unavailable"} → ${chart.sensitivity?.resultUnit ?? "unavailable"}` : waterfall ? waterfallUnit : [...new Set(chart.series.map((series) => series.unit))].join(" / ")} · ${section.period.start} – ${section.period.end}` : "",
       title: `${section.title} · ${section.period.start} – ${section.period.end}`,
       lines: [
+        ...(typeof (projection as DomainProjection & { reviewAgendaNote?: unknown }).reviewAgendaNote === "string" ? [`Agenda note: ${(projection as DomainProjection & { reviewAgendaNote: string }).reviewAgendaNote}`] : []),
+        ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison && validOutcomeComparison((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison) ? reviewOutcomeComparisonLines((projection as DomainProjection & { reviewOutcomeComparison: ReviewOutcomeComparison }).reviewOutcomeComparison) : []),
+        ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome && validReviewOutcome((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) ? [...reviewOutcomeLines((projection as DomainProjection & { reviewOutcome: ObservedResultProjection }).reviewOutcome), `Outcome snapshot: ${JSON.stringify((projection as DomainProjection & { reviewOutcome: ObservedResultProjection }).reviewOutcome)}`] : []),
+        ...(projection.decision ? validReviewDecision(projection.decision) ? [...reviewDecisionLines(projection.decision), `Decision snapshot: ${JSON.stringify(projection.decision)}`] : ["Decision details unavailable."] : []),
         `Selected records: ${section.count}`,
         ...(chart ? images.length && chart.status === "ok" ? [
           lineImage
@@ -72,7 +88,6 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
           ...chart.sensitivity.result.evidenceRefs.map((ref) => `Sensitivity source: ${ref.refId}`),
           ...(chart.sensitivity.result.thresholdEvidence.state === "unavailable" ? [] : chart.sensitivity.result.thresholdEvidence.evidenceRefs.map((ref) => `Threshold source: ${ref.refId}`)),
         ] : []),
-        ...projection.values.map((value) => `${value.id}: ${value.value === null ? "unavailable" : String(value.value)}${value.unit ? ` ${value.unit}` : ""}${value.currency ? ` ${value.currency}` : ""} · ${value.period.start} – ${value.period.end} · sources: ${value.sourceRefs.map((ref: BusinessEvidenceRef) => ref.refId).join(", ") || "unavailable"}`),
         ...projection.missing.map((missing) => `${missing.field}: ${missing.reason}`),
         ...(projection.values.length ? [] : [section.count ? "No values available for the selected records." : "No records."]),
       ],
@@ -80,47 +95,108 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   })
   const selectedRefs = sections.flatMap((section) => section?.sourceRefs ?? [])
   const comments = review.comments.filter((comment) => matchesSelectedSources(comment.sourceRefs, selectedRefs))
-  if (review.comments.length > comments.length) content.push({ title: "Comment coverage", images: [], lines: ["Some preserved comments do not match the selected section sources and are omitted."] })
-  if (comments.length) content.push({ title: "Preserved comments", images: [], lines: comments.map((comment) => {
+  if (review.comments.length > comments.length) content.push({ title: "Comment coverage", images: [], table: [], figureCaption: "", lines: ["Some preserved comments do not match the selected section sources and are omitted."] })
+  if (comments.length) content.push({ title: "Preserved comments", images: [], table: [], figureCaption: "", lines: comments.map((comment) => {
     return `${comment.id} v${comment.version} · ${comment.authorRef} · ${comment.createdAt}: ${comment.content}`
   }) })
+  const coverage = reviewCoverageLines(review, options.sectionRefs)
+  if (coverage) content.unshift({ title: "Coverage", images: [], table: [], figureCaption: "", lines: [...coverage] })
   const name = options.title.replace(/[^a-z0-9]+/gi, "_") || "Review"
   if (options.format === "docx") {
-    const { Document, Packer, Paragraph, HeadingLevel, ImageRun } = await import("docx")
-    const document = new Document({ title: options.title, sections: [{ children: [
+    const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType } = await import("docx")
+    const document = new Document({
+      title: options.title,
+      creator: "Sucafina",
+      styles: {
+        default: {
+          document: { run: { font: "Aptos", size: 22, color: "243C30" }, paragraph: { spacing: { after: 120, line: 280 } } },
+          heading1: { run: { color: "173D2C", size: 30 }, paragraph: { spacing: { before: 260, after: 160 }, keepNext: true } },
+        },
+      },
+      sections: [{
+        properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1000, right: 1000, bottom: 1000, left: 1000 } } },
+        footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun("Preserved review · Page "), new TextRun({ children: [PageNumber.CURRENT] }), new TextRun(" of "), new TextRun({ children: [PageNumber.TOTAL_PAGES] })] })] }) },
+        children: [
       new Paragraph({ text: options.title, heading: HeadingLevel.TITLE }),
       new Paragraph(`Review ${review.id} v${review.version} · ${review.createdAt}`),
-      ...content.flatMap((section) => [new Paragraph({ text: section.title, heading: HeadingLevel.HEADING_1 }), ...section.images.map((image) => new Paragraph({ children: [new ImageRun({ type: "png", data: image, transformation: { width: 600, height: 260 }, altText: { name: "Review chart", description: "Captured series and values are listed in the following text." } })] })), ...section.lines.map((line) => new Paragraph(line))]),
-    ] }] })
-    return { ok: true, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
+      new Paragraph("This material contains the selected preserved sections in order. Human agenda notes and comments are identified separately from captured values. Each section keeps its own period and coverage."),
+      ...content.flatMap((section) => [
+        new Paragraph({ text: section.title, heading: HeadingLevel.HEADING_1 }),
+        ...section.images.flatMap((image, index) => [
+          new Paragraph({ text: `Captured figure ${index + 1}/${section.images.length} · ${section.figureCaption}. Row numbers correspond to the chart captions and complete data below.`, keepNext: true }),
+          new Paragraph({ children: [new ImageRun({ type: "png", data: image, transformation: { width: 600, height: 260 }, altText: { name: section.title, description: "Captured chart with labeled axes. Series, periods, units and every source value follow in the data table." } })] }),
+        ]),
+        ...section.lines.map((line) => new Paragraph({ text: line, widowControl: true })),
+        ...(section.table.length ? [new Table({
+          width: { size: 9906, type: WidthType.DXA },
+          layout: TableLayoutType.FIXED,
+          columnWidths: [4900, 2100, 2906],
+          rows: [
+            new TableRow({ tableHeader: true, children: ["Captured value", "Period", "Sources"].map((label) => new TableCell({ shading: { fill: "E4ECE6" }, children: [new Paragraph({ children: [new TextRun({ text: label, bold: true, size: 20 })] })] })) }),
+            ...section.table.map((row) => new TableRow({ children: [row.value, row.period, row.sources].map((text, column) => new TableCell({ margins: { top: 100, bottom: 100, left: 100, right: 100 }, children: [new Paragraph({ children: fitSlideText(text, { fontSize: 10, boxWidthInches: [4900, 2100, 2906][column]! / 1440, marginInches: 0.1 }).map((fragment, index) => new TextRun({ text: fragment, size: 20, ...(index ? { break: 1 } : {}) })), widowControl: false, spacing: { after: 0, line: 240 } })] })) })),
+          ],
+        })] : []),
+      ]),
+        ],
+      }],
+    })
+    const artifact = { ok: true as const, name: `${name}.docx`, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: new Uint8Array(await Packer.toBuffer(document)) }
+    sealReviewArtifact(artifact, review, options)
+    return artifact
   }
   const { default: PptxGenJS } = await import("pptxgenjs")
   const presentation = new PptxGenJS()
   presentation.layout = "LAYOUT_WIDE"
+  presentation.author = "Sucafina"
   presentation.title = options.title
+  addReportTextSlides(presentation, options.title, [
+    `Review ${review.id} v${review.version} · ${review.createdAt}`,
+    `${sections.length} selected section(s), in the preserved selection order.`,
+    "Human agenda notes and comments are identified separately from captured values. Each section keeps its own period and coverage.",
+  ], "Preserved review")
   if (!content.length) {
     const slide = presentation.addSlide()
     slide.addText(`${options.title} · no sections selected`, { x: 0.6, y: 0.6, w: 12, h: 0.6, fontSize: 20 })
   }
-  content.forEach((section) => {
-    const title = Array.from(section.title)
-    const heading = title.length > 32 ? `${title.slice(0, 31).join("")}…` : section.title
-    const lines = title.length > 32 ? [`Full section title: ${section.title}`, ...section.lines] : section.lines
+  content.forEach((section, sectionIndex) => {
+    const titles = fitSlideText(section.title, SLIDE_HEADING)
+    const heading = titles.length > 2 ? `Section ${sectionIndex + 1}` : titles.join("\n")
+    if (titles.length > 2 && section.images.length) addReportTextSlides(presentation, "Section title", [section.title], "Preserved review")
     section.images.forEach((image, page) => {
       const slide = presentation.addSlide()
-      slide.addText(`${heading} · chart ${page + 1}/${section.images.length}`, { x: 0.6, y: 0.3, w: 12.1, h: 0.6, fontSize: 20, bold: true })
-      slide.addImage({ data: `data:image/png;base64,${Buffer.from(image).toString("base64")}`, x: 0.7, y: 1.1, w: 11.8, h: 5.1, altText: "Review chart. Captured series and values follow in text." })
+      slide.background = { color: "F6F8F5" }
+      slide.addText(heading, { x: 0.6, y: 0.3, w: 12.1, h: 0.85, fontSize: 20, fontFace: "Aptos", color: "173D2C", bold: true, margin: 0 })
+      slide.addText(`Figure ${page + 1}/${section.images.length} · ${section.figureCaption}`, { x: 0.6, y: 1.2, w: 12.1, h: 0.3, fontSize: 12, color: "607469", margin: 0 })
+      slide.addImage({ data: `data:image/png;base64,${Buffer.from(image).toString("base64")}`, x: 0.8, y: 1.65, w: 11.6, h: 5.03, altText: "Captured chart with labeled axes. All source values, periods, units and chart captions follow." })
+      slide.addText("Preserved review · chart rows retain producer order", { x: 0.6, y: 7.0, w: 11.6, h: 0.2, fontSize: 9, color: "607469", margin: 0 })
+      slide.slideNumber = { x: 12.2, y: 7.0, w: 0.5, h: 0.2, fontSize: 9, color: "607469", margin: 0 }
     })
-    lines.forEach((line, index) => {
-    const fragments = line.replace(/\r\n|\r|\n/g, " ↵ ").match(/.{1,60}(?:\s|$)|\S{1,60}/gu)?.map((fragment) => fragment.trim()) ?? [""]
-    fragments.forEach((fragment, part) => {
-      const slide = presentation.addSlide()
-      slide.addText(`${heading} · ${index + 1}/${lines.length}${fragments.length > 1 ? ` · ${part + 1}/${fragments.length}` : ""}`, { x: 0.6, y: 0.35, w: 12.1, h: 0.7, fontSize: 20, bold: true })
-      slide.addText(fragment, { x: 0.6, y: 1.3, w: 12.1, h: 5.4, fontSize: 14, margin: 0.08 })
-    })
-    })
+    addReportTextSlides(presentation, section.title, section.lines, "Preserved review")
+    addReportValueSlides(presentation, section.title, section.table)
   })
   const output = await presentation.write({ outputType: "uint8array" })
   if (!(output instanceof Uint8Array)) throw new Error("Unexpected presentation output")
-  return { ok: true, name: `${name}.pptx`, type: "application/vnd.openxmlformats-officedocument.presentationml.presentation", bytes: output }
+  const artifact = { ok: true as const, name: `${name}.pptx`, type: "application/vnd.openxmlformats-officedocument.presentationml.presentation", bytes: output }
+  sealReviewArtifact(artifact, review, options)
+  return artifact
+}
+
+const seals = new WeakMap<Artifact, { digest: string; inclusion: ReviewInclusion; renderDigest: string }>()
+
+function sealReviewArtifact(artifact: Artifact, review: PreservedReview, options: { title: string; format: "pptx" | "docx"; sectionRefs: readonly string[] }) {
+  const inclusion = reviewInclusion(review, options.sectionRefs)
+  if (inclusion) seals.set(artifact, { digest: createHash("sha256").update(artifact.bytes).digest("hex"), inclusion, renderDigest: digestSfValue({ rendererVersion: "wp07-paginated-v2", title: options.title, format: options.format }) })
+}
+
+/** A store can verify this receipt but only the renderer can create it. */
+export function readReviewArtifactSeal(artifact: Artifact, review: PreservedReview, sectionRefs: readonly string[]) {
+  const seal = seals.get(artifact)
+  const expected = reviewInclusion(review, sectionRefs)
+  if (!seal || !expected || seal.digest !== createHash("sha256").update(artifact.bytes).digest("hex") || digestSfValue(seal.inclusion) !== digestSfValue(expected)) return undefined
+  return structuredClone(seal.inclusion)
+}
+
+/** Container timestamps are excluded; all caller-controlled rendering inputs remain part of the retry identity. */
+export function readReviewArtifactRenderDigest(artifact: Artifact, review: PreservedReview, sectionRefs: readonly string[]) {
+  return readReviewArtifactSeal(artifact, review, sectionRefs) ? seals.get(artifact)?.renderDigest : undefined
 }

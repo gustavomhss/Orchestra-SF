@@ -37,6 +37,14 @@ export function createThreadAnswerEvidence(threads: Pick<ReturnType<typeof creat
   return {
     issue,
     resolve,
+    belongsToQuestion: async (questionId: string, answerRef: string, context: TrustedDomainContext): Promise<boolean> => {
+      const parts = /^sf-thread-answer:([^:]+):([^:]+):([^:]+):([1-9]\d*)$/.exec(answerRef)
+      if (!parts) return false
+      const decoded = decode(parts.slice(1, 4))
+      if (!decoded || decoded[0] !== questionId) return false
+      const answer = await resolve(answerRef, context)
+      return answer.status === "ok"
+    },
     project: async (ref: AnswerEvidence, productContext: ProductContext, context: TrustedDomainContext): Promise<PortResult<DomainProjection>> => {
       const selected = structuredClone(productContext)
       if (selected.installationId !== context.binding.installationId || selected.projectId !== context.binding.projectId || selected.principalRef !== context.binding.principalRef || selected.accessRevision !== context.binding.accessRevision || selected.policyVersion !== context.binding.policyVersion) return { status: "denied", reason: "answer-context-unavailable" }

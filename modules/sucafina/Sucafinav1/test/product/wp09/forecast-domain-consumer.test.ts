@@ -11,7 +11,7 @@ test("real Planner value and FX changes remain separate observations with the pr
       for (const [id, amount, rate] of [["v0", 100, 1.1], ["v1", 120, 1.2]] as const) {
         const version = rows(snapshot.data.versions).find((entry) => entry.id === id)!
         version.closed = 0
-        version.lines = [{ id: "license", name: "License", ownerId: "owner:finance", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100), a: [], f: [amount] }]
+        version.lines = [{ id: "license", name: "License", ownerId: "owner:finance", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100), a: [], f: [amount] }, { id: id === "v0" ? "removed" : "added", name: "Changed line membership", sec: "opex", el: "services", cur: "USD", b: Array(12).fill(0), a: [], f: [10] }]
         version.fx = [{ id: "EUR", cur: "EUR", rate }]
       }
       return { commit: true, value: undefined }
@@ -27,6 +27,8 @@ test("real Planner value and FX changes remain separate observations with the pr
     expect(result.value.measured.differenceAgainstBase).toBeCloseTo(34, 8)
     expect(result.value.changes).toContainEqual(expect.objectContaining({ state: "changed", current: expect.objectContaining({ id: "fx:EUR", value: 1.2 }), previous: expect.objectContaining({ value: 1.1 }) }))
     expect(result.value.changes).toContainEqual(expect.objectContaining({ state: "changed", delta: 20, current: expect.objectContaining({ id: "license:1:forecast", currency: "EUR", value: 120 }) }))
+    expect(result.value.changes).toContainEqual(expect.objectContaining({ state: "removed", previous: expect.objectContaining({ id: "removed:1:outlook-usd", value: 10 }) }))
+    expect(result.value.changes).toContainEqual(expect.objectContaining({ state: "added", current: expect.objectContaining({ id: "added:1:outlook-usd", value: 10 }) }))
     expect(result.value.justifications).toMatchObject({ status: "unavailable", reason: "justification-source-unavailable" })
     expect(result.value.changes.every((change) => !("cause" in change) && !("attribution" in change))).toBe(true)
     expect(result.value.synthesisIncluded).toBe(false)

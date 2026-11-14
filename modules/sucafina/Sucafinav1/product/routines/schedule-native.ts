@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import type { Capability } from "@orchestra/schema/capability"
-import type { ScheduledTask } from "@orchestra/schema/scheduled-task"
-import type { ScheduledTaskCapability } from "@orchestra/core/scheduled-task/capability"
+import type { ScheduledTask } from "@orchestra/core/scheduled-task"
+import type { CapabilityScheduleManagement } from "@orchestra/schema/capability-schedule-management"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { RoutineResult } from "../contracts/context.ts"
 import type { PortResult } from "../contracts/ports.ts"
@@ -12,7 +12,7 @@ import type { RoutineExecutionSnapshot, RoutineResultAccess } from "./result-acc
 
 export type NativeRoutineScheduleHost = {
   /** The supplied service is the existing native scheduler; no alternate task store is created. */
-  schedules: Pick<ScheduledTaskCapability.Interface, "get">
+  schedules: Pick<ScheduledTask.Interface["capability"], "get">
   resolve: (scheduleRef: string, context: TrustedDomainContext) => Promise<PortResult<{
     nativeId: ScheduledTask.ID
     owner: Capability.Owner
@@ -32,7 +32,7 @@ export type NativeRoutineScheduleView = {
   version: number
   state: "active" | "paused" | "blocked" | "exhausted"
   timezone: string
-  cadence: ScheduledTaskCapability.Schedule["cadence"]
+  cadence: CapabilityScheduleManagement.Schedule["cadence"]
   catchUp: "latest" | "skip"
   next?: number
   missedOccurrences: number
