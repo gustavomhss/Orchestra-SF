@@ -1,6 +1,6 @@
-# Astra — WPs 00–08
+# Astra — WPs 00–11
 
-Uma conversa independente por WP. Cada Astra implementa o WP completo, publica commit/PR e executa CI cirúrgico. S0 revisa e integra depois em sf2-stack; epic/global somente após o bundle. Sessões antigas continuam paradas e a Goal pausada.
+Uma conversa por WP. Cada Astra implementa o WP completo, publica commit/PR e executa CI cirúrgico. S0 revisa e integra em sf2-stack. Full epic/global somente após o bundle de TODO o trabalho. Sessões antigas continuam paradas e a Goal pausada.
 
 | Handoff | Tasks | Critérios próprios | Branch | Base da PR |
 |---|---:|---:|---|---|
@@ -13,7 +13,10 @@ Uma conversa independente por WP. Cada Astra implementa o WP completo, publica c
 | [WP06](WP06.md) |5|140|astra-wp06|sf2-stack|
 | [WP07](WP07.md) |4|86|astra-wp07|sf2-stack|
 | [WP08](WP08.md) |6|132|astra-wp08|sf2-stack|
+| [WP09](WP09.md) |7|112|astra-wp09|sf2-stack|
+| [WP10](WP10.md) |7|171|astra-wp10|sf2-stack|
+| [WP11](WP11.md) |4|83|astra-wp11|sf2-stack|
 
-43 tasks e 927 critérios próprios nesses nove WPs; a campanha completa continua 15 WPs/74 tasks/1.610 critérios. Os packs preservam os WPs completos e os vínculos de provas. Seeds partem da mesma base, com arquivos próprios recuperados e sem deleções cruzadas ou inputs estrangeiros dirty.
+61 tasks e 1293 critérios próprios nesses doze WPs; campanha completa permanece 15 WPs/74 tasks/1.610 critérios. Os packs preservam cada WP canônico completo. Seeds recuperam arquivos próprios com proveniência e sem deleções cruzadas/inputs dirty estrangeiros.
 
-[Protocolo de CI](CI.md). [Seeds e SHAs](seed-results.json). Preparação das branches não comprova implementação concluída ou testes aprovados.
+[CI](CI.md), [seeds](seed-results.json), [dependências WP00–08 observadas](integration-intake.json). Preparação não comprova aprovação. WP10 coordena composição em sua branch; revisão independente final e integração de sf2-stack permanecem separadas de sua autoria.

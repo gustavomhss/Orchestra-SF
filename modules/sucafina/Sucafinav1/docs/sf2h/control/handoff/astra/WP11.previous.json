@@ -1,0 +1,81 @@
+{
+  "schema": "sf2h-stop-handoff-v1",
+  "wp": "WP11",
+  "status": "STOPPED_INCOMPLETE",
+  "branch": "sf2-decisions-ready",
+  "worktree": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/work/decisions-ready",
+  "pre_handoff_commit": "2870c2e49609887bd3604b02ce914710891a95b3",
+  "pre_handoff_tree": "e910bf6ed44c58557545a82fc17815f018ab09da",
+  "baseline": "c873998a4bf597cb8fe3d94b48b58a7441d533e8",
+  "common_remote_ancestor": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "accepted_inputs": {
+    "path": "/Users/gustavoschneiter/Documents/sucafina/sf2h-integral-20261112/accepted-inputs/shared.json",
+    "sha256": "1d65453ab8ff37af17a3944d2b6ece8c61084b7e8a87f0002f9de5f928b29a53",
+    "revision": 15,
+    "foreign_copies_staged": []
+  },
+  "tasks": {
+    "T01": "PARTIAL: case durable; scenario operations fence depends on host; historical comparison and sensitivity incomplete",
+    "T02": "PARTIAL: C10 classification and conservative interval registry exist; composite scenario record/producer, supported N/A/shared coverage and actual consumer incomplete",
+    "T03": "PARTIAL: human choice and prepared changes; preview/promotion and portfolio parent retry checkpoint require integration and review",
+    "T04": "PARTIAL: human review digest and receipt replay binding implemented; domain bridges, host and UI integration not proven"
+  },
+  "workers": [
+    {
+      "id": "Terra",
+      "model": "Terra (exact model id not measured)",
+      "status": "TERMINAL",
+      "lease": "revoked"
+    },
+    {
+      "id": "01a1d644-b241-7f42-a9e9-4512e2ee7716",
+      "model": "Luna (exact model id not measured)",
+      "status": "TERMINAL acknowledged",
+      "lease": "returned T01/T02"
+    },
+    {
+      "id": "b6958084-864d-4293-91f4-d6e47d2f63a8",
+      "model": "grok-4.7-build",
+      "status": "TERMINAL HTTP 402",
+      "lease": "revoked"
+    },
+    {
+      "id": "1a4b2ceb-ecd1-4380-bb84-5632164249f0",
+      "model": "grok-4.7-build",
+      "status": "TERMINAL",
+      "lease": "revoked; partial edits committed f89a74119c"
+    }
+  ],
+  "validation": {
+    "hosted_tests": "NOT_RUN",
+    "local_tests": "NOT_RUN (user prohibited)",
+    "typecheck": "NOT_RUN",
+    "guardrail": "NOT_RUN",
+    "pr": "NOT_CREATED"
+  },
+  "findings": [
+    "No runtime-complete host composition or end-to-end consumer proof; no deployment performed.",
+    "Unreviewed last portfolio replay change at pre_handoff_commit must be reviewed; no CI.",
+    "C17 calculation nested evidence guard is restricted to record-only; producer replay/ancestry and host integration remain pending.",
+    "AlternativeDraft provenance publication needs host capture registry and exact operationIdentity binding; C11 contribution and source-fenced replay pending integration.",
+    "C10 interval certificate is conservative: pending, not-applicable and shared components are unavailable; no 55k threshold proven.",
+    "Composite operations require private full-request C08 record, per-operation C17, impactRef and source fences; no partial result can stand for the complete request.",
+    "Current-choice preview and promotion require durable source continuity revalidation, authentic fences, UI and tests.",
+    "Origin repository does not contain local base c873998a; remote checkpoint requires reconstructing tree from verified ancestor and cannot assume local commit SHA exists remotely."
+  ],
+  "resume": "Obtain explicit resume instruction; review checkpoint and accepted inputs, reconcile contracts and host consumers, finish all four tasks, author meaningful tests, run authorized hosted scoped checks and guardrail, then prepare one WP PR. Do not execute while stopped.",
+  "recorded_at": "2026-11-13T20:31:19.965154+00:00",
+  "checkpoint": {
+    "local_commit": "31333bb433acda015e8b7ccbefc5f97ac2f303b7",
+    "local_tree": "c214739735734b289c144d92dfc8311d9c17ed0e",
+    "remote_repository": "gustavomhss/Orchestra-SF",
+    "remote_branch": "sf2-decisions-ready",
+    "remote_commit": "ba2822bb06a8ad741ecbcf0d47654d1a86a3a95b",
+    "remote_tree": "509351055554735a83dcf63a6a2e282ce1df3735",
+    "remote_parent": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "publication": "owned-path snapshot only; global trees differ, local history not replicated",
+    "owned_blobs_verified": 66,
+    "verification": "GitHub MCP fetched and matched all 66 owned blobs at parent; final commit changed only handoff, verified its blob and branch head; remote tree from create_tree",
+    "dirty": "clean"
+  }
+}
