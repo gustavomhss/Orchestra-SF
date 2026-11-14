@@ -77,7 +77,7 @@ export async function createApplyRecoveryFixture() {
       if (response?.status !== 303 || !cookie) throw new Error("Fresh local authentication failed")
       return cookie
     }
-    const call = async (cookie: string, mode: string, payload?: unknown, query: Record<string, string> = {}, intent = randomUUID()) => {
+    const call = async (cookie: string, mode: string, payload?: unknown, query: Record<string, string> = {}, intent: string = randomUUID()) => {
       const url = new URL(`${origin}/sucafina/planner`)
       url.searchParams.set("sf", mode)
       Object.entries(query).forEach(([name, value]) => url.searchParams.set(name, value))
