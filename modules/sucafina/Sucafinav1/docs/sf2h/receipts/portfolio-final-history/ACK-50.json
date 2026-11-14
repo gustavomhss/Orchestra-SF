@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h.portfolio-final-history.authority.v1",
+  "mission": 50,
+  "actor": "S4-C",
+  "lease_epoch": "portfolio-history-browser50",
+  "state": "ACCEPTED_SUCCESSION_IMPLEMENTATION_ACTIVE",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_branch": "astra-wp13",
+  "pr": 37,
+  "expected_head": "6f0ac4628f2c8cf99d809a9150ab1dd0e17e5fc4",
+  "observed_source_tree": "6a8074dfcef5977c3de510104caf4bd6253dfb30",
+  "authority_source": {
+    "commit": "06a9cebf6c15969f9e255a4c05ffbf6b61fbb535",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-final-history.json",
+    "blob": "97def2dd8b0c9f8dc10dd9e295d755ee636257ec",
+    "direct_user_instruction": "Execute mission50 continuing astra-wp13 and PR37 via GitHub MCP/CAS."
+  },
+  "predecessor": {
+    "mission": 43,
+    "terminal": "6f0ac4628f2c8cf99d809a9150ab1dd0e17e5fc4",
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-held-closure/HANDOFF-FINAL.md",
+    "handoff_blob": "41d09a95e32f6ba7a8cad5954dfa5496486d2b68",
+    "release_blob": "19a84ce0c04c048bb296dcc9e62f5e7ebbb44d2f",
+    "explicit_writer_end": true,
+    "pending_runs": []
+  },
+  "reconciliation": {
+    "control_head": "06a9cebf6c15969f9e255a4c05ffbf6b61fbb535",
+    "source_head_matches_terminal43": true,
+    "pr_comments_reviewed": 5,
+    "newer_conflicting_authority_located": false,
+    "authority_basis": "Explicit mission50 and explicit termination43; not inference from silence or an old IN_PROGRESS receipt.",
+    "target_head": "03ce926754d7ac0039fbb38470229f13c1623696",
+    "target_tree": "33f79e84d434c58210d2e5a55ca0d2f90a355b57",
+    "target_material_candidate": "C14",
+    "finance34_ancestor": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+    "integration_authority": {
+      "mission": 47,
+      "epoch": "S0-C-e9-browser47",
+      "blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+      "sole_writer": "Root47 on sf2-stack"
+    }
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts (only if necessary for same read-boundary defect)",
+    "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts (fixture compatibility/performance only, original assertions/budgets intact)",
+    "modules/sucafina/Sucafinav1/test/product/portfolio-final-history/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-final-history/"
+  ],
+  "excluded": "Do not edit P01 numerical algorithms/planner sensitivity, normative contracts, runtime local-store/contract, finance producers, CurrentChoice46, Memory40, shared host/CLI, workflows45, Reports48, Microsoft49 or sf2-stack47. Return complete shared patches to47/actual owner. No whole-branch intake/reset/rebase.",
+  "implementation": {
+    "P02": "Apply reviewed43 proof.ts postimage d99af3b43388b510e510908fff2371a34b57eee1; preserve complete original body/four authority callbacks and unchanged regression.",
+    "read_boundary": "Source lacks read-snapshot.ts. Import exact existing C13 helper095a0e5764e115fb874a5f5c0c16a9c73466c340 under expressly authorized path; target retains identical helper.",
+    "P03": "Qualify unchanged72-expect semantic scenario using manifest-only isolated W containing C13 Finance34 and released43 paths. Never replace historical source with target tree."
+  },
+  "validation": {
+    "remote": "GitHub MCP",
+    "CAS": true,
+    "force": false,
+    "local_tests": false,
+    "local_product_execution": false,
+    "epic": false,
+    "budget_increase": false,
+    "oracle_weakening": false,
+    "dispatch": "Existing test-ci snapshot interface; recheck global runs and identical requests before dispatch; one WP13 flight.",
+    "compiler_gates": "45 owner; concrete W request, no seizure of shared workflow/ref."
+  },
+  "helpers": [
+    {
+      "id": "/root/review_p02",
+      "scope": "Independent static P02/canonical-contract review; no remote mutation or test dispatch"
+    },
+    {
+      "id": "/root/ci_p03",
+      "scope": "Read-only CI/composition/authority discovery"
+    },
+    {
+      "id": "/root/pack_criteria",
+      "scope": "Complete S4-C and appendices/criteria review; no remote mutation"
+    }
+  ],
+  "consumer": 47,
+  "consumer_ack": "NOT_REQUESTED_YET_NO_DELIVERY",
+  "global_release": false,
+  "current_choice": "Separate owner46 scope remains HELD",
+  "P01_KEEP_CURRENT19": "Preserve target blobs; no numerical algorithm edit."
+}
