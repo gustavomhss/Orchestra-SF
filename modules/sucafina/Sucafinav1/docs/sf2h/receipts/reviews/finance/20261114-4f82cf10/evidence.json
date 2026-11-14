@@ -1,0 +1,1161 @@
+{
+  "schema": "sf-finance-independent-evidence-v1",
+  "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+  "reviewed_tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+  "method": "Read-only GitHub MCP: Actions run/job metadata, source commit/tree/parents, .ci-run.json, parent→snapshot compare and full textual job logs. No test/process/CI execution by reviewer. No ZIP artifact bytes rehashed.",
+  "global_acceptance": false,
+  "no_total_across_runs": "Runs overlap and use different product versions. Counts are per selection; no grand total is used as acceptance.",
+  "exact_target_check": {
+    "run_id": 43620788510,
+    "job_id": 132525772062,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620788510/job/132525772062",
+    "head_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+    "workflow": ".github/workflows/astra-finance-resume-check.yml",
+    "conclusion": "failure",
+    "tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+    "typecheck": {
+      "conclusion": "failure",
+      "exit_code": 2,
+      "diagnostic_count": 115,
+      "diagnostics_in_owned_finance_directories": 0,
+      "interpretation": "Zero diagnósticos próprios não é PASS do pacote; consumidores externos falham.",
+      "relevant_diagnostics": [
+        "2026-11-14T17:24:22.3116461Z ##[error]../../../apps/cli/src/sucafina-product/business-services.ts(102,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextServi...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "2026-11-14T17:24:22.3362201Z ##[error]product/host-binding/business-context.ts(170,71): error TS2353: Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.",
+        "2026-11-14T17:24:22.3363992Z ##[error]product/host-binding/business-context.ts(170,153): error TS7006: Parameter 'refs' implicitly has an 'any' type.",
+        "2026-11-14T17:24:22.3365579Z ##[error]product/host-binding/business-context.ts(170,159): error TS7006: Parameter 'call' implicitly has an 'any' type."
+      ]
+    },
+    "guards": {
+      "conclusion": "failure",
+      "exit_code": 1,
+      "rules": 78,
+      "changed_paths": 1471,
+      "gates": 43,
+      "warnings": 15,
+      "engine_errors": 0,
+      "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "interpretation": "Gates preservados como falha existente; sem abrir findings cosméticos por cada arquivo temporário."
+    },
+    "product_tests_executed_by_check": false
+  },
+  "runs": [
+    {
+      "run_id": 43615424219,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615424219",
+      "job_id": 132509297971,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615424219/job/132509297971",
+      "workflow_conclusion": "failure",
+      "snapshot_sha": "1ee667356ad01f211e7473d2ad5e2fae4b670a9d",
+      "snapshot_tree": "403de749d387114621a6c9b3f29ec649da6a67e4",
+      "parent_product_sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+      "snapshot_parents": [
+        "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "./Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "HISTORICAL_PRODUCT_VERSION; NO_AUTOMATIC_TRANSFER",
+      "result": {
+        "pass": 8,
+        "fail": 1,
+        "expects": 254,
+        "scope": "Rate identity + HR port + scenario qualification.",
+        "limit": "R1:fixture de igualdade de snapshot falha. R2 posterior tem run distinto verde; preservado o resultado histórico."
+      },
+      "log_summary": [
+        "8 pass",
+        "1 fail",
+        "254 expect() calls",
+        "Ran 9 tests across 3 files. [1.62s]"
+      ],
+      "executed_case_lines": [
+        "(fail) C02 preserves explicit numeric HR identity, known zero and independent actual/forecast for finance and viewer [143.90ms]",
+        "(pass) qualified HR self-comparison still refuses revocation during the final coverage observation [43.23ms]",
+        "(pass) C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast [76.84ms]",
+        "(pass) replace and include qualify an absent forecast from the real post-command copy, including explicit zero [385.37ms]",
+        "(pass) a row save preserves an untouched missing December while an explicit December zero is hypothetical [369.04ms]",
+        "(pass) deferral quantifies its origin and destination while preserving a third missing month on the same row [80.94ms]",
+        "(pass) an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero [87.61ms]",
+        "(pass) a hypothetical HR forecast remains quantifiable when its independent budget rate is absent [158.76ms]",
+        "(pass) a self-comparison reads once per source observation and still rejects revocation at final revalidation [37.64ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43615428441,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615428441",
+      "job_id": 132509311266,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615428441/job/132509311266",
+      "workflow_conclusion": "failure",
+      "snapshot_sha": "4c84847a885f09bdb1fee936244b73d7129f764a",
+      "snapshot_tree": "3c32c530d5bbb385d70f9389f7d8eaf7a57125fe",
+      "parent_product_sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+      "snapshot_parents": [
+        "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+          "./Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "HISTORICAL_PRODUCT_VERSION; NO_AUTOMATIC_TRANSFER",
+      "result": {
+        "pass": 6,
+        "fail": 4,
+        "expects": 147,
+        "scope": "Sensibilidade/read scope + coverage-sensitivity.",
+        "limit": "R1:3 timeouts de persistência/replay omitido/bundled/confirmed (300000ms) e1 deadline humano (180000ms);6 negativos/escopo verdes não fecham a jornada. Não atribuído ao pin."
+      },
+      "log_summary": [
+        "6 pass",
+        "4 fail",
+        "147 expect() calls",
+        "Ran 10 tests across 2 files. [2580.75s]"
+      ],
+      "executed_case_lines": [
+        "(pass) sensitivity read scope refuses a swallowed canonical nested write and publishes no provisional fence [79958.87ms]",
+        "(pass) each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope [80541.92ms]",
+        "(pass) final UI authority revocation inside a sensitivity scope suppresses the staged proof [79793.20ms]",
+        "(pass) a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input [103253.12ms]",
+        "(fail) WP13 persists and cold-reloads omitted training with its real 55000 sensitivity bound [322163.15ms]",
+        "(fail) WP13 persists and cold-reloads bundled training with its real 55000 sensitivity bound [530286.17ms]",
+        "(fail) WP13 persists and cold-reloads confirmed training with its real 15000 sensitivity bound [1118050.04ms]",
+        "(pass) WP13 withholds an exact bound for a real null price or missing FX before consulting an exact callback [48872.33ms]",
+        "(pass) WP13 rejects a false scalar boundary even when it carries the real canonical source evidence [37592.32ms]",
+        "(fail) WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary [180030.75ms]"
+      ],
+      "timeout_error_lines": [
+        "^ this test timed out after 300000ms.",
+        "^ this test timed out after 300000ms.",
+        "^ this test timed out after 300000ms.",
+        "[wp11-fixture-trace] {\"label\":\"renewal-choice-history\",\"phase\":\"prepare:transition-confirmed:complete\",\"elapsedMs\":180019,\"budgetMs\":180000,\"status\":\"deadline-exceeded\",\"counts\":{\"c08.read.cases\":{\"calls\":3819,\"elapsedMs\":93805,\"maximumMs\":98},\"host.revalidate\":{\"calls\":24022,\"elapsedMs\":2711,\"maximumMs\":32},\"operation-source\":{\"calls\":5940,\"elapsedMs\":3002,\"maximumMs\":35},\"operation-coverage\":{\"calls\":2852,\"elapsedMs\":83,\"maximumMs\":4},\"c08.read.preferences\":{\"calls\":612,\"elapsedMs\":13608,\"maximumMs\":52},\"c08.transaction.preferences\":{\"calls\":6,\"elapsedMs\":391,\"maximumMs\":140},\"classified-source\":{\"calls\":343,\"elapsedMs\":356,\"maximumMs\":32},\"classified-coverage\":{\"calls\":319,\"elapsedMs\":29617,\"maximumMs\":241},\"c08.transaction.cases\":{\"calls\":13,\"elapsedMs\":1134,\"maximumMs\":154},\"planner.verifySourceOnly\":{\"calls\":956,\"elapsedMs\":3827,\"maximumMs\":10},\"planner.verifyOperation\":{\"calls\":588,\"elapsedMs\":11271,\"maximumMs\":27},\"planner.verifySourceProjection\":{\"calls\":1912,\"elapsedMs\":2223,\"maximumMs\":8},\"c08.read.outbox\":{\"calls\":1,\"elapsedMs\":19,\"maximumMs\":19}}}",
+        "13 |       console.error(\"[wp11-fixture-trace]\", JSON.stringify({ label, phase: progress.phase, elapsedMs: Date.now() - started, budgetMs, status: \"deadline-exceeded\", counts }))",
+        "error: WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000"
+      ],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43616600555,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616600555",
+      "job_id": 132512903901,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616600555/job/132512903901",
+      "workflow_conclusion": "success",
+      "snapshot_sha": "4d9eded5fd40d496861d65b7eab093fd5de88d9d",
+      "snapshot_tree": "644036816fd4b8db3cd7187cabad2e9abedc88f2",
+      "parent_product_sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "snapshot_parents": [
+        "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "HISTORICAL_PRODUCT_VERSION; NO_AUTOMATIC_TRANSFER",
+      "result": {
+        "pass": 2,
+        "fail": 0,
+        "expects": 64,
+        "scope": "Rate identity: normalização canônica numérica, missing versus zero e revogação final.",
+        "limit": "Seleção de um arquivo, snapshot R2; não prova todas as páginas Planner/HR."
+      },
+      "log_summary": [
+        "2 pass",
+        "0 fail",
+        "64 expect() calls",
+        "Ran 2 tests across 1 file. [285.00ms]"
+      ],
+      "executed_case_lines": [
+        "(pass) C02 preserves explicit numeric HR identity, known zero and independent actual/forecast for finance and viewer [95.08ms]",
+        "(pass) qualified HR self-comparison still refuses revocation during the final coverage observation [29.89ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43616603779,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616603779",
+      "job_id": 132512914754,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616603779/job/132512914754",
+      "workflow_conclusion": "success",
+      "snapshot_sha": "e3c1070024883ce6ea63a71e2401f1e49914de9d",
+      "snapshot_tree": "0df2aa9f841272596ca40c5aa0f0d49d958b4bec",
+      "parent_product_sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "snapshot_parents": [
+        "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+          "./Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+          "./Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+          "./Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+          "./Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+          "./Sucafinav1/test/product/wp11/case-port.test.ts",
+          "./Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "HISTORICAL_PRODUCT_VERSION; NO_AUTOMATIC_TRANSFER",
+      "result": {
+        "pass": 32,
+        "fail": 0,
+        "expects": 393,
+        "scope": "8 arquivos WP11: current choice, read/egress/lease fences, case operation/port, criterion rules, renewal revision.",
+        "limit": "Snapshot R2; não fecha a composição CLI defeituosa nem a versão posterior integral."
+      },
+      "log_summary": [
+        "32 pass",
+        "0 fail",
+        "393 expect() calls",
+        "Ran 32 tests across 8 files. [113.59s]"
+      ],
+      "executed_case_lines": [
+        "(pass) current-choice read suppresses its binding when membership changes during the final case authorization [252.52ms]",
+        "(pass) current-choice read suppresses its binding when preferences read changes during the final case authorization [160.93ms]",
+        "(pass) current-choice read suppresses its binding when finished lease changes during the final C08 namespace authorization [48.29ms]",
+        "(pass) current-choice read suppresses its binding when replacement lease changes during the final C08 namespace authorization [51.17ms]",
+        "(pass) case read refuses a finished lease after the final C08 namespace authorization [12.17ms]",
+        "(pass) case read refuses a expired lease after the final C08 namespace authorization [8.92ms]",
+        "(pass) case draft refuses a finished lease after the final C08 namespace authorization [10.67ms]",
+        "(pass) case draft refuses a expired lease after the final C08 namespace authorization [10.21ms]",
+        "(pass) case prepare-intent refuses a finished lease after the final C08 namespace authorization [24.70ms]",
+        "(pass) case prepare-intent refuses a expired lease after the final C08 namespace authorization [44.12ms]",
+        "(pass) case read suppresses its projection when membership changes during the final host revalidation [11.16ms]",
+        "(pass) case read suppresses its projection when same-version content changes during the final host revalidation [10.06ms]",
+        "(pass) draft suppresses membership changed by host check 3 before its response [10.77ms]",
+        "(pass) draft suppresses incarnation changed by host check 3 before its response [8.49ms]",
+        "(pass) draft suppresses same-version content changed by host check 3 before its response [9.21ms]",
+        "(pass) prepare-intent suppresses membership changed by host check 5 before its response [11.97ms]",
+        "(pass) prepare-intent suppresses incarnation changed by host check 5 before its response [12.78ms]",
+        "(pass) prepare-intent suppresses same-version content changed by host check 5 before its response [44.66ms]",
+        "(pass) prepare-intent suppresses same-version content changed by host check 3 before its response [11.79ms]",
+        "(pass) case projection denies an inaccessible operation even with no result components [6.52ms]",
+        "(pass) case draft survives a real store reopen, exact retry is idempotent and revoked access is denied [31.36ms]",
+        "(pass) an entirely omitted renewal category remains pending [0.45ms]",
+        "(pass) coverage distinguishes a sourced zero from an omitted category [0.95ms]",
+        "(pass) case references encode both identities without accepting ambiguous aliases [0.10ms]",
+        "(pass) receipt reconciliation preserves partial application and rejects changed identity [0.69ms]",
+        "(pass) a conditional human choice freezes the comparison and cost gap [1.10ms]",
+        "(pass) preparing a change preserves the domain command and never applies it [0.63ms]",
+        "(pass) revoked source suppresses an otherwise authorized case [62.83ms]",
+        "(pass) partial domain execution reconciles a durable receipt and never repeats it on retry [17.98ms]",
+        "(pass) human choice persists a versioned snapshot and ledger using the planner comparison [228.16ms]",
+        "(pass) explicit criterion rule is versioned, authorized and evaluated using the domain metric [118.71ms]",
+        "(pass) new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history [112170.15ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43618462688,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618462688",
+      "job_id": 132518604113,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618462688/job/132518604113",
+      "workflow_conclusion": "success",
+      "snapshot_sha": "f74733ed5c2ef77b53c3a40948a1b9c509bf7ac9",
+      "snapshot_tree": "7b0270dd270aa81e8c1ecc92a77ee123f1f5124f",
+      "parent_product_sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "snapshot_parents": [
+        "9de58454924b072b6e571b5b4ebcd70f95e596df"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "./Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "./Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "./Sucafinav1/test/product/wp11/portfolio-replay-lease-egress.test.ts",
+          "./Sucafinav1/test/product/wp11/result-store.test.ts",
+          "./Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "./Sucafinav1/test/product/wp11/case-port.test.ts",
+          "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "HISTORICAL_PRODUCT_VERSION; NO_AUTOMATIC_TRANSFER",
+      "result": {
+        "pass": 19,
+        "fail": 0,
+        "expects": 487,
+        "scope": "8 arquivos WP11 de histórico, indeterminado, Hot Topic, replay/lease/egress, resultados, cobertura/caso e prepared execution.",
+        "limit": "Snapshot filho de R3. Algumas fixtures mudam depois; somente evidencia a seleção/versão descrita."
+      },
+      "log_summary": [
+        "19 pass",
+        "0 fail",
+        "487 expect() calls",
+        "Ran 19 tests across 8 files. [11.73s]"
+      ],
+      "executed_case_lines": [
+        "(pass) an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result [3810.20ms]",
+        "(pass) a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart [327.70ms]",
+        "(pass) Hot Topic drafts verify the Dashboard snapshot, persist once without domain application and reject a source race [173.86ms]",
+        "(pass) portfolio replay lookup refuses a finished lease at the final C08 authorization [9.44ms]",
+        "(pass) portfolio replay lookup refuses a expired lease at the final C08 authorization [8.34ms]",
+        "(pass) decision result persistence binds retries, current case and source authority [53.54ms]",
+        "(pass) C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence [1.75ms]",
+        "(pass) persisted comparison results are scoped to current case, principal, and source access [19.30ms]",
+        "(pass) case draft survives a real store reopen, exact retry is idempotent and revoked access is denied [21.90ms]",
+        "(pass) an entirely omitted renewal category remains pending [0.37ms]",
+        "(pass) coverage distinguishes a sourced zero from an omitted category [0.88ms]",
+        "(pass) case references encode both identities without accepting ambiguous aliases [0.11ms]",
+        "(pass) receipt reconciliation preserves partial application and rejects changed identity [0.29ms]",
+        "(pass) a conditional human choice freezes the comparison and cost gap [0.89ms]",
+        "(pass) preparing a change preserves the domain command and never applies it [0.39ms]",
+        "(pass) revoked source suppresses an otherwise authorized case [14.75ms]",
+        "(pass) partial domain execution reconciles a durable receipt and never repeats it on retry [16.81ms]",
+        "(pass) human choice persists a versioned snapshot and ledger using the planner comparison [160.60ms]",
+        "(pass) a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it [6864.00ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43619812123,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619812123",
+      "job_id": 132522704978,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619812123/job/132522704978",
+      "workflow_conclusion": "failure",
+      "snapshot_sha": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+      "snapshot_tree": "723fadf3a3b616b269b9fa8052d760cd643e80c2",
+      "parent_product_sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "snapshot_parents": [
+        "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "./Sucafinav1/test/product/wp13/reconciliation.test.ts",
+          "./Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+          "./Sucafinav1/test/product/wp13/source-scenario.test.ts",
+          "./Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "./Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+          "./Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "./Sucafinav1/test/product/wp13/campaign.test.ts",
+          "./Sucafinav1/test/product/wp13/persistent-store.test.ts",
+          "./Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "./Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "PARENT_R4; PIN_CHANGES_ONLY_TWO_TEST_FILES_AND_TWO_RECEIPTS; SEE_SELECTION_SPECIFIC_LIMIT",
+      "result": {
+        "pass": 56,
+        "fail": 3,
+        "expects": 582,
+        "scope": "11 arquivos WP13: histórico, reconciliação/preço, source-scenario, handoffs, campanha, stores/candidatos.",
+        "limit": "Falhas: jornada source-scenario timeout; envelope de reserva10→11 (corrigido R5); private writer grant aceita campanha (FIN-IND-003, blobs inalterados). Não promover56 positivos a aceite do conjunto."
+      },
+      "log_summary": [
+        "56 pass",
+        "3 fail",
+        "582 expect() calls",
+        "Ran 59 tests across 11 files. [281.99s]"
+      ],
+      "executed_case_lines": [
+        "(pass) portfolio historical provenance > accepts an original binding and selection when current case and evidence remain authorized [4.00ms]",
+        "(pass) portfolio historical provenance > accepts authenticated source history at the same case version and still rejects revocation [1.26ms]",
+        "(pass) portfolio historical provenance > rejects a candidate whose case incarnation was replaced [0.25ms]",
+        "(pass) portfolio historical provenance > rejects revoked historical sources [0.40ms]",
+        "(pass) portfolio historical provenance > rejects a historical candidate missing from the authorized case [0.31ms]",
+        "(pass) portfolio historical provenance > rejects a same-version alternative whose original payload changed [0.27ms]",
+        "(pass) portfolio historical provenance > rejects ambiguous duplicate alternatives and a case older than the candidate [0.38ms]",
+        "(pass) portfolio historical provenance > rejects a binding supplied for a different current owner case [0.09ms]",
+        "(pass) portfolio historical provenance > keeps the first candidate observation when the provider reuses mutable objects [0.69ms]",
+        "(pass) portfolio historical provenance > rejects caller mutation during historical provenance verification [0.67ms]",
+        "(pass) portfolio historical provenance > rejects an owner observation changed during the first binding read [0.73ms]",
+        "(pass) portfolio historical provenance > rejects a binding whose digest does not cover its contents [0.21ms]",
+        "(pass) portfolio historical provenance > rejects a selection that differs from the binding proof [0.19ms]",
+        "(pass) portfolio historical provenance > rejects a binding that changes between provenance passes [0.64ms]",
+        "(pass) historical portfolio reads the original C08 candidate after WP11 replaces alternative v1 with v2 [6169.90ms]",
+        "(pass) historical candidate rejects a naked digest when the original C08 case snapshot and choice are absent [5857.94ms]",
+        "(pass) historical candidate rejects changed C08 request ancestry and revoked evidence [7699.66ms]",
+        "(pass) historical chosen candidate selects its witnessed C08 among equivalent writes and requires the exact WP11 ledger [6773.58ms]",
+        "(pass) historical candidate refuses a real case CAS in its last callback while the authority remains live [5447.20ms]",
+        "(pass) reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing [19.96ms]",
+        "(pass) reconciliation retains independent evidence and command revisions while binding effects and receipts [21.18ms]",
+        "(pass) reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency [8.36ms]",
+        "(pass) a global criterion change cannot attribute a different component's price to an unchanged component [6.25ms]",
+        "(pass) reconciliation refuses a substituted historical selection even when its numbers match the choice [1.27ms]",
+        "(pass) reconciliation refuses receipt substitution, revoked sources and a different current principal [2.24ms]",
+        "(pass) reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress [6.69ms]",
+        "(pass) reconciliation does not reinterpret another source or missing data as a material price signal [8.25ms]",
+        "(pass) reconciliation refuses authority mutation after the final successful revalidation [21.68ms]",
+        "(pass) HTTP reconciliation preserves the admitted selection when authorization mutates the caller request [36.40ms]",
+        "(pass) HTTP reconciliation fences authority from ingress before the core captures it [13.84ms]",
+        "(pass) a real 45000 to 70000 quote on the same source changes its portfolio condition while preserving the human choice and C08 composition [65876.99ms]",
+        "(fail) portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed [180030.89ms]",
+        "(pass) portfolio C08 choice applies two confirmed domain changes with durable receipts and preserves the conditioned choice [1402.93ms]",
+        "(fail) portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch [1219.26ms]",
+        "(pass) portfolio handoff retains C08 choice and resumes after pre-dispatch producer unavailability without repeating a receipt [598.86ms]",
+        "(pass) campaign read retains its original UI request after the last callback (finished) [42.90ms]",
+        "(pass) campaign read retains its original UI request after the last callback (replacement) [36.28ms]",
+        "(pass) campaign readOriginal retains its original UI request after the last callback (finished) [36.28ms]",
+        "(pass) campaign readOriginal retains its original UI request after the last callback (replacement) [34.34ms]",
+        "(pass) campaign readHistorical retains its original UI request after the last callback (finished) [32.54ms]",
+        "(pass) campaign readHistorical retains its original UI request after the last callback (replacement) [31.92ms]",
+        "(pass) campaign list retains its original UI request after the last callback (finished) [40.05ms]",
+        "(pass) campaign list retains its original UI request after the last callback (replacement) [38.47ms]",
+        "(pass) campaign listHistorical retains its original UI request after the last callback (finished) [38.10ms]",
+        "(pass) campaign listHistorical retains its original UI request after the last callback (replacement) [43.17ms]",
+        "(pass) absent campaign retains the UI request after its final namespace authorization (finished) [9.27ms]",
+        "(pass) absent campaign retains the UI request after its final namespace authorization (replacement) [8.79ms]",
+        "(pass) multi-case campaign keeps owner separate, provisional AI, order and exact retry [43.17ms]",
+        "(pass) revoked and stale sources and a moved proposal do not replace the campaign [17.02ms]",
+        "(pass) a locked fence that differs from the pre-lock fingerprint does not commit [8.03ms]",
+        "(fail) campaign metadata needs the host's private writer grant [12.92ms]",
+        "(pass) campaign rejects a candidate in another currency or horizon before any write [8.12ms]",
+        "(pass) a saved campaign remains authenticated historical data at the same owner case version [15.77ms]",
+        "(pass) a prior campaign is separately marked historical after the owner case advances [23.29ms]",
+        "(pass) campaign history binds a replaced candidate to the trusted historical port and original digest [18.98ms]",
+        "(pass) portfolio uses the C08 decision store for durable refs and revalidates access [28.35ms]",
+        "(pass) refuses to persist analysis whose referenced scenario differs [0.48ms]",
+        "(pass) stored contribution survives reopen and remains case-authorized [9.08ms]",
+        "(pass) portfolio resolves a persisted decision alternative and respects revocation [8.80ms]",
+        "(fail) portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed [180030.89ms]",
+        "(fail) portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch [1219.26ms]",
+        "(fail) campaign metadata needs the host's private writer grant [12.92ms]"
+      ],
+      "timeout_error_lines": [
+        "[wp11-fixture-trace] {\"label\":\"renewal-choice-history\",\"phase\":\"prepare:transition-omitted:complete\",\"elapsedMs\":180011,\"budgetMs\":180000,\"status\":\"deadline-exceeded\",\"counts\":{\"c08.read.cases\":{\"calls\":6569,\"elapsedMs\":115938,\"maximumMs\":57},\"host.revalidate\":{\"calls\":54676,\"elapsedMs\":771,\"maximumMs\":12},\"operation-source\":{\"calls\":14830,\"elapsedMs\":604,\"maximumMs\":3},\"operation-coverage\":{\"calls\":7814,\"elapsedMs\":134,\"maximumMs\":4},\"c08.read.preferences\":{\"calls\":96,\"elapsedMs\":787,\"maximumMs\":16},\"c08.transaction.preferences\":{\"calls\":3,\"elapsedMs\":58,\"maximumMs\":37},\"classified-source\":{\"calls\":39,\"elapsedMs\":0,\"maximumMs\":0},\"classified-coverage\":{\"calls\":41,\"elapsedMs\":1442,\"maximumMs\":60},\"c08.transaction.cases\":{\"calls\":5,\"elapsedMs\":150,\"maximumMs\":34},\"planner.verifySourceOnly\":{\"calls\":1754,\"elapsedMs\":3439,\"maximumMs\":9},\"planner.verifyOperation\":{\"calls\":1754,\"elapsedMs\":20845,\"maximumMs\":33},\"planner.verifySourceProjection\":{\"calls\":3508,\"elapsedMs\":2692,\"maximumMs\":7}}}",
+        "^ this test timed out after 180000ms.",
+        "^ this test timed out after 180000ms."
+      ],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43619817826,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619817826",
+      "job_id": 132522722250,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619817826/job/132522722250",
+      "workflow_conclusion": "failure",
+      "snapshot_sha": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+      "snapshot_tree": "d8ba00d43dfe45954fdb0253714b71a0a6adb0cb",
+      "parent_product_sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "snapshot_parents": [
+        "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+          "./Sucafinav1/test/product/wp05/factory-selection.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "PARENT_R4; PIN_CHANGES_ONLY_TWO_TEST_FILES_AND_TWO_RECEIPTS; SEE_SELECTION_SPECIFIC_LIMIT",
+      "result": {
+        "pass": 2,
+        "fail": 4,
+        "expects": 23,
+        "scope": "3 arquivos: scenario-bi, scenario-bi-complete, factory-selection.",
+        "limit": "4 setup failures SF_SOURCE_IDENTITIES_UNAVAILABLE. 2 positivos de N/A/shared completo e factory são delimitados; run inteiro vermelho. Bootstrap R5 corrige setup e run43620858830 cobre quatro casos."
+      },
+      "log_summary": [
+        "2 pass",
+        "4 fail",
+        "23 expect() calls",
+        "Ran 6 tests across 3 files. [51.73s]"
+      ],
+      "executed_case_lines": [
+        "(fail) BI09 routes a real C08 pair through the Planner waterfall without promoting conditioned totals or reversing evidence [152.42ms]",
+        "(fail) BI09 preserves explicit zero, missing amount and missing FX through actual Planner scenarios [101.96ms]",
+        "(fail) BI10 shows the real deferred periods and no invented annual saving or completed payment [83.95ms]",
+        "(fail) scenario plans reject callback mutation, changed paired projection, swallowed nested writes and final lease revocation [88.42ms]",
+        "(pass) BI09 accepts the complete source-only 235000 result with real N-A/shared coverage and -5000 complete difference [51131.64ms]",
+        "(pass) producer selection cannot switch between read and revalidation in one bound call [1.55ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43619824316,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619824316",
+      "job_id": 132522741789,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619824316/job/132522741789",
+      "workflow_conclusion": "success",
+      "snapshot_sha": "711f156d6995fa02f5e15043638bef9847a7f845",
+      "snapshot_tree": "627c45c326b26c8a017c3181e05a316e0cc05120",
+      "parent_product_sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "snapshot_parents": [
+        "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "PARENT_R4; PIN_CHANGES_ONLY_TWO_TEST_FILES_AND_TWO_RECEIPTS; SEE_SELECTION_SPECIFIC_LIMIT",
+      "result": {
+        "pass": 1,
+        "fail": 0,
+        "expects": 71,
+        "scope": "Escolha→preparação/revisão→grant separado de apply→comando Planner e recibo.",
+        "limit": "Adição R4 usa reader histórico controlado de refs exatas; não autentica histórico instalado, novo C17 ou restart do provider."
+      },
+      "log_summary": [
+        "1 pass",
+        "0 fail",
+        "71 expect() calls"
+      ],
+      "executed_case_lines": [
+        "(pass) a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it [5366.57ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43620049903,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620049903",
+      "job_id": 132523487634,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620049903/job/132523487634",
+      "workflow_conclusion": "success",
+      "snapshot_sha": "47f13c881ae8ad52ba0703efe60e2b011a3292c8",
+      "snapshot_tree": "1b3abb7fada35831646cf4cf0ba74cb5ea647d56",
+      "parent_product_sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "snapshot_parents": [
+        "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "PARENT_R4; PIN_CHANGES_ONLY_TWO_TEST_FILES_AND_TWO_RECEIPTS; SEE_SELECTION_SPECIFIC_LIMIT",
+      "result": {
+        "pass": 1,
+        "fail": 0,
+        "expects": 20,
+        "scope": "Persistência SQLite de requests/resultados C08 e replay Planner com ancestralidade de dois níveis.",
+        "limit": "BCS substituído; autorizações/verifySnapshot permissivos; recall vazio e emitFromLedger rejeitado por fixture. Não atravessa case-event/Atlas instalado."
+      },
+      "log_summary": [
+        "1 pass",
+        "0 fail",
+        "20 expect() calls"
+      ],
+      "executed_case_lines": [
+        "(pass) nested C17 calculations reopen through persisted canonical requests and replay every ancestor [127862.07ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43620619049,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049",
+      "job_id": 132525249982,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049/job/132525249982",
+      "workflow_conclusion": "failure",
+      "snapshot_sha": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+      "snapshot_tree": "413f807a60933f928e5526fb2dba768e41ba00d6",
+      "parent_product_sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "snapshot_parents": [
+        "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "--test-name-pattern",
+          "^WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary$",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "PARENT_R4; PIN_CHANGES_ONLY_TWO_TEST_FILES_AND_TWO_RECEIPTS; SEE_SELECTION_SPECIFIC_LIMIT",
+      "result": {
+        "pass": 0,
+        "fail": 1,
+        "expects": 10,
+        "scope": "Exatamente a jornada nomeada de escolha humana no mesmo caso e limiar15000.",
+        "limit": "Deadline na preparação transition-confirmed:complete antes das assertions de escolha/15000. R4, não execução no pin."
+      },
+      "log_summary": [
+        "0 pass",
+        "1 fail",
+        "10 expect() calls"
+      ],
+      "executed_case_lines": [
+        "(fail) WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary [180013.46ms]"
+      ],
+      "timeout_error_lines": [
+        "[wp11-fixture-trace] {\"label\":\"renewal-choice-history\",\"phase\":\"prepare:transition-confirmed:complete\",\"elapsedMs\":180003,\"budgetMs\":180000,\"status\":\"deadline-exceeded\",\"counts\":{\"c08.read.cases\":{\"calls\":4101,\"elapsedMs\":88994,\"maximumMs\":79},\"host.revalidate\":{\"calls\":26752,\"elapsedMs\":2709,\"maximumMs\":28},\"operation-source\":{\"calls\":5980,\"elapsedMs\":3697,\"maximumMs\":30},\"operation-coverage\":{\"calls\":2612,\"elapsedMs\":76,\"maximumMs\":9},\"c08.read.preferences\":{\"calls\":648,\"elapsedMs\":12609,\"maximumMs\":41},\"c08.transaction.preferences\":{\"calls\":6,\"elapsedMs\":354,\"maximumMs\":119},\"classified-source\":{\"calls\":359,\"elapsedMs\":996,\"maximumMs\":30},\"classified-coverage\":{\"calls\":333,\"elapsedMs\":27923,\"maximumMs\":238},\"c08.transaction.cases\":{\"calls\":13,\"elapsedMs\":2007,\"maximumMs\":633},\"planner.verifySourceOnly\":{\"calls\":1164,\"elapsedMs\":3805,\"maximumMs\":11},\"planner.verifyOperation\":{\"calls\":520,\"elapsedMs\":6897,\"maximumMs\":27},\"planner.verifySourceProjection\":{\"calls\":2328,\"elapsedMs\":1956,\"maximumMs\":7},\"c08.read.outbox\":{\"calls\":1,\"elapsedMs\":12,\"maximumMs\":12}}}",
+        "13 |       console.error(\"[wp11-fixture-trace]\", JSON.stringify({ label, phase: progress.phase, elapsedMs: Date.now() - started, budgetMs, status: \"deadline-exceeded\", counts }))",
+        "error: WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000"
+      ],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43620858830,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620858830",
+      "job_id": 132525991986,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620858830/job/132525991986",
+      "workflow_conclusion": "success",
+      "snapshot_sha": "a646c3009b0a348517ee2d2b551fbe0c8e0bc63e",
+      "snapshot_tree": "10e43b4e657216f3fe18a47aaf0f0c532401920f",
+      "parent_product_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "snapshot_parents": [
+        "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "DIRECT_CHILD_OF_PIN_ONLY_CI_REQUEST_ADDED",
+      "result": {
+        "pass": 4,
+        "fail": 0,
+        "expects": 77,
+        "scope": "Pares de cenário→BI09/10: condicionado, sentido, ausência/zero/FX, adiamento e revogação/final lease.",
+        "limit": "Produtores reais em fixture; sem entrypoint bi-services no pin, sem UI/native/MCP instalados."
+      },
+      "log_summary": [
+        "4 pass",
+        "0 fail",
+        "77 expect() calls",
+        "Ran 4 tests across 1 file. [59.16s]"
+      ],
+      "executed_case_lines": [
+        "(pass) BI09 routes a real C08 pair through the Planner waterfall without promoting conditioned totals or reversing evidence [12371.68ms]",
+        "(pass) BI09 preserves explicit zero, missing amount and missing FX through actual Planner scenarios [22431.10ms]",
+        "(pass) BI10 shows the real deferred periods and no invented annual saving or completed payment [11661.83ms]",
+        "(pass) scenario plans reject callback mutation, changed paired projection, swallowed nested writes and final lease revocation [12542.16ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    },
+    {
+      "run_id": 43621178540,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621178540",
+      "job_id": 132526990338,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621178540/job/132526990338",
+      "workflow_conclusion": "success",
+      "snapshot_sha": "4d998e9e8cd22af9e8c475ee5dcb4081336f3d82",
+      "snapshot_tree": "0d00c0d98ef2f6349377fb8e27643acdeedcb2c5",
+      "parent_product_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "snapshot_parents": [
+        "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "parent_compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "merge_base": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "snapshot_contains_only_request_delta": true,
+      "relation_to_reviewed_sha": "DIRECT_CHILD_OF_PIN_ONLY_CI_REQUEST_ADDED",
+      "result": {
+        "pass": 2,
+        "fail": 0,
+        "expects": 133,
+        "scope": "Escolha C08 e dois efeitos de domínio com recibos; falha Procurement depois da reserva não autoriza redispatch.",
+        "limit": "Seleção cirúrgica de handoff; não prova cobertura/sensibilidade, UI instalada ou Atlas."
+      },
+      "log_summary": [
+        "2 pass",
+        "0 fail",
+        "133 expect() calls",
+        "Ran 2 tests across 1 file. [3.08s]"
+      ],
+      "executed_case_lines": [
+        "(pass) portfolio C08 choice applies two confirmed domain changes with durable receipts and preserves the conditioned choice [1519.14ms]",
+        "(pass) portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch [1407.37ms]"
+      ],
+      "timeout_error_lines": [],
+      "browser_setup": [
+        {
+          "name": "Setup Playwright Node",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Install Chromium",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "conclusion": "skipped"
+        }
+      ],
+      "new_run_requested_by_reviewer": false
+    }
+  ],
+  "fixture_boundaries": [
+    {
+      "test": "test/product/wp11/calculation-persistence.test.ts",
+      "lines": "27–37,48,138–152",
+      "real": [
+        "SQLite persist/reopen",
+        "C08 result/request",
+        "Planner canonical replay",
+        "two-level ancestry",
+        "real source revision"
+      ],
+      "controlled": [
+        "BCS resolver/context",
+        "authorizeCase/authorizeProducer/verifySnapshot",
+        "empty recall",
+        "emitFromLedger intentionally unavailable",
+        "case ledger empty"
+      ],
+      "cannot_establish": [
+        "official accepted C09 event→case-event resolver",
+        "Atlas write/recall",
+        "scanner/bundle",
+        "installed authentication"
+      ]
+    },
+    {
+      "test": "test/product/wp11/choice-prepared-execution.test.ts",
+      "lines": "297–316",
+      "real": [
+        "choice",
+        "prepared review",
+        "separate apply grant",
+        "Planner command",
+        "durable receipt"
+      ],
+      "controlled": [
+        "post-apply historical reader whitelists exact emitted refs"
+      ],
+      "cannot_establish": [
+        "installed historical authorization",
+        "canonical collaborative-question producer",
+        "new C17 replay",
+        "provider restart"
+      ]
+    },
+    {
+      "test": "test/product/wp13/campaign.test.ts",
+      "lines": "41–78,172–176",
+      "real": [
+        "state-provider",
+        "LocalStore",
+        "private writer check",
+        "campaign commit/readOriginal"
+      ],
+      "controlled": [
+        "authorize",
+        "candidate and case sources",
+        "projections"
+      ],
+      "cannot_establish": [
+        "installed enterprise authentication",
+        "WP13 mounted UI/native/MCP"
+      ]
+    },
+    {
+      "test": "test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "lines": "124–188",
+      "failure_before": "final same-case/choice and15000/15001 assertions",
+      "cannot_establish": [
+        "integrated boundary proof",
+        "cold restart by service reconstruction on same live LocalStore"
+      ]
+    },
+    {
+      "test": "test/product/wp01/workbench-analysis.test.ts",
+      "lines": "56–74",
+      "method": "direct HTTP POST, optional model/skill branch",
+      "cannot_establish": [
+        "actual form submit/DOM",
+        "FIN-IND-004 absence"
+      ]
+    }
+  ],
+  "evidence_handling": "Timeout remains failure. Skipped browser setup/upload and Omni not-applicable are not installed journey witnesses. Controlled fixtures qualify only the real boundary they exercise. R4 successes are labeled R4 even when relevant inputs remain unchanged at pin."
+}
