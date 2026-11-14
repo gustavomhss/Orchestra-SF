@@ -1,0 +1,137 @@
+2026-11-14T17:32:58.1865368Z bun test v1.3.14 (0d9b296a)
+2026-11-14T17:32:58.1946150Z 
+2026-11-14T17:32:58.1946527Z Sucafinav1/test/product/wp01/browser-startup.test.ts:
+2026-11-14T17:32:58.4357071Z WP01 browser explicit selection admitted {
+2026-11-14T17:32:58.4358819Z   executable: "bun",
+2026-11-14T17:32:58.4359120Z   command: "test",
+2026-11-14T17:32:58.4359822Z   files: [ "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+2026-11-14T17:32:58.4360969Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts",
+2026-11-14T17:32:58.4362244Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context-history.test.ts",
+2026-11-14T17:32:58.4362954Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts",
+2026-11-14T17:32:58.4363712Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts",
+2026-11-14T17:32:58.4364381Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+2026-11-14T17:32:58.4364771Z   ],
+2026-11-14T17:32:58.4365175Z   startup: "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+2026-11-14T17:32:58.4366176Z   finalizer: "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+2026-11-14T17:32:58.4366761Z }
+2026-11-14T17:32:58.4366998Z WP01 browser launch phase {
+2026-11-14T17:32:58.4367366Z   phase: "published Node browser driver through AppProcess",
+2026-11-14T17:32:58.4367715Z   startupTimeoutMs: 30000,
+2026-11-14T17:32:58.4367972Z }
+2026-11-14T17:32:58.4368541Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"playwright-import","elapsedMs":0}
+2026-11-14T17:32:58.7543932Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"playwright-imported","elapsedMs":319}
+2026-11-14T17:32:58.7625048Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-service","elapsedMs":326}
+2026-11-14T17:32:58.7626247Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-spawn","elapsedMs":326,"remainingMs":29672,"deadlineEpochMs":1794677608433,"launchCeilingMs":30000}
+2026-11-14T17:32:58.7715054Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-spawned","elapsedMs":336,"driverPid":4086}
+2026-11-14T17:32:58.7973195Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-import","elapsedMs":362,"driverPid":4086}
+2026-11-14T17:32:59.0131479Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-imported","elapsedMs":578,"driverPid":4086}
+2026-11-14T17:32:59.0241817Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":0,"resources":{"FSReqPromise":1,"PipeWrap":3},"rss":100241408,"children":[],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":29410,"debugFileConfigured":false,"protocol":{"sent":0,"received":0,"malformed":0,"pending":[]}}
+2026-11-14T17:32:59.0243957Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"chromium-launch","elapsedMs":589,"driverPid":4086,"timeoutMs":29410,"deadlineEpochMs":1794677608433}
+2026-11-14T17:33:00.0246510Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":1001,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":28410,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:01.0263858Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":2002,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":27408,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:02.0280527Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":3004,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":26407,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:03.0299740Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":4006,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":25405,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:04.0309158Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":5007,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":24404,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:05.0316671Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":6008,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"0"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":23403,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:06.0323129Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":7009,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"S (sleeping)","wait":"futex_do_wait"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":22402,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:07.0337963Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":8010,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"S (sleeping)","wait":"futex_do_wait"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":21401,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:08.0354897Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":9012,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":20399,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:09.0370438Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":10013,"resources":{"PipeWrap":7,"ProcessWrap":1},"rss":100372480,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":19398,"debugFileConfigured":false,"protocol":{"sent":1,"received":0,"malformed":0,"lastSent":"Browser.getVersion","pending":["Browser.getVersion"]}}
+2026-11-14T17:33:09.2696195Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4086,"elapsedMs":10246,"resources":{"PipeWrap":7,"ProcessWrap":1,"TCPServerWrap":1},"rss":101974016,"children":[{"pid":4101,"parent":4086,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794677608433,"launchCeilingMs":30000,"remainingStartupMs":19165,"debugFileConfigured":false,"protocol":{"sent":2,"received":2,"malformed":0,"lastSent":"Target.setAutoAttach","lastReceived":"Target.setAutoAttach","pending":[]}}
+2026-11-14T17:33:09.2698498Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"chromium-launched","elapsedMs":10834,"driverPid":4086}
+2026-11-14T17:33:09.2699319Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-ready","elapsedMs":10834,"driverPid":4086,"browserPid":4101}
+2026-11-14T17:33:09.2700209Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"pipe-verify","elapsedMs":10834,"driverPid":4086,"browserPid":4101}
+2026-11-14T17:33:09.2701201Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"browser-connect","elapsedMs":10834,"driverPid":4086,"browserPid":4101}
+2026-11-14T17:33:09.3053903Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"browser-connected","elapsedMs":10870,"driverPid":4086,"browserPid":4101}
+2026-11-14T17:33:09.3054668Z WP01 browser launch phase {
+2026-11-14T17:33:09.3059050Z   phase: "read actual browser PID through CDP",
+2026-11-14T17:33:09.3059837Z }
+2026-11-14T17:33:09.3347580Z WP01 browser launch complete {
+2026-11-14T17:33:09.3347884Z   pid: 4101,
+2026-11-14T17:33:09.3348106Z   launches: 1,
+2026-11-14T17:33:09.3348292Z }
+2026-11-14T17:33:09.3411178Z (pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [10908.31ms]
+2026-11-14T17:33:09.3411850Z 
+2026-11-14T17:33:09.3412612Z Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts:
+2026-11-14T17:33:09.3436865Z 
+2026-11-14T17:33:09.3439615Z # Unhandled error between tests
+2026-11-14T17:33:09.3440060Z -------------------------------
+2026-11-14T17:33:09.3441512Z error: Cannot find module '../../../../product/reviews/thread-context.ts' from '/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts'
+2026-11-14T17:33:09.3442595Z -------------------------------
+2026-11-14T17:33:09.3442818Z 
+2026-11-14T17:33:09.3442877Z 
+2026-11-14T17:33:09.3443290Z Sucafinav1/test/product/ui-split/ui-review/review-context-history.test.ts:
+2026-11-14T17:33:09.3452230Z 
+2026-11-14T17:33:09.3452881Z # Unhandled error between tests
+2026-11-14T17:33:09.3453675Z -------------------------------
+2026-11-14T17:33:09.3454873Z error: Cannot find module '../../../../product/reviews/thread-context.ts' from '/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context-history.test.ts'
+2026-11-14T17:33:09.3455746Z -------------------------------
+2026-11-14T17:33:09.3456178Z 
+2026-11-14T17:33:09.3456308Z 
+2026-11-14T17:33:09.3456741Z Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts:
+2026-11-14T17:33:12.1153700Z WP01 browser lease acquired {
+2026-11-14T17:33:12.1154030Z   pid: 4101,
+2026-11-14T17:33:12.1154196Z   lease: 1,
+2026-11-14T17:33:12.1154374Z   acquisitions: 1,
+2026-11-14T17:33:12.1154552Z }
+2026-11-14T17:33:30.4191093Z WP01 browser lease released {
+2026-11-14T17:33:30.4191352Z   pid: 4101,
+2026-11-14T17:33:30.4191513Z   lease: 1,
+2026-11-14T17:33:30.4191742Z   releases: 1,
+2026-11-14T17:33:30.4191955Z   contexts: 0,
+2026-11-14T17:33:30.4192143Z }
+2026-11-14T17:33:30.4332150Z (pass) WholeReview UI reopens 1300 after reload and explicitly preserves a distinct 2400 observation [20818.39ms]
+2026-11-14T17:33:30.4332501Z 
+2026-11-14T17:33:30.4332735Z Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts:
+2026-11-14T17:33:32.2943310Z WP01 browser lease acquired {
+2026-11-14T17:33:32.2943592Z   pid: 4101,
+2026-11-14T17:33:32.2943757Z   lease: 2,
+2026-11-14T17:33:32.2943915Z   acquisitions: 2,
+2026-11-14T17:33:32.2944076Z }
+2026-11-14T17:33:34.8996215Z WP01 browser lease released {
+2026-11-14T17:33:34.8996571Z   pid: 4101,
+2026-11-14T17:33:34.8996784Z   lease: 2,
+2026-11-14T17:33:34.8996958Z   releases: 2,
+2026-11-14T17:33:34.8997143Z   contexts: 0,
+2026-11-14T17:33:34.8997343Z }
+2026-11-14T17:33:34.9134025Z (pass) WholeReview UI removes preserved material when the real history route revokes access [4476.88ms]
+2026-11-14T17:33:34.9134435Z 
+2026-11-14T17:33:34.9134649Z Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:
+2026-11-14T17:33:34.9166745Z WP01 browser final close starting {
+2026-11-14T17:33:34.9167097Z   pid: 4101,
+2026-11-14T17:33:34.9167307Z   connected: true,
+2026-11-14T17:33:34.9167507Z }
+2026-11-14T17:33:34.9193052Z WP01 browser disconnected {
+2026-11-14T17:33:34.9193522Z   pid: 4101,
+2026-11-14T17:33:34.9193966Z   expected: true,
+2026-11-14T17:33:34.9194320Z }
+2026-11-14T17:33:34.9648496Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-closed","elapsedMs":36529,"driverPid":4086}
+2026-11-14T17:33:34.9732209Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-exited","elapsedMs":36538,"driverPid":4086,"exitCode":0}
+2026-11-14T17:33:34.9773878Z WP01 browser final close observed {
+2026-11-14T17:33:34.9774169Z   pid: 4101,
+2026-11-14T17:33:34.9774366Z   disconnected: true,
+2026-11-14T17:33:34.9774564Z   connected: false,
+2026-11-14T17:33:34.9774773Z   driverClosed: true,
+2026-11-14T17:33:34.9775311Z   processExited: true,
+2026-11-14T17:33:34.9775526Z }
+2026-11-14T17:33:34.9775773Z WP01 browser lifecycle final evidence {
+2026-11-14T17:33:34.9776278Z   launches: 1,
+2026-11-14T17:33:34.9776461Z   acquisitions: 2,
+2026-11-14T17:33:34.9776629Z   releases: 2,
+2026-11-14T17:33:34.9776788Z   pid: 4101,
+2026-11-14T17:33:34.9776947Z   activeLease: false,
+2026-11-14T17:33:34.9777115Z   contexts: 0,
+2026-11-14T17:33:34.9777278Z   disconnected: true,
+2026-11-14T17:33:34.9777444Z   driverClosed: true,
+2026-11-14T17:33:34.9777611Z   processExited: true,
+2026-11-14T17:33:34.9777777Z }
+2026-11-14T17:33:34.9778203Z (pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [61.33ms]
+2026-11-14T17:33:34.9781989Z SF_WP02_BROWSER_DRIVER_PROOF {"consumer":"wp01-shared-pool","clientRuntime":{"name":"bun","version":"1.3.14","pid":4064},"driverRuntime":{"name":"node","version":"24.22.2","pid":4086},"playwrightVersion":"1.59.1","browserVersion":"157.0.8103.50","browserPid":4101,"transport":"playwright-unix-pipe-node-websocket","spawnBoundary":"AppProcess","browserStdioCount":5,"browserUsesPipe":true,"browserPipeOwner":"node","bridge":{"framing":"json-nul","acceptedClients":1,"framesToBrowser":133,"framesFromBrowser":316,"peakQueuedBytes":165954,"peakBufferedBytes":790,"maxFrameBytes":16777216,"maxQueuedBytes":33554432,"directoryMode":448,"socketMode":384},"lifecycle":{"remainingContexts":0,"connected":false,"nodeExitCode":0,"browserExitCode":0,"browserSignal":null,"bridgeClosed":true,"listenerClosed":true,"socketClosed":true,"pipeEnded":true,"webSocketOpened":true,"webSocketClosed":true,"webSocketCloseCode":1000,"webSocketCloseWasClean":true,"pendingFrameBytes":0,"queuedWriteBytes":0,"socketRemoved":true,"directoryRemoved":true}}
+2026-11-14T17:33:34.9784459Z 
+2026-11-14T17:33:34.9784546Z  4 pass
+2026-11-14T17:33:34.9784694Z  2 fail
+2026-11-14T17:33:34.9784837Z  2 errors
+2026-11-14T17:33:34.9784997Z  81 expect() calls
+2026-11-14T17:33:34.9785213Z Ran 6 tests across 6 files. [36.79s]
+2026-11-14T17:33:34.9806193Z omni positive control [747f6256e6505c569f17d6d643423b40]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.
+2026-11-14T17:33:35.0010563Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,16 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "packageSelector": "packages/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/wp01/meeting-number.test.ts",
+    "--timeout",
+    "120000",
+    "-t",
+    "^C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content$"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+  }
+}

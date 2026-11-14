@@ -1,0 +1,220 @@
+{
+  "schema": "sf-ui-review-input-pins-v1",
+  "readAt": "2026-11-14",
+  "scope": "Pinned reads only; no foreign source writes.",
+  "mission": "https://github.com/gustavomhss/Orchestra-SF/blob/d3d411f7e2476a562a57aa7620823980eaf34e46/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/ui-split/ui-review.md",
+  "base": {
+    "branch": "interface-resume",
+    "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+    "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5",
+    "sources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+        "blob": "a13f85982fa441086971d2b86af355f96c854bbd",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/product/ui/work-review-context.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/review-analysis-input.ts",
+        "blob": "a15558ea09002068bec7320ca21f05d426ed5777",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/product/interface/review-analysis-input.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+        "blob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "blob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "blob": "993d8fed23f398c4317dc6ed63bed05a5b79fd08",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/product/reviews/thread-context.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/work-review-context.ts",
+        "blob": "323ad234b37a4005a10a7bf5bfd185cb23831fab",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/product/collaboration/work-review-context.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "blob": "930c93a1704d0444519ffa85b8f69f57cc6c2735",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/product/interface/http.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/apps/cli/src/sucafina-product/business-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "blob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/apps/cli/src/sucafina-product/dashboard-services.ts"
+      }
+    ]
+  },
+  "publishedWP10": {
+    "branch": "astra-wp10",
+    "head": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+    "mount": {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "28d0eaf1013e6a7f53672a43d3d440bded1fd462",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    "sources": [
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/dashboard-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "blob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/review-history.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/review-read-integrity.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+        "blob": "012c83ed8b6382bebc0046526985f2f900f04035",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/review-calculation-history.ts"
+      }
+    ]
+  },
+  "composeTarget": {
+    "branch": "compose-resume",
+    "head": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "tree": "64d26157c0044018712074e55a4a56f36db15d5f",
+    "mount": {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "b3595989d0c08159c96484d96bd40a149a9721e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    "sources": [
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "blob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/apps/cli/src/sucafina-product/dashboard-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "blob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/apps/cli/src/sucafina-product/review-history.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "blob": "2bd1fbd753e38f38ef58e4d71f364972ac22703e",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/apps/cli/src/sucafina-product/review-read-integrity.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+        "blob": "012c83ed8b6382bebc0046526985f2f900f04035",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/apps/cli/src/sucafina-product/review-calculation-history.ts"
+      }
+    ]
+  },
+  "collaboration": {
+    "branch": "collab-resume",
+    "head": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+    "tree": "44a6c14f500f88dc8b01f82f64dedb6cc4d3c47f",
+    "sources": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "49f9e7824edb25443f48a2035ebfa698554de87e",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4/apps/cli/src/sucafina-product/business-services.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+        "blob": "119f642392a046dabc280c785acd2ad1fa65a838",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4/modules/sucafina/Sucafinav1/product/collaboration/host.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+        "blob": "7222e35f290d46f68d7ab2aefdfd1780774140ae",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4/modules/sucafina/Sucafinav1/product/collaboration/composition.ts"
+      }
+    ]
+  },
+  "unchangedOriginalRequirement": "meeting-number.test.ts and workbench-recovery-fixture.ts are unchanged in ui-review and byte-identical at the WP10 proof input. No record-capture substitution.",
+  "integrationLimits": [
+    "The published WP10 product is not the ui-review candidate. Its dashboard-workbench and shell-state blobs differ from ui-review.",
+    "Direct section pin preparation plus workReviewContext rendering does not prove the installed My work producer emits that metadata.",
+    "No entire upstream business-services.ts snapshot is proposed for replacement."
+  ],
+  "normative": {
+    "planCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "planPath": "modules/sucafina/Sucafinav1/docs/sf2h-plan",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "packsAndCICommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "ownerFindingsCommit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+    "criterionUniverse": 153,
+    "coverageClaim": "Only the explicitly named slice criteria receive the stated component/consumer evidence; all global gates remain intact."
+  },
+  "differingUI": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "publishedWP10Blob": "bad4b08050949eb7cde69615b131649f1c0bcad7",
+      "uiReviewBlob": "c92748938661f561a7f99d16049c35d0b4ce345c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+      "publishedWP10Blob": "58f7a218124cffed60d6e639d7f3ee675cf159d2",
+      "uiReviewBlob": "74ccb3c50dcadd85878987870f0e388926898d53"
+    }
+  ],
+  "browserHarness": [
+    {
+      "label": "uiReview",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "blob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "error": false
+    },
+    {
+      "label": "uiReview",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "blob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "error": false
+    },
+    {
+      "label": "uiReview",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "error": false
+    },
+    {
+      "label": "wp10",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "blob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "error": false
+    },
+    {
+      "label": "wp10",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "blob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "error": false
+    },
+    {
+      "label": "wp10",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "error": false
+    }
+  ],
+  "additionalContextDependency": {
+    "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+    "presentInUiReviewBase": "993d8fed23f398c4317dc6ed63bed05a5b79fd08",
+    "absentAtWP10": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "absentAtCompose": "ad7fcdef7739e1bc471e42fac082452799de751b",
+    "publishedCollaboration": {
+      "head": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+      "blob": "20d98a976372338a22c947ee6bfcb9641c0429c5"
+    },
+    "verification": "Actions module-not-found plus independent GitHub Contents reads; source proposal NOT_APPLIED."
+  }
+}

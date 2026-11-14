@@ -1,0 +1,43 @@
+{
+  "status": "NOT_APPLIED",
+  "targetBranch": "astra-wp10",
+  "targetHead": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "targetPreimage": "ABSENT (GitHub Contents 404, independently observed as module-not-found in Actions)",
+  "sourceBranch": "collab-resume",
+  "sourceHead": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "sourcePath": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+  "sourceBlob": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+  "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0d9820924b33a8fc7b145f54a675aeef76c98489/modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+  "patch": "c05-wp10-thread-context.patch",
+  "reportedBy": {
+    "run": 43621543227,
+    "job": 132528119418,
+    "errors": 2,
+    "message": "Cannot find module '../../../../product/reviews/thread-context.ts'",
+    "consumerFiles": [
+      "review-context.test.ts",
+      "review-context-history.test.ts"
+    ]
+  },
+  "apiReview": "The published module retains prepare(selection,basis,context) and authorize(pin,basis,context) used by the owned tests, and adds the private read snapshot API. No consumer adapter or substitute reader is proposed.",
+  "runtimeImports": [
+    "../contracts/canonical.ts",
+    "../contracts/validation.ts",
+    "./port.ts"
+  ],
+  "typeDependency": {
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+    "WP10Blob": "e0745ad913c6c1e93e83794ed1b4de6082868519",
+    "latestCollaborationBlob": "930e7a5febbc981ba1881fc67e9ab065691e3eb8"
+  },
+  "composeLimit": "compose-resume ad7fcdef has neither reviews/thread-context.ts nor collaboration/thread-context.ts. This one-file addition targets WP10 only; composition must reconcile the current Collaboration input and its type/dependency closure, not blindly apply this patch to its older tree.",
+  "scopeLimit": "This proposal supplies the missing module, not the actual My work provider mount. No source changes were applied and no composed product PASS is claimed.",
+  "checks": {
+    "gitApplyCheck": "PASS textual only",
+    "typecheck": "NOT_RUN",
+    "productTests": "NOT_RUN for proposed intake"
+  },
+  "patchSha256": "08cf45e4c5aebb75ba51f74b455f4382e06fea2bbcf12b44b5bf9e41a5a19255",
+  "patchBytes": 7712,
+  "proposedBlobVerified": "20d98a976372338a22c947ee6bfcb9641c0429c5"
+}

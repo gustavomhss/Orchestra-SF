@@ -1,0 +1,151 @@
+2026-11-14T17:20:14.3308600Z bun test v1.3.14 (0d9b296a)
+2026-11-14T17:20:14.3437277Z 
+2026-11-14T17:20:14.3438183Z Sucafinav1/test/product/wp01/browser-startup.test.ts:
+2026-11-14T17:20:14.6889803Z WP01 browser explicit selection admitted {
+2026-11-14T17:20:14.6890427Z   executable: "bun",
+2026-11-14T17:20:14.6890673Z   command: "test",
+2026-11-14T17:20:14.6891338Z   files: [ "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+2026-11-14T17:20:14.6892418Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts",
+2026-11-14T17:20:14.6893476Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts",
+2026-11-14T17:20:14.6894476Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+2026-11-14T17:20:14.6895026Z   ],
+2026-11-14T17:20:14.6895603Z   startup: "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+2026-11-14T17:20:14.6896584Z   finalizer: "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+2026-11-14T17:20:14.6897198Z }
+2026-11-14T17:20:14.6897417Z WP01 browser launch phase {
+2026-11-14T17:20:14.6897790Z   phase: "published Node browser driver through AppProcess",
+2026-11-14T17:20:14.6898151Z   startupTimeoutMs: 30000,
+2026-11-14T17:20:14.6898725Z }
+2026-11-14T17:20:14.6899249Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"playwright-import","elapsedMs":0}
+2026-11-14T17:20:15.1112095Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"playwright-imported","elapsedMs":424}
+2026-11-14T17:20:15.1207694Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-service","elapsedMs":434}
+2026-11-14T17:20:15.1209489Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-spawn","elapsedMs":434,"remainingMs":29564,"deadlineEpochMs":1794676844684,"launchCeilingMs":30000}
+2026-11-14T17:20:15.1330138Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-spawned","elapsedMs":445,"driverPid":4760}
+2026-11-14T17:20:15.1589300Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-import","elapsedMs":472,"driverPid":4760}
+2026-11-14T17:20:15.4733022Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-imported","elapsedMs":786,"driverPid":4760}
+2026-11-14T17:20:15.4859938Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4760,"elapsedMs":1,"resources":{"FSReqPromise":1,"PipeWrap":3},"rss":101064704,"children":[],"deadlineEpochMs":1794676844684,"launchCeilingMs":30000,"remainingStartupMs":29199,"debugFileConfigured":false,"protocol":{"sent":0,"received":0,"malformed":0,"pending":[]}}
+2026-11-14T17:20:15.4863934Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"chromium-launch","elapsedMs":799,"driverPid":4760,"timeoutMs":29199,"deadlineEpochMs":1794676844684}
+2026-11-14T17:20:16.1626943Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {"consumer":"wp01-shared-pool","event":"launch-diagnostic","runtime":"node","pid":4760,"elapsedMs":677,"resources":{"PipeWrap":7,"ProcessWrap":1,"TCPServerWrap":1},"rss":103161856,"children":[{"pid":4777,"parent":4760,"name":"chrome","state":"D (disk sleep)","wait":"folio_wait_bit_common"}],"deadlineEpochMs":1794676844684,"launchCeilingMs":30000,"remainingStartupMs":28523,"debugFileConfigured":false,"protocol":{"sent":2,"received":2,"malformed":0,"lastSent":"Target.setAutoAttach","lastReceived":"Target.setAutoAttach","pending":[]}}
+2026-11-14T17:20:16.1631761Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"chromium-launched","elapsedMs":1475,"driverPid":4760}
+2026-11-14T17:20:16.1634274Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-ready","elapsedMs":1476,"driverPid":4760,"browserPid":4777}
+2026-11-14T17:20:16.1636151Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"pipe-verify","elapsedMs":1476,"driverPid":4760,"browserPid":4777}
+2026-11-14T17:20:16.1637937Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"browser-connect","elapsedMs":1477,"driverPid":4760,"browserPid":4777}
+2026-11-14T17:20:16.2180944Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"browser-connected","elapsedMs":1530,"driverPid":4760,"browserPid":4777}
+2026-11-14T17:20:16.2194608Z WP01 browser launch phase {
+2026-11-14T17:20:16.2195317Z   phase: "read actual browser PID through CDP",
+2026-11-14T17:20:16.2195853Z }
+2026-11-14T17:20:16.2349251Z WP01 browser launch complete {
+2026-11-14T17:20:16.2352731Z   pid: 4777,
+2026-11-14T17:20:16.2353151Z   launches: 1,
+2026-11-14T17:20:16.2353853Z }
+2026-11-14T17:20:16.2458106Z (pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [1561.99ms]
+2026-11-14T17:20:16.2498612Z 
+2026-11-14T17:20:16.2499192Z Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts:
+2026-11-14T17:21:34.1900090Z (fail) C05 UI renders the exact section context issued from the real preserved review reader [77651.31ms]
+2026-11-14T17:21:34.1901144Z   ^ this test timed out after 60000ms.
+2026-11-14T17:22:02.7811956Z 48 |     const html = workReviewContext({ reviewContext: first.value })
+2026-11-14T17:22:02.7812727Z 49 |     const changed = await fixture.changeBudget()
+2026-11-14T17:22:02.7813446Z 50 |     expect(changed.status).toBe(200)
+2026-11-14T17:22:02.7814201Z 51 |     expect(await changed.json()).toMatchObject({ ok: true })
+2026-11-14T17:22:02.7814923Z 52 |     const reopened = await fixture.read((context) => reader.prepare(selection, basis, context))
+2026-11-14T17:22:02.7815472Z 53 |     expect(reopened.status).toBe("ok")
+2026-11-14T17:22:02.7815796Z                                  ^
+2026-11-14T17:22:02.7816419Z error: expect(received).toBe(expected)
+2026-11-14T17:22:02.7816773Z 
+2026-11-14T17:22:02.7816879Z Expected: "ok"
+2026-11-14T17:22:02.7817096Z Received: "denied"
+2026-11-14T17:22:02.7817225Z 
+2026-11-14T17:22:02.7817830Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts:53:29)
+2026-11-14T17:22:02.7819935Z (fail) C05 UI preserves the issued section context after a legitimate financial change and a fresh read admission [28591.33ms]
+2026-11-14T17:22:31.3387744Z (pass) C05 UI cannot reuse a preserved review pin after current read access is revoked [28557.39ms]
+2026-11-14T17:22:31.3388779Z 
+2026-11-14T17:22:31.3389346Z Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts:
+2026-11-14T17:22:45.8777490Z WP01 browser lease acquired {
+2026-11-14T17:22:45.8777825Z   pid: 4777,
+2026-11-14T17:22:45.8778042Z   lease: 1,
+2026-11-14T17:22:45.8778535Z   acquisitions: 1,
+2026-11-14T17:22:45.8778785Z }
+2026-11-14T17:23:03.5569498Z WP01 browser lease released {
+2026-11-14T17:23:03.5570623Z 31 |     expect(await total.locator("td").nth(2).textContent()).toBe("1300")
+2026-11-14T17:23:03.5571749Z   pid: 4777,
+2026-11-14T17:23:03.5575401Z   lease: 1,
+2026-11-14T17:23:03.5575994Z   releases: 1,
+2026-11-14T17:23:03.5579074Z   contexts: 0,
+2026-11-14T17:23:03.5580277Z }
+2026-11-14T17:23:03.5600173Z 32 | 
+2026-11-14T17:23:03.5601787Z 33 |     expect((await page.reload())?.status()).toBe(200)
+2026-11-14T17:23:03.5604321Z 34 |     await page.locator("[data-dashboard-workbench-panel] > summary").click()
+2026-11-14T17:23:03.5604924Z 35 |     const currentOptions = await loadOptions(page)
+2026-11-14T17:23:03.5605754Z 36 |     expect(rows(currentOptions.history)).toContainEqual(expect.objectContaining({ kind: "review", ref: fixture.original.id }))
+2026-11-14T17:23:03.5606570Z                                               ^
+2026-11-14T17:23:03.5607244Z error: expect(received).toContainEqual(expected)
+2026-11-14T17:23:03.5607636Z 
+2026-11-14T17:23:03.5607966Z Expected to contain: ObjectContaining {
+2026-11-14T17:23:03.5608690Z   kind: "review",
+2026-11-14T17:23:03.5609501Z   ref: "dashboard-review:d714e5c6d730814e436bcf514a4ce76a56b98afbeb784e4945b4f2b8d9d0b2bc",
+2026-11-14T17:23:03.5610343Z }
+2026-11-14T17:23:03.5610647Z Received: []
+2026-11-14T17:23:03.5610849Z 
+2026-11-14T17:23:03.5612025Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts:36:42)
+2026-11-14T17:23:03.5700315Z (fail) WholeReview UI reopens 1300 after reload and explicitly preserves a distinct 2400 observation [32227.77ms]
+2026-11-14T17:23:18.1331466Z WP01 browser lease acquired {
+2026-11-14T17:23:18.1331888Z   pid: 4777,
+2026-11-14T17:23:18.1332148Z   lease: 2,
+2026-11-14T17:23:18.1332402Z   acquisitions: 2,
+2026-11-14T17:23:18.1332673Z }
+2026-11-14T17:23:33.9227416Z WP01 browser lease released {
+2026-11-14T17:23:33.9228599Z   pid: 4777,
+2026-11-14T17:23:33.9228939Z   lease: 2,
+2026-11-14T17:23:33.9229249Z   releases: 2,
+2026-11-14T17:23:33.9229587Z   contexts: 0,
+2026-11-14T17:23:33.9229908Z }
+2026-11-14T17:23:33.9262819Z 94 |     fixture.policy.readable = false
+2026-11-14T17:23:33.9266276Z 95 |     const denied = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-review")
+2026-11-14T17:23:33.9268871Z 96 |     await panel.getByRole("button", { name: "Abrir histórico", exact: true }).click()
+2026-11-14T17:23:33.9270087Z 97 |     const response = await denied
+2026-11-14T17:23:33.9271066Z 98 |     expect(response.status()).toBe(403)
+2026-11-14T17:23:33.9272187Z 99 |     expect(await response.text()).not.toContain(fixture.original.id)
+2026-11-14T17:23:33.9273440Z                                ^
+2026-11-14T17:23:33.9275053Z error: text: Protocol error (Network.getResponseBody): No data found for resource with given identifier
+2026-11-14T17:23:33.9277729Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts:99:27
+2026-11-14T17:23:33.9279556Z       at processTicksAndRejections (native:7:39)
+2026-11-14T17:23:33.9293206Z (fail) WholeReview UI removes preserved material when the real history route revokes access [30359.27ms]
+2026-11-14T17:23:33.9293994Z 
+2026-11-14T17:23:33.9294468Z Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:
+2026-11-14T17:23:33.9332084Z WP01 browser final close starting {
+2026-11-14T17:23:33.9332582Z   pid: 4777,
+2026-11-14T17:23:33.9332926Z   connected: true,
+2026-11-14T17:23:33.9333359Z }
+2026-11-14T17:23:33.9362872Z WP01 browser disconnected {
+2026-11-14T17:23:33.9363377Z   pid: 4777,
+2026-11-14T17:23:33.9363741Z   expected: true,
+2026-11-14T17:23:33.9364106Z }
+2026-11-14T17:23:33.9976014Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-closed","elapsedMs":199310,"driverPid":4760}
+2026-11-14T17:23:34.0089558Z SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-exited","elapsedMs":199322,"driverPid":4760,"exitCode":0}
+2026-11-14T17:23:34.0176422Z WP01 browser final close observed {
+2026-11-14T17:23:34.0176920Z   pid: 4777,
+2026-11-14T17:23:34.0177293Z   disconnected: true,
+2026-11-14T17:23:34.0177704Z   connected: false,
+2026-11-14T17:23:34.0178098Z   driverClosed: true,
+2026-11-14T17:23:34.0178801Z   processExited: true,
+2026-11-14T17:23:34.0179226Z }
+2026-11-14T17:23:34.0179694Z WP01 browser lifecycle final evidence {
+2026-11-14T17:23:34.0180646Z   launches: 1,
+2026-11-14T17:23:34.0181034Z   acquisitions: 2,
+2026-11-14T17:23:34.0181427Z   releases: 2,
+2026-11-14T17:23:34.0181804Z   pid: 4777,
+2026-11-14T17:23:34.0182179Z   activeLease: false,
+2026-11-14T17:23:34.0182575Z   contexts: 0,
+2026-11-14T17:23:34.0182965Z   disconnected: true,
+2026-11-14T17:23:34.0183377Z   driverClosed: true,
+2026-11-14T17:23:34.0183808Z   processExited: true,
+2026-11-14T17:23:34.0184177Z }
+2026-11-14T17:23:34.0191439Z SF_WP02_BROWSER_DRIVER_PROOF {"consumer":"wp01-shared-pool","clientRuntime":{"name":"bun","version":"1.3.14","pid":4740},"driverRuntime":{"name":"node","version":"24.22.2","pid":4760},"playwrightVersion":"1.59.1","browserVersion":"157.0.8103.50","browserPid":4777,"transport":"playwright-unix-pipe-node-websocket","spawnBoundary":"AppProcess","browserStdioCount":5,"browserUsesPipe":true,"browserPipeOwner":"node","bridge":{"framing":"json-nul","acceptedClients":1,"framesToBrowser":78,"framesFromBrowser":232,"peakQueuedBytes":165953,"peakBufferedBytes":799,"maxFrameBytes":16777216,"maxQueuedBytes":33554432,"directoryMode":448,"socketMode":384},"lifecycle":{"remainingContexts":0,"connected":false,"nodeExitCode":0,"browserExitCode":0,"browserSignal":null,"bridgeClosed":true,"listenerClosed":true,"socketClosed":true,"pipeEnded":true,"webSocketOpened":true,"webSocketClosed":true,"webSocketCloseCode":1000,"webSocketCloseWasClean":true,"pendingFrameBytes":0,"queuedWriteBytes":0,"socketRemoved":true,"directoryRemoved":true}}
+2026-11-14T17:23:34.0199139Z (pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [85.33ms]
+2026-11-14T17:23:34.0199841Z 
+2026-11-14T17:23:34.0199972Z  3 pass
+2026-11-14T17:23:34.0200260Z  4 fail
+2026-11-14T17:23:34.0200571Z  74 expect() calls
+2026-11-14T17:23:34.0201004Z Ran 7 tests across 4 files. [199.69s]
+2026-11-14T17:23:34.0202570Z omni positive control [1189a44097fc470d133dbe5166a8372b]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.
+2026-11-14T17:23:34.0619278Z ##[error]Process completed with exit code 1.
