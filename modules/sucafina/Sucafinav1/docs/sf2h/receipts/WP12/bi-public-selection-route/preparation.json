@@ -1,0 +1,107 @@
+{
+  "schema": "wp12-bi-public-selection-preparation-v1",
+  "status": "STATIC_PREPARATION_NOT_RUN",
+  "writer": "astra-wp12/compose_typecheck",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+    "blob": "a3fa276e8824affe75842cec6a8a11c224366f71",
+    "sha256": "36fea4c59715b3e45aaa435fd5321a8623dc9180dad668f5cc2b243da5c4b123",
+    "bytes": 29409,
+    "lines": 372,
+    "test_count": 1,
+    "expect_calls": 80,
+    "declared_deadline_ms": 360000
+  },
+  "published_dependency_commit": "6880666b15dc18bf400c908a8457580526b70f4d",
+  "published_dependency_tree": "258bc03adf6343a10847f80060b6983cfc65ad43",
+  "question": "Can the installed public save/choice routes supply the artifact handles needed by the strict ContextualBIProposal verifier without private artifact identifiers or a host change?",
+  "static_answer": "The published route chain exposes authenticated artifact handles and reopens them under the same case/actor/source fences. The new driver exercises that chain; runtime success remains unobserved.",
+  "human_selection": {
+    "profile": "sf_finance",
+    "skill": "sf-produzir-bi-contextual",
+    "view": "BI01",
+    "version": 1,
+    "authorized_filters": [],
+    "dashboard_sources": [
+      "Budget Overview/budgetSeries",
+      "Budget Overview/budgetMetrics"
+    ],
+    "period": {
+      "start": "2027-01-01",
+      "end": "2027-12-31"
+    },
+    "artifact_identifiers_from": "authenticated bi-artifact-save response, reconfirmed by bi-selection-set/read",
+    "analysis_selection": {
+      "selectionKey": "bi"
+    },
+    "objective_contains": "Only actual public choice response plus the additional public KPI selector selected by the human; these are selectors reauthorized by the host, not grants.",
+    "private_artifact_identifiers_supplied": false,
+    "autonomous_discovery_claimed": false,
+    "c08_read_purpose": "Read only actual CAS storageVersion; callback returns null and never returns state values or identifiers."
+  },
+  "real_route_chain": [
+    "Dashboard source issuer -> actual case A and case B",
+    "bi-artifact-save -> public projectionRef and tableRef",
+    "bi-artifact-read -> stored canonical projection/table",
+    "bi-selection-set/read -> same-case durable human choice",
+    "workbench-analysis prepare with selectionKey:bi -> actual ContextualBIInput",
+    "actual model if available -> Session.skill/SkillLoadReceipt -> ContextualBIProposal",
+    "native output identifiers -> actual bi-artifact-read; C11 renderer and WP05 bi-data/bi-source after host reopen"
+  ],
+  "native_required_operations": [
+    "sf_case_read",
+    "sf_dashboard_read",
+    "sf_bi_view",
+    "sf_kpi_explain",
+    "sf_source_get"
+  ],
+  "native_assertions": [
+    "Actual completed Session tool calls are tied to native receipts, run/session/principal/call IDs and exact input/result digests.",
+    "Both Budget sources are read by actual sf_source_get; the proposal and envelope retain only the selected BI series source.",
+    "Proposal canonicalProjectionRefs/tableRef equal the handles obtained from public human selection, without changing the closed C11 output schema.",
+    "Actual contribution consumer and Session audit reopen under the real host."
+  ],
+  "ui_assertions": [
+    "Distinct annual owner amount 120000 and monthly overrides 1000..12000 (78000 total).",
+    "Explicit January actual zero differs from absent February actual; absent April forecast remains null/absent.",
+    "Producer currency remains unspecified.",
+    "Stored rows equal the complete real projection values, with producer digests.",
+    "Same public choice/artifact/input and WP05 projection/drilldown reopen; both cases and raw budget remain unchanged before deliberate source withdrawal."
+  ],
+  "negatives_required_not_yet_observed": [
+    "Another real case cannot select the first case artifact; preference CAS revision and original choice remain unchanged.",
+    "Unadmitted Request cannot read the public artifact.",
+    "Another case cannot prepare the selected-artifact input without its own human selection.",
+    "Real Dashboard source withdrawal refuses artifact read, choice read and input preparation; native output read must also refuse when a native witness exists."
+  ],
+  "scope_limits": {
+    "installed_model_required_for_inference": true,
+    "empty_catalog": "observe unavailable without producing Session/output substitute",
+    "principal_acl_revocation_exercised": false,
+    "source_withdrawal_exercised_only_when_run": true,
+    "gnative_accepted": false,
+    "runtime_result": "NOT_RUN",
+    "deadline_not_a_runtime_upper_bound": true
+  },
+  "verification": {
+    "syntax_only": "PASS Node stripTypeScriptTypes and node --check; no product imports executed",
+    "published_sources": "21 complete GitHub MCP payloads with bytes-to-blob and SHA256 checks",
+    "local_product_tests": false,
+    "local_typecheck": false,
+    "ci_dispatched": false,
+    "foreign_source_edits": false,
+    "own_shared_helper_edits": false,
+    "credentials_or_provider_changes": false
+  },
+  "residual_risks": [
+    "Hosted typecheck and runtime have not run this new driver.",
+    "The repeated real artifact/source validation has unmeasured runtime cost and retains the existing authority lease and 360000ms declared test deadline.",
+    "The installed model catalog may be empty; that permits only scoped UI/input/persistence evidence, never native acceptance."
+  ],
+  "source_capsules": [
+    "resume-input/independent-review/bi-public-human/source-mcp.json",
+    "resume-input/independent-review/bi-public-human/extra-source-mcp.json",
+    "resume-input/independent-review/bi-public-human/additional-source-mcp.json"
+  ],
+  "independent_review": "PENDING_ROOT_REVIEW"
+}

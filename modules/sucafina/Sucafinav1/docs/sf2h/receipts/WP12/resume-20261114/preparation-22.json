@@ -1,0 +1,228 @@
+{
+  "schema": "sf-wp12-product-preparation-v1",
+  "phase": 22,
+  "increment": "W27",
+  "status": "PREPARED_FOR_PUBLICATION_CHECK_AND_SURGICAL_CI",
+  "base": {
+    "sha": "5ef9d6fe0889e12a2bfc396bcaac7faf427b8630",
+    "tree": "692bee526128b3dd0ce4eb2f6ed839a4c28916a6"
+  },
+  "previousProduct": {
+    "sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "tree": "258bc03adf6343a10847f80060b6983cfc65ad43",
+    "checkRun": 43614850352,
+    "checkPassDoesNotCoverThisNewProduct": true
+  },
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "changes": [
+    {
+      "name": "Forecast auxiliary KPI",
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "blob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+        "sha256": "35d4f8573f1e5ece274ca29fc6e4a4f2f8c70851e206cd529de957213bf762ce",
+        "bytes": 29693,
+        "lines": 372,
+        "expects": 83,
+        "deadlineMs": 360000
+      },
+      "purpose": "Actual human public Budget KPI source in the same case and period, with real context/KPI/source operations; closed two-ref FinancialAnalysis replay unchanged. Distinct currencies are not combined.",
+      "originalObligationIndices": [
+        6,
+        12
+      ],
+      "status": "NEW_NOT_RUN"
+    },
+    {
+      "name": "Public BI artifact selection",
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "bytes": 29409,
+        "sha256": "36fea4c59715b3e45aaa435fd5321a8623dc9180dad668f5cc2b243da5c4b123",
+        "blob": "a3fa276e8824affe75842cec6a8a11c224366f71",
+        "kind": "own-test"
+      },
+      "purpose": "Replace the premature private-handle prerequisite classification with actual public artifact save/read and durable human selection; real input, output consumer and reload.",
+      "status": "NEW_NOT_RUN"
+    },
+    {
+      "name": "Question Work bounded cost correction",
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+        "bytes": 49745,
+        "sha256": "a71fba2c0ebcb2e1f73cf2b9abe9ef83434e86a54701d63f619ce69510f80b15",
+        "blob": "c146fe374294f07f38c5beae9d34147d97c94968"
+      },
+      "priorFailedRun": 43615955284,
+      "purpose": "Remove redundant unchanged input/render/reopen traversals while retaining real producer, reopened consumers, source/authority negatives and all native-thread reload requirements.",
+      "status": "CORRECTED_NOT_RUN"
+    }
+  ],
+  "changedTestFiles": 3,
+  "productionSourceChanges": 0,
+  "foreignSourceChanges": 0,
+  "sharedHelperChanges": 0,
+  "check": {
+    "required": true,
+    "command": "bun typecheck",
+    "package": "modules/sucafina",
+    "guards": [
+      "bun run check:spawn-imports",
+      "bun run check:guards --base origin/dev"
+    ],
+    "hostedOnly": true
+  },
+  "plannedProductCI": {
+    "filesInOrder": [
+      "native-execution-forecast-kpi.test.ts",
+      "native-execution-bi-public-selection.test.ts",
+      "native-execution-work-list.test.ts"
+    ],
+    "exactNamesOnly": true,
+    "selectedTests": 3,
+    "questionLast": true,
+    "perTestDeadlineMs": 360000,
+    "nominalDeadlineSumMs": 1080000,
+    "deadlineSumIsNotRuntimeBound": true,
+    "excludedEquivalentGreens": [
+      "Review crossroutes",
+      "Executive Work",
+      "BI/KPI prior mission",
+      "Documents",
+      "Handoff",
+      "Sourcing",
+      "Intent"
+    ],
+    "onlyOneOwnProductFlight": true,
+    "freshGlobalDedupRequired": true
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+      "bytes": 29693,
+      "sha256": "35d4f8573f1e5ece274ca29fc6e4a4f2f8c70851e206cd529de957213bf762ce",
+      "blob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/README.md",
+      "bytes": 2718,
+      "sha256": "8d76031fe04cdf5d35e83b41280eff864b1dab7d465c1ee8cbcfea0844252c28",
+      "blob": "ba6847274b3d3793fa58d0ce881cf075aa4e2151",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/preparation.json",
+      "bytes": 8056,
+      "sha256": "f3887d9aa11ef1e09d1c0d7244924fa482566c03c31534a1ee2cf90848daec30",
+      "blob": "e60d27ff5131131111a7ef77ee44b32880009b53",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/source-pins.json",
+      "bytes": 8033,
+      "sha256": "8727f9bcba9dfa3a01d7071db9824656a76ae013b4437ab75199b168dd9ed09f",
+      "blob": "8ad043d0e1dff17a00fbc2aac28cee923a98cc7a",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+      "bytes": 29409,
+      "sha256": "36fea4c59715b3e45aaa435fd5321a8623dc9180dad668f5cc2b243da5c4b123",
+      "blob": "a3fa276e8824affe75842cec6a8a11c224366f71",
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/preparation.json",
+      "bytes": 5780,
+      "sha256": "6b980bb2512adea4605784c25075723358d45df50fc8b4a510774684f81a76a2",
+      "blob": "2803701314f1249b2d45c4e001fda9f606bb87fe",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/source-pins.json",
+      "bytes": 9778,
+      "sha256": "1f45db0cf08a4639b0b148333d505ade751bfed8e7844e8edea8c95e7f82e611",
+      "blob": "2fceee5c6972dd891bf3ec7dd40626cd4003a6ea",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/README.md",
+      "bytes": 1824,
+      "sha256": "c2235bf0944c7b45308f0db7ae909a2d9442614c50b9d53bf8198bd2ccb9f46f",
+      "blob": "f01e0e0d7b843b6a7aa36e77b6b087111d0d6c36",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "bytes": 49745,
+      "sha256": "a71fba2c0ebcb2e1f73cf2b9abe9ef83434e86a54701d63f619ce69510f80b15",
+      "blob": "c146fe374294f07f38c5beae9d34147d97c94968",
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/author-freeze.json",
+      "bytes": 10759,
+      "sha256": "5acdcee965bbdb504ef342bb711173ec6b79bb4057d2b419f0be0bb9e4ac61ae",
+      "blob": "0fec99486bd0911d7897a60284f94f3d4cf9c24c",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/independent-review.json",
+      "bytes": 11671,
+      "sha256": "7d298e366ad619891b40298a96bf4db90b7931489f61829ae5226659f4a5ab2c",
+      "blob": "fe856923226566f157899a18a00efa1fe1d46990",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/author-freeze.json",
+      "bytes": 2588,
+      "sha256": "7bebba5268219ddb635bded79f4519aba2bc6f8de17a32abd43186c54c7c3b26",
+      "blob": "179b0805c0185e6ebf2cb65b527f2a25020b5e47",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/independent-root-review.json",
+      "bytes": 5452,
+      "sha256": "3fc2f4a5823b9c4b1030f3bae2e32eda70fed4cd0e86eebbb73036384f93623f",
+      "blob": "66c48aeef14f39ea5fdfc02a9472360bc94a61cd",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-cost/preparation.json",
+      "bytes": 4202,
+      "sha256": "e82637afa04ed92b97be933d0212f1f4d5301993678a5115bcf9ad3ee6886e22",
+      "blob": "9b1c3ec9e08a809ab9ac180974cc9f4fb174d531",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-cost/independent-root-review.json",
+      "bytes": 3466,
+      "sha256": "4dbf68344071220dc1b4dd198c70c763dcda645731e99f0588b0ec2576048ee6",
+      "blob": "f12f69b54dca3d5bcc46830dfde24e7a7b7a955f",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-review-work-independent-review.json",
+      "bytes": 11642,
+      "sha256": "f0587465e236ca3464414f3b54752ace83c43632667a9dc15392f8cdfe5ce807",
+      "blob": "f0c599cd1d9ef2095240f5b6b9f2fea6c779e505",
+      "kind": "own-document"
+    }
+  ],
+  "independentReviews": [
+    "forecast-kpi-route/independent-review.json",
+    "bi-public-selection-route/independent-root-review.json",
+    "work-list-cost/independent-root-review.json"
+  ],
+  "nativeInferenceObservedForThisIncrement": false,
+  "sessionLoadIsNotExecution": true,
+  "catalogEmptyIsNotAcceptance": true,
+  "gnative": false,
+  "completeWp12": false,
+  "localProductTests": false,
+  "localTypecheck": false
+}

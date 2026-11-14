@@ -1,0 +1,211 @@
+{
+  "schema": "sf-wp12-independent-driver-review-v1",
+  "reviewer": "own_review_resume",
+  "status": "PASS_STATIC_AFTER_OWN_NEGATIVE_FIX",
+  "scope": "Independent read-only review of the complete new Forecast-to-KPI driver, its installed producer/HTTP/dispatcher/replay/Session path, and the author correction. This is not product execution, a typecheck, native acceptance, or a performance result.",
+  "candidate": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+    "initialBlob": "cfd54796c005ba3970226c3345f50e8151644064",
+    "reviewedBlob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+    "sha256": "35d4f8573f1e5ece274ca29fc6e4a4f2f8c70851e206cd529de957213bf762ce",
+    "bytes": 29693,
+    "lines": 372,
+    "deadlineMs": 360000,
+    "assertionLines": 83
+  },
+  "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+  "readScope": {
+    "candidateReadInFull": true,
+    "authorMcpPayloadsHashVerified": 15,
+    "supplementalMcpPayloadsFetchedAndHashVerified": 8,
+    "allProductSourcesReadInFull": false,
+    "detail": "The complete candidate and the relevant full small producers/dispatchers were read. Larger host, contract, Dashboard and Session files were inspected at the specific invoked paths; hashing their complete payloads is not claimed as a global semantic review."
+  },
+  "resolvedFindings": [
+    {
+      "id": "F01",
+      "severity": "blocking-own-test",
+      "initialLines": [
+        101,
+        108
+      ],
+      "problem": "The initial driver expected unavailable/source-unavailable for two different producer refusals. The production dispatcher preserves the domain status and reason.",
+      "sourceProof": [
+        {
+          "blob": "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "lines": [
+            11,
+            13
+          ],
+          "fact": "The genuine forecast source selector has the planner-version prefix."
+        },
+        {
+          "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+          "lines": [
+            24,
+            43
+          ],
+          "fact": "A Planner selector is needs-input/invalid-dashboard-source-selector; a valid page selector with a mismatched selected period is denied/source-unavailable."
+        },
+        {
+          "blob": "e86b1ca37f7b82d1618b6209cfb362a422e475a1",
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+          "lines": [
+            26,
+            37
+          ],
+          "fact": "explainKpi preserves the producer status/reason except conflict becomes failed."
+        },
+        {
+          "blob": "6ba1b02eee73d44133c78599284f9772b26007b1",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+          "lines": [
+            26,
+            32
+          ],
+          "fact": "The shared dispatcher preserves non-ok statuses and reasons after final authority validation."
+        }
+      ],
+      "correction": "The author now supplies an explicit request/status/reason tuple for each negative. The refusal remains strict: needs-input/invalid-dashboard-source-selector and denied/source-unavailable.",
+      "closedIn": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+      "preservation": "Only lines101–108 changed from the initial candidate; all bytes outside that block, all83 assertion sites and the360000ms deadline remain unchanged."
+    }
+  ],
+  "checks": [
+    {
+      "id": "public-auxiliary-selection",
+      "status": "PASS_STATIC",
+      "candidateLines": [
+        32,
+        93,
+        225,
+        234
+      ],
+      "detail": "Raw Planner and Dashboard business inputs are initialized through actual persistence. Budget Overview/budgetMetrics is issued by createDashboardSourceIssuer under a real admitted UI call, and the emitted public record reference is inserted into the human case before creation. Both Planner sources and this auxiliary source share the selected annual period. The human objective explicitly names that public selector. The metric formatter conveys no authority; the real resolver checks its stored principal/fields/period again. This proves a legitimate human-selected auxiliary route, not autonomous discovery or financial equivalence between producers.",
+      "relevantBlobs": [
+        "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+        "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+        "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+        "97cde4dce2858f47b57b446c9c20bad77d367591"
+      ]
+    },
+    {
+      "id": "currency-and-meaning",
+      "status": "PASS_STATIC",
+      "candidateLines": [
+        94,
+        100,
+        240,
+        272
+      ],
+      "detail": "The Dashboard KPI remains600000 in currency unspecified, with12 real monthly budget components and absent actual/forecast totals. The FinancialAnalysis remains USD, with baseline590000/candidate596000, knownDifference6000, completeDifference null and unavailable cost coverage. The real KPI producer refuses even self-comparison when currency is unspecified. The driver neither computes a cross-producer margin nor adds the Budget reference to FinancialAnalysis. The objective contains no expected numeric result or invented exchange rate.",
+      "relevantBlobs": [
+        "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+        "9c62b6a375e4894f1d487b7eb12ab1c1bba9dd17"
+      ]
+    },
+    {
+      "id": "installed-http-route",
+      "status": "PASS_STATIC",
+      "candidateLines": [
+        115,
+        128,
+        164,
+        167
+      ],
+      "detail": "The initial productHttp request reaches the app createSfAnalysisHttp mounted first by host834b3c96. Its prepare branch admits analysis.prepare and invokes the actual input registry; it does not use the older WP01 prepare fallback that admits analysis.start. The reopened direct registry path also uses an actual analysis.prepare human admission. No local verifier, provider or registry is substituted.",
+      "relevantBlobs": [
+        "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+        "834b3c967d73411771e1f5aa82b683c6427e6769",
+        "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff"
+      ]
+    },
+    {
+      "id": "closed-financial-replay",
+      "status": "PASS_STATIC",
+      "candidateLines": [
+        126,
+        156,
+        176,
+        186
+      ],
+      "detail": "The real forecast verifier allows the two Forecast refs to be a subset of the current case's evidence, so the third valid auxiliary source does not widen FinancialAnalysis. The verifier replays compareForecast and permits only an exact FinancialAnalysis payload/evidence-ref sequence after removing observedAt fields. The test compares the complete material payload with that real input/replay and checks the separate source sets. It does not fabricate a ContributionEnvelope or accept a text explanation in place of the replay.",
+      "relevantBlobs": [
+        "9c62b6a375e4894f1d487b7eb12ab1c1bba9dd17",
+        "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff"
+      ]
+    },
+    {
+      "id": "authority-and-budget",
+      "status": "PASS_STATIC",
+      "candidateLines": [
+        23,
+        31,
+        56,
+        65,
+        116,
+        151
+      ],
+      "detail": "The requested four native operations are a subset of both the selected profile and skill, are included in the actual installation grant, and are checked against the mounted operationIds. UI-only case/draft/dashboard prerequisites are granted separately. There are no duplicate operations. The minimum six native calls (context, KPI, forecast and three source calls) fit the published maxSteps10 without widening the skill. Human actions and authentication remain the existing harness's real authority configuration.",
+      "relevantBlobs": [
+        "453c6f3a5b48c081223909af8293f854ad31d7c8",
+        "f22c114e97ceea6d8839efe892f57b2c1dcb58ae",
+        "49300a78a44ac0739791d10a11c386b317f4b51a"
+      ]
+    },
+    {
+      "id": "session-receipt-audit",
+      "status": "PASS_STATIC",
+      "candidateLines": [
+        147,
+        156,
+        321,
+        371
+      ],
+      "detail": "Execution uses the installed model/analysis/Session path. The existing harness requires ready, the real native SkillLoadReceipt, the synthetic loaded message, matching profile/source/instructions/model provenance and actual completed tool call IDs. The new audit reads this same persisted Session with order asc (Session's default is desc), filters completed non-error assistant tool parts by the previously attested call IDs and verifies native run/session/principal/call/result digests. Exact input digests bind context, KPI, forecast and every one of the three source operations. Context must occur in an earlier assistant message than KPI, so parallel tools within one message do not satisfy the sequential-use assertion.",
+      "relevantBlobs": [
+        "49300a78a44ac0739791d10a11c386b317f4b51a",
+        "00b276d8f2c9e634ae55a37e800fae388eb595e6",
+        "6ba1b02eee73d44133c78599284f9772b26007b1"
+      ]
+    },
+    {
+      "id": "reload-consumer-and-removal",
+      "status": "PASS_STATIC",
+      "candidateLines": [
+        164,
+        220
+      ],
+      "detail": "A fresh host opens the same actual store, re-prepares the input, re-resolves the public KPI/context/all sources and checks unchanged raw domain/case digests. When a native run exists, the real handleSfAnalysis output consumer renders the persisted FinancialAnalysis, preserves its output digest/envelope, and re-reads the durable auxiliary tool results/receipts. Removing the actually selected raw Budget source then refuses its old selector and current output, including when the reopened catalog is empty. This is source-removal/current-source proof, not a simulated ACL revision or proof of historical access.",
+      "relevantBlobs": [
+        "49300a78a44ac0739791d10a11c386b317f4b51a",
+        "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+        "834b3c967d73411771e1f5aa82b683c6427e6769"
+      ]
+    }
+  ],
+  "remainingConcreteFindings": [],
+  "limitations": [
+    "No product test, local typecheck, provider execution or runtime timing was performed by this review.",
+    "Type/API compatibility was assessed statically; the package's actual bun typecheck and hosted product run remain required.",
+    "All native branches still require an actually installed supported model. Empty/unsupported catalog records only real preparation and UI observations; no Session inference/output or native receipt is fabricated.",
+    "The auxiliary KPI is supplied by explicit human public selection in the same case and period. This is not autonomous source discovery, an authoritative financial relation to the Planner versions, or inclusion of the KPI in the Forecast chart.",
+    "sf_import_preview remains a separate normative mission with its own actual C04 prerequisite. This file does not claim all four normative Forecast operations or GNATIVE acceptance.",
+    "The negative statuses were verified by the current complete producer/dispatcher path; their corrected runtime execution remains unobserved.",
+    "The360000ms test declaration and existing native execution budget are unchanged; no performance guarantee follows from this static review."
+  ],
+  "edits": {
+    "authorCandidateByReviewer": false,
+    "foreignSources": false,
+    "testsRun": false,
+    "typecheckRun": false,
+    "ciRun": false
+  },
+  "sourceIndexes": [
+    "source-pins.json",
+    "supplemental-source-pins.json"
+  ],
+  "preservation": "preservation.json"
+}

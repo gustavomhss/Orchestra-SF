@@ -1,0 +1,55 @@
+{
+  "schema": "sf-wp12-independent-driver-delta-review-v1",
+  "reviewer": "Astra root",
+  "status": "PASS_BOUNDED_STATIC_REVIEW_AFTER_PRESERVATION_FIX",
+  "candidate": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+    "bytes": 49745,
+    "sha256": "a71fba2c0ebcb2e1f73cf2b9abe9ef83434e86a54701d63f619ce69510f80b15",
+    "blob": "c146fe374294f07f38c5beae9d34147d97c94968"
+  },
+  "prior": {
+    "bytes": 46720,
+    "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+    "blob": "d305c89fcbf42eef0290e744880342b3b017b48d"
+  },
+  "authorFreeze": {
+    "bytes": 4202,
+    "sha256": "e82637afa04ed92b97be933d0212f1f4d5301993678a5115bcf9ad3ee6886e22",
+    "blob": "9b1c3ec9e08a809ab9ac180974cc9f4fb174d531"
+  },
+  "scope": "Only the previously failed Question Work test body. Its Executive peer, constants/imports and every shared helper are byte-identical to the W26 source fetched by GitHub MCP.",
+  "unchangedTail": {
+    "starts": "/** The selected review",
+    "before_line": 148,
+    "after_line": 183,
+    "bytes": 33949,
+    "sha256": "36e1c479f527a68d9b61bb538d5d389f443f4c32e7435746b94060e0e70cb029",
+    "blob": "0b6e677ce85e0292b0efd1f2e4a5f976fd967b7c"
+  },
+  "checks": [
+    "Actual same-case PR/action/Planner source setup, C09/C10 explicitly human-pending classification and initial real QuestionPlanningInput remain required.",
+    "The initial typed UI Work producer remains; duplicated initial HTML traversal and identical input re-preparation after reload are removed. This driver no longer claims that extra input-reprepare witness.",
+    "A fresh second host still refuses the old host selector, requires a new public selection, runs actual typed Work and HTML consumers, and idempotently consumes the existing C06 action.",
+    "The second host checks the actual case, Procurement/Dashboard and Planner raw digests before source removal. This closes the preservation check that would otherwise be lost when the third host is skipped.",
+    "Only the no-native-output path omits a third identical host. It still performs unadmitted HTTP and actual selected-source deletion UI/HTML refusals in the second host.",
+    "When a native contribution exists, it must be consumed into a real Question thread. The third host still reopens/retries/reads this new durable state and reauthorizes the completed native output after source withdrawal, regardless of new catalog availability.",
+    "The real Session/SkillLoadReceipt/tool/output validators, the existing handlers and both 360000ms declarations are unchanged. Stage markers preserve the operation result/error and add no retries, cached authority or lease renewal.",
+    "The hosted prior timeout is retained as FAIL. No improved performance or full Question/native acceptance is inferred from this static delta."
+  ],
+  "resolvedFindings": [
+    {
+      "id": "ROOT-QUESTION-RAW-PLANNER-PRESERVATION",
+      "initialCandidate": "291d2a815edd94ca0fc0280ca1e6c8358b1850c7",
+      "problem": "Omitting the third no-output host would omit its final raw Planner digest assertion.",
+      "correction": "The same digest assertion now runs in the second reopened host before source removal for both branches."
+    }
+  ],
+  "remainingConcreteFindings": [],
+  "productTests": false,
+  "localTypecheck": false,
+  "foreignEdits": false,
+  "hostedRunRequired": true,
+  "improvedDurationObserved": false,
+  "gnativeAccepted": false
+}

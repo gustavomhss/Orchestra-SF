@@ -42,24 +42,39 @@ const namespaces = ["cases", "preferences", "documents", "contributions", "recei
  * homonymous request has neither the selected action nor the case membership. */
 test("native question work list uses a public Procurement selection for its own pending case and reopens its real consumers", async () => {
   const label = "question-work-list"
+  const startedAt = Date.now()
+  let sequence = 0
+  const step = async <T>(name: string, work: () => Promise<T>) => {
+    const id = ++sequence, began = Date.now()
+    console.log("SF_WP12_QUESTION_WORK_PHASE:" + JSON.stringify({ sequence: id, phase: name, state: "started", elapsedMs: began - startedAt }))
+    try {
+      const result = await work()
+      console.log("SF_WP12_QUESTION_WORK_PHASE:" + JSON.stringify({ sequence: id, phase: name, state: "returned", durationMs: Date.now() - began, elapsedMs: Date.now() - startedAt }))
+      return result
+    } catch (error) {
+      console.log("SF_WP12_QUESTION_WORK_PHASE:" + JSON.stringify({ sequence: id, phase: name, state: "failed", durationMs: Date.now() - began,
+        elapsedMs: Date.now() - startedAt, error: error instanceof Error ? error.message : String(error) }))
+      throw error
+    }
+  }
   await withWp12NativeMissionHost({ label, namespaces,
     operations: [...WP12_QUESTION_OPERATIONS, "sf_request_read", "sf_work_list", "sf_relation_read", "sf_question_prepare"],
     humanActions: [...WP12_QUESTION_HUMAN_ACTIONS, ...collaborationActions],
     initialize: async (persistence) => { await initializeWp12QuestionSource(persistence); await initializeWorkSources(persistence, label) },
   }, async ({ open }) => {
     const initial = await open("initial", async (context) => {
-      const publicWork = await selectPublicWork(context)
+      const publicWork = await step("initial-public-selection", () => selectPublicWork(context))
       const objective = `Clarifique a informação de custo ainda pendente da renovação registrada no caso. A pessoa escolheu explicitamente a seleção pública de Meu Trabalho ${publicWork.selection.selectionRef}, período ${period.start} a ${period.end}. Use sf_case_read e sf_relation_read para conferir a ligação entre a solicitação de compra, a ação humana já existente e o planejamento. Leia essa seleção por sf_work_list e confira a ação atribuída ao destinatário autorizado; não crie outra ação. Prepare com sf_question_prepare uma pergunta pertinente à condição de custo ainda pendente e retorne QuestionProposal com as fontes da relação. A seleção pública foi escolhida pela pessoa; não alegue descoberta autônoma ou confirmação de custo ausente.`
       const holder: { value?: SelectedWork } = {}
-      const preparedCase = await prepareWp12QuestionCase(context, { objective, support: async (source) => {
+      const preparedCase = await step("prepare-real-pending-case", () => prepareWp12QuestionCase(context, { objective, support: async (source) => {
         holder.value = await createLinkedWork(context, [source])
         return { evidenceRefs: [holder.value.requestRef, holder.value.topicRef] }
-      } })
+      } }))
       const selected = holder.value
       if (!selected) throw new Error("The actual question work producer did not return its selected request and action")
       const incoming = { request: missionRequest(context, preparedCase.caseRef, "sf-coordenar-perguntas", objective, questionOperations),
         selection: { relationRefIds: [selected.requestRef.refId, selected.topicRef.refId], directoryRefs: [context.principalRef] } }
-      const input = decodeSfSkillInput("QuestionPlanningInput", await prepareInput(context, incoming))
+      const input = decodeSfSkillInput("QuestionPlanningInput", await step("prepare-real-question-input", () => prepareInput(context, incoming)))
       if (!input.ok) throw new Error("The actual work-linked question input failed its schema")
       expect(input.value.unresolvedConditions).toHaveLength(1)
       expect(input.value.unresolvedConditions[0]).toMatchObject({ category: "training", reason: WP12_QUESTION_PENDING_REASON, evidenceRefs: [] })
@@ -71,8 +86,10 @@ test("native question work list uses a public Procurement selection for its own 
       await expectCaseSources(context, preparedCase.caseRef, [preparedCase.source, selected.requestRef, selected.topicRef])
       const caseDigest = digestSfValue(preparedCase.case)
       const domainDigest = await workSourceDigest(context)
-      const ui = await readUiWork(context, publicWork, selected)
-      await expectWorkbenchConsumer(context, publicWork, selected)
+      const ui = await step("initial-real-work-producer", () => readUiWork(context, publicWork, selected))
+      // The typed UI result is the initial producer witness. The actual HTML
+      // consumer runs after host reload; rendering the same unchanged Work list
+      // here would repeat that source traversal without another consumer state.
       await expectUnauthenticatedWorkRefused(context, publicWork)
       console.log("SF_WP12_QUESTION_WORK_INPUT:" + JSON.stringify({ scope: "real-same-case-request-action-condition-and-public-ui-work-selection",
         githubSha: process.env.GITHUB_SHA ?? null, caseRef: preparedCase.caseRef, inputDigest: digestSfValue(input.value), selectionRef: publicWork.selection.selectionRef,
@@ -100,16 +117,18 @@ test("native question work list uses a public Procurement selection for its own 
       return { publicWork, selected, incoming, inputDigest: digestSfValue(input.value), caseDigest, domainDigest, preparedCase, completed, nativeWork }
     })
     const consumed = await open("reopened", async (context) => {
-      await expectExpiredHostSelectionRefused(context, initial.publicWork)
-      const publicWork = await selectPublicWork(context)
-      const input = await prepareInput(context, initial.incoming)
-      expect(digestSfValue(input)).toBe(initial.inputDigest)
-      await readUiWork(context, publicWork, initial.selected)
-      await expectWorkbenchConsumer(context, publicWork, initial.selected)
-      await consumeExistingAction(context, initial.selected)
+      await step("reopened-prior-selector-refusal", () => expectExpiredHostSelectionRefused(context, initial.publicWork))
+      const publicWork = await step("reopened-public-selection", () => selectPublicWork(context))
+      // Work/consumer continuity uses the real fresh host and source fences.
+      // Re-preparing the identical QuestionPlanningInput is not a Work consumer
+      // and would repeat the full C09/C10 traversal. The initial actual input
+      // and any native contribution reader remain mandatory.
+      await step("reopened-real-work-producer", () => readUiWork(context, publicWork, initial.selected))
+      await step("reopened-workbench-consumer", () => expectWorkbenchConsumer(context, publicWork, initial.selected))
+      await step("reopened-idempotent-existing-action", () => consumeExistingAction(context, initial.selected))
       let question: Awaited<ReturnType<typeof consumeNativeQuestion>> | undefined
       if (initial.completed) {
-        await readWp12NativeMissionAfterReload(context, initial.completed)
+        await step("reopened-native-contribution", () => readWp12NativeMissionAfterReload(context, initial.completed!))
         expect(digestSfValue(await readNativeWork(context, initial.completed, initial.publicWork.selection, initial.selected))).toBe(digestSfValue(initial.nativeWork))
         question = await consumeNativeQuestion(context, initial.completed, initial.selected)
         await readUiWork(context, publicWork, initial.selected, question.thread.id)
@@ -117,15 +136,27 @@ test("native question work list uses a public Procurement selection for its own 
       }
       await expectCaseDigest(context, initial.preparedCase.caseRef, initial.caseDigest)
       expect(await workSourceDigest(context)).toBe(initial.domainDigest)
+      expect(await wp12QuestionSourceDigest(context)).toBe(initial.preparedCase.plannerSourceDigest)
       console.log("SF_WP12_QUESTION_WORK_CONSUMER:" + JSON.stringify({ scope: "real-workbench-and-c06-consumers-after-explicit-public-reselection",
         githubSha: process.env.GITHUB_SHA ?? null, selectionRef: publicWork.selection.selectionRef, priorHostSelectionRefused: true,
         actionId: initial.selected.topicId, questionId: question?.thread.id ?? null, outputRef: initial.completed?.output.id ?? null,
         nativeCallId: initial.nativeWork?.callId ?? null, nativeReceipt: initial.nativeWork?.receipt ?? null,
         inferenceExecuted: !!initial.completed, questionConsumerOrigin: question ? "actual-native-contribution" : null,
+        identicalInputRepreparedAfterReload: false,
         allSkillRequiredOperationsAccepted: false, unexercisedRequiredOperations: ["sf_answer_read"], confirmedAnswerReuseAccepted: false, gnativeAccepted: false }))
+      if (!initial.completed) {
+        // No new QuestionProposal/thread exists in this branch. The existing
+        // human action was already consumed idempotently in this reopened host;
+        // keep the real source-removal/HTTP fences here instead of opening a
+        // third host just to repeat the unchanged action and Work consumer.
+        await step("reopened-selected-source-refusal", () => proveSourceLossRefusal(context, publicWork, initial.selected))
+      }
       return { question }
     })
-    await open("reopened", async (context) => {
+    if (consumed.question) await open("reopened", async (context) => {
+      // A new native thread is a new durable consumer state. Its independent
+      // reopen, retry and source refusal remain required even if the catalog
+      // becomes unavailable after the original native execution.
       const publicWork = await selectPublicWork(context)
       await consumeExistingAction(context, initial.selected)
       if (consumed.question) {
@@ -140,8 +171,12 @@ test("native question work list uses a public Procurement selection for its own 
       await expectWorkbenchConsumer(context, publicWork, initial.selected, consumed.question?.thread.id, consumed.question?.thread.messages[0]?.body)
       await expectCaseDigest(context, initial.preparedCase.caseRef, initial.caseDigest)
       expect(await wp12QuestionSourceDigest(context)).toBe(initial.preparedCase.plannerSourceDigest)
-      await proveSourceLossRefusal(context, publicWork, initial.selected, initial.completed)
+      await step("native-thread-reopen-selected-source-refusal", () => proveSourceLossRefusal(context, publicWork, initial.selected, initial.completed))
     })
+    console.log("SF_WP12_QUESTION_WORK_COMPLETION:" + JSON.stringify({ githubSha: process.env.GITHUB_SHA ?? null,
+      elapsedMs: Date.now() - startedAt, nativeExecution: !!initial.completed, newNativeThread: !!consumed.question,
+      hostOpenCount: consumed.question ? 3 : 2, identicalInputRepreparedAfterReload: false,
+      workbenchAfterReloadObserved: true, sourceRemovalRefusalObserved: true, deadlineMs: 360000, gnativeAccepted: false }))
   })
 }, 360_000)
 

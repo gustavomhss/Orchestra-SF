@@ -1,0 +1,280 @@
+{
+  "schema": "sf-wp12-independent-terminal-receipt-review-v1",
+  "reviewer": "/root/own_review_resume",
+  "author": "/root",
+  "status": "PASS_BOUNDED_RECEIPT_REVIEW",
+  "findings": [],
+  "subject": {
+    "path": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-review-work.json",
+    "bytes": 47933,
+    "sha256": "365ca3dc14a16d9487b3a4e0a3a02e4a71bf81d3b3425783c6464f0b653c8161",
+    "blob": "66d5df819696695959c908564bd3557f4a30f2fd"
+  },
+  "scope": "Independent verification of the already-published run-21 Review/Work receipt against the exact saved GitHub MCP log, terminal metadata, five source payloads, the dispatched request and bounded source paths supporting the reported UI consumers. This does not approve the failed Question test or native execution.",
+  "method": {
+    "remoteLogRefetches": 0,
+    "newRemoteStatusFetches": 0,
+    "localProductExecution": false,
+    "localTypecheck": false,
+    "newCiRuns": 0,
+    "authorReceiptEdited": false,
+    "productionOrTestSourceEdited": false,
+    "metadataOnlyHashingParsing": true
+  },
+  "evidence": {
+    "log": {
+      "path": "evidence/resume-21-review-work.log",
+      "bytes": 105069,
+      "sha256": "bacf25008bb8c9a5ab330211851a652462a294a126cc90a93536a25584a808a0",
+      "blob": "aaafdbe638e24321abad0c9bf92205114ca2ff5d"
+    },
+    "lineCount": 1052,
+    "terminalMcp": {
+      "path": "resume-input/review-work-21-terminal-mcp.json",
+      "bytes": 19489,
+      "sha256": "7d7fb9fd7c2d954b80cd6755b540ea0ef82d53d4d6d366b55068d62eecec2299",
+      "blob": "3a1d445012295814be0a97333707f21daa858d29"
+    },
+    "sourceMcp": {
+      "path": "resume-input/review-work-21-sources-mcp.json",
+      "bytes": 117007,
+      "sha256": "2f7a33c795ea1d7fcda9a655b90728ff3bba81fa3bfda034fabbafc81377dd00",
+      "blob": "984d7c3b3aef9e0d8bca9ab9fb0a3ee8bfb69e23"
+    },
+    "logTransport": {
+      "path": "resume-input/review-work-21-log-transport.json",
+      "bytes": 111201,
+      "sha256": "3e5e10712eaef23bd86ecafb8c99d83dd94a4739c07e74a24c1f861e4555771b",
+      "blob": "08ef7180c19da1fc9214fc12f9480c21d21e543a"
+    },
+    "request": {
+      "path": "resume-input/w26-ci/review-work-new.ci-run.json",
+      "bytes": 666,
+      "sha256": "f70f8bd781179de5d2bddda44c66a00975ddcc9ed394ee13b4ad9d96932794a9",
+      "blob": "7da6158d86bb67894540a3da08b9cc8fa46e6d96"
+    },
+    "dispatchManifest": {
+      "path": "resume-input/w26-ci/combined-manifest.json",
+      "bytes": 12175,
+      "sha256": "e9615a9f836d555bb6a23bf9c9414bf957e2a6e8d16469409e6f660f150f0c07",
+      "blob": "29ffdbd26008ba4698f01acd639c4a8f29a05713"
+    },
+    "productPublicationMcp": {
+      "path": "resume-input/w26-ci/published-mcp-proof.json",
+      "bytes": 58055,
+      "sha256": "359ebc44b674265033687185a9924d0368be78226cb0ba163a5d2c9b1390f2f7",
+      "blob": "9a4fac1f65066b00446779a5320604083a0fa066"
+    }
+  },
+  "checks": {
+    "receiptBlobIsPublishedSubject": true,
+    "exactTransportLog": true,
+    "logPinExact": true,
+    "allMarkerEntriesExact": true,
+    "markerCountsExact": true,
+    "allFiveSourcePinsExact": true,
+    "requestFileAndBodyExact": true,
+    "runIdentityExact": true,
+    "runDatesExact": true,
+    "jobsExact": true,
+    "artifactsExact": true,
+    "productCommitTreeExact": true,
+    "dispatchSnapshotTreeParentReconciled": true,
+    "checkRunReconciled": true,
+    "caseResultLinesExact": true,
+    "summaryExact": true,
+    "catalogsEmpty": true,
+    "nativeUnavailableOnly": true
+  },
+  "identity": {
+    "product": {
+      "sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "tree": "258bc03adf6343a10847f80060b6983cfc65ad43",
+      "checkRun": 43614850352,
+      "checkResult": "PASS"
+    },
+    "snapshot": {
+      "sha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "tree": "3113a6c8c57dda0cd8ec740faaa3862ca1117a09",
+      "directParent": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "onlyDelta": ".ci-run.json"
+    },
+    "run": 43615955284,
+    "job": 132510939072,
+    "cleanup": 132514821904,
+    "requestBlob": "7da6158d86bb67894540a3da08b9cc8fa46e6d96",
+    "requestSha256": "f70f8bd781179de5d2bddda44c66a00975ddcc9ed394ee13b4ad9d96932794a9",
+    "qualification": "Product commit/tree were checked against cached GitHub MCP commit payload. S parent/tree and check association were reconciled against the frozen dispatch/check manifest; this review did not independently refetch those two commits or rerun CI."
+  },
+  "summary": {
+    "pass": 2,
+    "fail": 1,
+    "assertions": 446,
+    "tests": 3,
+    "files": 2,
+    "seconds": 729.62,
+    "aggregateLines": [
+      1026,
+      1027,
+      1028,
+      1029
+    ],
+    "noUnhandledErrorAggregateReported": true,
+    "qualification": "446 is the runner aggregate, including assertions from a callback that continued after its timeout; it is not allocated as an independently passing assertion count per mission."
+  },
+  "markers": {
+    "count": 48,
+    "prefixCount": 13,
+    "counts": {
+      "SF_WP12_NATIVE_MISSION_CATALOG": 7,
+      "SF_WP12_REVIEW_CROSSROUTES_PHASE": 22,
+      "SF_WP12_REVIEW_CROSSROUTES_INPUT": 1,
+      "SF_WP12_NATIVE_MISSION": 4,
+      "SF_WP12_REVIEW_CROSSROUTES_UI_ONLY": 1,
+      "SF_WP12_REVIEW_CROSSROUTES_REOPEN": 1,
+      "SF_WP12_FOCUSED_QUESTION_PHASE": 5,
+      "SF_WP12_FOCUSED_QUESTION_PREPARATION": 1,
+      "SF_WP12_QUESTION_WORK_INPUT": 1,
+      "SF_WP12_QUESTION_WORK_CONSUMER": 1,
+      "SF_WP12_WORK_SOURCE_REFUSAL": 2,
+      "SF_WP12_EXECUTIVE_WORK_INPUT": 1,
+      "SF_WP12_EXECUTIVE_WORK_REOPEN": 1
+    },
+    "allLineNumbersAndValuesMatch": true,
+    "catalogLines": [
+      856,
+      896,
+      926,
+      954,
+      996,
+      998,
+      1020
+    ],
+    "catalogObservationCount": 7,
+    "allEmpty": true,
+    "unavailableMissionLines": [
+      872,
+      873,
+      934,
+      1000
+    ],
+    "unavailableMissionCount": 4,
+    "nativeInferenceOrContributionProved": false
+  },
+  "temporalBoundaries": {
+    "questionConsumer": {
+      "line": 955,
+      "at": "2026-11-14T16:40:42.9025900Z",
+      "meaning": "Consumer marker is logged before Bun emits failure, but after the declared deadline has elapsed. It cannot establish completion within the deadline."
+    },
+    "questionFailure": {
+      "line": 956,
+      "at": "2026-11-14T16:40:42.9360526Z",
+      "reasonLine": 957,
+      "declaredTimeoutMs": 360000,
+      "reportedMs": 448134.68
+    },
+    "lateQuestionReopen": {
+      "catalogLine": 996,
+      "at": "2026-11-14T16:40:52.4993007Z"
+    },
+    "lateQuestionSourceRefusal": {
+      "line": 997,
+      "at": "2026-11-14T16:43:24.0102762Z",
+      "msAfterFail": 161074.224,
+      "uiStatus": "stale",
+      "httpStatus": 409,
+      "meaning": "This refusal belongs to the timed-out Question callback, identified by its request/action refs. It is not the first failure cause, proof of cleanup isolation or a passing completion."
+    },
+    "executive": {
+      "catalogLine": 998,
+      "catalogAt": "2026-11-14T16:43:24.0167042Z",
+      "resultLine": 1024,
+      "resultAt": "2026-11-14T16:44:10.5061985Z",
+      "reportedMs": 207566.33,
+      "wallMsAfterPreviousFail": 207570.146,
+      "qualification": "Reported Bun time includes the interval during which the prior Question callback still runs. No isolated Executive performance claim is justified; the author receipt explicitly preserves this limit."
+    }
+  },
+  "consumerCrosschecks": [
+    {
+      "sourceBlob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+      "resultLine": 904,
+      "reviewedPaths": [
+        "real preparation/public selection and UI report branch",
+        "reload review and meeting-input digest checks",
+        "downloadReport/assertCompleteDocx exact table rows and 44-value multiset"
+      ],
+      "conclusion": "The PASS is scoped to actual public UI input preparation, report/artifact receipts and reload. The source checks both 22-value sections, all 44 rendered rows including value/unit/currency/period/source identity, and unchanged review/download digests. No native branch ran with the empty catalog."
+    },
+    {
+      "sourceBlob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "resultLine": 956,
+      "reviewedPaths": [
+        "Question initial prepare",
+        "first reopen consumer marker",
+        "unconditional third reopen and source-refusal marker"
+      ],
+      "conclusion": "The receipt correctly preserves the timeout. The real pending condition is explicitly human-classified with derivedMissingCategoryIds=[], so it is not evidence of derived omission or answer reuse. The callback reaches the refusal only after the runner has failed the test."
+    },
+    {
+      "sourceBlob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "resultLine": 1024,
+      "reviewedPaths": [
+        "Executive public selection/input",
+        "same action and preserved review after reload",
+        "unauthenticated and deleted-request refusal"
+      ],
+      "conclusion": "The PASS supports the UI Work/action/review consumer and stale/409 source refusal, with separate annual request horizon and observed-day Hot Topic selection. Native DecisionBrief/contribution and C07 remain unproved."
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": ".ci-run.json",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 666,
+      "blob": "7da6158d86bb67894540a3da08b9cc8fa46e6d96",
+      "sha256": "f70f8bd781179de5d2bddda44c66a00975ddcc9ed394ee13b4ad9d96932794a9",
+      "allReceiptMetadataMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 33596,
+      "blob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+      "sha256": "65563a4d9499c410720a97efef55e0d96222e3307a4d2229032d1836ea35b742",
+      "allReceiptMetadataMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 46720,
+      "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+      "allReceiptMetadataMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 20042,
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "allReceiptMetadataMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+      "ref": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "bytes": 10795,
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+      "sha256": "1ff25c69a32523eed1d1aadaf9f94d42c54ca416f345dfe309254b7d5d83aa04",
+      "allReceiptMetadataMatch": true
+    }
+  ],
+  "limits": [
+    "This is a bounded audit of receipt fidelity and reached branches, not a fresh security or complete implementation review.",
+    "The exact immutable source bytes at S were used; later Question cost fixes were not evaluated here.",
+    "7 catalog observations include the post-timeout Question host; they are not seven successful test completions.",
+    "No provider, real native Session mission, native tool receipt, native output, GNATIVE or whole WP12 completion is promoted by this run.",
+    "No material inconsistency was found. The receipt can remain byte-exact; the failed Question case needs its relevant fix and a distinct bounded CI result."
+  ]
+}
