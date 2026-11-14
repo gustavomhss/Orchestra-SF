@@ -1,5 +1,5 @@
 import { roleMap } from "../../runtime/admin.ts"
-import { object, rows } from "../../runtime/contract.ts"
+import { object } from "../../runtime/contract.ts"
 import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -11,6 +11,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { simulatePlannerOperations } from "./scenario.ts"
 import { plannerKnownSubtotal } from "../../src/planner-accounts.ts"
 import { plannerCoverageComplete } from "./coverage.ts"
+import type { buildPlannerFinancialProjection } from "./port.ts"
 
 /** Host resolves the quantifiable value from the currently authorized source, not from model arguments. */
 export type PlannerScenarioInputs = {
@@ -18,7 +19,7 @@ export type PlannerScenarioInputs = {
   verifyAssumption: (assumption: ScenarioRequest["assumptions"][number], context: TrustedDomainContext) => Promise<PortResult<{ fingerprint: string }>>
 }
 
-export async function simulateScenario(input: { host: DomainPortHost; sources: PlannerSourceHost; evidence?: BusinessContextService; inputs?: PlannerScenarioInputs; compare: PlannerPort["compareForecast"]; project: (snapshot: Snapshot, actor: Actor, versionId: string) => Record<string, unknown> | undefined }, incoming: ScenarioRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["simulateScenario"]> {
+export async function simulateScenario(input: { host: DomainPortHost; sources: PlannerSourceHost; evidence?: BusinessContextService; inputs?: PlannerScenarioInputs; compare: PlannerPort["compareForecast"]; project: (snapshot: Snapshot, actor: Actor, versionId: string) => Record<string, unknown> | undefined; qualify: typeof buildPlannerFinancialProjection }, incoming: ScenarioRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["simulateScenario"]> {
   const parsed = decodeSfOperationInput("sf_scenario_simulate", incoming)
   if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-input" }
   const request = parsed.value
@@ -76,21 +77,21 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
     const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
     const projection = input.project(snapshot, actor, source.value.versionId)
     if (!projection || digestSfValue({ versionId: source.value.versionId, projection }) !== source.value.evidence.target.projectionDigest) return { commit: false, value: { status: "stale" as const, reason: "source-changed" } }
-    return { commit: false, value: simulatePlannerOperations(snapshot, actor, environment, source.value.versionId, operations) }
+    return { commit: false, value: simulatePlannerOperations(snapshot, actor, environment, source.value.versionId, operations, (next) => input.project(next, actor, source.value.versionId)) }
   })
   if (preview.status !== "ok") return preview
-  const version = rows(preview.view.data.versions).find((item) => item.id === source.value.versionId)
-  if (!version) return { status: "unavailable", reason: "preview-unavailable" }
-  const lines = rows(object(version.summary).lines)
+  if (!preview.projection) return { status: "unavailable", reason: "preview-unavailable" }
+  // Qualify the actual post-command copy. A previously absent cell can now have
+  // an explicit forecast; missing FX and independent HR budget rates stay visible.
+  const financial = input.qualify({ projection: preview.projection, ref: source.value.evidence, period, binding, at: environment.at })
+  if (new Set(financial.components.map((component) => component.id)).size !== financial.components.length) return { status: "unavailable", reason: "duplicate-preview-component-id" }
   const changed = new Set(request.operations.flatMap((operation) => operation.kind === "defer" && operation.period ? [operation.targetRef, `${operation.targetRef.slice(0, operation.targetRef.lastIndexOf(":"))}:${Number(operation.period.start.slice(5, 7))}`] : [operation.targetRef]))
-  const components = current.value.baseline.components.map((component) => {
-    const separator = component.id.lastIndexOf(":")
-    const line = lines.find((item) => item.id === component.id.slice(0, separator))
-    const month = Number(component.id.slice(separator + 1))
-    const outlook = line?.outlook
-    const value = Array.isArray(outlook) ? outlook[month - 1] : undefined
-    const amount = component.amount === null || typeof value !== "number" || !Number.isFinite(value) ? null : value
-    return { ...component, amount, evidenceState: amount === null ? "absent" as const : changed.has(component.id) ? "hypothetical" as const : component.evidenceState }
+  // A save can normalize the whole legacy row, including untouched null budgets.
+  // Only addressed cells may acquire quantification from that post-command copy.
+  const absentBefore = new Set(current.value.baseline.components.filter((component) => component.amount === null && component.evidenceState === "absent").map((component) => component.id))
+  const components = financial.components.map((component) => {
+    const absent = component.amount === null || !changed.has(component.id) && absentBefore.has(component.id)
+    return { ...component, amount: absent ? null : component.amount, evidenceState: absent ? "absent" as const : changed.has(component.id) ? "hypothetical" as const : component.evidenceState }
   })
   const rechecked = await input.compare({ baseRef: request.baseRef, candidateRef: request.baseRef, period, currency }, binding)
   const coverageAgain = await input.sources.resolveForecastCoverage(request.baseRef, binding)
@@ -117,6 +118,13 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
     return { status: "ok", value: { ...observation, total: null, costCoverage: assessment, comparisonStatus: "conditioned", unresolvedConditions: [...new Set([...current.value.gaps, ...assessment.issues, ...assessment.entries.flatMap((entry) => entry.status === "pending" ? [`coverage:${entry.categoryId}:${entry.reason}`] : [])])] } }
   }
   const scenarioCoverage = { ...coverage.value.assessment, coverageState: coverage.value.assessment.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...coverage.value.assessment.issues, "scenario-coverage-reassessment-required"] }
-  const unresolved = [...current.value.gaps, "scenario-is-hypothetical", "scenario-coverage-reassessment-required", ...request.assumptions.map((assumption) => `assumption:${assumption.id}:${assumption.state}:not-applied`)]
+  // Re-derive disclosures for addressed cells only; normalization is not evidence
+  // that a missing value in another month has been supplied.
+  const addressedMissing = new Set([...current.value.baseline.missing, ...current.value.candidate.missing]
+    .filter((entry) => changed.has(entry.field.slice(0, entry.field.lastIndexOf(":"))))
+    .map((entry) => `${entry.field}:${entry.reason}`))
+  const currentGaps = current.value.gaps.filter((gap) => !addressedMissing.has(gap))
+  const previewGaps = financial.missing.map((entry) => `${entry.field}:${entry.reason}`)
+  const unresolved = [...new Set([...currentGaps, ...previewGaps]), "scenario-is-hypothetical", "scenario-coverage-reassessment-required", ...request.assumptions.map((assumption) => `assumption:${assumption.id}:${assumption.state}:not-applied`)]
   return { status: "ok", value: { id: `preview:${digestSfValue({ request, source: source.value.evidence.refDigest })}`, version: 0, components, knownSubtotal, total: null, currency, horizon: period, sourceRefs: [source.value.evidence, ...evidenceRefs], costCoverage: scenarioCoverage, comparisonStatus: "conditioned", unresolvedConditions: unresolved, restrictions: ["preview-not-applied"] } }
 }
