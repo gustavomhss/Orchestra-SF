@@ -44,7 +44,7 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
   const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, coverageIssue: "fixture-training-unresolved" }
-  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: () => Promise<void>; outbox?: () => Promise<void> } = {}
+  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: { completedSequence: number; run: () => Promise<void> }; outbox?: () => Promise<void> } = {}
   let store = await openLocalStore(storeDirectory)
   deadline.own(() => store.dispose())
   const services: { current?: ReturnType<typeof createSfBusinessServices> } = {}
@@ -126,8 +126,12 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     const resolveEvidence = atlas.context.resolve
     atlas.context.resolve = async (ref, call) => {
       const waiting = interleave.evidence
-      delete interleave.evidence
-      await waiting?.()
+      // The actual calculation can resolve record evidence while its proof is
+      // still in flight. Keep this hook armed until the exact proof completes.
+      if (waiting && control.calculationResolves === waiting.completedSequence && control.calculationResolved === waiting.completedSequence) {
+        delete interleave.evidence
+        await waiting.run()
+      }
       return resolveEvidence(ref, call)
     }
     const ui = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>) => {
@@ -586,7 +590,7 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
           phase(`mutated-${mutation}-after-completed-proof`)
         }
         const final = mutation === "clock" || mutation === "principal" || mutation === "lease"
-        if (!final) interleave.evidence = mutate
+        if (!final) interleave.evidence = { completedSequence: before + 1, run: mutate }
         if (final) interleave.outbox = async () => {
           if (++outboxReads !== 2) return
           delete interleave.outbox
@@ -625,11 +629,12 @@ test("Planner recall proof stays lexical while an independent same-call calculat
     await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
       const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
       const before = control.calculationResolves
-      interleave.evidence = async () => { entered.resolve(); await release.promise }
+      interleave.evidence = { completedSequence: before + 1, run: async () => { entered.resolve(); await release.promise } }
       const running = reopened.atlas.memory.recall(caseRef, call)
       try {
         await Promise.race([entered.promise, running.then(() => { throw new Error("Real Atlas recall did not reach its warmed evidence boundary") })])
         expect(control.calculationResolves - before).toBe(1)
+        expect(control.calculationResolved).toBe(before + 1)
         // This continuation was created outside recall's AsyncLocalStorage.
         // It must run the actual producer even though the same UI call is live.
         const independent = await reopened.business.context.resolve(calculation, call)

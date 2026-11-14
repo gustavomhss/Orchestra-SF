@@ -1,0 +1,89 @@
+{
+  "schema": "astra-owned-increment-v1",
+  "finding": "CI5-WP10-RECALL-HOOK-01",
+  "owner": "Astra WP10 composition",
+  "baseHead": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+  "baseTree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+  "observedProductHead": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+  "observedProductTree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+  "state": "IMPLEMENTED_STAGED_ACTIONS_PENDING",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "baseBlob": "80b44373f154a70553f1c9ab84139091be3e0238",
+      "blob": "5f510ae6ba293257b2ffb74bc0adf1739a43dda8",
+      "sha256": "69874688c781ac4ebe7c0cffd39b8fa7d5419b2927f4fcc1c6c68c502469369b",
+      "bytes": 44643,
+      "status": "modified",
+      "stagedPath": "/workspace/scratch/4c48b09c5c29/owned-patch-round11/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts"
+    }
+  ],
+  "run": {
+    "id": 43589763353,
+    "jobId": 132431793223,
+    "sha": "564d04391d009b89718b10e67175d710d9e6b9c9",
+    "conclusion": "FAILURE",
+    "log": "evidence/ci5.log",
+    "failureLines": [
+      1214,
+      1244,
+      1274,
+      1304,
+      1334
+    ],
+    "lexicalBoundaryLines": [
+      1401,
+      1402,
+      1403,
+      1404,
+      1405
+    ]
+  },
+  "cause": {
+    "observed": "Five post-proof mutation tests fail applied===1 with Received:0. The lexical test starts the independent resolution sequence 5 before sequence 4 completes; sequence 5 returns with completed=4 and entered=5.",
+    "sourceMechanism": "The fixture consumed interleave.evidence on the first atlas.context.resolve call, including record evidence reached from the in-flight calculation. Mutation assertions require completed===entered before incrementing applied; that early exception is absorbed by the fail-closed producer boundary.",
+    "qualification": "The exact swallowed inner assertion is source-derived, not separately printed in the log. The wrong lexical boundary is directly demonstrated by the resolution trace."
+  },
+  "changes": [
+    "Represent the evidence hook as an expected completedSequence plus its existing callback.",
+    "Consume once only when both entered and completed counts equal the captured before+1. Earlier record reads retain the hook.",
+    "Use that condition in all five evidence-boundary mutations and in the parallel lexical isolation test.",
+    "Add explicit completed===before+1 assertion before starting the independent calculation."
+  ],
+  "invariants": [
+    "All existing assertions, real producer/storage mutations and deadlines are preserved.",
+    "Final clock/principal/lease hooks remain unchanged.",
+    "No product source, authority cache, source fence, lease, selected case, frozen contract, CI workflow or timeout is changed.",
+    "A missing completed proof still fails applied===1 or the existing entered/running race; there is no success fallback.",
+    "The independent calculation continues outside the recall AsyncLocalStorage; the final 2 real resolution-count assertion and actual recalled-record checks remain."
+  ],
+  "tests": {
+    "execution": "NOT_RUN",
+    "runtime": "GitHub Actions only",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+    "affectedNames": [
+      "Planner reopened recall rejects source drift after a completed calculation proof",
+      "Planner reopened recall rejects membership drift after a completed calculation proof",
+      "Planner reopened recall rejects capture drift after a completed calculation proof",
+      "Planner reopened recall rejects coverage drift after a completed calculation proof",
+      "Planner reopened recall rejects selector drift after a completed calculation proof",
+      "Planner recall proof stays lexical while an independent same-call calculation resolves in parallel"
+    ],
+    "deadlineMs": 105000,
+    "bunTestTimeoutMs": 120000
+  },
+  "limits": [
+    "A test-boundary repair, not a product performance fix or new native AM evidence.",
+    "Planner historical read and calculation ancestry/reopen latency findings remain open.",
+    "Not exercised by CI6 W10; root must publish and schedule a subsequent change-scoped check."
+  ],
+  "dependencies": {
+    "newImports": [],
+    "newPackages": [],
+    "productChanges": []
+  },
+  "payloadPath": "/workspace/scratch/4c48b09c5c29/incoming-cache/recall-hook-round11/payloads.json",
+  "patchPath": "/workspace/scratch/4c48b09c5c29/incoming-cache/recall-hook-round11/recall-completed-proof.patch",
+  "payloadSha256": "eb1fae334aba6a0bf107f911b5564ccb17c7094e3f0afacc65fa425712a8f9b3",
+  "patchSha256": "7d16eee087c2b2d0d6f564bf137d9ee2e87bf87618110e6479fdb25c08fc327a"
+}

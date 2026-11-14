@@ -27,8 +27,9 @@ export function createHotTopicDraftStore(input: {
   createId: () => string
   now: () => string
 }) {
-  const readCurrent = async (request: { caseRef: CaseRef; draftRef: string }, context: TrustedDomainContext): Promise<PortResult<HotTopicDraft>> => {
+  const readCurrent = async (incoming: { caseRef: CaseRef; draftRef: string }, context: TrustedDomainContext): Promise<PortResult<HotTopicDraft>> => {
     try {
+      const request = structuredClone(incoming)
       const source = input.host.requestFor(context)
       if (!source || !request.draftRef.trim() || !await input.host.revalidate(context)) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
       const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
@@ -45,15 +46,25 @@ export function createHotTopicDraftStore(input: {
       const again = await readCase()
       const draftAgain = await readDraft()
       if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(current.value) || !allowed(again.value, request.caseRef, context) || !await input.authorizeCase(again.value!, context) || draftAgain.status !== "ok" || digestSfValue(draftAgain.value) !== digestSfValue(found.value) || !await input.verifySources(draft, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "hot-topic-draft-changed" }
-      return { status: "ok", value: structuredClone(draft) }
+      // Source and case callbacks may await other work. Observe the exact authorized
+      // case and draft together after their last callback, with no callback on egress.
+      const final = await input.state.read(source, "preferences", (state, authority) => {
+        if (!sameAuthority(authority, context)) return undefined
+        const draft = state.preferences[historyKey(request.draftRef)]
+        return { current: state.cases[request.caseRef.id], draft, active: isDraft(draft) ? state.preferences[activeKey(draft.id)] : undefined }
+      })
+      if (final.status !== "ok" || !final.value || !allowed(final.value.current, request.caseRef, context) || digestSfValue(final.value.current) !== digestSfValue(again.value) || !isDraft(final.value.draft) || digestSfValue(final.value.draft) !== digestSfValue(draft) || !isDraft(final.value.active) || digestSfValue(final.value.active) !== digestSfValue(found.value.active) || source.signal.aborted) return { status: "stale", reason: "hot-topic-draft-changed" }
+      return { status: "ok", value: structuredClone(final.value.draft) }
     } catch { return { status: "unavailable", reason: "hot-topic-draft-unavailable" } }
   }
-  const list = async (request: { caseRef: CaseRef }, context: TrustedDomainContext): Promise<PortResult<readonly { draftRef: string; label: string; version: number; target: SourceRef }[]>> => {
+  const list = async (incoming: { caseRef: CaseRef }, context: TrustedDomainContext): Promise<PortResult<readonly { draftRef: string; label: string; version: number; target: SourceRef }[]>> => {
     try {
+      const request = structuredClone(incoming)
       const source = input.host.requestFor(context)
       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
       const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
-      const readDrafts = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? Object.entries(state.preferences).filter(([name]) => name.startsWith("sf:proposal-coverage:hot-topic:active:")).map(([, value]) => value).filter(isDraft).filter((draft) => draft.caseRef.id === request.caseRef.id && draft.caseRef.incarnation === request.caseRef.incarnation && draft.caseRef.version <= request.caseRef.version) : undefined)
+      const selectedDrafts = (state: Readonly<SfProductState>) => Object.entries(state.preferences).filter(([name]) => name.startsWith("sf:proposal-coverage:hot-topic:active:")).map(([, value]) => value).filter(isDraft).filter((draft) => draft.caseRef.id === request.caseRef.id && draft.caseRef.incarnation === request.caseRef.incarnation && draft.caseRef.version <= request.caseRef.version)
+      const readDrafts = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? selectedDrafts(state) : undefined)
       const current = await readCase()
       const drafts = await readDrafts()
       if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context) || drafts.status !== "ok" || !drafts.value) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
@@ -61,6 +72,8 @@ export function createHotTopicDraftStore(input: {
       const again = await readCase()
       const draftsAgain = await readDrafts()
       if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(current.value) || !allowed(again.value, request.caseRef, context) || !await input.authorizeCase(again.value!, context) || draftsAgain.status !== "ok" || digestSfValue(draftsAgain.value) !== digestSfValue(drafts.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "hot-topic-draft-changed" }
+      const final = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[request.caseRef.id], drafts: selectedDrafts(state) } : undefined)
+      if (final.status !== "ok" || !final.value || !allowed(final.value.current, request.caseRef, context) || digestSfValue(final.value.current) !== digestSfValue(again.value) || digestSfValue(final.value.drafts) !== digestSfValue(draftsAgain.value) || source.signal.aborted) return { status: "stale", reason: "hot-topic-draft-changed" }
       return { status: "ok", value: checked.flatMap((item) => item.status === "ok" ? [{ draftRef: item.value.draftRef, label: item.value.fields.action, version: item.value.version, target: item.value.target }] : []) }
     } catch { return { status: "unavailable", reason: "hot-topic-draft-unavailable" } }
   }

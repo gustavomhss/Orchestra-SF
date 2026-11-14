@@ -1,0 +1,99 @@
+{
+  "round": 11,
+  "base": {
+    "head": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+    "tree": "884138976f1e5ab04d924c3f29f4ba6584acb070"
+  },
+  "findings": [
+    {
+      "findingId": "ROUND11_WP13_PUBLIC_PORT_TYPE_REQUIRES_NEW_SENSITIVITY_PIPELINE",
+      "owner": "WP13 / PR36 astra-intelligence",
+      "sourceHead": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "sourceTree": "464902873b604ceabe4518f34d16643c5dfb2a18",
+      "base": {
+        "head": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+        "tree": "884138976f1e5ab04d924c3f29f4ba6584acb070"
+      },
+      "diagnostic": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "line": 158,
+        "code": "TS2322",
+        "message": "PlannerSourceHost lacks the producer-only projectForecastSource capability required by W10 product factory typing."
+      },
+      "observedFix": "Published product.ts uses public PlannerPort/PlannerSourceHost/PlannerScenarioHost, which would remove the unused projection requirement. No custom foreign hunk has been applied.",
+      "decision": "HOLD_EXACT_PRODUCT_BLOB_DEPENDENCY_CLOSURE_NOT_PRESENT_IN_W10",
+      "missingDependencies": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+          "reason": "New mandatory module import in product.ts; absent from W10 (MCP404)."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+          "reason": "New mandatory module import in product.ts; absent from W10 (MCP404)."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "reason": "W10 createPlannerSensitivity input has no coveragePreview option passed by new product.ts. Exact source replacement also changes active parameter proof and exact-threshold revalidation."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "W10Blob": "6c08aae11dd559553d5f9274d1aa5750686ff8fc",
+          "line": 12,
+          "reason": "W10 SensitivityHost defines sample/exactThreshold/revalidate only; source planner-sensitivity.ts passes new verifyCoverageQualification. Mandatory evaluator contract and implementation not present. Qualification changes emitted statuses/coverage, not only an unannounced optional endpoint."
+        }
+      ],
+      "observedWholeBlobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+          "sourceBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+          "baseBlob": "8fc915379f153fdb437be09c2c84924d7d59b6ed",
+          "baseAbsentVerifiedByMcp404": false,
+          "cachedExactBlob": "/workspace/scratch/4c48b09c5c29/incoming-cache/owner-round11/blobs/d4c5d9c9aabcf70bb71739d3952776517dc55923"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+          "sourceBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+          "baseBlob": null,
+          "baseAbsentVerifiedByMcp404": true,
+          "cachedExactBlob": "/workspace/scratch/4c48b09c5c29/incoming-cache/owner-round11/blobs/aedc80310eee2752d067dd52afa6312a9558b87a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+          "sourceBlob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+          "baseBlob": null,
+          "baseAbsentVerifiedByMcp404": true,
+          "cachedExactBlob": "/workspace/scratch/4c48b09c5c29/incoming-cache/owner-round11/blobs/9f7e12113b38e73befb64f99a94fb8ca28d05eee"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "sourceBlob": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+          "baseBlob": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+          "baseAbsentVerifiedByMcp404": false,
+          "cachedExactBlob": "/workspace/scratch/4c48b09c5c29/incoming-cache/owner-round11/blobs/ee1a9586231ec9027bb323a817c4a469c4b207a6"
+        }
+      ],
+      "remedy": "Owner may publish a minimal public-port typing change over the composed product.ts, or publish and qualify a complete coverage/sensitivity closure with its regression consumers for a separately scoped intake. Root should not derive/apply a custom hunk to the foreign file.",
+      "testsProposed": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "Full owner sensitivity/coverage regression selection if complete pipeline is later admitted."
+      ],
+      "executed": false,
+      "forwardedRemotely": false,
+      "limit": "Held for concrete absent dependencies, not solely because product adds an incidental optional reconciliation entrypoint."
+    }
+  ],
+  "excludedSnapshots": [
+    {
+      "pr": 31,
+      "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+      "pathsInObservedDelta": 103,
+      "reason": "No new targeted 14-TS/advantage reflow correction; foreign/snapshot paths excluded."
+    },
+    {
+      "pr": 36,
+      "head": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "pathsInObservedDelta": 48,
+      "reason": "Only exact two Atlas test paths accepted; AI lifecycle/reconciliation/coverage snapshots not imported."
+    }
+  ]
+}

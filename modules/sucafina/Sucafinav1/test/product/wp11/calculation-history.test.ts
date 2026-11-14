@@ -24,9 +24,10 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
   const fixture = await plannerFixture()
   try {
     for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
-    const context = await fixture.admit("sf-human:planner.read", {})
-    const http = fixture.host.requestFor(context)
-    if (!http) throw new Error("Real UI authority unavailable")
+    let context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+    const initialHttp = fixture.host.requestFor(context)
+    if (!initialHttp) throw new Error("Real UI authority unavailable")
+    let http: Request = initialHttp
     const issuedSource = await fixture.issueSource("v0", context)
     if (issuedSource.status !== "ok") throw new Error(issuedSource.reason)
     const sourceRef = issuedSource.value.evidence
@@ -36,7 +37,7 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
     const scenario: ScenarioRequest = { baseRef: sourceRef.refId, operations: [{ kind: "replace", targetRef: "line:11", amount: 42, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } }], assumptions: [] }
     const originalCaseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
     const decision: DecisionCase = { ...originalCaseRef, state: "investigating", objective: "Inspect an actual Planner calculation", horizon: plannerPeriod, currency: "USD", criteria: [], participants: [context.binding.principalRef], sourceRefs: [sourceRef], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
-    const hooks: { beforeSources?: () => Promise<void> } = {}
+    const hooks: { beforeSources?: () => Promise<void>; observeSources?: () => Promise<void>; observeRequestSources?: () => Promise<void> } = {}
     const compose = (persistence: Persistence) => {
       const writes = new WeakSet<object>()
       const state = createSfProductState({ persistence, proposalCoverageWrites: writes, createId: () => "history-state", resolveTarget: async (_request, snapshot, _namespace, targetRef) => {
@@ -57,13 +58,17 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
         const hook = hooks.beforeSources
         hooks.beforeSources = undefined
         await hook?.()
+        await hooks.observeSources?.()
         for (const ref of refs) if (!await verifySource(ref, trusted)) return false
         return true
       }, createId: () => "history-result", now: () => plannerAt })
       // This contract fixture supplies the private producer-capture and human-grant boundaries.
       // The source fence, C08 stores, analysis mutation and Planner replay are production implementations.
       const captured: { resultRef?: string; requestDigest?: string; sourceFence?: string } = {}
-      const requests = createScenarioRequestStore({ state, results, host: fixture.host, authorizeCase, authorizeProducer: async (request, resultRef, engineVersion) => captured.resultRef === resultRef && captured.requestDigest === digestSfValue(request) && engineVersion === "planner-runtime-v1", verifySnapshot: (snapshot, record) => captured.resultRef === record.resultRef && captured.requestDigest === record.requestDigest && captured.sourceFence === sfRunSourceFence(snapshot), operationIdentity: () => "history-request", writes })
+      const requests: ReturnType<typeof createScenarioRequestStore> = createScenarioRequestStore({ state, results, host: fixture.host, authorizeCase, authorizeProducer: async (request, resultRef, engineVersion) => captured.resultRef === resultRef && captured.requestDigest === digestSfValue(request) && engineVersion === "planner-runtime-v1", verifyRequestSources: async (request, stored, trusted) => {
+        await hooks.observeRequestSources?.()
+        return producer.verifyCalculationRequestSources(request, stored, trusted)
+      }, verifySnapshot: (snapshot, record) => captured.resultRef === record.resultRef && captured.requestDigest === record.requestDigest && captured.sourceFence === sfRunSourceFence(snapshot), operationIdentity: () => "history-request", writes })
       const producer = createPlannerCalculationEvidence({ host: fixture.host, readForCalculation: (request, trusted) => results.readForCalculation(request, trusted), loadRecordOnlyRequest: requests.read, replayRecordOnly: planner.simulateScenario })
       const historicalProducer = (selection: HistoricalCalculationRead) => createPlannerCalculationEvidence({ host: fixture.host,
         readForCalculation: (request, trusted) => request.resultRef === selection.reference.target.runId ? results.readHistoricalCalculation(selection, trusted) : Promise.resolve({ status: "denied", reason: "historical-calculation-outside-ledger-selection" }),
@@ -157,8 +162,34 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
         const next = update(structuredClone(current.value))
         expect((await first.state.transaction(http, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: current.value.id, targetIncarnation: current.value.incarnation, idempotencyKey: `history-negative-${++mutation}`, commandDigest: digestSfValue(next) }, async (staged) => { staged.cases[next.id] = next; return { commit: true, value: true } })).status).toBe("ok")
       }
+      // The second callback runs after the reader's earlier case re-observation.
+      // A concurrent commit there must be caught by the final C08 read fence.
+      const finalSourceRace = { calls: 0 }
+      hooks.observeSources = async () => {
+        if (++finalSourceRace.calls === 2) await changeCase((value) => ({ ...value, version: value.version + 1, ledger: [] }))
+      }
+      const finalRaceResult = await second.results.readHistoricalCalculation(selection, context)
+      expect(finalSourceRace.calls).toBe(2)
+      expect(finalRaceResult).toEqual({ status: "denied", reason: "historical-calculation-changed" })
+      expect(finalRaceResult).not.toHaveProperty("value")
+      hooks.observeSources = undefined
+      await changeCase((value) => ({ ...value, version: value.version + 1, ledger: acceptedCase.ledger }))
+      const restoredSelection = await second.selectionFor(calculation.value)
+      expect(await second.results.readHistoricalCalculation(restoredSelection, context)).toEqual(stored)
+      const finalRequestRace = { calls: 0 }
+      hooks.observeRequestSources = async () => {
+        if (++finalRequestRace.calls === 2) await changeCase((value) => ({ ...value, version: value.version + 1, ledger: [] }))
+      }
+      const requestRaceResult = await second.requests.readHistorical(restoredSelection, context)
+      expect(finalRequestRace.calls).toBe(2)
+      expect(requestRaceResult).toEqual({ status: "stale", reason: "scenario-request-case-changed" })
+      expect(requestRaceResult).not.toHaveProperty("value")
+      hooks.observeRequestSources = undefined
+      await changeCase((value) => ({ ...value, version: value.version + 1, ledger: acceptedCase.ledger }))
+      const requestRestoredSelection = await second.selectionFor(calculation.value)
+      expect(await second.requests.readHistorical(requestRestoredSelection, context)).toMatchObject({ status: "ok", value: { caseRef: originalCaseRef, request: scenario, requestDigest: digestSfValue(scenario), resultDigest: stored.value.resultDigest } })
       hooks.beforeSources = () => changeCase((value) => ({ ...value, version: value.version + 1, ledger: [] }))
-      expect(await second.results.readHistoricalCalculation(selection, context)).toEqual({ status: "denied", reason: "historical-calculation-changed" })
+      expect(await second.results.readHistoricalCalculation(requestRestoredSelection, context)).toEqual({ status: "denied", reason: "historical-calculation-changed" })
       expect((await second.results.readHistoricalCalculation(await second.selectionFor(calculation.value), context)).status).toBe("denied")
       await changeCase((value) => ({ ...value, version: value.version + 1, ledger: acceptedCase.ledger, horizon: { start: "2026-01-01", end: "2026-12-31" } }))
       expect(await second.results.readHistoricalCalculation(await second.selectionFor(calculation.value), context)).toEqual({ status: "denied", reason: "historical-calculation-unavailable" })
@@ -167,6 +198,17 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
       fixture.access.allowed = false
       expect((await second.results.readHistoricalCalculation(currentSelection, context)).status).toBe("denied")
       fixture.access.allowed = true
+      // Revocation permanently retires that admission; renewed access needs a new
+      // real UI admission before testing unrelated source and incarnation changes.
+      const revokedContext = context
+      expect(await fixture.host.revalidate(revokedContext)).toBe(false)
+      context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+      const renewedHttp = fixture.host.requestFor(context)
+      if (!renewedHttp) throw new Error("Renewed UI authority unavailable")
+      http = renewedHttp
+      expect(await fixture.host.revalidate(context)).toBe(true)
+      expect(await second.results.readHistoricalCalculation(currentSelection, context)).toEqual(stored)
+      expect((await second.results.readHistoricalCalculation(currentSelection, revokedContext)).status).toBe("denied")
       const changed = await fixture.persistence.transaction("planner", async (snapshot) => {
         const result = domain.execute(snapshot, { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }, { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f10: 43 } }, { at: plannerAt, id: () => "source-change", directory: [] })
         return { commit: result.ok, value: result }
