@@ -74,7 +74,12 @@ test("a current quote replays the same historical choice, requires a separate hu
     const basis = { ...fixture.basis, version: 2, sourceRefs: structuredClone(fixture.sourceRefs) }
     const coverage = await renewalCoverage({ ...fixture, basis }, "confirmed")
     expect(coverage.assessment.coverageState).toBe("complete")
-    expect(coverage.assessment.entries.find((entry) => entry.categoryId === "training")).toMatchObject({ status: "included", componentRefs: expect.arrayContaining(["training:11"]) })
+    // The assertion observes a detached entry; its asymmetric matcher must not
+    // share the live classification inputs used by the canonical reassessment.
+    const coverageBeforeObservation = digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })
+    const trainingObservation = structuredClone(coverage.assessment.entries.find((entry) => entry.categoryId === "training"))
+    expect(trainingObservation).toMatchObject({ status: "included", componentRefs: expect.arrayContaining(["training:11"]) })
+    expect(digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })).toBe(coverageBeforeObservation)
     const plannerAfterQuote = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
     const writes = new WeakSet<object>()
     const makeState = (store: typeof fixture.store) => createSfProductState({
