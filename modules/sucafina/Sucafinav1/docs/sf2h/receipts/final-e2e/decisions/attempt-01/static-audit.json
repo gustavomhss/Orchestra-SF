@@ -1,0 +1,547 @@
+{
+  "schema": "decisions-static-evidence-v1",
+  "ci_dependency_audit": {
+    "schema": "s4-a-decisions-dependency-audit-v1",
+    "observedAt": "2026-11-14T19:20:02Z",
+    "actor": "S4-A / ci_contract read-only internal audit",
+    "repository": "gustavomhss/Orchestra-SF",
+    "input": {
+      "pr": 40,
+      "branch": "astra-wp11",
+      "head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "tree": "694ab744ce9e1361ec65704c5854c0bd30bf833a"
+    },
+    "comparedHeads": [
+      {
+        "pr": 29,
+        "branch": "astra-wp10",
+        "head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/29"
+      },
+      {
+        "pr": 42,
+        "branch": "finance-resume",
+        "head": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/42"
+      }
+    ],
+    "scope": {
+      "remote": "GitHub MCP read-only",
+      "local": "scratch notes only",
+      "testsExecuted": false,
+      "actionsDispatched": false,
+      "intake": false,
+      "productChanged": false,
+      "limitations": [
+        "Static source audit does not prove the installation starts or reaches a UI action.",
+        "External PR run claims are context only; no successful journey is attributed to PR40.",
+        "Only current reachable composition and directly related producer/consumer contracts were compared; no other actor pack loaded."
+      ]
+    },
+    "mount": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+        "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+        "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/apps/cli/src/sucafina-product/installation.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+        "blob": "a7c5c08519906e640a3506f7685d18b949346cc8",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/local/entry.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+        "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/apps/cli/src/sucafina-product/host-context.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+        "blob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/apps/cli/src/sucafina-product/business-services.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+        "blob": "5a144bc373395a1ad2ce9eb7de256bcd94d0ed18",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/interface/http.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+        "blob": "74fa17f6e08efeabe08820454bfde7cc309f36ad",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/runtime/application.ts"
+      }
+    ],
+    "routeChain": "Fixture starts real apps/cli/src/index.ts serve with local/entry.ts. The installation receives createSfHostRuntime. local/entry.ts dispatches runtime.services.productHttp first, Workbench second, BI third; undefined falls through to runtime/application.ts base domain command parsing.",
+    "findings": [
+      {
+        "id": "DEC-DEP-CASE-READ-CALLER",
+        "severity": "blocker",
+        "classification": "STATIC_PRODUCER_CALLER_MISMATCH",
+        "firstAffectedStage": "Open/read the case immediately after human draft",
+        "owner": "WP10 / PR29 for CLI caller composition; Finance owns case-port contract and C17",
+        "evidence": [
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/apps/cli/src/sucafina-product/business-services.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "ref": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+            "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/54317229d7f8fcb7e92921c2f4a8dc6f9310270b/apps/cli/src/sucafina-product/business-services.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "ref": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+            "blob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1/apps/cli/src/sucafina-product/business-services.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "ref": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+            "blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1/modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+          }
+        ],
+        "producer": "case-port.ts requires verifyScenarioOperations at line 20 and invokes it in read at lines 85-86; missing callback throws and the catch returns case-state-unavailable.",
+        "caller": "business-services.ts lines 102-105 supply operationIdentity, authorizeCase and evidence but omit verifyScenarioOperations.",
+        "implication": "Human draft can persist a case, because draft does not invoke this verifier. An empty case passing preceding authorization/evidence checks then fails read on the missing function, so returning to/opening the case cannot be treated as a passed journey.",
+        "availableCorrection": "PR29 business-services.ts blob 385dd1998ec3fb73b32f77ab3dec9c93beb440d1 supplies the callback at line167 and initializes createSfScenarioOperationAccess at lines428-432.",
+        "financeRelation": "PR42 retains exactly the old CLI caller blob54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5. Its current case-port adds final live-lease/C17 checking but does not close the missing caller binding.",
+        "expectedEvidenceFromFirstRun": "Keep strict case/heading/history assertions. Record actual Actions/UI error and this producer/caller pair if reached. Do not seed/read around it or supply an E2E-only callback."
+      },
+      {
+        "id": "DEC-DEP-HOST-MOUNT",
+        "severity": "blocker",
+        "classification": "STATIC_MISSING_RUNTIME_COMPOSITION",
+        "firstAffectedStage": "Alternative creation/promotion and comparison/choice",
+        "owner": "WP10 / PR29 CLI host composition",
+        "evidence": [
+          {
+            "path": "apps/cli/src/sucafina-product/host-context.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/apps/cli/src/sucafina-product/host-context.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/apps/cli/src/sucafina-product/business-services.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/decisions/capabilities.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "5a144bc373395a1ad2ce9eb7de256bcd94d0ed18",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/interface/http.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "e4257c9f091085ddc173fe669e2a290b597d179e",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/ui/decision-edit.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "b1753d1621806d11079b5404c88f9f6dea6e0c94",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/host-context.ts",
+            "ref": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+            "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/54317229d7f8fcb7e92921c2f4a8dc6f9310270b/apps/cli/src/sucafina-product/host-context.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+            "ref": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+            "blob": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/54317229d7f8fcb7e92921c2f4a8dc6f9310270b/apps/cli/src/sucafina-product/extended-business-services.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+            "ref": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+            "blob": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/54317229d7f8fcb7e92921c2f4a8dc6f9310270b/apps/cli/src/sucafina-product/decision-domain-services.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+            "ref": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+            "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/54317229d7f8fcb7e92921c2f4a8dc6f9310270b/apps/cli/src/sucafina-product/decision-domain-http.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+            "ref": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+            "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/54317229d7f8fcb7e92921c2f4a8dc6f9310270b/apps/cli/src/sucafina-product/portfolio-http.ts"
+          }
+        ],
+        "currentMount": "host-context.ts line570 mounts only documentHttp and importHttp in productHttp. business-services.ts line148 calls createDecisionCapabilities without alternative/change producers. createDecisionCapabilities omits corresponding sf_alternative_draft and sf_change_prepare descriptors.",
+        "absentInCurrentCliDirectory": [
+          "decision-domain-services.ts",
+          "decision-domain-http.ts",
+          "extended-business-services.ts",
+          "portfolio-http.ts"
+        ],
+        "affectedRoutes": [
+          "decision-edit",
+          "decision-promote",
+          "decision-compare",
+          "decision-choose",
+          "decision-prepare-changes",
+          "decision-review",
+          "decision-apply"
+        ],
+        "requestBehaviorInference": "These sf modes are not in Workbench's accepted mode list. Their current UI JSON payloads fall through to runtime/application.ts readCommand/decodeCommand, whose generic command schema requires page/action/version/values and rejects them as Invalid command400. This is a code-path inference, not an observed HTTP response.",
+        "availableCorrection": "PR29 host blob bdf6d4e2014cc9b2a492b6ae304948c249221e39 constructs decisionDomain, binds it to business, and chains decisionDomainHttp/portfolioHttp/baselineServices/extended product handlers. Its extended services bind alternative/change producers. These blobs are not installed in PR40.",
+        "financeRelation": "PR42 host-context.ts is exactly PR40 blob81f07b9d68a85811cef3aa4d3b4615475486f04f; Finance changes alone do not mount the journey."
+      },
+      {
+        "id": "DEC-DEP-APPLY-REVIEW-DIGEST",
+        "severity": "blocker_after_mount",
+        "classification": "STATIC_DORMANT_UI_HTTP_MISMATCH",
+        "firstAffectedStage": "Explicit Apply after review",
+        "owner": "Existing product/Decisions UI owner; newer consumer is already in PR29, outside S4-A write scope",
+        "evidence": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "3bee0f4326c1a65d3c0573695c3e4a1609b6c480",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "596512b4e12c094fd178ea845f4b560bbf23a348",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/decisions/http.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+            "ref": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+            "blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/54317229d7f8fcb7e92921c2f4a8dc6f9310270b/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+            "ref": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+            "blob": "596512b4e12c094fd178ea845f4b560bbf23a348",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1/modules/sucafina/Sucafinav1/product/decisions/http.ts"
+          }
+        ],
+        "currentConsumer": "Old UI Apply at line37 sends caseRef, choiceId, changeId only. It neither validates nor stores reviewDigest from the review response.",
+        "currentContract": "Decisions HTTP valid(decision-apply) line220 requires reviewDigest as 64 lowercase hex characters, plus caseRef/changeId/choiceId.",
+        "reachability": "Decisions HTTP is a present library but not mounted in current CLI. Do not claim this validator was reached; this incompatibility remains after the missing mount is addressed.",
+        "availableCorrection": "PR29 UI blob2e6c081ad2a5282654707f7fc7278183e7dfb20d captures reviewDigest, freezes exact body+key in intention, exposes Retry same application, and verifies receipt. No selective intake was performed.",
+        "protection": "Preserve explicit review/checkbox/Apply, same-intention retry and receipt/history assertions; do not add reviewDigest from test code or replace UI mutation."
+      },
+      {
+        "id": "DEC-DEP-REAL-PROVIDER",
+        "severity": "prerequisite_for_independent_critique",
+        "classification": "STATIC_FIXTURE_ENVIRONMENT_LIMITATION",
+        "owner": "WP10/provider runtime availability; E2E must report actual availability",
+        "evidence": [
+          {
+            "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/host-context.ts",
+            "ref": "e8949be0e31952d5be4987c099003cd0b46e2add",
+            "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/apps/cli/src/sucafina-product/host-context.ts"
+          }
+        ],
+        "detail": "The existing real installation fixture creates isolated host config, excludes provider credentials from child env and sets ORCHESTRA_INHERIT_CREDENTIALS=0. No provider is configured by this fixture. The native start checks the actual model catalog and rejects unavailable models. Real critique output requires an actually available provider; it cannot be produced by a seeded or stubbed response.",
+        "limitation": "No provider session/catalog was queried by this audit. Absence of fixture configuration is not evidence of a live model result."
+      }
+    ],
+    "startup": {
+      "executed": false,
+      "status": "NOT_PROVEN",
+      "immediateRelativeImportAudit": {
+        "scope": "11 inspected current production files across CLI installation/host/business, local entry, runtime application, Workbench and Decisions UI/contracts",
+        "checkedEdges": 180,
+        "missingTargets": [],
+        "trees": {
+          "cli": "d35a957aa146b60e2558d9592dbce207d14a9d5e",
+          "product": "6be1ed5387beddb109f2775099ea60698f9e90a8",
+          "runtime": "335d9d0b9e0b24f0489708a0f2191e9d3690cd0a",
+          "local": "9594d7e2e89df87fc25bcd420e2b66fab41eb1f9"
+        },
+        "limitation": "Direct import target existence only, not a full transitive bootstrap or typecheck. New PR29 files absent from PR40 are missing composition, not unresolved imports from the inspected old sources."
+      },
+      "detectedBootstrapFailure": null
+    },
+    "excludedFalseAttribution": [
+      {
+        "claim": "Old FIN-IND-002 case-event producer/caller mismatch",
+        "reason": "Current PR40 product/host-binding/business-context.ts blobac158b0a4be9f6062339c37fb0a386eb9a11de10 already invokes createSfCaseEventSourceAccess with host,state,authorizeCase,authorizeEvidence. Do not claim obsolete {host,cases} mismatch."
+      },
+      {
+        "claim": "PR29/PR42 Actions outcomes certify PR40 UI journey",
+        "reason": "They are different heads/trees/compositions. No intake or test was run here."
+      }
+    ],
+    "stageAssessment": [
+      {
+        "stage": "Installation bootstrap + real Workbench entry",
+        "status": "NOT_EXECUTED; source mount exists"
+      },
+      {
+        "stage": "Human case draft",
+        "status": "Descriptor exists; runtime success unproven"
+      },
+      {
+        "stage": "Open/reload created case",
+        "status": "STATIC_BLOCKER DEC-DEP-CASE-READ-CALLER"
+      },
+      {
+        "stage": "Alternatives/compare/human choose",
+        "status": "STATIC_BLOCKER DEC-DEP-HOST-MOUNT"
+      },
+      {
+        "stage": "Proposal/preview/explicit Apply",
+        "status": "STATIC_BLOCKER DEC-DEP-HOST-MOUNT; dormant digest incompatibility"
+      },
+      {
+        "stage": "Receipt/lost response/retry/reload/persisted history",
+        "status": "NOT_REACHED; keep strict assertions in spec"
+      },
+      {
+        "stage": "Independent AI critique",
+        "status": "REAL_PROVIDER_PREREQUISITE; do not fabricate"
+      }
+    ]
+  },
+  "ui_source_audit": {
+    "audit": "S4-A Decisions source/UI consumer audit",
+    "repository": "gustavomhss/Orchestra-SF",
+    "installed_source_commit": "e8949be0e31952d5be4987c099003cd0b46e2add",
+    "observed_application_ui": false,
+    "tests_executed": false,
+    "ci_dispatched": false,
+    "product_modified": false,
+    "provider": "NOT_OBSERVED",
+    "critique": "NOT_RUN",
+    "primary_findings": [
+      {
+        "id": "DEC-CONSUMER-READ",
+        "owner": "WP10",
+        "state": "STATIC_DEPENDENCY",
+        "consumer": "GET ?sf=workbench-case → sf_case_read",
+        "finding": "business-services constructs createDecisionCasePort without required verifyScenarioOperations; read invokes it and catches failure as case-state-unavailable."
+      },
+      {
+        "id": "DEC-CONSUMER-HTTP",
+        "owner": "WP10",
+        "state": "STATIC_DEPENDENCY",
+        "consumer": "GET decision-list; POST decision-edit / decision-portfolio-catalog / decision-compare / decision-choose / decision-review / decision-apply",
+        "finding": "host productHttp composes documentHttp and importHttp only. Workbench handler does not admit these modes; legacy HTML 200 must not be treated as domain success."
+      },
+      {
+        "id": "DEC-INITIAL-ALTERNATIVES",
+        "owner": "WP10 + corresponding domain producer owner",
+        "state": "STATIC_DEPENDENCY",
+        "consumer": "Workbench case/alternatives",
+        "finding": "New human case always sourceRefs:[]; edit preserves sourceRefs; no mounted human UI source attachment or first-two-alternatives producer found. Choice needs >=2 saved alternatives; portfolio promotion consumes existing alternatives."
+      },
+      {
+        "id": "DEC-APPLY-DIGEST",
+        "owner": "WP10",
+        "state": "STATIC_UNREACHED",
+        "consumer": "decision-apply",
+        "finding": "UI payload lacks reviewDigest required by unmounted HTTP validator. No runtime proof of this defect."
+      },
+      {
+        "id": "DEC-PORTFOLIO-DATASET",
+        "owner": "WP10",
+        "state": "STATIC_UNREACHED",
+        "consumer": "choice button data-portfolio and portfolio script",
+        "finding": "With >=2 alternatives, button[data-portfolio] also matches generic portfolio controller root and can dereference absent promotion form. No runtime proof."
+      }
+    ],
+    "domain_expectations": {
+      "newly_created_case": {
+        "version": 1,
+        "state": "draft",
+        "sourceRefs": [],
+        "alternatives": [],
+        "choices": [],
+        "preparedChanges": [],
+        "receipts": [],
+        "ledger": [],
+        "required_criteria": true
+      },
+      "human_edit": {
+        "state": "preserved",
+        "version": "prior+1",
+        "ledger": "unchanged",
+        "case_identity": "preserved"
+      },
+      "selected_empty_catalog": {
+        "cases": 1,
+        "caseRef": "exact {id,incarnation,version}",
+        "caseVersion": "same version",
+        "criteria": "same persisted criteria",
+        "alternatives": []
+      },
+      "uninitialized_list": "case-management.list does not convert uninitialized state to ok/value:[]",
+      "history_limit": "Reload/reopen of current revision is not immutable historical choice/receipt replay under C17."
+    },
+    "reviewed_tests": {
+      "paths": [
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts"
+      ],
+      "method": "Static review of local draft supplied by parent; no execution",
+      "required_change_reported": "Avoid assuming decision-list before first case returns ok/value:[]; producer does not guarantee that on uninitialized state.",
+      "locator_result": "Reviewed labels/roles/ready attrs correspond to installed source.",
+      "lost_response_limit": "Original UI mutation is issued once, response observed then interrupted via CDP; reconciliation is read-only. No Apply/retry proof."
+    },
+    "published_not_installed": {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "product_commit": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+      "note": "Newer producer/consumer composition exists; this audit neither imports it nor grants acceptance."
+    },
+    "sources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+        "blob": "0ac2fe8410ac1b59ff4aa66f34de135ba0fad191",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+        "blob": "e4257c9f091085ddc173fe669e2a290b597d179e",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "blob": "b1753d1621806d11079b5404c88f9f6dea6e0c94",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "blob": "3bee0f4326c1a65d3c0573695c3e4a1609b6c480",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+        "blob": "86d52447424073e543f4b7ae28581e851ffc208a",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "blob": "4343a573766552cfc0d36056caddb845efb3f25b",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "blob": "eb2f3741d45126427e4fd0060607bd5c16d8c22f",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "blob": "5a144bc373395a1ad2ce9eb7de256bcd94d0ed18",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/html.ts",
+        "blob": "e97f2b64609001264be11d1b2a5f972932ec439f",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+        "blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "blob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+        "blob": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "blob": "596512b4e12c094fd178ea845f4b560bbf23a348",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+        "blob": "e81c2292873600cf605bad9494e671d94d6c1de8",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+        "blob": "495169ccb0da1c775622907facf9b2ba13e0bb5c",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "blob": "34e1f60df0d31db15597cce55718506ffaa5b6b1",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "blob": "74fa17f6e08efeabe08820454bfde7cc309f36ad",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "blob": "a7c5c08519906e640a3506f7685d18b949346cc8",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+        "commit": "e8949be0e31952d5be4987c099003cd0b46e2add"
+      }
+    ],
+    "official_cdp_source": {
+      "repository": "ChromeDevTools/devtools-protocol",
+      "path": "pdl/domains/Fetch.pdl",
+      "blob": "69852c2dc0e2b56ccf65d345feb5562a8e1cccf5",
+      "url": "https://github.com/ChromeDevTools/devtools-protocol/blob/master/pdl/domains/Fetch.pdl"
+    }
+  }
+}
