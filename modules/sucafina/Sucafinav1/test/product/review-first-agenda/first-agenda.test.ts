@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url"
 import type { Browser } from "@playwright/test"
 import type { DomainProjection, PreservedReview } from "../../../product/contracts/context.ts"
 import type { PortResult } from "../../../product/contracts/ports.ts"
+import type { ReviewAgendaCatalog } from "../../../product/reviews/agenda-picker.ts"
 import type { ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
 import { captureChromiumCleanup } from "../wp07/chromium-cleanup.ts"
 import { expectUnchangedDomainState } from "../wp08/domain-state.ts"
@@ -72,12 +73,22 @@ test("first agenda uses three real domains, preserves edits through drift and re
     const view = page.locator('section[aria-label="Prepare review"]')
     const chosen = view.getByRole("list", { name: "Selected agenda", exact: true })
     const headings = view.getByRole("heading", { level: 3 })
+    const discover = async (labels: readonly string[]) => {
+      const pending = page.waitForResponse((response) => response.request().method() === "GET" && new URL(response.url()).searchParams.get("sf") === "review-agenda")
+      await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+      const response = await pending
+      const result = await response.json() as PortResult<ReviewAgendaCatalog>
+      expect({ http: response.status(), result }).toMatchObject({ http: 200, result: { status: "ok" } })
+      const options = available(result).options
+      for (const label of labels) expect(options.map((option) => option.label)).toContain(label)
+    }
     await playwright.expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeDisabled()
-    await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+    const initialTopics = ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions", "Forecast · Agenda candidate", "Request · Independent purchase", "OPEX Detail"]
+    await discover(initialTopics)
     await playwright.expect(view.getByRole("button", { name: "Add Forecast · Agenda candidate", exact: true })).toBeVisible()
     await playwright.expect(chosen.getByRole("listitem")).toHaveCount(0)
     expect(await f.storedReviews()).toEqual([])
-    for (const label of ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions", "Forecast · Agenda candidate", "Request · Independent purchase", "OPEX Detail"]) {
+    for (const label of initialTopics) {
       await view.getByRole("button", { name: `Add ${label}`, exact: true }).click()
     }
     await view.getByRole("button", { name: "Remove selected OPEX Detail", exact: true }).click()
@@ -111,7 +122,7 @@ test("first agenda uses three real domains, preserves edits through drift and re
     // retaining exact record choices and the order already chosen by the human.
     await view.getByLabel("Period end", { exact: true }).fill("2026-01-31")
     await view.getByLabel("Domain", { exact: true }).selectOption("dashboard")
-    await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+    await discover(["IT Operations"])
     await view.getByRole("button", { name: "Add IT Operations", exact: true }).click()
     await playwright.expect(view.getByRole("table")).toHaveCount(0)
     await playwright.expect(view.getByRole("button", { name: "Preserve this review", exact: true })).toHaveCount(0)
@@ -140,7 +151,7 @@ test("first agenda uses three real domains, preserves edits through drift and re
     await playwright.expect(view.getByRole("button", { name: "Preserve this review", exact: true })).toHaveCount(0)
     await view.getByLabel("Period end", { exact: true }).fill("2026-12-31")
     await view.getByLabel("Domain", { exact: true }).selectOption("planner")
-    await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+    await discover(["Forecast · Agenda candidate"])
     await view.getByRole("button", { name: "Refresh Forecast · Agenda candidate", exact: true }).click()
     expect(await f.storedReviews()).toEqual([])
     await view.getByRole("button", { name: "Load selection", exact: true }).click()
@@ -192,7 +203,7 @@ test("first agenda uses three real domains, preserves edits through drift and re
     // revocation. No manufactured projection or timing sleep supplies the race.
     await page.goto("https://example.test/product", { waitUntil: "domcontentloaded" })
     await view.getByLabel("Domain", { exact: true }).selectOption("dashboard")
-    await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+    await discover(["Talent Review"])
     await view.getByRole("button", { name: "Add Talent Review", exact: true }).click()
     await view.getByRole("button", { name: "Load selection", exact: true }).click()
     await playwright.expect(view).toContainText("PRIVATE_AGENDA_TALENT_NAME")
@@ -228,6 +239,12 @@ test("first agenda uses three real domains, preserves edits through drift and re
 test("discovery is per source, denies forged and private selectors, and keeps independent Procurement periods", async () => {
   const f = await createFirstAgendaFixture()
   try {
+    const http = await f.request("review-agenda", undefined, { start: f.period.start, end: f.period.end, domain: "planner" })
+    const httpCatalog = await http.json() as PortResult<ReviewAgendaCatalog>
+    expect({ http: http.status, result: httpCatalog }).toMatchObject({ http: 200, result: { status: "ok" } })
+    expect(available(httpCatalog).options.map((option) => [option.domain, option.label]).sort()).toEqual([
+      ["planner", "Forecast · Agenda baseline"], ["planner", "Forecast · Agenda candidate"],
+    ])
     const annual = available(await f.discover({ period: f.period }))
     const talent = annual.options.find((option) => option.item.kind === "dashboard" && option.item.topic === "talent-review")
     const request = annual.options.find((option) => option.item.kind === "procurement-request")

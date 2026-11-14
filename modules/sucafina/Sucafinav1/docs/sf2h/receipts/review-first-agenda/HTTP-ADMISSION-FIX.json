@@ -1,0 +1,32 @@
+{
+  "schema": "m39-http-admission-fix-v1",
+  "observedCandidate": "15787c499bfcb9e0eb41e864a99aeca97af43c07",
+  "producer": {
+    "commit": "c1bd1c91b0e0d32db3074408e815e36107384073",
+    "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+    "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+  },
+  "changedFile": "apps/cli/src/sucafina-product/review-agenda-services.ts",
+  "diagnosis": {
+    "entry": "requestFor returns undefined until validate consumes the admitted UI lease; the old short-circuit checked requestFor first and therefore returned 403 before discovery.",
+    "egress": "validate consumes exactly once; invoking it again after discovery would deny a valid completed read."
+  },
+  "correction": {
+    "entry": "validate once, then requestFor equality and revalidate",
+    "egress": "requestFor equality, matchesIntent(context, operation, inputDigest), and revalidate; no second validate"
+  },
+  "producerContract": {
+    "matchesIntent": "matchesIntent(context: TrustedUiContext, operation: string, inputDigest: string): boolean",
+    "matchesIntentSemantics": "Returns true only for a current consumed admission with the same operation and input digest",
+    "requestForSemantics": "Returns original Request only for a current consumed admission",
+    "validateSemantics": "Rejects consumed admissions and atomically consumes one after asynchronous authority revalidation"
+  },
+  "verification": {
+    "method": "Static source inspection via GitHub MCP at immutable C9; local source patch only",
+    "localTests": "NOT_RUN",
+    "localServers": "NOT_RUN",
+    "remoteMutationsByHelper": false,
+    "testAgentNotified": true
+  },
+  "followUp": "The test owner checks the real HTTP response status and parsed catalog before asserting the visible Forecast action; root publishes W2 and controls deduplicated surgical Actions."
+}

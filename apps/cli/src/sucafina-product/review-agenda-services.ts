@@ -312,10 +312,10 @@ export function createSfReviewAgendaHttp(input: {
     const admitted = await input.authority.ui.admit(request, "sf_review_prepare", digest)
     if (admitted.status !== "ok") return json({ status: "denied", reason: "agenda-authority-unavailable" }, 403)
     try {
-      if (input.authority.ui.requestFor(admitted.value) !== request || !await input.authority.ui.validate(admitted.value, "sf_review_prepare", digest) ||
+      if (!await input.authority.ui.validate(admitted.value, "sf_review_prepare", digest) || input.authority.ui.requestFor(admitted.value) !== request ||
         !await input.authority.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "agenda-authority-unavailable" }, 403)
       const result = await input.agenda.discover(query, admitted.value)
-      if (request.signal.aborted || input.authority.ui.requestFor(admitted.value) !== request || !await input.authority.ui.validate(admitted.value, "sf_review_prepare", digest) ||
+      if (request.signal.aborted || input.authority.ui.requestFor(admitted.value) !== request || !input.authority.ui.matchesIntent(admitted.value, "sf_review_prepare", digest) ||
         !await input.authority.ui.revalidate(admitted.value))
         return json({ status: "denied", reason: "agenda-authority-unavailable" }, 403)
       return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "unavailable" || result.status === "failed" ? 503 : 409)
