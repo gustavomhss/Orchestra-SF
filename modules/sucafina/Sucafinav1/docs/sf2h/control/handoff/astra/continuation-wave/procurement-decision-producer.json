@@ -1,0 +1,49 @@
+{
+  "number": 37,
+  "id": "procurement-decision-producer",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": "S2-A / Procurement source continuation supporting S4-A",
+  "actor_pack": "execution/actors/S2-A.json",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "expected_head": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+  "lease_epoch": "procurement-decision-browser37",
+  "authority": "Mission24 terminal explicitlyended source authority. Explicit newbounded continuation, not silenceinference. Readterminal/head and reconcile anynewauthority. Otherlive writers33integrator/32C12/34persistence/35Atlastests/36Reports excluded.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts (new)",
+    "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts (new)",
+    "apps/cli/src/sucafina-product/procurement-scenario-services.ts (new)",
+    "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/"
+  ],
+  "inputs": {
+    "source": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+    "Decisions31": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+    "finding_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/FINDINGS.json",
+    "C9": "c1bd1c91b0e0d32db3074408e815e36107384073",
+    "C12source_observed": "8b7497a271c5afbd8604927f75b2a86a4f960bae"
+  },
+  "mission": "Implement missing pre-choice Procurement scenario producer and typedhumancontrols, plus approval-compatible preparation using existingcanonicaldomaincommands/policies, toresolve M31-PRECHOICE-PROCUREMENT andM31-FINANCIAL-APPROVAL. Deliver coherentproductioncode/read-onlypreview+C10provenance/persistence/replay+completeassemblypatches andsurgicalproof; no mockfinancialproducer or diagnostic-onlyreport.",
+  "facts": "Current scenario-preparation binds selectedamountreplace toRequests/save in draft/pr_rejected. FormalApprove requirespendingstage and subsequentcommand inadmissible. ExistinginitialPlanneralternativeUI operations=[] is correctfor its currentpath. Genericwrapper reports external-operation-cost-unresolved/totalnull; swappingwrapper orcallingpostchoiceexecutorbeforechoice isnotprechoicesimulation.",
+  "acceptance": [
+    "ReadcanonicalWP04/WP11 contracts/C10/C12, realProcurementdomainactions/approvalroles/stages and existingAPIs beforedesign. Decide compatiblecompositionwithinexistingpolicies. Do notchange thresholds/roles/approvalladders or admissiblestates, norapproveoldamount justtopass.",
+    "Trueprechoice read-onlysimulation usescurrent authorizedProcurementoperation/source witnesses andcanonicalcalculator, C10basis/assessment/currency/period/units, truthfulcoverage/pending, resultpersistence/replay andexacttypedoperation. No mutate/revertpreview or postchoicepreparedexecutorcalledbeforechoice.",
+    "Typedhumancontrols capture explicitoperation/target/amount/currency/period andauthorizedsource fromrealUI, produceridentity/resultrefs frozenintoactualchoice viaexistingports. No freeforminternalrefs, JSONpaste, fictitiouscosts orhiddenzero.",
+    "Proposedamount and exactoperation mustbe theones reviewed/financiallyapprovedunderexistingdomainpolicy. Preparedcommandrequirescurrentcompatibleapproval/version/source andsamechosenintent; source/proposal/approvaldrift invalidatesorrequiresnewhumanreview. ChoiceandApplycheckbox notformalapproval. No otherApplyimplementation.",
+    "Preserve OPSREV02 no-op/stage/postcondition protections andC12normalCAS/idempotency/originalreceipt/recovery. Testscover oldapproval/differentamount, staleapproval/target/version, wrongactor/incarnation, missingcost, previewnoeffects, exactpositivepath andoneeffect/receipt.",
+    "If canonicalpolicies genuinelyprovide no authorizedcompatiblecommand, complete independentprechoiceproducer anddeliver exactpolicy/contractcontradiction+minimumrequireddecision; do notimplementfinancialpolicychange orfakeapproval. Thisdoesnotwaive missingcriterion.",
+    "Completehost/router/descriptor/chooser/calculation/resultstore integrationpatches withpreimages/postimages/consumer33; do not editsharedsource orprotectedpubliccontracts. RequestconsumerACK andboundedsurgicalproof actualnewassembledinput."
+  ],
+  "exclusions": "No edits product/procurement/decision-host.ts,decision-http.ts,c12.ts, product/decisions/apply.ts or UIdecision-apply.ts (32); no DecisionHTTP/UIchoice/alternativeexistingfiles, sharedhost/router, persistence34, Report36, Atlas35, workflow/config26, engines/Procurementpolicy/businessdomainrules orC01–C17 normativecontracts. Outsidepaths=completepatchtoownerunderownreceipts.",
+  "testing": "SurgicalGitHubActions viaexistingauthorizedinterface/dispatcher,dedup/reattach; no localproducttests/servers, epic/fullsuite,sleeps,budgetincrease,skip or weakened oracles. Actualtypecheck/guardsperAGENTS; testswithfixtures accuratelylabelednotnative/AM. No installingservices/scannerfake.",
+  "handoff": "ReadAGENTS,pinnedSTART/WORKFLOW/COMMON,fullS2Apack+appendices andDecisions31normativeinputs. Samebranch/PR23 GitHubMCP CAS, no gh/push/force/devmerge/deploy/Azure/credentials/messages/enginechanges/restart/newGoal/supervisor/dispatcher. Delivercompletecode/patches/tests, criteria, input/outputSHAs,W/S/results, blockers andterminalhandoff. Consumer33soleintegrator; S0finalacceptance preserved. Preserve15WPs74tasks17contracts1610criteria/T0."
+}
