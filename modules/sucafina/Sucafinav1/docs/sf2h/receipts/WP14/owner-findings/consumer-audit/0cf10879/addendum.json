@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "mode": "Read-only incremental source/CI audit; no product edits, no run dispatched",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pr": 29,
+  "pin": "0cf10879337bf1e4a4dfd0dbde0b9c259cb51d23",
+  "tree": "78a1976c1c8831121fda75efad95ebaab6f2f425",
+  "previous_pin": "f075e9824b7d8aed50b7f42c597528ef198177db",
+  "previous_tree": "2751625f28928baf371d39576fe46777aa81f74e",
+  "compare": {
+    "status": "ahead",
+    "ahead_by": 2,
+    "behind_by": 0,
+    "changed_files": 90,
+    "commits": [
+      {
+        "sha": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+        "tree": "ffae7f1279c8c7af7b98f19f3ebc04960db75cc7",
+        "parents": [
+          "f075e9824b7d8aed50b7f42c597528ef198177db"
+        ],
+        "subject": "WP10 W14: close review fences and compose published calculation contracts"
+      },
+      {
+        "sha": "0cf10879337bf1e4a4dfd0dbde0b9c259cb51d23",
+        "tree": "78a1976c1c8831121fda75efad95ebaab6f2f425",
+        "parents": [
+          "78f80881e94913b9b211bad7d17fbc95467ce0d7"
+        ],
+        "subject": "WP10 W15: repair reviewed authority and BI browser contraproofs"
+      }
+    ],
+    "metadata": "increment-metadata.json"
+  },
+  "sources": {
+    "snapshots": 13,
+    "manifest": "source-manifest.json",
+    "verification": "Every snapshot verified using actual UTF-8 bytes against Git blob SHA; SHA256 and byte count included."
+  },
+  "findings": [
+    {
+      "id": "WP14-CONSUMER-01",
+      "status": "PRODUCTION_WIRING_REMAINS_PRESENT",
+      "detail": "Real memory/outcome/review composition is preserved. No new nonempty WP14 outcome-in-review execution receipt was added by the inspected increment."
+    },
+    {
+      "id": "WP14-CONSUMER-02",
+      "status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "business-services still omits workSignals and the delta introduces no live createSfWorkSignalList/createSfWorkRefIssuer composition."
+    },
+    {
+      "id": "WP14-CONSUMER-03",
+      "status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "business-services:362-374 still derives decisionType only from record/preparedChanges, omitting canonical deriveAuthorizedRecallFeatures and Planner calculation coverage. Existing canonical-feature patch remains relevant."
+    },
+    {
+      "id": "WP14-CONSUMER-04",
+      "status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "business-services:438-453 still has no native scoped candidateAccess producer or wiring; the unchanged lexical Atlas scope is UI only. Host-only seam proposal remains required."
+    },
+    {
+      "id": "WP14-CONSUMER-05",
+      "status": "OPEN_REFINED_FOR_LEXICAL_PROOF_UNCHANGED",
+      "detail": "The f075 completed-result lexical fence is unchanged. No new decideSfRecallInvalidation consumer. No stale-data leak is asserted from that absence."
+    },
+    {
+      "id": "WP14-CONSUMER-06",
+      "status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "memory-services and decision-materiality-services have no delta; original fresh/equal source requirement still prevents the specified actual replacement reevaluation path."
+    },
+    {
+      "id": "WP14-CONSUMER-07",
+      "status": "PRODUCTION_WIRING_REMAINS_PRESENT",
+      "detail": "Review/portfolio history composition remains. Changed payload verifier fixture and C17 source-chain test do not demonstrate nonempty WP14 outcome consumer behavior or native publication."
+    },
+    {
+      "id": "WP14-CONSUMER-08",
+      "status": "PRODUCTION_WIRING_EXTENDED_EXECUTION_PENDING",
+      "detail": "C17 now composes canonical nested replay/source closure through business-services and result/request stores. The actual Atlas adapter/scope sources are unchanged, and performance at this head remains unexecuted evidence in this audit. Final follow-up: direct Planner/Atlas recall latency is now resolved on f075 by run 43580252381, including both formerly failing chains; current 0cf source changes still lack exact execution evidence from this run."
+    },
+    {
+      "id": "WP14-CONSUMER-09",
+      "status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "W14 intake receipt retains C07-NATIVE-ADAPTER blocked with no public executor/five routine descriptors. No native/global claim."
+    }
+  ],
+  "planner_timeout_assessment": {
+    "status": "RESOLVED_ON_F075_FOR_EXACT_DIRECT_ATLAS_RECALL_CHAINS",
+    "source_change": "Canonical nested replay and calculation-closure verification were expanded; the lexical Atlas scope and actual Atlas memory implementation did not change in this increment.",
+    "planner_test_delta": "Only an authorizedProjection.components type-narrowing guard; direct memory.recall assertions and 105000/120000 deadlines are unchanged.",
+    "scope_distinction": [
+      "Direct reopened.atlas.memory.recall checks canonical records; it does not call WP14 business.caseRecall ranking or close missing Planner feature derivation.",
+      "New calculation-ancestry-composition uses real SQLite/C08/Planner and reopens nested ledger/calculation evidence; initializeAtlas(undefined) means no real scanner memory write/read is exercised by that test.",
+      "Historical-memory uses real scanner/CaseRecall adapter in its existing structural integration test; only payload-fixture construction changed. No model or Session executes, and no native publication authority exists.",
+      "No new source test is promoted to PASS without matching hosted execution on its exact candidate."
+    ],
+    "initial_status": "NEW_HEAD_NOT_EXECUTION_PROVEN",
+    "new_head_status": "0cf10879_NOT_EXECUTION_PROVEN_BY_THIS_RUN",
+    "final_evidence": "product-final-summary.json",
+    "target_tests": [
+      {
+        "line": 1234,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner calculation recalls the actual reopened Atlas record and does not append it twice",
+        "duration_ms": 45206.01
+      },
+      {
+        "line": 1301,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner overlapping replays and Atlas recall disclose nothing after principal revocation",
+        "duration_ms": 45544.43
+      }
+    ]
+  },
+  "intake": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W14/intake-pins.json",
+    "effective_foreign_pin_entries": 258,
+    "wp14_effective_entries": 14,
+    "wp14_pin": "2fb7e9c792327725384d99d656cc44b232ddc485",
+    "wp14_pr": 36,
+    "current_wp14_pr38_not_consumed": true
+  },
+  "patches": {
+    "canonical_features": "0001 remains semantically applicable; transplant against current business-services blob 0d09eac4610a1f18c50f38094ada5a921e2ec237 with normal context review.",
+    "native_candidate_scope": "0002 remains proposal only, blocked on real owner-scoped authority producer and current producer tests.",
+    "signal_registry_host_scope": "0003 owner proposal remains independent of the unchanged workSignals gap.",
+    "procurement_compatibility": "Current Object.assign callable resolver remains compatible with WP14 ReturnType<typeof createProcurementSourceResolver>['resolve']; no foreign edits required."
+  },
+  "ci": {
+    "product": {
+      "run_id": 43580252381,
+      "job_id": 132403235716,
+      "snapshot": "dd648c423ab97fbe6e806b620057a328a5816b5f",
+      "candidate_parent": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "status_observed": "completed",
+      "conclusion": "failure",
+      "observation": "product-final-status.json",
+      "result": "Overall failure: 198 pass, 12 fail, 2 skip. All 16 Planner calculation tests pass, including the exact reopen-and-recall and overlapping-revocation regressions on f075. No result transfer to 0cf.",
+      "updated_at": "2026-11-14T10:01:56Z",
+      "summary": "product-final-summary.json"
+    },
+    "owner_w14_receipt": {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W15/changes.json",
+      "run_id": 43582254372,
+      "job_id": 132409279269,
+      "snapshot": "0f895a5086dd270f024aa291b876d1a4cc9677f6",
+      "reported_conclusion": "failure",
+      "verification": "Published owner receipt only; this audit did not download that job/artifact or count diagnostics.",
+      "w15_acceptance": "Exact successor hosted evidence and reviews pending; native/global not claimed."
+    },
+    "epic_run": false,
+    "local_product_execution": false,
+    "initial_product_observation": {
+      "run_id": 43580252381,
+      "job_id": 132403235716,
+      "snapshot": "dd648c423ab97fbe6e806b620057a328a5816b5f",
+      "candidate_parent": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "status_observed": "in_progress",
+      "conclusion": null,
+      "observation": "product-run-status.json",
+      "result": "No completed run outcome available; cannot transfer f075 evidence to 0cf head."
+    }
+  },
+  "limits": [
+    "Historical audits and findings preserved without overwrite.",
+    "No mutation of foreign branches or product source by this audit.",
+    "No scanner/restart/native acceptance inferred from catalog, generated fixtures, source inspection, or successful structure decoding."
+  ],
+  "final_run_chronology": {
+    "observed_at_utc": "2026-11-14T10:21:27.613Z",
+    "run_updated_at": "2026-11-14T10:01:56Z",
+    "document": "FINAL_RUN_ADDENDUM.md",
+    "summary": "product-final-summary.json",
+    "raw_log": "job-132403235716.log",
+    "raw_log_sha256": "fc1f7b522623b9f8d1a89535ce37873d6d1a572fec698a0832a8427ec0ef23a7",
+    "overall": "failure",
+    "planner_file": "16 pass, 0 fail, 0 skip",
+    "omni": "pass: 38 spawns, 0 delegated; 22 declared tests",
+    "features_and_native_findings": "unchanged; separate from direct Atlas recall"
+  }
+}

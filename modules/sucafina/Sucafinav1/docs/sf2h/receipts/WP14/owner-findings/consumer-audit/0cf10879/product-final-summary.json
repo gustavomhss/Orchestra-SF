@@ -1,0 +1,677 @@
+{
+  "schema_version": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "pr": 29,
+  "observed_at_utc": "2026-11-14T10:21:27.613Z",
+  "retrieval": "GitHub MCP fetch_workflow_run_jobs, fetch_workflow_job_logs and fetch actions/runs/43580252381",
+  "run": {
+    "id": 43580252381,
+    "status": "completed",
+    "conclusion": "failure",
+    "updated_at": "2026-11-14T10:01:56Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580252381",
+    "snapshot": "dd648c423ab97fbe6e806b620057a328a5816b5f",
+    "snapshot_tree": "ac9a7f96aa0f8bd6b30200c5628c37058e8176b0",
+    "candidate_parent": "f075e9824b7d8aed50b7f42c597528ef198177db",
+    "candidate_tree": "2751625f28928baf371d39576fe46777aa81f74e",
+    "snapshot_delta": [
+      ".ci-run.json"
+    ],
+    "request_sha256": "bc01cc977b331e5538d4dad42e38048c943a2747fde600eb7cee580fd05c371b"
+  },
+  "job": {
+    "id": 132403235716,
+    "status": "completed",
+    "conclusion": "failure",
+    "failed_step": "Run tests",
+    "cleanup_job": {
+      "id": 132412438453,
+      "conclusion": "success"
+    }
+  },
+  "totals": {
+    "pass": 198,
+    "fail": 12,
+    "skip": 2,
+    "tests": 212,
+    "files": 24,
+    "expect_calls": 2163,
+    "duration_seconds": 2274.65,
+    "log_lines": [
+      2460,
+      2461,
+      2462,
+      2463,
+      2464
+    ]
+  },
+  "omni": {
+    "verdict": "pass",
+    "declared_tests": 22,
+    "native_omni_spawns": 38,
+    "delegated_spawns": 0,
+    "declaring_files": [
+      "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts"
+    ],
+    "nonce": "61ba1e84741e852d5655bf54b0582c01",
+    "log_line": 2457,
+    "limitation": "Omni process-spawn control; not native Session/model/skill acceptance."
+  },
+  "planner": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+    "blob_at_f075": "2bc069d03fc39cede7635c94e0cf3f09f7f26882",
+    "pass": 16,
+    "fail": 0,
+    "skip": 0,
+    "cooperative_deadline_ms": 105000,
+    "bun_test_deadline_ms": 120000,
+    "results": [
+      {
+        "line": 1182,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors",
+        "duration_ms": 12000.01
+      },
+      {
+        "line": 1213,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner calculation survives SQLite and Atlas reopen with continuity, original and ancestor context",
+        "duration_ms": 65272.49
+      },
+      {
+        "line": 1234,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner calculation recalls the actual reopened Atlas record and does not append it twice",
+        "duration_ms": 45206.01
+      },
+      {
+        "line": 1256,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner calculation rejects foreign case routing and all six corrupted durable Atlas capture fields",
+        "duration_ms": 43484.84
+      },
+      {
+        "line": 1280,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner continuity fences membership changes during a real environment await and recovers after restoration",
+        "duration_ms": 42301.1
+      },
+      {
+        "line": 1301,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner overlapping replays and Atlas recall disclose nothing after principal revocation",
+        "duration_ms": 45544.43
+      },
+      {
+        "line": 1318,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner calculation becomes unavailable after its real persisted source changes",
+        "duration_ms": 16587.11
+      },
+      {
+        "line": 1336,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects source drift after a completed calculation proof",
+        "duration_ms": 17912.94
+      },
+      {
+        "line": 1354,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects membership drift after a completed calculation proof",
+        "duration_ms": 18587.93
+      },
+      {
+        "line": 1372,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects capture drift after a completed calculation proof",
+        "duration_ms": 18891.55
+      },
+      {
+        "line": 1390,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects coverage drift after a completed calculation proof",
+        "duration_ms": 18490.34
+      },
+      {
+        "line": 1408,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects selector drift after a completed calculation proof",
+        "duration_ms": 18122.5
+      },
+      {
+        "line": 1426,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects clock drift after a completed calculation proof",
+        "duration_ms": 38524.82
+      },
+      {
+        "line": 1444,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects principal drift after a completed calculation proof",
+        "duration_ms": 37083.46
+      },
+      {
+        "line": 1462,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner reopened recall rejects lease drift after a completed calculation proof",
+        "duration_ms": 37233.41
+      },
+      {
+        "line": 1481,
+        "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "status": "pass",
+        "name": "Planner recall proof stays lexical while an independent same-call calculation resolves in parallel",
+        "duration_ms": 48531.26
+      }
+    ],
+    "target_phases": [
+      {
+        "line": 1214,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "initialized-real-store-producers-and-scanner",
+        "elapsedMs": 628
+      },
+      {
+        "line": 1215,
+        "event": "SF_COMPOSITION_PHASE",
+        "fixture": "planner-calculation.reopen-and-recall",
+        "phase": "calculation.produce",
+        "state": "started",
+        "elapsedMs": 628
+      },
+      {
+        "line": 1216,
+        "event": "SF_COMPOSITION_PHASE",
+        "fixture": "planner-calculation.reopen-and-recall",
+        "phase": "calculation.produce",
+        "state": "returned",
+        "phaseMs": 2457,
+        "elapsedMs": 3085,
+        "aborted": false
+      },
+      {
+        "line": 1217,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "persisted-and-replayed-calculation",
+        "elapsedMs": 3085
+      },
+      {
+        "line": 1218,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "initial",
+        "sequence": 1,
+        "state": "started"
+      },
+      {
+        "line": 1219,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "initial",
+        "sequence": 1,
+        "state": "returned",
+        "elapsedMs": 1403,
+        "completed": 1,
+        "entered": 1
+      },
+      {
+        "line": 1220,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "initial",
+        "sequence": 2,
+        "state": "started"
+      },
+      {
+        "line": 1221,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "initial",
+        "sequence": 2,
+        "state": "returned",
+        "elapsedMs": 1434,
+        "completed": 2,
+        "entered": 2
+      },
+      {
+        "line": 1222,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "initial",
+        "sequence": 3,
+        "state": "started"
+      },
+      {
+        "line": 1223,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "initial",
+        "sequence": 3,
+        "state": "returned",
+        "elapsedMs": 1474,
+        "completed": 3,
+        "entered": 3
+      },
+      {
+        "line": 1224,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "real-atlas-write-committed",
+        "elapsedMs": 7942
+      },
+      {
+        "line": 1225,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "reopened-sqlite-and-authority",
+        "elapsedMs": 7950
+      },
+      {
+        "line": 1226,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "starting-reopened-calculation-resolve-before-recall",
+        "elapsedMs": 7970
+      },
+      {
+        "line": 1227,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "reopened",
+        "sequence": 4,
+        "state": "started"
+      },
+      {
+        "line": 1228,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "reopened",
+        "sequence": 4,
+        "state": "returned",
+        "elapsedMs": 7949,
+        "completed": 4,
+        "entered": 4
+      },
+      {
+        "line": 1229,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "finished-reopened-calculation-resolve-before-recall",
+        "elapsedMs": 16088
+      },
+      {
+        "line": 1230,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "starting-real-atlas-recall",
+        "elapsedMs": 16088
+      },
+      {
+        "line": 1231,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "reopened",
+        "sequence": 5,
+        "state": "started"
+      },
+      {
+        "line": 1232,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "reopen-and-recall",
+        "generation": "reopened",
+        "sequence": 5,
+        "state": "returned",
+        "elapsedMs": 7871,
+        "completed": 5,
+        "entered": 5
+      },
+      {
+        "line": 1233,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "reopen-and-recall",
+        "phase": "real-atlas-recall-authorized",
+        "elapsedMs": 45070
+      },
+      {
+        "line": 1281,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "initialized-real-store-producers-and-scanner",
+        "elapsedMs": 651
+      },
+      {
+        "line": 1282,
+        "event": "SF_COMPOSITION_PHASE",
+        "fixture": "planner-calculation.overlapping-revocation",
+        "phase": "calculation.produce",
+        "state": "started",
+        "elapsedMs": 652
+      },
+      {
+        "line": 1283,
+        "event": "SF_COMPOSITION_PHASE",
+        "fixture": "planner-calculation.overlapping-revocation",
+        "phase": "calculation.produce",
+        "state": "returned",
+        "phaseMs": 2621,
+        "elapsedMs": 3273,
+        "aborted": false
+      },
+      {
+        "line": 1284,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "persisted-and-replayed-calculation",
+        "elapsedMs": 3273
+      },
+      {
+        "line": 1285,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "initial",
+        "sequence": 1,
+        "state": "started"
+      },
+      {
+        "line": 1286,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "initial",
+        "sequence": 1,
+        "state": "returned",
+        "elapsedMs": 1595,
+        "completed": 1,
+        "entered": 1
+      },
+      {
+        "line": 1287,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "initial",
+        "sequence": 2,
+        "state": "started"
+      },
+      {
+        "line": 1288,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "initial",
+        "sequence": 2,
+        "state": "returned",
+        "elapsedMs": 1555,
+        "completed": 2,
+        "entered": 2
+      },
+      {
+        "line": 1289,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "initial",
+        "sequence": 3,
+        "state": "started"
+      },
+      {
+        "line": 1290,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "initial",
+        "sequence": 3,
+        "state": "returned",
+        "elapsedMs": 1619,
+        "completed": 3,
+        "entered": 3
+      },
+      {
+        "line": 1291,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "real-atlas-write-committed",
+        "elapsedMs": 8599
+      },
+      {
+        "line": 1292,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "reopened-sqlite-and-authority",
+        "elapsedMs": 8605
+      },
+      {
+        "line": 1293,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "starting-reopened-calculation-resolve-before-overlap",
+        "elapsedMs": 8625
+      },
+      {
+        "line": 1294,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "reopened",
+        "sequence": 4,
+        "state": "started"
+      },
+      {
+        "line": 1295,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "reopened",
+        "sequence": 4,
+        "state": "returned",
+        "elapsedMs": 8067,
+        "completed": 4,
+        "entered": 4
+      },
+      {
+        "line": 1296,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "finished-reopened-calculation-resolve-before-overlap",
+        "elapsedMs": 16865
+      },
+      {
+        "line": 1297,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "starting-real-atlas-recall-before-overlap",
+        "elapsedMs": 16865
+      },
+      {
+        "line": 1298,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "reopened",
+        "sequence": 5,
+        "state": "started"
+      },
+      {
+        "line": 1299,
+        "event": "SF_CALCULATION_RESOLUTION",
+        "fixture": "overlapping-revocation",
+        "generation": "reopened",
+        "sequence": 5,
+        "state": "returned",
+        "elapsedMs": 8067,
+        "completed": 5,
+        "entered": 5
+      },
+      {
+        "line": 1300,
+        "event": "SF_CALCULATION_PHASE",
+        "fixture": "overlapping-revocation",
+        "phase": "reopened-positive-before-overlapping-revocation",
+        "elapsedMs": 45406
+      }
+    ],
+    "prior_finding": {
+      "run_id": 43564553695,
+      "job_id": 132355419787,
+      "failures": [
+        "reopen-and-recall",
+        "overlapping-revocation"
+      ],
+      "disposition": "RESOLVED_ON_F075_FOR_THE_TWO_EXACT_DIRECT_ATLAS_RECALL_CHAINS",
+      "evidence": "Both exact tests now pass within the unchanged 105000ms cooperative and 120000ms Bun deadlines. The positive re-opened record and duplicate-emit checks execute; the interleaved revocation negative also executes.",
+      "limits": [
+        "Overall job remains failure because other files fail.",
+        "The request tests f075, not 0cf10879.",
+        "Direct Atlas memory.recall is not WP14 business.caseRecall ranking; missing canonical Planner features remain open.",
+        "UI lexical proof scope and structural integration do not supply native precedent candidateAccess or a SessionV2/model/skill proof."
+      ]
+    }
+  },
+  "failures": [
+    {
+      "line": 924,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "duration_ms": 10376.43,
+      "reason": "Expected case option containing 'Review the action'; received 'Selecione um caso'."
+    },
+    {
+      "line": 993,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "duration_ms": 16042.65,
+      "reason": "Playwright case selectOption('Review the action') timed out; 15000ms for draft conflict, 30000ms for the four remaining selection cases."
+    },
+    {
+      "line": 1025,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard discovery fences participant removal after options were assembled",
+      "duration_ms": 40.97,
+      "reason": "Expected stale; received ok with empty cases/changes/drafts/preparations and permission fields."
+    },
+    {
+      "line": 1054,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "duration_ms": 31027.03,
+      "reason": "Playwright case selectOption('Review the action') timed out; 15000ms for draft conflict, 30000ms for the four remaining selection cases."
+    },
+    {
+      "line": 1085,
+      "source_file": "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "status": "fail",
+      "name": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+      "duration_ms": 31041.63,
+      "reason": "Playwright case selectOption('Review the action') timed out; 15000ms for draft conflict, 30000ms for the four remaining selection cases."
+    },
+    {
+      "line": 1114,
+      "source_file": "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "status": "fail",
+      "name": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+      "duration_ms": 30993.88,
+      "reason": "Playwright case selectOption('Review the action') timed out; 15000ms for draft conflict, 30000ms for the four remaining selection cases."
+    },
+    {
+      "line": 1143,
+      "source_file": "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "status": "fail",
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "duration_ms": 31132.47,
+      "reason": "Playwright case selectOption('Review the action') timed out; 15000ms for draft conflict, 30000ms for the four remaining selection cases."
+    },
+    {
+      "line": 1160,
+      "source_file": "Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 1.23,
+      "reason": "WP01 browser fixture rejected selection because browser-lifecycle.test.ts was not the explicit last file; requires integrator-owned lifecycle."
+    },
+    {
+      "line": 2209,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+      "duration_ms": 105012.28,
+      "reason": "Alternative-selection fixture exceeded its 105000ms cooperative deadline."
+    },
+    {
+      "line": 2248,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+      "duration_ms": 105005.71,
+      "reason": "Alternative-selection fixture exceeded its 105000ms cooperative deadline."
+    },
+    {
+      "line": 2361,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "annual 2026 canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+      "duration_ms": 105008.27,
+      "reason": "Alternative-selection fixture exceeded its 105000ms cooperative deadline."
+    },
+    {
+      "line": 2398,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "annual 2026 comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+      "duration_ms": 105005.59,
+      "reason": "Alternative-selection fixture exceeded its 105000ms cooperative deadline."
+    }
+  ],
+  "skipped": [
+    {
+      "line": 848,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "skip",
+      "name": "rejects foreign UID directory (requires root fixture privileges)"
+    },
+    {
+      "line": 849,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "skip",
+      "name": "rejects foreign UID database (requires root fixture privileges)"
+    }
+  ],
+  "logs": {
+    "raw": "job-132403235716.log",
+    "raw_sha256": "fc1f7b522623b9f8d1a89535ce37873d6d1a572fec698a0832a8427ec0ef23a7",
+    "raw_bytes": 344268,
+    "raw_lines": 2519,
+    "encoding": "UTF-8, original BOM and terminal escapes preserved",
+    "extracted": "planner-final-evidence.log",
+    "all_results": "product-test-results.json",
+    "extracted_sha256": "d9b300fb07c9f5ecd61e6b61a3c94342c20f532d6baa2753dfe7e8eff78741c6",
+    "extracted_bytes": 9632,
+    "all_results_sha256": "2dee9ced1ece5c68a114e5c4bf0798e88c3a87e675a420e962703a2f6456bd24",
+    "all_results_bytes": 58469
+  },
+  "newer_head": {
+    "sha": "0cf10879337bf1e4a4dfd0dbde0b9c259cb51d23",
+    "tree": "78a1976c1c8831121fda75efad95ebaab6f2f425",
+    "status": "NOT_TESTED_BY_THIS_RUN"
+  },
+  "actions": {
+    "product_code_edited": false,
+    "product_tests_run_locally": false,
+    "remote_mutations": false,
+    "new_ci_runs_dispatched": 0
+  }
+}

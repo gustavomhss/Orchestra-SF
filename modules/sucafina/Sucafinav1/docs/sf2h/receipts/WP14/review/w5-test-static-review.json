@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/wp14_signals_outcomes",
+  "reported_to": ["/root", "/root/wp14_requirements"],
+  "mode": "Independent read-only static review of four newly added W5 tests",
+  "product_execution": false,
+  "typecheck_execution": false,
+  "source_mutation": false,
+  "status": "NO_CONCRETE_STATIC_BLOCKER_FOUND_CI_REQUIRED",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "git_blob": "54438ff168810a69af2ef71ce2df149805ee78a8",
+      "sha256": "42ba92e8f142de630074a9f70b52b778f6e8396ccd56d90abd1cea95ddcd0025"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "git_blob": "d870d96e0fc5440593d0fead7d9c9fd837cd506e",
+      "sha256": "9ec265bf2fb14a972d99265494fc545c39ab3fc2fc0955eb1f470dea5cc4ded4"
+    }
+  ],
+  "findings": [],
+  "observations": [
+    "The expected reasons for all eleven scope dimensions match the real helpers; reauthorize remains true on invalidation and reuse.",
+    "Substitutive import is represented by a coherent historical reference with changed incarnation; unrelated dependency changes are filtered from the envelope.",
+    "The deterministic recall fixture calls the actual mapper for each coherent case/event/bundle and recalculates owner, entry and projection digest; equal matches sort a-prior before z-prior.",
+    "Missing AtlasTrace reaches the authorized wrapper's fail-closed catch; forged module, operation and record digest are refused even with otherwise-successful authorization callbacks."
+  ],
+  "limits": [
+    "The import test is a pure invalidation-boundary test, not execution of the real import producer.",
+    "The provenance negatives use controlled callbacks; they are not actual Atlas, native Session, SkillLoad or AM05 witnesses.",
+    "Static review does not replace hosted product execution or the package typecheck."
+  ]
+}

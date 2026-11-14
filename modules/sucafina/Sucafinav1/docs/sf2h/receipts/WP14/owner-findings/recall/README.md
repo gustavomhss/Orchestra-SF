@@ -62,3 +62,62 @@ No mesmo run, `reopen-and-context` passou em cerca de 85973 ms, com cálculo res
 A chamada que falha é diretamente `reopened.atlas.memory.recall(...)`; ela não passa por `createSfCaseRecall`, `featuresForCase` nem pelo ranking WP14. Portanto o patch de features não é uma correção demonstrada para esse deadline. O pin contém repetição custosa das resoluções/continuidade de calculation nas passagens de autorização do host. Cabe ao WP10 instrumentar e eliminar recomputação dentro de uma única passagem, conservando os fences antes/depois, o recheck após revogação e os deadlines existentes. Cache entre chamadas, remoção de ancestry/revalidação, aumento do prazo ou retorno de catálogo não constituem solução.
 
 Para encerrar este finding, o proprietário precisa publicar o pin e uma execução dos dois testes que falharam, com o mesmo scanner real e SQLite real. O WP14 não declara esse resultado aprovado.
+
+## 4. Persistência das registries — proposta de separação WP14/WP10
+
+`0003-host-memory-registry-ownership.patch` materializa o finding de `WP14.INV.01` e `WP14.INV.40`: as implementações herdadas de `signal-registry.ts` e `outcome-selection.ts` chamam `state.read`/`state.transaction` e escrevem em `preferences` dentro do namespace WP14. A proposta transfere essas implementações para adaptadores de `product/host-binding`, mantendo contratos de porta, seleções, bindings e prefixos em `product/decision-memory`. Os critérios relacionados de T04 continuam sujeitos à revisão do proprietário. O patch não altera o plano aprovado nem atribui autoria, ACL ou permissão de merge a alguém.
+
+**Estado: proposta para revisão S0/WP10, não aplicada e não pronta para produção.** Nenhum arquivo de produto foi alterado para gerar este artefato; não houve `git apply`, teste local de produto, typecheck ou CI deste patch. Os 11 paths propostos, os blobs Git e os SHA256 anteriores/propostos estão em `0003-host-memory-registry-ownership.sources.json`. O patch contém duas adições e nove modificações; a maior parte do conteúdo é a implementação existente movida de lugar.
+
+### Bases e dependências
+
+O lado WP14 usa W2 de PR38, commit `075cbe04a954b08e946bed676c3901dae13a14cc`, tree `3f59fc019290d4f7a01a42de8a136c36840ff9ee`, conforme publicação informada pelo root. Esse incremento inclui as correções de identidade, cancelamento, snapshots e mutação de callbacks após o último await. O manifesto identifica os bytes exatos de cada arquivo. A proposta exige o consumo desses arquivos W2 antes da relocação. Não deve ser aplicada isoladamente ao antigo snapshot WP14 de PR36 presente no host.
+
+O lado host usa WP10 `f075e9824b7d8aed50b7f42c597528ef198177db`, tree `2751625f28928baf371d39576fe46777aa81f74e`. Os dois arquivos CLI usados no patch não aparecem no delta completo de 134 paths desse commit em relação a `417038d6b3cfd1817f40ffc60e56f42e505b50a5`; por isso os snapshots do parent, já verificados por blob, são os mesmos inputs em f075. Os blobs são `85c3021dec21ab942a8fab04524d48295fd918f7` para `memory-services.ts` e `2deb115ed924b39319eecada7701b8c63da79064` para `decision-materiality-services.ts`. Essa derivação está registrada em `../consumer-audit/f075e982/increment-metadata.json`, `addendum.json` e no manifesto do patch.
+
+As novas localizações abaixo são nomes propostos de adaptadores no namespace do host. S0/WP10 precisam aceitar a transferência e publicar o incremento sob seu próprio ownership. Não há alteração de `AGENTS`, `CODEOWNERS`, grants, identidades técnicas ou estado financeiro.
+
+### Paths e compatibilidade
+
+Paths de produto e teste nesta tabela são relativos a `modules/sucafina/Sucafinav1/`.
+
+| Path ou grupo | Mudança proposta |
+| --- | --- |
+| `product/decision-memory/signal-registry.ts` | Retém `SfSignalSelection`, `SfStoredSignalBinding` e `SF_SIGNAL_REGISTRY_PREFIX`; declara o contrato puro `SfSignalRegistry`, sem dependência de store ou import do host. |
+| `product/decision-memory/outcome-selection.ts` | Retém `SF_OUTCOME_SELECTION_PREFIX`; declara o contrato puro `SfOutcomeSelectionRegistry`, usando o tipo existente `SfOutcomeSelection`. |
+| `product/host-binding/memory-signal-registry.ts` | Recebe `createSfSignalRegistry` e sua validação privada, com a implementação W2 preservada. |
+| `product/host-binding/memory-outcome-selection.ts` | Recebe `createSfOutcomeSelectionRegistry`, o formato persistido privado e sua validação, com a implementação W2 preservada. |
+| `product/decision-memory/planner-materiality.ts`, `signal-list.ts`, `signal-work.ts` | Consomem `SfSignalRegistry` por tipo, sem depender de `ReturnType` da factory concreta. As assinaturas das portas recebidas permanecem as mesmas. |
+| `test/product/wp14/signal-registry.test.ts`, `domain-outcome.test.ts` | Importam as factories do host; continuam importando prefixos e tipos puros de WP14. O corpo dos testes e os produtores reais permanecem intactos. |
+| `apps/cli/src/sucafina-product/memory-services.ts` | Atualiza somente os imports de ambas as factories para os adaptadores do host. |
+| `apps/cli/src/sucafina-product/decision-materiality-services.ts` | Atualiza somente o import de `createSfSignalRegistry` para o adaptador do host. |
+
+As factories conservam os nomes, argumentos, métodos e formatos de retorno. Os contratos explícitos descrevem os mesmos métodos `register`/`revise`/`list`/`reconcile` e `register`/`select`; não introduzem capacidade nova. A mudança dos paths das factories exige consumo atômico com os imports dos callers. Um re-export de runtime do WP14 para o host recolocaria a dependência concreta no namespace puro, por isso ele não faz parte da proposta.
+
+Os callers conhecidos que importam apenas o contrato existente não precisam de hunk: `apps/cli/src/sucafina-product/memory-selection.ts` e `test/product/wp10/integration/memory-fixture.ts` continuam recebendo `SfSignalSelection` no mesmo path; `test/product/wp10/integration/memory-services.test.ts` continua recebendo `SF_SIGNAL_REGISTRY_PREFIX` no mesmo path. `memory-http.ts`, `host-context.ts`, revisão e a composição de decisões continuam consumindo as mesmas APIs de serviços. A busca cobre os snapshots auditados WP10 e as fontes WP14 disponíveis; o owner deve repetir a busca no tree integrado que efetivamente publicará para encontrar callers de incrementos posteriores.
+
+### Autoridade, persistência e replay preservados
+
+O patch mantém os prefixos `sf:memory-condition:` e `sf:memory-outcome:`, schemas, IDs, revisões, digests de escolha, keys de idempotência, storage versions e target incarnation. Não cria store paralelo nem exige migração de dados. O `SfProductStatePort` e os produtores canônicos de caso e de fonte continuam sendo os fornecidos pela composição atual.
+
+O mesmo `signalRegistryWrites` fornecido pelo host continua marcando a identidade do callback de transação e removendo-a em `finally`; o guard dos prefixos protegidos de `state-provider.ts` não é alterado. Os mesmos hooks de aprovação humana, autorização, source fence e revalidação continuam obrigatórios. A identidade do objeto de seleção entre autorização e source fence também permanece: isso conserva o `WeakMap` privado usado pela composição WP10. As cópias isoladas no armazenamento e as verificações finais W2 são movidas junto com a implementação.
+
+A relocação não amplia participantes, escopo nativo, acesso a precedentes ou fontes. Não implementa scheduler, invalidação de cache concreta, ligação C16, revisão material após alteração real de Planner ou prova nativa/Atlas. Esses findings permanecem separados. A proposta também não declara os invariantes completos aprovados apenas porque um arquivo foi movido.
+
+### Boundary restante: os dois writers não esgotam a separação
+
+Este patch move somente os dois adaptadores que gravam as seleções e estados de sinal. Ainda há adaptação de host herdada em `product/decision-memory/source-access.ts`: `createSfDashboardSourceAccess` e `createSfDashboardContinuityProof` executam transações de leitura com `commit: false` em `host.persistence`, consultam scopes/identidade física e chamam autenticação concreta; `createSfCaseEventSourceAccess` lê o namespace `cases` por `SfProductStatePort`. Esses acessos continuam sendo I/O, mesmo quando não gravam. As factories de acesso a registros, procurement e documentos também invocam os resolvers/readers fornecidos pelo host e os produtores reais.
+
+Além desse acesso direto, os consumidores assíncronos de WP14 continuam dependendo de callbacks com I/O — leitura de casos/fontes, resolução de materialidade/outcome, revalidação e operações das registries. A proposta declara o contrato dessas portas, mas não transforma a execução dos callbacks em computação pura. S0/WP10 precisam distinguir as funções puras de decisão/ranking/tradução dos adaptadores e da orquestração de host, definir a transferência restante por path e conservar os checks atuais de autoridade, continuidade, revogação e ancestry. `source-access.ts` e os outros consumidores não são movidos por este patch. **`WP14.INV.01`/`WP14.INV.40` não ficam globalmente resolvidos por 0003**, e o patch não autoriza ampliar ou remover callbacks para simular essa conclusão.
+
+### Revisão e validação que cabem ao proprietário
+
+S0/WP10 devem reconciliar os 11 paths com seu tree atual e com o pin W2 admitido, revisar os contratos explícitos e fazer a atualização dos imports em um único incremento. Divergências de fonte devem ser conciliadas por arquivo; esta proposta não autoriza merge de snapshot antigo nem substituição de mudanças concorrentes.
+
+Após a revisão, a validação cirúrgica sugerida ao owner cobre `test/product/wp14/signal-registry.test.ts`, `domain-outcome.test.ts`, `planner-materiality.test.ts` e `test/product/wp10/integration/memory-services.test.ts`, além de Bun typecheck nos packages Sucafina/CLI e os guards aplicáveis. A execução deve usar GitHub Actions conforme o protocolo vigente e não repetir runs equivalentes. Os resultados precisam pertencer ao novo head que contém a relocação; o CI de W2 sem este patch não valida os novos imports ou contratos. Nenhum desses checks foi executado nesta proposta.
+
+## 5. Resultado posterior do finding de latência
+
+O run WP10 `43580252381`, job `132403235716`, concluiu no produto `f075e9824b7d8aed50b7f42c597528ef198177db`: os 16 testes Planner passaram, incluindo recall direto após reopen em 45,20601 s e overlap/revogação em 45,54443 s, sem elevar o prazo de 105/120 s. O finding de latência dessas duas cadeias está reconciliado nesse pin. O run geral teve 198 pass, 12 fail e 2 skip.
+
+Esta evidência posterior não é green do head `0cf10879`, não executa as propostas 0001/0002 e não concede candidateAccess nativo. As diferenças entre recall Atlas direto e ranking WP14 permanecem. Consulte [o adendo final](../consumer-audit/0cf10879/ADDENDUM.md) e [o resumo executado](../consumer-audit/0cf10879/product-final-summary.json), que preservam a observação pendente anterior e o resultado final.

@@ -1,0 +1,3369 @@
+{
+  "schema_version": 1,
+  "scope": "Compact CI receipt through W6: current diagnostics once, historical counts and pinned identities",
+  "repository": "gustavomhss/Orchestra-SF",
+  "latest_product": {
+    "version": "W6",
+    "sha": "302332e2d30ecb3426265aac3adaa518b81a5ea3",
+    "tree": "f176fd9024d2dd93ad5a40f5e898c3760b7eb10e"
+  },
+  "analysis_method": {
+    "local_product_tests_executed": false,
+    "product_source_changed": false,
+    "remote_operations": false,
+    "canonical_control_parser": {
+      "parser": "./reference/ci/script/test-ci-request.ts",
+      "parserSha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+      "execution": "pure canonical controlVerdict parser only; no product tests or product modules loaded"
+    },
+    "product_result_parser": "ANSI/timestamp stripping, Bun file headers and per-test result lines before failure summary; counts cross-checked against Bun totals",
+    "typescript_parser": "One diagnostic per path(line,column): error TSxxxx emission; message continuations retained; normalization relative to modules/sucafina/Sucafinav1",
+    "ownership_source": {
+      "file": "campaign.json",
+      "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "policy": "Exact existing/new files and prefix matches from immutable campaign; unmapped paths stay unmapped; ownership is not causal attribution"
+    }
+  },
+  "current_typecheck": {
+    "scope": "Bun typecheck from modules/sucafina delegates to Sucafinav1; imported CLI files are included, no separate CLI gate asserted",
+    "status": "failure",
+    "diagnostic_emissions": 139,
+    "unique_diagnostics": 139,
+    "affected_paths": 52,
+    "by_code": {
+      "TS18046": 2,
+      "TS18048": 1,
+      "TS2304": 2,
+      "TS2307": 4,
+      "TS2322": 31,
+      "TS2339": 30,
+      "TS2345": 7,
+      "TS2352": 1,
+      "TS2366": 1,
+      "TS2367": 8,
+      "TS2554": 2,
+      "TS2638": 5,
+      "TS2722": 2,
+      "TS2739": 1,
+      "TS2740": 2,
+      "TS2741": 11,
+      "TS2769": 3,
+      "TS7006": 26
+    },
+    "by_path_owner": {
+      "UNMAPPED_IN_IMMUTABLE_OWNERSHIP": 7,
+      "WP00": 1,
+      "WP01": 5,
+      "WP02": 9,
+      "WP03": 8,
+      "WP04": 3,
+      "WP06": 33,
+      "WP07": 3,
+      "WP08": 12,
+      "WP10": 25,
+      "WP11": 16,
+      "WP12": 1,
+      "WP13": 16
+    },
+    "wp14_diagnostic_locations": 0,
+    "wp14_api_couplings_in_other_paths": 0
+  },
+  "current_diagnostics": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "line": 85,
+      "column": 30,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 567,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "line": 85,
+      "column": 40,
+      "code": "TS7006",
+      "message": "Parameter 'evidence' implicitly has an 'any' type.",
+      "log_line": 568,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "line": 102,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextServi...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 569,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 158,
+      "column": 128,
+      "code": "TS2345",
+      "message": "Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.",
+      "log_line": 570,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 185,
+      "column": 136,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "log_line": 572,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 217,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "log_line": 578,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 273,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "log_line": 584,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 396,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "log_line": 590,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 412,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "log_line": 598,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 551,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "log_line": 606,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "line": 85,
+      "column": 101,
+      "code": "TS2304",
+      "message": "Cannot find name 'Period'.",
+      "log_line": 612,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "line": 115,
+      "column": 21,
+      "code": "TS2304",
+      "message": "Cannot find name 'isSfPeriod'.",
+      "log_line": 613,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "line": 79,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+      "log_line": 614,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "line": 91,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+      "log_line": 620,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+      "line": 16,
+      "column": 9,
+      "code": "TS2322",
+      "message": "Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.",
+      "log_line": 626,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "line": 50,
+      "column": 32,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.",
+      "log_line": 634,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "line": 70,
+      "column": 66,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "log_line": 640,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "line": 116,
+      "column": 35,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "log_line": 646,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "line": 127,
+      "column": 35,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+      "log_line": 652,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 57,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "log_line": 658,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 68,
+      "column": 33,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "log_line": 664,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 86,
+      "column": 31,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "log_line": 670,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 101,
+      "column": 32,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "log_line": 676,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "line": 14,
+      "column": 45,
+      "code": "TS2307",
+      "message": "Cannot find module '../routines/factory.ts' or its corresponding type declarations.",
+      "log_line": 682,
+      "path_owners": [
+        "WP00"
+      ],
+      "coupling": {
+        "kind": [
+          "MISSING_ROUTINES_PRODUCER"
+        ],
+        "related_owners": [
+          "WP09"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 66,
+      "column": 474,
+      "code": "TS7006",
+      "message": "Parameter 'field' implicitly has an 'any' type.",
+      "log_line": 683,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 104,
+      "column": 41,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+      "log_line": 684,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 118,
+      "column": 16,
+      "code": "TS2339",
+      "message": "Property 'state' does not exist on type '{}'.",
+      "log_line": 690,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 118,
+      "column": 52,
+      "code": "TS2339",
+      "message": "Property 'index' does not exist on type '{}'.",
+      "log_line": 691,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 119,
+      "column": 16,
+      "code": "TS2339",
+      "message": "Property 'state' does not exist on type '{}'.",
+      "log_line": 692,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 120,
+      "column": 77,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'.",
+      "log_line": 693,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 121,
+      "column": 163,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'.",
+      "log_line": 694,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 123,
+      "column": 61,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'.",
+      "log_line": 695,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 128,
+      "column": 126,
+      "code": "TS2339",
+      "message": "Property 'physicalIncarnations' does not exist on type '{}'.",
+      "log_line": 696,
+      "path_owners": [
+        "WP02"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 46,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "log_line": 697,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 71,
+      "column": 446,
+      "code": "TS2345",
+      "message": "Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "log_line": 704,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 95,
+      "column": 75,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "log_line": 710,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 97,
+      "column": 185,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "log_line": 711,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 100,
+      "column": 74,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "log_line": 712,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 101,
+      "column": 81,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "log_line": 713,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 101,
+      "column": 112,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "log_line": 714,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 102,
+      "column": 183,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "log_line": 715,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "line": 92,
+      "column": 26,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 716,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "line": 71,
+      "column": 172,
+      "code": "TS2339",
+      "message": "Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.",
+      "log_line": 717,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "STATE_PORT_RESULT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP00",
+          "WP10"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "line": 210,
+      "column": 55,
+      "code": "TS2307",
+      "message": "Cannot find module '../procurement/decision-host.ts' or its corresponding type declarations.",
+      "log_line": 719,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "MISSING_PROCUREMENT_PRODUCER"
+        ],
+        "related_owners": [
+          "WP04"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 38,
+      "column": 75,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+      "log_line": 720,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 17,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'.",
+      "log_line": 729,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 71,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'.",
+      "log_line": 730,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 119,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'.",
+      "log_line": 731,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 62,
+      "column": 29,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "log_line": 732,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 251,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 733,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 306,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 734,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 353,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 735,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 457,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 736,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 297,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "log_line": 737,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 445,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "log_line": 738,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 469,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "log_line": 739,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 545,
+      "code": "TS2339",
+      "message": "Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 740,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 573,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 741,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 592,
+      "code": "TS2322",
+      "message": "Type '{}' is not assignable to type 'string'.",
+      "log_line": 742,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 674,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 743,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 848,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "log_line": 744,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 114,
+      "code": "TS2339",
+      "message": "Property 'runRef' does not exist on type 'ContributionEnvelope'.",
+      "log_line": 745,
+      "path_owners": [
+        "UNMAPPED_IN_IMMUTABLE_OWNERSHIP"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'version' does not exist on type 'ContributionEnvelope'.",
+      "log_line": 747,
+      "path_owners": [
+        "UNMAPPED_IN_IMMUTABLE_OWNERSHIP"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 197,
+      "code": "TS2339",
+      "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "log_line": 749,
+      "path_owners": [
+        "UNMAPPED_IN_IMMUTABLE_OWNERSHIP"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 235,
+      "code": "TS2339",
+      "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "log_line": 751,
+      "path_owners": [
+        "UNMAPPED_IN_IMMUTABLE_OWNERSHIP"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "line": 148,
+      "column": 82,
+      "code": "TS7006",
+      "message": "Parameter 'run' implicitly has an 'any' type.",
+      "log_line": 753,
+      "path_owners": [
+        "UNMAPPED_IN_IMMUTABLE_OWNERSHIP"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "line": 148,
+      "column": 87,
+      "code": "TS7006",
+      "message": "Parameter 'index' implicitly has an 'any' type.",
+      "log_line": 754,
+      "path_owners": [
+        "UNMAPPED_IN_IMMUTABLE_OWNERSHIP"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "line": 54,
+      "column": 249,
+      "code": "TS2345",
+      "message": "Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.",
+      "log_line": 755,
+      "path_owners": [
+        "UNMAPPED_IN_IMMUTABLE_OWNERSHIP"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+      "line": 27,
+      "column": 73,
+      "code": "TS2339",
+      "message": "Property 'domain' does not exist on type '{ state: HeadcountState; }'.",
+      "log_line": 758,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+      "line": 39,
+      "column": 66,
+      "code": "TS2339",
+      "message": "Property 'domain' does not exist on type '{ state: HeadcountState; }'.",
+      "log_line": 759,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+      "line": 58,
+      "column": 598,
+      "code": "TS7006",
+      "message": "Parameter 'cell' implicitly has an 'any' type.",
+      "log_line": 760,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "line": 33,
+      "column": 19,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 761,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "line": 38,
+      "column": 22,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 762,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+      "line": 54,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "log_line": 763,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "line": 13,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 771,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 41,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 772,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 78,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 773,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "log_line": 774,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "log_line": 776,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "line": 36,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 778,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "line": 25,
+      "column": 19,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "log_line": 779,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "line": 119,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "log_line": 780,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "line": 119,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "log_line": 782,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "line": 69,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "log_line": 784,
+      "path_owners": [
+        "WP04"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "line": 49,
+      "column": 9,
+      "code": "TS2741",
+      "message": "Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+      "log_line": 792,
+      "path_owners": [
+        "WP01"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "line": 7,
+      "column": 65,
+      "code": "TS2366",
+      "message": "Function lacks ending return statement and return type does not include 'undefined'.",
+      "log_line": 793,
+      "path_owners": [
+        "WP01"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "line": 36,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContex...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 794,
+      "path_owners": [
+        "WP01"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "line": 35,
+      "column": 137,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "log_line": 795,
+      "path_owners": [
+        "WP01"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "line": 6,
+      "column": 38,
+      "code": "TS2307",
+      "message": "Cannot find module '@orchestra/server/routes' or its corresponding type declarations.",
+      "log_line": 801,
+      "path_owners": [
+        "WP01"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "line": 106,
+      "column": 68,
+      "code": "TS2339",
+      "message": "Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.",
+      "log_line": 802,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "line": 33,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 804,
+      "path_owners": [
+        "WP03"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "line": 208,
+      "column": 41,
+      "code": "TS2554",
+      "message": "Expected 0 arguments, but got 1.",
+      "log_line": 805,
+      "path_owners": [
+        "WP04"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "line": 220,
+      "column": 107,
+      "code": "TS2554",
+      "message": "Expected 0 arguments, but got 1.",
+      "log_line": 806,
+      "path_owners": [
+        "WP04"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 25,
+      "column": 40,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.",
+      "log_line": 807,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "MISSING_ROUTINES_PRODUCER"
+        ],
+        "related_owners": [
+          "WP09"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 101,
+      "column": 227,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "log_line": 808,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 101,
+      "column": 230,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "log_line": 809,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 114,
+      "column": 229,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "log_line": 810,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 114,
+      "column": 232,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "log_line": 811,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 253,
+      "column": 225,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "log_line": 812,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 253,
+      "column": 228,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "log_line": 813,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 263,
+      "column": 227,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "log_line": 814,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 263,
+      "column": 230,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "log_line": 815,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "line": 56,
+      "column": 72,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "log_line": 816,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "line": 65,
+      "column": 590,
+      "code": "TS2322",
+      "message": "Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'.",
+      "log_line": 822,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 41,
+      "column": 76,
+      "code": "TS2322",
+      "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+      "log_line": 825,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 42,
+      "column": 12,
+      "code": "TS18046",
+      "message": "'applied' is of type 'unknown'.",
+      "log_line": 830,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 46,
+      "column": 74,
+      "code": "TS2322",
+      "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+      "log_line": 831,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 47,
+      "column": 12,
+      "code": "TS18046",
+      "message": "'stale' is of type 'unknown'.",
+      "log_line": 836,
+      "path_owners": [
+        "WP06"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "line": 106,
+      "column": 64,
+      "code": "TS2769",
+      "message": "No overload matches this call.",
+      "log_line": 837,
+      "path_owners": [
+        "WP07"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "line": 113,
+      "column": 122,
+      "code": "TS2769",
+      "message": "No overload matches this call.",
+      "log_line": 842,
+      "path_owners": [
+        "WP07"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "line": 124,
+      "column": 64,
+      "code": "TS2769",
+      "message": "No overload matches this call.",
+      "log_line": 847,
+      "path_owners": [
+        "WP07"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "line": 63,
+      "column": 289,
+      "code": "TS2739",
+      "message": "Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection",
+      "log_line": 852,
+      "path_owners": [
+        "WP08"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 13,
+      "column": 112,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 853,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 13,
+      "column": 122,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "log_line": 854,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 31,
+      "column": 58,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 855,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 31,
+      "column": 68,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "log_line": 856,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 40,
+      "column": 63,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 857,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 40,
+      "column": 73,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "log_line": 858,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 51,
+      "column": 49,
+      "code": "TS7006",
+      "message": "Parameter '_snapshot' implicitly has an 'any' type.",
+      "log_line": 859,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 51,
+      "column": 60,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "log_line": 860,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 68,
+      "column": 69,
+      "code": "TS7006",
+      "message": "Parameter '_snapshot' implicitly has an 'any' type.",
+      "log_line": 861,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 68,
+      "column": 80,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "log_line": 862,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "line": 24,
+      "column": 47,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 863,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "line": 24,
+      "column": 57,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "log_line": 864,
+      "path_owners": [
+        "WP10"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "line": 73,
+      "column": 60,
+      "code": "TS2345",
+      "message": "Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "log_line": 865,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "line": 25,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 869,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "line": 178,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<true>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 870,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "line": 273,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 871,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "line": 39,
+      "column": 127,
+      "code": "TS2322",
+      "message": "Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "log_line": 872,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "line": 48,
+      "column": 127,
+      "code": "TS2322",
+      "message": "Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "log_line": 875,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "line": 77,
+      "column": 63,
+      "code": "TS2322",
+      "message": "Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "log_line": 878,
+      "path_owners": [
+        "WP11"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "line": 32,
+      "column": 26,
+      "code": "TS2352",
+      "message": "Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+      "log_line": 884,
+      "path_owners": [
+        "WP12"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "line": 27,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 886,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+      "line": 41,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 887,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 117,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: () => Promise<...>; evidence: BusinessContextService; createId: () => string; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 888,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 218,
+      "column": 211,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'.",
+      "log_line": 889,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 230,
+      "column": 25,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'.",
+      "log_line": 890,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 230,
+      "column": 25,
+      "code": "TS18048",
+      "message": "'store.transactionAll' is possibly 'undefined'.",
+      "log_line": 891,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "UNDETERMINED_FROM_LOG"
+        ],
+        "related_owners": [],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "line": 32,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "log_line": 892,
+      "path_owners": [
+        "WP13"
+      ],
+      "coupling": {
+        "kind": [
+          "DECISION_CASE_PORT_CONTRACT"
+        ],
+        "related_owners": [
+          "WP11"
+        ],
+        "causality": "Not established by diagnostic path; path ownership is routing, not attribution of the defect."
+      }
+    }
+  ],
+  "current_guard_summary": {
+    "rules": 78,
+    "changed_paths": 609,
+    "gate_findings": 0,
+    "warn_findings": 11,
+    "errors": 0,
+    "log_line": 911,
+    "status": "success"
+  },
+  "history": [
+    {
+      "version": "W1",
+      "product_sha": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "product_tree": "fd5a08bfbaaf255ba2fd43b67638cf5532cbc2a9",
+      "product_test": {
+        "run_id": 43580834753,
+        "job_id": 132405026618,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580834753/job/132405026618",
+        "envelope_sha": "749bfcec1b1fa9910a1799d7bf887c24158bb17a",
+        "envelope_tree": "72069d40acb9091d254e146cc3243a86a808f5bc",
+        "log": {
+          "file": "current-ci/job-132405026618.log",
+          "job_id": 132405026618,
+          "sha256": "c815df92f494b301bb067ec3edb7cf9fbc3bf4d56e0bf6f7644e5a96d00eb526",
+          "bytes": 81043,
+          "lines": 964
+        },
+        "conclusion_from_log": "failure",
+        "summary": {
+          "pass": 52,
+          "fail": 2,
+          "expect_calls": 431,
+          "tests": 54,
+          "files": 17,
+          "duration_ms": 245670.0,
+          "log_line": 941
+        },
+        "controlVerdict": {
+          "jobId": 132405026618,
+          "logPath": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580834753/job/132405026618",
+          "accepted": true,
+          "verdict": "omni positive control: pass (declared: 3 test(s) in Sucafinav1/test/product/wp14/source-access-atlas.test.ts, Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts, Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts); 7 omni spawn(s), 0 delegated."
+        }
+      },
+      "check": {
+        "run_id": 43580850502,
+        "job_id": 132405069162,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580850502/job/132405069162",
+        "envelope_sha": "2a7e56587f7b8083b0bd4473759ea4bc89fd03e0",
+        "envelope_tree": "6062bb3fa13f796aec102723992f6e1934448ccb",
+        "log": {
+          "file": "current-ci/job-132405069162.log",
+          "job_id": 132405069162,
+          "sha256": "791a5a245a1dae46770a3c691744383e710b40937a7d66f55f88b9a7f2dfa7b9",
+          "bytes": 142150,
+          "lines": 999
+        },
+        "status": "failure",
+        "ts_diagnostics": 142,
+        "ts_wp14_paths": 2,
+        "ts_wp14_api_couplings": 1,
+        "by_path_owner": {
+          "UNMAPPED_IN_IMMUTABLE_OWNERSHIP": 7,
+          "WP00": 1,
+          "WP01": 5,
+          "WP02": 9,
+          "WP03": 8,
+          "WP04": 3,
+          "WP06": 33,
+          "WP07": 3,
+          "WP08": 12,
+          "WP10": 26,
+          "WP11": 16,
+          "WP12": 1,
+          "WP13": 16,
+          "WP14": 2
+        },
+        "guards": {
+          "rules": 78,
+          "changed_paths": 594,
+          "gate_findings": 0,
+          "warn_findings": 11,
+          "errors": 0,
+          "log_line": 933,
+          "status": "success"
+        }
+      }
+    },
+    {
+      "version": "W2",
+      "product_sha": "075cbe04a954b08e946bed676c3901dae13a14cc",
+      "product_tree": "3f59fc019290d4f7a01a42de8a136c36840ff9ee",
+      "product_test": {
+        "run_id": 43581868850,
+        "job_id": 132408115499,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581868850/job/132408115499",
+        "envelope_sha": "766b30eff18ae3d0bf5310a33eb7e1cd91fdaac0",
+        "envelope_tree": "7a17558d270af6f8bd9240a0a0e51bbb44baa434",
+        "log": {
+          "file": "current-ci/job-132408115499.log",
+          "job_id": 132408115499,
+          "sha256": "572c3c02943879d738ab5ec0e35d3e9da7d9b9ebf56277acd293c4fdc58df71b",
+          "bytes": 84411,
+          "lines": 985
+        },
+        "conclusion_from_log": "failure",
+        "summary": {
+          "pass": 57,
+          "fail": 1,
+          "expect_calls": 543,
+          "tests": 58,
+          "files": 17,
+          "duration_ms": 118350.0,
+          "log_line": 961
+        },
+        "controlVerdict": {
+          "jobId": 132408115499,
+          "logPath": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581868850/job/132408115499",
+          "accepted": true,
+          "verdict": "omni positive control: pass (declared: 3 test(s) in Sucafinav1/test/product/wp14/source-access-atlas.test.ts, Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts, Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts); 7 omni spawn(s), 0 delegated."
+        },
+        "atlas_receipts": [
+          {
+            "log_line": 845,
+            "marker": "SF_WP14_ATLAS_RESTART_RECEIPT",
+            "value": {
+              "kind": "sqlite-atlas-process-restart",
+              "nativeSessionWitness": false,
+              "scanner": {
+                "name": "gitleaks",
+                "version": "gitleaks version 8.30.1",
+                "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+              },
+              "committed": {
+                "status": "committed",
+                "eventId": "9a732d9f8a684588324081b02e4841c524fbd12e9373de19290af1633d75f2ef",
+                "recordDigest": "43b967380fa071923e14572b80fcf46a979e4861398d23ea7ef0eb9a8368ebe7"
+              },
+              "replayed": {
+                "status": "already-committed",
+                "eventId": "9a732d9f8a684588324081b02e4841c524fbd12e9373de19290af1633d75f2ef",
+                "recordDigest": "43b967380fa071923e14572b80fcf46a979e4861398d23ea7ef0eb9a8368ebe7"
+              },
+              "parentPid": 4045,
+              "childPid": 4096,
+              "authorized": "ok",
+              "matches": 1,
+              "outsider": "unavailable",
+              "revoked": "unavailable"
+            }
+          }
+        ]
+      },
+      "check": {
+        "run_id": 43581908400,
+        "job_id": 132408235781,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581908400/job/132408235781",
+        "envelope_sha": "d787ab14fc4d3183b805f5271f4a20776094d43f",
+        "envelope_tree": "bee82457ab93579f36e203ef3760adbd31d3e7df",
+        "log": {
+          "file": "current-ci/job-132408235781.log",
+          "job_id": 132408235781,
+          "sha256": "6808efd24c8a8ba5e3f7e82063dd552e2e99b8990a8e731723a8b3225022b8e4",
+          "bytes": 138727,
+          "lines": 977
+        },
+        "status": "failure",
+        "ts_diagnostics": 140,
+        "ts_wp14_paths": 0,
+        "ts_wp14_api_couplings": 1,
+        "by_path_owner": {
+          "UNMAPPED_IN_IMMUTABLE_OWNERSHIP": 7,
+          "WP00": 1,
+          "WP01": 5,
+          "WP02": 9,
+          "WP03": 8,
+          "WP04": 3,
+          "WP06": 33,
+          "WP07": 3,
+          "WP08": 12,
+          "WP10": 26,
+          "WP11": 16,
+          "WP12": 1,
+          "WP13": 16
+        },
+        "guards": {
+          "rules": 78,
+          "changed_paths": 605,
+          "gate_findings": 0,
+          "warn_findings": 11,
+          "errors": 0,
+          "log_line": 911,
+          "status": "success"
+        }
+      }
+    },
+    {
+      "version": "W3",
+      "product_sha": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+      "product_tree": "cf7b3f8a74f101b3d580f6395808d0ddc6d75750",
+      "product_test": {
+        "run_id": 43582306795,
+        "job_id": 132409435524,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582306795/job/132409435524",
+        "envelope_sha": "11d95450508039b538e7dcc25754d9b1b3adf9ce",
+        "envelope_tree": "b1d0a675b735519fd1cc3fb5a6ff753740c23ead",
+        "log": {
+          "file": "current-ci/job-132409435524.log",
+          "job_id": 132409435524,
+          "sha256": "81d4059ec6b2b58f83ccff3cc1b36970be814d66632cc9909ff7f43ad167e128",
+          "bytes": 70746,
+          "lines": 861
+        },
+        "conclusion_from_log": "success",
+        "summary": {
+          "pass": 14,
+          "fail": 0,
+          "expect_calls": 117,
+          "tests": 14,
+          "files": 2,
+          "duration_ms": 200.0,
+          "log_line": 832
+        },
+        "controlVerdict": {
+          "jobId": 132409435524,
+          "logPath": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582306795/job/132409435524",
+          "accepted": true,
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      },
+      "check": {
+        "run_id": 43582318468,
+        "job_id": 132409471352,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582318468/job/132409471352",
+        "envelope_sha": "08ee104fd6931f595cf1f00110b5ed1029a21d58",
+        "envelope_tree": "83a210a33a50988143312e134a8fbaf396e42549",
+        "log": {
+          "file": "current-ci/job-132409471352.log",
+          "job_id": 132409471352,
+          "sha256": "2425ea49a293f45b8bd21e85556b711970fd24a61bf7a355674dc2243d26ad0d",
+          "bytes": 138486,
+          "lines": 975
+        },
+        "status": "failure",
+        "ts_diagnostics": 140,
+        "ts_wp14_paths": 0,
+        "ts_wp14_api_couplings": 1,
+        "by_path_owner": {
+          "UNMAPPED_IN_IMMUTABLE_OWNERSHIP": 7,
+          "WP00": 1,
+          "WP01": 5,
+          "WP02": 9,
+          "WP03": 8,
+          "WP04": 3,
+          "WP06": 33,
+          "WP07": 3,
+          "WP08": 12,
+          "WP10": 26,
+          "WP11": 16,
+          "WP12": 1,
+          "WP13": 16
+        },
+        "guards": {
+          "rules": 78,
+          "changed_paths": 606,
+          "gate_findings": 0,
+          "warn_findings": 11,
+          "errors": 0,
+          "log_line": 909,
+          "status": "success"
+        }
+      }
+    },
+    {
+      "version": "W4",
+      "product_sha": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "product_tree": "181a08e1349bf1d550d14505ff7ad3e81ed4decd",
+      "product_test": {
+        "run_id": 43582881542,
+        "job_id": 132411172526,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582881542/job/132411172526",
+        "envelope_sha": "cb128c652a567f24b52a00d156a4d24cd94c660d",
+        "envelope_tree": "5341838230f129fba005d69ca77e3340d582e651",
+        "request_sha256": "6ff7a0f1ebc779d1e1c480da8928325d9311e4d874c5b6ab3d9ff65259cf5f89",
+        "log": {
+          "file": "current-ci/job-132411172526.log",
+          "job_id": 132411172526,
+          "sha256": "bab1ebb9e3cf7f6f0e1c94662daff0736da2dc62e92dc5e46d1198cb0f5a0781",
+          "bytes": 69997,
+          "lines": 864
+        },
+        "conclusion_from_log": "success",
+        "summary": {
+          "pass": 1,
+          "fail": 0,
+          "expect_calls": 5,
+          "tests": 1,
+          "files": 1,
+          "duration_ms": 286.0,
+          "log_line": 835
+        },
+        "controlVerdict": {
+          "jobId": 132411172526,
+          "logPath": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582881542/job/132411172526",
+          "accepted": true,
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      },
+      "check": {
+        "run_id": 43582884753,
+        "job_id": 132411182186,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582884753/job/132411182186",
+        "envelope_sha": "ef6bfe69ef8f4a3f2bb95739bffe9a302a4c195f",
+        "envelope_tree": "54bd56ed8b340dcb254c1e330efaca75d42b6159",
+        "log": {
+          "file": "current-ci/job-132411182186.log",
+          "job_id": 132411182186,
+          "sha256": "88249547ada676afa8ed04451b7c94a4d2cbfdf797d0f820ae8ee2de5c0ac05b",
+          "bytes": 137891,
+          "lines": 974
+        },
+        "status": "failure",
+        "ts_diagnostics": 139,
+        "ts_wp14_paths": 0,
+        "ts_wp14_api_couplings": 0,
+        "by_path_owner": {
+          "UNMAPPED_IN_IMMUTABLE_OWNERSHIP": 7,
+          "WP00": 1,
+          "WP01": 5,
+          "WP02": 9,
+          "WP03": 8,
+          "WP04": 3,
+          "WP06": 33,
+          "WP07": 3,
+          "WP08": 12,
+          "WP10": 25,
+          "WP11": 16,
+          "WP12": 1,
+          "WP13": 16
+        },
+        "guards": {
+          "rules": 78,
+          "changed_paths": 607,
+          "gate_findings": 0,
+          "warn_findings": 11,
+          "errors": 0,
+          "log_line": 908,
+          "status": "success"
+        }
+      }
+    },
+    {
+      "version": "W5",
+      "product_sha": "1240efef88be380c82b29ec422a13c54b42c7b62",
+      "product_tree": "1ebec1428d581c36c706ddbca97ea2b84d9daa0c",
+      "product_test": {
+        "run_id": 43584174407,
+        "job_id": 132415011849,
+        "envelope_sha": "7376413d8d6b07dd9e86f3f1fc8e1e1a495fe6f1",
+        "envelope_tree": "d10d96ebbf40e43523ffcfb45a027f58f979befe",
+        "request_sha256": "85d617de1af4bf379ffb65c7f26808844292a9588edb4161b6c14482c45cf5f4",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584174407/job/132415011849",
+        "log": {
+          "file": "current-ci/job-132415011849.log",
+          "job_id": 132415011849,
+          "sha256": "8ec3f4fc415ad12ecae9112faf4f0ff985831f4c0d9a05936589634036dea015",
+          "bytes": 79153,
+          "lines": 925
+        },
+        "conclusion_from_log": "success",
+        "summary": {
+          "pass": 39,
+          "fail": 0,
+          "expect_calls": 556,
+          "tests": 39,
+          "files": 6,
+          "duration_ms": 75470.0,
+          "log_line": 896
+        },
+        "controlVerdict": {
+          "jobId": 132415011849,
+          "logPath": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584174407/job/132415011849",
+          "accepted": true,
+          "nonce": "9e17f5aea604f4749dddda65fe88795b",
+          "verdict": "omni positive control: pass (declared: 2 test(s) in Sucafinav1/test/product/wp14/source-access-atlas.test.ts, Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts); 5 omni spawn(s), 0 delegated."
+        },
+        "atlas_receipts": [
+          {
+            "log_line": 841,
+            "marker": "SF_WP14_ATLAS_RESTART_RECEIPT",
+            "value": {
+              "kind": "sqlite-atlas-process-restart",
+              "nativeSessionWitness": false,
+              "scanner": {
+                "name": "gitleaks",
+                "version": "gitleaks version 8.30.1",
+                "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+              },
+              "committed": {
+                "status": "committed",
+                "eventId": "3373db39d643a7146deb7318c041027e2ab9f5208ed79add825c056ea9cd763e",
+                "recordDigest": "723a8cfd4f715f5e6aa3ae63106effb7d394ec4ae5da4c5753cb490b0b476112"
+              },
+              "replayed": {
+                "status": "already-committed",
+                "eventId": "3373db39d643a7146deb7318c041027e2ab9f5208ed79add825c056ea9cd763e",
+                "recordDigest": "723a8cfd4f715f5e6aa3ae63106effb7d394ec4ae5da4c5753cb490b0b476112"
+              },
+              "parentPid": 4045,
+              "childPid": 4095,
+              "authorized": "ok",
+              "matches": 1,
+              "outsider": "unavailable",
+              "revoked": "unavailable"
+            }
+          }
+        ]
+      },
+      "check": {
+        "run_id": 43584178239,
+        "job_id": 132415023095,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584178239/job/132415023095",
+        "envelope_sha": "121915c3661d94f133bea0cbe4a8ca3a4ebea56d",
+        "envelope_tree": "8a3314a82ff71b54ade5a7d6633a11ce3ddac3b5",
+        "log": {
+          "file": "current-ci/job-132415023095.log",
+          "job_id": 132415023095,
+          "sha256": "70babaf94f55d61cb97713f2a6ad092bafda136ed2ef90b72b19b9d00aa1c4b1",
+          "bytes": 138416,
+          "lines": 981
+        },
+        "status": "failure",
+        "ts_diagnostics": 141,
+        "ts_wp14_paths": 2,
+        "ts_wp14_api_couplings": 0,
+        "by_path_owner": {
+          "UNMAPPED_IN_IMMUTABLE_OWNERSHIP": 7,
+          "WP00": 1,
+          "WP01": 5,
+          "WP02": 9,
+          "WP03": 8,
+          "WP04": 3,
+          "WP06": 33,
+          "WP07": 3,
+          "WP08": 12,
+          "WP10": 25,
+          "WP11": 16,
+          "WP12": 1,
+          "WP13": 16,
+          "WP14": 2
+        },
+        "guards": {
+          "rules": 78,
+          "changed_paths": 608,
+          "gate_findings": 0,
+          "warn_findings": 11,
+          "errors": 0,
+          "log_line": 915,
+          "status": "success"
+        }
+      }
+    },
+    {
+      "version": "W6",
+      "product_sha": "302332e2d30ecb3426265aac3adaa518b81a5ea3",
+      "product_tree": "f176fd9024d2dd93ad5a40f5e898c3760b7eb10e",
+      "product_test": {
+        "executed": false,
+        "reason": "W5-to-W6 changes only two expect<string | undefined> test type arguments plus receipt 06; the mapper test's transformed JavaScript is byte-identical. No S6 or new product run was dispatched.",
+        "inherited_from": {
+          "version": "W5",
+          "product_sha": "1240efef88be380c82b29ec422a13c54b42c7b62",
+          "run_id": 43584174407,
+          "job_id": 132415011849,
+          "summary": {
+            "pass": 39,
+            "fail": 0,
+            "expect_calls": 556,
+            "tests": 39,
+            "files": 6,
+            "duration_ms": 75470.0,
+            "log_line": 896
+          }
+        },
+        "proof": {
+          "file": "current-ci/w6-type-only-proof.json",
+          "sha256": "79c41468c31440e1e0f96c2d064280a4eacd4a493854db40cffd1bfee06467f4",
+          "value": {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+            "sourceSha256": "6688fd500edc16659b7ba91f92e91468c2b5365a6b92548a1cec698c88777c92",
+            "blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+            "beforeSha256": "0054bf0f19065e2f06ae961980b775d51a6d37ec1039b9d0d8099ca1adb8e332",
+            "javascriptIdentical": true,
+            "javascriptSha256": "93befb2f040984bcf6ad193369da88646e1294dcf386e7cf7a2d9de21151f122",
+            "javascriptBytes": 27110,
+            "transform": "node:module.stripTypeScriptTypes, mode=transform, source text only; no product evaluated"
+          },
+          "provenance": "Root-produced source-only stripTypeScriptTypes comparison; this audit read the proof and independently matched the current TypeScript source SHA256. No product modules evaluated.",
+          "independent_source_checks": {
+            "current_source_sha256_matches_proof": true,
+            "type_argument_occurrences": 2,
+            "removing_exact_type_arguments_restores_w5_sha256": true,
+            "w5_frozen_source_sha256": "0054bf0f19065e2f06ae961980b775d51a6d37ec1039b9d0d8099ca1adb8e332",
+            "w5_frozen_blob": "0cd241ca2410e581a3793dfb1fc52b07b2ad7b8c",
+            "product_evaluated": false
+          }
+        }
+      },
+      "check": {
+        "run_id": 43584536897,
+        "job_id": 132416102283,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584536897/job/132416102283",
+        "envelope_sha": "760cf0549a5432819f3a3d4a42f87fdbedfb1ece",
+        "envelope_tree": "655f1bf17cee00502572947c0bde8bd004d7a3d7",
+        "log": {
+          "file": "current-ci/job-132416102283.log",
+          "job_id": 132416102283,
+          "sha256": "a260a8f82af8b2fc87690d11d0c241c4bc13b23df9a6426c67c0cab341563557",
+          "bytes": 138088,
+          "lines": 977
+        },
+        "status": "failure",
+        "ts_diagnostics": 139,
+        "ts_wp14_paths": 0,
+        "ts_wp14_api_couplings": 0,
+        "by_path_owner": {
+          "UNMAPPED_IN_IMMUTABLE_OWNERSHIP": 7,
+          "WP00": 1,
+          "WP01": 5,
+          "WP02": 9,
+          "WP03": 8,
+          "WP04": 3,
+          "WP06": 33,
+          "WP07": 3,
+          "WP08": 12,
+          "WP10": 25,
+          "WP11": 16,
+          "WP12": 1,
+          "WP13": 16
+        },
+        "guards": {
+          "rules": 78,
+          "changed_paths": 609,
+          "gate_findings": 0,
+          "warn_findings": 11,
+          "errors": 0,
+          "log_line": 911,
+          "status": "success"
+        }
+      }
+    }
+  ],
+  "diagnostic_deltas": [
+    {
+      "from": "W1",
+      "to": "W2",
+      "removed": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+          "line": 128,
+          "column": 65,
+          "code": "TS2352"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "line": 100,
+          "column": 71,
+          "code": "TS2352"
+        }
+      ],
+      "added": [],
+      "unchanged_count": 140
+    },
+    {
+      "from": "W2",
+      "to": "W3",
+      "removed": [],
+      "added": [],
+      "unchanged_count": 140
+    },
+    {
+      "from": "W3",
+      "to": "W4",
+      "removed": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "line": 188,
+          "column": 20,
+          "code": "TS2322"
+        }
+      ],
+      "added": [],
+      "unchanged_count": 139
+    },
+    {
+      "from": "W4",
+      "to": "W5",
+      "removed": [],
+      "added": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "line": 135,
+          "column": 40,
+          "code": "TS2769"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "line": 194,
+          "column": 40,
+          "code": "TS2769"
+        }
+      ],
+      "unchanged_count": 139
+    },
+    {
+      "from": "W5",
+      "to": "W6",
+      "removed": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "line": 135,
+          "column": 40,
+          "code": "TS2769"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "line": 194,
+          "column": 40,
+          "code": "TS2769"
+        }
+      ],
+      "added": [],
+      "unchanged_count": 139
+    }
+  ],
+  "resolved_procurement_coupling": {
+    "status": "EXECUTED_FOCUSED_CORRECTION",
+    "topic": "WP14 Procurement source-access callable resolver compatibility with WP10",
+    "product_sha": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+    "product_run_id": 43582881542,
+    "check_run_id": 43582884753,
+    "product_result": "1 pass, 0 fail, 5 expects in source-access-procurement.test.ts",
+    "typecheck_delta": "140 to 139: only business-services.ts:188:20 TS2322 removed; no added diagnostics",
+    "validated_by_this_audit": true,
+    "limits": "This closes the observed callable API coupling; it does not make the complete package typecheck pass or provide new native/Atlas evidence."
+  },
+  "limits": [
+    "W3 is 14 tests in 2 files, not a rerun or pass of the complete 17-file selection.",
+    "W2 Atlas receipt explicitly says nativeSessionWitness:false; the fresh-process scanner/SQLite proof is real but is not a SessionV2/MCP native witness.",
+    "ControlVerdict passes are separate from product success; W1 and W2 product jobs fail despite a passing Omni control.",
+    "W3 control is accepted as not applicable and supplies no Omni spawn evidence.",
+    "No diagnostics at a WP14 file path in W2/W3 does not mean no WP14 coupling: business-services.ts:188 TS2322 is the WP10 caller of a WP14 Procurement API.",
+    "The package typecheck remains failed in all six checks; guards success does not waive those errors.",
+    "Source path ownership does not identify the introducing commit. Missing dependencies and incompatible consumer signatures require coordinated pinned input review.",
+    "W4 runs one Procurement test in one file, not the earlier 17-file selection.",
+    "W4 removes the observed WP10 caller / WP14 Procurement API TS2322; the package check still fails with 139 other diagnostics.",
+    "W4 canonical Omni control is not applicable and supplies no spawn evidence.",
+    "W5 passed 39 tests in six selected files, not the complete earlier 17-file selection.",
+    "W5 real Atlas receipt also explicitly has nativeSessionWitness:false; fresh-process/scanner/replay evidence does not imply native workflow acceptance.",
+    "W5 import-substitution cases exercise the pure historical-resolution/incarnation boundary, not an actual importer; malformed AtlasTrace cases exercise the boundary with controlled callbacks.",
+    "W5 package typing failed with 141 diagnostics; W6 check-only type correction removed the two own TS2769 diagnostics, leaving the identical 139 diagnostic keys from W4.",
+    "No product tests ran on W6. W5 evidence is inherited only under the recorded type-only source change and byte-identical JavaScript proof; the W5 run retains its original SHA and IDs.",
+    "Zero current WP14 diagnostic locations does not prove all cross-owner contracts correct or make the package check pass."
+  ],
+  "detailed_report": {
+    "published": "wp14-ci-analysis.md",
+    "note": "The normalized current receipt retains all current diagnostics and execution history; decoded job log URLs and SHA256 values identify the authoritative source. Repeated historical diagnostic payloads are not duplicated in this commit."
+  },
+  "type_only_w6_inheritance": {
+    "status": "EXECUTED_CHECK_ONLY_TYPE_CORRECTION",
+    "product_sha": "302332e2d30ecb3426265aac3adaa518b81a5ea3",
+    "check_run_id": 43584536897,
+    "check_job_id": 132416102283,
+    "product_tests_executed_on_w6": false,
+    "w5_product_evidence_inheritance": {
+      "executed": false,
+      "reason": "W5-to-W6 changes only two expect<string | undefined> test type arguments plus receipt 06; the mapper test's transformed JavaScript is byte-identical. No S6 or new product run was dispatched.",
+      "inherited_from": {
+        "version": "W5",
+        "product_sha": "1240efef88be380c82b29ec422a13c54b42c7b62",
+        "run_id": 43584174407,
+        "job_id": 132415011849,
+        "summary": {
+          "pass": 39,
+          "fail": 0,
+          "expect_calls": 556,
+          "tests": 39,
+          "files": 6,
+          "duration_ms": 75470.0,
+          "log_line": 896
+        }
+      },
+      "proof": {
+        "file": "current-ci/w6-type-only-proof.json",
+        "sha256": "79c41468c31440e1e0f96c2d064280a4eacd4a493854db40cffd1bfee06467f4",
+        "value": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "sourceSha256": "6688fd500edc16659b7ba91f92e91468c2b5365a6b92548a1cec698c88777c92",
+          "blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+          "beforeSha256": "0054bf0f19065e2f06ae961980b775d51a6d37ec1039b9d0d8099ca1adb8e332",
+          "javascriptIdentical": true,
+          "javascriptSha256": "93befb2f040984bcf6ad193369da88646e1294dcf386e7cf7a2d9de21151f122",
+          "javascriptBytes": 27110,
+          "transform": "node:module.stripTypeScriptTypes, mode=transform, source text only; no product evaluated"
+        },
+        "provenance": "Root-produced source-only stripTypeScriptTypes comparison; this audit read the proof and independently matched the current TypeScript source SHA256. No product modules evaluated.",
+        "independent_source_checks": {
+          "current_source_sha256_matches_proof": true,
+          "type_argument_occurrences": 2,
+          "removing_exact_type_arguments_restores_w5_sha256": true,
+          "w5_frozen_source_sha256": "0054bf0f19065e2f06ae961980b775d51a6d37ec1039b9d0d8099ca1adb8e332",
+          "w5_frozen_blob": "0cd241ca2410e581a3793dfb1fc52b07b2ad7b8c",
+          "product_evaluated": false
+        }
+      }
+    },
+    "explanation": "W6 publicou apenas os dois argumentos genéricos expect<string | undefined> no teste mapper e receipt 06. A prova de transformação de texto (sem avaliar produto) registra JavaScript byte-idêntico, SHA256 93befb2f040984bcf6ad193369da88646e1294dcf386e7cf7a2d9de21151f122. O check W6 removeu exatamente os dois TS2769 próprios: restam os mesmos 139 diagnósticos de W4, zero em paths WP14. Não há S6 nem novo run de produto; os 39 testes continuam sendo evidência do run W5, com essa equivalência explicitada."
+  },
+  "current_check_artifacts": [
+    {
+      "id": 14110035678,
+      "size_bytes": 7777,
+      "digest": "sha256:d07f060138fc5b169964f62a0087d27247389eacef334df3663ad22703a19c83",
+      "verification": "Metadata supplied by root only; artifact bytes not downloaded by this audit."
+    }
+  ]
+}

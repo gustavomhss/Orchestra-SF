@@ -1,0 +1,36 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+    "Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+    "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+    "Sucafinav1/test/product/wp10/integration/source-destinations.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+    "Sucafinav1/test/local-store.test.ts",
+    "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+    "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+    "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+    "Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+    "Sucafinav1/test/product/wp10/integration/native-evidence.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+    "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+    "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+    "Sucafinav1/test/product/wp10/integration/personal-view-persistence.test.ts",
+    "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+    "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+    "Sucafinav1/test/product/wp01/shell-recovery.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}
