@@ -1,0 +1,241 @@
+{
+  "schema": "procurement-apply/checks/v1",
+  "finding": "OPS-REV-02",
+  "W": {
+    "sha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+    "tree": "7ce04850ffe2dc283eae076a625bcdc5d70a4cf4"
+  },
+  "S_check": {
+    "sha": "92fe39450c3b5f3db2ac019b8050a6dc5f883ade",
+    "tree": "93f5ad103abbf56b7d0273e2c31d24a6ab3f6f6f",
+    "parent": "897484c9a472bd43d17cabe56552f2f8fa890185",
+    "branch": "astra-check-operations-procurement-apply-897484c9-a5db3871-01"
+  },
+  "envelope": {
+    "only_delta": {
+      "status": "added",
+      "path": ".astra-operations-check.json",
+      "blob": "35885d0d023c0bf1dc85ddb54b0c5b8bfd854fd1"
+    },
+    "request": {
+      "productSha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "request_sha256_including_final_newline": "a5db3871288ccd5726f7d11c4fec93a8f5f9caf7de8a1c8b9af6908582e8e6ed",
+    "effective_mode": "all",
+    "product_tests_configuration_fixtures_identical_to_W": true,
+    "verified_by": [
+      "GitHub compare W...S_check: one added request, no other delta",
+      "Hosted envelope validation, exact product checkout and product/base checks all passed"
+    ]
+  },
+  "configuration": {
+    "workflow": {
+      "path": ".github/workflows/astra-operations-check.yml",
+      "blob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e"
+    },
+    "guard_base_ref": "origin/dev",
+    "guard_base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "guard_merge_base_sha": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "merge_base_verification": "GitHub compare pinned dev...W; workflow also wrote merge-base.txt to its evidence artifact.",
+    "workflow_modified": false
+  },
+  "deduplication": {
+    "consulted": "Latest 100 Actions runs, all statuses, plus exact branch, queued and in_progress queries.",
+    "matching_run_found_before_trigger": false,
+    "mission_runs_in_flight_before_trigger": 0,
+    "shared_group_pending_before_trigger": 0,
+    "shared_group_active_before_trigger": {
+      "run_id": 43627083716,
+      "policy": "Existing cancel-in-progress:false serialized the check. No pending run was replaced."
+    },
+    "own_run_observed_pending_then_in_progress": true,
+    "attempts_started": 1,
+    "reruns": 0
+  },
+  "run": {
+    "id": 43627354338,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627354338",
+    "attempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T18:34:29Z",
+    "updated_at": "2026-11-14T18:37:25Z",
+    "head_sha": "92fe39450c3b5f3db2ac019b8050a6dc5f883ade",
+    "job": {
+      "id": 132546331455,
+      "name": "scoped-checks",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify product SHA and unchanged product tree",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload check evidence",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "name": "Sucafina typecheck",
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "examined_sha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "result": "failure",
+      "exit_code": 2,
+      "diagnostic_count": 1,
+      "diagnostics": [
+        {
+          "code": "TS2741",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "line": 167,
+          "column": 41,
+          "missing_property": "procurementEvidenceWrites",
+          "classification": "inherited external consumer fixture",
+          "base_blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+          "W_blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41"
+        }
+      ],
+      "new_mission_file_diagnostics": 0
+    },
+    {
+      "name": "CLI consumer typecheck",
+      "command": "bun typecheck",
+      "directory": "apps/cli",
+      "examined_sha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "result": "success"
+    },
+    {
+      "name": "Repository guards",
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "examined_sha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "result": "success",
+      "rules": 78,
+      "changed_paths": 843,
+      "gate_findings": 0,
+      "warn_findings": 11,
+      "errors": 0,
+      "warning_paths": [
+        {
+          "path": "apps/cli/package.json",
+          "rule": "dep-new-added",
+          "count": 1
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "rule": "dep-new-added",
+          "count": 3
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "rule": "dep-new-added",
+          "count": 6
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+          "rule": "test-timeout-raised",
+          "count": 1
+        }
+      ],
+      "warning_path_provenance": "All four paths are unchanged between mission base ba8a09e371ce8d93eb917eabb102caaee5affaf4 and W. The 843 paths are the existing full guard comparison against dev, not the 9-file mission delta at W.",
+      "handling": "WARN is advisory under .orchestra/skills/guardrail-usage/SKILL.md, blob c2333f8b46d780f6b52bba2ae9f6696e840d18a0. No ignore or approval label was added."
+    }
+  ],
+  "artifact": {
+    "id": 14126209098,
+    "name": "astra-operations-check-1",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627354338/artifacts/14126209098",
+    "size_in_bytes": 1580,
+    "digest": "sha256:8ce77efd1313ed03cb8a5067c7e3aec71c42b063d27df6812f991bf2bf9e51d8",
+    "files_uploaded": 5,
+    "expires_at": "2026-11-28T18:37:21Z",
+    "expired_when_observed": false,
+    "verification": "Upload log and API agree on ID, name, size and digest. Command results were read from the complete job log; the zip was not downloaded."
+  },
+  "external_dependency": {
+    "owner": "astra-compose / owner of the WP14 consumer test",
+    "consumer": "Second Documents WP06 -> BusinessContext -> Atlas C17 scenario in source-access-atlas.test.ts",
+    "target": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "preimage_blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+    "existing_patch": {
+      "commit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/OPS-CONSUMER-02.patch",
+      "blob": "2ab9a6b6f18709d5bad95f58247c70ba286a00aa",
+      "proposed_postimage_blob": "d7d2a69837560f42438d470b83724c1a61939a73"
+    },
+    "applied_by_this_mission": false,
+    "next_action": "Owner rechecks current preimage, consumes the two existing hunks sharing the same WeakSet between authority and BusinessServices, then runs Sucafina typecheck and the two original consumer cases through scoped hosted CI."
+  },
+  "limits": [
+    "Overall check conclusion is failure. Passing tests, CLI typecheck and guards do not convert the failed Sucafina typecheck into a pass.",
+    "Checks examined W. A later receipt-only descendant does not inherit a claim that its own commit was executed or guarded.",
+    "No full suite, epic, local product test, workflow modification, permission change or external consumer patch was performed."
+  ]
+}

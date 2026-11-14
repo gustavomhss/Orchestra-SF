@@ -1,0 +1,360 @@
+{
+  "schema": "sf2h-c12-receipt-recovery-tests-v1",
+  "mission": "19 / C12 / I-OPS-02",
+  "attempt": 2,
+  "status": "PASS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "procurement-apply",
+  "pullRequest": 60,
+  "product": {
+    "sha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+    "tree": "536b11690bd71a90023a78825d114730352a024c",
+    "parent": "3f333173780756a42b90b5e1c6dd99de2c5fe40f",
+    "productCodeIdenticalTo": "3f333173780756a42b90b5e1c6dd99de2c5fe40f"
+  },
+  "snapshot": {
+    "sha": "f4a1e6e2743188276f42dd68e14b7c06a23ad55c",
+    "tree": "519288ec0078ff66151d3304c47ea069f0bfc04f",
+    "parent": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+    "ref": "ci-run-linux-c12-recovery-0b483fbf-ab1b419a-02",
+    "differenceFromProduct": [
+      {
+        "status": "added",
+        "path": ".ci-run.json"
+      }
+    ],
+    "allOtherBlobsIdentical": true,
+    "comparison": "GitHub MCP compare W2...S2: ahead_by=1; only .ci-run.json"
+  },
+  "request": {
+    "content": {
+      "package": "sucafina",
+      "packageSelector": "packages/sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+        "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "serialization": "compact JSON, no final newline",
+    "bytes": 285,
+    "sha256": "ab1b419ac5d36fd1e0a0c9419259e80f13e055cbcac53d6a7c11c0374d9e7df2",
+    "git": "2a3fb5dd04b5e9f1f9721495096b6c46451319ff"
+  },
+  "deduplication": {
+    "previousRun": 43635717762,
+    "previousConclusion": "failure",
+    "reason": "Only exclusive partial helper and browser-response capture changed; revalidate both affected test files. No product/config/shared-fixture edits.",
+    "oneMissionRunAtATime": true,
+    "rerun": false,
+    "requestDifference": "2 explicit files; no broad directory or name filter"
+  },
+  "workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "runId": 43636531401,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43636531401",
+    "headSha": "f4a1e6e2743188276f42dd68e14b7c06a23ad55c",
+    "conclusion": "success",
+    "runAttempt": 1,
+    "createdAt": "2026-11-14T20:15:34Z",
+    "updatedAt": "2026-11-14T20:19:24Z"
+  },
+  "jobs": [
+    {
+      "id": 132574441676,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 132575442781,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "runtime": {
+    "os": "ubuntu-24.04",
+    "bun": "1.3.14 (0d9b296a)",
+    "selectedFiles": 2,
+    "tests": 7,
+    "pass": 7,
+    "fail": 0,
+    "expectCalls": 225,
+    "seconds": 125.46,
+    "exitCode": 0
+  },
+  "browser": {
+    "playwright": "1.59.1",
+    "chrome": "157.0.8103.50",
+    "driver": "Node 24.22.2 via AppProcess",
+    "transport": "playwright-unix-pipe-node-websocket",
+    "proofs": 2,
+    "driverExitCode": 0,
+    "browserExitCode": 0,
+    "remainingContexts": 0,
+    "productionScript": true,
+    "productionRenderer": true,
+    "actualPostApplication": true,
+    "realSqlite": true,
+    "realC08": true,
+    "testGetShell": "minimal authorized projection; not whole Workbench navigation"
+  },
+  "omni": {
+    "status": "pass",
+    "nonce": "169fe899dd116e934e8b337db5f25f84",
+    "declaredTests": 2,
+    "spawns": 2,
+    "delegated": 0
+  },
+  "artifacts": [],
+  "logs": {
+    "jobId": 132574441676,
+    "decodedFullUtf8": {
+      "bytes": 84979,
+      "sha256": "39146ff384c628067ba42e01eacc25dd7272ab8b690216f1b535f672e4d975e9",
+      "source": "GitHub Actions job132574441676 decoded full log; https://github.com/gustavomhss/Orchestra-SF/actions/runs/43636531401/job/132574441676"
+    },
+    "testPhaseExcerpt": {
+      "bytes": 15486,
+      "sha256": "6fa62557c8144ccd8fff17ec3df943028c52524758f97f392dad75283165475a",
+      "disposition": "Used for analysis only; raw tool logs are not committed. This receipt persists the parsed evidence events and assertion summary; the complete hosted log is linked by job."
+    }
+  },
+  "events": [
+    {
+      "at": "2026-11-14T20:17:16.1355721Z",
+      "event": "SF_C12_MISSING_RECEIPT",
+      "value": {
+        "missingRecovery": "unavailable",
+        "durableMutations": 0,
+        "normalApplyAfterwards": 200
+      }
+    },
+    {
+      "at": "2026-11-14T20:17:25.5984820Z",
+      "event": "SF_C12_INTENT_WITHOUT_RECEIPT",
+      "value": {
+        "realIntentCommits": 1,
+        "receiptCount": 0,
+        "recovery": 503,
+        "ordinaryRetry": 503,
+        "domainEffects": 0
+      }
+    },
+    {
+      "at": "2026-11-14T20:17:48.7294610Z",
+      "event": "SF_C12_RECOVERY_IDENTITY",
+      "value": {
+        "wrongDigest": 409,
+        "otherPrincipal": 403,
+        "alteredPreparedInputs": [
+          "command payload",
+          "command digest",
+          "target",
+          "incarnation",
+          "intention key"
+        ],
+        "restoredOriginal": 200,
+        "receiptId": "50cd551d-e18d-4b06-9941-bfe013813f36"
+      }
+    },
+    {
+      "at": "2026-11-14T20:18:09.8102754Z",
+      "event": "SF_C12_REVOKED_OR_REPLACED",
+      "value": {
+        "revocationAfterReceiptRead": true,
+        "revokedStatus": 403,
+        "lastStateReadRevocation": 503,
+        "finalReadInterleavings": 1,
+        "reauthorizedStatus": 200,
+        "replacementStatus": 403,
+        "duplicateEffects": 0
+      }
+    },
+    {
+      "at": "2026-11-14T20:18:27.7132172Z",
+      "event": "SF_C12_PARTIAL_DOMAIN",
+      "value": {
+        "otherDomain": "planner",
+        "otherDomainState": "planned",
+        "foreignRecovery": 409,
+        "originalRecovery": 200,
+        "originalReceipt": "c9e5bf5a-ce00-47a6-88bf-5dba79a220fb",
+        "otherDomainReceiptFabricated": false
+      }
+    },
+    {
+      "at": "2026-11-14T20:18:54.6897400Z",
+      "event": "SF_C12_RECOVERY_POSITIVE",
+      "value": {
+        "receiptId": "0ec7cd8a-4e04-4ddf-bcbd-fae89bdbc17a",
+        "firstInternalStatus": 409,
+        "lostResponse": true,
+        "retryStatus": 409,
+        "recoveryStatus": 200,
+        "repeatedStatus": 200,
+        "sameReceipt": true,
+        "financialEffects": 1,
+        "originalCaseVersion": 3,
+        "concurrentCaseVersion": 4,
+        "reconciledCaseVersion": 5,
+        "newBrowserContext": true,
+        "emptyBrowserStorage": true,
+        "newAdmission": true,
+        "servicesReconstructed": true,
+        "sqliteReopened": true,
+        "processRestarted": false
+      }
+    },
+    {
+      "at": "2026-11-14T20:19:10.7786406Z",
+      "event": "SF_C12_COMMITTED_200_LOSS",
+      "value": {
+        "internalStatus": 200,
+        "lostResponse": true,
+        "recoveryStatus": 200,
+        "receiptId": "644f048d-bae2-4cf4-a473-b30e0de962e7",
+        "financialEffects": 1
+      }
+    }
+  ],
+  "combinedEvidence": {
+    "distinctPassingScenarios": 19,
+    "c12": 9,
+    "opsRev02": 7,
+    "existingWp04": 3,
+    "notASingleGreen19TestRun": true,
+    "retainedFromFirstRun": {
+      "sha": "3f333173780756a42b90b5e1c6dd99de2c5fe40f",
+      "runId": 43635717762,
+      "jobId": 132571953924,
+      "aggregateConclusion": "failure",
+      "individualPassesReused": 12,
+      "normalCasAndConcurrentRecovery": 2,
+      "opsRev02": 7,
+      "wp04": 3,
+      "basis": "W1→W2 modifies only partial.ts, recovery-ui.test.ts and four receipt documents. Neither changed test/helper is an input of normal-retry or the four OPS/WP04 selected files; all product, consumers, common fixtures, config/env/driver inputs remain identical. GitHub compare verifies no other tree changes.",
+      "files": [
+        "test/product/c12-receipt-recovery/normal-retry.test.ts",
+        "test/product/review-fixes/procurement-apply/refusals.test.ts",
+        "test/product/review-fixes/procurement-apply/real-apply.test.ts",
+        "test/product/wp04/prepared-production.test.ts",
+        "test/product/wp04/finance-prepared-alias.test.ts"
+      ]
+    }
+  },
+  "candidateFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "gitBlob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
+      "sha256": "e194c4b2d92cddee7f2e6c2e87d272d7111cc3b13033cb83fff4204a4f30227e",
+      "bytes": 17355
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "gitBlob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+      "sha256": "18919bf9a422f7023061264f896ff7385a513c1402eef5ec1328628afd032594",
+      "bytes": 50653
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "gitBlob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+      "sha256": "8da5bada6de1df90dea00eb0eff048948abdd06b51224188b928d45029e51cfb",
+      "bytes": 7858
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "gitBlob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+      "sha256": "49438dc778c06ba5e162bf74685178f9aaeb61e48e79b03b80f5c6dd20a3cad8",
+      "bytes": 10564
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+      "gitBlob": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+      "sha256": "ad6ce70432c80dff91b04317d3ffbbec359ce4758c1c07cad1e2762358bcba32",
+      "bytes": 5213
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "gitBlob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+      "sha256": "ea84988e1a612e763f5c495810a2e2d74ff28ffac292d5b36e91fec50632e8e9",
+      "bytes": 22110
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "gitBlob": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+      "sha256": "979ef4b8655fcc5c8c896a6b4b10a67c1bdf86ca353c23780b61a09d9f161a94",
+      "bytes": 4141
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/partial.ts",
+      "gitBlob": "31c54f4ddeb4cddbca1684ae311b40d2dd209521",
+      "sha256": "d62a9853659986c945e3097112497bc29efcf9e3536997c8fc9b75b769ca012a",
+      "bytes": 5203
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "gitBlob": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+      "sha256": "9bc66aace0a7112b0ee91a35d9ff06a38052fff99b760cc207074f5948aeae7c",
+      "bytes": 17125
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "gitBlob": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+      "sha256": "49ed1d0a44089766d82165683258ac21463cae508c6cd989d2dce43969962089",
+      "bytes": 14183
+    }
+  ],
+  "unchangedRelevantSharedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/choice.ts",
+      "gitBlob": "a52426bdec23ed61fac29ba84e85e7b7d101a3f3",
+      "bytes": 8011
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/fixture.ts",
+      "gitBlob": "d66efca4ffc076b6c709cec2fcccf6b024b26fb1",
+      "bytes": 11382
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "gitBlob": "b4ce031c32276342f041c0ed14beee94e8fd1fee",
+      "bytes": 5357
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "gitBlob": "86ff640201bc35674b8fc4bb6f96dc4b0896d395",
+      "bytes": 8754
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "gitBlob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "bytes": 23484
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "gitBlob": "df59fbe6a75525e57a7013a09a1a56712214868e",
+      "bytes": 7945
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "gitBlob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "bytes": 19420
+    }
+  ],
+  "limits": [
+    "No local product tests/typecheck. Hosted surgical Actions only.",
+    "Main lost response was internally409 after real effect/receipt commit plus concurrent case edit; recovery200 closes that case. Separate browser test drops a committed200 response and recovers200.",
+    "Reconstructed services/authority and reopened SQLite with a fresh browser context and admission in the same Bun process; no Orchestra process restart.",
+    "Actual production UI renderer/script and HTTP/C08/SQLite under a minimal authorized GET shell; no entire Workbench navigation qualification.",
+    "The Planner negative prepares a real pending command with real source evidence and an explicitly unconfirmed fixture review. It is not the integrated Planner-applied/Procurement-refused AM04 journey.",
+    "Seeded choice has explicitly pending coverage; no native model, SkillLoadReceipt or global AM01–AM06/C/D/GLOBAL_RELEASE claim.",
+    "Legacy receipts without durable C12 intent need original exact proof; cacheless canonical recovery does not synthesize missing history."
+  ]
+}
