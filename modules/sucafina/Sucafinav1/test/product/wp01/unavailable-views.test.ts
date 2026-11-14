@@ -193,7 +193,9 @@ test("an earlier real saved-view response cannot restore private labels after th
     await within(fixture.page.getByRole("button", { name: "Refresh saved views" }).click(), "request the delayed authorized list")
     await within(entered, "hold the complete authorized list before delivery")
     expect(fixture.hold.status).toBe(200)
-    expect(fixture.hold.body).toContain("PRIVATE-PREVIOUS-TITLE")
+    const authorizedBody = fixture.hold.body
+    if (typeof authorizedBody !== "string") throw new Error("The authorized list body was not captured before delivery")
+    expect(authorizedBody).toContain("PRIVATE-PREVIOUS-TITLE")
     expect((await within(fixture.context.request.post(`${fixture.origin}/sucafina/auth/logout`, { headers: { origin: fixture.origin }, timeout: 5_000 }), "revoke the actual operator session")).status()).toBe(204)
     const [refused] = await Promise.all([
       within(fixture.page.waitForResponse((response) => response.status() === 403 && new URL(response.url()).searchParams.get("sf") === "workbench-views", { timeout: 5_000 }), "observe the real revoked list response"),
@@ -207,7 +209,7 @@ test("an earlier real saved-view response cannot restore private labels after th
     expect(late.status()).toBe(200)
     // Reading exact delivered bytes proves completion and the private content
     // available to the old request without an unbounded response.finished wait.
-    expect(await within(late.text(), "read the delayed authorized response body")).toBe(fixture.hold.body)
+    expect(await within(late.text(), "read the delayed authorized response body")).toBe(authorizedBody)
     await within(fixture.page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))), "settle late-response browser rendering")
     expect(await fixture.page.locator("[data-personal-views]").textContent()).not.toContain("PRIVATE-")
     expect(await fixture.page.locator("[data-personal-views] button, [data-personal-views] input").count()).toBe(0)

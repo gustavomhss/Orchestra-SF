@@ -34,8 +34,9 @@ afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 type Edit = Parameters<ReturnType<typeof createDecisionCaseManagement>["edit"]>[0]
 
 /** Real operator cookies, C08, admission, case reads, intent fences and CAS edits.
- * Only the private edit HTTP route is mounted here. Unused Decision HTTP ports
- * are absent; this is a consumer proof, not acceptance of the complete host router.
+ * Only the private edit HTTP route is exercised here. Other Decision HTTP ports
+ * fail explicitly on access; they never supply a simulated domain result.
+ * This is a consumer proof, not acceptance of the complete host router.
  * These source-free cases do not assert source provenance or native execution.
  */
 async function fixture() {
@@ -73,7 +74,26 @@ async function fixture() {
       return payload !== undefined && intent.verify(context, "decisions.edit", payload) && before.sourceRefs.length === 0 && after.sourceRefs.length === 0 &&
         [...before.assumptions, ...after.assumptions].every((item) => item.evidenceRefs.length === 0)
     } })
-  const edit = createDecisionHttp({ origin, mount: "/sucafina/dashboard", human: authority.human, management, withCase: business.withCase } as Parameters<typeof createDecisionHttp>[0])
+  const unmounted = (port: string): never => { throw new Error(`Decision conflict fixture does not mount ${port}`) }
+  const editOptions = {
+    origin, mount: "/sucafina/dashboard", human: authority.human, management, withCase: business.withCase,
+    get admitList() { return unmounted("admitList") },
+    get admitComparison() { return unmounted("admitComparison") },
+    get admitSelection() { return unmounted("admitSelection") },
+    get portfolio() { return unmounted("portfolio") },
+    get history() { return unmounted("history") },
+    get choiceCatalog() { return unmounted("choiceCatalog") },
+    get coverageCatalog() { return unmounted("coverageCatalog") },
+    get reviewChange() { return unmounted("reviewChange") },
+    get selection() { return unmounted("selection") },
+    get baseline() { return unmounted("baseline") },
+    get compare() { return unmounted("compare") },
+    get mutations() { return unmounted("mutations") },
+    get accept() { return unmounted("accept") },
+    get apply() { return unmounted("apply") },
+    get criteria() { return unmounted("criteria") },
+  } satisfies Parameters<typeof createDecisionHttp>[0]
+  const edit = createDecisionHttp(editOptions)
   const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors: business.descriptors, authority: authority.authority,
     validateInput: (_descriptor, value) => operation === "sf_case_read" && decodeSfOperationInput("sf_case_read", value).ok,
     validateOutput: (_descriptor, result) => result.status !== "ok" || operation === "sf_case_read" && decodeSfOperationOutput("sf_case_read", result.result).ok })

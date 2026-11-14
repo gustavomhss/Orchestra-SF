@@ -1,0 +1,912 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43584162495,
+  "job_id": 132414976391,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584162495",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584162495/job/132414976391",
+  "conclusion": "failure",
+  "cleanup_job_id": 132415511794,
+  "cleanup_conclusion": "success",
+  "source": "GitHub MCP existing run/jobs/logs and exact snapshot .ci-run.json; no run initiated by auditor",
+  "product_sha": "5886df8aaedb4db179f336e474e123c30a1d1193",
+  "product_tree": "ec4e9503c452ac724e2b6c9b0b049ccb40377c65",
+  "snapshot_sha": "d8517881a27603e932f759ac877f7019f02d45f4",
+  "snapshot_tree": "d6b83404bf7e8654e4e228e4ef1ef615af54d2fa",
+  "snapshot_branch": "ci-run-linux-astra-interface-5886df8aae-11295a026d-1",
+  "request_sha256": "11295a026dacff165e4a16bda206ef813f304faedfd5cf268e6d58979d502848",
+  "request_blob": "2fe4fb0864196f62a284ba4cc871b417e4e86831",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "./Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "envelope_proof": {
+    "onlyDelta": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "2fe4fb0864196f62a284ba4cc871b417e4e86831",
+    "productTree": "ec4e9503c452ac724e2b6c9b0b049ccb40377c65",
+    "snapshotTree": "d6b83404bf7e8654e4e228e4ef1ef615af54d2fa"
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "attempt": 1,
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43584162495.log",
+    "bytes": 95906,
+    "sha256": "16a54a707b331aab2e79d59e95cb213a6a3c7491bb95005283825e10813635bd"
+  },
+  "summary": {
+    "pass": 0,
+    "fail": 9,
+    "observations": 9,
+    "files_observed": 9,
+    "files_selected": 9,
+    "expect_calls": 2,
+    "elapsed_seconds": 13.9,
+    "bun_summary_present": true,
+    "before_all_failures": 7,
+    "consumer_test_bodies_executed": 0,
+    "named_harness_failures": 2
+  },
+  "omni": {
+    "nonce": "2ada9a9a990995b0021712344be61068",
+    "status": "pass",
+    "spawns": 1,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_APPLICABLE_HARNESS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_EXECUTED_BEFORE_ALL_FAILED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_EXECUTED_BEFORE_ALL_FAILED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_EXECUTED_BEFORE_ALL_FAILED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_EXECUTED_BEFORE_ALL_FAILED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_EXECUTED_BEFORE_ALL_FAILED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_EXECUTED_BEFORE_ALL_FAILED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_EXECUTED_BEFORE_ALL_FAILED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "file_header_observed": true,
+      "consumer_body_status": "NOT_APPLICABLE_HARNESS"
+    }
+  ],
+  "observations": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "status": "fail",
+      "duration_ms": 12030.64,
+      "log_line": 861,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:14:22.3697468Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"playwright-import\",\"elapsedMs\":0}\n2026-11-14T10:14:22.6986563Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"playwright-imported\",\"elapsedMs\":331}\n2026-11-14T10:14:22.7075419Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"app-process-service\",\"elapsedMs\":338}\n2026-11-14T10:14:22.7076228Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"app-process-spawn\",\"elapsedMs\":338}\n2026-11-14T10:14:22.7161790Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"app-process-spawned\",\"elapsedMs\":348,\"driverPid\":4085}\n2026-11-14T10:14:22.7386297Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"node-import\",\"elapsedMs\":371,\"driverPid\":4085}\n2026-11-14T10:14:22.9716295Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"node-imported\",\"elapsedMs\":604,\"driverPid\":4085}\n2026-11-14T10:14:22.9828888Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"chromium-launch\",\"elapsedMs\":615,\"driverPid\":4085}\n2026-11-14T10:14:32.3723258Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"startup-cancelled\",\"elapsedMs\":10001,\"waitingAt\":\"chromium-launch\",\"driverPid\":4085}\n2026-11-14T10:14:32.3729153Z SF_BROWSER_DRIVER_STARTUP_FAILURE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"startup-cancelled\",\"driverPid\":4085,\"elapsedMs\":10005,\"reason\":\"Browser driver launch exceeded 9665 ms\",\"stderr\":\"\"}\n2026-11-14T10:14:34.3961893Z SF_BROWSER_DRIVER_FAILURE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"startup-cancelled\",\"driverPid\":4085,\"reason\":\"WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\",\"stderr\":\"\"}\n2026-11-14T10:14:34.3962591Z WP01 browser acquisition failure observed {\n2026-11-14T10:14:34.3962823Z   pid: undefined,\n2026-11-14T10:14:34.3962994Z   launches: 0,\n2026-11-14T10:14:34.3963203Z   reason: \"Browser driver launch exceeded 9665 ms\",\n2026-11-14T10:14:34.3963432Z }\n2026-11-14T10:14:34.3963823Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:34.3964559Z 219 | }\n2026-11-14T10:14:34.3964710Z 220 | \n2026-11-14T10:14:34.3965039Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:34.3965443Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:34.3966440Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:34.3967105Z                                                                                                                        ^\n2026-11-14T10:14:34.3967426Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:34.3967999Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114)\n2026-11-14T10:14:34.3968658Z (fail) WP01 starts one Node-owned Chromium through Omni before leasing it across files [12030.64ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "test_body_entered": true,
+      "proof_completion": "INFRASTRUCTURE_FAILURE",
+      "scope": "Executed browser-harness assertion failed; no UI consumer body or browser session was reached."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 1.13,
+      "log_line": 884,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T10:14:34.3967426Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:34.3967999Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114)\n2026-11-14T10:14:34.3968658Z (fail) WP01 starts one Node-owned Chromium through Omni before leasing it across files [12030.64ms]\n2026-11-14T10:14:34.3968928Z \n2026-11-14T10:14:34.3969119Z Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:\n2026-11-14T10:14:34.4576603Z 201 | \n2026-11-14T10:14:34.4577420Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T10:14:34.4578055Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T10:14:34.4578597Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T10:14:34.4579157Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T10:14:34.4579770Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T10:14:34.4580162Z                                    ^\n2026-11-14T10:14:34.4580448Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T10:14:34.4581009Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T10:14:34.4581992Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:31:41)\n2026-11-14T10:14:34.4582399Z \n2026-11-14T10:14:34.4582701Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:34.4583051Z 219 | }\n2026-11-14T10:14:34.4583203Z 220 | \n2026-11-14T10:14:34.4583496Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:34.4583861Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:34.4584734Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:34.4585287Z                                                                                                                        ^\n2026-11-14T10:14:34.4585601Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:34.4586104Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114)\n2026-11-14T10:14:34.4586564Z (fail) (unnamed) [1.13ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "hook_phase": "beforeAll",
+      "test_body_entered": false,
+      "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+      "scope": "W7 beforeAll failed because the shared Chromium pool never became ready; no consumer test body executes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 0.12,
+      "log_line": 907,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T10:14:34.4585601Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:34.4586104Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114)\n2026-11-14T10:14:34.4586564Z (fail) (unnamed) [1.13ms]\n2026-11-14T10:14:34.4586682Z \n2026-11-14T10:14:34.4586827Z Sucafinav1/test/product/wp01/thread-recovery.test.ts:\n2026-11-14T10:14:34.4625212Z 201 | \n2026-11-14T10:14:34.4625806Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T10:14:34.4626527Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T10:14:34.4627166Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T10:14:34.4627778Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T10:14:34.4628658Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T10:14:34.4629234Z                                    ^\n2026-11-14T10:14:34.4629683Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T10:14:34.4630545Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T10:14:34.4632032Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:33:41)\n2026-11-14T10:14:34.4632596Z \n2026-11-14T10:14:34.4632984Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:34.4633451Z 219 | }\n2026-11-14T10:14:34.4633652Z 220 | \n2026-11-14T10:14:34.4634316Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:34.4634889Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:34.4635862Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:34.4636728Z                                                                                                                        ^\n2026-11-14T10:14:34.4637187Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:34.4637976Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114)\n2026-11-14T10:14:34.4638662Z (fail) (unnamed) [0.12ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "hook_phase": "beforeAll",
+      "test_body_entered": false,
+      "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+      "scope": "W7 beforeAll failed because the shared Chromium pool never became ready; no consumer test body executes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 1384.78,
+      "log_line": 930,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T10:14:34.4637187Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:34.4637976Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114)\n2026-11-14T10:14:34.4638662Z (fail) (unnamed) [0.12ms]\n2026-11-14T10:14:34.4638821Z \n2026-11-14T10:14:34.4639049Z Sucafinav1/test/product/wp01/decision-mutations.test.ts:\n2026-11-14T10:14:35.9916429Z 201 | \n2026-11-14T10:14:35.9916967Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T10:14:35.9917550Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T10:14:35.9918081Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T10:14:35.9918745Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T10:14:35.9919308Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T10:14:35.9919746Z                                    ^\n2026-11-14T10:14:35.9920041Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T10:14:35.9920632Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T10:14:35.9921390Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts:23:19)\n2026-11-14T10:14:35.9921801Z \n2026-11-14T10:14:35.9922107Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:35.9922481Z 219 | }\n2026-11-14T10:14:35.9922636Z 220 | \n2026-11-14T10:14:35.9922925Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:35.9923331Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:35.9923942Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:35.9924641Z                                                                                                                        ^\n2026-11-14T10:14:35.9924989Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:35.9925487Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:35.9925957Z (fail) (unnamed) [1384.78ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "hook_phase": "beforeAll",
+      "test_body_entered": false,
+      "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+      "scope": "W7 beforeAll failed because the shared Chromium pool never became ready; no consumer test body executes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 0.14,
+      "log_line": 953,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T10:14:35.9924989Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:35.9925487Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:35.9925957Z (fail) (unnamed) [1384.78ms]\n2026-11-14T10:14:35.9926076Z \n2026-11-14T10:14:35.9926223Z Sucafinav1/test/product/wp01/edit-recovery.test.ts:\n2026-11-14T10:14:35.9986465Z 201 | \n2026-11-14T10:14:35.9986946Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T10:14:35.9987506Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T10:14:35.9988253Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T10:14:35.9988752Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T10:14:35.9989294Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T10:14:35.9989683Z                                    ^\n2026-11-14T10:14:35.9989969Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T10:14:35.9990516Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T10:14:35.9991203Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:24:19)\n2026-11-14T10:14:35.9991547Z \n2026-11-14T10:14:35.9991853Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:35.9992211Z 219 | }\n2026-11-14T10:14:35.9992352Z 220 | \n2026-11-14T10:14:35.9992635Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:35.9992994Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:35.9993594Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:35.9994277Z                                                                                                                        ^\n2026-11-14T10:14:35.9994582Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:35.9995116Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:35.9995597Z (fail) (unnamed) [0.14ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "hook_phase": "beforeAll",
+      "test_body_entered": false,
+      "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+      "scope": "W7 beforeAll failed because the shared Chromium pool never became ready; no consumer test body executes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 0.12,
+      "log_line": 976,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T10:14:35.9994582Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:35.9995116Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:35.9995597Z (fail) (unnamed) [0.14ms]\n2026-11-14T10:14:35.9995709Z \n2026-11-14T10:14:35.9995875Z Sucafinav1/test/product/wp01/unavailable-views.test.ts:\n2026-11-14T10:14:36.0027293Z 201 | \n2026-11-14T10:14:36.0027702Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T10:14:36.0028276Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T10:14:36.0028798Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T10:14:36.0029347Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T10:14:36.0029959Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T10:14:36.0030339Z                                    ^\n2026-11-14T10:14:36.0030620Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T10:14:36.0031160Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T10:14:36.0031857Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:22:41)\n2026-11-14T10:14:36.0032214Z \n2026-11-14T10:14:36.0032612Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:36.0032972Z 219 | }\n2026-11-14T10:14:36.0033143Z 220 | \n2026-11-14T10:14:36.0033578Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:36.0033937Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:36.0034668Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:36.0035252Z                                                                                                                        ^\n2026-11-14T10:14:36.0035674Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:36.0036129Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:36.0036539Z (fail) (unnamed) [0.12ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "hook_phase": "beforeAll",
+      "test_body_entered": false,
+      "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+      "scope": "W7 beforeAll failed because the shared Chromium pool never became ready; no consumer test body executes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 2.37,
+      "log_line": 999,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T10:14:36.0035674Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:36.0036129Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:36.0036539Z (fail) (unnamed) [0.12ms]\n2026-11-14T10:14:36.0036655Z \n2026-11-14T10:14:36.0036808Z Sucafinav1/test/product/wp01/two-actor-conflict.test.ts:\n2026-11-14T10:14:36.0082996Z 201 | \n2026-11-14T10:14:36.0083439Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T10:14:36.0083914Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T10:14:36.0084457Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T10:14:36.0084898Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T10:14:36.0085432Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T10:14:36.0085829Z                                    ^\n2026-11-14T10:14:36.0086111Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T10:14:36.0086729Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T10:14:36.0087597Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts:16:41)\n2026-11-14T10:14:36.0088086Z \n2026-11-14T10:14:36.0088584Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:36.0089129Z 219 | }\n2026-11-14T10:14:36.0089330Z 220 | \n2026-11-14T10:14:36.0089965Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:36.0090549Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:36.0091541Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:36.0092417Z                                                                                                                        ^\n2026-11-14T10:14:36.0092884Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:36.0093614Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:36.0094491Z (fail) (unnamed) [2.37ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "hook_phase": "beforeAll",
+      "test_body_entered": false,
+      "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+      "scope": "W7 beforeAll failed because the shared Chromium pool never became ready; no consumer test body executes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 0.11,
+      "log_line": 1022,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T10:14:36.0092884Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:36.0093614Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:36.0094491Z (fail) (unnamed) [2.37ms]\n2026-11-14T10:14:36.0094685Z \n2026-11-14T10:14:36.0094915Z Sucafinav1/test/product/wp01/shell-refresh.test.ts:\n2026-11-14T10:14:36.0116974Z 201 | \n2026-11-14T10:14:36.0117342Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T10:14:36.0117902Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T10:14:36.0118307Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T10:14:36.0118728Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T10:14:36.0119394Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T10:14:36.0119960Z                                    ^\n2026-11-14T10:14:36.0120283Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T10:14:36.0120817Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T10:14:36.0121504Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts:16:41)\n2026-11-14T10:14:36.0121859Z \n2026-11-14T10:14:36.0122160Z 218 |   catch (error) { if (error instanceof Error && \"code\" in error && error.code === \"ENOENT\") return true; throw error }\n2026-11-14T10:14:36.0122625Z 219 | }\n2026-11-14T10:14:36.0122766Z 220 | \n2026-11-14T10:14:36.0123060Z 221 | async function within<T>(work: Promise<T>, timeout: number, name: string) {\n2026-11-14T10:14:36.0123415Z 222 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:14:36.0124146Z 223 |   try { return await Promise.race([work, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`${name} exceeded ${timeout} ms`)), timeout) })]) }\n2026-11-14T10:14:36.0124703Z                                                                                                                        ^\n2026-11-14T10:14:36.0125021Z error: Browser driver launch exceeded 9665 ms\n2026-11-14T10:14:36.0125754Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:223:114\n2026-11-14T10:14:36.0126408Z (fail) (unnamed) [0.11ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "hook_phase": "beforeAll",
+      "test_body_entered": false,
+      "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+      "scope": "W7 beforeAll failed because the shared Chromium pool never became ready; no consumer test body executes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "status": "fail",
+      "duration_ms": 0.52,
+      "log_line": 1066,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:14:36.0155807Z                                                    ^\n2026-11-14T10:14:36.0156094Z error: WP01 selection did not share exactly one Chromium launch\n2026-11-14T10:14:36.0156658Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:268:46)\n2026-11-14T10:14:36.0157378Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)\n2026-11-14T10:14:36.0157883Z 266 |   const contexts = pool.browser?.contexts().length ?? 0\n2026-11-14T10:14:36.0158178Z 267 |   if (pool.failed) failures.push(pool.failure)\n2026-11-14T10:14:36.0158606Z 268 |   if (pool.launches !== 1) failures.push(new Error(\"WP01 selection did not share exactly one Chromium launch\"))\n2026-11-14T10:14:36.0159179Z 269 |   if (activeLease || pool.releasing) failures.push(new Error(\"WP01 browser lease remains active at finalization\"))\n2026-11-14T10:14:36.0159698Z 270 |   if (contexts !== 0) failures.push(new Error(\"WP01 browser contexts remain at finalization\"))\n2026-11-14T10:14:36.0160316Z 271 |   if (pool.acquisitions === 0 || pool.acquisitions !== pool.releases) failures.push(new Error(\"WP01 browser acquisition/release counts do not match\"))\n2026-11-14T10:14:36.0160809Z                                                                                               ^\n2026-11-14T10:14:36.0161233Z error: WP01 browser acquisition/release counts do not match\n2026-11-14T10:14:36.0161782Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:271:89)\n2026-11-14T10:14:36.0162555Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)\n2026-11-14T10:14:36.0162968Z  97 | \n2026-11-14T10:14:36.0163173Z  98 | function shutdownBrowser(): Promise<void> {\n2026-11-14T10:14:36.0163434Z  99 |   if (pool.shutdown) return pool.shutdown\n2026-11-14T10:14:36.0163681Z 100 |   const browser = pool.browser\n2026-11-14T10:14:36.0163906Z 101 |   const driver = pool.driver\n2026-11-14T10:14:36.0164534Z 102 |   if (!browser || !driver) return Promise.reject(new Error(\"WP01 browser driver was never acquired in this shared module\"))\n2026-11-14T10:14:36.0164934Z                                                            ^\n2026-11-14T10:14:36.0165248Z error: WP01 browser driver was never acquired in this shared module\n2026-11-14T10:14:36.0165766Z       at shutdownBrowser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:102:54)\n2026-11-14T10:14:36.0166475Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:272:15)\n2026-11-14T10:14:36.0167303Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)\n2026-11-14T10:14:36.0167941Z (fail) WP01 shares one Chromium across files, releases every lease, and proves final process exit [0.52ms]",
+      "failure_family": "shared_pool_startup_failure",
+      "product_failure_inferred": false,
+      "browser_journey_reached": false,
+      "test_body_entered": true,
+      "proof_completion": "INFRASTRUCTURE_FAILURE",
+      "scope": "Executed browser-harness assertion failed; no UI consumer body or browser session was reached."
+    }
+  ],
+  "proof_records": {
+    "SF_BROWSER_DRIVER_PHASE": [
+      {
+        "log_line": 836,
+        "observed_at": "2026-11-14T10:14:22.3697468Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 837,
+        "observed_at": "2026-11-14T10:14:22.6986563Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-imported",
+          "elapsedMs": 331
+        }
+      },
+      {
+        "log_line": 838,
+        "observed_at": "2026-11-14T10:14:22.7075419Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-service",
+          "elapsedMs": 338
+        }
+      },
+      {
+        "log_line": 839,
+        "observed_at": "2026-11-14T10:14:22.7076228Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawn",
+          "elapsedMs": 338
+        }
+      },
+      {
+        "log_line": 840,
+        "observed_at": "2026-11-14T10:14:22.7161790Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawned",
+          "elapsedMs": 348,
+          "driverPid": 4085
+        }
+      },
+      {
+        "log_line": 841,
+        "observed_at": "2026-11-14T10:14:22.7386297Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-import",
+          "elapsedMs": 371,
+          "driverPid": 4085
+        }
+      },
+      {
+        "log_line": 842,
+        "observed_at": "2026-11-14T10:14:22.9716295Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-imported",
+          "elapsedMs": 604,
+          "driverPid": 4085
+        }
+      },
+      {
+        "log_line": 843,
+        "observed_at": "2026-11-14T10:14:22.9828888Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launch",
+          "elapsedMs": 615,
+          "driverPid": 4085
+        }
+      },
+      {
+        "log_line": 844,
+        "observed_at": "2026-11-14T10:14:32.3723258Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "startup-cancelled",
+          "elapsedMs": 10001,
+          "waitingAt": "chromium-launch",
+          "driverPid": 4085
+        }
+      }
+    ],
+    "SF_BROWSER_DRIVER_STARTUP_FAILURE": [
+      {
+        "log_line": 845,
+        "observed_at": "2026-11-14T10:14:32.3729153Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "startup-cancelled",
+          "driverPid": 4085,
+          "elapsedMs": 10005,
+          "reason": "Browser driver launch exceeded 9665 ms",
+          "stderr": ""
+        }
+      }
+    ],
+    "SF_BROWSER_DRIVER_FAILURE": [
+      {
+        "log_line": 846,
+        "observed_at": "2026-11-14T10:14:34.3961893Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "startup-cancelled",
+          "driverPid": 4085,
+          "reason": "WP01 browser timed out: single Node-owned Chromium launch and PID acquisition",
+          "stderr": ""
+        }
+      }
+    ]
+  },
+  "limits": [
+    "W7 startup failed before Chromium PID acquisition. The seven consumer files fail beforeAll: no named consumer test body executes.",
+    "Each observation belongs only to W5886df8a / S d8517881 and the exact request9; earlier passing evidence keeps its original SHA.",
+    "DEBUG=pw:browser was present but captured stderr is empty. It did not supply a Chrome process diagnostic or establish the launch-stall cause.",
+    "Cleanup job success is separate from browser-driver physical cleanup proof; the finalizer itself failed.",
+    "Native/source/engine evidence and S0 global gates remain separate; no runtime result is inferred from source declarations."
+  ],
+  "final_run_metadata": {
+    "id": 43584162495,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKJdGKvw",
+    "head_branch": "ci-run-linux-astra-interface-5886df8aae-11295a026d-1",
+    "head_sha": "d8517881a27603e932f759ac877f7019f02d45f4",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "test(sucafina): qualify W7 decision and thread consumers in Actions",
+    "run_number": 408,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 416464764,
+    "check_suite_id": 118012098028,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbehG17A",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43584162495",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584162495",
+    "pull_requests": [],
+    "created_at": "2026-11-14T10:12:24Z",
+    "updated_at": "2026-11-14T10:14:49Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T10:12:24Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43584162495/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43584162495/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118012098028",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43584162495/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43584162495/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43584162495/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "d8517881a27603e932f759ac877f7019f02d45f4",
+      "tree_id": "d6b83404bf7e8654e4e228e4ef1ef615af54d2fa",
+      "message": "test(sucafina): qualify W7 decision and thread consumers in Actions",
+      "timestamp": "2026-11-14T10:12:15Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "final_job_metadata": [
+    {
+      "id": 132414976391,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43584162495,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132415511794,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43584162495,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "cleanup_job_log": {
+    "file": "product-43584162495.cleanup.log",
+    "bytes": 2320,
+    "sha256": "7375b95a1f6c4b93c64ddbc4eece5bb80830cc42815fef09eb63c022137c3f91"
+  },
+  "cleanup_scope": "Workflow ci-run branch cleanup succeeded. This is not browser/process lifecycle proof.",
+  "startup_diagnostic": {
+    "driver_pid": 4085,
+    "browser_pid": null,
+    "phase_log_lines": [
+      836,
+      837,
+      838,
+      839,
+      840,
+      841,
+      842,
+      843,
+      844
+    ],
+    "chromium_launch_elapsed_ms": 615,
+    "startup_cancelled_elapsed_ms": 10001,
+    "launch_wait_timeout_ms": 9665,
+    "captured_stderr": "",
+    "ready_observed": false,
+    "chromium_launched_observed": false,
+    "debug_source": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "product_sha": "5886df8aaedb4db179f336e474e123c30a1d1193",
+      "blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "source": "GitHub MCP github_fetch_file verified at exact W7 head; identical blob at W6d.",
+      "statement": "process.env.DEBUG = \"pw:browser\" occurs in the Node driver before the dynamic Playwright import."
+    },
+    "inference_limit": "The phase is observed; the root cause inside launchServer is not. Empty captured stderr does not distinguish no log production from a capture defect."
+  },
+  "physical_lifecycle": {
+    "log_lines": [
+      1025,
+      1066,
+      1067,
+      1076
+    ],
+    "launches": 0,
+    "acquisitions": 0,
+    "releases": 0,
+    "pid": null,
+    "active_lease": false,
+    "contexts": 0,
+    "disconnected": false,
+    "driver_closed": false,
+    "process_exited": false,
+    "conclusion": "NOT_PROVED_FINALIZER_FAILED"
+  },
+  "environment": {
+    "runner": "2.338.2",
+    "os": "Ubuntu24.04.5",
+    "image": "20261111.127.1",
+    "cloud": "AWS",
+    "region": "us-east-1",
+    "node_setup_version": "24.22.2",
+    "bun": "1.3.14",
+    "observed_browser_version": null,
+    "scope": "Setup versions, no browser-ready runtime version claim."
+  }
+}

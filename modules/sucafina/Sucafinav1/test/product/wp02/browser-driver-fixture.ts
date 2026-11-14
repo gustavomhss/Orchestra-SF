@@ -14,14 +14,16 @@ import { object } from "../../../runtime/contract.ts"
 const transport = "playwright-unix-pipe-node-websocket"
 const limits = { maxFrameBytes: 16 * 1024 * 1024, maxQueuedBytes: 32 * 1024 * 1024 }
 const nodeDriver = String.raw`
+import { readFileSync } from "node:fs"
 import { chmod, lstat, mkdtemp, readFile, rm } from "node:fs/promises"
 import { createServer } from "node:net"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { setTimeout } from "node:timers/promises"
 if (process.versions.bun || process.release.name !== "node") throw new Error("The browser driver requires Node")
-// Keep Playwright's launch/PID/Chromium stderr in the bounded failure report.
-// A phase name alone cannot diagnose a browser that never reaches ready.
+// launchServer 1.59.1 stores its browser launch logs without the DEBUG callback.
+// Keep DEBUG for any available diagnostics, and independently observe its public
+// protocol logger and the Node-owned children before the external deadline.
 process.env.DEBUG = "pw:browser"
 console.log(JSON.stringify({ event: "phase", phase: "node-import" }))
 const { chromium } = await import(process.argv[1])
@@ -40,7 +42,51 @@ const stats = { framing: "json-nul", acceptedClients: 0, framesToBrowser: 0, fra
 const lifecycle = { bridgeClosed: false, listenerClosed: false, socketClosed: false, pipeEnded: false,
   webSocketOpened: false, webSocketClosed: false, webSocketCloseCode: 0, webSocketCloseWasClean: false,
   pendingFrameBytes: 0, queuedWriteBytes: 0, socketRemoved: false, directoryRemoved: false }
-let server, socket, websocket, bridge, failure
+let server, socket, websocket, bridge, failure, launchSampler
+const launchStarted = performance.now()
+const protocol = { sent: 0, received: 0, malformed: 0, lastSent: undefined, lastReceived: undefined, pending: new Map() }
+const launchLogger = {
+  isEnabled: (name) => name === "protocol",
+  log: (_name, _severity, message) => {
+    try {
+      const start = message.indexOf("{")
+      if (start < 0) throw new Error("Missing protocol object")
+      const value = JSON.parse(message.slice(start))
+      if (message.startsWith("SEND")) {
+        protocol.sent++; protocol.lastSent = typeof value.method === "string" ? value.method : undefined
+        if (Number.isSafeInteger(value.id) && typeof value.method === "string" && protocol.pending.size < 32) protocol.pending.set(value.id, value.method)
+      } else {
+        protocol.received++; protocol.lastReceived = typeof value.method === "string" ? value.method : protocol.pending.get(value.id)
+        protocol.pending.delete(value.id)
+      }
+    } catch { protocol.malformed++ }
+  },
+}
+const inspectLaunch = () => {
+  const activeResources = process.getActiveResourcesInfo()
+  const resources = Object.fromEntries([...new Set(activeResources)].map((name) => [name, activeResources.filter((value) => value === name).length]))
+  const children = []
+  if (process.platform === "linux") {
+    try {
+      const ids = readFileSync("/proc/" + process.pid + "/task/" + process.pid + "/children", "utf8").trim().split(/\s+/).filter(Boolean).slice(0, 8)
+      for (const id of ids) {
+        try {
+          const status = readFileSync("/proc/" + id + "/status", "utf8")
+          const parent = Number(/^PPid:\s+(\d+)/m.exec(status)?.[1])
+          if (parent !== process.pid) continue
+          children.push({ pid: Number(id), parent, name: readFileSync("/proc/" + id + "/comm", "utf8").trim(), state: /^State:\s+([^\n]+)/m.exec(status)?.[1], wait: readFileSync("/proc/" + id + "/wchan", "utf8").trim() })
+        } catch { children.push({ pid: Number(id), state: "exited-during-observation" }) }
+      }
+    } catch { children.push({ state: "process-observation-unavailable" }) }
+  }
+  // No protocol payload, command arguments, cookies or environment values leave
+  // the driver. These samples are diagnostic and never count as lifecycle proof.
+  console.log(JSON.stringify({ event: "launch-diagnostic", runtime: process.release.name, pid: process.pid,
+    elapsedMs: Math.round(performance.now() - launchStarted), resources, rss: process.memoryUsage().rss, children,
+    debugFileConfigured: typeof process.env.DEBUG_FILE === "string" && process.env.DEBUG_FILE.length > 0,
+    protocol: { sent: protocol.sent, received: protocol.received, malformed: protocol.malformed,
+      lastSent: protocol.lastSent, lastReceived: protocol.lastReceived, pending: [...protocol.pending.values()] } }))
+}
 const fail = (error) => {
   if (failure) return
   failure = error
@@ -151,7 +197,12 @@ async function forward(client) {
 }
 try {
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launch" }))
-  server = await chromium.launchServer({ host: "127.0.0.1", channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 })
+  inspectLaunch()
+  launchSampler = setInterval(inspectLaunch, 1000)
+  launchSampler.unref()
+  server = await chromium.launchServer({ host: "127.0.0.1", channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000, logger: launchLogger })
+  clearInterval(launchSampler)
+  inspectLaunch()
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launched" }))
   await new Promise((resolve, reject) => {
     listener.once("error", reject)
@@ -177,6 +228,7 @@ try {
   console.log(JSON.stringify({ event: "closed", browserExitCode: child.exitCode, browserSignal: child.signalCode,
     bridge: { ...stats, directoryMode, socketMode }, lifecycle }))
 } catch (error) {
+  clearInterval(launchSampler)
   fail(error)
   console.error("SF_WP02_BROWSER_BRIDGE_FAILURE", JSON.stringify({ bridge: stats, lifecycle }))
   await Promise.allSettled([
@@ -244,7 +296,7 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
   if (startup?.signal.aborted) throw startup.signal.reason
   const ready = Promise.withResolvers<Ready>(), stop = Promise.withResolvers<void>()
   const abort = new AbortController()
-  const observed: { pid?: number; ready?: Ready; closed?: ReturnType<typeof closedMessage>; proof?: object; stderr: string } = { stderr: "" }
+  const observed: { pid?: number; ready?: Ready; closed?: ReturnType<typeof closedMessage>; proof?: object; stderr: string; diagnostic?: ReturnType<typeof object> } = { stderr: "" }
   const cancelStartup = () => {
     phase("startup-cancelled", { waitingAt: currentPhase, driverPid: observed.pid })
     stop.resolve()
@@ -255,6 +307,12 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
     try {
       if (!line || line.length > 8192) throw new Error("Invalid browser driver message")
       const value = object(JSON.parse(line))
+      if (value.event === "launch-diagnostic") {
+        if (value.runtime !== "node" || value.pid !== observed.pid || !Array.isArray(value.children) || value.children.length > 8 || typeof value.elapsedMs !== "number") throw new Error("Invalid browser launch diagnostic")
+        observed.diagnostic = value
+        console.info("SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC", JSON.stringify({ consumer, ...value }))
+        return
+      }
       if (value.event === "phase") {
         if (typeof value.phase !== "string" || !["node-import", "node-imported", "chromium-launch", "chromium-launched"].includes(value.phase)) throw new Error("Invalid browser driver phase")
         phase(value.phase, { driverPid: observed.pid })
@@ -299,7 +357,7 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
   // A timeout at the caller must not hide a later owned-process failure.
   void finished.catch((error: unknown) => {
     console.error("SF_BROWSER_DRIVER_FAILURE", JSON.stringify({ consumer, phase: currentPhase, driverPid: observed.pid,
-      reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr }))
+      reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr, diagnostic: observed.diagnostic }))
     ready.reject(error)
   })
   const cleanup = async <T>(work: () => Promise<T>) => {
@@ -349,7 +407,7 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
     }
   } catch (error) {
     console.error("SF_BROWSER_DRIVER_STARTUP_FAILURE", JSON.stringify({ consumer, phase: currentPhase, driverPid: observed.pid,
-      elapsedMs: Math.round(performance.now() - started), reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr }))
+      elapsedMs: Math.round(performance.now() - started), reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr, diagnostic: observed.diagnostic }))
     // Failed startup owns no reusable browser. Cancel immediately and await its
     // AppProcess finalizer instead of waiting for a handshake that already expired.
     stop.resolve()
