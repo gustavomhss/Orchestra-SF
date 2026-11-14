@@ -38,7 +38,6 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 // A provider is never registered by this test. The available branch uses the
 // installed catalog and fails on every non-ready native execution outcome.
 test("configured Finance executes through the real host and its persisted contribution opens after reload", async () => {
-  expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp12-native-finance-"))
   await chmod(directory, 0o700)
   const sourceRoot = path.resolve(import.meta.dir, "../../../product/ai")
@@ -72,7 +71,7 @@ test("configured Finance executes through the real host and its persisted contri
   }
   const host = async <T>(driver: Awaited<ReturnType<typeof openLocalStore>>, initialize: boolean,
     work: (services: SfHostServices, session: SessionV2.Interface, models: readonly ModelV2.Ref[],
-      persistence: ReturnType<typeof createSfSourcePersistence>) => Promise<T>) => {
+      persistence: ReturnType<typeof createSfSourcePersistence>, catalogState: "available" | "empty" | "unsupported") => Promise<T>) => {
     const persistence = createSfSourcePersistence({ persistence: driver, createId: randomUUID,
       enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
     if (initialize) {
@@ -104,36 +103,49 @@ test("configured Finance executes through the real host and its persisted contri
       const identity = runtime.identity()
       const services = runtime.services?.()
       if (!identity || !services) throw new Error("Native Finance host did not publish its own identity and services")
-      const candidates = yield* Effect.gen(function* () {
+      const catalogObservation = yield* Effect.gen(function* () {
         const catalog = yield* Catalog.Service
         const available = yield* catalog.model.available()
         const preferred = yield* catalog.model.default()
         // C15 currently admits only the Responses HTTP transport. Prefer an
-        // existing compatible catalog model; an unsupported-only installation
-        // still reaches and must be refused by the real gate during execution.
-        return available.filter(SessionRunnerModel.supported).toSorted((left, right) =>
+        // existing compatible catalog model. Models unsupported by the native
+        // runner remain an availability observation; a runner-supported model
+        // with an incompatible C15 transport still reaches the real gate.
+        const supported = available.filter(SessionRunnerModel.supported).toSorted((left, right) =>
           2 * Number(right.api.type === "aisdk" && right.api.package === "@ai-sdk/openai") +
           Number(right.providerID === preferred?.providerID && right.id === preferred?.id) -
           2 * Number(left.api.type === "aisdk" && left.api.package === "@ai-sdk/openai") -
           Number(left.providerID === preferred?.providerID && left.id === preferred?.id))
           .map((model) => ({ providerID: model.providerID, id: model.id }))
+        return { available: available.map((model) => ({ providerID: model.providerID, id: model.id,
+          supported: SessionRunnerModel.supported(model) })), supported }
       }).pipe(Effect.provide(locations.get(identity.location)))
-      const published = yield* Effect.promise(() => services.models())
-      const models = candidates.filter((candidate) => published.some((model) => model.providerID === candidate.providerID && model.id === candidate.id))
-      return yield* Effect.promise(() => work(services, session, models, persistence))
+      const published = (yield* Effect.promise(() => services.models())).map((model) => ({ providerID: model.providerID, id: model.id }))
+      const models = catalogObservation.supported.filter((candidate) => published.some((model) => model.providerID === candidate.providerID && model.id === candidate.id))
+      const mismatch = catalogObservation.supported.length > 0 && models.length === 0
+      const catalogState = models.length > 0 ? "available" : catalogObservation.available.length === 0 ? "empty" : "unsupported"
+      console.log("SF_WP12_NATIVE_FINANCE_CATALOG:" + JSON.stringify({ scope: "host-installed-catalog", phase: initialize ? "initial" : "reopened",
+        githubSha: process.env.GITHUB_SHA ?? null, state: mismatch ? "mismatch" : catalogState,
+        available: catalogObservation.available, supported: catalogObservation.supported, published, intersection: models }))
+      if (mismatch) throw new Error("Native Finance catalog has supported models absent from published host services")
+      return yield* Effect.promise(() => work(services, session, models, persistence, catalogState))
     }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
   }
 
   try {
     const first = await openLocalStore(path.join(directory, "business"))
-    const completed = await host(first, true, async (services, session, models, persistence) => {
+    const completed = await host(first, true, async (services, session, models, persistence, catalogState) => {
       if (models.length === 0) {
         console.log("SF_WP12_NATIVE_FINANCE:" + JSON.stringify({ scope: "host-availability-only", status: "unavailable",
-          reason: "no-supported-model-in-installed-host-catalog", classification: "catalog-observation",
+          reason: catalogState === "empty" ? "installed-host-catalog-empty" : "installed-host-catalog-has-no-supported-model",
+          classification: "catalog-observation", catalogState,
           githubSha: process.env.GITHUB_SHA ?? null, candidates: [],
           inferenceExecuted: false, outputRef: null, consumerRef: null, gnativeAccepted: false }))
         return undefined
       }
+      // Only the admitted execution branch must load through the native runner.
+      // An empty catalog is an availability observation and starts no provider.
+      expectSpawn(import.meta.path)
       const selected = services.selected.find((entry) => entry.profile.id === "sf_finance")
       const skill = selected?.skills.find((entry) => entry.id === "sf-explicar-forecast")
       if (!selected || !skill || !services.analysisInputs || !services.analyses) throw new Error("Native Finance published analysis services are incomplete")

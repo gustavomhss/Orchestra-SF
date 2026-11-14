@@ -82,7 +82,8 @@ test("native loading keeps the reserved source and rejects changed bytes or gran
 }, 120_000)
 
 test("closing the native registration scope revokes its capability before another skill load", async () => {
-  expectSpawn(import.meta.path)
+  // This denial happens before Session.skill; creating a Session and refusing a
+  // revoked capability need no subprocess. The successful load above owns its spawn expectation.
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/native-probe.json") })
   const selected = bundle.selected[0]!
   const skill = selected.skills[0]!

@@ -3,7 +3,7 @@ import type { BusinessPorts, PortResult } from "../contracts/ports.ts"
 import type { ContributionEnvelope, SkillLoadReceipt } from "../contracts/resident-ai.ts"
 import normative from "../contracts/normative-contracts.json"
 import { sfSkillInputSchemas } from "../contracts/output-schemas.ts"
-import { decodeSfSkillInput } from "../contracts/schema-admission.ts"
+import { decodeSfContributionOutput, decodeSfSkillInput } from "../contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
 import { digestSfContribution, digestSfValue } from "../contracts/canonical.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -85,7 +85,6 @@ export async function publishSfContribution(input: {
   runRef: string
   reviewTarget?: SfReviewTarget
 }) {
-  const { decodeSfContributionOutput } = await import("../contracts/schema-admission.ts")
   const receipt = input.skillReceipt
   const provenance = input.output.runProvenance
   if (provenance.runId !== input.runRef || !sameSfSkillLoadReceipt(receipt, provenance) || !provenance.actualModel || !provenance.contextFingerprint) {
@@ -109,29 +108,48 @@ export async function publishSfContribution(input: {
   if (input.output.state === "ready" && input.output.kind === "CritiqueReport" && (receipt.profileId !== "sf_reviewer" || !input.reviewTarget || input.output.payload.targetRunId !== input.reviewTarget.targetRunId ||
       input.output.payload.targetOutputDigest !== input.reviewTarget.targetOutputDigest || input.output.payload.reviewerRunId !== receipt.runId ||
       input.output.payload.reviewerSessionId !== receipt.nativeSessionId)) return { status: "failed", reason: "review-target-mismatch" } as const
-  const authorized = await input.host.withRunContext(input.runRef, (context) => input.host.revalidate(context, {
-    runRef: input.runRef,
-    caseRef: input.output.caseRef,
-    contextFingerprint: provenance.contextFingerprint,
-    manifestDigest: receipt.manifestDigest,
-    accessRevision: input.output.accessRevision,
-    outputKind: input.output.kind,
-    evidenceRefs: input.output.evidenceRefs,
-    output: input.output,
-    skillReceipts: [receipt],
-    reviewTarget: input.reviewTarget,
-  }))
+  // Revalidation is asynchronous and receives the original envelope. Keep the
+  // caller's complete command pinned even if a callback reseals a changed output.
+  const host = input.host
+  const runRef = input.runRef
+  const command = () => ({ runRef: input.runRef, output: input.output, skillReceipt: input.skillReceipt, reviewTarget: input.reviewTarget })
+  const commandDigest = digestSfValue(command())
+  const unchanged = () => matchesDigest(command(), commandDigest)
+  const changed = { status: "denied", reason: "contribution-input-changed-during-authorization" } as const
+  const authorized = await host.withRunContext(runRef, async (context) => {
+    if (!unchanged()) return changed
+    const checked = await host.revalidate(context, {
+      runRef,
+      caseRef: input.output.caseRef,
+      contextFingerprint: input.output.runProvenance.contextFingerprint,
+      manifestDigest: input.skillReceipt.manifestDigest,
+      accessRevision: input.output.accessRevision,
+      outputKind: input.output.kind,
+      evidenceRefs: input.output.evidenceRefs,
+      output: input.output,
+      skillReceipts: [input.skillReceipt],
+      reviewTarget: input.reviewTarget,
+    })
+    return unchanged() ? checked : changed
+  })
+  if (!unchanged()) return changed
   if (authorized.status === "stale") {
-    const stale = await input.host.withRunContext(input.runRef, (context) => input.host.preserveStale(input.runRef, authorized.reason, input.output, context))
+    const stale = await host.withRunContext(runRef, (context) => unchanged()
+      ? host.preserveStale(runRef, authorized.reason, input.output, context) : Promise.resolve(changed))
+    if (!unchanged()) return changed
     if (stale.status !== "ok") return stale
     return authorized
   }
   if (authorized.status !== "ok") return authorized
-  const written = await input.host.withRunContext(input.runRef, (context) => input.host.result.write({ runRef: input.runRef, caseRef: input.output.caseRef, output: input.output }, context))
+  const written = await host.withRunContext(runRef, (context) => unchanged()
+    ? host.result.write({ runRef, caseRef: input.output.caseRef, output: input.output }, context) : Promise.resolve(changed))
+  if (!unchanged()) return changed
   if (written.status !== "stale") return written
   // The result may have committed before its final source check. The store can
   // retain only that same verified output, never replace a concurrent terminal state.
-  const stale = await input.host.withRunContext(input.runRef, (context) => input.host.preserveStale(input.runRef, written.reason, input.output, context))
+  const stale = await host.withRunContext(runRef, (context) => unchanged()
+    ? host.preserveStale(runRef, written.reason, input.output, context) : Promise.resolve(changed))
+  if (!unchanged()) return changed
   return stale.status === "ok" ? written : stale
 }
 
@@ -317,34 +335,59 @@ export async function cancelSfAnalysis(input: {
 
 /** Recover persisted progress and a ready result after restart without reviving an expired ticket or grant. */
 export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }) {
-  const read = await withLifecycleContext(input.host, input.runRef, (context) => input.host.readRun(input.runRef, context))
+  const host = input.host
+  const runRef = input.runRef
+  const changed = { status: "denied", reason: "run-input-changed-during-read" } as const
+  const read = await withLifecycleContext(host, runRef, (context) => host.readRun(runRef, context))
+  if (input.runRef !== runRef) return changed
   if (read.status !== "ok") return read
   const run = read.value
-  if (run.runRef !== input.runRef) return { status: "denied", reason: "run-identity-mismatch" } as const
-  const progress: SfAnalysisRunProgress = { runRef: run.runRef, version: run.version, caseRef: run.caseRef, skillId: run.skillId, state: run.state, createdAt: run.createdAt, updatedAt: run.updatedAt,
+  if (run.runRef !== runRef) return { status: "denied", reason: "run-identity-mismatch" } as const
+  const runDigest = digestSfValue(run)
+  const progress: SfAnalysisRunProgress = { runRef: run.runRef, version: run.version, caseRef: structuredClone(run.caseRef), skillId: run.skillId, state: run.state, createdAt: run.createdAt, updatedAt: run.updatedAt,
     ...("reason" in run && run.reason ? { reason: run.reason } : {}), ...(run.outputRef ? { outputRef: run.outputRef } : {}) }
   if (run.state !== "ready") return { status: "ok", value: { run: progress } } as const
   if (!run.outputRef || !run.native) return { status: "unavailable", reason: "ready-output-unavailable" } as const
   const receipt = run.native.skillReceipt
-  return input.host.withRunContext<{ run: SfAnalysisRunProgress; output?: Extract<ContributionEnvelope, { state: "ready" }> }>(input.runRef, async (context) => {
-    const output = await input.host.analysis.read(run.runRef, context)
+  const pins: { value: unknown; digest: string }[] = [{ value: run, digest: runDigest }, { value: receipt, digest: digestSfValue(receipt) }]
+  const egress: { digest?: string } = {}
+  const unchanged = () => input.runRef === runRef && pins.every((pin) => matchesDigest(pin.value, pin.digest))
+  const result = await host.withRunContext<{ run: SfAnalysisRunProgress; output?: Extract<ContributionEnvelope, { state: "ready" }> }>(runRef, async (context) => {
+    if (!unchanged()) return changed
+    const output = await host.analysis.read(runRef, context)
+    if (!unchanged()) return changed
     if (output.status !== "ok") return output
     if (output.value.state !== "ready" || output.value.id !== run.outputRef || !matchesSfRunOutput(run, output.value)) return { status: "denied", reason: "run-output-provenance-mismatch" } as const
-    const authorized = await input.host.revalidate(context, { runRef: run.runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
-      accessRevision: run.accessRevision, outputKind: output.value.kind, evidenceRefs: output.value.evidenceRefs, output: output.value, skillReceipts: [receipt], reviewTarget: run.reviewTarget })
+    const contribution = output.value
+    pins.push({ value: contribution, digest: digestSfValue(contribution) })
+    const authorized = await host.revalidate(context, { runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
+      accessRevision: run.accessRevision, outputKind: contribution.kind, evidenceRefs: contribution.evidenceRefs, output: contribution, skillReceipts: [receipt], reviewTarget: run.reviewTarget })
+    if (!unchanged()) return changed
     if (authorized.status !== "ok") return authorized
-    const current = await input.host.readRun(input.runRef, context)
+    const current = await host.readRun(runRef, context)
+    if (!unchanged()) return changed
     if (current.status !== "ok") return current
-    if (digestSfValue(current.value) !== digestSfValue(run)) return { status: "stale", reason: "run-changed-during-read" } as const
-    const authorizedAgain = await input.host.revalidate(context, { runRef: run.runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
-      accessRevision: run.accessRevision, outputKind: output.value.kind, evidenceRefs: output.value.evidenceRefs, output: output.value, skillReceipts: [receipt], reviewTarget: run.reviewTarget })
+    if (!matchesDigest(current.value, runDigest)) return { status: "stale", reason: "run-changed-during-read" } as const
+    pins.push({ value: current.value, digest: runDigest })
+    const authorizedAgain = await host.revalidate(context, { runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
+      accessRevision: run.accessRevision, outputKind: contribution.kind, evidenceRefs: contribution.evidenceRefs, output: contribution, skillReceipts: [receipt], reviewTarget: run.reviewTarget })
+    if (!unchanged()) return changed
     if (authorizedAgain.status !== "ok") return authorizedAgain
-    return { status: "ok", value: { run: progress, output: output.value } } as const
+    const ready = { status: "ok", value: { run: progress, output: structuredClone(contribution) } } as const
+    egress.digest = digestSfValue(ready)
+    pins.push({ value: ready, digest: egress.digest })
+    return ready
   })
+  if (!unchanged() || (result.status === "ok" && (!egress.digest || !matchesDigest(result, egress.digest)))) return changed
+  return result.status === "ok" ? structuredClone(result) : result
 }
 
 function withLifecycleContext<T>(host: SfAnalysisHost, runRef: string, action: (context: TrustedDomainContext) => Promise<PortResult<T>>) {
   return host.withLifecycleContext ? host.withLifecycleContext(runRef, action) : host.withRunContext(runRef, action)
+}
+
+function matchesDigest(value: unknown, expected: string) {
+  try { return digestSfValue(value) === expected } catch { return false }
 }
 
 /** Only the existing admitted routine port may start Relay; results never recursively start another run. */

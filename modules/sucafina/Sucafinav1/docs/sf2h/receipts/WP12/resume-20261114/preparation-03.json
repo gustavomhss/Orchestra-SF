@@ -1,0 +1,132 @@
+{
+  "schema": "sf-wp12-increment-preparation-v1",
+  "baseProduct": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+  "status": "READY_FOR_HOSTED_VERIFICATION",
+  "ownChanges": [
+    "Pin publication output, provenance receipt and independent review target before awaits; check inside and outside authorization/write scopes even when a callback reseals its mutation.",
+    "Pin current and ready contribution/run reads across verifiers and final authorization, pin the value crossing the context scope, and isolate returned objects.",
+    "Pin continuation request, skill input, selection and authority binding before callbacks; recheck prior response/admission/persisted reread and preserve denied on revocation.",
+    "Recover the later own C08/SQLite publication lifecycle proof and complete case fixture from PR36 exact blobs; no pre-recorded inference or native receipt is asserted.",
+    "Align Omni declarations with required native loading: pre-load revocation cannot require a spawn; admitted provider execution still requires it.",
+    "Observe the installed Finance host model catalog after actual host/location bootstrap; mismatched available and published models fail, empty/unsupported observations do not claim inference."
+  ],
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "b641f11960e6b69f5985fc49228a839700f40fa8",
+      "sha256": "9b606a56bd6a921fd8877a955517c5b4dcff45cc6293a10ce3f97b42129bac2a",
+      "bytes": 28584
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "blob": "7954823a7289cae17406390aac8c65bc527680d2",
+      "sha256": "efc029597dabb1bffd50fd79018f528b87277403df83b6e0ec89d4d9fb12f96a",
+      "bytes": 9415
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+      "blob": "645d69ac20087e04e9b5ea93db0dd094341b0299",
+      "sha256": "57044eaa5954db294e3feaaa9222e0b12a909e874112050b65087891f795d30e",
+      "bytes": 9894
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "blob": "f15cb2d1ce9dca74c115c3234f60b81db852c1fd",
+      "sha256": "447368b9bae7d843d0c09a30e1c05b5501b283d2eaefdee4c6116bf6724d2b2f",
+      "bytes": 46516
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "blob": "4ef13d6d2382c91f16dd8f0ec797bb5ebb7d395a",
+      "sha256": "09062ea29b5674ca454e2bf7c14eb3e40ab379784becc09c13cab7b4418d2b0c",
+      "bytes": 8610
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "blob": "1b0052bd2cd70d6f1f41ae6067bf27287a9d03bc",
+      "sha256": "c1bc14f2ec370f5904913079e469fa0073598bd6aba13c556d14fe975ee2c6cf",
+      "bytes": 12334
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "blob": "073d2ce97d4786cabae0fc1aa17eb73d923da30d",
+      "sha256": "e5a0b65876868bb6766ab8f39f0ba64b69ef25a4e3bcea19225dc0109ebaa3a2",
+      "bytes": 7288
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "blob": "eb81b88cbea47b399b0d4eeb2128bd8562e0bae6",
+      "sha256": "2a97dd0191e119662d7b5ee8ab59510d7dcd76481d3da2a1ccf94c842b84f2aa",
+      "bytes": 19165
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "blob": "e3e3dacbb3af4c62cc5c3f57582dfaac5581ae3c",
+      "sha256": "9880318bd6b22b5ef745135915cb194603620f850928c4ce70632366f18110be",
+      "bytes": 20242
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+      "blob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "sha256": "e46bd4eb13bba2fafe489ae7d73a96749e1608c17f42dc70ab8c7f6ff6bd65a5",
+      "bytes": 3605
+    }
+  ],
+  "ownRecovery": {
+    "sourceCommit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+    "alsoPublishedByWp10": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+    "paths": [
+      "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts"
+    ]
+  },
+  "foreignDelta": {
+    "files": 63,
+    "manifest": "intake-03.json",
+    "foreignAuthoredChanges": 0,
+    "enginesChanged": false
+  },
+  "plannedChecks": {
+    "tests": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/analysis.test.ts",
+        "./Sucafinav1/test/product/wp12/author-reader.test.ts",
+        "./Sucafinav1/test/product/wp12/continuation.test.ts",
+        "./Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+        "./Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+        "./Sucafinav1/test/product/wp12/historical-reader.test.ts",
+        "./Sucafinav1/test/product/wp12/resident.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-authority.test.ts",
+        "./Sucafinav1/test/product/wp12/run-store.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+        "./Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestSha256": "15ac8dc645b843301e153dace8b9cc705c2215a9300db34b11e6b737c4707bc5",
+    "requestBlob": "1804b56dc5fbfe3de0d192ff9753f6f1fd51834a",
+    "validatorSourceBlobsVerified": 42,
+    "omniScope": "declared",
+    "packageTypecheck": "bun typecheck in modules/sucafina",
+    "guards": [
+      "bun run check:spawn-imports",
+      "bun run check:guards --base origin/dev"
+    ]
+  },
+  "independentReview": {
+    "analysis": "Cross-review identified and closed mutation of a value returned by the host context scope.",
+    "continuation": "Exact source and test blobs reviewed; no new blocking static finding.",
+    "runtimeExecution": false
+  },
+  "localProductTestsExecuted": false,
+  "providerExecutionAccepted": false,
+  "fullWp12Accepted": false
+}

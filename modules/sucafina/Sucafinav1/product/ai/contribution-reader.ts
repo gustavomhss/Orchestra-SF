@@ -29,18 +29,26 @@ export function createSfContributionReader(input: {
     const run = await input.runs.read(decoded.value.runProvenance.runId, context)
     if (run.status !== "ok") return run
     if (run.value.state !== "ready" || run.value.outputRef !== decoded.value.id || !matchesSfRunOutput(run.value, decoded.value)) return { status: "denied", reason: "contribution-provenance-mismatch" }
+    const outputDigest = digestSfValue(decoded.value)
+    const runDigest = digestSfValue(run.value)
+    const unchanged = () => matchesDigest(decoded.value, outputDigest) && matchesDigest(run.value, runDigest)
     const verified = await input.verify(decoded.value, run.value, context)
     if (verified.status !== "ok") return verified
+    if (!unchanged()) return { status: "denied", reason: "contribution-verification-mutated-input" }
     const current = await read()
     if (current.status !== "ok") return "reason" in current ? { status: current.status, reason: current.reason } : { status: "unavailable", reason: "contribution-unavailable" }
-    if (!current.value || digestSfValue(current.value) !== digestSfValue(decoded.value)) return { status: "stale", reason: "contribution-changed" }
+    if (!unchanged()) return { status: "denied", reason: "contribution-verification-mutated-input" }
+    if (!current.value || !matchesDigest(current.value, outputDigest)) return { status: "stale", reason: "contribution-changed" }
     const again = await input.runs.read(run.value.runRef, context)
     if (again.status !== "ok") return again
-    if (digestSfValue(again.value) !== digestSfValue(run.value)) return { status: "stale", reason: "contribution-run-changed" }
+    if (!unchanged()) return { status: "denied", reason: "contribution-verification-mutated-input" }
+    if (!matchesDigest(again.value, runDigest)) return { status: "stale", reason: "contribution-run-changed" }
     const verifiedAgain = await input.verify(decoded.value, again.value, context)
     if (verifiedAgain.status !== "ok") return verifiedAgain
+    if (!unchanged() || !matchesDigest(again.value, runDigest)) return { status: "denied", reason: "contribution-verification-mutated-input" }
     if (!await input.revalidate(context)) return { status: "denied", reason: "contribution-access-unavailable" }
-    return { status: "ok", value: { output: decoded.value, run: again.value } }
+    if (!unchanged() || !matchesDigest(again.value, runDigest)) return { status: "denied", reason: "contribution-verification-mutated-input" }
+    return { status: "ok", value: { output: structuredClone(decoded.value), run: structuredClone(again.value) } }
   }
 }
 

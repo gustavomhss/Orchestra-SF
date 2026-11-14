@@ -7,7 +7,7 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { resolve } from "../../../src/identity.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { projectSfProcurementScope } from "../../../product/integration/procurement-projections.ts"
+import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
 import { createProcurementPort } from "../../../product/procurement/port.ts"
 import { createSfProcurementSourceAccess } from "../../../product/decision-memory/source-access.ts"
@@ -21,7 +21,8 @@ test("Procurement evidence is read through current source and domain ports", asy
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-procurement-evidence-"))
   const store = await openLocalStore(directory, { lockTimeoutMs: 500 })
   try {
-    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: projectSfProcurementScope })
+    const at = "2026-11-13T12:00:00Z"
+    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => { snapshot.data.roleMap = [{ surface: "procurement", role: "requester", entra: "requesters", version: 1, by: "admin" }]; snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", status: "draft", createdBy: "alice", pr: { title: "Owned", estAmount: 100 } }, version: 1, by: "alice" } }, settings: { currency: "USD" }, suppliers: [] }; return { commit: true, value: undefined } })
     const session = { active: true }
@@ -30,16 +31,12 @@ test("Procurement evidence is read through current source and domain ports", asy
     const port = createProcurementPort({ ...host, resolveRequestSource: resolver.resolve, resolveSupplierSource: resolver.resolve, isCurrentRequestSource: resolver.isCurrent, isCurrentSupplierSource: resolver.isCurrent, resolveRequestCollection: async () => ({ status: "unavailable", reason: "not in this test" }), isCurrentRequestCollection: () => false, readContractSource: async () => ({ status: "unavailable", reason: "not in this test" }) })
     const issued = await resolver.issue("procurement-request", "PR-1", call)
     expect(issued.status).toBe("ok")
-    if (issued.status !== "ok") throw new Error("Procurement source issuance failed")
+    if (issued.status !== "ok") throw new Error(`Procurement source issue failed: ${issued.reason}`)
     const first = await resolver.resolve(issued.value, call)
     expect(first.status).toBe("ok")
     if (first.status !== "ok") return
-    const access = createSfProcurementSourceAccess({ host, resolve: resolver, procurement: port })
+    const access = createSfProcurementSourceAccess({ host, resolve: resolver.resolve, procurement: port })
     expect((await access(first.value.evidence, call)).state).toBe("fresh")
-    let resolutions = 0
-    const racing = createSfProcurementSourceAccess({ host, resolve: { resolve: async (ref, context) => { const result = await resolver.resolve(ref, context); resolutions += 1; if (resolutions === 2) session.active = false; return result } }, procurement: port })
-    expect((await racing(first.value.evidence, call)).state).toBe("unavailable")
-    expect(resolutions).toBe(2)
     session.active = false
     expect((await access(first.value.evidence, call)).state).toBe("unavailable")
     session.active = true

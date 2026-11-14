@@ -1,0 +1,522 @@
+{
+  "schema": "sf-wp12-pinned-intake-v1",
+  "baseProduct": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+  "trigger": {
+    "runId": 43588290544,
+    "jobId": 132427393876,
+    "diagnostics": 159,
+    "files": 43,
+    "ownDiagnostics": 0
+  },
+  "scope": "Observed diagnostic producers/callers and their absent modules, exported functions/types and concretely required input signatures. Current WP11 apply/result-store CAS/read fences; two exact W17 lifecycle adapter blobs. Exact published source blobs only.",
+  "count": 63,
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "why": "Direct new helper of W17 host-context. Consumes existing withCase allowHistoricalRetry and preserves final authority checks.",
+      "sourceCommit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "sourceBlob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "baseBlob": null,
+      "sha256": "9d497b424797430aa713cae24a3bdd6a433ddbf678f4acc88da87d66230f6abf"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "why": "Published WP10 W17 replaces inline withRunContext with the authorized lifecycle helper; resolves case-advance terminal access while keeping selected case version original.",
+      "sourceCommit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "sourceBlob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "baseBlob": "28046172e5a540c8418aff0b968b2e098888c432",
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772"
+    },
+    {
+      "path": "bun.lock",
+      "why": "Exact published lock adds only Relay/Schema workspace entries for root and Sucafina; coherent setup-bun cache key and installation",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "baseBlob": "c190f0e6158ffff3a73fd0d84df72d3d1ba0b31f",
+      "sha256": "9076ec63e9e96686b16ad446261309f7fcab44657ee4d5a16a8dd3058f8f78e9"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "why": "Three hosted TS2307 and Finance import failure require @orchestra/relay and @orchestra/schema workspace links in Sucafina",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "baseBlob": "0fabcdd9148286629ba67bcbda4860783ab9c487",
+      "sha256": "33d138842aa2e8ef078b9f4dbcdebb2fb0796c5aed1f41f48b79510d919d4e30"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+      "why": "CI analytics/consumer:54 imports BiSelection from analytics/catalog.ts and requires visualPeriod",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "2b92394e3f1ce66e715e83a79b249b7972305ff6",
+      "baseBlob": "d90aa7b979cb1910fbe7587838d58296071c6a6b",
+      "sha256": "5521b06aef001830175f1192db3b731d92178789b2813f43c35a224f68853a28"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "baseBlob": null,
+      "sha256": "b3c0cd0bb9221b980fe30b8dcd3a2a856bed4ec5dd79220d14c4d2fd6803f7d1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "0bec2b428730833b6e2823c700aacfa059f76b92",
+      "baseBlob": null,
+      "sha256": "353bf7c45c0d137b6a39533fc4d82921df512e877c3b6f9d4bb6530851190104"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "why": "W16 collaboration host and recipient reader require historicalSources; retained producer lacks that method",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "20b6153642a43ffcf0158061a27b302d6e08280c",
+      "baseBlob": "448cfd56634e59ace90b3e7baa289ceaaa593530",
+      "sha256": "2bc0457186c3759032003330363c794aebdce8764e6e0b82225eea999d552b5f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+      "baseBlob": null,
+      "sha256": "f10165f3da65d1f6431567f84d1ef2737a9ec66fe6ad4e7c1a670c291381410b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+      "why": "Selected host passes signals, recipientAuthority, refreshWorkSource and answerWork absent from retained composition input",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "6ebbe23c3788d4dbd91521af823917796262f0c9",
+      "baseBlob": "44779c8b539c547705a9ecfde4ef98bcc38a6bb1",
+      "sha256": "1c7b353b0cdfe816b02d71a504222d2e64eaac5ac3132a1e40503573e3ef344c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation-work.ts",
+      "why": "Absent in tested cfbd2a; direct import of required WorkSignals producer modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "68f43ca3f03602fc7ac825fa8ac926d460a7dbfe",
+      "baseBlob": null,
+      "sha256": "9b40c562041607a430d2df5a8d8e7dc373445508139507a3737dbbcc47c573cd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "why": "Selected host passes answerReuse and recordQuestionPreparation absent from retained dispatch input",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "4a1ebe9298dd62d2846a45f294aa1b6331343040",
+      "baseBlob": "bc00fed04f58e1b6c0d239be55e88f917973a829",
+      "sha256": "75ac70777d1e386284e6a5c7a9a394ad579884afeea155f63b3eed5152070569"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/evidence.ts",
+      "why": "CI analysis-services-readers:79, analysis-services-review:46 and portfolio-preparation:58 require belongsToQuestion on answerEvidence, with message sourceContext preserved",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "6379310c439d2643ba64efd4c54777aac10e582c",
+      "baseBlob": "e458ea2cdc12e838eebbb8dd7989c82c91f70a79",
+      "sha256": "f7c34e6fae8aab4f21459552044babc5508775a8d62dd58bef8f28a6db07a8a8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/handoff.ts",
+      "why": "CI collaboration/http-routes:44-45 requires handoff.link and handoff.update",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "a9c796045e3b329ff62736405d1939477dd7ce87",
+      "baseBlob": "0bf569661eacb4ac536ab7ae5a42d03dacdde487",
+      "sha256": "be85cf6d9d084c26fdf5782ab0f86a18acede76fa7149d10969a2a3e1e2106b3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "why": "CI business-services:175 and http-routes:32-67 require caseSelectionWrites, questions, threadHistory, answerReuse, caseSelection, recipients and storageVersion",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "7d8396e2f6b07dbb41fd4a1694da6fab32bb25d0",
+      "baseBlob": "46863e16bfd38c30e86a522c83624e80b095d3a8",
+      "sha256": "4afff123a457f0b077fb61d7038d0710b745825680115585ca0fdaa0f5da41b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-read-host.ts",
+      "why": "Absent direct dependency of required collaboration composition; supplies read-only Hot Topic access separately from authorized mutation handlers.",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "e38450f2263f11fa5825e603bcb2fca72f9b7d7c",
+      "baseBlob": null,
+      "sha256": "2bbe4df6bd83e8887df542ca618fbd57a79f839dcedac2858af9d4b829a73df7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/question-consumer.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "ddccfdf46810117fb49e123140c8411373b387e9",
+      "baseBlob": null,
+      "sha256": "c1c1f7a664bb7d91706c81c8a3607e4b2036f8e59c2e9436e74de6767371c823"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/question-preparations.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "fc9930cbaac82fe7f61ea7c1ade656a4cd00350b",
+      "baseBlob": null,
+      "sha256": "82666cde078451cd5db83025647ca4e8455ea4f5bb15d75e4eb15c35d533d542"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "why": "W16 host passes answerWork; current producer lacks that parameter and protected historical source context",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "45f31b1f67e53f25e78ba6e26b334946889ef926",
+      "baseBlob": "4c93bd36cdfeb53146db2e81f7763bee38ed9630",
+      "sha256": "1da811f72fac1f250b27eefa0fae5ea4f14ce13e339c77e5e2a701e9be23fd9b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+      "why": "W16 host passes refresh and authorizeHistorical; thread-reads requires RecipientThread.historical",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "ad954aef41383b3d9afe2b4d537e0e89f57ce7cb",
+      "baseBlob": "f8f36cc53b8032623e8f9be93f499f6aa3657f80",
+      "sha256": "f4c019368b92d76caf4f7a78c6b71e866cb0160ddca5a80d2df2923030c7f815"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+      "why": "W16 recipient reader, thread history, evidence and review continuity require the protected ThreadSourceContext type and validator",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "e0745ad913c6c1e93e83794ed1b4de6082868519",
+      "baseBlob": null,
+      "sha256": "7616b0960bbebc34cb5414c92ac5dbad9e72cfd97ca12c8ddc65deeb9a015f69"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-continuity.ts",
+      "why": "CI review-services:92 requires authorizeThreadSourceContinuity; direct implementation imported by the selected W16 collaboration host W17 adds only the explicit field: unknown annotation fixing the already observed TS7006; runtime body otherwise identical.",
+      "sourceCommit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "sourceBlob": "ae53fc67d61477f39146b4d03c6349bef46144f3",
+      "baseBlob": null,
+      "sha256": "fef43679178c409ddb1277c863771bd820a68e0c4ca0a1386ebb6c2623fbe538"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "e6b1f6d0868438d0182041cd3cf23628d29d872c",
+      "baseBlob": null,
+      "sha256": "4e755e578c101e3206fae5c3de8fb7384da6e14d52c4ab7529e7c39bb0a1617c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+      "why": "Required by W16 collaboration host and review-services: readHistorical preserves the authorized original message basis after case/source advancement.",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "5c8b811692c3e8aea1859b2f346096f0410e82f8",
+      "baseBlob": "0f17addaaadb25bad3b7985526d7803e54e8f207",
+      "sha256": "98689fe1f533c6419b702d1a37d498426c6a1ffe3dda5634a93160e632079eb2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-source-refresh.ts",
+      "why": "Required direct helper of W16 collaboration host for authorized original-source refresh",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "9412fa165d4b94dcf06f04049c7246ef9e94fcec",
+      "baseBlob": null,
+      "sha256": "73a4f28545daf8e354eabecc750889a8c93ffcfea6b33809dbcc63a1dabb39b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "why": "W16 producers access CollaborationThread.messages.sourceContext; retained type does not expose it",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "58c34db271485752fa1dd89f6af5adddd405b22f",
+      "baseBlob": "d53c0336a0c1e0dad0c2b272ba6eba03a41301e1",
+      "sha256": "e84bbd0bd1b7b08aaeb69aa004a9af8cc09c2b76245416897e4d739fb74e9cd3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-handoff-source.ts",
+      "why": "Absent in tested cfbd2a; direct import of required WorkSignals producer modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "4fe2e41effccbb682773419762c00fc9bb3c5fe5",
+      "baseBlob": null,
+      "sha256": "cbff3052173a64c45ee954649e37f1fbea60ff8c3560fa32921ca7a3019c8686"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "why": "CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts imports WorkSignals; the retained base lacks that export",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "22a2a7fab04757667fcfed82147b7676d6928fee",
+      "baseBlob": "f3ef4c7b26782d0eb9f863ac998a363ef2da81bd",
+      "sha256": "c212766b21b89ad0b5ad9c321bfd34e4b6a9352e08050760976dbb7b676a68bf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-source-refresh.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "1a6076b3588296f3e19e85fe9504c832f8c0dc89",
+      "baseBlob": null,
+      "sha256": "0ecb31809a05c7827b90d94591eb5c67c0bdcefd8619ecc68635bf9fa2ad6fce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "why": "CI business-services:125 passes recordEvidence",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "baseBlob": "1df365d4d41292d086bd27763248cab8c248d2ff",
+      "sha256": "e3774ecdbc161eb827bf60a9c13bf7247ef0fcb2c86fada534a5456df6fb18fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "why": "Published WP11 apply.ts records the reservation before domain dispatch and reopens state for CAS reconciliation; its direct application-attempt import is absent in tested cfbd2a",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+      "baseBlob": null,
+      "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "why": "CI dashboard-decisions:176, procurement/decision-host:196 and case-port.test:226 require reviewDigestFor",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+      "baseBlob": "fc1dbe4e23fe78c19b675e219bf45381d2929a49",
+      "sha256": "756906647ca921578b5c242af44c15a8e11c296aa693d8d659a86b4ee65bd3e2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts",
+      "why": "CI portfolio-preparation/services use decisions.answer-question and promote-alternative actions",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "24051e0a30b53e09b387ac575a658f30e098cf0a",
+      "baseBlob": "010103e97eb2b38a4e618fa1809a4ae87c207b50",
+      "sha256": "c069b30f1a15374502bb3b323314b280ed03230e2f8ebfdcfb991bf08a1f1928"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "why": "CI portfolio-handoff/services require replayPortfolio and verifyMutation",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "baseBlob": "0f021015aa5a303f561bae6a53b777397228002b",
+      "sha256": "94f28f541f238aba4542f3b77259effcf4817ed22756a3a9895953605a4ec5d6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+      "why": "CI dashboard/procurement decision-host require the preserved reviewDigest in the review projection",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "ae7a4476d686638512f3fc8bcf342a746259cacc",
+      "baseBlob": "8c1c96fc5b280bbc359b242c1dc82f35976f95bd",
+      "sha256": "991316cd0bfde75d4fc0079f8e748577cef52ef1d42a72c1116aa4047faff16b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "why": "CI scenario-request-store and planner-calculation-services require readForCalculation/readHistoricalCalculation plus verifyCalculationSources",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "baseBlob": "ec7d45cc5e3827a1c59057fb994600cab1af235f",
+      "sha256": "0bc0d34e79bac608968b088030d38ba3bf75ca6a49e388acef6b6b9e8b55705f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/host.ts",
+      "why": "CI analysis-host-services:191 and host-context:669/671 require evidenceHost",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "fede075378ee964fccdb73f0d95958a5f56c7159",
+      "baseBlob": "094240128a3f4257d85f799f31b2b25e056cae69",
+      "sha256": "dff4ed51b47da6a5fd011f962517e82961074f0f79f802bebebb08db5c1ed39e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "why": "CI host-binding/business-context:291-296 requires readOriginalCapture",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "baseBlob": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+      "why": "CI interface/import-http and wp06/end-to-end require readPreviewReference",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "40e02a3486c1b5a192395568c3ad37bde8a2e1e5",
+      "baseBlob": "b061d24d02ebc6be8ec5db04e0f575d2afa3e5ea",
+      "sha256": "150634705ac1da4661abb346bfea11563c942528ea8b0b37b1f3d06724057ebf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "why": "CI-required producer modules/sucafina/Sucafinav1/product/planner/product.ts imports plannerScenarioCostPresentation; the retained base lacks that export",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "baseBlob": "6dc4a0be3c67bb96df6359ae14b73628e1b33f71",
+      "sha256": "90ec6a2211bd8753f1a7d850e06c311b49cf056cc9430521179d980c97a64636"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/planner/overview.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "e2ff6ab3ba419d63df76c94e3b4c2284fc34b99f",
+      "baseBlob": null,
+      "sha256": "9051e15a440ecdf9c82ea67db071d993ab2e2d7b05c7f560f4eca253729738cc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview-host.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "39f65d53403c09950a3dd246a0a8ad9df56436c9",
+      "baseBlob": null,
+      "sha256": "5543c4454303af063eaeba08f025a436b714e1e2f287230349be527ce37db912"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/planner/overview-host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "9514987d19768f7bd9144f74a608a7470e6b0c18",
+      "baseBlob": null,
+      "sha256": "fffac336bb1dc73be8776490ed79a996602474e9933115b7162a62842ba89c70"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "why": "CI extended-bi-options:35 requires plannerProduct.versions",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "baseBlob": "116922ed7e7d6e54eec6d7dcebe654b02fa45543",
+      "sha256": "8b31a503eae2d06fac5b38250c571937e211ea3aed3864e650149e5d589d7162"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "why": "CI exact-threshold:21/78 requires parameterOperation",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+      "baseBlob": "9864986073a92603edf21e8a7c4e2a09c539c6ae",
+      "sha256": "2bf920cec395a7f103ea554790d0cc424f90c1a524656c5d0ac6148b452da4bf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/versions-host.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+      "baseBlob": null,
+      "sha256": "1c3e4a93a5a30bf8888cdc489946b77402cb55e10fcaca43684eb4ba0a4fefc9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/versions.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/planner/versions-host.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+      "baseBlob": null,
+      "sha256": "b89e15fb15488bdb472b50e819fd9f6f97a1ace8b7d69bb95c91a8515b0050ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/chart.ts",
+      "why": "CI analysis-verifier-routines:75 and reviews/inclusion:27 pass projection and chart",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "c5b7a979305e5894c9cc6dd00604c082ab6bed8b",
+      "baseBlob": "302c4b16244c56921a57298376a483bc11d697d3",
+      "sha256": "1d499c6fbfb75076972124a2eeeca3dc53ac541522a98fa02149b405757b27fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "why": "CI 26 ReviewHost/ReviewSection/result diagnostics require creationTarget, agendaNote, outcomeComparison, current authorization callbacks and PortResult read/preserve",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "1b93fd89a1f544808455c15d12f9c06cc18e21f3",
+      "baseBlob": "465f171f19bdc23398838fd1aea09a82b441436a",
+      "sha256": "d7e90864107251cc988511b5afe66c2362baf2aa317c6b0b09cd990832493377"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "why": "CI reports/storage:4 requires readReviewArtifactSeal/readReviewArtifactRenderDigest",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "b86ae1f0c012922610a9567a3ef6a4af1fd5e050",
+      "baseBlob": "2358e3929af2b6060569455f3522db1e2ed48e12",
+      "sha256": "24d016095de793ac91de21c58ca6d963d766a6978087b94dba533f780dfcc203"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/report-layout.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "ed6d3f5342d06fac2782ae4ae63c1158e6b1c2fb",
+      "baseBlob": null,
+      "sha256": "e908d89eba734fc83da1e315a681c72d1e32b2d3c418a72f77d2aeab72614935"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/sensitivity.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "25a286482848f04f65285b31bb086c031d4b0f89",
+      "baseBlob": null,
+      "sha256": "bac6cc8a9090b53c48e1dfcc1441eb9184ca425d4c63716f9ab92605b2b800fe"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-access.ts",
+      "why": "CI review-services:92 requires authorizeSourceContinuity",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "9d00f632224d36a7e073f1dd66d50c885a1ad872",
+      "baseBlob": "a432b41361da396a119b459819520cbbb3e4ecc4",
+      "sha256": "0437d7c27aa86c0609a45f121ca3131815f384a309a5a75e62767c4ce8e22153"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-command.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "0b139ed2c8bc2371c7a5933e00eaa970876d55b8",
+      "baseBlob": null,
+      "sha256": "6cb85d8e4e7bff27c74f12f1380062d2808555c37df46792b19c0fd1b1966b75"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-preview.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "73c2ce48454e4291fcc4d6c9e2b554317d820f2a",
+      "baseBlob": null,
+      "sha256": "ef7eef781ef1ad89c5587acef8fb3e45eeedd40aac1818840cafd07b8fd961a2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+      "why": "Absent in tested cfbd2a; direct import of CI-required producer modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "58f7a218124cffed60d6e639d7f3ee675cf159d2",
+      "baseBlob": null,
+      "sha256": "f561e4e11f3c00a92704b04593a03899be3f0a96c41baf7ee3ab2c78811f33cd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "why": "CI contracts/host-context and procurement/queue-page require Application.productView callback",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "b8b03573d4e21e330b60ad308f4300702f43cbdd",
+      "baseBlob": "74fa17f6e08efeabe08820454bfde7cc309f36ad",
+      "sha256": "ab42eb244074a74915033a6616822a7e2689d94b300598ad1efb346a10ba1fcd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "why": "CI decision-controls, interface/http and contextual-decision pass documentHtml's seventh accessRevision argument",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "baseBlob": "08baa1c47ee42650b1ec3dad20ebdb480881046e",
+      "sha256": "ba163e77c412fd3abc1c5bac5ced128195cacd2a32c905114517b64e26255318"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "why": "CI line33 lacks mandatory verifyScenarioOperations; exact published consumer fixture",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "f841235bd6b4683a858ddd60c3a275bffaa0200c",
+      "baseBlob": "02d41d67a0b8cdff3c2577e89e20e7da4161b547",
+      "sha256": "798476b2919e7486d7331eb517e143ae6b05402a6c9f10cc3d830cb14196a5e8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "why": "CI line52 lacks reviewDigestFor; exact owner-published consumer fixture",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "d01bf28e150197deb8dd2b06469f57a7dc0b0b5b",
+      "baseBlob": "7925f873f6638dc02e9d823912699edd48745e82",
+      "sha256": "ce34064c23c66b4c7980c46dcae6157530b3e70876918b88059ce2ef2e49260d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "why": "CI line55 lacks reviewDigestFor; exact owner-published consumer fixture",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb",
+      "baseBlob": "eead54159fe2e6c56da3a4ba3fb8e09bf802c309",
+      "sha256": "f24ff0e954254cefb82e5bbecb09c0e857382cb661f806c4ed9d2fdbd84256f0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "why": "CI line37/40 passes resolver object; current source-access requires resolver.resolve callback",
+      "sourceCommit": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "sourceBlob": "8adc906eac19e275118d1e5b3d9f66ce09104aa8",
+      "baseBlob": "687007a3e8ed34373bbce1200570f79fa78731ec",
+      "sha256": "f3d0788aa9d15db15b0a6bff8292563cd3e0c7678c1c88492be8506e6caae0c0"
+    },
+    {
+      "path": "package.json",
+      "why": "Published root consumer declares the same two workspace dependencies for CLI type-only imports; no other root package differences",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "baseBlob": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+      "sha256": "6e5c01f798f19ec5d6f3103f611cc9e57d4430f8da15c2fa49701a4c1d1509c8"
+    }
+  ],
+  "metadataDelta": "Only @orchestra/relay and @orchestra/schema workspace dependencies added at root and modules/sucafina, plus corresponding bun.lock workspace entries; no engine or workflow source is changed.",
+  "localProductTestsExecuted": false,
+  "hostedValidation": "PENDING_FOR_NEW_PRODUCT"
+}
