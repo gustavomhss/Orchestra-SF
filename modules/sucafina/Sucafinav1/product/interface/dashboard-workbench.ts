@@ -100,6 +100,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     find('recovery').hidden = !draftOutcome && (!mutation || !mutation.uncertain);
     find('recovery-message').textContent = draftOutcome ? 'O resultado do primeiro salvamento continua pendente. O serviço ainda não permite recuperar esta tentativa após recarregar a página. Nenhum novo salvamento será enviado; o comprovante precisa ser recuperado com seu acesso atual antes de continuar.' : mutation && mutation.ambiguous ? 'A tentativa anterior continua pendente. As opções recebidas são ambíguas. Atualize as opções antes de tentar recuperar o comprovante; nenhuma nova alteração foi enviada.' : 'O resultado da tentativa anterior ainda não foi confirmado. Repita a mesma requisição para consultar seu resultado com seu acesso atual antes de iniciar outra alteração.';
     find('retry').hidden = !!draftOutcome;
+    find('retry').style.display = draftOutcome ? 'none' : '';
     find('retry').disabled = busy || !mutation || !mutation.uncertain || !!mutation.ambiguous;
     find('agenda').disabled = locked || !data || !data.agenda;
     find('preserve').disabled = locked || !permissions.preserve || !agenda;

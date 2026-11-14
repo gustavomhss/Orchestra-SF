@@ -96,12 +96,26 @@ test("UI recovery reauthorizes the restored attempt and purges it on real denial
     // The missing server discovery/lookup remains SHARED-APPLY-LOOKUP, not a PASS.
     const previous = await fixture.authority.state.read(fixture.request(), "cases", (state) => state.cases[initialCaseRef.id])
     if (previous.status !== "ok" || !previous.value) throw new Error("Case unavailable before reauthorization")
-    expect((await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: previous.storageVersion,
+    const selfGrant = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: previous.storageVersion,
       targetRef: initialCaseRef.id, targetIncarnation: initialCaseRef.incarnation, idempotencyKey: "ui-recovery-reauthorize", commandDigest: digestSfValue({ participants: [fixture.principalRef] }) }, async (state) => {
         const decision = state.cases[initialCaseRef.id]!
         state.cases[decision.id] = { ...decision, version: decision.version + 1, participants: [fixture.principalRef] }
         return { commit: true, value: true }
-      })).status).toBe("ok")
+      })
+    expect(selfGrant).toMatchObject({ status: "denied", reason: "target-access-unavailable" })
+    expect((await observedApplication(fixture)).decision).toEqual(previous.value)
+    // Administrative regrant is controlled fixture input, not a command available
+    // to the revoked user. Keep C08 revisions coherent; real HTTP admission and
+    // discovery below must authorize this fresh state without old browser data.
+    await fixture.persistence.transaction("dashboard", async (snapshot) => {
+      const state = object(snapshot.data.__sfProductV1), cases = object(state.cases), versions = object(state.versions)
+      const decision = object(cases[initialCaseRef.id])
+      expect(decision).toEqual(previous.value)
+      cases[initialCaseRef.id] = { ...decision, version: Number(decision.version) + 1, participants: [fixture.principalRef] }
+      versions.cases = Number(versions.cases) + 1
+      state.revision = Number(state.revision) + 1
+      return { commit: true, value: true }
+    })
     await page.reload()
     await page.locator("[data-dashboard-workbench-panel] > summary").click()
     await panel.getByRole("button", { name: "Carregar opções", exact: true }).click()
