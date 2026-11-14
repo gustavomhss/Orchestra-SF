@@ -1,0 +1,38 @@
+{
+  "schema": "review-first-agenda-patch/v1",
+  "mission": 39,
+  "finding": "M27-C05-FIRST-AGENDA",
+  "owner": "session36",
+  "source_ref": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+  "status": "PROPOSED_NOT_APPLIED",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "preimage_blob": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+      "postimage_blob": "e7f96d297db6c3899d321110aef3cc73fbca7466",
+      "preimage_sha256": "982ad17ea29759b3c75141f1d2ef4f16ab7ec84bd1849be0d5ccf85feeacf6a5",
+      "postimage_sha256": "c9103b70dcc7f84e152ea7c60bc44f853266f4c218421dd81eeec4156b327279",
+      "preimage": "preimages/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
+      "postimage": "postimages/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
+      "materialization_extra_lf_removed": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
+      "preimage_blob": "a32cac26786e4ace96490f719677370e42f87958",
+      "postimage_blob": "7697e049510dcf60d04eff6208d6a0a6f284f749",
+      "preimage_sha256": "4b058ccb0eb4dc09a5bd967530e1b809ec025d4f6e7fedd0219a6c5f38f8c669",
+      "postimage_sha256": "01a14763a6527d2f6358788e94a27a78f047a4d2c3a8f25a8197e4841e94b860",
+      "preimage": "preimages/packages/app-shell/e2e/sucafina/reports-support/production-state.ts.txt",
+      "postimage": "postimages/packages/app-shell/e2e/sucafina/reports-support/production-state.ts.txt",
+      "materialization_extra_lf_removed": true
+    }
+  ],
+  "rules": [
+    "Compare every preimage blob before applying; if any differs, reconcile explicitly with that owner.",
+    "These complete images are inert .txt receipts; no shared target is modified on review-agenda.",
+    "Apply the complete patch and compare every resulting postimage; do not assemble a partial snippet.",
+    "Do not dispatch Reports nominal until session33 and session36 consume all required shared wiring."
+  ],
+  "patch_sha256": "8ecae99a13de1979feef76f781453d417308f621439a13ac308ed783ef59af07",
+  "static_patch_integrity": "PASS: git apply --check and exact postimage blob comparison in disposable materialization; no product code executed"
+}

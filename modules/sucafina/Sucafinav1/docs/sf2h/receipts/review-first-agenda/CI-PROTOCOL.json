@@ -1,0 +1,107 @@
+{
+  "schema": "review-first-agenda-ci-protocol/v1",
+  "mission": 39,
+  "role": "proof helper (read-only remote)",
+  "product_base": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "observed_control_ref": "98e6c9c4847d0f3239a0f9cf1fcc1afd6fbb338b",
+  "dispatch_performed": false,
+  "authority": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+    "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+    "rule": "Each Astra WP may execute its own surgical checks through the unchanged GitHub MCP snapshot protocol; no local tests, no epic, no new dispatcher. Mission39 narrowed write paths supersede optional new check-workflow allowance."
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073"
+    },
+    {
+      "path": "script/module-registry.json",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073"
+    }
+  ],
+  "surgical_request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-first-agenda/<exact-authored-test>.test.ts"
+    ],
+    "env": {}
+  },
+  "nominal_request_after_owner36_and33_consume": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "config": "e2e/playwright.production.config.ts",
+    "args": [
+      "e2e/sucafina/reports.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "steps": [
+    "Commit owned code/test files as W on review-agenda via GitHub MCP create_tree/create_commit/update_ref with expected head, force=false; read back parent/tree/blob identities.",
+    "Read current test workflow/validator/registry/config in exact W; check every requested filename exists, aliases and directory match, no selection filters or timeout overrides; canonical validation happens again in Actions.",
+    "Build the dedupe key from W/tree, normalized request hash, workflow+validator identities, runtime/config and exact tests+fixtures. Inspect current Actions and existing request receipts before any trigger.",
+    "Respect at most one test run in flight for WP07 including concurrent Reports36; reuse an exact equivalent run rather than dispatch duplicate. Different source trees do not share a green.",
+    "Create S child of W containing only .ci-run.json delta, then create unique ci-run-linux-astra-wp07-review-agenda-<Wshort>-<requesthash>-<attempt> directly at S. Do not create ref without request.",
+    "Query GET actions/runs?branch=<exact-ref>&per_page=30; verify event push, expected ref, head_sha S. Read jobs/logs/artifacts; report exact selected files/test count, failures and Omni control nonce+verdict.",
+    "Keep W and S separate in receipts; verify all W product/test/config/fixture blobs identical in S. Evidential-only later commit does not retest product; material edits require focused revalidation.",
+    "Do not run Reports nominal until shared/fixture/spec proposal is explicitly consumed into immutable composed W, and source36 authorizes its same nominal selection. No ninth final CI recipe."
+  ],
+  "observed_runs": [
+    {
+      "id": 43647268470,
+      "head": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "branch": "astra-check-wp07",
+      "workflow": ".github/workflows/astra-wp07-check.yml",
+      "status": "in_progress",
+      "observed_basis": "latest100 at helper inspection; recheck before dispatch"
+    },
+    {
+      "id": 43646916265,
+      "head": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "branch": "ci-run-linux-astra-wp07-83d71026-37251a43-m36-05",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "checks": {
+    "local_product_tests": "NOT_RUN_BY_POLICY",
+    "local_servers": "NOT_RUN_BY_POLICY",
+    "typecheck": "NOT_RUN; package bun typecheck remains required; C9 has no bounded check workflow and active source36 owns astra-check-wp07",
+    "guards": "NOT_RUN; bun run check:guards --base origin/dev remains required; no own permission to add workflow or move owner36 check ref",
+    "assembly_nominal": "NOT_RUN until composition+consumption",
+    "source_surgical": "NOT_RUN by helper"
+  },
+  "limits": [
+    "No result from source36 qualifies source39 or composed bundle.",
+    "No modified validators/workflows, assertion weakening, extra broad grants, epic/full suite, sleeps or fabricated native proof.",
+    "Metadata readers may use direct GETs to inspect effects; required agenda selection/preservation must happen through user controls."
+  ]
+}

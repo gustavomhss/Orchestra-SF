@@ -1,0 +1,87 @@
+{
+  "actor": "mission39/agenda_proof",
+  "implementation_test_status": "NOT_RUN",
+  "remote_access": "GitHub MCP only; no mutations; no test dispatch",
+  "read": [
+    {
+      "name": "COMMON",
+      "local_path": "review39/planning/COMMON.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "local_git_blob_sha1": "0fc33ffbf67f22922dcbeb4b691c221fb9cb2152",
+      "sha256": "f4562ca9b28b640437feb49303219e33754f27e9da1a47c4a293aedafe008664",
+      "scope_read": "complete"
+    },
+    {
+      "name": "S3-A",
+      "local_path": "review39/planning/S3-A.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "local_git_blob_sha1": "ee59efdba355b98363bca2ba5a29cacafa1361f1",
+      "sha256": "5808d12856109b05e78cfa1a90a86b0a6ef2cf496be9843f5e558ff7f83b48e9",
+      "scope_read": "evidence, all 86 proof_bindings, execution_proofs AM01–AM06, numeric_oracles including entire omitted-category oracle, dependency_context, coverage, incoming_outgoing_handoffs, consumer_edges, code_sources, mandatory_appendices; full WP07.T01 read too"
+    },
+    {
+      "name": "acceptance",
+      "local_path": "review39/proof/acceptance.txt",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "local_git_blob_sha1": "df317a24fe6bb3cd2e61f4bf99b3bc5410a6225b",
+      "sha256": "dab088092644a8d9cbf18f34fa993e25627d39ead24f51e9f1b4cf9bf988195e",
+      "scope_read": "complete"
+    },
+    {
+      "name": "resident-runtime",
+      "local_path": "review39/proof/runtime.txt",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "local_git_blob_sha1": "9937a06cd03c437f64e513f72e9d71e0d344ef71",
+      "sha256": "763c71b9ef1650b3b2982aacd80051347bffc0430f3007213dc14617666e080a",
+      "scope_read": "complete normative sections1–6, section7 primary-source catalog, final39-operation coverage"
+    },
+    {
+      "name": "root-AGENTS",
+      "local_path": "review39/base/AGENTS.md",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073",
+      "local_git_blob_sha1": "b3095d259d5498f9c543e003780e0394b7f90515",
+      "sha256": "2258750d244e5b1f6786d00e91017ac8b5a45c97f1b059c06a89155998da84b4",
+      "scope_read": "complete"
+    },
+    {
+      "name": "runtime-reports",
+      "local_path": "review39/proof/required-sources/runtime/reports.ts",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073",
+      "local_git_blob_sha1": "a64a5dbe7d6142e8fcec230b678ee6bfee133cd1",
+      "sha256": "b73126d2b14b3994b85f4ac2f3906c1a9a0583af904c155e9edb85a0c4170497",
+      "scope_read": "complete source; also read full exact GitHub MCP response"
+    },
+    {
+      "name": "parity-reports",
+      "local_path": "review39/proof/required-sources/test/parity-reports.test.ts",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073",
+      "local_git_blob_sha1": "fa8a3d42031e1ad0d4a0a78630b69de88317f642",
+      "sha256": "89b72fe1945f09302494c5c48caf5d114e356a87aaef6cf5908b749043de3239",
+      "scope_read": "complete source; NOT executed"
+    },
+    {
+      "name": "reports-runtime",
+      "local_path": "review39/proof/required-sources/test/reports-runtime.test.ts",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073",
+      "local_git_blob_sha1": "73bdb60189defc1bf414312da214a34408ff69e3",
+      "sha256": "36365f19e9ba142e407fd4d4871ec529cd858be5d659a19112d9d9ecea5f54f4",
+      "scope_read": "complete source; NOT executed"
+    }
+  ],
+  "fetched_blobs": {
+    "modules/sucafina/Sucafinav1/runtime/reports.ts": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+    "modules/sucafina/Sucafinav1/test/parity-reports.test.ts": "d52082c8538917ae616d09102758bcce66bc5305",
+    "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts": "69b530d7396bc7b1b16b672093309c976de15d89"
+  },
+  "obligations": [
+    "CHK.01 Budget+Projects+Hot Topics explicit selection, reorder and remove selected record without mutating origin",
+    "CHK.02 denied Talent must leak no private labels, counts, values or notes",
+    "CHK.03 annual budget plus monthly operations plus empty collection preserve local competency and explicit absence; no invented global year or YTD",
+    "DOD.01 references, counts, order and periods visible before generation",
+    "C05 immutable review: source updates cannot replace saved meeting values; new confirmation only after current reprévia",
+    "Existing 25-project identity/long-note export completeness and 1320→1400 drift assertions retained",
+    "Per-source authorization and revocation, including late return fence, remain mandatory",
+    "Nominal CI-UI-REPORTS existing reports.spec.ts only; no ninth selection; owner36 receives inert pre/postimages",
+    "Surgical CI only through existing test-ci push request with exact parent W/tree/request identity and dedupe; no local tests"
+  ]
+}

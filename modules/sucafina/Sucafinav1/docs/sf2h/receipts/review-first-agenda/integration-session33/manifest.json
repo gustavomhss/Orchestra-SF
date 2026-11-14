@@ -1,0 +1,58 @@
+{
+  "schema": "review-first-agenda-patch/v1",
+  "mission": 39,
+  "finding": "M27-C05-FIRST-AGENDA",
+  "owner": "session33",
+  "source_ref": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "status": "PROPOSED_NOT_APPLIED",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "preimage_blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "postimage_blob": "da98ee9b674a1d7b4f3ba2c8a230745c33ccdbd7",
+      "preimage_sha256": "2f7b7a64fdc0d868966e103abbabbc677e86df77528dc268f11570c42427dc9e",
+      "postimage_sha256": "7a59b7f39ee42945d0babead087a57bc7af2e12ba3670e8b4b8c58cde70a5afb",
+      "preimage": "preimages/apps/cli/src/sucafina-product/review-services.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/review-services.ts.txt",
+      "materialization_extra_lf_removed": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "preimage_blob": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "postimage_blob": "ff43e324d280498e629f867d0ac93714bdf608cc",
+      "preimage_sha256": "698e289b2cfc3996bc91069561d40b89294e3004bbd682e07a14ec3026f948ac",
+      "postimage_sha256": "fb159e76aae253f341268589fe5efdade86bb2d4595e226ec96be6fae6377cde",
+      "preimage": "preimages/apps/cli/src/sucafina-product/extended-business-services.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/extended-business-services.ts.txt",
+      "materialization_extra_lf_removed": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "preimage_blob": "d8e0d149e37c640db8957f3e917f867088923d93",
+      "postimage_blob": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09",
+      "preimage_sha256": "4f126782c18018ec6f17da90c19a19c237731064d3ee23fbfe4769e793224dcc",
+      "postimage_sha256": "4dd0a371eb71df4faadb24672d15fcf7faca66e3680ee396f594257eea2ab3f0",
+      "preimage": "preimages/apps/cli/src/sucafina-product/extended-http.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/extended-http.ts.txt",
+      "materialization_extra_lf_removed": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "preimage_blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "postimage_blob": "480dcc9c1b299542552e8a6a2e4e3ce2a659db10",
+      "preimage_sha256": "4c28afeb113132ce7836f2d247d175418c9c5ef3be25323cb55e4161efb7d3f2",
+      "postimage_sha256": "3d7d7ae2df1a91ac7162f95d9e803ed173f89ecbfa11bff5919d99b3ad6be7c5",
+      "preimage": "preimages/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "materialization_extra_lf_removed": false
+    }
+  ],
+  "rules": [
+    "Compare every preimage blob before applying; if any differs, reconcile explicitly with that owner.",
+    "These complete images are inert .txt receipts; no shared target is modified on review-agenda.",
+    "Apply the complete patch and compare every resulting postimage; do not assemble a partial snippet.",
+    "Do not dispatch Reports nominal until session33 and session36 consume all required shared wiring."
+  ],
+  "patch_sha256": "25eab5130b50c8562e3071867c9b401c368deec74255fcfadc1da142a744c906",
+  "static_patch_integrity": "PASS: git apply --check and exact postimage blob comparison in disposable materialization; no product code executed"
+}

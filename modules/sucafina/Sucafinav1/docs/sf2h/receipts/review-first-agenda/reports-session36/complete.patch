@@ -1,0 +1,40 @@
+diff --git a/packages/app-shell/e2e/sucafina/reports.spec.ts b/packages/app-shell/e2e/sucafina/reports.spec.ts
+index c332c86..e7f96d2 100644
+--- a/packages/app-shell/e2e/sucafina/reports.spec.ts
++++ b/packages/app-shell/e2e/sucafina/reports.spec.ts
+@@ -1,5 +1,6 @@
+ import { expect } from "@playwright/test"
+ import { reportsTest } from "./reports-support/fixture.ts"
++import { prepareFirstAgenda } from "./review-agenda-support/first-agenda.ts"
+ import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
+ import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
+ import { confirmHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed } from "./reports-support/human-answer-flow.ts"
+@@ -20,7 +21,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
+ 
+   reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
+     const { app, corpus } = reports
+-    const { saved } = await reportsTest.step("Prepare and explicitly preserve the authorized dossier", () => prepareReview(page, app, corpus, info))
++    const { saved } = await reportsTest.step("Discover, select, reorder and explicitly preserve the first agenda", () => prepareFirstAgenda(page, app, corpus, info))
+     await reportsTest.step("Edit the real January source once without refreshing the capture", () => changeForecast(page, app, corpus))
+     expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
+     const docx = await reportsTest.step("Download DOCX and assert values, periods, all identities and the long-note tail", () => exportReview(page, app, saved, corpus, "docx", info))
+diff --git a/packages/app-shell/e2e/sucafina/reports-support/production-state.ts b/packages/app-shell/e2e/sucafina/reports-support/production-state.ts
+index a32cac2..7697e04 100644
+--- a/packages/app-shell/e2e/sucafina/reports-support/production-state.ts
++++ b/packages/app-shell/e2e/sucafina/reports-support/production-state.ts
+@@ -2,6 +2,7 @@ import path from "node:path"
+ import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
+ import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+ import { reportsCorpus } from "./corpus.ts"
++import { seedFirstAgendaSources } from "../review-agenda-support/source-seed.ts"
+ 
+ // Invoked under Bun by the owned setup process, only before the real CLI starts.
+ // The installed source lifecycle, domain projections and authorization are not replaced.
+@@ -25,6 +26,7 @@ try {
+     ].map((key) => [key, { version: 1, by: principal }]))
+     return { commit: true, value: undefined }
+   })
++  await seedFirstAgendaSources(store, principal, corpus.today, corpus.year)
+   process.stdout.write(JSON.stringify({ seeded: true, projects: corpus.projects.length, year: corpus.year, sourceForecast: corpus.before }))
+ } finally {
+   await store.dispose()

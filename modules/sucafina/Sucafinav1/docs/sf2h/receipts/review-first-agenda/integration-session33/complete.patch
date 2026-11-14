@@ -1,0 +1,158 @@
+diff --git a/apps/cli/src/sucafina-product/review-services.ts b/apps/cli/src/sucafina-product/review-services.ts
+index c07d55c..da98ee9 100644
+--- a/apps/cli/src/sucafina-product/review-services.ts
++++ b/apps/cli/src/sucafina-product/review-services.ts
+@@ -17,6 +17,7 @@ import { createSfReviewHistory } from "./review-history.ts"
+ import { createSfReviewHandoffs } from "./review-handoffs.ts"
+ import { createSfReviewPortfolioHistory } from "./review-portfolio-history.ts"
+ import { protectSfReviewReads } from "./review-read-integrity.ts"
++import type { createSfReviewAgendaServices } from "./review-agenda-services.ts"
+ 
+ type ApplicationInput = Parameters<typeof createReviewApplication>[0]
+ export type SfReviewReaders = {
+@@ -36,13 +37,16 @@ export function createSfReviewServices(input: {
+   persistence: SfScopedSourcePort
+   origin: string
+   readers?: SfReviewReaders
++  agenda?: Pick<ReturnType<typeof createSfReviewAgendaServices>, "procurement" | "resolveEvidence">
+   maxBytes?: number
+ }) {
+   const { authority, business } = input
+   const host = authority.host
+   const history = business.collaboration.threadHistory
+   if (!history) return { application: undefined, unavailable: ["review-thread-history-unavailable"] }
+-  const historical = createSfReviewHistory({ authority, persistence: input.persistence, evidence: business.context, authorizeCase: business.authorizeCase })
++  const evidence = input.agenda ? { ...business.context, resolve: async (ref: Parameters<typeof business.context.resolve>[0], call: TrustedDomainContext) =>
++    await input.agenda!.resolveEvidence(ref, call) ?? business.context.resolve(ref, call) } : business.context
++  const historical = createSfReviewHistory({ authority, persistence: input.persistence, evidence, authorizeCase: business.authorizeCase })
+   const currentSource = historical.currentSource
+   const sources = async (call: TrustedDomainContext, refs: readonly SourceRef[]) => {
+     if (!await host.revalidate(call)) return false
+@@ -80,7 +84,7 @@ export function createSfReviewServices(input: {
+     creationTarget: authority.creationTarget, operationIdentity: business.operationIdentity, requiredAuthority: ["reviews:read"],
+     maxBytes: input.maxBytes ?? 8 * 1024 * 1024, now: () => new Date().toISOString(), origin: input.origin, ui: authority.ui,
+     humanAuthority: authority.human, maxBodyBytes: 256 * 1024,
+-    ports: { planner: input.portfolio.planner, procurement: business.procurement,
++    ports: { planner: input.portfolio.planner, procurement: input.agenda?.procurement ?? business.procurement,
+       selectDashboardAgenda: createDashboardAgendaSelector({ host, dashboard: business.dashboard, sources: business.dashboardSources, recordEvidence: business.dashboardRecords }),
+       readBiPresentation: input.bi.readForReview, captureBiReviewChart,
+     },
+diff --git a/apps/cli/src/sucafina-product/extended-business-services.ts b/apps/cli/src/sucafina-product/extended-business-services.ts
+index 4cadc40..ff43e32 100644
+--- a/apps/cli/src/sucafina-product/extended-business-services.ts
++++ b/apps/cli/src/sucafina-product/extended-business-services.ts
+@@ -13,6 +13,7 @@ import type { SfBiHumanChoiceReader } from "./bi-artifacts.ts"
+ import { createSfReviewCollaboration } from "./review-collaboration.ts"
+ import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
+ import { createSfReviewServices } from "./review-services.ts"
++import { createSfReviewAgendaServices } from "./review-agenda-services.ts"
+ import type { SfReviewReaders } from "./review-services.ts"
+ import { createSfExtendedAssets } from "./extended-assets.ts"
+ import { createSfExtendedHttp } from "./extended-http.ts"
+@@ -50,7 +51,8 @@ export function createSfExtendedBusinessServices(input: {
+   const choices = createSfAnalysisChoiceServices({ ...input, portfolio: portfolioServices, biArtifacts: biArtifacts.store })
+   const biSelection = createStoredContextualBiSelectionReader({ approvedViews: biViews.map((view) => ({ id: view.id, version: 1, allowedFilters: [] })),
+     readHumanChoice: input.readHumanBiChoice ?? choices.readBi, readArtifact: biArtifacts.store.read, revalidate: input.authority.host.revalidate })
+-  const reviewServices = createSfReviewServices({ ...input, portfolio: portfolioServices, bi, readers: input.reviewReaders })
++  const reviewAgenda = createSfReviewAgendaServices(input)
++  const reviewServices = createSfReviewServices({ ...input, portfolio: portfolioServices, bi, readers: input.reviewReaders, agenda: reviewAgenda })
+   const reviews = reviewServices.application
+   if (reviews && reviewServices.historical) input.business.bindReviewCollaboration(createSfReviewCollaboration({ authority: input.authority,
+     application: reviews, evidence: reviewServices.historical.evidence, recipientAuthority: input.reviewRecipientAuthority }))
+@@ -66,7 +68,7 @@ export function createSfExtendedBusinessServices(input: {
+       requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } })
+       .filter((descriptor) => descriptor.id === "sf_change_prepare" || descriptor.id === "sf_alternative_draft"),
+   ]
+-  const http = createSfExtendedHttp({ ...input, bi, reviews, assets, reviewEvidence: reviewServices.historical?.evidence })
++  const http = createSfExtendedHttp({ ...input, bi, reviews, assets, reviewEvidence: reviewServices.historical?.evidence, reviewAgenda })
+   const choiceHttp = createSfAnalysisChoiceHttp({ authority: input.authority, origin: input.origin, choices, artifacts: biArtifacts.store,
+     alternatives: alternatives.choices, business: input.business })
+   let disposed = false
+diff --git a/apps/cli/src/sucafina-product/extended-http.ts b/apps/cli/src/sucafina-product/extended-http.ts
+index d8e0d14..72c145a 100644
+--- a/apps/cli/src/sucafina-product/extended-http.ts
++++ b/apps/cli/src/sucafina-product/extended-http.ts
+@@ -14,6 +14,8 @@ import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/cont
+ import { createSfExtendedBiOptions } from "./extended-bi-options.ts"
+ import { readSfDecisionBiSelection, sfPlannerBiSelection } from "./bi-selections.ts"
+ import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "./extended-review-cycle.ts"
++import { createSfReviewAgendaHttp } from "./review-agenda-services.ts"
++import type { createSfReviewAgendaServices } from "./review-agenda-services.ts"
+ import { sfExtendedSourceLinks } from "./extended-source-links.ts"
+ import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
+ import type { BusinessContextService } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+@@ -27,6 +29,7 @@ export function createSfExtendedHttp(input: {
+   reviews: ReturnType<typeof createSfReviewServices>["application"]
+   persistence: SfScopedSourcePort
+   reviewEvidence?: Pick<BusinessContextService, "resolve">
++  reviewAgenda?: Pick<ReturnType<typeof createSfReviewAgendaServices>, "discover">
+   origin: string
+   assets: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
+ }) {
+@@ -35,7 +38,10 @@ export function createSfExtendedHttp(input: {
+   const options = createSfExtendedBiOptions(input)
+   const reviewCycle = createSfExtendedReviewCycle(input)
+   const decisionNavigation = createSfBiDecisionNavigation(input)
++  const agendaHttp = input.reviewAgenda ? createSfReviewAgendaHttp({ authority, agenda: input.reviewAgenda, origin: input.origin }) : undefined
+   const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
++    const discovered = await agendaHttp?.(request, surface)
++    if (discovered) return discovered
+     const reviewed = await input.reviews?.http(request, surface)
+     if (reviewed) return reviewed
+     const url = new URL(request.url)
+@@ -226,7 +232,7 @@ export function createSfExtendedHttp(input: {
+             items.push(sfDashboardReviewAgendaItem({ ...current.value.agenda.section,
+               id: reportsEntry ? `report:${page}` : current.value.agenda.section.id }))
+           }
+-          data = { items, ...(reportsEntry ? { requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : {}) }
++          data = { items, period, ...(reportsEntry ? { requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : {}) }
+         }
+       }
+       const script = await (mode === "review" ? input.assets.reviews() : input.assets.bi()).catch(() => undefined)
+diff --git a/apps/cli/src/sucafina-product/extended-browser.ts b/apps/cli/src/sucafina-product/extended-browser.ts
+index 83ecd80..480dcc9 100644
+--- a/apps/cli/src/sucafina-product/extended-browser.ts
++++ b/apps/cli/src/sucafina-product/extended-browser.ts
+@@ -1,9 +1,11 @@
+ import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
++import { createReviewAgendaDiscoveryBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
+ import { createReviewCollaborationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
+ import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+ import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
+ import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+ import { createReviewPreparationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/workspace.ts"
+ import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
+ import type { PreservedReview, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+@@ -171,6 +173,7 @@ if (root && bootstrap) {
+   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
+     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
+     const client = createReviewPreparationBrowser()
++    const discover = createReviewAgendaDiscoveryBrowser()
+     const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+       const turn = generation
+       if (closed) return { status: "denied", reason: "review-access-changed" }
+@@ -180,6 +183,8 @@ if (root && bootstrap) {
+       return closed || turn !== generation ? { status: "denied", reason: "review-access-changed" } : result
+     }
+     const view = createReviewPreparationView({ items: update.items, ...(typeof update.previousReviewRef === "string" ? { previousReviewRef: update.previousReviewRef } : {}),
++      ...(isSfPeriod(value.period) ? { discoveryPeriod: value.period } : {}),
++      discover: (query) => guarded(() => discover(query)),
+       client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
+         preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
+         downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
+@@ -190,11 +195,11 @@ if (root && bootstrap) {
+     const confirm = (label: string) => {
+       const container = document.createElement("label"), check = document.createElement("input")
+       check.type = "checkbox"; checks.push(check); container.append(check, document.createTextNode(label)); choices.append(container, document.createElement("br"))
+-      check.addEventListener("change", () => { view.element.inert = checks.some((entry) => !entry.checked) || !update.items.length; message.textContent = view.element.inert ? "Confirme a nova seleção antes de carregar e preservar." : "Carregue a seleção, confira os registros e preserve a sucessora." })
++      check.addEventListener("change", () => { view.element.inert = checks.some((entry) => !entry.checked) || (!!update.previousReviewRef && !update.items.length); message.textContent = view.element.inert ? "Confirme a nova seleção antes de carregar e preservar." : "Carregue a seleção, confira os registros e preserve a sucessora." })
+     }
+     for (const entry of update.confirmations ?? []) confirm(entry.label)
+     for (const entry of update.unavailableSections ?? []) confirm(`Excluir explicitamente o tópico ${entry.title} desta nova pauta. ${entry.reason}`)
+-    view.element.inert = checks.length > 0 || !update.items.length
++    view.element.inert = checks.length > 0 || (!!update.previousReviewRef && !update.items.length)
+     if (update.previousReviewRef) {
+       const previous = document.createElement("a"); previous.href = reviewUrl(update.previousReviewRef).toString(); previous.textContent = "Reabrir a revisão anterior"; choices.append(previous)
+       message.textContent = update.items.length ? "A revisão anterior permanecerá preservada. Confirme a seleção de cada tópico para preparar sua sucessora." : "Nenhum tópico pode ser reconstruído com uma seleção exata. Abra a origem e prepare uma nova agenda; nenhum tópico foi substituído automaticamente."
