@@ -62,7 +62,9 @@ export function decideSfRecallInvalidation(input: { previous: RecallScope; curre
         if (maps.sourceVersions[ref.refDigest] === undefined) changedReferences.push("immutable-source")
         // Numeric versions alone do not identify historical content: records,
         // documents and case events also bind their canonical content digests.
-        if (maps.sourceVersions[ref.refDigest] !== undefined && resolutions[0]!.state === "historical") changedReferences.push("source-content")
+        if (maps.sourceVersions[ref.refDigest] !== undefined && resolutions[0]!.state === "historical" &&
+          mapped.sourceVersions[current.refDigest] === maps.sourceVersions[ref.refDigest] &&
+          mapped.sourceIncarnations[current.refDigest] === maps.sourceIncarnations[ref.refDigest]) changedReferences.push("source-content")
       }
     }
     const plan = planSfMemoryInvalidation(input.previous, input.current, input.dependencies)

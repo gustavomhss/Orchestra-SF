@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h-wp14-implementation-v1",
+  "owner": "WP14",
+  "previousProduct": "075cbe04a954b08e946bed676c3901dae13a14cc",
+  "parent": "075cbe04a954b08e946bed676c3901dae13a14cc",
+  "status": "IMPLEMENTED_PENDING_CI",
+  "reason": "W2 returned a redundant source-content reason alongside source-version; preserve precise version/incarnation reasons and use source-content for unchanged numeric identities with changed content.",
+  "changedProduct": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "blob": "acca5b77dfef2cf4552ccf1caf27e19e74a98cf2",
+      "sha256": "fad69438aa6408ae9385979e98ebe6518c5e3db19f466e0184b734a4e3139ea2"
+    }
+  ],
+  "scope": "Only invalidation.ts changes. Revalidate its two direct test consumers; no additional equivalent run. Atlas/scanner/restart and other previous test results stay attributed to W2 with explicit blob equivalence.",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "Sucafinav1/test/product/wp14/recall.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestHash": "339a2f8bf194764c2946e65c24cb4f26ad8cf45f7b277aabddb6ae2fa0a407c6",
+  "precedingRun": {
+    "schema": "sf2h-scoped-ci-evidence-v1",
+    "runId": 43581868850,
+    "jobId": 132408115499,
+    "W": "075cbe04a954b08e946bed676c3901dae13a14cc",
+    "tree": "3f59fc019290d4f7a01a42de8a136c36840ff9ee",
+    "S": "766b30eff18ae3d0bf5310a33eb7e1cd91fdaac0",
+    "snapshotTree": "7a17558d270af6f8bd9240a0a0e51bbb44baa434",
+    "requestHash": "b2dd550d8128fd7da11d2ba35e9751e9666bd705411a03fecd60156bcc6f290e",
+    "conclusion": "failure",
+    "tests": {
+      "files": 17,
+      "total": 58,
+      "pass": 57,
+      "fail": 1,
+      "durationSeconds": 118.35
+    },
+    "failure": {
+      "test": "invalidation follows the envelope dependencies and fails closed on revocation",
+      "path": "Sucafinav1/test/product/wp14/recall.test.ts",
+      "line": 110,
+      "expected": [
+        "source-version"
+      ],
+      "actual": [
+        "source-version",
+        "source-content"
+      ],
+      "decision": "invalidate in both"
+    },
+    "omni": {
+      "verdict": "pass",
+      "nonce": "3925615282d6a3250214bec001b68f40",
+      "declaredTests": 3,
+      "spawns": 7,
+      "delegated": 0
+    },
+    "atlasRestartReceipt": {
+      "kind": "sqlite-atlas-process-restart",
+      "nativeSessionWitness": false,
+      "scanner": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+      },
+      "committed": {
+        "status": "committed",
+        "eventId": "9a732d9f8a684588324081b02e4841c524fbd12e9373de19290af1633d75f2ef",
+        "recordDigest": "43b967380fa071923e14572b80fcf46a979e4861398d23ea7ef0eb9a8368ebe7"
+      },
+      "replayed": {
+        "status": "already-committed",
+        "eventId": "9a732d9f8a684588324081b02e4841c524fbd12e9373de19290af1633d75f2ef",
+        "recordDigest": "43b967380fa071923e14572b80fcf46a979e4861398d23ea7ef0eb9a8368ebe7"
+      },
+      "parentPid": 4045,
+      "childPid": 4096,
+      "authorized": "ok",
+      "matches": 1,
+      "outsider": "unavailable",
+      "revoked": "unavailable"
+    },
+    "acceptance": "Individual executed tests only. Overall run failed. No AM05, GNATIVE, full bundle or native Session approval."
+  }
+}
