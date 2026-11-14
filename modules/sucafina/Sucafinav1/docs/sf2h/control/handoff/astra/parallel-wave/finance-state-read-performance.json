@@ -1,0 +1,44 @@
+{
+  "number": 22,
+  "id": "finance-state-read-performance",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": "S0-C scoped source-support22; not a supervisor or CI dispatcher",
+  "actor_pack": "execution/actors/S0-C.json",
+  "branch": "finance-resume",
+  "pr": 42,
+  "expected_head": "d8d586e19c824f75a88494a9c3677faac617e81d",
+  "lease_epoch": "browser-source-performance-22",
+  "authority": "Predecessor session18 explicitly ended write authority in HANDOFF-FINAL. Transfer confined to paths below; session14 remains sole sf2-stack writer. No native Goal resume or worker launch by preparing this mission.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+    "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/"
+  ],
+  "inputs": {
+    "finance": "d8d586e19c824f75a88494a9c3677faac617e81d",
+    "finance_product": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "composed": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/HANDOFF-FINAL.md",
+    "residual": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/residual-boundary.json",
+    "counterexample_review": "29356ad7a554309e9a905749dd84e3f6bd0900ea"
+  },
+  "mission": "Implement and prove a safe reduction of full-state materialization/serialization or canonical case replay overhead to close FIN-IND-005. Deliver working source and surgical proof on existing PR42, not another diagnostic-only report. Reconcile two authorized source files against composed target before editing; do not copy the full composed tree.",
+  "facts": "Finance S2 passed43 tests350assertions. S3 run43636137688 failed180000ms. Observed3095 cases reads71840ms inclusive,586 preferences reads13163ms; counts are nested, not additive. confirmed.exact began178956ms; final15000/15001/history/replay/reopen not reached. Provider currently passes structuredClone(state) to read callback; case-port uses separate fresh before/again reads. These boundaries are correctness constraints, not permission to remove checks.",
+  "acceptance": [
+    "Measure a material reduction with real C08/SQLite and representative state using a short regression before repeating original long journey. Use operation/materialization counts plus observed timing; no fragile asserted wallclock speed ratio.",
+    "Retain detached callback/output isolation, no mutation of committed state on read/error/rejection, no accidental privilege broadening or private namespace leakage. Current callbacks may be opaque and mutable.",
+    "Retain both observation moments, original authority predicates, source/current/final fences, Request/header/binding/lease/abort/CAS semantics, nested-write poison, revocation, source replacement and malformed/legacy state handling. No cross-request or cross-user result/authorization caching.",
+    "Re-run the unchanged original complete journey only after proven material change: trainingpending→confirmed40000, total250000,difference−10000,15000qualifiesminimum20000/15001fails, actualhistoricalchoice read,replay,reopen and outsider/revocation negatives. Preserve180000fixture/300000Bun budgets, arithmetic and alloriginalassertions.",
+    "Keep full original criteria accessible; bind achieved behavior and exact SHAs/results. Short PASS is not long-journey closure."
+  ],
+  "exclusions": "No edits to business-context.ts/analysis-stale-commit.ts/CLI host-context (Memory13), C12 generic apply/procurement decision HTTP/UI/interface HTTP/host contract (19), initial alternatives UI/spec (20), WP13 semantic union (21), existing Finance producer algorithms, runtime/local-store.ts, global contracts, publicProtocol/HttpApi, fixtures/workflows/config/shared source tests. If required, prepare exact patch for current owner rather than overwrite. Own tests may invoke unchanged existing journey helpers.",
+  "testing": "No local product tests or server starts. Surgical hosted Actions only through existing authorized CI request interface/dispatcher, one request in flight for this mission, dedup by exact candidate/selection/config. Reattach prior results. No epic/full suite or repeated unchanged failing long run. Required package bun typecheck and guards per AGENTS; classify inherited failures without suppressing them.",
+  "handoff": "Commit to same finance-resume/PR42 via GitHub MCP, no force, expected-head fencing. Return terminal handoff with source preimages/postimages, complete patch, counterproof, preserved semantics, short+long exactW/S/run/results and consumer=session14. Product changes require new candidate intake; no automatic release claim.",
+  "limits": "Read applicable AGENTS,pinned START/WORKFLOW/COMMON, complete S0-C pack and required appendices, finance receipts and review counterexample. Preserve plan/T0/digests. GitHub MCP only for remote; no gh/push/devmerge/Azure/deploy/credentials/engines/restarts/thirdpartymessages/newcontroller. Head advance requires reconciliation, not reset. Source support only, no duplicate S0 authority."
+}
