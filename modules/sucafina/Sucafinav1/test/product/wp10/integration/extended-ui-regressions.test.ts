@@ -6,6 +6,45 @@ import { createSfExtendedReviewCycle } from "../../../../../../../apps/cli/src/s
 import { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
 import { createSfPersonalViewAuthority, sfPersonalViewSelectionAllowed } from "../../../../../../../apps/cli/src/sucafina-product/personal-view-authority.ts"
 import type { SfPersonalView } from "../../../../product/interface/personal-views.ts"
+import { createSfExtendedBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts"
+import { createApplication } from "../../../../runtime/application.ts"
+import { DashboardBudget } from "../../../../runtime/dashboard-budget.ts"
+import { DashboardOperations } from "../../../../runtime/dashboard-operations.ts"
+
+test("review and BI links retain the actual page's scoped year and selected month", async () => {
+  const fixture = await financialCompositionFixture()
+  const { authority, business, persistence, guards } = fixture
+  const extended = createSfExtendedBusinessServices({ authority, business, persistence, ...guards, origin: "https://example.test",
+    assets: { bi: async () => "", reviews: async () => "" } })
+  try {
+    const selections = [
+      { query: "page=IT+Operations&year=2026&opsYear=2027&operationsMonth=2", start: "2027-02-01", end: "2027-02-28" },
+      { query: "page=IT+Security+KPIs&year=2026&secYear=2024&securityMonth=2", start: "2024-02-01", end: "2024-02-29" },
+      { query: "page=Executive+Dashboard&year=2026&execYear=2025&executiveMonth=3&opsMonth=8", start: "2025-03-01", end: "2025-03-31" },
+      { query: "page=IT+Operations&year=2027&own=2025&month=5", start: "2025-05-01", end: "2025-05-31" },
+      { query: "page=IT+Operations&year=2027", start: "2026-11-01", end: "2026-11-30" },
+      { query: "page=Budget+Overview&year=2027", start: "2027-01-01", end: "2027-12-31" },
+    ]
+    for (const selected of selections) {
+      const request = new Request(`https://example.test/sucafina/dashboard?${selected.query}`)
+      const application = createApplication("/sucafina", { persistence, authenticate: authority.host.authenticate, environment: authority.host.environment,
+        maxJsonBytes: 262144, domains: { dashboard: [DashboardBudget, DashboardOperations], planner: [], procurement: [] },
+        productHtml: (html, surface, page) => extended.productHtml(html, surface, page, request) })
+      const response = await application(request)
+      expect(response?.status).toBe(200)
+      const html = await response!.text()
+      const navigation = /<nav data-sf-extended-navigation[\s\S]*?<\/nav>/.exec(html)?.[0]
+      expect(navigation).toBeDefined()
+      const links = [...navigation!.matchAll(/href="([^"]+)"/g)].map((match) => new URL(match[1]!.replaceAll("&amp;", "&"), request.url))
+      expect(links.map((link) => link.searchParams.get("sf"))).toEqual(["bi", "review"])
+      for (const link of links) {
+        expect(link.searchParams.get("page")).toBe(new URL(request.url).searchParams.get("page"))
+        expect(link.searchParams.get("start")).toBe(selected.start)
+        expect(link.searchParams.get("end")).toBe(selected.end)
+      }
+    }
+  } finally { extended.dispose(); await fixture.dispose() }
+})
 
 test("a non-Budget review update preserves topic, period, notes and predecessor after explicit new record selection", async () => {
   const fixture = await financialCompositionFixture(), call = await fixture.read()

@@ -15,29 +15,25 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   await expect(page.getByRole("link", { name: "Gerenciar versões do Planner", exact: true })).toHaveAttribute("href", /\/sucafina\/planner\?page=Versions&year=2027$/)
   const available = await bi.getByRole("combobox", { name: "Dados para visualizar", exact: true }).locator('option[value="planner"]').count()
   facts.plannerChoiceAvailable = available === 1
-  if (available) {
+  expect(available, "The published corpus contains three authorized Planner versions for 2027").toBe(1)
     await bi.getByRole("combobox", { name: "Dados para visualizar", exact: true }).selectOption("planner")
     await expect(bi.getByRole("combobox", { name: "Versão base", exact: true })).toHaveValue("")
     await expect(bi.getByRole("combobox", { name: "Versão candidata", exact: true })).toHaveValue("")
     await expect(bi.getByRole("button", { name: "Atualizar visualização", exact: true })).toBeDisabled()
     const candidates = await bi.getByRole("combobox", { name: "Versão base", exact: true }).locator("option").evaluateAll((options) => options.map((entry) => (entry as HTMLOptionElement).value).filter(Boolean))
     facts.plannerVersions = candidates.length
-    expect(candidates.length).toBeGreaterThan(0)
+    expect(candidates.length).toBeGreaterThanOrEqual(2)
     // The test explicitly chooses both sources; the product never selects a latest version.
     await bi.getByRole("combobox", { name: "Versão base", exact: true }).selectOption(candidates[0]!)
-    await bi.getByRole("combobox", { name: "Versão candidata", exact: true }).selectOption(candidates[1] ?? candidates[0]!)
+    await bi.getByRole("combobox", { name: "Versão candidata", exact: true }).selectOption(candidates[1]!)
     const [read] = await Promise.all([
       page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data" && new URL(response.url()).searchParams.get("viewId") === "BI02"),
       bi.getByRole("button", { name: "Atualizar visualização", exact: true }).click(),
     ])
     const body = await read.json()
     facts.plannerHttp = read.status(); facts.plannerResult = read.ok() ? "authorized-projection" : String(body.reason)
-    if (read.ok()) await expect(bi.getByRole("table", { name: "Dados e referências", exact: true })).toBeVisible()
-    else { expect(typeof body.reason).toBe("string"); await expect(bi.getByRole("status")).toContainText(body.reason) }
-  } else {
-    await expect(bi.getByRole("status")).toContainText("Nenhuma versão autorizada")
-    facts.plannerResult = "no-authorized-version-in-period"
-  }
+    expect(read.status(), `Planner comparison failed: ${String(body.reason ?? "unavailable")}`).toBe(200)
+    await expect(bi.getByRole("table", { name: "Dados e referências", exact: true })).toBeVisible()
   await testInfo.attach("wp10-bi-explicit-versions.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
   await bi.getByRole("combobox", { name: "Visualização", exact: true }).selectOption("BI05")
   await expect(bi.getByRole("status")).not.toHaveText("Carregando escolhas autorizadas…", { timeout: 30000 })

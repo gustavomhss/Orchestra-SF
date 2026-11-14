@@ -1,0 +1,242 @@
+{
+  "schema": "sf2.wp10.independent-review.v1",
+  "review_id": "R3-runtime-W2",
+  "issued_at": "2026-11-14T03:01:55Z",
+  "reviewer": {
+    "agent": "/root/review_runtime",
+    "role": "R3 — IA, Relay e integração",
+    "independent": true,
+    "product_authorship": [],
+    "product_files_modified": [],
+    "author_overlap": false,
+    "authors_disclosed_by_controller": "Root, builders e produtores estrangeiros; R3 não escreveu produto, testes, workflow ou correções. Os informes dos autores são insumos, não aceite.",
+    "previous_review": "analysis/reviews/R3-runtime-W.json"
+  },
+  "lease": {
+    "accepted_before_review": true,
+    "mode": "readonly-product",
+    "builders_status_at_start": "CLOSED",
+    "allowed_writes": ["analysis/reviews/R3-runtime-W2.json", "analysis/reviews/R3-runtime-W2.md"],
+    "remote_writes": 0,
+    "ci_dispatches": 0,
+    "local_product_tests_build_typecheck_browser": 0,
+    "frozen_read_root": "/workspace/scratch/cca507855f4a/analysis/frozen-W2/repo",
+    "later_mutable_corrections_excluded": true
+  },
+  "candidate": {
+    "name": "W2",
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "astra-wp10",
+    "base": "sf2-stack",
+    "pull_request": "https://github.com/gustavomhss/Orchestra-SF/pull/29",
+    "commit": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+    "tree": "4fba27f0de68963a0da60debb8ced17fe3abd1e8",
+    "parent": "a43883c930cf996472b27c524aadb4694c13b5a3",
+    "remote_head_independently_confirmed": true,
+    "remote_pr_state_observed": "open, draft",
+    "manifest": "analysis/frozen-W2/manifest.json",
+    "manifest_sha256": "4a2e542c5ba300543a822f8ac45fd0d37e051339054b28ea84219493f9b29063",
+    "manifest_files": 841,
+    "manifest_foreign_pins": 105,
+    "sha256_verification": {
+      "result": "841/841 matched; manifest digest also matched",
+      "command": "jq -r '.files[] | \"\\(.sha256)  analysis/frozen-W2/repo/\\(.path)\"' analysis/frozen-W2/manifest.json | sha256sum --check --quiet",
+      "exit_code": 0,
+      "scope": "Arquivos reconstruídos do manifesto. A revisão não afirma que existe checkout Git completo local."
+    }
+  },
+  "verdict": "changes-required",
+  "acceptance": {
+    "wp10_owned_behavior": "CHANGES_REQUIRED",
+    "native_qualification": "NOT_ESTABLISHED",
+    "global_candidate_C": "NOT_ACCEPTED_BY_THIS_REVIEW",
+    "delivery_D": "NOT_REVIEWED",
+    "reason": "C11 está corrigido por inspeção, sem unidade hospedada W2. LIFE mantém espera de interrupt antes da revogação em caminhos de cleanup. O check W2 revela um erro próprio de tipagem no adaptador de calculation e dois gates próprios de logs versionados. C07 continua pendência externa obrigatória."
+  },
+  "source_basis": {
+    "instructions": ["analysis/frozen-W2/repo/AGENTS.md", "context/handoff.md"],
+    "plan": "context/pack.json canonical_work_package",
+    "canonical_tasks": 7,
+    "canonical_criteria": 171,
+    "independently_counted_unique_criteria": 171,
+    "criterion_count_detail": "146 critérios de tasks e 25 critérios/axiomas WP; excluídos os sete IDs de task e o ID WP10.",
+    "intake": "context/intake.json",
+    "non_acceptance_inputs": ["analysis/criteria-current-draft.json", "analysis/runtime/c07-native-api-findings.md", "mensagens de triagem e correções do controlador"],
+    "scope": "Rechecagem dirigida dos findings R3 de W e dos deltas W2 de identidade WP06, C07 e Planner calculation. Não é nova aceitação integral dos 171 critérios."
+  },
+  "findings": [
+    {
+      "id": "R3-C11-01",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "WP10 / host native-input composition",
+      "classification": "owned-fix",
+      "status": "SOURCE_CORRECTED_NEEDS_HOSTED_EVIDENCE",
+      "title": "Veto de publicação externa deixa de escapar como preview ready",
+      "criteria": ["WP10.T01.INV.02", "WP10.T01.INV.03", "WP10.T01.CHK.05", "WP10.T06.CHK.04", "WP10.T06.QLT.60"],
+      "evidence": [
+        {"path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts", "lines": "161-197", "detail": "vetoed é marcado por cada recusa do callback e pelo nativePublicationGuard final. Após await state.transaction, um veto retorna denied/alternative-publication-vetoed, sem reutilizar o valor ready interno."},
+        {"path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts", "lines": "88-95,134-140", "detail": "C08 ainda preserva o valor de preview, mas o wrapper agora converte o resultado externo; o guard final ocorre antes de incrementar versão e publicar staged."},
+        {"path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts", "lines": "196-250", "detail": "O teste usa run-store+C08 reais, retém UI grant válida e revoga binding nativo após o trabalho interno. Exige denied e snapshot exatamente anterior; o controle positivo exige ready."}
+      ],
+      "recheck_result": "O traço determinístico que produzia ok sem commit foi eliminado no W2. Ambas WeakSets/guard são limpas no finally. O teste discriminante foi lido, não executado pelo reviewer.",
+      "remaining_evidence": "Executar seleção hospedada no SHA que será aceito, incluindo veto após callback e veto final durante reautenticação. Não há unit W2 disponível no fechamento.",
+      "controller_notified_immediately": true
+    },
+    {
+      "id": "R3-LIFE-01",
+      "severity": "P2",
+      "mandatory": true,
+      "owner": "WP10 / native-execution e native-host",
+      "classification": "owned-fix",
+      "status": "OPEN_IN_W2",
+      "title": "Cleanup ainda espera interrupção antes de revogar recursos em caminhos com autoridade vigente",
+      "criteria": ["WP10.T06.CHK.04", "WP10.T06.CHK.06", "WP10.T06.QLT.01", "WP10.T06.CMP.01", "WP10.T06.INV.40"],
+      "evidence": [
+        {"path": "apps/cli/src/sucafina-product/native-execution.ts", "lines": "74-104", "detail": "O novo finally cobre attach e onAdmitted, mas remove active e espera host.interrupt na linha 101 antes de alcançar host.release na 103."},
+        {"path": "apps/cli/src/sucafina-product/native-execution.ts", "lines": "178-230", "detail": "interrupt/cancelRun aguardam host.interrupt; releaseRun pode esperar cancelDone; shutdown aguarda todos interrupts (229) antes de iniciar releases (230)."},
+        {"path": "apps/cli/src/sucafina-product/native-host.ts", "lines": "244-263", "detail": "interrupt só executa run.release depois de await Session.interrupt (253-254). release já revoga antes da espera (261-262), mas os callers acima chegam a ele tarde."},
+        {"path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts", "lines": "143-203", "detail": "Os quatro modos attach/announce definem authorization.allowed=false na linha 167; assim interrupt é negado imediatamente. Não cobrem falha de attach/announce com autorização válida e interrupção pendente."}
+      ],
+      "partial_correction": "O caso original de abort/revoke antes de attach agora possui release incondicional e foi adicionado ao teste. Host.release e finalizer global revogam antes da interrupção. Isso não fecha a ordem dos demais callers.",
+      "reproduction": [
+        "Preparar um run real e conservar a autorização válida.",
+        "Fazer attach ou anúncio falhar; ou iniciar shutdown/cancelamento de run ainda ativo.",
+        "Manter Session.interrupt pendente por uma finalização nativa que ainda não terminou.",
+        "Na falha de admissão, active já foi removido, mas binding, budget ticket e observação ainda não foram revogados; host.release está depois da espera. No shutdown, todos releases ficam atrás da barreira de interrupts."
+      ],
+      "reproduction_kind": "Traço estático e contraprova da cobertura do teste; nenhum produto executado localmente.",
+      "impact": "A duração do cleanup e a revogação dependem de uma interrupção que pode não terminar. O código não garante revogação imediata e retenção limitada em caminhos de falha/cancelamento.",
+      "minimum_fix": "Após a autorização pertinente ao cancelamento, separar revogação host-owned da espera nativa. Revogar recursos antes de aguardar Session.interrupt em todos os caminhos; preservar a interrupção real e o isolamento de Sessions alheias.",
+      "required_recheck": "Novo SHA imutável e regressão hospedada com autorização vigente, attach/announce recusado ou lançado, interrupt bloqueado e interrupt com defeito; observar binding/ticket/observação revogados antes de liberar a espera. Cobrir shutdown e cancelamento.",
+      "controller_notified_immediately": true,
+      "controller_triage": "Controlador aceitou o residual obrigatório e informou correção em mutable; nenhuma dessas alterações posteriores foi lida ou rechecada por R3."
+    },
+    {
+      "id": "R3-C07",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "Native Task/Relay e WP09; WP10 compõe o seam público publicado",
+      "classification": "foreign-native-prerequisite",
+      "status": "BLOCKED_IN_W2",
+      "title": "Port público de publicação é honesto, mas o host ainda não instala C07 nativo",
+      "criteria": ["WP10.T01.CHK.03", "WP10.T01.DOD.01", "WP10.T06.CHK.07", "WP10.T06.CHK.60", "WP10.T06.DOD.60", "WP10.T06.SUC.60"],
+      "evidence": [
+        {"path": "apps/cli/src/sucafina-product/routine-publication.ts", "lines": "12-68", "blob": "3bc63f611beb36d535fd3ccedd9c5ae846ee4ca5", "detail": "Sem installed(), identity ou epoch retorna undefined. Wrapper invalida provider retido quando identity/provider/epoch mudam. O blob W2 coincide com a43883c9 publicado, consultado via MCP."},
+        {"path": "apps/cli/src/sucafina-product/host-context.ts", "lines": "290-293", "detail": "Composição não passa installed ao publication nem native ao routineServices e não adiciona descritores C07 à lista do produto."},
+        {"path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-services.test.ts", "lines": "25-46,122-173", "detail": "Testes explicitam unavailable sem provider e exercitam substituição/disposal com port público; a integração de execução C07 no teste é fixture declarada, não GNATIVE."},
+        {"path": "packages/core/src/tool/task.ts", "lines": "425-456", "blob": "0e82455ca428e5b498551496bc65bdc0f6551df3", "detail": "Ref W2 conferido via MCP, blob igual ao examinado em W: requireParent exige assistant tool part task registrado e input exato."},
+        {"path": "packages/core/src/tool/task-governance.ts", "blob": "12173c0769e62212a4a01003a0a253e7d1d1ba38", "detail": "Ref W2 conferido via MCP, blob igual a W; hooks não substituem governança Task nem publicam eventos Session."}
+      ],
+      "recheck_result": "Eliminada a importação privada Maestro. Ausência do provider é explícita e não é promovida a catálogo/execução disponível. Isso corrige a apresentação da disponibilidade, sem satisfazer a entrega obrigatória C07.",
+      "impact": "Não há recibo nativo real de admission/start/terminal/artifact para as rotas de rotina. Logo 39 rotas, AM02/AM06 e GNATIVE não estão fechados.",
+      "minimum_fix": "Produtores publicam port governado com principal/project/case/input/plan/publication, revalidate/index/start e terminal/artifact imutáveis. WP10 instala o adapter real. Não fabricar Task/assistant part, não substituir por resume solto.",
+      "required_recheck": "Pin do produtor publicado, instalação real e CI native positivo/negativo no próximo candidato integrado.",
+      "controller_notified_immediately": true
+    },
+    {
+      "id": "R3-BCS-TYPE-01",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "WP10 / planner-calculation-services",
+      "classification": "owned-fix",
+      "status": "OPEN_IN_W2",
+      "title": "Novo resolver de calculation não passa typecheck CLI",
+      "criteria": ["WP10.T04.DOD.01", "WP10.T04.DOD.10", "WP10.T04.CMP.10", "WP10.T07.DOD.01"],
+      "evidence": [
+        {"path": "apps/cli/src/sucafina-product/planner-calculation-services.ts", "lines": "112-118", "detail": "Teste de presença de context não estreita a união até ProductContext; source.authorizedProjection.context.sourceRefs na linha 116 causa TS2339."},
+        {"path": "analysis/hosted/job-132306683850.log", "lines": "565-566", "detail": "Check hospedado W2, run 43548947850/job 132306683850, contém exatamente o diagnóstico TS2339 (116,162)."}
+      ],
+      "reproduction": ["Executar Typecheck CLI consumers no check W2; o diagnóstico já está registrado no job hospedado."],
+      "impact": "Um gate obrigatório do consumidor CLI falha no candidato; inspeção de lógica não pode promover W2 a verificado.",
+      "minimum_fix": "Estreitar explicitamente o tipo da projeção/contexto antes de usar sourceRefs; conservar recusa de projeções incompatíveis, sem cast que oculte a incompatibilidade.",
+      "required_recheck": "Novo check hospedado do próximo SHA; executar também o teste de integração de calculation que usa source/context/Atlas.",
+      "controller_notified_immediately": true,
+      "controller_triage": "Controlador identificou e aceitou a correção; R3 confirmou independentemente o diagnóstico no log do W2."
+    },
+    {
+      "id": "R3-GUARD-01",
+      "severity": "P2",
+      "mandatory": true,
+      "owner": "WP10 / evidências versionadas e sourceguard",
+      "classification": "owned-fix",
+      "status": "OPEN_IN_W2",
+      "title": "Dois logs brutos versionados bloqueiam sourceguard",
+      "criteria": ["WP10.T04.CHK.03", "WP10.T04.DOD.01", "WP10.T04.DOD.40", "WP10.T04.CMP.01"],
+      "evidence": [
+        {"path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293688965.log", "detail": "agent-scratch GATE no check hospedado W2."},
+        {"path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293700346.log", "detail": "agent-scratch GATE no check hospedado W2."},
+        {"path": "analysis/hosted/job-132306683850.log", "lines": "702-703,739-741,777-778", "detail": "check:guards --base origin/dev: 78 regras, 1093 paths, 2 gates e 35 warnings; exit 1."}
+      ],
+      "impact": "O gate obrigatório de produto falha por arquivos de output de ferramenta incluídos no candidato.",
+      "minimum_fix": "Remover logs brutos do produto e manter referências/rastreabilidade dos runs em recibos próprios e artefatos hospedados. Não alterar guard/allowlist para esconder a ocorrência.",
+      "required_recheck": "Sourceguard hospedado do novo SHA, conservando base e regras exigidas.",
+      "controller_notified_immediately": true,
+      "controller_triage": "Controlador confirmou inclusão no próximo candidato; alteração mutable excluída desta revisão."
+    }
+  ],
+  "additional_scope": [
+    {
+      "area": "Identidade Native Model/Location WP06",
+      "status": "SOURCE_REVIEWED_NEEDS_HOSTED_EVIDENCE",
+      "criteria": ["WP10.T06.CHK.01", "WP10.T06.CHK.03", "WP10.T06.CHK.08", "WP10.T06.QLT.01"],
+      "evidence": [
+        "apps/cli/src/sucafina-product/native-identity.ts:5-11 normaliza workspaceID explícito e variant default, preservando provider/id/variant explícita.",
+        "native-host.ts:113-155 normaliza antes de admission e mantém comparação exata de Session persistida; catálogo ainda exige provider/id e variantes alternativas existentes.",
+        "token-gate.ts:77,94-97 usa identidade normalizada em Location e Model, com Session/project/agent exatos.",
+        "Core packages/core/src/session/info.ts ref W2 blob84e5b70475bc6efb110b11d7a23d6ae6c3c5a207, linhas50 e63-66, produz variant default e workspaceID explícito da mesma forma.",
+        "native-host-disposal.test.ts:125-140 injeta modelo/variant/directory diferentes e exige recusa; linhas214-216 conferem identidade persistida."
+      ],
+      "limit": "Fonte compatível, sem novo defeito concreto identificado. Sem resultado unit/native W2, não qualifica SessionExecution, todas as 18 skills ou C15/C16 completos."
+    },
+    {
+      "area": "Planner calculation via BCS e Atlas",
+      "status": "SOURCE_REVIEWED_WITH_TYPECHECK_BLOCKER",
+      "criteria": ["WP10.T01.CHK.12", "WP10.T07.CHK.02", "WP10.T07.CHK.03", "WP10.T07.DOD.01"],
+      "evidence": [
+        "planner-calculation-services.ts:32-67 captura request/result/fences por call, valida snapshot, usa replay real record-only e rejeita closure não record.",
+        "planner-calculation-services.ts:68-96 vincula request original a result persistido e emite cálculo após replay; finally elimina capture.",
+        "planner-calculation-services.ts:98-140 confere ref canônica completa, request/result/engine/source/period/currency, fontes atuais, reconsulta result e binding e revalida autoridade.",
+        "business-services.ts:199-227 seleciona caso autenticado sem recursão por projeção, exige incarnation/version/participação/principal/access/policy atuais antes e depois.",
+        "product/host-binding/business-context.ts:179,262,278 conecta resolver e prova de continuidade calculation.",
+        "product/planner/calculation-evidence.ts:21-53 usa duas reproduções reais, validação record-only e guarda de ciclos; result-store.ts:24-43 revalida caso e fontes duas vezes.",
+        "test/product/wp10/integration/planner-calculation.test.ts lê source pela capability UI, BCS e Atlas real, reabre store e recusa tamper/revogação/mudança de fonte. Coverage e ledger accepted são fixtures explícitas."
+      ],
+      "limit": "O adaptador deixa de estar ausente no router; não foi identificado outro desvio concreto de auth/fences na inspeção. O TS2339 continua aberto e o teste não foi executado no W2. Reopen do store no teste não equivale por si a restart de processo ou AM05 completo."
+    },
+    {
+      "area": "C17 Atlas package/generation",
+      "status": "W2_HOSTED_STATIC_GATES_PASSED",
+      "criteria": ["WP10.T04.CHK.10", "WP10.T04.QLT.10", "WP10.T07.CHK.10", "WP10.T07.CHK.40", "WP10.T07.CHK.62"],
+      "evidence": ["run43548947850/job132306683850: generate, check:generated, git diff --exit-code src/generated, Atlas boundary typecheck e root check:spawn-imports tiveram sucesso.", "spawn-imports registrou 4642 arquivos e 66 sites permitidos."],
+      "limit": "Esses gates qualificados pertencem ao W2. Não substituem teste runtime Atlas/scanner/AM05, AST adversarial específico, AMs ou oito seleções finais. Os arquivos Atlas não hidratados não foram classificados como ausentes."
+    }
+  ],
+  "hosted_evidence": {
+    "check": {
+      "run_id": 43548947850,
+      "job_id": 132306683850,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43548947850/job/132306683850",
+      "product_sha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "log": "analysis/hosted/job-132306683850.log",
+      "exact_product_evidence_lines": "277,329-342,361",
+      "job_status_independently_observed_via_mcp": "completed/failure",
+      "passed_steps": ["Validate exact product and envelope", "Verify canonical Atlas generation", "Typecheck Atlas boundary", "Guard subprocess imports"],
+      "failed_steps": ["Typecheck Sucafina", "Typecheck CLI consumers", "Guard product against origin/dev"],
+      "typescript_diagnostics_count": 33,
+      "own_new_typescript_diagnostics": 1,
+      "other_typescript_diagnostics": 32,
+      "other_diagnostics_ownership": "Controlador classifica os 32 como foreign; R3 reobservou os diagnósticos no W2 atual, sem transferir o resultado de predecessor e sem fechar a triagem dos demais owners.",
+      "sourceguard": {"rules": 78, "changed_paths": 1093, "gates": 2, "warnings": 35, "exit_code": 1}
+    },
+    "unit_W2": {"status": "NOT_RUN_AT_REVIEW_CLOSURE", "basis": "Controlador confirmou que ainda não havia unit W2. Run43548294775 pertence ao pai a43883c9 e estava em andamento; não foi usado como prova de W2."},
+    "global": "Epic, oito seleções finais e AM01–AM06 são responsabilidade S0 após bundle integrado; nenhum PASS native/global é emitido."
+  },
+  "limitations": [
+    "Revisão estática independente com leitura de check hospedado; zero execução local de produto/test/build/typecheck/browser.",
+    "Fechamento de fonte não equivale a qualificação de comportamento hospedado. C11 e identidade aguardam evidência do SHA aceito.",
+    "Correções mutable informadas após findings não pertencem ao lease W2 e não foram consideradas.",
+    "Todos os findings mantêm owner e condição de recheck; C07 é obrigatório externo, não opcional nem aceite fictício.",
+    "Nenhuma aceitação das 39 rotas, dos 5 perfis/18 skills completos, de C15/C16 integral, das seis AMs, de C ou de D foi inferida destes checks."
+  ]
+}

@@ -15,8 +15,8 @@ import type { createSfPortfolioServices } from "./portfolio-services.ts"
 import type { createSfBiServices } from "./bi-services.ts"
 import { createSfReviewHistory } from "./review-history.ts"
 import { createSfReviewHandoffs } from "./review-handoffs.ts"
-import { createPortfolioHistory } from "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts"
-import { createPortfolioHistoricalProvenance } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+import { createSfReviewPortfolioHistory } from "./review-portfolio-history.ts"
+import { protectSfReviewReads } from "./review-read-integrity.ts"
 
 type ApplicationInput = Parameters<typeof createReviewApplication>[0]
 export type SfReviewReaders = {
@@ -54,10 +54,8 @@ export function createSfReviewServices(input: {
   const sensitivityReader: Parameters<typeof createReviewDecisionAccess>[0]["sensitivity"] = {
     read: (ref, call) => sensitivity ? sensitivity.read(ref, call) : Promise.resolve({ status: "unavailable", reason: "review-sensitivity-reader-unavailable" }),
   }
-  const portfolioHistory = input.readers?.portfolioHistory ?? createPortfolioHistory({ state: authority.state, host, authorizeCase: business.authorizeCase,
-    verifyHistoricalProvenance: createPortfolioHistoricalProvenance({ readHistoricalBinding: input.portfolio.portfolioBindings.readHistoricalBinding,
-      caseFor: business.resolveCase, cases: business.cases, evidence: historical.evidence, host }) })
-  const authorizeDecision = createReviewDecisionAccess({ host, results: business.results, sensitivity: sensitivityReader, portfolioHistory, currentCase: business.resolveCase })
+  const { portfolioHistory, authorizeDecision } = createSfReviewPortfolioHistory({ authority, business, portfolio: input.portfolio,
+    evidence: historical.evidence, sensitivity: sensitivityReader, portfolioHistory: input.readers?.portfolioHistory })
   const authorizeSensitivity: ApplicationInput["access"]["authorizeSensitivity"] = async (call, values) => {
     const request = host.requestFor(call)
     if (!request || !await host.revalidate(call) || values.length && !sensitivity) return false
@@ -95,5 +93,6 @@ export function createSfReviewServices(input: {
     handoffs,
     ...(input.readers?.contributions ? { contributions: input.readers.contributions } : {}),
   })
+  protectSfReviewReads({ authority, reviews: application.reviews })
   return { application, historical, portfolioHistory, handoffs, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
 }

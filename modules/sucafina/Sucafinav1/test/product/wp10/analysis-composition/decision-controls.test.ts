@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import type { Browser } from "@playwright/test"
 import { randomUUID } from "node:crypto"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -50,8 +51,9 @@ async function fixture(origin: string) {
   })
   if (seeded.status !== "ok") throw new Error("Controls fixture could not initialize C08")
   await persistence.transaction("planner", async (snapshot) => {
-    snapshot.data.versions = [{ id: "v0", year: 2026, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD",
-      b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(100) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+    const version = { id: "v0", name: "Forecast", year: 2026, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD",
+      b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(100) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }
+    snapshot.data.versions = [version, { ...structuredClone(version), id: "v1" }]
     return { commit: true, value: true }
   })
   await persistence.initializeSources("planner")
@@ -64,6 +66,8 @@ async function fixture(origin: string) {
   if (reader.status !== "ok" || !await authority.ui.validate(reader.value, "sf_forecast_compare", digest)) throw new Error("Controls read authority unavailable")
   const issued = await business.plannerProduct.issueSource("v0", reader.value)
   if (issued.status !== "ok") throw new Error("Controls source unavailable")
+  const second = await business.plannerProduct.issueSource("v1", reader.value)
+  if (second.status !== "ok") throw new Error("Second authorized controls source unavailable")
   const forecast = await business.planner.compareForecast({ baseRef: issued.value.evidence.refId, candidateRef: issued.value.evidence.refId, period: horizon, currency: "USD" }, reader.value)
   if (forecast.status !== "ok") throw new Error("Controls forecast unavailable")
   authority.ui.finish(reader.value)
@@ -72,7 +76,7 @@ async function fixture(origin: string) {
   if (current.status !== "ok") throw new Error("Controls case unavailable")
   const linked = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: caseRef.id,
     targetIncarnation: caseRef.incarnation, idempotencyKey: "link-controls-source", commandDigest: digestSfValue(basis) }, async (state) => {
-    state.cases.case!.sourceRefs = [issued.value.evidence]
+    state.cases.case!.sourceRefs = [issued.value.evidence, second.value.evidence]
     state.cases.case!.costCoverageBases = [basis]
     return { commit: true, value: true }
   })
@@ -82,7 +86,18 @@ async function fixture(origin: string) {
       ? { categoryId, status: "included", componentRefs: forecast.value.baseline.components.map((component) => component.id), evidenceRefs: [issued.value.evidence], scopeNote: "Serviço classificado pelo usuário" }
       : { categoryId, status: "pending", reason: "Aguardando comprovante" }) }
   const http = createSfDecisionDomainHttp({ origin, mount: "/sf", runtime: () => ({ authority, business, domain }) })
-  return { actor, authority, business, domain, http, coverage, caseRef, request, source: issued.value.evidence,
+  const addOtherCase = async () => {
+    const current = await authority.state.read(request, "cases", () => null)
+    if (current.status !== "ok") throw new Error("Cases unavailable")
+    const result = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: current.storageVersion,
+      targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "other-case",
+      commandDigest: digestSfValue("other-case") }, async (state) => {
+      state.cases.other = { ...structuredClone(state.cases.case!), id: "other", incarnation: "other-inc", objective: "Outra decisão autorizada" }
+      return { commit: true, value: true }
+    })
+    if (result.status !== "ok") throw new Error("Other case could not be saved")
+  }
+  return { actor, authority, business, domain, http, coverage, caseRef, request, source: issued.value.evidence, secondSource: second.value.evidence, addOtherCase,
     close: async () => { domain.dispose(); business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
 
@@ -99,6 +114,8 @@ test("decision controls use authorized cases and real absence, and revalidate ev
       expect(html).toContain("Nova classificação")
       expect(html).toContain('data-decision-action="decision-coverage"')
       expect(html).toContain("dois cenários armazenados")
+      expect(html).toContain("Forecast v0 ·")
+      expect(html).toContain("Forecast v1 ·")
       expect(html).not.toContain("SEGREDO OUTRO PARTICIPANTE")
     }
     const head = await state.http(new Request(`https://example.test/sf/planner?${query}`, { method: "HEAD" }), "planner")
@@ -146,11 +163,14 @@ test("Chromium navigates the own decision controls, saves real classification an
     const response = await handle.http?.(request, "planner")
     return response ?? new Response(decorateSfDecisionControlsHtml('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><main><h1>Planner</h1></main></body></html>', "planner"), { headers: { "Content-Type": "text/html" } })
   } })
-  const state = await fixture(server.url.origin)
-  handle.http = state.http
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
-  const closeBrowser = await captureChromiumCleanup(browser)
+  const resources: { state?: Awaited<ReturnType<typeof fixture>>; browser?: Browser; closeBrowser?: () => Promise<void> } = {}
   try {
+    const state = await fixture(server.url.origin)
+    resources.state = state
+    handle.http = state.http
+    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
+    resources.browser = browser
+    resources.closeBrowser = await captureChromiumCleanup(browser)
     const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } })
     const page = await context.newPage()
     const errors: string[] = []
@@ -159,13 +179,16 @@ test("Chromium navigates the own decision controls, saves real classification an
     await page.getByRole("link", { name: "Controles da decisão" }).click()
     await page.getByLabel("Caso de decisão", { exact: true }).selectOption({ label: "Renovação de licenças · revisão 1" })
     await page.getByRole("button", { name: "Abrir caso", exact: true }).click()
-    await page.getByLabel("Forecast para classificar", { exact: true }).selectOption({ index: 1 })
+    const forecastChoices = await page.getByLabel("Forecast para classificar", { exact: true }).locator('option').allTextContents()
+    expect(new Set(forecastChoices).size).toBe(forecastChoices.length)
+    await page.getByLabel("Forecast para classificar", { exact: true }).selectOption(state.secondSource.refDigest)
     await page.getByRole("button", { name: "Abrir forecast", exact: true }).click()
     await page.locator('[data-classification-version="0"]').waitFor()
     const groups = page.locator('[data-decision-action="decision-coverage"] fieldset')
     expect(await groups.count()).toBe(RENEWAL_TRANSITION_CATEGORIES.length)
     await groups.nth(0).getByLabel("Escopo ou motivo da pendência").fill("Rascunho preservado após nova observação")
     state.actor.milliseconds += 60_000
+    await state.addOtherCase()
     const observed = page.waitForResponse((response) => new URL(response.url()).searchParams.get("format") === "json")
     await page.evaluate(() => window.dispatchEvent(new Event("focus")))
     expect((await observed).status()).toBe(200)
@@ -176,6 +199,10 @@ test("Chromium navigates the own decision controls, saves real classification an
     await groups.nth(0).getByLabel("Componentes incluídos", { exact: true }).selectOption({ index: 0 })
     await page.getByRole("button", { name: "Salvar classificação", exact: true }).click()
     await page.locator('[data-classification-version="1"]').waitFor({ timeout: 20_000 })
+    const selected = new URL(page.url()); selected.searchParams.set("format", "json")
+    const stored = await (await page.request.get(selected.href)).json()
+    expect(stored.value.selected.forecast.source.refDigest).toBe(state.secondSource.refDigest)
+    expect(stored.value.selected.forecast.expectedVersion).toBe(1)
     expect(await page.locator("body").textContent()).toContain("Licenças do serviço no período selecionado")
     const output = path.resolve(import.meta.dir, "../../../../../../../test-ci-evidence")
     await mkdir(output, { recursive: true })
@@ -200,8 +227,11 @@ test("Chromium navigates the own decision controls, saves real classification an
     expect(await page.locator("body").textContent()).not.toContain("Renovação de licenças")
     expect(await page.locator("select option").count()).toBe(0)
     expect(errors).toEqual([])
-    await context.close()
   } finally {
-    try { await closeBrowser() } finally { await browser.close().catch(() => undefined); server.stop(true); await state.close() }
+    server.stop(true)
+    try {
+      if (resources.closeBrowser) await resources.closeBrowser()
+      else await resources.browser?.close()
+    } finally { await resources.state?.close() }
   }
 }, 120_000)

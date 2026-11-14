@@ -48,7 +48,7 @@ export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof 
       if (versions.status === "ok") for (const version of versions.value.versions) {
         if (period.start.slice(0, 4) !== String(version.year) || period.end.slice(0, 4) !== String(version.year)) continue
         const source = await business.plannerProduct.issueSource(version.id, call)
-        if (source.status === "ok") value.versions.push({ ref: source.value.evidence.refId, label: `${version.name || version.id} · ${version.year} · ${version.state} · r${source.value.evidence.target.version}`, year: version.year })
+        if (source.status === "ok") value.versions.push({ ref: source.value.evidence.refId, label: `${version.name || "Forecast"} (${version.id}) · ${version.year} · ${version.state} · r${source.value.evidence.target.version}`, year: version.year })
       }
       else value.limitations.push(versions.reason)
       if (!value.versions.length) value.limitations.push("Nenhuma versão autorizada cobre o período selecionado.")

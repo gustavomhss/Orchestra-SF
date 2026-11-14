@@ -250,8 +250,8 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
               ? yield* Effect.suspend(() => input.authorizeInterrupt!(run.admission, binding, request)).pipe(Effect.catch(() => Effect.succeed(false))) : false
             if ((!current && !cancelled) || !lifetime.open || runs.get(binding) !== run || (request && request.signal.aborted))
               return { status: "denied", reason: "native-authority-unavailable" } as const
-            yield* session.interrupt(run.admission.sessionID)
             run.release()
+            yield* session.interrupt(run.admission.sessionID)
             return { status: "ok", value: true } as const
           }),
           release: (binding) => Effect.gen(function* () {

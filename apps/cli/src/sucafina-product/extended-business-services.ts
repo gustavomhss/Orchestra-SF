@@ -22,6 +22,7 @@ import { createDecisionCapabilities } from "../../../../modules/sucafina/Sucafin
 import { createSfChangeProposalServices } from "./change-proposal-services.ts"
 import { createSfAlternativeServices } from "./alternative-services.ts"
 import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/product/integration/host-presentation.ts"
+import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 
 /** Composition of published domain factories over the installation's existing authorities and persistence. */
 export function createSfExtendedBusinessServices(input: {
@@ -67,9 +68,8 @@ export function createSfExtendedBusinessServices(input: {
   const productHttp: NonNullable<Application["product"]> = async (request, surface) => disposed ? undefined : await choiceHttp(request, surface) ?? await http(request, surface)
   const productHtml: SfProductHtml = (html, surface, page, request) => {
     if (disposed || surface !== "dashboard" || html.includes("data-sf-extended-navigation")) return html
-    const current = request ? new URL(request.url) : undefined
-    const year = current?.searchParams.get("year") ?? String(new Date().getUTCFullYear())
-    const period = { start: current?.searchParams.get("start") ?? `${year}-01-01`, end: current?.searchParams.get("end") ?? `${year}-12-31` }
+    const period = navigationPeriod(html, page, request)
+    if (!period) return html.replace("</main>", '<nav data-sf-extended-navigation aria-label="Business analysis"><p>Choose a supported period to open business analysis.</p></nav></main>')
     const link = (mode: string) => `?${new URLSearchParams({ sf: mode, page, ...period }).toString().replaceAll("&", "&amp;")}`
     const links = `<nav data-sf-extended-navigation aria-label="Business analysis"><a href="${link("bi")}">Business intelligence</a>${reviews ? ` <a href="${link("review")}">Prepare review and reports</a>` : ""}</nav>`
     return html.replace("</main>", `${links}</main>`)
@@ -89,4 +89,32 @@ export function createSfExtendedBusinessServices(input: {
     unavailable: [...portfolioServices.unavailable, ...bi.unavailable, ...reviewServices.unavailable, ...decisions.unavailable],
     dispose: () => { disposed = true; portfolioServices.dispose(); ownAssets?.dispose() },
   }
+}
+
+/** Read the rendered controls so defaults use the same environment date as the page. */
+function navigationPeriod(html: string, page: string, request?: Request) {
+  const query = request ? new URL(request.url).searchParams : undefined
+  if (query?.has("start") || query?.has("end")) {
+    const period = { start: query.get("start"), end: query.get("end") }
+    return isSfPeriod(period) ? period : undefined
+  }
+  const scoped = page === "Executive Dashboard" ? ["execYear", "executiveMonth"] :
+    page === "IT Operations" ? ["opsYear", "operationsMonth"] : page === "IT Security KPIs" ? ["secYear", "securityMonth"] : undefined
+  const year = selectedValue(html, scoped?.[0] ?? "year") ??
+    (scoped ? query?.get(scoped[0]!) || query?.get("own") : query?.get("year")) ?? (scoped ? undefined : "2026")
+  if (!year || !/^202[4-7]$/.test(year)) return undefined
+  if (!scoped) return { start: `${year}-01-01`, end: `${year}-12-31` }
+  const month = selectedValue(html, scoped[1]!) ?? query?.get(scoped[1]!) ?? query?.get("month")
+  if (!month || !/^([1-9]|1[0-2])$/.test(month)) return undefined
+  const prefix = `${year}-${month.padStart(2, "0")}`
+  return { start: `${prefix}-01`, end: `${prefix}-${new Date(Date.UTC(Number(year), Number(month), 0)).getUTCDate()}` }
+}
+function selectedValue(html: string, key: string): string | undefined {
+  for (const select of html.matchAll(/<select\b([^>]*)>([\s\S]*?)<\/select>/g)) {
+    if (!new RegExp(`(?:data-query|name)="${key}"`).test(select[1]!)) continue
+    const options = [...select[2]!.matchAll(/<option\b([^>]*)>([^<]*)<\/option>/g)]
+    const selected = options.find((option) => /(?:^|\s)selected(?:\s|=|$)/.test(option[1]!)) ?? options[0]
+    if (selected) return /\bvalue="([^"]*)"/.exec(selected[1]!)?.[1] ?? selected[2]!.trim()
+  }
+  return undefined
 }

@@ -111,9 +111,9 @@ export function createSfPlannerCalculationServices(input: {
         return unavailable()
       const sources = await input.evidence.context({ refs: ref.target.sourceRefs }, call)
       if (sources.length !== ref.target.sourceRefs.length || sources.some((source, index) => source.state !== "fresh" || !source.currentRef || !source.authorizedProjection ||
-        !("context" in source.authorizedProjection) || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return unavailable()
+        !("context" in source.authorizedProjection) || !("sourceRefs" in source.authorizedProjection.context) || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return unavailable()
       const result = stored.value.result
-      const metadata = sources.flatMap((source) => source.authorizedProjection && "context" in source.authorizedProjection ? source.authorizedProjection.context.sourceRefs : [])
+      const metadata = sources.flatMap((source) => source.authorizedProjection && "context" in source.authorizedProjection && "sourceRefs" in source.authorizedProjection.context ? source.authorizedProjection.context.sourceRefs : [])
       const sourceRefs = [...metadata, ...result.components.flatMap((component) => component.sourceRefs)]
         .filter((source, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(source)) === index)
       const value = (id: string, amount: ProjectionValue["value"], unit?: string): ProjectionValue => ({ id, value: amount, ...(unit ? { unit } : {}),

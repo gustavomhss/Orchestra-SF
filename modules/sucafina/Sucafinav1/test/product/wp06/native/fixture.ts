@@ -53,8 +53,8 @@ import contractFreeze from "../../../../product/contracts/freeze-v1.json" with {
 /** Actual native stores, source registration, skill load and private MCP. The public input is
  * prerecorded through the production event publisher; no external model, C15 oracle or installed
  * scanner qualification is claimed. The reused storage fixture declares its scanner substitute. */
-export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof compose>>) => Promise<void>) {
-  const control = nativeFixtureControl()
+export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof compose>>) => Promise<void>, options: { traceOperations?: boolean } = {}) {
+  const control = nativeFixtureControl(options)
   const resources: { app?: Awaited<ReturnType<typeof createWp06Runtime>> } = {}
   try {
     const app = await control.stage("fixture:create-app", async () => {
@@ -162,25 +162,25 @@ async function compose(input: {
   const bridge = createSfBusinessMcpBridge({ registry: authority.native, mcp: input.mcp, descriptors: business.descriptors, dispatch })
   const documentHttp = createSfDocumentHttp({ origin: app.origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, ...documents }) })
   const importHandler = createSfImportHttp({ origin: app.origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, service: imports }) })
-  const importHttp: typeof importHandler = (request, surface) => importHandler(control.request(request), surface)
-  const admittedUi = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, cookie = app.cookie) => {
+  const importHttp: typeof importHandler = (request, surface) => control.phase("http:import-route", () => importHandler(control.request(request), surface))
+  const admittedUi = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, cookie = app.cookie) => control.phase(`ui:${operation}`, async () => {
     const request = control.request(`${app.origin}/sucafina/dashboard`, { method: "POST", headers: { cookie, origin: app.origin, "Idempotency-Key": randomUUID() } })
-    const access = await authority.ui.admit(request, operation, digestSfValue(payload))
+    const access = await control.phase("ui:admit", () => authority.ui.admit(request, operation, digestSfValue(payload)))
     if (access.status !== "ok") throw new Error(`UI admission ${operation}: ${access.reason}`)
     try { return await work(access.value) } finally { authority.ui.finish(access.value) }
-  }
+  })
   const ui = <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, cookie = app.cookie) => admittedUi(operation, payload, async (call) => {
     if (!await authority.ui.validate(call, operation, digestSfValue(payload))) throw new Error(`UI validation ${operation}: authority-unavailable`)
     return work(call)
   }, cookie)
   // The dispatcher consumes its own admission; direct domain handlers above receive a consumed grant.
   const uiDispatch = (operation: string, payload: unknown, cookie = app.cookie) => admittedUi(operation, payload, (call) => dispatch(operation, payload, call), cookie)
-  const human = async <T>(action: SfHumanAction, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, trace = false) => {
+  const human = async <T>(action: SfHumanAction, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, trace = false) => control.phase(`human:${action}`, async () => {
     const admit = () => authority.human.admit(app.request(), action, payload)
-    const access = await (trace ? control.stage("complete:humanAdmit", admit) : admit())
+    const access = await (trace ? control.stage("complete:humanAdmit", admit) : control.phase("human:admit", admit))
     if (access.status !== "ok") throw new Error(`Human admission ${action}: ${access.reason}`)
     try { return await work(access.value) } finally { authority.human.finish(access.value) }
-  }
+  })
   const caseRef = { id: randomUUID(), incarnation: randomUUID(), version: 1 }
   const seeded = await authority.state.transaction(app.request(), { namespace: "cases", expectedStorageVersion: 0,
     idempotencyKey: randomUUID(), commandDigest: digestSfValue(caseRef), targetRef: authority.creationTarget.ref,
@@ -230,7 +230,7 @@ async function compose(input: {
         ? { status: "ok", value: true } : { status: "stale", reason: "analysis-source-changed" }
     }, now: () => new Date().toISOString() })
   const releases = new Set<() => void>()
-  const bind = async (skillId: string, skillInput: unknown = {}, prompt?: string, variant?: string) => {
+  const bind = async (skillId: string, skillInput: unknown = {}, prompt?: string, variant?: string) => control.phase(`bind:${skillId}`, async () => {
     const parent = input.selected.find((value) => value.profile.id === (skillId === "sf-explicar-forecast" ? "sf_finance" : skillId === "sf-enquadrar-decisao" ? "sf_maestro" : "sf_procurement") && value.skills.some((skill) => skill.id === skillId))
     const skill = parent?.skills.find((value) => value.id === skillId)
     if (!parent || !skill) throw new Error("Native skill missing from real bundle")
@@ -251,25 +251,25 @@ async function compose(input: {
         skillInputDigest: digestSfValue(skillInput), principalRef: access.value.binding.principalRef, accessRevision: access.value.binding.accessRevision,
         policyVersion: access.value.binding.policyVersion, caseRef: currentCaseRef, selection: selected, model, skillId, objective: "WP06 deterministic native ingress",
         contextFingerprint: digestSfValue({ caseRef: currentCaseRef, skillInput }), createdAt: at, updatedAt: at, state: "preparing" }
-      const stored = await runs.create(record, access.value)
+      const stored = await control.phase("bind:run-create", () => runs.create(record, access.value))
       if (stored.status !== "ok") throw new Error(`Native run persistence: ${stored.reason}`)
-      const session = await control.run(input.session.create({ location: installation.location, agent: AgentV2.ID.make(parent.profile.id), model }))
+      const session = await control.phase("bind:session-create", () => control.run(input.session.create({ location: installation.location, agent: AgentV2.ID.make(parent.profile.id), model })))
       if (digestSfValue(session.model) !== digestSfValue(record.model) || digestSfValue(session.location) !== digestSfValue(installation.location))
         throw new Error("Persisted Core Session identity differs from admitted run")
-      const receipt = await control.run(loadSfSkill({ session: input.session, skills: input.skills, sourceCapability: input.sourceCapability,
-        selected, sessionID: session.id, profile: parent.profile, skill, runId, manifestDigest: parent.manifestDigest }))
+      const receipt = await control.phase("bind:skill-load", () => control.run(loadSfSkill({ session: input.session, skills: input.skills, sourceCapability: input.sourceCapability,
+        selected, sessionID: session.id, profile: parent.profile, skill, runId, manifestDigest: parent.manifestDigest })))
       await control.run(input.store.narrow(session.id, { skills: { entry: skill.id, allow: [skill.id] },
         tools: [...selected.operationIds], budgets: { loads: 0, toolCalls: parent.profile.maxSteps } }))
       const admission: SfNativeAdmission = { request, selected, sessionID: session.id, runId, caseRef: currentCaseRef, profile: parent.profile,
         manifestDigest: parent.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" }
       const release = proof.observe({ session, admission, skills: input.skills, sourceCapability: input.sourceCapability })
       releases.add(release)
-      const attached = await runs.attach(runId, stored.value.version, session.id, receipt, access.value)
+      const attached = await control.phase("bind:run-attach", () => runs.attach(runId, stored.value.version, session.id, receipt, access.value))
       if (attached.status !== "ok") throw new Error(`Native receipt persistence: ${attached.reason}`)
-      const bound = await authority.native.bind(admission)
+      const bound = await control.phase("bind:native-admit", () => authority.native.bind(admission))
       if (bound.status !== "ok") throw new Error(`Native binding: ${bound.reason}`)
       const promptID = prompt ? SessionMessage.ID.create() : undefined
-      const promptAdmission = promptID && prompt ? await control.run(input.session.prompt({ id: promptID, sessionID: session.id, prompt: { text: prompt }, resume: false })) : undefined
+      const promptAdmission = promptID && prompt ? await control.phase("bind:prompt-admit", () => control.run(input.session.prompt({ id: promptID, sessionID: session.id, prompt: { text: prompt }, resume: false }))) : undefined
       const publisher = createLLMEventPublisher(input.events, { sessionID: session.id, agent: parent.profile.id, model })
       const context = async (operation: string, payload: unknown): Promise<Tool.Context> => {
         const callId = randomUUID()
@@ -279,20 +279,20 @@ async function compose(input: {
         if (persisted?.sessionID !== session.id || persisted.message.type !== "assistant") throw new Error("Native assistant message was not projected")
         return { sessionID: session.id, agent: AgentV2.ID.make(parent.profile.id), assistantMessageID, toolCallID: callId, model }
       }
-      const call = async (surface: "native" | "mcp", operation: string, payload: unknown) => {
-        const native = await context(operation, payload)
+      const call = async (surface: "native" | "mcp", operation: string, payload: unknown) => control.phase(`${surface}:${operation}`, async () => {
+        const native = await control.phase("call:context", () => context(operation, payload))
         const execute = async (): Promise<CapabilityResult> => {
           if (surface === "mcp") return bridge.call(native, operation, payload)
           const lease = await authority.native.lease(native, operation, digestSfValue(payload))
           if (lease.status !== "ok") return { status: "denied", reason: lease.reason, receipt: { kind: "unbound", operation, code: "invalid-binding", at: new Date().toISOString() } }
           try { return await dispatch(operation, payload, lease.value) } finally { authority.native.finish(lease.value) }
         }
-        const result = await execute()
-        await control.run(publisher.publish(LLMEvent.toolResult({ id: native.toolCallID, name: operation,
+        const result = await control.phase("call:dispatch", execute)
+        await control.phase("call:publish-result", () => control.run(publisher.publish(LLMEvent.toolResult({ id: native.toolCallID, name: operation,
           result: { type: "content", value: [{ type: "text", text: JSON.stringify(result) }] },
-          output: { structured: result, content: [{ type: "text", text: JSON.stringify(result) }] } })))
+          output: { structured: result, content: [{ type: "text", text: JSON.stringify(result) }] } }))))
         return result
-      }
+      })
       const domain = async <T>(operation: string, payload: unknown, work: (call: TrustedDomainContext) => Promise<T>): Promise<T> => {
         const native = await context(operation, payload)
         const lease = await authority.native.lease(native, operation, digestSfValue(payload))
@@ -332,8 +332,8 @@ async function compose(input: {
       }
       return { admission, binding: bound.value, session, receipt, record: attached.value, requestedModel, promptAdmission, context, call, domain, complete, release }
     } finally { authority.human.finish(access.value) }
-  }
-  const http = async (kind: "document" | "import", mode: string, payload?: unknown, query: Record<string, string> = {}, cookie = app.cookie) => {
+  })
+  const http = async (kind: "document" | "import", mode: string, payload?: unknown, query: Record<string, string> = {}, cookie = app.cookie) => control.phase(`http:${kind}:${mode}`, async () => {
     const surface = kind === "document" ? "procurement" : "planner"
     const url = new URL(`${app.origin}/sucafina/${surface}`)
     url.searchParams.set("sf", mode)
@@ -343,13 +343,13 @@ async function compose(input: {
     const response = await (kind === "document" ? documentHttp : importHttp)(request, surface)
     if (!response) throw new Error("Native consumer route missing")
     return response
-  }
-  return { app, installation, authority, documents, imports, business, dispatch, bridge, proof, selected: input.selected, sessionStore: input.store, caseRef, runs, ui, uiDispatch, human, bind, http, importHttp,
+  })
+  return { app, installation, authority, documents, imports, business, dispatch, bridge, proof, selected: input.selected, sessionStore: input.store, caseRef, runs, ui, uiDispatch, human, bind, http, importHttp, stage: control.stage,
     dispose: async () => { for (const release of releases) release(); proof.clear(); fences.clear(); lifetime.open = false; documents.dispose(); business.dispose() } }
 }
 
 /** Leave time for awaited resource cleanup before Bun's unchanged 120-second test deadline. */
-function nativeFixtureControl() {
+function nativeFixtureControl(options: { traceOperations?: boolean }) {
   const cancellation = new AbortController()
   const started = performance.now()
   const deadline = started + 100_000
@@ -381,6 +381,7 @@ function nativeFixtureControl() {
   }
   return {
     signal: cancellation.signal, check, stage,
+    phase: async <T>(name: string, work: () => T | Promise<T>) => options.traceOperations ? stage(name, work) : work(),
     request: (input: string | URL | Request, init?: RequestInit) => {
       check()
       const request = new Request(input, init)

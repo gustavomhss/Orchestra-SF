@@ -84,8 +84,7 @@ export function createSfProductAuthority(input: {
     Object.freeze(copy.location)
     return Object.freeze(copy)
   }
-  const principal = async (request: Request, dashboard: Snapshot) => {
-    const snapshots = input.persistence.currentSnapshots?.()
+  const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
     if (!snapshots) return undefined
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
@@ -120,7 +119,7 @@ export function createSfProductAuthority(input: {
   const resolve = async (request: Request) => {
     if (!input.persistence.currentSnapshots) return undefined
     const snapshots = input.persistence.currentSnapshots()
-    if (snapshots) return principal(request, snapshots.dashboard)
+    if (snapshots) return principal(request, snapshots.dashboard, snapshots)
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
   }
   const state = createSfProductState({

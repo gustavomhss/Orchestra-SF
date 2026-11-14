@@ -35,7 +35,7 @@ import { selection } from "../resident-runtime/fixture.ts"
 
 // Session recording, skill loading, execution ownership and interruption use Core.
 // The synthetic budget admission isolates lifecycle; this is not a live C15/GNATIVE proof.
-test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "throw-attach", "throw-announcement"] as const)("native host ownership cleanup: %s", async (mode) => {
+test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "throw-attach", "throw-announcement", "pending-interruption"] as const)("native host ownership cleanup: %s", async (mode) => {
   const failure = mode === "interrupt-failure"
   const root = await mkdtemp(path.join(tmpdir(), "sf-host-disposal-"))
   try {
@@ -67,6 +67,7 @@ test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "thr
       const released: SessionSchema.ID[] = []
       const fail: { sessionID?: SessionSchema.ID } = {}
       const authorization = { allowed: true }
+      const interruption = { hold: false, entered: Promise.withResolvers<void>(), resume: Promise.withResolvers<void>() }
       const changed: { create?: Partial<Parameters<SessionV2.Interface["create"]>[0]> } = {}
       const registry = createSfExecutionBindingRegistry({
         authenticateAndResolve: async (admission) => {
@@ -96,6 +97,10 @@ test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "thr
         interrupted.push(id)
         expect(tickets.size).toBe(0)
         expect(leases.every((lease) => registry.requestFor(lease) === undefined)).toBe(true)
+        if (interruption.hold) {
+          interruption.entered.resolve()
+          yield* Effect.promise(() => interruption.resume.promise)
+        }
         if (id === fail.sessionID) return yield* Effect.die("synthetic interruption failure")
         yield* session.interrupt(id)
       }) }
@@ -164,7 +169,7 @@ test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "thr
               markStale: async () => ({ status: "unavailable", reason: "not-exercised" }), preserveStale: async () => ({ status: "unavailable", reason: "not-exercised" }),
               publish: async () => ({ status: "unavailable", reason: "not-exercised" }), transition: async () => ({ status: "denied", reason: "revoked-transition" }),
               attach: async (_run, _version, sessionID, skillReceipt) => {
-                authorization.allowed = false
+                authorization.allowed = mode !== "abort-attach" && mode !== "revoke-attach"
                 const run = runs[0]
                 if (!run) throw new Error("Native preparation did not retain its resources")
                 const leased = await registry.lease({ sessionID: run.sessionID, agent: AgentV2.ID.make(runtime.profile.id),
@@ -175,6 +180,7 @@ test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "thr
                 expect(released).toHaveLength(0)
                 if (mode === "abort-attach") abort.abort()
                 if (mode === "revoke-attach") registry.revoke(run.binding)
+                if (mode === "pending-interruption") interruption.hold = true
                 if (mode === "throw-attach") throw new Error("Injected attachment failure")
                 if (mode !== "throw-announcement") return { status: "denied", reason: "injected-attachment-veto" }
                 fail.sessionID = run.sessionID
@@ -191,7 +197,18 @@ test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "thr
               onAdmitted: () => { throw new Error("Injected announcement failure") },
             })
             try {
-              const result = yield* Effect.promise(() => executor.admit(analysis, {}))
+              const admitted = executor.admit(analysis, {})
+              if (mode === "pending-interruption") {
+                try {
+                  yield* Effect.promise(() => interruption.entered.promise)
+                  expect(authorization.allowed).toBe(true)
+                  expect(interrupted).toEqual([runs[0]!.sessionID])
+                  expect(tickets.size).toBe(0)
+                  expect(released).toEqual([runs[0]!.sessionID])
+                  expect(leases.every((lease) => registry.requestFor(lease) === undefined)).toBe(true)
+                } finally { interruption.resume.resolve() }
+              }
+              const result = yield* Effect.promise(() => admitted)
               expect(result.status).not.toBe("ok")
               expect(runs).toHaveLength(1)
               expect(tickets.size).toBe(0)

@@ -98,8 +98,7 @@ export function createSfNativeExecution(input: {
         if (!ownership.retained) {
           if (ownership.ticket) tickets.delete(ownership.ticket)
           if (active.get(record.runRef)?.run === run) active.delete(record.runRef)
-          await Promise.resolve().then(() => Effect.runPromise(input.host.interrupt(run.binding))).catch(() => undefined)
-          // Host ownership survives request revocation; release never requires a business grant.
+          // Release revokes ownership before awaiting Core interruption and needs no business grant.
           await Promise.resolve().then(() => Effect.runPromise(input.host.release(run.binding))).catch(() => undefined)
         }
       }
@@ -206,12 +205,15 @@ export function createSfNativeExecution(input: {
           if (result.status !== "ok" || !result.value.cancelled) return result
           entry.cancelled = true
         }
-        const interrupted = await Effect.runPromise(input.host.interrupt(entry.run.binding, request))
-        if (interrupted.status !== "ok") return interrupted
         if (active.get(runRef) === entry) active.delete(runRef)
         tickets.delete(entry.ticket)
+        const interrupted = await Effect.runPromise(input.host.interrupt(entry.run.binding, request))
+        if (interrupted.status !== "ok") return interrupted
         return { status: "ok", value: { cancelled: true } }
-      } finally { entry.cancelling = false; done.resolve() }
+      } finally {
+        entry.cancelling = false; done.resolve()
+        if (entry.cancelled) await Promise.resolve().then(() => Effect.runPromise(input.host.release(entry.run.binding))).catch(() => undefined)
+      }
     },
     releaseRun: async (runRef) => {
       const entry = active.get(runRef)
@@ -226,10 +228,10 @@ export function createSfNativeExecution(input: {
         caseRef: structuredClone(entry.record.caseRef), sessionID: entry.run.sessionID, receiptDigest: digestSfValue(entry.run.skillReceipt), cancelled: entry.cancelled }
     },
     shutdown: async () => {
-      await Promise.allSettled([...active.values()].map((entry) => Effect.runPromise(input.host.interrupt(entry.run.binding))))
-      await Promise.allSettled([...active.values()].map((entry) => Effect.runPromise(input.host.release(entry.run.binding))))
-      active.forEach((entry) => tickets.delete(entry.ticket))
+      const entries = [...active.values()]
+      entries.forEach((entry) => tickets.delete(entry.ticket))
       active.clear()
+      await Promise.allSettled(entries.map((entry) => Effect.runPromise(input.host.release(entry.run.binding))))
     },
   }
 }

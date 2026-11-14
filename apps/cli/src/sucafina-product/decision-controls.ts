@@ -21,7 +21,7 @@ type ControlsBody = { cases: readonly { ref: string; title: string; version: num
   scenarios: readonly Scenario[]; rules: readonly { id: string; expectedVersion?: number }[]; units?: PlannerSensitivityUnits; unitSelection?: { scenarioRef: string; baselineRef: string; parameterRef: string };
   evidence: readonly Evidence[]; recipients: readonly { ref: string; label: string }[]; conditions: readonly { label: string; revision: number }[];
 } }
-type Controls = ControlsBody & { fingerprint: string }
+type Controls = ControlsBody & { fingerprint: string; selectionFingerprint: string }
 
 /** This reader enumerates identities only; every displayed value goes through its real authorized port. */
 export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, request: Request): Promise<PortResult<Controls>> {
@@ -69,7 +69,7 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         if (sources.length !== 1) continue
         const source = sources[0]!
         const fields = source.fields.filter((field) => ref.target.fields.includes(field))
-        const label = `${ref.target.recordType === "planner-version" ? "Forecast" : "Registro Planner"} · ${source.period.start} a ${source.period.end} · ${projection.context.currency} · revisão ${source.version}`
+        const label = `${ref.target.recordType === "planner-version" ? "Forecast" : "Registro Planner"} ${source.id} · ${source.period.start} a ${source.period.end} · ${projection.context.currency} · revisão ${source.version}`
         if (fields.length && source.period.start <= decision.horizon.start && source.period.end >= decision.horizon.end && ref.target.period && ref.target.period.start <= decision.horizon.start && ref.target.period.end >= decision.horizon.end) evidence.push({ evidence: ref, source, fields, label })
         if (ref.target.recordType === "planner-version") forecasts.push({ source: ref, label })
       }
@@ -165,6 +165,9 @@ const decisionControlsScript = `(() => {
   const status = document.getElementById('sf-decision-status');
   const selectedRoot = document.getElementById('sf-decision-selected');
   const clear = () => { selectedRoot.replaceChildren(); document.querySelector('.sf-decision-controls').replaceChildren(status); document.getElementById('sf-decision-data')?.remove(); selected = undefined; data = undefined; status.textContent = 'O acesso ou as fontes mudaram. Abra novamente o caso.'; };
+  let blocked = false;
+  const buttons = new Map([...document.querySelectorAll('[data-decision-action] button')].map(button => [button, button.disabled]));
+  const revalidate = (message) => { blocked = !!message; for (const [button, disabled] of buttons) button.disabled = blocked || disabled; status.textContent = message; };
   const options = (select, values) => { select.replaceChildren(new Option('Selecione', '')); for (const value of values) select.add(new Option(value.label, value.value)); };
   const unitForm = document.getElementById('sf-unit-selection');
   if (unitForm) unitForm.elements.scenario.addEventListener('change', () => {
@@ -178,7 +181,7 @@ const decisionControlsScript = `(() => {
   });
   const commands = new WeakMap();
   for (const form of document.querySelectorAll('[data-decision-action]')) form.addEventListener('submit', async event => {
-    event.preventDefault(); if (!form.reportValidity()) return;
+    event.preventDefault(); if (blocked || !selected || !form.reportValidity()) return;
     const fields = new FormData(form); const action = form.dataset.decisionAction; let payload;
     try {
       if (action === 'decision-coverage') {
@@ -210,7 +213,7 @@ const decisionControlsScript = `(() => {
         if (!response.ok || result.status !== 'ok') { status.textContent = response.status === 409 ? 'O caso ou a versão mudou. Reabra o caso antes de tentar novamente.' : 'Registro indisponível. Verifique as fontes, as escolhas e os campos informados.'; return; }
         status.textContent = 'Registro salvo. Atualizando o caso…'; location.reload();
       } catch { status.textContent = 'Não foi possível confirmar a resposta. Tente novamente com os mesmos campos para reconciliar o registro.'; }
-      finally { if (button.isConnected) button.disabled = false; }
+      finally { if (button.isConnected) button.disabled = blocked || buttons.get(button); }
     } catch (error) { status.textContent = error instanceof Error ? error.message : 'Verifique os campos.'; }
   });
   let verifying = false;
@@ -218,9 +221,15 @@ const decisionControlsScript = `(() => {
     if (!data || verifying || !document.getElementById('sf-decision-data')) return;
     verifying = true;
     try { const target = new URL(location.href); target.searchParams.set('format','json'); const response = await fetch(target,{cache:'no-store',credentials:'same-origin'});
-      if (!response.ok) { clear(); return; } const result = await response.json();
-      if (result.status !== 'ok' || result.value.fingerprint !== data.fingerprint) clear();
-    } catch { clear(); } finally { verifying = false; }
+      if (response.status === 401 || response.status === 403) { clear(); return; }
+      if (!response.ok) { revalidate('Não foi possível revalidar. Seu rascunho foi preservado; a gravação está bloqueada até nova verificação.'); return; }
+      const result = await response.json();
+      if (result.status !== 'ok') { revalidate('A fonte está indisponível. Seu rascunho foi preservado; reabra o caso para conferir os dados.'); return; }
+      if (result.value.accessRevision !== data.accessRevision) { clear(); return; }
+      if (result.value.selectionFingerprint !== data.selectionFingerprint) { revalidate('O caso ou suas fontes mudaram. Seu rascunho foi preservado; reabra o caso e reconcilie os campos antes de gravar.'); return; }
+      data.fingerprint = result.value.fingerprint;
+      revalidate('');
+    } catch { revalidate('Não foi possível revalidar. Seu rascunho foi preservado; a gravação está bloqueada até nova verificação.'); } finally { verifying = false; }
   });
 })();`
 
@@ -238,7 +247,7 @@ function withFingerprint(value: ControlsBody): Controls {
       components: forecast.projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })),
       ...(forecast.projection.comparison ? { comparison: { ...forecast.projection.comparison, context: { ...forecast.projection.comparison.context,
         sourceRefs: forecast.projection.comparison.context.sourceRefs.map(source) } } } : {}) } } } : {}) } } : {}) }
-  return { ...value, fingerprint: digestSfValue(material) }
+  return { ...value, fingerprint: digestSfValue(material), selectionFingerprint: digestSfValue({ accessRevision: material.accessRevision, actions: material.actions, selected: material.selected }) }
 }
 function sameActor(actor: { principalRef: string; accessRevision: string; policyVersion: string }, call: TrustedUiContext) {
   return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion

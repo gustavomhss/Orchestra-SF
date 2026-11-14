@@ -1,0 +1,351 @@
+{
+  "kind": "check",
+  "W": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+  "treeW": "4fba27f0de68963a0da60debb8ced17fe3abd1e8",
+  "S": "55e5300c23b39054874060b34e36abda0a6f443d",
+  "tree": "6df5e17f89accde4315bd6af8382215024e2b393",
+  "previous": "24975a149960b4f2853c2a50b45c579b47a1f7d4",
+  "request": {
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "productSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+  },
+  "branch": "astra-check-wp10",
+  "published": {
+    "success": true
+  },
+  "runId": 43548947850,
+  "attempt": 1,
+  "jobId": 132306683850,
+  "conclusion": "failure",
+  "sourceSnapshotDiff": [
+    {
+      "path": ".astra-wp10-check.json",
+      "status": "added",
+      "blobSha": "eb6c9ae5eb76744475243d71c69de3dc075d968f"
+    }
+  ],
+  "logSha256": "80df430efea9b2e8654db4cb5441622ff6b8fa89a6f5a9483b1cf6290b70e341",
+  "rawLogVersioned": false,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43548947850",
+  "artifact": {
+    "id": 14094658407,
+    "name": "astra-wp10-check-1",
+    "bytes": 6116,
+    "digest": "sha256:872cd9c83fac5dbd3578f969ca2806993d7800b09664f846eceaf1b7ecddd6bc",
+    "expiresAt": "2026-11-28T02:58:31Z"
+  },
+  "steps": {
+    "exactEnvelope": "PASS",
+    "sucafinaTypecheck": "FAIL: foreign parser diagnostics",
+    "cliTypecheck": "FAIL: 1 own + 30 foreign semantic diagnostics",
+    "atlasGenerateCheckDiff": "PASS",
+    "atlasTypecheck": "PASS",
+    "spawnImports": "PASS: 4642 files, 66 allow-listed sites unchanged",
+    "productGuards": "FAIL: two own raw log files flagged as agent-scratch"
+  },
+  "diagnostics": [
+    {
+      "logLine": 556,
+      "path": "test/product/wp13/history-provenance.test.ts",
+      "line": 60,
+      "column": 202,
+      "code": "TS1005",
+      "message": "',' expected.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 557,
+      "path": "test/product/wp13/history-provenance.test.ts",
+      "line": 66,
+      "column": 157,
+      "code": "TS1005",
+      "message": "',' expected.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 565,
+      "path": "src/sucafina-product/planner-calculation-services.ts",
+      "line": 116,
+      "column": 162,
+      "code": "TS2339",
+      "message": "Property 'sourceRefs' does not exist on type 'ProductContext | ({ installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string; } & ({ kind: \"native\"; profileId: string; } | { ...; }))'.",
+      "ownership": "WP10"
+    },
+    {
+      "logLine": 567,
+      "path": "../../modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "line": 245,
+      "column": 120,
+      "code": "TS2345",
+      "message": "Argument of type '\"cancelled\" | \"failed\" | \"needs-input\" | \"queued\" | \"running\" | \"stale\" | \"unavailable\"' is not assignable to parameter of type '\"needs-input\" | \"unavailable\"'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 569,
+      "path": "../../modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "line": 303,
+      "column": 50,
+      "code": "TS2345",
+      "message": "Argument of type '(context: TrustedDomainContext) => Promise<{ status: \"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"; reason: string; } | ... 6 more ... | { ...; }>' is not assignable to parameter of type '(context: TrustedDomainContext) => Promise<PortResult<{ output?: undefined; readonly run: SfAnalysisRunProgress; }>>'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 577,
+      "path": "../../modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "line": 91,
+      "column": 1060,
+      "code": "TS7006",
+      "message": "Parameter 'field' implicitly has an 'any' type.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 578,
+      "path": "../../modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 221,
+      "column": 35,
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 580,
+      "path": "../../modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 227,
+      "column": 33,
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 582,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 42,
+      "column": 36,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: string; version: number; components: readonly ProjectionComponent[]; currency: string; horizon: Period; sourceRefs: readonly BusinessEvidenceRef[]; ... 5 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }' is not assignable to parameter of type 'ScenarioResult'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 593,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 44,
+      "column": 58,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; currency: string; ... 7 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }' is not assignable to parameter of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 606,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 50,
+      "column": 213,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; currency: string; ... 7 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }' is not assignable to parameter of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 619,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 51,
+      "column": 39,
+      "code": "TS2322",
+      "message": "Type '{ caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; ... 8 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domai...' is not assignable to type '{ caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 632,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "line": 119,
+      "column": 26,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 633,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 48,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 640,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 85,
+      "column": 426,
+      "code": "TS2345",
+      "message": "Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 646,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 109,
+      "column": 75,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 647,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 111,
+      "column": 185,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 648,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 114,
+      "column": 74,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 649,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 115,
+      "column": 81,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 650,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 115,
+      "column": 112,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 651,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 116,
+      "column": 183,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 652,
+      "path": "../../modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "line": 98,
+      "column": 26,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 653,
+      "path": "../../modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "line": 54,
+      "column": 3,
+      "code": "TS2322",
+      "message": "Type '(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => { baseDigest?: undefined; commandDigest?: undefined; ... 7 more ...; reason: string; } | { ...; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => { errors?: undefined; status: \"denied\"; reason: string; ... 9 more ...; summary?: undefined; } | ... 5 more ... | { ...; }'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 661,
+      "path": "../../modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "line": 15,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 662,
+      "path": "../../modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 41,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 663,
+      "path": "../../modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 79,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 664,
+      "path": "../../modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 96,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 665,
+      "path": "../../modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 667,
+      "path": "../../modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 669,
+      "path": "../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "line": 168,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: ProcurementSourceHost; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 9 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 670,
+      "path": "../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "line": 187,
+      "column": 43,
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; host: ProcurementSourceHost; apply: PreparedApplyPort; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeApplication: (request: { ...; }, change: PreparedChange, context:...' is missing the following properties from type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; apply: PreparedApplyPort; ... 6 more ...; revalidateProducer: (request: { ...; }, context: TrustedDomainContext) => Promise<...>; }': reviewDigestFor, revalidateProducer",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 671,
+      "path": "../../modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "line": 64,
+      "column": 9,
+      "code": "TS2741",
+      "message": "Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+      "ownership": "foreign"
+    },
+    {
+      "logLine": 672,
+      "path": "../../modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "line": 8,
+      "column": 65,
+      "code": "TS2366",
+      "message": "Function lacks ending return statement and return type does not include 'undefined'.",
+      "ownership": "foreign"
+    }
+  ],
+  "productGuardGates": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293688965.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293700346.log"
+  ],
+  "testExecutionClaimed": false,
+  "nativeGlobalAcceptanceClaimed": false
+}

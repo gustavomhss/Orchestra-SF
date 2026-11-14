@@ -37,7 +37,7 @@ export function createSfSourcePersistence(input: {
     const before = digestSfValue(snapshot.sfSources)
     const auditStart = snapshot.audit.length
     const auditPrefix = digestSfValue(snapshot.audit)
-    const productState = structuredClone(snapshot.data.__sfProductV1)
+    const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
     return () => {
       requireSourceIdentities(snapshot)
       if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
