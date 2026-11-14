@@ -201,7 +201,7 @@ export async function currentChoiceAuthorityFixture() {
     })
     const snapshot = () => store.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
     return { store, persistence, external, outside, product, fence, preview, request, controller, context, contexts, intentDigest, identity, authenticated, clock, events, hooks,
-      caseRef, choice, decision, binding, promotion, promote, results, currentSource, originalSource, snapshot,
+      caseRef, choice, decision, binding, promotion, promote, results, currentSource, originalSource, snapshot, registry, writes, authorizeCase,
       changePolicy() { options.policyVersion = "policy-replaced" },
       async admitPromotion(payload: CurrentChoicePromotion = promotion, command = "human-promotes-current") {
         const post = new Request(request, { method: "POST", headers: { authorization: "cohort-session", origin: "https://example.test", "x-command": command } })
