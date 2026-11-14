@@ -1,0 +1,64 @@
+{
+  "schema": "sf2h-mission-ack-v1",
+  "mission": 46,
+  "id": "CURRENT-CHOICE-COHORT",
+  "state": "ACKNOWLEDGED_IMPLEMENTING",
+  "at": "2026-11-14T22:53:38Z",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "lease_epoch": "current-choice-browser46",
+  "branch": "astra-finance",
+  "pr": 35,
+  "observed_head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "observed_tree": "ec517fa26571228bc1ce5e3698fcfc9c5d137ae3",
+  "authority_source": "Explicit current user instruction and pinned mission46 packet",
+  "actor": "ChatGPT /root",
+  "effective_model": "GPT-6 Astra Pro (session configuration); no independent provider receipt",
+  "session_id": null,
+  "browser_or_native_session_identity_verified": false,
+  "sole_remote_writer": "/root",
+  "helpers": [
+    {
+      "task": "cohort_provider_review",
+      "authority": "read-only, no remote mutations or tests"
+    },
+    {
+      "task": "cohort_contract_ci",
+      "authority": "read-only, no remote mutations or tests"
+    }
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+    "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/"
+  ],
+  "excluded": "No runtime/local-store.ts or runtime/contract.ts (34), host-binding/business-context or atlas-memory (40), Procurement producer paths (37), BI (38), Portfolio43 paths, Decisions44 UI/http, native41, Reports/Agenda36/39, compiler45, shared host/context/contracts or sf2-stack. Supply complete minimal patches for shared consumer/provider changes to 42/actual owner; no competing source writer.",
+  "reconciliation": {
+    "source_terminal_handoff": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "blob": "6d98dc8dac07ae2e6342080cc801840b1e7749b0",
+      "head": "ec052c2c3bef96f492512f3d5f663919580f25c8"
+    },
+    "control_pin": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+    "control_state": "PAUSED; all_writer_authorities REVOKED (historical controller)",
+    "pr35_observed_latest_comment": {
+      "id": 6880372117,
+      "at": "2026-11-14T16:09:14Z",
+      "kind": "WP12 read-only finding, not a writer ACK"
+    },
+    "competing_current_choice_authority_observed": false,
+    "limits": "GitHub verifies published authority/receipts and heads, not the runtime state of unrelated Chat/native sessions. No live writer is inferred terminated from silence. Current mission explicitly succeeds terminal predecessor."
+  },
+  "gates": {
+    "tests": "GitHub Actions only, surgical after code; inspect matching in-flight runs first",
+    "remote": "GitHub MCP only, fast-forward CAS expected head",
+    "shared_changes": "Complete minimal patches to session42; no foreign source writes",
+    "global_release": false
+  }
+}
