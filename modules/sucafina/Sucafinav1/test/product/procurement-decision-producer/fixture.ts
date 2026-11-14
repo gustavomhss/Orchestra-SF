@@ -5,7 +5,8 @@ import { join } from "node:path"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { domain } from "../../../runtime/procurement.ts"
 import { object } from "../../../runtime/contract.ts"
-import type { Actor, Command } from "../../../runtime/contract.ts"
+import type { Actor, Command, Snapshot } from "../../../runtime/contract.ts"
+import type { BlobTransaction } from "../../../runtime/assets.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -30,7 +31,7 @@ export async function createScenarioFixture(input: { amount?: number | null; dir
   const writes: string[] = []
   const tracked: Parameters<typeof createSfSourcePersistence>[0]["persistence"] = {
     currentSnapshots: () => currentSnapshots(),
-    transaction: (surface, work, options) => store.transaction(surface, async (snapshot, blobs) => {
+    transaction: (surface, work, options) => store.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
       const result = await work(snapshot, blobs)
       if (result.commit) writes.push(surface)
       return result
