@@ -3,6 +3,7 @@ import type { Page } from "@playwright/test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { object, rows } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
 import { launchBrowserDriver } from "./browser-driver-fixture.ts"
 import { createRecoveryFixture, initialCaseRef, storeExistingChoice } from "./workbench-recovery-fixture.ts"
 
@@ -152,6 +153,115 @@ test("Dashboard recovers a committed draft after response loss, restores only it
     release.resolve()
     try { await driver.close() } finally { await f.close() }
   }
+  driver.report()
+}, 60000)
+
+test("Dashboard retains the exact draft attempt when its first response is denied after the real host commits", async () => {
+  expectSpawn(import.meta.path)
+  const f = await createRecoveryFixture()
+  const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => { await f.close(); throw error })
+  try {
+    const page = await driver.browser.newPage(), errors: string[] = []
+    page.on("pageerror", (error) => errors.push(error.message))
+    const panel = await openWorkbench(page, f)
+    const register = f.decisions.drafts.register
+    let committed: { draftRef: string; version: number } | undefined
+    f.decisions.drafts.register = async (...args) => {
+      const result = await register(...args)
+      // The producer completed its real C08 transaction. Change authority before the
+      // real HTTP egress check, which must produce the denied response itself.
+      if (!committed && result.status === "ok") { committed = result.value; f.policy.writable = false }
+      return result
+    }
+    const attempts: { body: string | null; key: string | undefined; status: number }[] = []
+    await page.route((url) => url.searchParams.get("sf") === "dashboard-hot-topic-draft", async (route) => {
+      const response = await route.fetch()
+      attempts.push({ body: route.request().postData(), key: route.request().headers()["idempotency-key"], status: response.status() })
+      // Restore authority before delivery, so fresh discovery can prove the original
+      // exact source again. The response remains the host's actual post-commit 403.
+      if (attempts.length === 1) f.policy.writable = true
+      await route.fulfill({ response })
+    })
+    await editNewDraft(page, "Committed before egress authority changed")
+    await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
+    await panel.getByText("Seu acesso não permite esta ação agora.", { exact: false }).waitFor()
+    expect(committed?.version).toBe(1)
+    expect(attempts).toHaveLength(1)
+    expect(attempts[0]!.status).toBe(403)
+    expect(await panel.getByLabel("Ação", { exact: true }).inputValue()).toBe("Committed before egress authority changed")
+    expect(await panel.getByLabel("Notas", { exact: true }).inputValue()).toBe("Private operational explanation")
+    expect(await panel.locator("[data-dashboard-draft]").getAttribute("data-dirty")).toBe("true")
+    expect(await panel.locator("[data-dashboard-pending]").getAttribute("data-dirty")).toBe("true")
+    expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isDisabled()).toBe(true)
+    expect(await panel.getByRole("button", { name: "Repetir mesma tentativa", exact: true }).isEnabled()).toBe(true)
+    const before = await currentDraft(f)
+    expect(before).toMatchObject({ draftRef: committed!.draftRef, version: committed!.version, fields: { action: "Committed before egress authority changed" } })
+    await panel.getByRole("button", { name: "Repetir mesma tentativa", exact: true }).click()
+    await panel.getByText("Rascunho salvo.", { exact: false }).waitFor()
+    expect(attempts).toHaveLength(2)
+    expect(attempts[1]).toEqual({ ...attempts[0]!, status: 200 })
+    expect(attempts[0]!.key).toBeTruthy()
+    const recovered = await currentDraft(f)
+    expect(recovered).toMatchObject({ id: before.id, incarnation: before.incarnation, draftRef: before.draftRef, version: 1 })
+    expect(await panel.locator("[data-dashboard-pending]").getAttribute("data-dirty")).toBeNull()
+    expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Original action")
+    expect(errors).toEqual([])
+  } finally { try { await driver.close() } finally { await f.close() } }
+  driver.report()
+}, 60000)
+
+test("Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable", async () => {
+  expectSpawn(import.meta.path)
+  const f = await createRecoveryFixture()
+  const driver = await launchBrowserDriver("host-source-recovery").catch(async (error) => { await f.close(); throw error })
+  try {
+    const unsavedPage = await driver.browser.newPage(), replacementPage = await driver.browser.newPage(), savedPage = await driver.browser.newPage(), errors: string[] = []
+    for (const page of [unsavedPage, replacementPage, savedPage]) page.on("pageerror", (error) => errors.push(error.message))
+    const unsaved = await openWorkbench(unsavedPage, f)
+    await editNewDraft(unsavedPage, "Private unsaved source wording")
+    const replacement = await openWorkbench(replacementPage, f)
+    await editNewDraft(replacementPage, "Private unsaved wording for original incarnation")
+    const saved = await openWorkbench(savedPage, f)
+    await editNewDraft(savedPage, "Private saved source wording")
+    await saved.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
+    await saved.getByText("Rascunho salvo.", { exact: false }).waitFor()
+    expect((await currentDraft(f)).fields.action).toBe("Private saved source wording")
+    await saved.getByLabel("Ação", { exact: true }).fill("Private later edits to saved source")
+    const original = await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: { row: rows(snapshot.data.hotTopics)[0]!,
+      identity: sfSourceIdentity(snapshot, "hotTopics", "topic"), version: snapshot.versions["hotTopics:topic"]?.version ?? 0 } }))
+    expect(original.identity).toBeDefined()
+    const deleted = await fetch(`${f.origin}/sucafina/dashboard`, { method: "POST", headers: f.request().headers,
+      body: JSON.stringify({ page: "Hot Topics & Actions", action: "delete", id: "topic", version: original.version, values: {}, confirmed: true }) })
+    expect(deleted.status).toBe(200)
+    expect(await deleted.json()).toMatchObject({ ok: true })
+    const assertPurged = async (page: Page, panel: Awaited<ReturnType<typeof openWorkbench>>, recordCount: number) => {
+      const discovery = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-workbench")
+      await panel.getByRole("button", { name: "Carregar opções", exact: true }).click()
+      const response = await discovery
+      expect(response.status()).toBe(200)
+      const value = object(object(await response.json()).value), decisions = object(value.decisions)
+      expect(rows(decisions.cases).map((entry) => object(entry.caseRef).id)).toContain(initialCaseRef.id)
+      expect(decisions.drafts).toEqual([])
+      expect(rows(value.records)).toHaveLength(recordCount)
+      await panel.getByText("Seu acesso mudou. Reabra a página com o acesso atual.", { exact: true }).waitFor()
+      expect(await panel.locator("input, textarea, select, button").count()).toBe(0)
+      expect(await panel.textContent()).not.toContain("Private")
+      expect(object(object(await page.evaluate(() => history.state)).sfDashboardWorkbench).draft).toBeUndefined()
+    }
+    await assertPurged(unsavedPage, unsaved, 0)
+    // Seed an external replacement through the real scoped persistence after a canonical
+    // delete. Identical public id and fields must not stand in for C17 incarnation proof.
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.hotTopics = [structuredClone(original.row)]
+      return { commit: true, value: undefined }
+    })
+    const replaced = await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "hotTopics", "topic") }))
+    expect(replaced).toBeDefined()
+    expect(replaced!.incarnation).not.toBe(original.identity!.incarnation)
+    await assertPurged(replacementPage, replacement, 1)
+    await assertPurged(savedPage, saved, 1)
+    expect(errors).toEqual([])
+  } finally { try { await driver.close() } finally { await f.close() } }
   driver.report()
 }, 60000)
 

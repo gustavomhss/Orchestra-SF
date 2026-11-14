@@ -8,7 +8,7 @@ import { reviewInclusion } from "./inclusion.ts"
 import type { ReviewInclusion } from "./inclusion.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { Artifact } from "../../runtime/artifact.ts"
-import { matchesSelectedSources } from "./references.ts"
+import { selectedReviewComments } from "./comment-selection.ts"
 import { renderReviewBars, renderReviewChart, renderReviewTimeline, renderReviewWaterfall, renderReviewSensitivity } from "./chart.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ReviewChart } from "./port.ts"
@@ -24,6 +24,8 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     const projection = section?.content as DomainProjection | undefined
     return !section || !projection || !Array.isArray(projection.values) || !Number.isSafeInteger(section.count) || section.count < 0 || !Array.isArray(projection.missing) || !projection.context || !Array.isArray(projection.context.sourceRefs) || projection.values.some((value: DomainProjection["values"][number]) => !value || typeof value.id !== "string" || !value.period || !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))))
   })) return { ok: false, status: 422, errors: ["Section content is invalid."] }
+  const comments = selectedReviewComments(review, options.sectionRefs, digestSfValue)
+  if (!comments) return { ok: false, status: 422, errors: ["Comment association is invalid."] }
   const content = sections.flatMap((section) => {
     if (!section) return []
     const projection = section.content as DomainProjection
@@ -93,8 +95,6 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
       ],
     }]
   })
-  const selectedRefs = sections.flatMap((section) => section?.sourceRefs ?? [])
-  const comments = review.comments.filter((comment) => matchesSelectedSources(comment.sourceRefs, selectedRefs))
   if (review.comments.length > comments.length) content.push({ title: "Comment coverage", images: [], table: [], figureCaption: "", lines: ["Some preserved comments do not match the selected section sources and are omitted."] })
   if (comments.length) content.push({ title: "Preserved comments", images: [], table: [], figureCaption: "", lines: comments.map((comment) => {
     return `${comment.id} v${comment.version} · ${comment.authorRef} · ${comment.createdAt}: ${comment.content}`
@@ -200,3 +200,4 @@ export function readReviewArtifactSeal(artifact: Artifact, review: PreservedRevi
 export function readReviewArtifactRenderDigest(artifact: Artifact, review: PreservedReview, sectionRefs: readonly string[]) {
   return readReviewArtifactSeal(artifact, review, sectionRefs) ? seals.get(artifact)?.renderDigest : undefined
 }
+

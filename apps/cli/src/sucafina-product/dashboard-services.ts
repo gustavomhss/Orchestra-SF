@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { Period, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { DashboardPort, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -20,6 +20,8 @@ import { createReviewPort } from "../../../../modules/sucafina/Sucafinav1/produc
 import type { ReviewHost, ReviewSection } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { createSfReviewHistory } from "./review-history.ts"
+import { protectSfReviewReads } from "./review-read-integrity.ts"
 
 export type DashboardAgendaSection = { id: string; title: string; selectionRef: string; topic: string; period: Period; recordRefs?: readonly string[] }
 export type DashboardAgendaRequest = { sections: readonly DashboardAgendaSection[] }
@@ -33,6 +35,7 @@ export function createSfDashboardServices(input: {
   sources: ReturnType<typeof createDashboardSourceHost>
   records: ReturnType<typeof createDashboardRecordEvidenceHost>
   dashboardHostWrites: WeakSet<object>
+  evidence?: BusinessContextService
 }) {
   const { host, state, creationTarget, human } = input.authority
   const agenda = createDashboardAgendaSelector({ host, dashboard: input.dashboard, sources: input.sources, recordEvidence: input.records })
@@ -87,7 +90,7 @@ export function createSfDashboardServices(input: {
         throw new Error("SF_DASHBOARD_REVIEW_SOURCE_CHANGED")
       return result
     }) }
-  const reviews = createReviewPort({ state: reviewState, creationTarget,
+  const reviewHost: ReviewHost = { state: reviewState, creationTarget,
     authorizeOutcomeComparison: async (_context, values) => values.length === 0,
     authorizeOutcome: async (_context, values) => values.length === 0,
     authorizeDecision: async (_context, values) => values.length === 0,
@@ -95,7 +98,35 @@ export function createSfDashboardServices(input: {
     select, authorizeSections: (context, sections) => revalidateSources(context, sections.flatMap((section) => section.sourceRefs)),
     authorizeComments: async (_context, comments) => comments.length === 0,
     authorizeSensitivity: async (_context, sensitivity) => sensitivity.length === 0,
-    revalidate: revalidateSources, revalidateEvidence: (context, refs) => resolveEvidence(refs, context) })
+    revalidate: revalidateSources, revalidateEvidence: (context, refs) => resolveEvidence(refs, context) }
+  const reviews = createReviewPort(reviewHost)
+  // Preview and preservation keep the source-current writer above. Historical reads
+  // reopen an exact C08-captured body under the current ACL and source incarnation.
+  const reviewHistory = input.evidence ? createSfReviewHistory({ authority: input.authority, persistence: input.scopedSources, evidence: input.evidence }) : undefined
+  const historicalSources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
+    if (!reviewHistory || !await host.revalidate(context)) return false
+    const sources = new Map(refs.map((ref) => [digestSfValue(ref), structuredClone(ref)]))
+    const checked = await Promise.all([...sources.values()].map((ref) => ref.surface === "dashboard" && reviewHistory.historicalSource(ref, context)))
+    return checked.every(Boolean) && await host.revalidate(context)
+  }
+  const historicalReviews = reviewHistory ? createReviewPort({ ...reviewHost,
+    authorizeSections: (context, sections) => historicalSources(context, sections.flatMap((section) => section.sourceRefs)),
+    revalidate: historicalSources,
+    revalidateEvidence: async (context, refs) => {
+      if (!await host.revalidate(context)) return false
+      const references = new Map(refs.map((ref) => [digestSfValue(ref), structuredClone(ref)]))
+      const checked = await Promise.all([...references].map(async ([expected, ref]) => {
+        if (ref.kind !== "record" || ref.target.surface !== "dashboard") return false
+        const result = await reviewHistory.evidence.resolve(ref, context)
+        return (result.state === "fresh" || result.state === "historical") && result.accessRevision === context.binding.accessRevision && digestSfValue(result.ref) === expected
+      }))
+      return checked.every(Boolean) && await host.revalidate(context)
+    },
+  }) : reviews
+  protectSfReviewReads({ authority: input.authority, reviews: historicalReviews })
+  // Previous-review links and exact retries also reopen the protected capture;
+  // preserve still selects and commits only current source projections.
+  reviews.read = historicalReviews.read.bind(historicalReviews)
   const readCapture = async (captureId: string, context: TrustedDomainContext): Promise<PortResult<DashboardHistoricalCapture>> => {
     const request = host.requestFor(context)
     if (!request || !await host.revalidate(context)) return { status: "denied", reason: "historical-capture-unavailable" }
@@ -193,7 +224,7 @@ export function createSfDashboardServices(input: {
         .filter((review) => review.sections.every((section) => object(object(section.content).context).principalRef === authority.principalRef))
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 100).map((review) => review.id) : [])
       if (savedReviews.status === "ok") for (const id of savedReviews.value) {
-        const current = await reviews.read(id, context)
+        const current = await historicalReviews.read(id, context)
         if (current.status === "ok") historyOptions.push({ kind: "review", ref: id, label: `${current.value.sections.map((section) => section.title).join(", ")} · ${current.value.createdAt.slice(0, 10)}` })
       }
       const actions = await input.authority.humanActions(source)
@@ -231,7 +262,7 @@ export function createSfDashboardServices(input: {
         expectedStorageVersion: current.status === "ok" ? current.storageVersion : 0, idempotencyKey: `dashboard-review:${operation}`, targetIncarnation: creationTarget.incarnation }, context)
       return result
     },
-    readReview: reviews.read.bind(reviews),
+    readReview: historicalReviews.read.bind(historicalReviews),
     capture: async (incoming: { sourceRef: string }, context: TrustedDomainContext): Promise<PortResult<{ captureId: string }>> => {
       const request = structuredClone(incoming)
       if (context.kind !== "ui" || !await human.authorize(context, "reviews.preserve", request)) return { status: "denied", reason: "human-capture-authority-required" }

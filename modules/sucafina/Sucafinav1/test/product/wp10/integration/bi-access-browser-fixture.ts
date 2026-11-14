@@ -103,6 +103,7 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
     await context.route("https://example.test/**", async (route) => {
       const request = route.request()
       const mode = new URL(request.url()).searchParams.get("sf") ?? "other"
+      if (mode === "bi-source") expect(new URL(request.url()).searchParams.get("referenceDigest")).toMatch(/^[a-f0-9]{64}$/)
       const watch = watches.find((entry) => entry.mode === mode && !entry.request)
       if (watch) { watch.request = request; watch.sent.resolve(request) }
       const at = performance.now()

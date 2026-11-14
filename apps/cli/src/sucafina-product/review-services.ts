@@ -89,6 +89,7 @@ export function createSfReviewServices(input: {
       authorizeOutcomeComparison, authorizeOutcome: outcome?.authorize ?? (async (call, values) => values.length === 0 && await host.revalidate(call)),
     },
     collaboration: { threads: createRecipientAwareThreadReads(business.collaboration.threads, business.collaboration.recipientThread), history,
+      authorizeSourceContinuity: business.collaboration.authorizeThreadSourceContinuity,
       authorizeSourceMapping: createExactReviewThreadSourceMapping({ host, evidence: historical.evidence }), maxMessages: 500 },
     handoffs,
     ...(input.readers?.contributions ? { contributions: input.readers.contributions } : {}),

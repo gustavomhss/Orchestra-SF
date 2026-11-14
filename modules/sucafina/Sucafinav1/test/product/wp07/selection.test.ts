@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { DomainProjection, Period, SourceRef } from "../../../product/contracts/context.ts"
 import type { ObservedResultProjection } from "../../../product/contracts/decisions.ts"
@@ -74,7 +75,8 @@ function dashboardProjection(topic: string, page: string, period: Period, refs: 
 }
 
 function recordEvidence(topic: string, recordId: string, period: Period): BusinessEvidenceRef {
-  return { schema: "sf-evidence-v1", refId: `evidence:${topic}:${recordId}`, installationId: "i", projectId: "p", refDigest: `digest:${topic}:${recordId}`, evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: topic, recordId, incarnation: `inc-${recordId}`, version: 1, fields: ["value"], period, projectionDigest: `projection:${recordId}` } }
+  const ref: BusinessEvidenceRef = { schema: "sf-evidence-v1", refId: `evidence:${topic}:${recordId}`, installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: topic, recordId, incarnation: `inc-${recordId}`, version: 1, fields: ["value"], period, projectionDigest: `projection:${recordId}` } }
+  return { ...ref, refDigest: digestSfEvidenceRef(ref) }
 }
 
 test("agenda keeps exact records, chosen order, periods and notes without mutating Dashboard", async () => {
@@ -309,3 +311,4 @@ test("selection refuses changed preview content while retaining its original obs
   expect(refreshed.value.sections[0]?.projection.values[0]?.value).toBe(1400)
   expect(initial.value.sections[0]?.projection.values[0]?.value).toBe(1320)
 })
+

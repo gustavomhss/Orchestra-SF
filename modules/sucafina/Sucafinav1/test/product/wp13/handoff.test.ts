@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { createPortfolioPort } from "../../../product/portfolio/port.ts"
 import { preparePortfolioChoice, promotePortfolioAlternative, portfolioEvaluationDigest } from "../../../product/portfolio/handoff.ts"
-import type { PortfolioHost } from "../../../product/portfolio/port.ts"
+import type { PortfolioHost, PortfolioPort } from "../../../product/portfolio/port.ts"
 import type { DecisionCasePort } from "../../../product/contracts/ports.ts"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
 import type { PortfolioRequest } from "../../../product/contracts/operations.ts"
@@ -105,4 +105,49 @@ test("review digest ignores observation clocks but retains financial changes", (
   const changed: PortfolioResult = { ...result, combinations: [{ ...result.combinations[0], components: [{ ...component, amount: 41 }] }] }
   expect(portfolioEvaluationDigest(request, later)).toBe(portfolioEvaluationDigest(request, result))
   expect(portfolioEvaluationDigest(request, changed)).not.toBe(portfolioEvaluationDigest(request, result))
+})
+
+test("handoffs reject a candidate object reused and mutated during its final read", async () => {
+  for (const action of ["prepare", "promote"] as const) {
+    const changes = [{ kind: "replace" as const, targetRef: "line:1", amount: 40 }]
+    const candidate = { ref: "a", caseRef: "case", operations: changes, scenario: { baseRef: "base", operations: changes, assumptions: [] } }
+    const phase = { handoff: false, reads: 0, effects: 0 }
+    const changingHost: PortfolioHost = { ...host, resolveCandidate: async () => {
+      if (phase.handoff && ++phase.reads === 2) changes[0]!.amount = 41
+      return { status: "ok", value: candidate }
+    } }
+    const real = createPortfolioPort(changingHost)
+    const evaluated = await real.evaluate(request, context)
+    if (evaluated.status !== "ok") throw new Error(evaluated.reason)
+    const portfolio: PortfolioPort = { ...real, evaluate: async (value, call) => { const found = await real.evaluate(value, call); phase.handoff = true; return found } }
+    const ref = { id: "case", incarnation: "one", version: 2 }
+    const common = { portfolio, host: changingHost, request, selectedCandidateRefs: ["a"], combinationId: evaluated.value.combinations[0]!.id,
+      expectedEvaluationDigest: portfolioEvaluationDigest(request, evaluated.value), caseRef: ref }
+    const cases = { read: async () => ({ status: "ok", value: { case: { ...ref, choices: [{ id: "choice", scenario: { baseRef: "base", operations: [{ kind: "replace", targetRef: "line:1", amount: 40 }], assumptions: [] }, result: scenario }] } } }) } as unknown as DecisionCasePort
+    const found = action === "prepare" ? await preparePortfolioChoice({ ...common, cases, choiceId: "choice", decisions: { prepareChanges: async () => { phase.effects++; return { status: "ok", value: { caseRef: ref } } } } }, context)
+      : await promotePortfolioAlternative({ ...common, title: "Reviewed", coverageRef: "case-coverage", decisions: { addAlternative: async () => { phase.effects++; return { status: "ok", value: { caseRef: ref } } } } }, context)
+    expect(found).toEqual({ status: "stale", reason: "candidate-changed-before-handoff" })
+    expect(changes[0]!.amount).toBe(41)
+    expect(phase.effects).toBe(0)
+  }
+})
+
+test("promotion retains the reviewed case, scope and title when the caller mutates its request", async () => {
+  const requested = structuredClone(request)
+  const caseRef = { id: "case", incarnation: "one", version: 2 }
+  const real = createPortfolioPort(host)
+  const evaluated = await real.evaluate(requested, context)
+  if (evaluated.status !== "ok") throw new Error(evaluated.reason)
+  const calls: unknown[] = []
+  const input = { portfolio: { ...real, evaluate: async (value: PortfolioRequest, call: TrustedDomainContext) => {
+    caseRef.id = "other-case"
+    requested.scope.currency = "EUR"
+    input.title = "Changed by caller"
+    return real.evaluate(value, call)
+  } }, host, decisions: { addAlternative: async (value: unknown) => { calls.push(value); return { status: "ok" as const, value: { caseRef: { id: "case", incarnation: "one", version: 3 } } } } },
+    request: requested, selectedCandidateRefs: ["a"], combinationId: evaluated.value.combinations[0]!.id,
+    expectedEvaluationDigest: portfolioEvaluationDigest(requested, evaluated.value), caseRef, title: "Reviewed", coverageRef: "case-coverage" }
+  expect((await promotePortfolioAlternative(input, context)).status).toBe("ok")
+  expect(calls).toEqual([{ caseRef: { id: "case", incarnation: "one", version: 2 }, title: "Reviewed", coverageRef: "case-coverage", scenario: { baseRef: "base", operations, assumptions: [] } }])
+  expect(requested.scope.currency).toBe("EUR")
 })

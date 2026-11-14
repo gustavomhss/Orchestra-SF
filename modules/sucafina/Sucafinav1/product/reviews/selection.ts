@@ -249,9 +249,12 @@ function sameBinding(left: Pick<TrustedDomainContext["binding"], "installationId
 /** A repeated authorized observation may advance its timestamp; the selected content and source identity must remain exact. */
 function sectionDigest(section: ReviewSection) {
   const source = (ref: SourceRef) => Object.fromEntries(Object.entries(ref).filter(([key]) => key !== "observedAt"))
+  // Procurement's stage age is derived from the read clock. Keep the captured
+  // age, but compare its source identity and availability instead of that clock.
+  const values = section.projection.values.map((value) => section.projection.context.surface === "procurement" && section.projection.engineVersion === "procurement-v1" && value.id === "ageDays" && value.unit === "days" && typeof value.value === "number" && Number.isFinite(value.value) && value.sourceRefs.length > 0 && value.sourceRefs.every((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "requests" && ref.target.fields.includes("ageDays")) ? { ...value, value: "derived-stage-age" } : value)
   return digestSfValue({
     ...section,
-    projection: { ...section.projection, context: { ...section.projection.context, sourceRefs: section.projection.context.sourceRefs.map(source) }, components: section.projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) },
+    projection: { ...section.projection, values, context: { ...section.projection.context, sourceRefs: section.projection.context.sourceRefs.map(source) }, components: section.projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) },
     ...(section.comments ? { comments: section.comments.map((comment) => ({ ...comment, sourceRefs: comment.sourceRefs.map(source) })) } : {}),
   })
 }
@@ -285,3 +288,4 @@ function validOutcomeCaseRef(value: unknown): value is ObservedResultProjection[
 function forecastSideRef(itemId: string, side: "baseline" | "candidate") {
   return `${itemId}:${side}`
 }
+

@@ -76,7 +76,8 @@ test("real confirmation and case selection keep v7 January valid after global v8
       return { state: result.status === "ok" && digestSfValue(result.value.evidence) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
-    const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
+    const caseSelectionWrites = new WeakSet<object>()
+    const state = createSfProductState({ caseSelectionWrites, persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
     // Exactly the canonical host's private authority; one closure is shared by both consumers.
     const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
     const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
@@ -92,7 +93,7 @@ test("real confirmation and case selection keep v7 January valid after global v8
       const projected = await dashboard.read({ selectionRef: issued.value.selectionRef, fields: ["signals"], period: selectedPeriod }, context)
       return projected.status === "ok" && projected.value.values.length === 0 && projected.value.missing.length === 0 ? { status: "ok", signals: [] } : { status: "unavailable" }
     }
-    const settings = { host, state, creationTarget, scopedSources: persistence, evidence, cases, workCaseAuthority: authorizeCase, issueForActor, prepareReissueScope: observer.prepareReissueScope, human, authority, caseSelectionWrites: new WeakSet<object>(), confirmationSource: observer, workSignals, procurement: { list: async () => ({ status: "unavailable" as const, reason: "not-selected" }) }, collections: { resolveRequestCollection: async () => ({ status: "unavailable" as const, reason: "not-selected" }) }, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now: () => at }
+    const settings = { host, state, creationTarget, scopedSources: persistence, evidence, cases, workCaseAuthority: authorizeCase, issueForActor, prepareReissueScope: observer.prepareReissueScope, human, authority, caseSelectionWrites, confirmationSource: observer, workSignals, procurement: { list: async () => ({ status: "unavailable" as const, reason: "not-selected" }) }, collections: { resolveRequestCollection: async () => ({ status: "unavailable" as const, reason: "not-selected" }) }, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now: () => at }
     const factory = createCollaborationHost(settings)
     if (!factory.caseSelection || !factory.confirmation) throw new Error("real work selection or confirmation unavailable")
     const selectionDraft = { caseRef, period, sourceRefs: [source] }
@@ -150,3 +151,4 @@ test("real confirmation and case selection keep v7 January valid after global v8
     await rm(directory, { recursive: true, force: true })
   }
 })
+

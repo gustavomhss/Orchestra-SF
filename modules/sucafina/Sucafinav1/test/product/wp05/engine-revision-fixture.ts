@@ -17,19 +17,29 @@ const now = () => "2026-11-13T01:00:00Z"
  */
 export async function createWp05TrainingRevision(fixture: Fixture) {
   if (fixture.scenario.baseRef !== "transition-omitted") throw new Error("Training revision requires the omitted-category source")
-  const versionId = "transition-confirmed"
+  return createWp05QuoteRevision(fixture, { versionId: "transition-confirmed", name: "Transition with a separately confirmed training quote", lineId: "training", amount: 40000, identityPrefix: "wp05-training-revision" })
+}
+
+/** The confirmed implementation quote preserves the source's other scopes and prices. */
+export async function createWp05ImplementationRevision(fixture: Fixture) {
+  return createWp05QuoteRevision(fixture, { versionId: "transition-implementation70000", name: "Transition with implementation quoted at 70000", lineId: "implementation", amount: 70000, identityPrefix: "wp05-implementation-revision" })
+}
+
+async function createWp05QuoteRevision(fixture: Fixture, revision: { versionId: string; name: string; lineId: "training" | "implementation"; amount: number; identityPrefix: string }) {
+  if (!["transition-omitted", "transition-bundled"].includes(fixture.scenario.baseRef)) throw new Error("Quote revision requires the original transition source")
+  const versionId = revision.versionId
   const reader = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
   const author = { ...reader, id: "fixture-source-author", roles: ["admin"] }
   let allocated = 0
-  const environment = { at: now(), id: () => ++allocated === 1 ? versionId : `wp05-training-revision-${allocated}`, directory: [] }
+  const environment = { at: now(), id: () => ++allocated === 1 ? versionId : `${revision.identityPrefix}-${allocated}`, directory: [] }
   const source = await fixture.store.transaction("planner", async (snapshot) => {
     const previous = projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)
     if (!previous) throw new Error("Original Planner source unavailable")
     const previousDigest = digestSfValue(previous)
-    const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: "Transition with a separately confirmed training quote" } }, environment)
+    const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: revision.name } }, environment)
     if (!copied.ok || copied.value !== versionId) throw new Error(`Planner copy rejected: ${JSON.stringify(copied)}`)
-    const added = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: "training", version: 0, values: { versionId, el: "licenses", cur: "USD", annual: 0, f10: 40000 } }, environment)
-    if (!added.ok) throw new Error(`Planner training quote rejected: ${JSON.stringify(added)}`)
+    const added = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: revision.lineId, version: snapshot.versions[`${versionId}:lines:${revision.lineId}`]?.version ?? 0, values: revision.lineId === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f10: revision.amount } : { versionId, f10: revision.amount } }, environment)
+    if (!added.ok) throw new Error(`Planner quote rejected: ${JSON.stringify(added)}`)
     if (digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== previousDigest) throw new Error("Copy changed the original source")
     const projection = projectPlannerSource(snapshot, reader, versionId)
     if (!projection) throw new Error("Revised Planner source unavailable")
@@ -67,11 +77,11 @@ export async function createWp05TrainingRevision(fixture: Fixture) {
     resolve: async (ref, context) => ({ state: await currentSource(ref, context) ? "fresh" : "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: now() }),
     context: async ({ refs }, context) => Promise.all(refs.map((ref) => evidence.resolve(ref, context))),
     recall: async () => [],
-    emitFromLedger: async () => { throw new Error("Unexpected memory write in the training revision fixture") },
+    emitFromLedger: async () => { throw new Error("Unexpected memory write in the quote revision fixture") },
   }
   const ids = { value: 0 }
-  const results = createSfDecisionResultStore({ state: fixture.state, host: fixture.host, authorizeCase: async (decision) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation, verifySources: async (_value, refs, context) => (await Promise.all(refs.map((ref) => currentSource(ref, context)))).every(Boolean), createId: () => `wp05-revised-result-${++ids.value}`, now })
-  const scenario = { ...structuredClone(fixture.scenario), baseRef: versionId }
+  const results = createSfDecisionResultStore({ state: fixture.state, host: fixture.host, authorizeCase: async (decision) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation, verifySources: async (_value, refs, context) => (await Promise.all(refs.map((ref) => currentSource(ref, context)))).every(Boolean), createId: () => `${revision.lineId === "training" ? "wp05-revised" : revision.identityPrefix}-result-${++ids.value}`, now })
+  const scenario = { ...structuredClone(fixture.scenario), baseRef: versionId, operations: fixture.scenario.operations.map((operation) => revision.lineId === "implementation" && operation.targetRef === "implementation:11" ? { ...structuredClone(operation), amount: revision.amount } : structuredClone(operation)) }
   const projected = await planner.compareForecast({ baseRef: versionId, candidateRef: versionId, period: wp05Horizon, currency: "USD" }, fixture.context)
   if (projected.status !== "ok") throw new Error(`Revised Planner projection unavailable: ${JSON.stringify(projected)}`)
   const simulated = await planner.simulateScenario(scenario, fixture.context)

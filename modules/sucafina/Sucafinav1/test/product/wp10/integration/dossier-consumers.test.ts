@@ -6,8 +6,18 @@ import { createSfDossierServices } from "../../../../../../../apps/cli/src/sucaf
 import { createWp06Runtime } from "../../wp06/runtime-fixture.ts"
 
 /** Real persisted credentials, SQLite, Request producer and dossier HTTP; no native execution witness. */
-async function fixture() {
+async function fixture(options: { initializedDocuments?: boolean } = {}) {
   const state = await createWp06Runtime({ additionalOperations: ["sf_request_read", "sf_work_list"] })
+  // This positive consumer fixture starts from a real, initialized C08 catalog.
+  // A read cannot invent an empty catalog when the product state has never been written.
+  if (options.initializedDocuments !== false) {
+    const initialized = await state.authority.state.transaction(state.request("procurement"), {
+      namespace: "documents", expectedStorageVersion: 0,
+      targetRef: state.authority.creationTarget.ref, targetIncarnation: state.authority.creationTarget.incarnation,
+      idempotencyKey: "fixture-empty-document-catalog", commandDigest: digestSfValue({ fixture: "empty-document-catalog" }),
+    }, async () => ({ commit: true, value: null }))
+    if (initialized.status !== "ok") throw new Error(`Document catalog fixture failed: ${initialized.reason}`)
+  }
   const business = createSfBusinessServices({ authority: state.authority, persistence: state.store,
     proposalCoverageWrites: new WeakSet(), documentRead: state.documents.documents.reader })
   const dossier = createSfDossierServices({ runtime: state.runtime, authority: state.authority, business, documents: state.documents })
@@ -43,6 +53,10 @@ test("dossier composition retains actual authorized proposal facts and fences a 
     const requestRef = choices.value[0]!.requestRef
     const before = await value.state.store.transaction("procurement", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.store) }))
     const response = await value.request("sourcing-dossier-read", { requestRef })
+    if (response.status !== 200) {
+      const producer = await value.state.uiCall("sf_request_read", { requestRef }, (call) => value.dossier.prepare(requestRef, call))
+      throw new Error(`Dossier HTTP ${response.status}; real producer ${JSON.stringify(producer)}`)
+    }
     expect(response.status).toBe(200)
     expect(await response.json()).toMatchObject({ status: "ok", value: {
       commercialSources: {
@@ -52,6 +66,13 @@ test("dossier composition retains actual authorized proposal facts and fences a 
         supplierRegister: { status: "not-selected" },
       }, draft: { domainApplied: false },
     } })
+    const direct = await value.state.uiCall("sf_work_list", {}, (call) => value.business.procurementDossier.prepare(requestRef, call))
+    expect(direct).toMatchObject({ status: "ok", value: { commercialSources: {
+      proposalTerms: { status: "available", sourceRef: { refId: requestRef },
+        offers: [{ offerRef: "offer-a", amount: 42 }, { offerRef: "offer-b", amount: null }],
+        submittedBaseCurrency: "USD", submittedFx: [{ from: "EUR", rate: 1.1 }, { from: "USD", rate: 1 }] },
+      supplierRegister: { status: "not-selected" },
+    }, draft: { domainApplied: false } } })
     // Counterproof at the producer seam: retain the real authorization and source
     // envelope, but alter an independently returned fact after the first sample.
     const samples = { count: 0 }
@@ -67,6 +88,45 @@ test("dossier composition retains actual authorized proposal facts and fences a 
     expect(await denied.json()).toEqual({ status: "denied" })
     expect(samples.count).toBeGreaterThan(1)
     expect(await value.state.store.transaction("procurement", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.store) }))).toBe(before)
+  } finally { await value.close() }
+}, 60_000)
+
+test("dossier does not turn an uninitialized protected document catalog into an empty authorized selection", async () => {
+  const value = await fixture({ initializedDocuments: false })
+  try {
+    const found = await value.request("sourcing-dossier-requests", { start: "2026-01-01", end: "2026-12-31" })
+    expect(found.status).toBe(200)
+    const choices = await found.json() as { value: { requestRef: string }[] }
+    expect(choices.value).toHaveLength(1)
+    const requestRef = choices.value[0]!.requestRef
+    const produced = await value.state.uiCall("sf_request_read", { requestRef }, (call) => value.dossier.prepare(requestRef, call))
+    expect(produced).toEqual({ status: "unavailable", reason: "document-state-unavailable" })
+    const response = await value.request("sourcing-dossier-read", { requestRef })
+    expect(response.status).toBe(503)
+    expect(await response.json()).toEqual({ status: "unavailable" })
+    const persisted = await value.state.authority.state.read(value.state.request(), "documents", (state) => state.documents)
+    expect(persisted).toEqual({ status: "unavailable", reason: "product-state-uninitialized" })
+  } finally { await value.close() }
+}, 60_000)
+
+test("the internal dossier reader refuses a real Request changed after authorized discovery", async () => {
+  const value = await fixture()
+  try {
+    const found = await value.request("sourcing-dossier-requests", { start: "2026-01-01", end: "2026-12-31" })
+    expect(found.status).toBe(200)
+    const choices = await found.json() as { value: { requestRef: string }[] }
+    expect(choices.value).toHaveLength(1)
+    const ref = choices.value[0]!.requestRef
+    const initial = await value.state.uiCall("sf_work_list", {}, (call) => value.business.procurementDossier.prepare(ref, call))
+    expect(initial.status).toBe("ok")
+    await value.state.store.transaction("procurement", async (snapshot) => {
+      const store = snapshot.data.store as { requests: { r1: { request: { sourcing: { fxSnapshot: Record<string, number> } } } } }
+      store.requests.r1.request.sourcing.fxSnapshot.EUR = 1.3
+      return { commit: true, value: undefined }
+    })
+    const changed = await value.state.uiCall("sf_work_list", {}, (call) => value.business.procurementDossier.prepare(ref, call))
+    expect(changed.status).not.toBe("ok")
+    expect(Object.hasOwn(changed, "value")).toBe(false)
   } finally { await value.close() }
 }, 60_000)
 

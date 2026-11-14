@@ -37,12 +37,13 @@ export function createSfObservedOutcomeAccess(input: {
 }) {
   return async (request: { caseRef: ObservedResultProjection["caseRef"]; choiceId: string }, call: TrustedDomainContext) => {
     try {
+      const captured = structuredClone(request)
       const binding = digestSfValue([call.kind, call.binding])
       if (!await input.revalidate(call)) return { status: "unavailable" as const }
-      const loaded = await input.load(request.caseRef, request.choiceId, call)
-      if (!loaded || digestSfValue(loaded.caseRef) !== digestSfValue(request.caseRef) || loaded.choice.id !== request.choiceId || !await input.authorizeEvidence(outcomeEvidence(loaded), call) || !await input.revalidate(call)) return { status: "unavailable" as const }
-      const again = await input.load(request.caseRef, request.choiceId, call)
-      if (!again || digestSfValue({ ...again, observation: { ...again.observation, cutoff: "" } }) !== digestSfValue({ ...loaded, observation: { ...loaded.observation, cutoff: "" } }) || !Number.isFinite(Date.parse(loaded.observation.cutoff)) || !Number.isFinite(Date.parse(again.observation.cutoff)) || Date.parse(again.observation.cutoff) < Date.parse(loaded.observation.cutoff) || !await input.authorizeEvidence(outcomeEvidence(again), call) || digestSfValue([call.kind, call.binding]) !== binding || !await input.revalidate(call)) return { status: "unavailable" as const }
+      const loaded = structuredClone(await input.load(structuredClone(captured.caseRef), captured.choiceId, call))
+      if (!loaded || digestSfValue(loaded.caseRef) !== digestSfValue(captured.caseRef) || loaded.choice.id !== captured.choiceId || !await input.authorizeEvidence(structuredClone(outcomeEvidence(loaded)), call) || !await input.revalidate(call)) return { status: "unavailable" as const }
+      const again = structuredClone(await input.load(structuredClone(captured.caseRef), captured.choiceId, call))
+      if (!again || digestSfValue({ ...again, observation: { ...again.observation, cutoff: "" } }) !== digestSfValue({ ...loaded, observation: { ...loaded.observation, cutoff: "" } }) || !Number.isFinite(Date.parse(loaded.observation.cutoff)) || !Number.isFinite(Date.parse(again.observation.cutoff)) || Date.parse(again.observation.cutoff) < Date.parse(loaded.observation.cutoff) || !await input.authorizeEvidence(structuredClone(outcomeEvidence(again)), call) || !await input.revalidate(call) || digestSfValue([call.kind, call.binding]) !== binding) return { status: "unavailable" as const }
       const result = compareSfExpectedObserved(again)
       return result.status === "comparable" ? { ...result, observation: structuredClone(again.observation) } : result
     } catch {

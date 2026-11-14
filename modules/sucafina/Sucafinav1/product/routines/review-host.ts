@@ -17,8 +17,9 @@ export function createReviewRoutinePreparation(input: {
     const request = structuredClone(incoming)
     const selected = await input.agenda.create(request.items, context)
     if (selected.status !== "ok") return selected
-    const selectionRef = selected.value.selectionRef
-    const sectionRefs = selected.value.sectionRefs
+    const selection = structuredClone(selected.value)
+    const selectionRef = selection.selectionRef
+    const sectionRefs = selection.sectionRefs
     const prepared = await prepareFactualReview({
       topicRefs: sectionRefs,
       period: request.period,
@@ -60,10 +61,14 @@ export function createReviewRoutinePreparation(input: {
     }
     return { status: "ok", value: {
       ...prepared.value,
-      draft: { ...prepared.value.draft, sections: prepared.value.draft.sections.map((section) => ({ ...section, title: selected.value.sections.find((candidate) => candidate.id === section.id)!.title })) },
+      draft: { ...prepared.value.draft, sections: prepared.value.draft.sections.map((section) => ({ ...section, title: selection.sections.find((candidate) => candidate.id === section.id)!.title })) },
       reviewSelection: { selectionRef, sectionRefs, ...(request.previousReviewRef ? { previousReviewRef: request.previousReviewRef } : {}) },
-      agendaGaps: selected.value.gaps,
+      // The native immutable result keeps every selected chart, comment and note.
+      // A transient selection reference alone cannot restore this material after reload.
+      agendaSnapshot: { sectionRefs, sections: selection.sections, sectionRecordRefs: selection.sectionRecordRefs, agendaNotes: selection.agendaNotes, gaps: selection.gaps },
+      agendaGaps: selection.gaps,
       preserved: false,
     } } as const
   }
 }
+

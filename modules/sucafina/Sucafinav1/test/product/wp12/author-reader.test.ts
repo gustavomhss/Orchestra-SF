@@ -11,6 +11,7 @@ import type { SfNativeRunRecord } from "../../../product/contracts/state.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { sfCaseFixture } from "./run-fixture.ts"
 
 test("author reader rechecks the real stored run, receipt, case, and current authority", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-review-author-"))
@@ -29,7 +30,7 @@ test("author reader rechecks the real stored run, receipt, case, and current aut
     const output = { id: "output", caseRef: selected, kind: "MatchExplanation", schemaVersion: "sf-contribution-v1", state: "ready", payload: { candidateCaseRef: selected, matchedCriteria: [], currentDifferences: [], sourceStates: [], limitations: [] }, evidenceRefs: [], runProvenance: { ...receipt, actualModel: "provider/model", contextFingerprint: "context" }, accessRevision: "access", createdAt: "2026-11-13T00:00:00Z", outputDigest: "" } as unknown as ContributionEnvelope
     output.outputDigest = digestSfContribution(output)
     const caseWrite = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "case", commandDigest: "a".repeat(64) }, async (state) => {
-      state.cases.case = { ...selected, participants: ["person"] } as typeof state.cases[string]
+      state.cases.case = sfCaseFixture(selected, ["person"])
       return { commit: true, value: true }
     })
     expect(caseWrite.status).toBe("ok")

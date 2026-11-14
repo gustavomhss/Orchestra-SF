@@ -123,7 +123,6 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
     issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
-  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites })
   const evidence: { current?: BusinessContextService } = {}
   const recall: { current?: ReturnType<typeof createSfCaseRecall> } = {}
   const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => recall.current
@@ -150,6 +149,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     recall: (request, call) => evidence.current ? evidence.current.recall(request, call) : Promise.reject(new Error("SF_ATLAS_UNAVAILABLE")),
     emitFromLedger: (ref, call) => evidence.current ? evidence.current.emitFromLedger(ref, call) : Promise.resolve({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "atlas-unavailable" }),
   }
+  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites, evidence: context })
   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
   let scenarioOperationAccess: ReturnType<typeof createSfScenarioOperationAccess> | undefined
@@ -397,7 +397,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return host.requestFor(call) === request && !request.signal.aborted && binding === digestSfValue([call.kind, call.binding])
         ? matches.map((entry) => entry.ref) : undefined
     }
-    const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords,
+    const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords, dashboardEvidence: dashboardDecisions,
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
       procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner, project: projectPlannerEvidence, readEvidence: projectPlannerEvidence.readEvidence },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),

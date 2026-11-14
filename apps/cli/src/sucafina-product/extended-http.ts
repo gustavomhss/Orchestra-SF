@@ -96,14 +96,23 @@ export function createSfExtendedHttp(input: {
       if (mode === "bi-source") {
         const ref = url.searchParams.get("selectionRef")
         if (!ref || ref.length > 16_384) return json({ status: "needs-input", reason: "invalid-selection" }, 400)
+        const referenceDigest = url.searchParams.get("referenceDigest")
+        if (referenceDigest !== null && !/^[a-f0-9]{64}$/.test(referenceDigest)) return json({ status: "needs-input", reason: "invalid-source-choice" }, 400)
         const selectedCase = readSfDecisionBiSelection(ref) ? await options.caseFor(ref, call) : undefined
         if (readSfDecisionBiSelection(ref) && !selectedCase) return json({ status: "denied", reason: "bi-case-selection-unavailable" }, 403)
         const read = async () => {
           const current = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)
           if (current.status !== "ok") return current
           const value = current.value.values.find((entry) => entry.id === url.searchParams.get("valueId"))
-          if (!value?.drilldown) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
-          const links = await sfExtendedSourceLinks({ business, reference: value.drilldown, call, url })
+          if (!value) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
+          // Match the producer's explicit drilldown or require a human choice
+          // among this exact row's origins. Client bytes never supply a source.
+          const origins = value.drilldown ? [value.drilldown] : value.sourceRefs.filter((entry, index, all) => all.findIndex((candidate) => digestSfValue(candidate) === digestSfValue(entry)) === index)
+          if (!origins.length) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
+          if (referenceDigest === null && origins.length !== 1) return { status: "needs-input" as const, reason: "bi-source-choice-required" }
+          const reference = referenceDigest === null ? origins[0] : origins.find((entry) => entry.refDigest === referenceDigest)
+          if (!reference) return { status: "denied" as const, reason: "bi-source-outside-selected-value" }
+          const links = await sfExtendedSourceLinks({ business, reference, call, url })
           // Reopen the protected selection after destination resolution. The
           // producer's digest comparison ignores only observation timestamps.
           const latest = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)

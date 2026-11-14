@@ -17,6 +17,11 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     const current = await input.evidence.context({ refs: structuredClone(refs) }, context).catch(() => [])
     return current.length === refs.length && current.every((item, index) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(refs[index])) && await input.host.revalidate(context)
   }
+  const historicalSources = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => {
+    if (!refs.length || refs.some((ref) => !ref || typeof ref !== "object" || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) || !await input.host.revalidate(context)) return false
+    const resolved = await input.evidence.context({ refs: structuredClone(refs) }, context).catch(() => [])
+    return resolved.length === refs.length && resolved.every((item, index) => (item.state === "fresh" || item.state === "historical" && !!item.currentRef && !!item.authorizedProjection && !!item.differences) && item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(refs[index])) && await input.host.revalidate(context)
+  }
   const recipientSources = createRecipientSourceAuthorizer({ sources, revalidate: input.host.revalidate, recipientAuthority: input.recipientAuthority })
   const recipient = async (id: string, context: TrustedDomainContext) => {
     const request = input.host.requestFor(context)
@@ -34,6 +39,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
   }
   return {
     sources,
+    historicalSources,
     recipient,
     recipientSources,
     checkRecipientAtCommit: createRecipientCommitCheck(input.recipientAuthority),
@@ -48,6 +54,8 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     authorizeThread: async (thread: { sourceRef: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; messages?: CollaborationThread["messages"] }, context: TrustedDomainContext, mode: "read" | "write") => {
       if (!Array.isArray(thread.evidenceRefs) || thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
       if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await sources(thread.evidenceRefs, context)) return false
+      const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
+      if (messageRefs.length && !await sources(messageRefs, context)) return false
       if (thread.recipientRef && (!await recipient(thread.recipientRef, context) || mode === "write" && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
       if (!thread.messages) return mode === "write"
       return thread.recipientRef === context.binding.principalRef || thread.messages.some((message) => message.authorRef === context.binding.principalRef)
@@ -60,4 +68,5 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     },
   }
 }
+
 

@@ -47,7 +47,7 @@ export type SfAnalysisHost = {
   settle: (runRef: string, state: "unavailable" | "needs-input", reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
   /** Preserve a stale run and its safe references under the host's current access policy. */
   markStale: (runRef: string, reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
-  /** Preserve a ready provider envelope under its original case/run provenance while marking it stale atomically. */
+  /** Preserve safe original content atomically, or lifecycle only for an unpublished alternative without a private capture. */
   preserveStale: (runRef: string, reason: string, output: ContributionEnvelope, context: TrustedDomainContext) => Promise<PortResult<true>>
   /** Verify host-owned binding and load receipt, current evidence and C10 semantics against real domain results, and persisted review target; field shape alone is insufficient. */
   revalidate: (context: TrustedDomainContext, input: { runRef: string; caseRef: ContributionEnvelope["caseRef"]; contextFingerprint: string; manifestDigest: string; accessRevision: string; outputKind?: ContributionEnvelope["kind"]; evidenceRefs?: ContributionEnvelope["evidenceRefs"]; output?: ContributionEnvelope; skillReceipts: readonly SkillLoadReceipt[]; reviewTarget?: SfReviewTarget }) => Promise<PortResult<true>>
@@ -123,7 +123,12 @@ export async function publishSfContribution(input: {
     return authorized
   }
   if (authorized.status !== "ok") return authorized
-  return input.host.withRunContext(input.runRef, (context) => input.host.result.write({ runRef: input.runRef, caseRef: input.output.caseRef, output: input.output }, context))
+  const written = await input.host.withRunContext(input.runRef, (context) => input.host.result.write({ runRef: input.runRef, caseRef: input.output.caseRef, output: input.output }, context))
+  if (written.status !== "stale") return written
+  // write can detect a changed source either before committing or at its final egress check.
+  // Reopen authority and reconcile the durable state; the store fences any intervening change.
+  const stale = await input.host.withRunContext(input.runRef, (context) => input.host.preserveStale(input.runRef, written.reason, input.output, context))
+  return stale.status === "ok" ? written : stale
 }
 
 /** Runs one admitted native session; the host owns authentication, durable admission and result collection. */
@@ -236,8 +241,9 @@ export async function runSfAnalysis(input: {
       return saved.status === "ok" ? { status: "failed", reason: outcome.reason } : saved
     }
     if (outcome.state === "needs-input" || outcome.state === "unavailable") {
-      const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, outcome.state, outcome.reason, context))
-      return saved.status === "ok" ? { status: outcome.state, reason: outcome.reason } : saved
+      const state = outcome.state
+      const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, outcome.reason, context))
+      return saved.status === "ok" ? { status: state, reason: outcome.reason } : saved
     }
     if (outcome.state === "stale") {
       const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.markStale(admission.runRef, outcome.reason, context))
@@ -259,7 +265,10 @@ export async function runSfAnalysis(input: {
     if (stale.status !== "ok") return stale
     return { status: "stale", reason: "analysis-base-changed" } as const
   }
-  return publishSfContribution({ host: input.host, output: collected.value, skillReceipt: admission.skillReceipt, runRef: admission.runRef, reviewTarget: input.reviewTarget })
+  const published = await publishSfContribution({ host: input.host, output: collected.value, skillReceipt: admission.skillReceipt, runRef: admission.runRef, reviewTarget: input.reviewTarget })
+  if (published.status !== "failed") return published
+  const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, published.reason, context))
+  return failed.status === "ok" ? published : failed
 }
 
 /** Cancel the durable run before interrupting its matching native session. */
@@ -273,14 +282,24 @@ export async function cancelSfAnalysis(input: {
   contextFingerprint: string
 }) {
   if (input.skillReceipt.nativeSessionId !== input.sessionID || input.skillReceipt.runId !== input.runRef) return { status: "denied", reason: "session-mismatch" } as const
-  const authorized = await input.host.withRunContext(input.runRef, (context) => input.host.revalidate(context, {
-    runRef: input.runRef,
-    caseRef: input.caseRef,
-    contextFingerprint: input.contextFingerprint,
-    manifestDigest: input.skillReceipt.manifestDigest,
-    accessRevision: context.binding.accessRevision,
-    skillReceipts: [input.skillReceipt],
-  }))
+  const authorized = await input.host.withRunContext(input.runRef, async (context) => {
+    const current = await input.host.readRun(input.runRef, context)
+    if (current.status !== "ok") return current
+    const run = current.value
+    if (run.runRef !== input.runRef || !run.native || run.native.sessionID !== input.sessionID ||
+      digestSfValue(run.native.skillReceipt) !== digestSfValue(input.skillReceipt) || digestSfValue(run.caseRef) !== digestSfValue(input.caseRef) ||
+      run.contextFingerprint !== input.contextFingerprint) return { status: "denied", reason: "run-binding-mismatch" } as const
+    // The review target comes from durable host state, never from caller/model metadata.
+    return input.host.revalidate(context, {
+      runRef: input.runRef,
+      caseRef: run.caseRef,
+      contextFingerprint: run.contextFingerprint,
+      manifestDigest: run.selection.manifestDigest,
+      accessRevision: context.binding.accessRevision,
+      skillReceipts: [run.native.skillReceipt],
+      reviewTarget: run.reviewTarget,
+    })
+  })
   if (authorized.status !== "ok" && authorized.status !== "stale") return authorized
   const cancelled = await input.host.withRunContext(input.runRef, (context) => input.host.analysis.cancel(input.runRef, context))
   if (cancelled.status !== "ok" || !cancelled.value.cancelled) return cancelled
@@ -294,8 +313,8 @@ export async function cancelSfAnalysis(input: {
 }
 
 /** Recover persisted progress and a ready result after restart without reviving an expired ticket or grant. */
-export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }) {
-  return input.host.withRunContext(input.runRef, async (context) => {
+export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }): Promise<PortResult<{ run: SfAnalysisRunProgress; output?: ContributionEnvelope }>> {
+  return input.host.withRunContext<{ run: SfAnalysisRunProgress; output?: ContributionEnvelope }>(input.runRef, async (context) => {
     const read = await input.host.readRun(input.runRef, context)
     if (read.status !== "ok") return read
     const run = read.value

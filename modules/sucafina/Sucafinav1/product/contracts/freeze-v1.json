@@ -1,5 +1,5 @@
 {
-  "revision": 8,
+  "revision": 9,
   "scope": "C01-C17 definitions and complete 5/18/8/39/6 contract matrix; runtime acceptance is separate",
   "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "canonicalSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
@@ -1972,7 +1972,7 @@
     "../../docs/product-campaign/wp00/ci-selection.json": "b22148940a23772a50d266aaeb1d1af03f49fa705b2919b1d55a73e0be5dd4db",
     "../../docs/product-campaign/wp00/consumer-deltas.md": "0db0e0f767ca8c2ebf8c572630c4af8da9f680fba6361f057e848f4043465437",
     "../../docs/product-campaign/wp00/consumer-deltas.patch": "83a7624bdbbfce641ed82d01a7a5d855742cec2a39bbf40057cb97d1e3eb618f",
-    "../../docs/product-campaign/wp00/contracts-v1.md": "cfd9782b2ad29e82ab199251730d12218477d2c26734930b25290563ce6d3657",
+    "../../docs/product-campaign/wp00/contracts-v1.md": "8d674141a405da1a9c1a0bb31e76b3bee622b1262d34a545ab8a9ee563a50abd",
     "../../docs/product-campaign/wp00/criterion-map.json": "1c146668c033a86c13692280973b0f1cd9ba8c8ef20fe0faa3562932873359f4",
     "../../docs/product-campaign/wp00/oracles/corpus-consumers.json": "2b059151a9c1c24eff6e9d7a852f4208fb4e0ce38b46ae781496c5e61da7a60c",
     "../../docs/product-campaign/wp00/oracles/journeys-j01-j08.json": "89430a541094f1e7c56598f59e1983a3da482beaf916f6750f5e88457e14f1af",
@@ -1982,7 +1982,7 @@
     "../../docs/product-campaign/wp00/state-consumer-matrix.json": "526903fb47294acd6900467398c2a04551f05b1fa9f59378f0f956af036eed64",
     "../../docs/product-campaign/wp00/state-consumer-matrix.md": "3d519f43055cd7afc6e5b8bf534724e2a246e2af04efddc3e40e31554a3d46b8",
     "../../docs/product-campaign/wp00/t02-criteria.json": "17f290f3b2f6932ea946177984b6cc562c052cc2222a5eb2605c856f02266883",
-    "../../../../../apps/cli/src/sucafina-product/host-context.ts": "c5eb745882408f09c5dc878a8d9abc021b4a3c802548b6c6673e9e64b71c55a2"
+    "../../../../../apps/cli/src/sucafina-product/host-context.ts": "4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922"
   },
   "nativeProfiles": [
     {
@@ -3151,7 +3151,7 @@
     "AM05",
     "AM06"
   ],
-  "runtimeSeams": "runtime.ts factory types approved by S0; native Registry requires real Tool.Context/Request/Session/skill identity. UI registry remains distinct and host-only. Case ledger lives in DecisionCase.ledger. Case reads return AuthorizedCaseProjection, native/UI context discriminated. Creation target and operation identity are injected by private host; namespace permission never grants every case. v4: receiptFor exposes only registry-derived bound metadata while consumed/inflight (not a new consume); host source coverage includes immutable declared basis; DecisionCase persists costCoverageBases. v5: eighteen closed skill input decoders; IntentFrame preserves editable criteria; alternative and immutable choice preserve ScenarioRequest; native prepareIntent stays in pinned case; common authority exposes registry receiptFor for UI/native egress; ProcurementPort includes all four canonical capabilities. Routes are positive proof coverage, grants remain the current profile/skill intersection. v6: C11 alternative carries immutable CostCoverageBasis and coverageRef; C09 typed atomic Atlas outbox; C05 comments carry author/time and sections sourceRefs; C07 admitted result carries admissionRef/version and run checks expectedAdmissionVersion; sensitivity includes coverage, units, engine and explicit threshold precision/evidence. Job orchestration reacquires private Request authority at each boundary rather than retaining a one-shot call lease across provider wait. v7: C08 state-layout.ts names all namespace-owned fields and provider metadata; additive migration and read fences remain WP10-owned. AlternativeDraft is included in the complete normative profile/skill matrix, with distributed WP12 compatibility explicitly blocked until its sources/manifests are reconciled. v8: the composed host retains productView/forecastInputs/sourcingInputs and adds the canonical host-only SfAnalysisInputPort/analysisInputs preparation seam; its CLI consumer shares that type. Contract definitions, normative schemas, profiles, skills, packs and operations are unchanged. The freeze also binds the pinned WP00 documentation and required ownership/baseline test inputs; historical receipts remain qualified by their original candidates.",
+  "runtimeSeams": "runtime.ts factory types approved by S0; native Registry requires real Tool.Context/Request/Session/skill identity. UI registry remains distinct and host-only. Case ledger lives in DecisionCase.ledger. Case reads return AuthorizedCaseProjection, native/UI context discriminated. Creation target and operation identity are injected by private host; namespace permission never grants every case. v4: receiptFor exposes only registry-derived bound metadata while consumed/inflight (not a new consume); host source coverage includes immutable declared basis; DecisionCase persists costCoverageBases. v5: eighteen closed skill input decoders; IntentFrame preserves editable criteria; alternative and immutable choice preserve ScenarioRequest; native prepareIntent stays in pinned case; common authority exposes registry receiptFor for UI/native egress; ProcurementPort includes all four canonical capabilities. Routes are positive proof coverage, grants remain the current profile/skill intersection. v6: C11 alternative carries immutable CostCoverageBasis and coverageRef; C09 typed atomic Atlas outbox; C05 comments carry author/time and sections sourceRefs; C07 admitted result carries admissionRef/version and run checks expectedAdmissionVersion; sensitivity includes coverage, units, engine and explicit threshold precision/evidence. Job orchestration reacquires private Request authority at each boundary rather than retaining a one-shot call lease across provider wait. v7: C08 state-layout.ts names all namespace-owned fields and provider metadata; additive migration and read fences remain WP10-owned. AlternativeDraft is included in the complete normative profile/skill matrix, with distributed WP12 compatibility explicitly blocked until its sources/manifests are reconciled. v8: the composed host retains productView/forecastInputs/sourcingInputs and adds the canonical host-only SfAnalysisInputPort/analysisInputs preparation seam; its CLI consumer shares that type. Contract definitions, normative schemas, profiles, skills, packs and operations are unchanged. The freeze also binds the pinned WP00 documentation and required ownership/baseline test inputs; historical receipts remain qualified by their original candidates. v9: the CLI composes the joint verifiedAlternativeAdmissionFor reader; one authenticated run sample supplies its input and alternative selection, while every before/after fence and fresh authorization remains. No contract, schema, profile, skill, pack or operation changes.",
   "errorPolicy": "No fabricated data or authority; structural decoders are not ACL. Denied/unavailable/stale/provider-conflict never become ok; domain authorization and semantic validation remain producer/consumer duties.",
   "implementationStatus": "CONTRACT_FROZEN_CONSUMERS_BLOCKED",
   "nonCircularity": "This inventory hashes typed contract artifacts, the canonical host-contract consumer and pinned WP00 documentation; it never hashes itself, future commits or future guards. Artifact paths are relative to product/contracts. Its containing candidate commit/digest and consumer receipts are external. Historical source maps may describe earlier pinned manifests and do not bind a future digest.",
@@ -3957,67 +3957,138 @@
     "qualification": "Static freeze and schema tests do not prove native execution, authorization, persistence or consumer acceptance."
   },
   "revisionProvenance": {
-    "revision": 8,
-    "reason": "Reconcile the contract freeze with explicitly composed additive host services and the WP00 documentation/test inputs; retain the approved semantic matrix.",
-    "previousManifest": {
-      "revision": 7,
-      "pr": 20,
-      "commit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
-      "blob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104",
-      "sha256": "5fc38c7b25f1a5d904159bea4a381f050689a43f33cbbd010f9347c11e2931ab"
-    },
+    "revision": 9,
+    "reason": "Pin the changed WP10 CLI consumer of the joint authenticated alternative admission and preserve the strict byte freeze.",
     "compositionBase": {
       "pr": 32,
-      "commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
-      "manifestBlob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104",
-      "hostContextBlob": "f6d7b659945cd90f1bc09b6c24d8a3962d156ad4",
-      "hostContextSha256": "de63ec47412f45367e0be68eb8ee59c8f8149c8a8c31220e75a319e2197432f2"
+      "commit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "tree": "da48ad2d7d4f72867c4093aa32174f6bf731ebbb"
     },
-    "hostContextAmendment": {
-      "owner": "WP00 with WP10 composition",
-      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
-      "blob": "920fda293db553096f4d8ab7004fcd9652a69291",
-      "sha256": "0476febc21bf87c35a734e4cae028bc4fee2f72ccfebfd30a0490ecf44fae055",
-      "additiveExports": [
-        "SfAnalysisInputPort"
-      ],
-      "additiveServiceMembers": [
-        "analysisInputs"
-      ],
-      "preservedComposedMembers": [
-        "productView",
-        "forecastInputs",
-        "sourcingInputs"
-      ],
-      "candidateCommit": "Identified by the containing published commit; not predicted in this manifest."
+    "previousManifest": {
+      "revision": 8,
+      "commit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "blob": "2da531fd35740d1bb3b69e2c1ae03eb3a93e2c5f",
+      "sha256": "466638bd8ff9e3637f1933927b563059749dfabeaaee6a86169c8c052f335c8f"
     },
-    "documentationSource": {
-      "pr": 20,
-      "commit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
-      "paths": [
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-capabilities.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-decisions.md",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-new-capabilities.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/check-ownership.ts",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ci-selection.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/consumer-deltas.md",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/consumer-deltas.patch",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contracts-v1.md",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/criterion-map.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/corpus-consumers.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/measurement-protocol.md",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/t01-t03-evidence.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ownership-v1.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.md",
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/t02-criteria.json"
-      ],
-      "derivedDocumentation": [
-        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contracts-v1.md"
-      ],
-      "historicalEvidencePolicy": "Original pins and scopes are retained. Neither old PASS nor old consumer blockers are relabeled as current composition evidence."
+    "previousRevisionProvenance": {
+      "revision": 8,
+      "reason": "Reconcile the contract freeze with explicitly composed additive host services and the WP00 documentation/test inputs; retain the approved semantic matrix.",
+      "previousManifest": {
+        "revision": 7,
+        "pr": 20,
+        "commit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+        "blob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104",
+        "sha256": "5fc38c7b25f1a5d904159bea4a381f050689a43f33cbbd010f9347c11e2931ab"
+      },
+      "compositionBase": {
+        "pr": 32,
+        "commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+        "manifestBlob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104",
+        "hostContextBlob": "f6d7b659945cd90f1bc09b6c24d8a3962d156ad4",
+        "hostContextSha256": "de63ec47412f45367e0be68eb8ee59c8f8149c8a8c31220e75a319e2197432f2"
+      },
+      "hostContextAmendment": {
+        "owner": "WP00 with WP10 composition",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "blob": "920fda293db553096f4d8ab7004fcd9652a69291",
+        "sha256": "0476febc21bf87c35a734e4cae028bc4fee2f72ccfebfd30a0490ecf44fae055",
+        "additiveExports": [
+          "SfAnalysisInputPort"
+        ],
+        "additiveServiceMembers": [
+          "analysisInputs"
+        ],
+        "preservedComposedMembers": [
+          "productView",
+          "forecastInputs",
+          "sourcingInputs"
+        ],
+        "candidateCommit": "Identified by the containing published commit; not predicted in this manifest."
+      },
+      "documentationSource": {
+        "pr": 20,
+        "commit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+        "paths": [
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-capabilities.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-decisions.md",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-new-capabilities.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/check-ownership.ts",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ci-selection.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/consumer-deltas.md",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/consumer-deltas.patch",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contracts-v1.md",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/criterion-map.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/corpus-consumers.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/measurement-protocol.md",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/t01-t03-evidence.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ownership-v1.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.md",
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/t02-criteria.json"
+        ],
+        "derivedDocumentation": [
+          "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contracts-v1.md"
+        ],
+        "historicalEvidencePolicy": "Original pins and scopes are retained. Neither old PASS nor old consumer blockers are relabeled as current composition evidence."
+      },
+      "unchangedSemanticMatrix": {
+        "contractIds": [
+          "C01",
+          "C02",
+          "C03",
+          "C04",
+          "C05",
+          "C06",
+          "C07",
+          "C08",
+          "C09",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C17"
+        ],
+        "profiles": 5,
+        "skills": 18,
+        "packs": 8,
+        "operations": 39,
+        "proofs": [
+          "AM01",
+          "AM02",
+          "AM03",
+          "AM04",
+          "AM05",
+          "AM06"
+        ],
+        "planUnmodified": true,
+        "normativeSchemasUnmodified": true
+      },
+      "artifactCounts": {
+        "typedContracts": 20,
+        "wp00Documents": 17,
+        "canonicalHostConsumers": 1,
+        "total": 38
+      },
+      "validation": {
+        "status": "NOT_REVALIDATED",
+        "preparation": "Deterministic byte hashing and metadata comparison only. No local product tests, typecheck or guards executed.",
+        "required": [
+          "Scoped contract-freeze and ownership/baseline consumers in GitHub Actions on final composed W/S",
+          "bun typecheck in package",
+          "Applicable guards on the final composed candidate"
+        ],
+        "independentReviewClaimed": false,
+        "globalReleaseClaimed": false
+      }
     },
+    "changedArtifacts": [
+      "../../docs/product-campaign/wp00/contracts-v1.md",
+      "../../../../../apps/cli/src/sucafina-product/host-context.ts"
+    ],
     "unchangedSemanticMatrix": {
       "contractIds": [
         "C01",
@@ -4061,12 +4132,7 @@
     },
     "validation": {
       "status": "NOT_REVALIDATED",
-      "preparation": "Deterministic byte hashing and metadata comparison only. No local product tests, typecheck or guards executed.",
-      "required": [
-        "Scoped contract-freeze and ownership/baseline consumers in GitHub Actions on final composed W/S",
-        "bun typecheck in package",
-        "Applicable guards on the final composed candidate"
-      ],
+      "localProductTests": false,
       "independentReviewClaimed": false,
       "globalReleaseClaimed": false
     }

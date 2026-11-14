@@ -20,7 +20,7 @@ import { createPlannerScenarioInputs } from "../../../product/planner/scenario-i
 import { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
 import { createWp05SensitivityFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
-import { createWp05TrainingRevision } from "../wp05/engine-revision-fixture.ts"
+import { createWp05ImplementationRevision, createWp05TrainingRevision } from "../wp05/engine-revision-fixture.ts"
 import { renewalCoverage } from "./renewal-coverage-fixture.ts"
 
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
@@ -28,8 +28,8 @@ const now = () => "2026-11-13T02:00:00Z"
 const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
 
 /** One durable case. Source declarations and human grants are synthetic; every financial value comes from Planner. */
-export async function createRenewalChoiceHistory() {
-  const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training: "omitted", composed: true })
+export async function createRenewalChoiceHistory(options: { training: "omitted" | "bundled" } = { training: "omitted" }) {
+  const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training: options.training, composed: true })
   try {
     const writes = new WeakSet<object>()
     const current = { sources: fixture.sources, evidence: fixture.evidence, identity: "wp11-history", next: 0, ruleVersion: 1, sourceFenceValid: true }
@@ -113,7 +113,7 @@ export async function createRenewalChoiceHistory() {
       const advanced = await mutation.addAlternative({ caseRef: refFor(decision), alternativeRef: { id: selected.id, version: selected.version }, title: selected.title, scenario, coverageRef }, fixture.context)
       if (advanced.status !== "ok") throw new Error(`Alternative revision: ${advanced.reason}`)
     }
-    const preparePhase = async (source: RecordEvidence, basis: CostCoverageBasis, scenario: ScenarioRequest, training: "omitted" | "confirmed") => {
+    const preparePhase = async (source: RecordEvidence, basis: CostCoverageBasis, scenario: ScenarioRequest, training: "omitted" | "confirmed" | "bundled") => {
       const phaseRefs = [...basis.sourceRefs].filter((ref): ref is RecordEvidence => ref.kind === "record")
       const coverage = await renewalCoverage({ ...fixture, state, planner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
       declarations.set(coverage.statement.refDigest, { ref: coverage.statement, entries: coverage.entries })
@@ -164,10 +164,10 @@ export async function createRenewalChoiceHistory() {
     }
     const originalSource = fixture.sourceRefs.find((ref) => ref.refId === fixture.scenario.baseRef)
     if (!originalSource) throw new Error("Original source unavailable")
-    const before = await preparePhase(originalSource, fixture.basis, fixture.scenario, "omitted")
+    const before = await preparePhase(originalSource, fixture.basis, fixture.scenario, options.training)
     const choose = async () => {
       current.identity = "human-records-original-choice"
-      const request = { caseRef: before.caseRef, alternativeId: "selected", alternativeVersion: before.selectedResult.costCoverage.alternativeVersion, comparison: { scenarioRefs: [before.baselineRef, before.selectedRef], criteria: ["renewal-difference"] }, criteria: ["renewal-difference"], reason: "Human chooses the conditioned transition while the separately excluded training quote is still missing; no application is authorized." }
+      const request = { caseRef: before.caseRef, alternativeId: "selected", alternativeVersion: before.selectedResult.costCoverage.alternativeVersion, comparison: { scenarioRefs: [before.baselineRef, before.selectedRef], criteria: ["renewal-difference"] }, criteria: ["renewal-difference"], reason: options.training === "omitted" ? "Human chooses the conditioned transition while the separately excluded training quote is still missing; no application is authorized." : "Human chooses the reviewed transition scenario with bundled migration and training; no application is authorized." }
       const recorded = await mutation.recordChoice(request, fixture.context)
       if (recorded.status !== "ok") throw new Error(recorded.reason)
       const decision = await readCase()
@@ -181,6 +181,12 @@ export async function createRenewalChoiceHistory() {
       current.evidence = revision.evidence
       return preparePhase(revision.source, revision.basis, { baseRef: revision.source.refId, operations: [], assumptions: [] }, "confirmed")
     }
+    const reviseImplementation = async () => {
+      const revision = await createWp05ImplementationRevision(fixture)
+      current.sources = revision.sources
+      current.evidence = revision.evidence
+      return preparePhase(revision.source, revision.basis, { baseRef: revision.source.refId, operations: [], assumptions: [] }, "bundled")
+    }
     const rejectLockedSourceCheck = async () => {
       const decision = await readCase()
       const selected = decision.alternatives.find((alternative) => alternative.id === "selected")
@@ -192,7 +198,7 @@ export async function createRenewalChoiceHistory() {
       try { return await mutation.addAlternative({ caseRef: refFor(decision), alternativeRef: { id: selected.id, version: selected.version }, title: selected.title, scenario: selected.scenario, coverageRef: coverage.value.coverageRef }, fixture.context) }
       finally { current.sourceFenceValid = true }
     }
-    return { fixture, before, choose, resolveTraining, readCase, state, rejectLockedSourceCheck, cleanup: fixture.cleanup }
+    return { fixture, before, choose, resolveTraining, reviseImplementation, readCase, state, rejectLockedSourceCheck, cleanup: fixture.cleanup }
   } catch (error) {
     await fixture.cleanup()
     throw error

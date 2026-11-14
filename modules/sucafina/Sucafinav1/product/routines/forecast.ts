@@ -6,6 +6,8 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { compareProjections, confirmationCharge, type ProjectionChange } from "./review.ts"
 import { routineProjectionMaterial } from "./material.ts"
+import { forecastConfirmationCoverageDigest } from "./confirmation.ts"
+import type { ForecastConfirmationCoverage } from "./confirmation.ts"
 
 export type ForecastResponsibility = { readonly valueId: string; readonly responsibleRef: string; readonly evidenceRefs: readonly BusinessEvidenceRef[] }
 export type ForecastRecordedReason = { readonly valueId: string; readonly reason: string | null; readonly evidenceRefs: readonly BusinessEvidenceRef[] }
@@ -21,6 +23,8 @@ export type ForecastFacts = {
 export type ForecastReviewHost = {
   planner: Pick<PlannerPort, "compareForecast">
   confirmations: (request: ForecastCompareRequest, context: TrustedDomainContext) => Promise<PortResult<readonly ConfirmationValidityProjection[]>>
+  /** Every selected scope is retained, including explicit C06 absence. IDs alone do not prove coverage. */
+  confirmationCoverage?: (request: ForecastCompareRequest, context: TrustedDomainContext) => Promise<PortResult<ForecastConfirmationCoverage>>
   revalidate: (request: ForecastCompareRequest, context: TrustedDomainContext) => Promise<boolean>
   /** Absent until composition supplies a real owner source. Missing does not invent an owner. */
   responsibles?: (request: ForecastCompareRequest, context: TrustedDomainContext) => Promise<PortResult<readonly ForecastResponsibility[]>>
@@ -62,9 +66,10 @@ export async function prepareForecastReview(input: { request: ForecastCompareReq
   if (compared.status !== "ok") return compared
   const comparison = { value: structuredClone(compared.value) }
   if ([comparison.value.baseline, comparison.value.candidate].some((projection) => projection.missing.some((entry) => entry.reason === "restricted"))) return { status: "unavailable", reason: "review-source-unavailable" } as const
-  const confirmed = await input.host.confirmations(input.request, input.context)
+  const confirmed = await readConfirmationSnapshot(input.host, input.request, input.context)
   if (confirmed.status !== "ok") return confirmed
-  const confirmations = { value: structuredClone(confirmed.value) }
+  const confirmations = { value: structuredClone(confirmed.value.confirmations) }
+  const coverage = confirmed.value.coverage
   if (confirmations.value.some((entry) => confirmationCharge(entry) === "unavailable")) return { status: "unavailable", reason: "review-source-unavailable" } as const
   const changes = compareProjections(comparison.value.baseline, comparison.value.candidate)
   if (changes === undefined) return { status: "unavailable", reason: "projection-identity-invalid" } as const
@@ -81,11 +86,12 @@ export async function prepareForecastReview(input: { request: ForecastCompareReq
   if (currentComparison.status !== "ok") return currentComparison
   const comparisonDigest = (value: FinancialAnalysis) => digestSfValue({ ...value, baseline: routineProjectionMaterial(value.baseline), candidate: routineProjectionMaterial(value.candidate) })
   if (comparisonDigest(currentComparison.value) !== comparisonDigest(comparison.value)) return { status: "stale", reason: "forecast-source-changed" } as const
-  const currentConfirmations = await input.host.confirmations(input.request, input.context)
+  const currentConfirmations = await readConfirmationSnapshot(input.host, input.request, input.context)
   if (currentConfirmations.status !== "ok") return currentConfirmations
-  if (currentConfirmations.value.some((entry) => confirmationCharge(entry) === "unavailable")) return { status: "unavailable", reason: "review-source-unavailable" } as const
-  const confirmationDigest = (values: readonly ConfirmationValidityProjection[]) => digestSfValue(values.map((entry) => ({ ...entry, evaluatedAt: "" })).sort((left, right) => left.confirmationId.localeCompare(right.confirmationId)))
-  if (confirmationDigest(currentConfirmations.value) !== confirmationDigest(confirmations.value)) return { status: "stale", reason: "confirmation-source-changed" } as const
+  if (currentConfirmations.value.confirmations.some((entry) => confirmationCharge(entry) === "unavailable")) return { status: "unavailable", reason: "review-source-unavailable" } as const
+  const confirmationDigest = (values: readonly ConfirmationValidityProjection[]) => digestSfValue(values.map((entry) => ({ ...entry, evaluatedAt: "", evaluatedSourceVersion: 0 })).sort((left, right) => left.confirmationId.localeCompare(right.confirmationId)))
+  if (confirmationDigest(currentConfirmations.value.confirmations) !== confirmationDigest(confirmations.value) ||
+    (coverage ? forecastConfirmationCoverageDigest(coverage) : null) !== (currentConfirmations.value.coverage ? forecastConfirmationCoverageDigest(currentConfirmations.value.coverage) : null)) return { status: "stale", reason: "confirmation-source-changed" } as const
   const currentAssignment = await assignmentFor(facts.status === "ok" ? { ...input.host, responsibles: async () => ({ status: "ok", value: facts.value.responsibles }) } : input.host, input.request, input.context, changes)
   if (currentAssignment.status !== "ok") return currentAssignment
   const currentJustifications = await justificationsFor(input.host, input.request, input.context, changes, facts.status === "ok" ? facts.value.inheritedBudget.map((entry) => entry.valueId) : [])
@@ -94,13 +100,15 @@ export async function prepareForecastReview(input: { request: ForecastCompareReq
   if (facts.status === "ok" && (!input.host.revalidateFacts || !await input.host.revalidateFacts(input.request, facts.value, input.context))) return { status: "denied", reason: "access-changed" } as const
   if (!await input.host.revalidate(input.request, input.context)) return { status: "denied", reason: "access-changed" } as const
   const gaps = classifyGaps(comparison.value)
+  const allConfirmed = !!coverage && coverage.scopes.length > 0 && coverage.scopes.every((entry) => entry.confirmation !== null && confirmationCharge(entry.confirmation) === "confirmed")
   return {
     status: "ok",
     value: {
       comparison: comparison.value,
       confirmations: confirmations.value,
+      confirmationCoverage: coverage ? { state: "checked" as const, scopes: coverage.scopes } : { state: "unavailable" as const, reason: "confirmation-scope-coverage-unavailable" },
       pendingConfirmationIds: [...new Set(confirmations.value.flatMap((entry) => entry.state === "stale" ? [entry.confirmationId] : []))],
-      reviewState: confirmations.value.length === 0 ? "unconfirmed" as const : confirmations.value.some((entry) => entry.state === "stale") ? "pending" as const : "confirmed" as const,
+      reviewState: allConfirmed ? "confirmed" as const : confirmations.value.length === 0 ? "unconfirmed" as const : "pending" as const,
       measured: {
         differenceAgainstBase: comparison.value.knownDifference,
         completeDifference: comparison.value.completeDifference,
@@ -112,9 +120,21 @@ export async function prepareForecastReview(input: { request: ForecastCompareReq
       assignment: assignment.value,
       justifications: justifications.value,
       synthesisIncluded: false as const,
-      complete: facts.status === "ok" && facts.value.budgetMargin.value !== null && facts.value.absentActual.length === 0 && confirmations.value.length > 0 && confirmations.value.every((entry) => confirmationCharge(entry) === "confirmed") && assignment.value.status === "ready" && assignment.value.unassigned.length === 0 && justifications.value.status === "ready" && justifications.value.items.every((item) => item.state === "recorded") && comparison.value.comparison.comparisonStatus === "complete" && gaps.missingFx.length === 0 && gaps.missingRate.length === 0,
+      complete: allConfirmed && facts.status === "ok" && facts.value.budgetMargin.value !== null && facts.value.absentActual.length === 0 && assignment.value.status === "ready" && assignment.value.unassigned.length === 0 && justifications.value.status === "ready" && justifications.value.items.every((item) => item.state === "recorded") && comparison.value.comparison.comparisonStatus === "complete" && gaps.missingFx.length === 0 && gaps.missingRate.length === 0,
     },
   } as const
+}
+
+async function readConfirmationSnapshot(host: ForecastReviewHost, request: ForecastCompareRequest, context: TrustedDomainContext): Promise<PortResult<{ confirmations: readonly ConfirmationValidityProjection[]; coverage: ForecastConfirmationCoverage | null }>> {
+  if (host.confirmationCoverage) {
+    const result = await host.confirmationCoverage(request, context)
+    if (result.status !== "ok") return result
+    const coverage = structuredClone(result.value)
+    if (coverage.scopes.some((entry) => entry.confirmation?.state === "unavailable")) return { status: "unavailable", reason: "review-source-unavailable" }
+    return { status: "ok", value: { confirmations: coverage.scopes.flatMap((entry) => entry.confirmation ? [entry.confirmation] : []), coverage } }
+  }
+  const result = await host.confirmations(request, context)
+  return result.status === "ok" ? { status: "ok", value: { confirmations: structuredClone(result.value), coverage: null } } : result
 }
 
 async function assignmentFor(host: ForecastReviewHost, request: ForecastCompareRequest, context: TrustedDomainContext, changes: readonly ProjectionChange[]): Promise<PortResult<AssignmentFacet>> {

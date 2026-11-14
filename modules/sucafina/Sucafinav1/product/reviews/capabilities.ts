@@ -12,7 +12,7 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { Artifact } from "../../runtime/artifact.ts"
 import { renderPreservedReview } from "./render.ts"
 import { renderReviewBars, renderReviewChart, renderReviewTimeline, renderReviewWaterfall, renderReviewSensitivity } from "./chart.ts"
-import { matchesSelectedSources } from "./references.ts"
+import { selectedReviewComments } from "./comment-selection.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { reviewChartEvidence } from "./port.ts"
@@ -70,8 +70,9 @@ export async function prepareReport(value: unknown, context: TrustedDomainContex
   })
   const stored = await host.artifacts.put({ reviewRef: parsed.value.reviewRef, sectionRefs: parsed.value.sectionRefs, artifact, format: parsed.value.format, evidenceRefs, recordCount: selected.reduce((total, section) => total + section.count, 0) }, context)
   if (stored.status !== "ok") return reject("sf_report_prepare", stored.reason, stored.status === "conflict" ? "stale" : stored.status)
-  const selectedRefs = selected.flatMap((section) => section.sourceRefs)
-  const omittedComments = review.value.comments.some((comment) => !matchesSelectedSources(comment.sourceRefs, selectedRefs))
+  const includedComments = selectedReviewComments(review.value, parsed.value.sectionRefs, digestSfValue)
+  if (!includedComments) return reject("sf_report_prepare", "comment-association-invalid", "unavailable")
+  const omittedComments = includedComments.length !== review.value.comments.length
   const output = {
     reviewSelectionRef: parsed.value.reviewRef, orderedResultRefs: [stored.value.artifactRef],
     coverage: selected.map((section) => ({ sectionRef: section.id, includedCount: section.count, totalCount: section.count })),
@@ -123,3 +124,4 @@ export function createReviewCapabilities(host: ReviewCapabilityHost): readonly C
 function reject(operation: string, reason: string, status: "needs-input" | "stale" | "denied" | "unavailable" | "provider-conflict" | "failed"): CapabilityResult {
   return { status, reason, receipt: { kind: "unbound", operation, code: status === "needs-input" ? "invalid-input" : status === "denied" ? "invalid-binding" : "unavailable", at: new Date().toISOString() } }
 }
+

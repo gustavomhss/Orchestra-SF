@@ -6,6 +6,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { Location } from "@orchestra/core/location"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
+import type { SfHumanAction } from "../../../../product/integration/human-authority.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
@@ -13,7 +14,7 @@ import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfPortfolioServices } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts"
 
-export async function financialCompositionFixture(options: { clock?: { at: string }; signal?: AbortSignal; beforeEnvironment?: () => Promise<void> } = {}) {
+export async function financialCompositionFixture(options: { clock?: { at: string }; signal?: AbortSignal; beforeEnvironment?: () => Promise<void>; humanActions?: readonly SfHumanAction[] } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-financial-composition-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(join(directory, "store"))
@@ -37,7 +38,7 @@ export async function financialCompositionFixture(options: { clock?: { at: strin
     identity: () => ({ installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
     persistence, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "bi-artifacts", "reviews", "documents", "threads", "relations", "confirmations", "receipts", "outbox"],
       operations: ["sf_dashboard_read", "sf_bi_view", "sf_work_list", "sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_portfolio_evaluate", "sf_sensitivity_evaluate", "sf_case_read", "sf_forecast_compare", "sf_scenario_simulate", "sf_scenario_compare"],
-      humanActions: ["decisions.prepare-portfolio", "decisions.promote-portfolio", "decisions.prepare-changes", "decisions.choose", "decisions.answer-question", "reviews.preserve", "decisions.coverage", "decisions.criteria", "decisions.promote-alternative", "decisions.select-portfolio"] }],
+      humanActions: ["decisions.prepare-portfolio", "decisions.promote-portfolio", "decisions.prepare-changes", "decisions.choose", "decisions.answer-question", "reviews.preserve", "decisions.coverage", "decisions.criteria", "decisions.promote-alternative", "decisions.select-portfolio", ...options.humanActions ?? []] }],
     createId: randomUUID, now: Date.now, commandIdentity: async (request) => request.headers.get("x-operation") ?? randomUUID(),
     authenticate: async (_request, context) => active.value && context ? { id: "person", canWrite: true, roles: [{ surface: context.surface, role: "admin" }] } : null,
     environment: async () => {

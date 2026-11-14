@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ScenarioResult } from "../contracts/decisions.ts"
@@ -19,45 +20,39 @@ export function createPlannerCalculationEvidence(input: {
   replayRecordOnly: PlannerPort["simulateScenario"]
   nested?: { replayScenario: PlannerPort["simulateScenario"]; evidence: Pick<BusinessContextService, "resolve"> }
 }) {
-  const active = new Map<string, Set<string>>()
-  const checking = new Map<string, Set<string>>()
+  // These are ancestors of one asynchronous replay, not a lock or an authorization cache.
+  // Immutable sets keep parallel callbacks descended from the same caller independent.
+  const ancestry = new AsyncLocalStorage<{ binding: string; runs: ReadonlySet<string>; checks: ReadonlySet<string> }>()
   const verifyCalculationSources = async (incoming: StoredScenario, requested: readonly BusinessEvidenceRef[], context: TrustedDomainContext): Promise<boolean> => {
     const key = digestSfValue(context.binding)
     const value = structuredClone(incoming)
     const refs = structuredClone(requested)
-    const runs = active.get(key) ?? new Set<string>()
-    const checks = checking.get(key) ?? new Set<string>()
+    const parent = ancestry.getStore()
+    const runs = parent?.binding === key ? parent.runs : new Set<string>()
+    const checks = parent?.binding === key ? parent.checks : new Set<string>()
     const ownsRun = !runs.has(value.resultRef)
     if (checks.has(value.resultRef) || ownsRun && runs.size >= 16) return false
-    checks.add(value.resultRef)
-    runs.add(value.resultRef)
-    checking.set(key, checks)
-    active.set(key, runs)
-    try {
-      const http = input.host.requestFor(context)
-      if (!http || http.signal.aborted || !await input.host.revalidate(context) || !value.resultRef.trim() || value.resultDigest !== digestSfValue(value.result) || !sourceClosure(value.result, value.sourceRefs, context, !!input.nested)) return false
-      const complete = completeSources(value.result, value.sourceRefs)
-      if (digestSfValue(refs.map((ref) => ref.refDigest).sort()) !== digestSfValue(complete.map((ref) => ref.refDigest).sort())) return false
-      sfEvidenceSourceMaps(refs)
-      if (!input.nested) return complete.every((ref) => ref.kind === "record")
-      for (const ref of evidenceGraph(complete)) {
-        if (ref.kind === "calculation") {
-          if (ref.target.runId === value.resultRef || ref.target.calculationId !== "planner:scenario" || ref.target.engineVersion !== "planner-runtime-v1") return false
-          const issued = await issue(ref.target.runId, context)
-          if (issued.status !== "ok" || digestSfValue(issued.value) !== digestSfValue(ref)) return false
-          continue
+    return ancestry.run({ binding: key, runs: new Set([...runs, value.resultRef]), checks: new Set([...checks, value.resultRef]) }, async () => {
+      try {
+        const http = input.host.requestFor(context)
+        if (!http || http.signal.aborted || !await input.host.revalidate(context) || !value.resultRef.trim() || value.resultDigest !== digestSfValue(value.result) || !sourceClosure(value.result, value.sourceRefs, context, !!input.nested)) return false
+        const complete = completeSources(value.result, value.sourceRefs)
+        if (digestSfValue(refs.map((ref) => ref.refDigest).sort()) !== digestSfValue(complete.map((ref) => ref.refDigest).sort())) return false
+        sfEvidenceSourceMaps(refs)
+        if (!input.nested) return complete.every((ref) => ref.kind === "record")
+        for (const ref of evidenceGraph(complete)) {
+          if (ref.kind === "calculation") {
+            if (ref.target.runId === value.resultRef || ref.target.calculationId !== "planner:scenario" || ref.target.engineVersion !== "planner-runtime-v1") return false
+            const issued = await issue(ref.target.runId, context)
+            if (issued.status !== "ok" || digestSfValue(issued.value) !== digestSfValue(ref)) return false
+            continue
+          }
+          const resolved = structuredClone(await input.nested.evidence.resolve(structuredClone(ref), context))
+          if (resolved.state !== "fresh" || resolved.accessRevision !== context.binding.accessRevision || !resolved.currentRef || !resolved.authorizedProjection || digestSfValue(resolved.ref) !== digestSfValue(ref) || digestSfValue(resolved.currentRef) !== digestSfValue(ref)) return false
         }
-        const resolved = structuredClone(await input.nested.evidence.resolve(structuredClone(ref), context))
-        if (resolved.state !== "fresh" || resolved.accessRevision !== context.binding.accessRevision || !resolved.currentRef || !resolved.authorizedProjection || digestSfValue(resolved.ref) !== digestSfValue(ref) || digestSfValue(resolved.currentRef) !== digestSfValue(ref)) return false
-      }
-      return !http.signal.aborted && await input.host.revalidate(context)
-    } catch { return false }
-    finally {
-      checks.delete(value.resultRef)
-      if (!checks.size) checking.delete(key)
-      if (ownsRun) runs.delete(value.resultRef)
-      if (!runs.size) active.delete(key)
-    }
+        return !http.signal.aborted && await input.host.revalidate(context)
+      } catch { return false }
+    })
   }
   const verifyCalculationRequestSources = async (request: ScenarioRequest, stored: StoredScenario, context: TrustedDomainContext): Promise<boolean> => {
     try {
@@ -98,13 +93,13 @@ export function createPlannerCalculationEvidence(input: {
   const issue = async (runId: string, context: TrustedDomainContext): Promise<PortResult<CalculationEvidence>> => {
     if (typeof runId !== "string" || !runId.trim()) return { status: "denied", reason: "calculation-authority-unavailable" }
     const key = digestSfValue(context.binding)
-    const runs = active.get(key) ?? new Set<string>()
+    const parent = ancestry.getStore()
+    const runs = parent?.binding === key ? parent.runs : new Set<string>()
     if (runs.has(runId) || runs.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
-    runs.add(runId)
-    active.set(key, runs)
-    try { return await replay(runId, context) }
-    catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
-    finally { runs.delete(runId); if (!runs.size) active.delete(key) }
+    return ancestry.run({ binding: key, runs: new Set([...runs, runId]), checks: parent?.binding === key ? parent.checks : new Set<string>() }, async (): Promise<PortResult<CalculationEvidence>> => {
+      try { return await replay(runId, context) }
+      catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
+    })
   }
   const resolve = async (reference: string, context: TrustedDomainContext): Promise<PortResult<CalculationEvidence>> => {
     const match = /^planner-calculation:([^:]+)$/.exec(reference)

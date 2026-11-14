@@ -1,6 +1,7 @@
 import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
 import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
 import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
+import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { createReviewPreparationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/workspace.ts"
 import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
@@ -92,6 +93,21 @@ if (root && bootstrap) {
           !["complete", "partial", "unavailable"].includes(body.value?.forwardingCoverage) || !Array.isArray(body.value?.limitations))
           return { status: closed ? "denied" : "unavailable", reason: "review-comparison-unavailable" }
         return { status: "ok", value: body.value }
+      },
+      readCurrentThread: async (reference, commentId): Promise<PortResult<ReviewCurrentThread>> => {
+        const url = new URL(location.href)
+        url.search = new URLSearchParams({ sf: "review-current-thread", reviewRef: reference, commentId }).toString()
+        const found = await privateRead(url), body = found?.body
+        if (!found?.response.ok || body?.status !== "ok" || !body.value || typeof body.value !== "object")
+          return { status: closed ? "denied" : "unavailable", reason: "current-thread-unavailable" }
+        const thread = body.value as Partial<ReviewCurrentThread>
+        if (typeof thread.threadId !== "string" || !thread.threadId.trim() || thread.view !== "current" ||
+          !["comment", "review"].includes(String(thread.kind)) || !Array.isArray(thread.messages) ||
+          thread.messages.some((message) => !message || typeof message.id !== "string" || typeof message.incarnation !== "string" ||
+            typeof message.body !== "string" || typeof message.authorRef !== "string" || typeof message.createdAt !== "string" ||
+            !Number.isSafeInteger(message.version) || message.version < 1))
+          return { status: "unavailable", reason: "current-thread-unavailable" }
+        return { status: "ok", value: thread as ReviewCurrentThread }
       },
       checkUpdate: async (reference) => {
         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-update", reviewRef: reference }).toString()

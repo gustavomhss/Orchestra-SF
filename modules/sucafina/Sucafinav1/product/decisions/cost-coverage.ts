@@ -74,7 +74,8 @@ export async function reassessScenarioCoverage(input: {
     const evidence = await input.resolveEvidence(refs)
     if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
     // A baseline's generated missing-category row is still an omitted input, not a newly supplied answer.
-    const entries = input.entries.filter((entry) => !(entry.status === "pending" && entry.reason === "missing-category" && input.baseline.derivedMissingCategoryIds.includes(entry.categoryId)))
+    const derivedMissingCategories = new Set<string>(input.baseline.derivedMissingCategoryIds)
+    const entries = input.entries.filter((entry) => !(entry.status === "pending" && entry.reason === "missing-category" && derivedMissingCategories.has(entry.categoryId)))
     const assessment = assessCostCoverage({ basis: input.basis, alternativeId: input.scenario.costCoverage.alternativeId, alternativeVersion: input.scenario.costCoverage.alternativeVersion, currency: input.scenario.currency, horizon: input.scenario.horizon, entries, components: input.scenario.components, evidence, supports: input.supports })
     const unresolvedConditions = input.scenario.unresolvedConditions.filter((condition) => condition !== "scenario-coverage-reassessment-required")
     if (input.scenario.comparisonStatus === "complete" && assessment.coverageState === "complete") return { ...input.scenario, unresolvedConditions, costCoverage: assessment }

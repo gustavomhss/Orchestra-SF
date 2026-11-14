@@ -179,6 +179,7 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
     } }
     const domain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites: new WeakSet(),
       selectedCase: business.selectedCase, verifiedInputFor: readers.verifiedInputFor, verifiedAlternativeSelectionFor: readers.verifiedAlternativeSelectionFor,
+      verifiedAlternativeAdmissionFor: readers.verifiedAlternativeAdmissionFor,
       hasAdmittedInputContext: readers.hasAdmittedInputContext, sharedPortfolio })
     cleanups.push(() => domain.dispose())
     business.bindDecisionDomain(domain)

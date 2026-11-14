@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createReviewThreadComments } from "../../../product/reviews/thread-access.ts"
 
@@ -116,3 +118,37 @@ test("capture returns no comments after authority is revoked during source assoc
   boundary.resume()
   expect(await capture).toEqual({ status: "denied", reason: "thread-access-unavailable" })
 })
+
+test("different message periods require explicit producer continuity and keep each original captured period", async () => {
+  // Controlled continuity contract only. WP08 owns the physical-current-state
+  // resolver test; this reader may not manufacture a historical grant from dates.
+  const context = { kind: "ui", binding: { principalRef: "p", installationId: "i", projectId: "p", accessRevision: "a", policyVersion: "v" } } as unknown as TrustedDomainContext
+  const oldPeriod = { start: "2026-11-12", end: "2026-11-12" }
+  const newPeriod = { start: "2026-11-13", end: "2026-11-13" }
+  const reference = (id: string, period: typeof oldPeriod, version: number) => {
+    const raw: BusinessEvidenceRef = { schema: "sf-evidence-v1", refId: id, installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "hotTopics", recordId: "topic", incarnation: id, version, fields: ["status"], period, projectionDigest: id } }
+    return { ...raw, refDigest: digestSfEvidenceRef(raw) }
+  }
+  const oldRef = reference("old-scope", oldPeriod, 1)
+  const newRef = reference("current-scope", newPeriod, 2)
+  const basis = (ref: typeof oldRef) => ({ sourceRef: ref.refId, sourceIncarnation: ref.target.incarnation, observedVersion: ref.target.version, period: ref.target.period!, evidenceRefs: [ref] })
+  const source = { surface: "dashboard" as const, type: "hotTopics", id: "topic", incarnation: newRef.target.incarnation, version: newRef.target.version, fields: ["status"], period: newPeriod, observedAt: "2026-11-13T00:00:00Z" }
+  const thread = { id: "thread", kind: "comment" as const, ...basis(oldRef), messages: [{ id: "old", incarnation: "old-message", version: 1, authorRef: "author", body: "Yesterday's preserved note", createdAt: "2026-11-12T00:00:00Z" }, { id: "new", incarnation: "new-message", version: 1, authorRef: "author", body: "Today's new reply", createdAt: "2026-11-13T00:00:00Z", sourceContext: basis(newRef) }] }
+  const control = { continuity: false, historical: true }
+  const read = async () => control.historical ? { status: "ok" as const, value: thread } : { status: "denied" as const, reason: "historical-access-revoked" }
+  const mapping: Parameters<typeof createReviewThreadComments>[0]["authorizeSourceMapping"] = async (value, sources) => sources.length === 1 && sources[0]!.incarnation === value.sourceIncarnation && sources[0]!.version === value.observedVersion && digestSfValue(sources[0]!.period) === digestSfValue(value.period)
+  const input = { host: { revalidate: async () => true }, maxMessages: 10, authorizeSourceMapping: mapping }
+  const withoutProducer = createReviewThreadComments({ ...input, threads: { read } })
+  expect((await withoutProducer.capture(thread.id, [source], context)).status).not.toBe("ok")
+  const comments = createReviewThreadComments({ ...input, threads: { read, readHistorical: read }, authorizeSourceContinuity: async (_basis, selected) => control.continuity && digestSfValue(selected) === digestSfValue([source]) })
+  expect((await comments.capture(thread.id, [source], context)).status).not.toBe("ok")
+  control.continuity = true
+  const captured = await comments.capture(thread.id, [source], context)
+  if (captured.status !== "ok") throw new Error(captured.reason)
+  expect(captured.value.map((comment) => comment.sourceRefs[0]!.period)).toEqual([oldPeriod, newPeriod])
+  expect(captured.value.map((comment) => comment.sourceRefs[0]!.incarnation)).toEqual([oldRef.target.incarnation, newRef.target.incarnation])
+  expect(await comments.authorizeComments(context, captured.value)).toBe(true)
+  control.historical = false
+  expect(await comments.authorizeComments(context, captured.value)).toBe(false)
+})
+

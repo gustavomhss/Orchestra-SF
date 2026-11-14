@@ -3,6 +3,7 @@ import { createPlannerForecastInsights } from "../../../product/planner/forecast
 import { createForecastFactsAccess, prepareForecastReview } from "../../../product/routines/forecast.ts"
 import { prepareFactualReview } from "../../../product/routines/review.ts"
 import { createScopedReviewHost } from "../../../product/routines/review-confirmation.ts"
+import { createForecastConfirmationHost, createScopedConfirmationIndex } from "../../../product/routines/confirmation.ts"
 import { createRoutinePlannerFixture, routineJanuary, routinePlannerPeriod } from "./planner-review-fixture.ts"
 
 test("WP09 consumes Planner 12000/6000 differences, budget margin and missing actual without invented savings or reasons", async () => {
@@ -50,10 +51,9 @@ test("real C06 January v7 remains valid after February v8; material changes crea
     const readForecast = async () => {
       const current = await fixture.source("v1")
       return prepareForecastReview({ request: { baseRef: current.refId, candidateRef: current.refId, period: routineJanuary, currency: "USD" }, context: fixture.context,
-        host: { planner: fixture.product.planner, confirmations: async (_request, context) => {
-          const validity = await fixture.confirmations.project(confirmed.id, context)
-          return validity.status === "ok" ? { status: "ok", value: [validity.value, validity.value] } : validity
-        }, revalidate: (_request, context) => fixture.host.revalidate(context) },
+        host: createForecastConfirmationHost({ planner: fixture.product.planner, confirmation: fixture.confirmations,
+          listConfirmationIds: createScopedConfirmationIndex({ resolveScopes: async () => ({ status: "ok", value: [scope, scope] }), confirmation: fixture.confirmations, revalidate: (_request, context) => fixture.host.revalidate(context) }),
+          revalidate: (_request, context) => fixture.host.revalidate(context) }),
       })
     }
     await fixture.editActual("v1", 1, 41000)

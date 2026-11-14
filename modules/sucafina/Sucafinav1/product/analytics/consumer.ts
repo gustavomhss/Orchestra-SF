@@ -56,14 +56,16 @@ export async function readBiDestination(input: {
   if (current.status !== "ok") return current
   const projection = current.value.projection
   const row = projection.values.find((value) => value.id === selection.valueId)
-  if (!row || !row.drilldown || !selection.reference) return { status: "unavailable", reason: "selection-source-unavailable" }
-  if (projection.version !== selection.projectionVersion || projection.engineVersion !== selection.engineVersion || !sameBiContext(projection.context, selection.context) || digestSfValue(row.drilldown) !== digestSfValue(selection.reference)) return { status: "stale", reason: "selection-source-changed" }
-  const resolved = await input.business.resolve(structuredClone(row.drilldown), input.context)
+  if (!row || (!row.drilldown && !row.sourceRefs.length) || !selection.reference) return { status: "unavailable", reason: "selection-source-unavailable" }
+  // The selected origin must be one of this exact current row's canonical refs, never another row or an overview.
+  const reference = [...(row.drilldown ? [row.drilldown] : []), ...row.sourceRefs].find((ref) => digestSfValue(ref) === digestSfValue(selection.reference))
+  if (projection.version !== selection.projectionVersion || projection.engineVersion !== selection.engineVersion || !sameBiContext(projection.context, selection.context) || !reference) return { status: "stale", reason: "selection-source-changed" }
+  const resolved = await input.business.resolve(structuredClone(reference), input.context)
   const source = structuredClone(resolved)
   if (source.state === "revoked") return { status: "denied", reason: "selection-source-revoked" }
   if (source.state === "historical" || source.state === "stale" || source.state === "replaced") return { status: "stale", reason: "selection-source-changed" }
-  if (!decodeSfOperationOutput("sf_source_get", source).ok || source.state !== "fresh" || !source.authorizedProjection || digestSfValue(source.ref) !== digestSfValue(row.drilldown) || source.accessRevision !== input.context.binding.accessRevision) return { status: "unavailable", reason: "selection-source-unavailable" }
-  if (source.currentRef && digestSfValue(source.currentRef) !== digestSfValue(row.drilldown)) return { status: "stale", reason: "selection-source-changed" }
+  if (!decodeSfOperationOutput("sf_source_get", source).ok || source.state !== "fresh" || !source.authorizedProjection || digestSfValue(source.ref) !== digestSfValue(reference) || source.accessRevision !== input.context.binding.accessRevision) return { status: "unavailable", reason: "selection-source-unavailable" }
+  if (source.currentRef && digestSfValue(source.currentRef) !== digestSfValue(reference)) return { status: "stale", reason: "selection-source-changed" }
   if (!await revalidateBiSnapshot(input.source, request, input.context, projection) || !await input.authority.revalidateDomainContext(input.context)) return { status: "denied", reason: "access-changed" }
   return { status: "ok", value: { selection, source } }
 }

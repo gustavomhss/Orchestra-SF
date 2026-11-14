@@ -18,6 +18,7 @@ import { createSfDecisionMemoryVerifier } from "../../../../../../../apps/cli/sr
 import { createSfAnalysisSelectionReaders } from "../../../../../../../apps/cli/src/sucafina-product/analysis-services-readers.ts"
 import { sfAnalysisSourcesAuthorized, sfMemoryEvidence } from "../../../../../../../apps/cli/src/sucafina-product/analysis-memory-evidence.ts"
 import { sfAnalysisPrompt, withoutObservationTimes } from "../../../../../../../apps/cli/src/sucafina-product/analysis-verifier.ts"
+import { createSfStaleAnalysisAccess } from "../../../../../../../apps/cli/src/sucafina-product/analysis-stale-commit.ts"
 import type { SfAnalysisRequest } from "../../../../../../../apps/cli/src/sucafina-product/analysis-verifier.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { domain } from "../../../../runtime/procurement.ts"
@@ -29,7 +30,12 @@ import { enumerateSfSources } from "../../../../product/integration/source-inven
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { createResidentAiBundle } from "../../../../product/ai/resident.ts"
 import { createChoiceSnapshot } from "../../../../product/decisions/choice.ts"
-import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { digestSfContribution, digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
+import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
+import type { SfNativeRunRecord } from "../../../../product/contracts/state.ts"
+import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
+import { createSfRunStore } from "../../../../product/ai/run-store.ts"
+import { sfRunFixture } from "../../wp12/run-fixture.ts"
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
 import type { CostCoverageBasis, DecisionCase, ScenarioResult, CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
 import type { ScenarioOperation } from "../../../../product/contracts/operations.ts"
@@ -79,7 +85,7 @@ test("historical decision recall binds original/current evidence and rejects cha
     const authority = createSfProductAuthority({ installationId: "installation", origin, policyVersion: "policy", persistence,
       identity: () => ({ installationId: "installation", hostId: "memory-test", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
       grants: [{ principalRef: "alice", namespaces: ["cases", "preferences", "atlas", "outbox", "contributions"],
-        operations: ["sf_work_list", "sf_request_read", "sf_case_read"], humanActions: ["decisions.prepare-changes", "analysis.prepare", "analysis.start", "analysis.read"] }],
+        operations: ["sf_work_list", "sf_request_read", "sf_case_read"], humanActions: ["decisions.prepare-changes", "analysis.prepare", "analysis.start", "analysis.cancel", "analysis.read"] }],
       authenticate: async (value, selection) => access.allowed && value.headers.get("authorization") === "alice" && selection
         ? { id: "alice", canWrite: true, roles: [{ surface: selection.surface, role: selection.surface === "procurement" ? "requester" : "admin" }] } : null,
       environment: async () => ({ at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] }),
@@ -213,6 +219,119 @@ test("historical decision recall binds original/current evidence and rejects cha
       expect(await proof.acceptsOutput(output, call)).toEqual({ status: "ok", value: true })
       const excluded = await activeBusiness.caseRecall({ caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }, call)
       expect(excluded).toMatchObject({ status: "ok", matches: [] })
+
+      // Only durable lifecycle metadata is seeded. No native admission, Session,
+      // provider execution or skill-load observation is fabricated by this proof.
+      const fixture = sfRunFixture()
+      if (!fixture.run.native) throw new Error("Unexecuted lifecycle fixture metadata missing")
+      const staleStart = { request: analysis, skillInput: value, model: fixture.run.model }
+      const staleRequest = request()
+      const staleAdmission = await authority.human.admit(staleRequest, "analysis.start", staleStart)
+      if (staleAdmission.status !== "ok") throw new Error(staleAdmission.reason)
+      const staleCall = staleAdmission.value
+      const fixtureRun: SfNativeRunRecord = { ...fixture.run, native: fixture.run.native, caseRef, principalRef: staleCall.binding.principalRef,
+        policyVersion: staleCall.binding.policyVersion, accessRevision: staleCall.binding.accessRevision }
+      const cancelRun: SfNativeRunRecord = { ...fixtureRun, runRef: "unexecuted-cancel-run", native: { ...fixture.run.native,
+        skillReceipt: { ...fixture.run.native.skillReceipt, runId: "unexecuted-cancel-run" } } }
+      const fixtureOutput: ContributionEnvelope = { ...fixture.output, caseRef, evidenceRefs: [original], accessRevision: fixtureRun.accessRevision }
+      fixtureOutput.outputDigest = digestSfContribution(fixtureOutput)
+      const expectedOutput = digestSfValue(fixtureOutput)
+      const staleAccess = createSfStaleAnalysisAccess({ authority, persistence, context: activeBusiness.context, request: staleRequest, start: staleStart,
+        proof: { runRef: fixtureRun.runRef, caseRef, contextFingerprint: fixtureRun.contextFingerprint, evidenceRefs: [original] } })
+      const staleRecord: SfNativeRunRecord = { ...fixtureRun, native: fixture.run.native, version: fixtureRun.version + 1, state: "stale", reason: "source-changed", outputRef: fixtureOutput.id }
+      const cancelAccess = createSfStaleAnalysisAccess({ authority, persistence, context: activeBusiness.context, request: staleRequest, start: staleStart,
+        proof: { runRef: cancelRun.runRef, caseRef, contextFingerprint: cancelRun.contextFingerprint, evidenceRefs: [original] } })
+      let substitutedCancellation: TrustedDomainContext | undefined
+      const cancellation = cancelAccess.wrapStore(createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
+        preflight: cancelAccess.preflight, revalidateForCommit: (record, currentCall, snapshot) => cancelAccess.commitCancellation(record, substitutedCancellation ?? currentCall, snapshot), now: () => at }))
+      try {
+        const prior = await authority.state.read(staleRequest, "contributions", () => null)
+        if (prior.status !== "ok") throw new Error("Stale lifecycle fixture state unavailable")
+        expect((await authority.state.transaction(staleRequest, { namespace: "contributions", expectedStorageVersion: prior.storageVersion,
+          targetRef: `case:${encodeURIComponent(caseRef.id)}:${encodeURIComponent(caseRef.incarnation)}`, targetIncarnation: caseRef.incarnation,
+          idempotencyKey: "unexecuted-stale-lifecycle-fixture", commandDigest: digestSfValue(fixtureRun) }, async (stored) => {
+          stored.nativeRuns ??= {}
+          stored.nativeRuns[fixtureRun.runRef] = fixtureRun
+          stored.nativeRuns[cancelRun.runRef] = cancelRun
+          return { commit: true, value: true }
+        })).status).toBe("ok")
+        const before = await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
+        expect((await staleAccess.preflight(staleRecord, staleCall, fixtureOutput)).status).toBe("ok")
+        expect(await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(before)
+        // A forged historical scope cannot call the commit validator without C08.
+        const detached = await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+        expect((await staleAccess.commit(staleRecord, staleCall, detached, fixtureOutput)).status).toBe("unavailable")
+        const runs = staleAccess.wrapStore(createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
+          preflight: staleAccess.preflight, revalidateForCommit: staleAccess.commit, now: () => at }))
+        expect((await runs.preserveStale(fixtureRun.runRef, "source-changed", fixtureOutput, staleCall)).status).toBe("ok")
+        const preserved = await authority.state.read(staleRequest, "contributions", (stored) => ({ run: stored.nativeRuns?.[fixtureRun.runRef], output: stored.contributions[fixtureOutput.id] }))
+        if (preserved.status !== "ok") throw new Error("Preserved lifecycle fixture unavailable")
+        expect(preserved.value.run).toMatchObject({ state: "stale", version: 4, outputRef: fixtureOutput.id })
+        expect(digestSfValue(preserved.value.output)).toBe(expectedOutput)
+        expect((await activeBusiness.context.resolve(original, staleCall)).state).toBe("historical")
+        expect((await staleAccess.preflight(staleRecord, staleCall, fixtureOutput)).status).toBe("ok")
+        await edit(175)
+        if (!persistence.transactionAll) throw new Error("Real C08 scope unavailable")
+        const raced = await persistence.transactionAll(async (snapshots) => ({ commit: false,
+          value: await staleAccess.commit(staleRecord, staleCall, snapshots.dashboard, fixtureOutput) }))
+        expect(raced).toEqual({ status: "stale", reason: "analysis-stale-source-changed" })
+        const unchanged = await authority.state.read(staleRequest, "contributions", (stored) => stored.contributions[fixtureOutput.id])
+        if (unchanged.status !== "ok") throw new Error("Preserved output unavailable")
+        expect(digestSfValue(unchanged.value)).toBe(expectedOutput)
+        const other = await authority.human.admit(request(), "analysis.start", staleStart)
+        if (other.status !== "ok") throw new Error(other.reason)
+        try { expect((await staleAccess.preflight(staleRecord, other.value, fixtureOutput)).status).toBe("denied") }
+        finally { authority.human.finish(other.value) }
+        expect((await cancellation.transition(cancelRun.runRef, cancelRun.version, "cancelled", "human-cancelled", staleCall)).status).toBe("denied")
+        const cancelPayload = { runRef: cancelRun.runRef }
+        const cancelRequest = request()
+        const cancelAdmission = await authority.human.admit(cancelRequest, "analysis.cancel", cancelPayload)
+        const replacement = await authority.human.admit(request(), "analysis.cancel", cancelPayload)
+        if (cancelAdmission.status !== "ok" || replacement.status !== "ok") throw new Error("Human cancellation authority unavailable")
+        try {
+          // Both contexts are real leases, but the transaction may use only the
+          // exact Request/context admitted for this cancellation preparation.
+          substitutedCancellation = replacement.value
+          expect((await cancellation.transition(cancelRun.runRef, cancelRun.version, "cancelled", "human-cancelled", cancelAdmission.value)).status).toBe("denied")
+        } finally { substitutedCancellation = undefined; authority.human.finish(replacement.value); authority.human.finish(cancelAdmission.value) }
+        const abort = new AbortController()
+        const abortedRequest = new Request(request(), { signal: abort.signal })
+        const aborted = await authority.human.admit(abortedRequest, "analysis.cancel", cancelPayload)
+        if (aborted.status !== "ok") throw new Error(aborted.reason)
+        abort.abort()
+        try { expect((await cancellation.transition(cancelRun.runRef, cancelRun.version, "cancelled", "human-cancelled", aborted.value)).status).toBe("denied") }
+        finally { authority.human.finish(aborted.value) }
+        const version = await authority.state.read(staleRequest, "cases", () => null)
+        if (version.status !== "ok") throw new Error("Stale lifecycle case unavailable")
+        const revoke = await authority.state.transaction(staleRequest, { namespace: "cases", expectedStorageVersion: version.storageVersion,
+          targetRef: `case:${encodeURIComponent(caseRef.id)}:${encodeURIComponent(caseRef.incarnation)}`, targetIncarnation: caseRef.incarnation,
+          idempotencyKey: "revoke-stale-case", commandDigest: digestSfValue("revoke-stale-case") }, async (stored) => {
+          stored.cases[caseRef.id]!.participants = []
+          return { commit: true, value: true }
+        })
+        expect(revoke.status).toBe("ok")
+        expect((await staleAccess.preflight(staleRecord, staleCall, fixtureOutput)).status).toBe("denied")
+        const removed = await authority.human.admit(request(), "analysis.cancel", cancelPayload)
+        if (removed.status !== "ok") throw new Error(removed.reason)
+        try { expect((await cancellation.transition(cancelRun.runRef, cancelRun.version, "cancelled", "human-cancelled", removed.value)).status).toBe("denied") }
+        finally { authority.human.finish(removed.value) }
+        // Restore fixture membership through the raw source driver so subsequent
+        // existing revocation/capture tests continue from the same original case.
+        await persistence.transaction("dashboard", async (snapshot) => {
+          object(object(object(snapshot.data.__sfProductV1).cases)[caseRef.id]).participants = ["alice"]
+          return { commit: true, value: undefined }
+        })
+        const currentCancel = await authority.human.admit(cancelRequest, "analysis.cancel", cancelPayload)
+        if (currentCancel.status !== "ok") throw new Error(currentCancel.reason)
+        try {
+          expect(cancelRequest).not.toBe(staleRequest)
+          expect((await cancellation.transition(cancelRun.runRef, cancelRun.version, "cancelled", "human-cancelled", currentCancel.value)).status).toBe("ok")
+          const cancelled = await authority.state.read(cancelRequest, "contributions", (stored) => stored.nativeRuns?.[cancelRun.runRef])
+          if (cancelled.status !== "ok") throw new Error("Cancelled fixture lifecycle unavailable")
+          expect(cancelled.value).toMatchObject({ state: "cancelled", version: 4, native: cancelRun.native })
+          expect(cancelled.value?.outputRef).toBeUndefined()
+        } finally { authority.human.finish(currentCancel.value) }
+      } finally { authority.human.finish(staleCall) }
       await edit(180)
       const changed = await activeBusiness.context.resolve(original, call)
       expect(changed.state).toBe("historical")
@@ -228,6 +347,10 @@ test("historical decision recall binds original/current evidence and rejects cha
         return { commit: true, value: undefined }
       })
       expect((await atlas.memory.recall(caseRef, call)).status).toBe("unavailable")
+      const corrupted = await authority.human.admit(staleRequest, "analysis.start", staleStart)
+      if (corrupted.status !== "ok") throw new Error(corrupted.reason)
+      try { expect((await staleAccess.preflight(staleRecord, corrupted.value, fixtureOutput)).status).toBe("denied") }
+      finally { authority.human.finish(corrupted.value) }
       access.allowed = false
       expect((await producer.prepare(value, analysis, call)).status).toBe("unavailable")
       expect((await verifier.verify(value, analysis, call)).status).toBe("unavailable")

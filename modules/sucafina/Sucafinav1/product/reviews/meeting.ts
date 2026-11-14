@@ -10,9 +10,10 @@ import { compareReviews } from "./compare.ts"
 import { reviewDecisionEvidence, reviewDecisionLines, validReviewDecision } from "./decision.ts"
 import { renderCapturedMeetingChart } from "./meeting-chart.ts"
 import type { ReviewChart } from "./port.ts"
-import { matchesSelectedSources } from "./references.ts"
+import { selectedReviewComments } from "./comment-selection.ts"
 import type { ReviewComparisonRead, createReviewComparisonPort } from "./comparison-port.ts"
 import { canonicalSfValue } from "../contracts/canonical.ts"
+import type { ReviewCurrentThread, createReviewCurrentThread } from "./current-thread.ts"
 
 export function createMeetingView(input: {
   reviews: ReturnType<typeof createReviewPort>
@@ -21,10 +22,11 @@ export function createMeetingView(input: {
   checkUpdate: (reviewRef: string, context: TrustedDomainContext) => Promise<PortResult<{ available: boolean }>>
   requestUpdate: (reviewRef: string) => void
   comparisons?: Pick<ReturnType<typeof createReviewComparisonPort>, "read">
+  currentThread?: ReturnType<typeof createReviewCurrentThread>
   openSource?: (reference: BusinessEvidenceRef) => void | Promise<void>
   openReviewSection?: (reviewRef: string, sectionId: string) => void | Promise<void>
 }) {
-  return createMeetingViewFromReads({ reviewRef: input.reviewRef, read: (ref) => input.reviews.read(ref, input.context), checkUpdate: (ref) => input.checkUpdate(ref, input.context), requestUpdate: input.requestUpdate, openSource: input.openSource, openReviewSection: input.openReviewSection, ...(input.comparisons ? { readComparison: (ref: string) => input.comparisons!.read(ref, input.context) } : {}) })
+  return createMeetingViewFromReads({ reviewRef: input.reviewRef, read: (ref) => input.reviews.read(ref, input.context), checkUpdate: (ref) => input.checkUpdate(ref, input.context), requestUpdate: input.requestUpdate, openSource: input.openSource, openReviewSection: input.openReviewSection, ...(input.comparisons ? { readComparison: (ref: string) => input.comparisons!.read(ref, input.context) } : {}), ...(input.currentThread ? { readCurrentThread: (ref: string, commentId: string) => input.currentThread!(ref, commentId, input.context) } : {}) })
 }
 
 /** Browser clients obtain a fresh authenticated read for every navigation. */
@@ -34,6 +36,7 @@ export function createMeetingViewFromReads(input: {
   checkUpdate: (reviewRef: string) => Promise<PortResult<{ available: boolean }>>
   requestUpdate: (reviewRef: string) => void
   readComparison?: (reviewRef: string) => Promise<PortResult<ReviewComparisonRead>>
+  readCurrentThread?: (reviewRef: string, commentId: string) => Promise<PortResult<ReviewCurrentThread>>
   /** The host opens evidence through its current authorized source resolver. */
   openSource?: (reference: BusinessEvidenceRef) => void | Promise<void>
   openReviewSection?: (reviewRef: string, sectionId: string) => void | Promise<void>
@@ -137,6 +140,47 @@ export function createMeetingViewFromReads(input: {
     }
     parent.append(list)
   }
+  const appendCurrentThread = (parent: HTMLElement, reviewRef: string, comment: Pick<PreservedReview["comments"][number], "id" | "version" | "authorRef" | "createdAt" | "content">) => {
+    if (!input.readCurrentThread || !comment.id.startsWith("thread-message:")) return
+    const button = document.createElement("button")
+    button.type = "button"
+    button.textContent = "Open current conversation"
+    const panel = document.createElement("section")
+    panel.setAttribute("aria-label", "Current conversation")
+    button.addEventListener("click", () => {
+      const turn = ++generation
+      panel.replaceChildren()
+      status.textContent = "Checking current conversation access…"
+      void (async () => {
+        const reviewed = await input.read(reviewRef)
+        if (turn !== generation) return
+        const preserved = reviewed.status === "ok" ? reviewed.value.comments.find((value) => value.id === comment.id && value.version === comment.version) : undefined
+        if (!preserved || preserved.content !== comment.content || preserved.authorRef !== comment.authorRef || preserved.createdAt !== comment.createdAt) {
+          navigationUnavailable("Review or conversation access is unavailable.")
+          return
+        }
+        const current = await input.readCurrentThread!(reviewRef, comment.id)
+        if (turn !== generation) return
+        if (current.status !== "ok" || current.value.view !== "current") {
+          navigationUnavailable("Current conversation is unavailable under current access.")
+          return
+        }
+        const heading = document.createElement("h4")
+        heading.textContent = "Current conversation"
+        const explanation = document.createElement("p")
+        explanation.textContent = "This is the current C06 conversation. The preserved comment above retains its captured version."
+        const messages = document.createElement("ul")
+        current.value.messages.forEach((message) => {
+          const item = document.createElement("li")
+          item.textContent = `${message.authorRef} · ${message.createdAt} · v${message.version}: ${message.body}`
+          messages.append(item)
+        })
+        panel.replaceChildren(heading, explanation, messages)
+        status.textContent = "Current conversation opened; the preserved review is unchanged."
+      })().catch(() => { if (turn === generation) navigationUnavailable("Current conversation is unavailable.") })
+    })
+    parent.append(" ", button, panel)
+  }
   const show = async (target: number) => {
     const turn = ++generation
     content.replaceChildren()
@@ -219,14 +263,18 @@ export function createMeetingViewFromReads(input: {
       list.append(item)
     }
     content.append(list)
-    const comments = review.comments.filter((comment) => matchesSelectedSources(comment.sourceRefs, section.sourceRefs))
+    const comments = selectedReviewComments(review, [section.id])
+    if (!comments) { navigationUnavailable("Comment association is unavailable."); return false }
     if (comments.length) {
       const heading = document.createElement("h3")
       heading.textContent = "Preserved comments"
       const list = document.createElement("ul")
       comments.forEach((comment) => {
         const item = document.createElement("li")
-        item.textContent = `${comment.authorRef} · ${comment.createdAt} · v${comment.version}: ${comment.content}`
+        const captured = document.createElement("span")
+        captured.textContent = `${comment.authorRef} · ${comment.createdAt} · v${comment.version}: ${comment.content}`
+        item.append(captured)
+        appendCurrentThread(item, review.id, comment)
         list.append(item)
       })
       content.append(heading, list)
@@ -327,7 +375,10 @@ export function createMeetingViewFromReads(input: {
           const comments = document.createElement("ul")
           differences.comments.forEach((comment) => {
             const item = document.createElement("li")
-            item.textContent = `${comment.reviewId} · ${comment.authorRef} · ${comment.createdAt} · v${comment.version}: ${comment.content}`
+            const captured = document.createElement("span")
+            captured.textContent = `${comment.reviewId} · ${comment.authorRef} · ${comment.createdAt} · v${comment.version}: ${comment.content}`
+            item.append(captured)
+            appendCurrentThread(item, comment.reviewId, comment)
             comments.append(item)
           })
           content.append(heading, comments)
@@ -403,3 +454,4 @@ function sectionEvidence(section: PreservedReview["sections"][number]): readonly
     ...(projection.reviewOutcomeComparison && validOutcomeComparison(projection.reviewOutcomeComparison) ? [...projection.reviewOutcomeComparison.baselineRefs, ...projection.reviewOutcomeComparison.sourceRefs] : []),
   ]
 }
+

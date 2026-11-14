@@ -16,8 +16,8 @@ test("host builds persisted provenance from the observed assistant model and ski
   expect(result.value.runProvenance).toMatchObject({ ...receipt, actualModel: "provider/model", contextFingerprint: "context" })
   expect(result.value.outputDigest).toBe(digestSfContribution(result.value))
   expect(buildSfContribution({ ...input, actualModel: { providerID: "provider", id: "other" } })).toEqual({ status: "denied", reason: "invalid-native-output-context" })
-  expect(buildSfContribution({ ...input, candidate: { ...candidate, runProvenance: {} } })).toEqual({ status: "denied", reason: "invalid-native-output" })
-  expect(buildSfContribution({ ...input, candidate: { ...candidate, payload: {} } })).toEqual({ status: "denied", reason: "invalid-native-output" })
+  expect(buildSfContribution({ ...input, candidate: { ...candidate, runProvenance: {} } })).toEqual({ status: "failed", reason: "invalid-native-output" })
+  expect(buildSfContribution({ ...input, candidate: { ...candidate, payload: {} } })).toEqual({ status: "failed", reason: "invalid-native-output" })
   expect(buildSfContribution({ ...input, run: { ...run, native: { sessionID: "session", skillReceipt: { ...receipt, runId: "another-run" } } } })).toEqual({ status: "denied", reason: "invalid-native-output-context" })
   expect(buildSfContribution({ ...input, run: { ...run, native: { sessionID: "session", skillReceipt: { ...receipt, sourceDigest: "9".repeat(64) } } } })).toEqual({ status: "denied", reason: "invalid-native-output-context" })
 })
@@ -37,7 +37,7 @@ test("durable output must belong to the active skill and observed model", () => 
   const anotherSkill = { ...fixture.skill, id: "different-skill", outputSchemaRefs: ["MatchExplanation"] }
   const wrongGrant = { ...fixture.run, selection: { ...fixture.run.selection, skills: [{ ...fixture.skill, outputSchemaRefs: ["FinancialAnalysis"] }, anotherSkill] } }
   expect(matchesSfRunOutput(wrongGrant, fixture.output)).toBe(false)
-  expect(buildSfContribution({ ...input, run: wrongGrant })).toEqual({ status: "denied", reason: "native-output-kind-not-granted" })
+  expect(buildSfContribution({ ...input, run: wrongGrant })).toEqual({ status: "failed", reason: "native-output-kind-not-granted" })
   const forgedModel = { ...fixture.output, runProvenance: { ...fixture.output.runProvenance, actualModel: "provider/unobserved" } }
   forgedModel.outputDigest = digestSfContribution(forgedModel)
   expect(matchesSfRunOutput(fixture.run, forgedModel)).toBe(false)

@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { renderPreservedReview } from "../../../product/reviews/render.ts"
 import { createReport } from "../../../runtime/reports.ts"
 import { exportFixture, extractReportText } from "./export-fixture.ts"
+import { historicalExportFixture } from "./historical-export-fixture.ts"
 
 if (process.env.GITHUB_ACTIONS !== "true") throw new Error("Generate WP07 export fixtures only in hosted GitHub Actions")
 
@@ -30,5 +31,21 @@ for (const format of ["pptx", "docx"] as const) {
     files.push({ name, sha256: createHash("sha256").update(result.bytes).digest("hex"), bytes: result.bytes.length, format, kind, selectedRecords: kind === "preserved" ? 26 : 25, slides: extracted.pages, figures: extracted.figures, extractedTextSha256: createHash("sha256").update(extracted.text).digest("hex") })
   }
 }
-await Bun.write(join(directory, "manifest.json"), JSON.stringify({ schema: "wp07-export-inspection-v1", fixture: "explicit synthetic data; 25 projects, long notes, monthly financial trajectory, empty section and preserved human comment", productSha: process.env.WP07_PRODUCT_SHA ?? process.env.GITHUB_SHA ?? "unavailable", runId: process.env.GITHUB_RUN_ID ?? "unavailable", runAttempt: process.env.GITHUB_RUN_ATTEMPT ?? "unavailable", contentExtraction: "passed", visualInspection: "pending; render and inspect these exact files", files }, null, 2))
+const historical = historicalExportFixture()
+for (const format of ["pptx", "docx"] as const) {
+  const result = await renderPreservedReview(historical.review, { title: "WP07 preserved historical comments", format, sectionRefs: historical.sectionRefs })
+  if (!result.ok) throw new Error(`historical ${format} generation failed`)
+  const extracted = await extractReportText(result.bytes, format)
+  const text = extracted.text.replace(/\s/gu, "")
+  for (const marker of ["END-HISTORICAL-A-V3", "END-HISTORICAL-B-V1", "captured-amount:1320USD", "actual:unavailableUSD"]) {
+    if (text.split(marker).length - 1 !== 1) throw new Error(`${format}: historical material incomplete or duplicated: ${marker}`)
+  }
+  if (text.includes(historical.unselected.content) || text.includes("captured-amount:1400USD")) throw new Error(`${format}: unselected or live replacement content leaked`)
+  const name = `historical-comments.${format}`
+  await Bun.write(join(directory, name), result.bytes)
+  await Bun.write(join(directory, `historical-${format}.txt`), extracted.text)
+  files.push({ name, sha256: createHash("sha256").update(result.bytes).digest("hex"), bytes: result.bytes.length, format, kind: "historical-comments", selectedRecords: 1, slides: extracted.pages, figures: extracted.figures, extractedTextSha256: createHash("sha256").update(extracted.text).digest("hex") })
+}
+await Bun.write(join(directory, "manifest.json"), JSON.stringify({ schema: "wp07-export-inspection-v1", fixture: "explicit synthetic data; original 25-project corpus unchanged; two additional historical-comment files demonstrate exact selected versions across actor scopes, not native execution or production historical ACL", productSha: process.env.WP07_PRODUCT_SHA ?? process.env.GITHUB_SHA ?? "unavailable", runId: process.env.GITHUB_RUN_ID ?? "unavailable", runAttempt: process.env.GITHUB_RUN_ATTEMPT ?? "unavailable", contentExtraction: "passed", visualInspection: "pending; render and inspect these exact files", files }, null, 2))
 console.log(JSON.stringify({ status: "generated", directory, files: files.map((file) => ({ name: file.name, sha256: file.sha256, slides: file.slides })) }))
+

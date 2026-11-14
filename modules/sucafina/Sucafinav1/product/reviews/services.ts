@@ -15,7 +15,7 @@ export function createReviewServices(input: {
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
   authority: SfDomainValidation
   evidence: Pick<BusinessContextService, "resolve">
-  selection: Pick<ReviewHost, "select" | "authorizeOutcomeComparison" | "authorizeOutcome" | "authorizeDecision" | "authorizeSections" | "authorizeComments" | "authorizeSensitivity" | "revalidate">
+  selection: Pick<ReviewHost, "select" | "isHistoricalSelection" | "authorizeOutcomeComparison" | "authorizeOutcome" | "authorizeDecision" | "authorizeSections" | "authorizeComments" | "authorizeSensitivity" | "revalidate">
   creationTarget: { ref: string; incarnation: string }
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   requiredAuthority: readonly string[]
@@ -45,3 +45,4 @@ export function createReviewServices(input: {
   const artifacts = createReviewArtifactStorage({ state: input.state, host: input.host, reviews, creationTarget: input.creationTarget, operationIdentity: (context, entry) => input.operationIdentity(context) ?? (context.kind === "native" ? input.authority.receiptFor(context, "sf_report_prepare", digestSfValue({ reviewRef: entry.reviewRef, format: entry.format, sectionRefs: entry.sectionRefs }))?.callId : undefined), maxBytes: input.maxBytes })
   return { reviews, artifacts, descriptors: createReviewCapabilities({ reviews, artifacts, authority: input.authority, requiredAuthority: input.requiredAuthority }) }
 }
+

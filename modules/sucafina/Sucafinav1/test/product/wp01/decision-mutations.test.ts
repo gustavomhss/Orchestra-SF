@@ -3,6 +3,7 @@ import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { decisionEditScript } from "../../../product/ui/decision-edit.ts"
 import { decisionApplyScript } from "../../../product/ui/decision-apply.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createRealReviewFixture } from "./real-review-fixture.ts"
 
 // These are transport fault fixtures for the shipped consumers. A fixture's
 // acknowledgement/counter is not a domain receipt or proof of durable idempotence.
@@ -13,6 +14,12 @@ async function within<T>(operation: Promise<T>, step: string): Promise<T> {
   finally { clearTimeout(timer) }
 }
 beforeAll(async () => {
+  const source = await createRealReviewFixture()
+  try {
+    review = source.review
+    applyContext = { ...source.request, surface: review.surface, expectedVersion: review.expectedVersion }
+    apply = `<article data-decision-apply data-context='${JSON.stringify(applyContext)}'><h4>Prepared change</h4><button type="button" data-review-change>Review current changes</button><div data-change-review></div><label><input type="checkbox" data-change-confirm disabled>I reviewed these changes</label><button type="button" data-apply-change disabled>Apply reviewed change</button><p data-change-status role="status"></p><form data-change-guard hidden></form></article><script>${decisionApplyScript}</script>`
+  } finally { await source.close() }
   browser = await launchWp01Browser()
 }, 35000)
 afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25000)
@@ -20,9 +27,11 @@ afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25000)
 const caseRef = { id: "consumer-case", incarnation: "consumer-incarnation", version: 1 }
 const editContext = { caseRef, sourceRefs: [], criteria: [{ id: "criterion", required: true }] }
 const edit = (objective = "Original objective", version = 1) => `<form data-decision-edit data-context='${JSON.stringify({ ...editContext, caseRef: { ...caseRef, version } })}'><label>Decision objective<input name="objective" required value="${objective}"></label><label>Start<input name="start" type="date" required value="2027-01-01"></label><label>End<input name="end" type="date" required value="2027-12-31"></label><label>Currency<input name="currency" required value="USD"></label><label>Criterion<input name="criterion-0" required value="Cost"></label><input name="unavailable" value="Restricted control" disabled><button>Save decision</button><p role="status"></p></form><script>${decisionEditScript}</script>`
-const applyContext = { caseRef, choiceId: "choice", changeId: "change", surface: "planner", expectedVersion: 7 }
-const apply = `<article data-decision-apply data-context='${JSON.stringify(applyContext)}'><h4>Prepared change</h4><button type="button" data-review-change>Review current changes</button><div data-change-review></div><label><input type="checkbox" data-change-confirm disabled>I reviewed these changes</label><button type="button" data-apply-change disabled>Apply reviewed change</button><p data-change-status role="status"></p><form data-change-guard hidden></form></article><script>${decisionApplyScript}</script>`
-const review = { changeId: "change", choiceId: "choice", surface: "planner", target: { type: "line", id: "line", label: "Authorized planning line" }, expectedVersion: 7, state: "planned", fields: [{ field: "amount", before: 100, after: 120 }] }
+// The response snapshot comes from the real prepared-review producer. The server below
+// still injects transport outcomes only; its acknowledgement is not a C12 receipt proof.
+let review: Awaited<ReturnType<typeof createRealReviewFixture>>["review"]
+let applyContext: { caseRef: { id: string; incarnation: string; version: number }; choiceId: string; changeId: string; surface: string; expectedVersion: number }
+let apply: string
 const ok = (value: unknown = {}) => Response.json({ status: "ok", value })
 const frames = (page: Page) => page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
 async function fixture(body: string, respond: (request: Request) => Response | undefined | Promise<Response | undefined>, check: (page: Page) => Promise<void>, release?: () => void) {
@@ -164,10 +173,10 @@ for (const outcome of ["confirmed", "conflict"] as const) test(`prepared applica
     seen.push({ body, key: request.headers.get("idempotency-key") })
     if (seen.length === 1) { entered(); await wait; return new Response("delivery interrupted") }
     if (outcome === "conflict") return Response.json({ status: "conflict" }, { status: 409 })
-    applied = true; return ok({ receiptId: "consumer-receipt", surface: "planner", version: 8 })
+    applied = true; return ok({ receiptId: "consumer-receipt", surface: applyContext.surface, version: applyContext.expectedVersion + 1 })
   }, async (page) => {
     await page.getByRole("button", { name: "Review current changes", exact: true }).click()
-    await page.getByText("amount: 100 → 120", { exact: true }).waitFor()
+    await page.getByText("action: Original action → Reviewed action", { exact: true }).waitFor()
     await page.getByLabel("I reviewed these changes", { exact: true }).check()
     await page.getByRole("button", { name: "Apply reviewed change", exact: true }).click()
     await within(started, "apply request entered")
@@ -186,8 +195,8 @@ for (const outcome of ["confirmed", "conflict"] as const) test(`prepared applica
       expect(await page.locator("[data-change-guard]").getAttribute("data-dirty")).toBe("true")
     }
     expect(seen).toHaveLength(2); expect(seen[1]).toEqual(seen[0]); expect(reviewReads).toBe(1)
-    expect(JSON.parse(seen[0]!.body)).toEqual({ caseRef, choiceId: "choice", changeId: "change" })
-    expect(JSON.parse(seen[0]!.body)).not.toHaveProperty("reviewDigest")
+    expect(JSON.parse(seen[0]!.body)).toEqual({ caseRef: applyContext.caseRef, choiceId: applyContext.choiceId, changeId: applyContext.changeId, reviewDigest: review.reviewDigest })
+    expect(JSON.parse(seen[0]!.body).reviewDigest).toBe(review.reviewDigest)
   }, release)
 }, 30000)
 
@@ -199,12 +208,12 @@ for (const status of [401, 403]) test(`prepared application ${status} clears its
     applies++; return Response.json({ status: "denied" }, { status })
   }, async (page) => {
     await page.getByRole("button", { name: "Review current changes", exact: true }).click()
-    await page.getByText("amount: 100 → 120", { exact: true }).waitFor()
+    await page.getByText("action: Original action → Reviewed action", { exact: true }).waitFor()
     await page.getByLabel("I reviewed these changes", { exact: true }).check()
     await page.getByRole("button", { name: "Apply reviewed change", exact: true }).click()
     await page.getByText("Your access changed. Reload before reviewing or applying this change.", { exact: true }).waitFor()
     expect(await page.locator("[data-context], [data-change-review], button, input").count()).toBe(0)
-    expect(await page.locator("body").innerText()).not.toContain("100 → 120")
+    expect(await page.locator("body").innerText()).not.toContain("Original action → Reviewed action")
     expect(applies).toBe(1)
   })
 }, 30000)
@@ -221,7 +230,7 @@ test("a late prepared-change review cannot repopulate the revoked entry", async 
     await page.evaluate(() => dispatchEvent(new CustomEvent("sf-access-revoked")))
     release(); const response = await pending; expect(await within(response.finished(), "review finished")).toBeNull(); await frames(page)
     expect(await page.locator("[data-context], [data-change-review], button, input").count()).toBe(0)
-    expect(await page.locator("body").innerText()).not.toContain("Authorized planning line")
+    expect(await page.locator("body").innerText()).not.toContain("Original action")
   }, release)
 }, 30000)
 
@@ -245,7 +254,7 @@ test("an initial apply conflict after domain receipt observation remains unconfi
     return Response.json({ status: "conflict", reason: "receipt-outcome-mismatch" }, { status: 409 })
   }, async (page) => {
     await page.getByRole("button", { name: "Review current changes", exact: true }).click()
-    await page.getByText("amount: 100 → 120", { exact: true }).waitFor()
+    await page.getByText("action: Original action → Reviewed action", { exact: true }).waitFor()
     await page.getByLabel("I reviewed these changes", { exact: true }).check()
     await page.getByRole("button", { name: "Apply reviewed change", exact: true }).click()
     await page.getByText("its outcome is still unconfirmed", { exact: false }).waitFor()
@@ -256,5 +265,28 @@ test("an initial apply conflict after domain receipt observation remains unconfi
     await page.getByRole("button", { name: "Retry same application", exact: true }).click()
     await page.getByText("its outcome is still unconfirmed", { exact: false }).waitFor()
     expect(seen).toHaveLength(2); expect(seen[1]).toEqual(seen[0])
+  })
+}, 30000)
+
+for (const proof of ["missing", "malformed", "stale"] as const) test(`shared Apply refuses a ${proof} review proof before enabling confirmation`, async () => {
+  let applies = 0, reads = 0
+  await fixture(apply, (request) => {
+    if (request.method !== "POST") return
+    if (new URL(request.url).searchParams.get("sf") === "decision-review") {
+      reads++
+      const { reviewDigest, ...withoutProof } = review
+      return ok(proof === "missing" ? withoutProof : proof === "malformed" ? { ...review, reviewDigest: reviewDigest.slice(1) } : { ...review, expectedVersion: review.expectedVersion + 1 })
+    }
+    applies++; return ok()
+  }, async (page) => {
+    await page.getByRole("button", { name: "Review current changes", exact: true }).click()
+    await page.getByText("Current change unavailable or stale.", { exact: false }).waitFor()
+    expect(await page.locator("[data-change-confirm]").isDisabled()).toBe(true)
+    expect(await page.locator("[data-apply-change]").isDisabled()).toBe(true)
+    expect(await page.locator("[data-change-guard]").getAttribute("data-dirty")).toBeNull()
+    await page.locator("[data-apply-change]").evaluate((node) => node.dispatchEvent(new MouseEvent("click", { bubbles: true })))
+    await frames(page)
+    expect(reads).toBe(1)
+    expect(applies).toBe(0)
   })
 }, 30000)

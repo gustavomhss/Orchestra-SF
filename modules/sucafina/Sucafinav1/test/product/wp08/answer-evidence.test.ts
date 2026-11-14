@@ -20,8 +20,8 @@ test("human answer evidence is a stable claim and disappears when access is revo
   const threadHistoryWrites = new WeakSet<object>()
   const source = { schema: "sf-evidence-v1", refId: "source", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "line", recordId: "line-A", incarnation: "inc-A", version: 1, fields: ["amount"], period: { start: "2027-01-01", end: "2027-01-31" }, projectionDigest: "b".repeat(64) } } as const
   try {
-    // The canonical provider does not expose the history guard; this fixture proves history/evidence behavior only.
-    const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async (request) => {
+    // The same host-private callback set is shared by the canonical provider and history writer.
+    const state = createSfProductState({ threadHistoryWrites, persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async (request) => {
       const principalRef = request.headers.get("x-test-principal")
       return access.allowed && (principalRef === "A" || principalRef === "B") ? { principalRef, policyVersion: "policy", accessRevision: "access" } : undefined
     } })

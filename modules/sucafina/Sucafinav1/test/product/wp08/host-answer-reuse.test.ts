@@ -71,7 +71,8 @@ test("host-created capabilities consume a confirmed answer through shared dispat
       const source = await sources.resolveDashboardSource(ref.refId, context)
       return { state: source.status === "ok" && digestSfValue(source.value.evidence) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
-    const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async (candidate) => current.allowed && candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
+    const caseSelectionWrites = new WeakSet<object>()
+    const state = createSfProductState({ caseSelectionWrites, persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async (candidate) => current.allowed && candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
     const source = issued.value.evidence
     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
     const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
@@ -88,7 +89,7 @@ test("host-created capabilities consume a confirmed answer through shared dispat
       const projected = await dashboard.read({ selectionRef: issued.value.selectionRef, fields: ["signals"], period: selectedPeriod }, context)
       return projected.status === "ok" && projected.value.values.length === 0 && projected.value.missing.length === 0 ? { status: "ok", signals: [] } : { status: "unavailable" }
     }
-    const factory = createCollaborationHost({ host, state, human, creationTarget, scopedSources: persistence, evidence, cases, workCaseAuthority: authorizeCase, issueForActor, prepareReissueScope: observer.prepareReissueScope, caseSelectionWrites: new WeakSet<object>(), workSignals, procurement: { list: async () => ({ status: "unavailable", reason: "not-selected" }) }, collections: { resolveRequestCollection: async () => ({ status: "unavailable", reason: "not-selected" }) }, confirmationSource: observer, authority, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now: () => at })
+    const factory = createCollaborationHost({ host, state, human, creationTarget, scopedSources: persistence, evidence, cases, workCaseAuthority: authorizeCase, issueForActor, prepareReissueScope: observer.prepareReissueScope, caseSelectionWrites, workSignals, procurement: { list: async () => ({ status: "unavailable", reason: "not-selected" }) }, collections: { resolveRequestCollection: async () => ({ status: "unavailable", reason: "not-selected" }) }, confirmationSource: observer, authority, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now: () => at })
     if (!factory.caseSelection) throw new Error("case selection unavailable")
     const selectionDraft = { caseRef: encodeCaseRef(decision), period: workPeriod, sourceRefs: [source] }
     const selectionMutation = { expectedStorageVersion: 0, idempotencyKey: "select-January-answers" }
@@ -163,3 +164,4 @@ test("host-created capabilities consume a confirmed answer through shared dispat
     await rm(directory, { recursive: true, force: true })
   }
 })
+

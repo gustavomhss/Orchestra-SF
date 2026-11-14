@@ -9,6 +9,8 @@ import type { CollaborationMutationFence } from "./mutation-fence.ts"
 import type { CollaborationHumanAuthority } from "./human.ts"
 import { createRecipientCommitCheck } from "./recipient-authority.ts"
 import type { CollaborationRecipientCommitCheck } from "./recipient-authority.ts"
+import { threadMessageContext } from "./thread-context.ts"
+import type { ThreadSourceContext } from "./thread-context.ts"
 
 export type CollaborationThread = {
   id: string
@@ -19,7 +21,7 @@ export type CollaborationThread = {
   period: Period
   recipientRef?: string
   state: "open" | "resolved"
-  messages: readonly { id: string; incarnation: string; version: number; authorRef: string; body: string; createdAt: string }[]
+  messages: readonly { id: string; incarnation: string; version: number; authorRef: string; body: string; createdAt: string; sourceContext?: ThreadSourceContext }[]
   evidenceRefs: readonly BusinessEvidenceRef[]
 }
 type Draft = Pick<CollaborationThread, "kind" | "sourceRef" | "sourceIncarnation" | "observedVersion" | "period" | "recipientRef" | "evidenceRefs"> & { body: string }
@@ -120,7 +122,7 @@ function publicThreadProjection(thread: CollaborationThread): CollaborationThrea
     period: thread.period,
     ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}),
     state: thread.state,
-    messages: thread.messages.map(({ id, incarnation, version, authorRef, body, createdAt }) => ({ id, incarnation, version, authorRef, body, createdAt })),
+    messages: thread.messages.map(({ id, incarnation, version, authorRef, body, createdAt, sourceContext }) => ({ id, incarnation, version, authorRef, body, createdAt, ...(sourceContext ? { sourceContext } : {}) })),
     evidenceRefs: thread.evidenceRefs,
   }
 }
@@ -140,6 +142,7 @@ export function isThread(value: unknown): value is CollaborationThread {
     if (!value || typeof value !== "object") return false
     const message = value as Record<string, unknown>
     return [message.id, message.incarnation, message.authorRef, message.body, message.createdAt].every((part) => typeof part === "string" && !!part.trim()) && Number.isSafeInteger(message.version) && Number(message.version) > 0
-  }) && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).id)).size === thread.messages.length && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).incarnation)).size === thread.messages.length
+  }) && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).id)).size === thread.messages.length && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).incarnation)).size === thread.messages.length && thread.messages.every((message) => !!threadMessageContext(value as CollaborationThread, message as CollaborationThread["messages"][number]))
 }
+
 

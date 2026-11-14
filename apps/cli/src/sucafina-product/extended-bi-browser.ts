@@ -142,6 +142,7 @@ if (root) {
         try {
         const source = new URL(location.href)
         source.search = new URLSearchParams({ sf: "bi-source", selectionRef: selected.selectionRef, viewId: request.value.viewId, start: request.value.period.start, end: request.value.period.end, valueId: selected.valueId }).toString()
+        if (selected.reference) source.searchParams.set("referenceDigest", selected.reference.refDigest)
         const found = await readJson(source, active)
         if (!found) return
         const opened = found.response, value = found.body

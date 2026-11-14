@@ -15,8 +15,11 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
   section.append(heading)
   const summary = document.createElement("p")
   const qualifier = data.status === "complete" ? "Completa" : `Condicionada ou indisponível (${data.status})`
-  summary.textContent = `${qualifier} · ${data.currency} · ${data.horizon.start} – ${data.horizon.end} · subtotal conhecido: ${data.knownSubtotal ?? "indisponível"} · total: ${data.total ?? "indisponível"} · diferença conhecida: ${data.difference ?? "indisponível"}`
+  summary.textContent = `${qualifier} · ${data.currency} · ${data.horizon.start} – ${data.horizon.end} · subtotal conhecido: ${data.knownSubtotal ?? "indisponível"} · total: ${data.total ?? "indisponível"} · diferença conhecida (alternativa − referência): ${data.difference ?? "indisponível"}`
+  const orientation = document.createElement("p")
+  orientation.textContent = `Comparação de custos: alternativa ${comparison.alternativeResultRef} menos referência ${comparison.baselineResultRef}. Diferença negativa indica custo conhecido menor da alternativa; positiva indica custo conhecido maior. A cobertura determina se a comparação é completa.`
   section.append(summary)
+  section.append(orientation)
   const timelineHeading = document.createElement("h3")
   timelineHeading.textContent = "Períodos dos componentes"
   section.append(timelineHeading)

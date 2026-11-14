@@ -7,14 +7,15 @@ import { reviewDecisionEvidence } from "./decision.ts"
 import { reviewChartEvidence } from "./port.ts"
 import { validReviewDecision } from "./decision.ts"
 import { validReviewOutcome, validOutcomeComparison } from "./outcome.ts"
-import { matchesSelectedSources } from "./references.ts"
+import { selectedReviewComments } from "./comment-selection.ts"
 import type { ReviewChart } from "./port.ts"
 
 /** Describes only content the renderer actually emitted, never infers a decision-case association. */
 export function reviewInclusion(review: PreservedReview, sectionRefs: readonly string[]) {
   const sections = sectionRefs.map((id) => review.sections.find((section) => section.id === id))
   if (new Set(sectionRefs).size !== sectionRefs.length || sections.some((section) => !section)) return undefined
-  const selectedRefs = sections.flatMap((section) => section?.sourceRefs ?? [])
+  const comments = selectedReviewComments(review, sectionRefs, digestSfValue)
+  if (!comments) return undefined
   return {
     reviewRef: review.id,
     reviewVersion: review.version,
@@ -39,8 +40,9 @@ export function reviewInclusion(review: PreservedReview, sectionRefs: readonly s
         sourceRefs: [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence(chart), ...reviewDecisionEvidence(decision), ...(projection.reviewOutcome?.sourceRefs ?? []), ...(projection.reviewOutcomeComparison?.baselineRefs ?? []), ...(projection.reviewOutcomeComparison?.sourceRefs ?? [])],
       }
     }),
-    comments: review.comments.filter((comment) => matchesSelectedSources(comment.sourceRefs, selectedRefs)).map((comment) => ({ id: comment.id, version: comment.version, digest: digestSfValue(comment) })),
+    comments: comments.map((comment) => ({ id: comment.id, version: comment.version, digest: digestSfValue(comment) })),
   }
 }
 
 export type ReviewInclusion = NonNullable<ReturnType<typeof reviewInclusion>>
+
