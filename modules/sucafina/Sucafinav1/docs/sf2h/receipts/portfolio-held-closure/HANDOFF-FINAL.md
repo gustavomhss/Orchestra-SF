@@ -2,6 +2,8 @@
 
 **Estado: TERMINAL_IMPLEMENTED_PARTIAL_PROOF_HELD. Implementação entregue; fechamento integral P02/P03 bloqueado por resultados reais. P04 documentado. GLOBAL_RELEASE=false.**
 
+**Atualização do readback após publicação:** [POST-PUBLICATION-READBACK.json](POST-PUBLICATION-READBACK.json) registra target `657ddd81e8f8cc6709ea82e7a8acb40c04851d7b` e a sucessão explícita da integradora42 pela missão47, epoch `S0-C-e9-browser47`. O único delta é o recibo de autoridade47; todos os preimages, P01/KEEP_CURRENT e inputs ativos permanecem iguais. O patch abaixo continua compatível. A entrega solicitada à42 e seu checkpoint permanecem como proveniência; o recebimento passa à sucessora autorizada47. Nenhum ACK43, aplicação ou PASS novo foi presumido.
+
 Consumidor solicitado: **sessão42**, integradora seletiva de sf2-stack. Seu checkpoint terminal mais recente foi reconciliado em `217b4295e2aeb00bc2f4accb9fb893451b9795e9`; a próxima continuação precisa reconciliar a autoridade42/S0 antes de escrever. Este recibo não inicia nem substitui um integrador e não fabrica ACK.
 
 ## 1. O que foi implementado

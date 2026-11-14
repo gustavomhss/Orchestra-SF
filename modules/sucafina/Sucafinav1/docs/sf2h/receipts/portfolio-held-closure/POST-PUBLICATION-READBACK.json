@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h-mission43-post-publication-readback-v1",
+  "mission": 43,
+  "recorded_at": "2026-11-14 23:14:17 UTC",
+  "published_delivery_commit": "6feaf8deab0df1d1e409da9e475340a449fd694e",
+  "published_delivery_tree": "f84767dbf360c2f0d5512437a9bdd96ae5cf79f4",
+  "source_product_commit": "f767ef44e0a165ca6dc5fc4590b0970a68a7379e",
+  "previous_target": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+  "target_after_readback": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "target_tree": "3e7658b3cdd46d0331f2c0b5446bcf60b55f134d",
+  "diff": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/AUTHORITY.json",
+      "status": "added",
+      "blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf"
+    }
+  ],
+  "active_product_test_config_changes": 0,
+  "selective_patch": {
+    "path": "patches/P02-P04-complete.patch",
+    "blob": "90b218902d2f58f66611ba2b43404273fe4496da",
+    "sha256": "71c50b685b8eff13a307bea13be2d3bf6c0ba6d004059f594fa9dfcc07098d18",
+    "bytes": 119342,
+    "compatibility": "All ten preimages/absence conditions and all P01/KEEP_CURRENT/dependency identities are unchanged because the sole target delta is a newly added authority receipt."
+  },
+  "successor": {
+    "mission": 47,
+    "epoch": "S0-C-e9-browser47",
+    "observed_state": "ACCEPTED_SUCCESSION_INTAKE_ACTIVE",
+    "authority_commit": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+    "authority_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "authority_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/AUTHORITY.json",
+    "control_pin": "bd045542ebb287cd5f25ce36e676ce90cbce320f",
+    "control_blob": "cfaf9936eab091c3e43d3608986b118b59af3f90",
+    "requested_handoff42_preserved": true,
+    "explicit_successor_record_not_silence": true,
+    "source43_authority_taken": false
+  },
+  "consumer_ack_for_mission43": "NOT_RECEIVED",
+  "qualification": {
+    "new_product_delta": false,
+    "new_test_run": false,
+    "existing_runs_unchanged": true,
+    "P02": "HELD",
+    "P03": "HELD",
+    "CurrentChoice": "SEPARATE_HELD",
+    "global_release": false
+  },
+  "next": "Authorized successor47 may receive the released43 implementation and owner patches after its own head/authority reconciliation. No direct target write, external message or source takeover by43.",
+  "readback": "PR37 remains open/draft on astra-wp13, base sf2-stack; all seven original mission43 commits and 75 receipt-file hashes verified before this final observation."
+}
