@@ -10,11 +10,13 @@ import { revokeReportsSession } from "./reports-support/revocation.ts"
 // workers=1, retries=0. The fixture launches the real CLI installation in Actions.
 // These four scenarios exercise coherent C6 plus the owned Reports changes.
 // Missing authority resources fail the assertions; no scenario becomes skip/xfail.
+// These worker options must be set at file scope. Real operator credentials
+// must never enter retained Playwright API/network traces; explicit synthetic
+// content receipts and downloaded reports remain the evidence.
+reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
+
 reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest.describe.configure({ retries: 0, timeout: 180_000 })
-  // Real operator credentials must never enter retained Playwright API/network traces.
-  // Explicit synthetic-content receipts and downloaded reports remain the evidence.
-  reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
 
   reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
     const { app, corpus } = reports
