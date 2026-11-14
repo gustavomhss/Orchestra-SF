@@ -4,7 +4,8 @@ import { startWp01BrowserPool } from "./browser-fixture.ts"
 
 // First in the explicit Actions selection. This test owns the one AppProcess
 // spawn; consumers only lease it, and browser-lifecycle.test.ts closes it last.
-// The launch has a 15s ceiling; keep 5s for its owned cancellation/cleanup.
+// One 30s acquisition deadline includes launch/connect/PID; keep 5s for owned
+// cancellation observation. A stalled scope remains a failure, never a proof.
 test("WP01 starts one Node-owned Chromium through Omni before leasing it across files", async () => {
   expectSpawn(import.meta.path)
   const evidence = await startWp01BrowserPool()
@@ -13,4 +14,4 @@ test("WP01 starts one Node-owned Chromium through Omni before leasing it across 
   expect(evidence.connected).toBe(true)
   expect(evidence.activeLease).toBe(false)
   expect(evidence.contexts).toBe(0)
-}, 20_000)
+}, 35_000)

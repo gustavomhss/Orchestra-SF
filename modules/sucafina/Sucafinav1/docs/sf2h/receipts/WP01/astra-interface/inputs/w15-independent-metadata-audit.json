@@ -1,0 +1,103 @@
+{
+  "schema": "astra.interface.independent-metadata-audit.v1",
+  "candidate": {
+    "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+    "tree": "68a8d13d3d60164670a7e95310b2cf1afb294e43",
+    "pr": 31,
+    "branch": "astra-interface",
+    "base": "sf2-stack",
+    "increment": "W15"
+  },
+  "reviewer": "ci_reconcile",
+  "verdict": "NO_METADATA_DIVERGENCE_IN_AUDITED_SCOPE",
+  "catalog": {
+    "file": "interface-evidence-catalog-w15.json",
+    "bytes": 1116380,
+    "sha256": "2f763e76d8f3f833194704e9c563b996d73ba09e0f3205d97a88ee1bfb15b699"
+  },
+  "parcels": [
+    {
+      "file": "interface-criteria-w15-WP01.compact.json",
+      "bytes": 175277,
+      "sha256": "60baf86874071d304df6492cdc1b05d2d95d687b783fe0a3155393a0ee6b5fc6"
+    },
+    {
+      "file": "interface-criteria-w15-WP02.compact.json",
+      "bytes": 142785,
+      "sha256": "4577e6867f7ec7a41acc2ace7f3e460629f717f686d275438582db20b0602792"
+    }
+  ],
+  "readableMap": {
+    "file": "interface-criteria-w15-complete.md",
+    "bytes": 153463,
+    "sha256": "70a0acb20f33ec60fd665d0f101a1dee545970fe4c803356dd1396cc9df4857f"
+  },
+  "counts": {
+    "literalCriteria": 153,
+    "WP01": 75,
+    "WP02": 78,
+    "tasks": 9,
+    "generalClauses": 36,
+    "markdownRows": 153,
+    "typedReferencesVerified": 17218,
+    "historicalObservationObjectsUnchanged": 1265,
+    "newActualBunObservations": 3,
+    "unexecutedNamedConsumersAttachedToOneHook": 2,
+    "totalObservations": 1268,
+    "tests": 435,
+    "runs": 29,
+    "candidateSourcesVerified": 184,
+    "explicitExternalSources": 1,
+    "exactPublishedArtifactsVerified": 37
+  },
+  "checks": [
+    "All criterion IDs/texts/families/task titles match canonical immutable metadata; all153 remain NOT_DECLARED_DONE.",
+    "All1265 W14 observation objects are byte-value identical; W15 adds only the three actual Bun observations.",
+    "One actual hook has sourceRef and two affectedTestRefs, with no invented testRef/name. Both declared consumers reference that same hook as candidateAttemptRef and retain latest named W14FAIL.",
+    "Two named harness failures remain separate from five latest named consumer failures. No current consumer body or physical lifecycle PASS is inferred.",
+    "Current run summary and all original physical lifecycle fields equal the frozen W15 receipt; added optional-provenance labels on raw-log references are publication metadata only.",
+    "Every mapped typed reference resolves,184 candidate source blobs/length/SHA256 match exact W15, and one external source stays explicit.",
+    "Historical static43580186410 execution fields equal the frozen original receipt; no observations or acceptance were added by its inclusion.",
+    "G03 unpinned STILL_PERIOD_ONLY is explicitly historical; F04 current action targets the missing new-draft endpoint and retains the prior closure action as history.",
+    "Published artifact hashes resolve against their exact repository pins."
+  ],
+  "latestNamedConsumerFailures": [
+    {
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "runRef": "R43586466170"
+    },
+    {
+      "name": "C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content",
+      "runRef": "R43589003673"
+    },
+    {
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "runRef": "R43587346579"
+    },
+    {
+      "name": "real logout denies directory reads and the question consumer purges its protected recipient and draft",
+      "runRef": "R43592240575"
+    },
+    {
+      "name": "the question consumer finds recipients through the canonical HTTP route and the real authorized directory",
+      "runRef": "R43592240575"
+    }
+  ],
+  "latestHarnessFailures": [
+    {
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "runRef": "R43593121437"
+    },
+    {
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "runRef": "R43593121437"
+    }
+  ],
+  "limits": [
+    "Read-only metadata/source inspection only; no product, typecheck, guard, CI poll or dispatch.",
+    "External workspace-services is explicit and not a consumed candidate source; its pinned blob was independently verified in earlier audits.",
+    "Canonical proof bindings and native normative inventory remain unchanged; public-resolution metadata can differ.",
+    "This validates bookkeeping and stated scope, not complete functional/native/global acceptance.",
+    "No W16 code or execution credit was included."
+  ]
+}

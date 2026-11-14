@@ -1,0 +1,346 @@
+{
+  "schema": "astra-own-harness-increment-v1",
+  "name": "WP01 common startup deadline and observed cancellation",
+  "base": {
+    "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+    "tree": "68a8d13d3d60164670a7e95310b2cf1afb294e43"
+  },
+  "status": "CANDIDATE_FROZEN_FOR_PEER_NO_PRODUCT_EXECUTION",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "bytes": 15926,
+      "blob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "sha256": "8e2673472d0e67e7756b0a7ad1b8eb5c743491385838351f6b7c184af41e59a7",
+      "base": {
+        "bytes": 15598,
+        "blob": "b0d1c6311bf62c9e40e2446922da11fa66d0ea4e",
+        "sha256": "05266d0a5ce3205890a46428f1138e3e0b28854fa595949e201d5177e1cfc7b6"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "bytes": 879,
+      "blob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "sha256": "6bf12141743b52d256b35f48e410eb52bb65fd556d0eecadece976cfe73ea080",
+      "base": {
+        "bytes": 798,
+        "blob": "1c70697bba81a75d073d3133e10164c2deccb89f",
+        "sha256": "61859423d0fb5fefaff09ba416f4446f7ca96d9234ea30b7414c85ba23478071"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "bytes": 33122,
+      "blob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "sha256": "31aae478fa5d1a0420ce26af5d340373090a9caf2f4676b73e8fd79b21fbb139",
+      "base": {
+        "bytes": 27140,
+        "blob": "174a976308f00e604310b66fadf5fbf202808802",
+        "sha256": "8febfd0d16fef664e6dfeb968262ea8043b8a52deebfed960e83d1bed50b3bc4"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "bytes": 5171,
+      "blob": "4bca9c1ef90e07e4167292d612cc55cc6330f26f",
+      "sha256": "7e6e5d473fa9ffcfd9efd375a5219459d308cc094dcc5cccce0e1441a3d7cdbc",
+      "base": {
+        "bytes": 3764,
+        "blob": "e6aa3175931b38e1a12e02664a859779993506a5",
+        "sha256": "3352d29881776166360044a2bd83a2be50697f82ba31504e023a3e5490a114fb"
+      }
+    }
+  ],
+  "causalFailure": {
+    "run": 43593121437,
+    "log": "analysis/product-43593121437.log",
+    "driverPid": 4143,
+    "browserPid": 4158,
+    "nodeChromiumLaunchElapsedMs": 573,
+    "outerCancellationElapsedMs": 14997,
+    "lastProtocol": {
+      "sent": 1,
+      "received": 0,
+      "pending": [
+        "Browser.getVersion"
+      ]
+    },
+    "observation": "Chrome alternated disk sleep folio_wait_bit_common and futex sleep; consumers never executed. No unique storage cause or cure inferred."
+  },
+  "deadlinePolicy": {
+    "poolTotalMs": 30000,
+    "startupNamedTestMs": 35000,
+    "otherDriverDefaultAndCeilingMs": 15000,
+    "nodeInput": "deadlineEpochMs plus consumer/ceiling metadata",
+    "nodeLaunch": "Recompute after imports/preparation; reject remaining<=0; no reset to a full timeout",
+    "clientStages": "Bun import, ready, Unix-pipe verification, connect and CDP PID use remaining budget",
+    "expiredPromiseHandling": "Compute stage timeout before creating await/race; observe rejected ready deferred without replacing original rejection"
+  },
+  "failedStartupCleanup": {
+    "event": "SF_BROWSER_DRIVER_STARTUP_CANCEL_CLEANUP",
+    "windowMs": 5000,
+    "windowStarts": "First cancellation, never reset by later await/probe",
+    "ownership": "Cancel and await the owned AppProcess scope; no Core/Omni change and no second teardown",
+    "observations": "Only after scope completion, readonly process.kill(pid,0) probes of Node and all recorded child PIDs whose parent matched Node",
+    "incompleteConditions": [
+      "Missing or invalid Node PID",
+      "No parent-validated browser PID",
+      "Observation error",
+      "Any known PID still present/unobserved",
+      "Owned scope or observation exceeds shared5s"
+    ],
+    "scopeOverrun": "Continue awaiting ownership; then record deadlineExceeded/incomplete without late probes. This is an observation budget, not a promise that infrastructure physically exits within5s.",
+    "normalProof": false,
+    "startupSucceeded": false
+  },
+  "preservation": {
+    "startupAssertionLines": 5,
+    "startupAssertionsExact": true,
+    "finalizer": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "bytes": 991,
+      "blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "sha256": "db0ea9a106a32299366670c41ce6275eb26fce705aa0f1f41449f42498d7356b",
+      "byteExact": true
+    },
+    "sections": [
+      {
+        "section": "Node forward transport",
+        "byteExact": true,
+        "sha256": "07c6fa3e71fa30597c6155ac8dc16d97ece44e711bd496c0277453258f627b24"
+      },
+      {
+        "section": "closedMessage validation",
+        "byteExact": true,
+        "sha256": "6f9fb4d2fca800b0bbb8e63f218cb5d76c4bdb7617e0eb8139bbf398feb20d2f"
+      },
+      {
+        "section": "normal close/proof/report",
+        "byteExact": true,
+        "sha256": "42c46e1e6076e2d4f899524b57bd75df6e1cedcd4a143beefee4636a3defe6a0"
+      },
+      {
+        "section": "lease/finalizer/report",
+        "byteExact": true,
+        "sha256": "42b122976f5f39a339217c038e7bd33c8e8f2f434b33a951c5d2a1c719285d0f"
+      },
+      {
+        "section": "owned browser shutdown",
+        "byteExact": true,
+        "sha256": "9e05062bb51870c9da3d1bbe6972ebabc5a83ea51647eccdba90dce64a59b236"
+      }
+    ],
+    "dependentConsumers": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "bytes": 5803,
+        "blob": "9296d34c30aeabed0796fdf8544c514e99f12365",
+        "sha256": "27cbabc4423e5890ae4868991b0ca5530b198c90946e63b24fa072199bcb8ab6",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+        "bytes": 7290,
+        "blob": "62c0ec48e997340a36b14c1b7fc9c5c2ec8443b3",
+        "sha256": "b3668f813eb984d6747a153cd0542cb2619ed135cfa6e3e4c3d94b38a7221468",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+        "bytes": 14709,
+        "blob": "3699a3c9c3206e86878770768a2399fc49d11618",
+        "sha256": "d5f6093df48d5e7c0bd7b897f8d51744f6fa18040813d835535dc4b624bba1e2",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+        "bytes": 19143,
+        "blob": "671168b256283f2d4da00f0ab59fcafe371fa513",
+        "sha256": "03f8d765e34567c37d4f40ec356f3600b0db7079219568591826bd4a3ecf7fc9",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+        "bytes": 30423,
+        "blob": "e22020011f464a2cc7277d4fe0f9a999c5587d38",
+        "sha256": "9594f44a1e9fdb05bed64e54e07ea6db7df004025d75c9ed2b846434a6136c77",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+        "bytes": 20580,
+        "blob": "393b34550b39c796a4bd7125162eba1c2fae806b",
+        "sha256": "3e61d189b8c8c878dfe6dbb7d0bc08cae29134cd75bfaf75b0d23ae3189d637a",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "bytes": 74348,
+        "blob": "be4e6c1f990ab190291022f2133e239fb9239eb8",
+        "sha256": "b41dd5576e5ee97900301861e1159ffebdc3cab59b430534de023ed3199ad66f",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "bytes": 9936,
+        "blob": "31a744a79f7b4d1c6452c1f6e1de23480957d113",
+        "sha256": "79c04493f3497e89ddea82d00ed094bb1256334c81cecd5b444b1ec6b4a58ccc",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+        "bytes": 2417,
+        "blob": "e46009604df40813e9386970c5f9e8e36826fca5",
+        "sha256": "60e4d1247bc754ada9b68f3bf763b9460874610b47f073f6a972291885c787b6",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+        "bytes": 16203,
+        "blob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+        "sha256": "e2ce080179c8b6f2e8b332d8ced8cb3642fab15d2cef721842908b03381770fe",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+        "bytes": 7600,
+        "blob": "8538485dd7efb5c2d6711895291bf2b5919f19c3",
+        "sha256": "9595c20d615a9ba4c151f3d7e3a81f57d8ceffcedb970d68f3f20f51eada4582",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+        "bytes": 21164,
+        "blob": "712645acac294d0d3a8dc3a87f83b656189c9201",
+        "sha256": "ff81b5f8ce893934ade33185ba2041f0324480801075ba425698c72520893e04",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+        "bytes": 6471,
+        "blob": "b47b29497f2ec9a2673bfbb299829191de32622f",
+        "sha256": "274d9f7f2c4ec17ba61818a2e484089392800d6df0bb13570dd402f00a3f3f9d",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "bytes": 19601,
+        "blob": "6706c7753cc241889195d65622ee7e0c4d38eb6a",
+        "sha256": "35302cbeeea307d203cd4c408f50fb6a9ecacc266bb00e1077ab7bca01686e11",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+        "bytes": 20963,
+        "blob": "e5c3e7f569b3009de9b4aaed27a3231ddd089736",
+        "sha256": "da8f16e3b32009076949b81f68e408452f4f0377532946be0e423729a57aa4fe",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "bytes": 9531,
+        "blob": "8fca620410456af1ad786ee9f7739ff5642b19b7",
+        "sha256": "63485ea87ea0630a7acfc38dc3ee9223136a47fa370db47b7fb93288682fc4e7",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "bytes": 14266,
+        "blob": "755e4d2fe5e65e0281674528eefece30dea56183",
+        "sha256": "3151eb3056be315ed9c3e30e028939cedba8b10484fc08e933e793e61200e66d",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+        "bytes": 51412,
+        "blob": "a5f684fed8b90cf44e0c54dad39572284835a494",
+        "sha256": "b9fca882cf8708f71d90eb5bc5a9b02f9c0c82264c1334c6c57d7129810d72f4",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+        "bytes": 11183,
+        "blob": "04132b4a9225057fcdb33868e5e3a22f24115363",
+        "sha256": "4c2b8f498be3d82036243d60da192a383f0e3269c33e0ffa24a51c7fec50ac51",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+        "bytes": 18477,
+        "blob": "5b3c1e1115a81a9d880ee08f9d8c28b6c55b6e2b",
+        "sha256": "b5d524678cec8a9927f8cda2fffa8ae361996687c00cf0caf2072494abe23cad",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+        "bytes": 24917,
+        "blob": "2a26600428f71773385650e1565248f69c9a42b5",
+        "sha256": "82516fc4ca7aa122102016dd4443a0d583f7e885a3211971d4509e2b9858b82b",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+        "bytes": 15844,
+        "blob": "6321582683cfaec721ad5cf0624a8e2da6e37226",
+        "sha256": "21f0fff966bb475d9c8556c5628c387d28ff030491842242b9f2e3c5315c2957",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "bytes": 10984,
+        "blob": "7748fcbd3aa9073c5ec487d5b649bf47310956bd",
+        "sha256": "dfb7b3c8350d62a81c323adaffbc688f29ca9357dd713fe42be14c1ab19c811c",
+        "byteExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+        "bytes": 12823,
+        "blob": "8fb32fc4e0ae2d000c830c8af87fba9f5e4eb2df",
+        "sha256": "763300b5a0645c4c50ffda2e0418872c3149c4021a47f74ff5b2c39737b24b7c",
+        "byteExact": true
+      }
+    ],
+    "dependentConsumerCount": 24,
+    "allDependentConsumerBodiesExact": true,
+    "consumerOperationTimeoutsChanged": false,
+    "consumerTestTimeoutsChanged": false,
+    "spawnBoundary": "AppProcess/Omni retained",
+    "nodeLaunchExpressions": 1,
+    "replacementBrowserAdded": false,
+    "foreignCoreOmniAllowlistOrWorkflowEdits": []
+  },
+  "selection": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/wp01/question-recipients.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "selectionReason": "Startup owns changed deadline/cancellation; both real recipient bodies did not execute in W15; finalizer preserves one browser, leases, contexts, CDP PID and clean transport proof. The24-consumer inventory is dependency information, not a demand for a whole-group rerun.",
+  "primaryReference": [
+    {
+      "repository": "microsoft/playwright",
+      "ref": "v1.59.1",
+      "path": "docs/src/api/params.md",
+      "blob": "391504655ce2ba244a1c97f6773d2e680243c5fa",
+      "scope": "Usual documented browser-start timeout30s, not failure cause or cure"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "ref": "v1.59.1",
+      "path": "docs/src/api/class-browsertype.md",
+      "blob": "fa7a0b05f7f9e5f89c0bbdcf9addba5ab7f12f4d",
+      "scope": "launchServer includes shared timeout option"
+    }
+  ],
+  "normativeBoundary": "CI.md and AGENTS unchanged. No local product/typecheck/guards/browser; no CI calls, retry, bypass or global/native acceptance.",
+  "peerReview": {
+    "reviewer": "ci_reconcile",
+    "status": "pending"
+  },
+  "patch": {
+    "path": "analysis/wp01-browser-startup-w16.patch",
+    "bytes": 25847,
+    "blob": "470648b048a866ddf9f02d6a07d25c993d695643",
+    "sha256": "f8854f599ce3bfad3465e8bddaee15342f715f85f546d67a4352f4fd2c58e6c7"
+  }
+}
