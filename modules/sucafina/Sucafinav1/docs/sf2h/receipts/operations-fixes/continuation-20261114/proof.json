@@ -1,0 +1,359 @@
+{
+  "schema": "operations-fixes-search-proof-v1",
+  "finding": "OPS-REV-03",
+  "classification": "FIXED_AND_SURGICALLY_PROVEN",
+  "formalIndependentAcceptance": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": 52,
+  "product": {
+    "sha": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+    "tree": "08c06a318a21e8c343742f935c9ad789accc34be",
+    "parent": "32a73ae7995eb193eaf9a78527736cb2df176a00",
+    "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+    "preimage": "6b655187d4444cff5b8966e868ba163191adfc42",
+    "resultBlob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41"
+  },
+  "snapshot": {
+    "sha": "56b5b3dcd409aa65ced84244999a01f9042570a0",
+    "tree": "4b5674490383dfbc4585efcb7ae8c7662024e1e2",
+    "parent": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+    "delta": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "113bfc26eeb44819590baa06c12625134d11f348"
+      }
+    ],
+    "compareVerified": true,
+    "branch": "ci-run-linux-operations-fixes-c9b14ba6-113bfc26-1"
+  },
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/operations-fixes/document-search.test.ts",
+      "./Sucafinav1/test/product/operations-fixes/document-search-budget.test.ts",
+      "./Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "--timeout",
+      "120000",
+      "-t",
+      "OPS-REV-03|search suppresses"
+    ],
+    "env": {}
+  },
+  "run": {
+    "id": 43626678715,
+    "job": 132543970174,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626678715",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "56b5b3dcd409aa65ced84244999a01f9042570a0",
+    "cleanupJob": 132544689010,
+    "completedAt": "2026-11-14T18:29:42Z",
+    "cleanupConclusion": "success"
+  },
+  "behavior": [
+    "Search budget counts distinct current authorized document identities rather than field/index records.",
+    "The identity key includes installation, project, document ID, incarnation, source revision and SHA-256 blob digest; excludes field candidate ID and RAG revision ID.",
+    "An inaccessible or stale record cannot occupy a scan slot.",
+    "At most 100 distinct authorized sources are searched. An authorized 101st witness produces document-scan-limited without searching its text.",
+    "All counted sources and the overflow witness are revalidated at egress; unchanged reference/segment/digest validation remains in place.",
+    "The match limit retains its early return. document-scan-limited reports the scan cutoff actually reached, not unobserved corpus cardinality."
+  ],
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-search-fixture.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da52ddc0e684ba92e8098eed8a5eed691d7db860"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-search.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0a801209899cdbf29b1dc83c71cb5806cdffb62"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-search-budget.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e12e6cfc9c2ad5e4e3dc7803d838ecae4599814"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "A100_B_HTTP",
+      "kind": "production HTTP / real SQLite, authority, source admission, schema, parser, RAG, reader and resolver",
+      "assertions": "A remains authorized after B; A index +100 fields cannot hide B; general and [A,B] search equal B-only; query absent has no false limit; candidate-only A+B retains identity; removed A with100 persisted candidates cannot hide B or leak."
+    },
+    {
+      "id": "PRIVATE_PREFIX_104",
+      "kind": "declared synthetic byte-access policy; real authority/SQLite/parser/RAG/adapter/resolver/search",
+      "assertions": "104 preceding sources alternate revoked/other principal/installation/project; B output and metadata exactly equal B-only; private token yields no result or private existence metadata."
+    },
+    {
+      "id": "AUTHORIZED_100_101",
+      "kind": "declared synthetic byte-access policy; actual indexing/reader/resolver/search",
+      "assertions": "100th source is searched;101st yields only limitation; overflow text unsearched; revoking101st or a no-hit source at egress suppresses whole output."
+    },
+    {
+      "id": "EGRESS_EXISTING",
+      "kind": "unchanged real SQLite regression",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "blob": "92af635bb6d50fd025e53e5eab6cba2835a637dc",
+      "assertions": "A match is suppressed if a later source read changes its source."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "WP06.T05.CMP.19",
+      "scope": "Search lexical, source withdrawal, budget and current authorization subset; no whole-format matrix requalification."
+    },
+    {
+      "id": "WP06.T05.QLT.18",
+      "scope": "Authorized output and limitation metadata; no independent UI/native/MCP parity acceptance."
+    },
+    {
+      "id": "CAMP.INV.04",
+      "scope": "No unauthorized source/text/ref/limit metadata in covered search cases."
+    }
+  ],
+  "limitations": [
+    "The two cardinality fixtures use an explicitly synthetic byte policy; they do not prove native ACL qualification for 104 real admitted attachments.",
+    "The HTTP scenario uses real production services and source withdrawal; no new Chromium/UI visual journey was executed in this continuation.",
+    "This is a targeted finding proof, not whole WP06, C14/C17, AM qualification, global release or merge acceptance."
+  ],
+  "reusedEvidence": {
+    "D_OPS_01": {
+      "run": 43625203326,
+      "product": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+      "pass": 8,
+      "assertions": 96,
+      "reexecuted": false
+    },
+    "I_OPS_02": {
+      "run": 43624678702,
+      "product": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+      "pass": 2,
+      "assertions": 76,
+      "reexecuted": false,
+      "recoveryAccepted": false
+    }
+  },
+  "validation": {
+    "localProductTests": false,
+    "epic": false,
+    "fullSuite": false,
+    "previousTestsOverwritten": false,
+    "deadlinesRaised": false,
+    "remote": "GitHub MCP",
+    "createdRuns": [
+      43626678715,
+      43627083716
+    ],
+    "reattachedRuns": [
+      43625203326,
+      43624678702,
+      43625644846
+    ],
+    "equivalentReruns": 0
+  },
+  "result": {
+    "pass": 4,
+    "fail": 0,
+    "assertions": 37,
+    "files": 3,
+    "seconds": 42.53
+  },
+  "omni": {
+    "nonce": "90950a28e333b1d67c5615abefcdb6a2",
+    "verdict": "not applicable",
+    "declaredTests": 0,
+    "spawns": 0,
+    "delegated": 0,
+    "omniQualificationClaimed": false
+  },
+  "logs": {
+    "kind": "decoded-job-log",
+    "job": 132543970174,
+    "bytes": 69695,
+    "sha256": "3e49fc21d0bce4ee3f6548412e3a3ff6a43bccfeb9d3712fa1bf30519447305d",
+    "retainedInRepository": false
+  },
+  "artifacts": {
+    "count": 0,
+    "requiredForSelectedBunRun": false,
+    "playwrightUpload": "skipped"
+  },
+  "ownerRecheck": {
+    "at": "2026-11-14T18:29:18.390Z",
+    "branch": "procurement-apply",
+    "head": "897484c9a472bd43d17cabe56552f2f8fa890185",
+    "scope": "Read-only reconciliation; new prepared intent fix is not a receipt-only recovery endpoint.",
+    "paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+        "blob": "e169d335f091c446bb380ee73f450083f917946f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8"
+      }
+    ]
+  },
+  "staticReview": {
+    "product": "PASS_STATIC_ONLY",
+    "tests": "PASS_STATIC_ONLY",
+    "reviewer": "document_search_review",
+    "selfApproval": false,
+    "formalAcceptance": false
+  },
+  "executedTests": [
+    {
+      "name": "OPS-REV-03 real HTTP search reaches B after A's index and 100 extracted fields, including candidate-only storage and revoked A",
+      "status": "PASS",
+      "milliseconds": 41097.19
+    },
+    {
+      "name": "OPS-REV-03 inaccessible principals and scopes before B cannot consume search budget or affect result metadata",
+      "status": "PASS",
+      "milliseconds": 232.97
+    },
+    {
+      "name": "OPS-REV-03 budget counts 100 authorized sources and fences the 101st metadata witness and sources without hits",
+      "status": "PASS",
+      "milliseconds": 462.84
+    },
+    {
+      "name": "search suppresses an earlier match when a later document read changes its source",
+      "status": "PASS",
+      "milliseconds": 383.87
+    }
+  ],
+  "iOps02": {
+    "status": "BLOCKED_EXTERNAL_DEPENDENCY",
+    "classification": "reproduced-consumer-impasse",
+    "recoveryAccepted": false,
+    "proposalsApplied": false,
+    "proposalsExecuted": false,
+    "preimagesRechecked": {
+      "at": "2026-11-14T18:29:18.390Z",
+      "branch": "procurement-apply",
+      "head": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "scope": "Read-only reconciliation; new prepared intent fix is not a receipt-only recovery endpoint.",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "blob": "e169d335f091c446bb380ee73f450083f917946f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8"
+        }
+      ]
+    },
+    "preimageListSource": {
+      "commit": "32a73ae7995eb193eaf9a78527736cb2df176a00",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/c12-source-pins.json",
+      "blob": "57ec743bd950c60ce1fa950293c40748f72b6479"
+    }
+  },
+  "checks": {
+    "run": 43627083716,
+    "job": 132545828766,
+    "productSha": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+    "snapshot": {
+      "sha": "1601f4eef6e556f660217627771b2f8a6a7b17dd",
+      "tree": "77707e529972f759420ced4b399b44b0d132f27c",
+      "parent": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+      "delta": [
+        {
+          "path": ".astra-operations-check.json",
+          "status": "added",
+          "blob": "0789c92cf40d554902167e957cf18c50adb9e171"
+        }
+      ],
+      "compareVerified": true
+    },
+    "request": {
+      "productSha": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "workflow": {
+      "path": ".github/workflows/astra-operations-check.yml",
+      "blob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+      "mode": "all",
+      "changed": false
+    },
+    "status": "completed",
+    "conclusion": "failure",
+    "completedAt": "2026-11-14T18:35:12Z",
+    "results": {
+      "envelope": "PASS",
+      "productAndGuardBase": "PASS",
+      "sucafina": {
+        "status": "FAIL",
+        "diagnostics": 1,
+        "error": "TS2741: Property 'procurementEvidenceWrites' is missing",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "line": 167,
+        "column": 41,
+        "baselineAndProductBlob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+        "baselineBlobEqualityVerified": true,
+        "withinMissionWriteScope": false
+      },
+      "cli": "PASS",
+      "guards": {
+        "status": "PASS",
+        "rules": 78,
+        "changedPaths": 856,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "warningsWithinContinuation": false,
+        "warningKinds": {
+          "dep-new-added": 10,
+          "test-timeout-raised": 1
+        }
+      },
+      "upload": "PASS"
+    },
+    "logs": {
+      "kind": "decoded-job-log",
+      "job": 132545828766,
+      "bytes": 66722,
+      "sha256": "faaefc4a48e69569b0adf54d8c2e9f1bead39f18134ff9278e5811e445e0de5c",
+      "retainedInRepository": false
+    },
+    "artifacts": [
+      {
+        "id": 14126157499,
+        "name": "astra-operations-check-1",
+        "bytes": 1579,
+        "digest": "sha256:fe836ef2d973cf9c9cb883f5361ee97075d2d3d9116b91b62269ab95cc0321bc",
+        "expired": false,
+        "run": 43627083716,
+        "snapshot": "1601f4eef6e556f660217627771b2f8a6a7b17dd"
+      }
+    ],
+    "repeated": false
+  },
+  "recordedAt": "2026-11-14T18:37:00.404Z",
+  "handoff": {
+    "status": "PARTIAL",
+    "reason": "OPS-REV-03 fixed and surgically proven; D-OPS-01 retained; I-OPS-02 requires shared owner code; inherited WP14 typecheck failure remains.",
+    "writerContinues": false,
+    "ownRunsInFlight": [],
+    "sharedOwnerCodeApplied": false
+  }
+}
