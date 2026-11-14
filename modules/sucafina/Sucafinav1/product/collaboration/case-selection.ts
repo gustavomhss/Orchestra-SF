@@ -176,7 +176,7 @@ export function createCaseWorkSelection(input: {
       }
       input.caseSelectionWrites.add(work)
       const saved = await input.state.transaction(request, { namespace: "preferences", ...selected.mutation, commandDigest: digestSfValue(selected.draft), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.caseSelectionWrites.delete(work))
-      if (saved.status === "preview") return { status: "conflict", reason: "selection-not-committed" }
+      if (saved.status === "preview" || (saved.status === "conflict" && saved.reason === "product-state-changed")) return { status: "conflict", reason: "selection-not-committed" }
       if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "selection-unavailable" }
       const verified = await load(saved.value, stored.period, context)
       if (verified.status !== "ok") return verified
@@ -184,3 +184,4 @@ export function createCaseWorkSelection(input: {
     },
   }
 }
+
