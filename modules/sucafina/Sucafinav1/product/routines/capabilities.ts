@@ -51,11 +51,12 @@ async function execute<K extends Operation>(operation: K, value: unknown, contex
   const result = await invoke(parsed.value).catch(() => undefined)
   if (!result) return reject(operation, "routine-port-unavailable", "unavailable", "unavailable")
   if (result.status !== "ok") return reject(operation, result.reason, result.status === "denied" ? "invalid-binding" : "unavailable", result.status === "conflict" ? "stale" : result.status)
-  if (!decodeSfOperationOutput(operation, result.value).ok) return reject(operation, "invalid-output", "unavailable", "unavailable")
-  if (!await host.authority.revalidateDomainContext(context) || !await host.revalidateOutput(context, result.value)) return reject(operation, "authority-unavailable", "invalid-binding", "denied")
-  const receipt = host.authority.receiptFor(context, operation, digest, digestSfValue(result.value))
+  const output = decodeSfOperationOutput(operation, result.value)
+  if (!output.ok) return reject(operation, "invalid-output", "unavailable", "unavailable")
+  if (!await host.authority.revalidateDomainContext(context) || !await host.revalidateOutput(context, structuredClone(output.value))) return reject(operation, "authority-unavailable", "invalid-binding", "denied")
+  const receipt = host.authority.receiptFor(context, operation, digest, digestSfValue(output.value))
   if (!receipt) return reject(operation, "authority-unavailable", "invalid-binding", "denied")
-  return { status: "ok", result: result.value, receipt }
+  return { status: "ok", result: output.value, receipt }
 }
 
 export function readRoutineCatalog(value: unknown, context: TrustedDomainContext, host: RoutineHost) {
@@ -90,19 +91,32 @@ export function runAdmittedRoutine(value: unknown, context: TrustedDomainContext
     if (!request.admittedRunRef.trim() || !Number.isSafeInteger(request.expectedAdmissionVersion) || request.expectedAdmissionVersion < 1) return { status: "needs-input", reason: "invalid-admission-version" }
     const admission = await host.routines.readAdmission(request.admittedRunRef, context)
     if (admission.status !== "ok") return admission
-    if (!decodeSfOperationOutput("sf_routine_run", admission.value).ok) return { status: "unavailable", reason: "invalid-admission-result" }
-    if (admission.value.admission !== "admitted") return { status: "needs-input", reason: "admission-required" }
-    if (admission.value.admissionRef !== request.admittedRunRef || admission.value.admissionVersion !== request.expectedAdmissionVersion) return { status: "stale", reason: "admission-changed" }
-    if (admission.value.principalRef !== context.binding.principalRef || admission.value.projectId !== context.binding.projectId) return { status: "denied", reason: "admission-unavailable" }
+    // The decoder takes a deep snapshot before case and authority awaits; providers never receive this identity object.
+    const accepted = decodeSfOperationOutput("sf_routine_run", admission.value)
+    if (!accepted.ok) return { status: "unavailable", reason: "invalid-admission-result" }
+    if (accepted.value.admission !== "admitted") return { status: "needs-input", reason: "admission-required" }
+    if (accepted.value.admissionRef !== request.admittedRunRef || accepted.value.admissionVersion !== request.expectedAdmissionVersion) return { status: "stale", reason: "admission-changed" }
+    if (accepted.value.principalRef !== context.binding.principalRef || accepted.value.projectId !== context.binding.projectId) return { status: "denied", reason: "admission-unavailable" }
     const caseRef = await host.resolveCase(context)
     if (caseRef.status !== "ok") return caseRef
-    if (context.kind === "native" && (caseRef.value.id !== context.binding.caseId || caseRef.value.incarnation !== context.binding.caseIncarnation || caseRef.value.version !== context.binding.caseVersion)) return { status: "denied", reason: "case-unavailable" }
+    const nativeCase = structuredClone(caseRef.value)
+    if (context.kind === "native" && (nativeCase.id !== context.binding.caseId || nativeCase.incarnation !== context.binding.caseIncarnation || nativeCase.version !== context.binding.caseVersion)) return { status: "denied", reason: "case-unavailable" }
     // An asynchronous case read can observe a revoked lease. Do not start native work and hide it only at egress.
-    if (!await host.authority.revalidateDomainContext(context) || !await host.revalidateOutput(context, admission.value)) return { status: "denied", reason: "admission-authority-changed" }
-    const run = await host.routines.run({ admissionRef: request.admittedRunRef, expectedAdmissionVersion: request.expectedAdmissionVersion, caseRef: caseRef.value }, context)
+    if (!await host.authority.revalidateDomainContext(context) || !await host.revalidateOutput(context, structuredClone(accepted.value))) return { status: "denied", reason: "admission-authority-changed" }
+    const run = await host.routines.run({ admissionRef: request.admittedRunRef, expectedAdmissionVersion: request.expectedAdmissionVersion, caseRef: structuredClone(nativeCase) }, context)
     if (run.status !== "ok") return run
-    if (run.value.admission !== "admitted" || run.value.admissionRef !== request.admittedRunRef || run.value.admissionVersion !== request.expectedAdmissionVersion || run.value.documentId !== admission.value.documentId || run.value.publishedVersion !== admission.value.publishedVersion || !run.value.runRef || run.value.principalRef !== context.binding.principalRef || run.value.projectId !== context.binding.projectId) return { status: "stale", reason: "run-admission-mismatch" }
-    return run
+    const started = decodeSfOperationOutput("sf_routine_run", run.value)
+    if (!started.ok) return { status: "unavailable", reason: "invalid-run-result" }
+    if (started.value.admission !== "admitted" || started.value.admissionRef !== request.admittedRunRef || started.value.admissionVersion !== request.expectedAdmissionVersion ||
+      started.value.documentId !== accepted.value.documentId || started.value.publishedVersion !== accepted.value.publishedVersion || !started.value.runRef ||
+      started.value.principalRef !== context.binding.principalRef || started.value.projectId !== context.binding.projectId || started.value.correlationId !== accepted.value.correlationId ||
+      digestSfValue(started.value.sourceRefs) !== digestSfValue(accepted.value.sourceRefs) ||
+      (accepted.value.authorizationId !== undefined && started.value.authorizationId !== accepted.value.authorizationId) ||
+      (accepted.value.armRef !== undefined && started.value.armRef !== accepted.value.armRef) ||
+      (accepted.value.childSessionId !== undefined && started.value.childSessionId !== accepted.value.childSessionId) ||
+      (accepted.value.runRef !== undefined && started.value.runRef !== accepted.value.runRef) ||
+      (accepted.value.resultRef !== undefined && started.value.resultRef !== accepted.value.resultRef)) return { status: "stale", reason: "run-admission-mismatch" }
+    return { status: "ok", value: started.value }
   })
 }
 
@@ -115,7 +129,7 @@ export function readRoutineResult(value: unknown, context: TrustedDomainContext,
     if (run.status !== "ok") return run
     if (run.value.admission !== "admitted" || !run.value.resultRef) return { status: "needs-input", reason: "result-not-ready" }
     if (!host.resolveResult) return { status: "unavailable", reason: "result-reader-unavailable" }
-    const opened = await host.resolveResult(run.value, context)
+    const opened = await host.resolveResult(structuredClone(run.value), context)
     if (opened.status !== "ok") return opened
     if (opened.value.admission !== "admitted" || opened.value.admissionRef !== run.value.admissionRef || opened.value.admissionVersion !== run.value.admissionVersion || opened.value.runRef !== run.value.runRef || opened.value.resultRef !== run.value.resultRef || opened.value.documentId !== run.value.documentId || opened.value.publishedVersion !== run.value.publishedVersion || opened.value.correlationId !== run.value.correlationId || opened.value.principalRef !== run.value.principalRef || opened.value.projectId !== run.value.projectId || digestSfValue(opened.value.sourceRefs) !== digestSfValue(run.value.sourceRefs)) return { status: "stale", reason: "result-run-mismatch" }
     return opened
@@ -135,9 +149,11 @@ async function readAuthorizedRun(runRef: string, context: TrustedDomainContext, 
   if (!runRef.trim()) return { status: "needs-input", reason: "run-reference-required" } as const
   const result = await host.routines.readRun(runRef, context)
   if (result.status !== "ok") return result
-  if (result.value.runRef !== runRef || result.value.principalRef !== context.binding.principalRef || result.value.projectId !== context.binding.projectId) return { status: "denied", reason: "run-unavailable" } as const
-  if (result.value.admission !== "admitted") return { status: "unavailable", reason: "run-admission-unavailable" } as const
-  return result
+  const run = decodeSfOperationOutput("sf_routine_status", result.value)
+  if (!run.ok) return { status: "unavailable", reason: "invalid-run-result" } as const
+  if (run.value.runRef !== runRef || run.value.principalRef !== context.binding.principalRef || run.value.projectId !== context.binding.projectId) return { status: "denied", reason: "run-unavailable" } as const
+  if (run.value.admission !== "admitted") return { status: "unavailable", reason: "run-admission-unavailable" } as const
+  return { status: "ok", value: run.value } as const
 }
 
 export function createRoutineCapabilities(host: RoutineHost): readonly CapabilityDescriptor[] {

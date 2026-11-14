@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { prepareRoutine, prepareWatch, readRoutineResult, readRoutineStatus, runAdmittedRoutine, routineInputSchemas, routineOutputSchemas } from "../../../product/routines/capabilities.ts"
 import type { RoutineHost } from "../../../product/routines/capabilities.ts"
-import type { RoutineResult } from "../../../product/contracts/context.ts"
+import type { RoutineResult, SourceRef } from "../../../product/contracts/context.ts"
 import type { BoundCapabilityReceipt, TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
 // Synthetic contexts isolate adapter behavior; they are not evidence of native binding or skill loading.
@@ -41,6 +41,58 @@ test("run refuses fractional versions and a port that only prepared admission", 
   host.routines.readAdmission = async () => ({ status: "ok", value: { ...admitted, admission: "needs-review" } })
   expect((await runAdmittedRoutine({ admittedRunRef: "admission", expectedAdmissionVersion: 3 }, context, host)).status).toBe("needs-input")
   expect(state.starts).toBe(0)
+})
+
+const governed: RoutineResult = {
+  ...admitted,
+  authorizationId: "authorization", armRef: "arm", childSessionId: "child-session",
+  sourceRefs: [{ surface: "dashboard", type: "topic", id: "topic", incarnation: "inc", version: 1, fields: ["status"], period: { start: "2031-01-01", end: "2031-01-31" }, observedAt: "2031-01-15T12:00:00Z" }],
+}
+
+test.each(["correlationId", "authorizationId", "armRef", "childSessionId", "documentId", "publishedVersion", "principalRef", "projectId"] as const)("run rejects substituted %s from the admitted identity", async (field) => {
+  const { host } = fixture()
+  host.routines.readAdmission = async () => ({ status: "ok", value: structuredClone(governed) })
+  host.routines.run = async () => ({ status: "ok", value: { ...structuredClone(governed), runRef: "run", [field]: "substituted" } })
+  expect(await runAdmittedRoutine({ admittedRunRef: "admission", expectedAdmissionVersion: 3 }, context, host)).toMatchObject({ status: "stale", reason: "run-admission-mismatch" })
+})
+
+test.each(["authorizationId", "armRef", "childSessionId"] as const)("run rejects removal of admitted %s", async (field) => {
+  const { host } = fixture()
+  host.routines.readAdmission = async () => ({ status: "ok", value: structuredClone(governed) })
+  const run = { ...structuredClone(governed), runRef: "run" }
+  delete run[field]
+  host.routines.run = async () => ({ status: "ok", value: run })
+  expect(await runAdmittedRoutine({ admittedRunRef: "admission", expectedAdmissionVersion: 3 }, context, host)).toMatchObject({ status: "stale", reason: "run-admission-mismatch" })
+})
+
+const sourceChanges: readonly [string, Partial<SourceRef>][] = [
+  ["id", { id: "substituted" }], ["incarnation", { incarnation: "substituted" }],
+  ["fields", { fields: ["title"] }], ["version", { version: 2 }],
+  ["period", { period: { start: "2031-02-01", end: "2031-02-28" } }],
+]
+test.each(sourceChanges)("run compares the complete source digest including %s", async (_, change) => {
+  const { host } = fixture()
+  host.routines.readAdmission = async () => ({ status: "ok", value: structuredClone(governed) })
+  const source = { ...governed.sourceRefs[0]!, ...change }
+  host.routines.run = async () => ({ status: "ok", value: { ...structuredClone(governed), runRef: "run", sourceRefs: [source] } })
+  expect(await runAdmittedRoutine({ admittedRunRef: "admission", expectedAdmissionVersion: 3 }, context, host)).toMatchObject({ status: "stale", reason: "run-admission-mismatch" })
+})
+
+test("an admission object changed while resolving the case cannot rewrite the accepted identity", async () => {
+  const { host } = fixture()
+  const shared = structuredClone(governed)
+  host.routines.readAdmission = async () => ({ status: "ok", value: shared })
+  host.resolveCase = async () => { shared.correlationId = "substituted-during-await"; return { status: "ok", value: { id: "case", incarnation: "inc", version: 1 } } }
+  host.routines.run = async () => ({ status: "ok", value: { ...shared, runRef: "run" } })
+  expect(await runAdmittedRoutine({ admittedRunRef: "admission", expectedAdmissionVersion: 3 }, context, host)).toMatchObject({ status: "stale", reason: "run-admission-mismatch" })
+})
+
+test("authority callbacks receive copies and cannot change the admitted or released run", async () => {
+  const { host } = fixture()
+  host.routines.readAdmission = async () => ({ status: "ok", value: structuredClone(governed) })
+  host.routines.run = async () => ({ status: "ok", value: { ...structuredClone(governed), runRef: "run" } })
+  host.revalidateOutput = async (_, value) => { if ("correlationId" in value) value.correlationId = "callback-substitution"; return true }
+  expect(await runAdmittedRoutine({ admittedRunRef: "admission", expectedAdmissionVersion: 3 }, context, host)).toMatchObject({ status: "ok", result: { correlationId: "correlation", authorizationId: "authorization", armRef: "arm", childSessionId: "child-session" } })
 })
 
 test("status and direct result reads never return another principal's metadata", async () => {

@@ -28,24 +28,26 @@ export async function prepareSourcingDossier(input: SourcingDossierHost & {
   context: TrustedDomainContext
 }) {
   if (!input.requestRef.trim()) return { status: "needs-input", reason: "request-required" } as const
-  const prepared = await input.prepareProcurement(input.requestRef, input.context)
-  if (prepared.status !== "ok") return prepared
+  const read = await input.prepareProcurement(input.requestRef, input.context)
+  if (read.status !== "ok") return read
+  const prepared = { value: structuredClone(read.value) }
   if (prepared.value.comparison && (prepared.value.comparison.requestRef !== input.requestRef || prepared.value.comparison.requestVersion !== prepared.value.request.version)) return { status: "stale", reason: "comparison-request-mismatch" } as const
   const comparison = prepared.value.comparison
   if (comparison && (new Set(comparison.proposals.map((proposal) => proposal.proposalRef)).size !== comparison.proposals.length || new Set(comparison.ranking).size !== comparison.ranking.length || comparison.ranking.some((ref) => !comparison.proposals.some((proposal) => proposal.proposalRef === ref && proposal.eligible)))) return { status: "unavailable", reason: "comparison-identity-invalid" } as const
   const selected = await input.selectedDocuments(input.requestRef, input.context)
   if (selected.status !== "ok") return selected
-  const refs = selected.value
+  const refs = structuredClone(selected.value)
   const evidence = await prepareDossierEvidence({ refs, reader: input.reader, context: input.context, revalidate: input.revalidate })
   if (evidence.status !== "ok") return evidence
   const currentSelection = await input.selectedDocuments(input.requestRef, input.context)
   if (currentSelection.status !== "ok") return currentSelection
   const selectionKey = (items: readonly DocumentRef[]) => digestSfValue([...new Set(items.map((ref) => digestSfValue(ref)))].sort())
-  if (selectionKey(selected.value) !== selectionKey(currentSelection.value)) return { status: "stale", reason: "document-selection-changed" } as const
+  if (selectionKey(refs) !== selectionKey(currentSelection.value)) return { status: "stale", reason: "document-selection-changed" } as const
   if (!await input.revalidateProcurement(prepared.value, input.context) || !await input.revalidate(refs, input.context)) return { status: "denied", reason: "access-changed" } as const
   const currentEvidence = await prepareDossierEvidence({ refs, reader: input.reader, context: input.context, revalidate: input.revalidate })
   if (currentEvidence.status !== "ok") return currentEvidence
   if (digestSfValue(currentEvidence.value) !== digestSfValue(evidence.value)) return { status: "stale", reason: "document-evidence-changed" } as const
+  if (!await input.revalidateProcurement(prepared.value, input.context) || !await input.revalidate(refs, input.context)) return { status: "denied", reason: "access-changed" } as const
   const documentGaps = evidence.value.entries.flatMap((entry) => entry.state === "confirmed" ? [] : [entry.state === "pending" ? "document-needs-confirmation" : entry.state === "rejected" ? "document-rejected" : "document-source-unavailable"])
   const gaps = [...new Set([
     ...prepared.value.limitations,
@@ -54,11 +56,11 @@ export async function prepareSourcingDossier(input: SourcingDossierHost & {
     ...(evidence.value.entries.length === 0 ? ["document-evidence-unavailable"] : []),
     ...documentGaps,
   ])]
-  const sourceRefs = [...(comparison?.sourceRefs ?? []), ...(prepared.value.sourcing ? [prepared.value.sourcing.evidence] : []), ...prepared.value.request.values.flatMap((value) => value.sourceRefs ?? []), ...evidence.value.entries.flatMap((entry) => entry.state === "confirmed" ? [entry.evidence.ref] : [])]
+  const sourceRefs = [...(comparison?.sourceRefs ?? []), ...(prepared.value.sourcing ? [prepared.value.sourcing.evidence] : []), ...prepared.value.request.values.flatMap((value) => (value.sourceRefs ?? []).filter((ref) => ref.kind !== "document")), ...evidence.value.entries.flatMap((entry) => entry.state === "confirmed" ? [entry.evidence.ref] : [])]
   return { status: "ok", value: {
     ...prepared.value,
     documents: evidence.value.entries,
-    summary: { proposalCount: comparison?.proposals.length ?? 0, comparisonAvailable: comparison !== null, ranking: comparison?.ranking ?? [], confirmedDocumentCount: evidence.value.entries.filter((entry) => entry.state === "confirmed").length, pendingDocumentCount: documentGaps.length },
+    summary: { proposalCount: comparison?.proposals.length ?? 0, comparisonAvailable: comparison !== null, ranking: comparison?.ranking ?? [], confirmedDocumentCount: evidence.value.entries.filter((entry) => entry.state === "confirmed").length, pendingDocumentCount: evidence.value.entries.filter((entry) => entry.state === "pending").length, rejectedDocumentCount: evidence.value.entries.filter((entry) => entry.state === "rejected").length, unavailableDocumentCount: evidence.value.entries.filter((entry) => entry.state === "unavailable").length },
     draft: { requestRef: input.requestRef, requestVersion: prepared.value.request.version, alternatives: comparison?.ranking ?? [], conditions: comparison?.conditions ?? [], sourceRefs: sourceRefs.filter((ref, index) => sourceRefs.findIndex((candidate) => candidate.refId === ref.refId && candidate.refDigest === ref.refDigest) === index), gaps, domainApplied: false as const },
     complete: comparison !== null && comparison.proposals.length >= 2 && comparison.conditions.length === 0 && gaps.length === 0,
     synthesisIncluded: false as const,

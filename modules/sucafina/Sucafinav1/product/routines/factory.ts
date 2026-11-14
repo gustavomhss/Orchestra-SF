@@ -38,9 +38,10 @@ export function createSfRoutineProduct(input: {
         return { status: "denied" as const, reason: "routine-access-unavailable" }
       const result = await input.resultAccess.readResult(runRef, context)
       if (result.status !== "ok") return result
-      if (!await input.capabilities.authority.revalidateDomainContext(context) || !await input.capabilities.revalidateOutput(context, result.value.run))
+      const authorized = structuredClone(result.value)
+      if (!await input.capabilities.authority.revalidateDomainContext(context) || !await input.capabilities.revalidateOutput(context, structuredClone(authorized.run)))
         return { status: "denied" as const, reason: "routine-access-unavailable" }
-      return result
+      return { status: "ok" as const, value: authorized }
     },
     /** Discovery does not promote an admission or assert that an occurrence completed. */
     async discoverRuns(context: TrustedDomainContext): Promise<PortResult<readonly RoutineResult[]>> {
@@ -53,8 +54,8 @@ export function createSfRoutineProduct(input: {
       if (refs.length > 100 || refs.some((ref) => !ref.trim())) return { status: "unavailable", reason: "routine-index-invalid" }
       const reads = await Promise.all(refs.map((ref) => routines.readRun(ref, context)))
       if (reads.some((read, index) => read.status !== "ok" ? read.status !== "denied" : read.value.runRef !== refs[index] || read.value.principalRef !== context.binding.principalRef || read.value.projectId !== context.binding.projectId)) return { status: "unavailable", reason: "routine-index-unavailable" }
-      const runs = reads.flatMap((read) => read.status === "ok" ? [read.value] : [])
-      if (!await input.capabilities.authority.revalidateDomainContext(context) || !await input.discovery.revalidate(context, runs)) return { status: "denied", reason: "routine-access-unavailable" }
+      const runs = reads.flatMap((read) => read.status === "ok" ? [structuredClone(read.value)] : [])
+      if (!await input.capabilities.authority.revalidateDomainContext(context) || !await input.discovery.revalidate(context, structuredClone(runs))) return { status: "denied", reason: "routine-access-unavailable" }
       return { status: "ok", value: runs }
     },
   }

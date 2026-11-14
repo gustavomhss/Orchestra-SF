@@ -4,7 +4,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createProcurementSourcingEvidence } from "../procurement/sourcing-evidence.ts"
 import { prepareSourcingDossier } from "./dossier.ts"
 import type { ProcurementPreparation, SourcingDossierHost } from "./dossier.ts"
-import { routineProjectionMaterial } from "./material.ts"
+import { routineContextMaterial, routineProjectionMaterial } from "./material.ts"
 
 /** Compose the WP04 domain and WP06 Request-document ports without decoding their opaque selectors. */
 export function createSourcingDossierPreparation(input: {
@@ -32,7 +32,7 @@ export function createSourcingDossierPreparation(input: {
     revalidateProcurement: async (material, call) => {
       const current = await prepare(requestRef, call)
       // Stage/source versions remain exact; the displayed clock-derived age is an observation.
-      const digest = (value: ProcurementPreparation) => digestSfValue({ ...value, request: { ...routineProjectionMaterial(value.request), values: value.request.values.map((item) => item.id === "ageDays" ? { ...item, value: null } : item) } })
+      const digest = (value: ProcurementPreparation) => digestSfValue({ ...value, ...(value.sourcing ? { sourcing: { ...value.sourcing, context: routineContextMaterial(value.sourcing.context) } } : {}), request: { ...routineProjectionMaterial(value.request), values: value.request.values.map((item) => item.id === "ageDays" ? { ...item, value: null } : item) } })
       return current.status === "ok" && digest(current.value) === digest(material) && await input.revalidateAuthority(call)
     },
     revalidate: async (refs, call) => {

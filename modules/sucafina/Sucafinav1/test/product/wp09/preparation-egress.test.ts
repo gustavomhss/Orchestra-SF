@@ -7,6 +7,8 @@ import type { ForecastCompareRequest } from "../../../product/contracts/operatio
 import type { FinancialAnalysis, PlannerPort } from "../../../product/contracts/ports.ts"
 import type { CommercialComparison } from "../../../product/contracts/outputs.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 
 const context = {} as TrustedDomainContext
 const period = { start: "2027-01-01", end: "2027-01-31" }
@@ -84,4 +86,25 @@ test("a single sourced proposal remains an incomplete factual dossier without fa
     revalidateProcurement: async () => true,
   })
   expect(result).toMatchObject({ status: "ok", value: { comparison, complete: false, synthesisIncluded: false, summary: { proposalCount: 1, comparisonAvailable: true, ranking: [] }, draft: { alternatives: [], domainApplied: false, gaps: ["comparison-needs-multiple-proposals", "document-evidence-unavailable"] } } })
+})
+
+test("dossier pins the initial procurement snapshot and fences it after the final document read", async () => {
+  const selectedContext = { binding: { installationId: "i", projectId: "p", accessRevision: "a" } } as TrustedDomainContext
+  const document: Extract<BusinessEvidenceRef, { kind: "document" }> = { schema: "sf-evidence-v1", kind: "document", refId: "doc", refDigest: "", installationId: "i", projectId: "p", evidenceLevel: "observed", target: { documentId: "doc", incarnation: "inc", revision: 1, blobDigest: { algorithm: "sha256", value: "a".repeat(64) }, segment: { start: 0, end: 1, unit: "utf16", textDigest: { algorithm: "sha256", value: "b".repeat(64) } } } }
+  document.refDigest = digestSfEvidenceRef(document)
+  const material = { request: structuredClone(projection), comparison: null, limitations: [] }
+  let reads = 0
+  const result = await prepareSourcingDossier({ requestRef: "request", context: selectedContext,
+    prepareProcurement: async () => ({ status: "ok", value: material }),
+    selectedDocuments: async () => ({ status: "ok", value: [document] }),
+    reader: async () => {
+      if (++reads === 2) material.request.version = 9
+      return { status: "unavailable", accessRevision: "a" }
+    },
+    revalidate: async () => true,
+    revalidateProcurement: async (initial) => initial.request.version === material.request.version,
+  })
+  expect(reads).toBe(2)
+  expect(result).toEqual({ status: "denied", reason: "access-changed" })
+  expect(result).not.toHaveProperty("value")
 })

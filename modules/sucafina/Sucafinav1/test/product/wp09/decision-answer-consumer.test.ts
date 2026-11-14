@@ -18,6 +18,7 @@ import { createDecisionMutations } from "../../../product/decisions/mutations.ts
 import { answerDecisionRoutine, readDecisionRoutine } from "../../../product/routines/decision.ts"
 import type { DecisionRoutineHost } from "../../../product/routines/decision.ts"
 import { createRoutineResultAccess, routineArtifactDigest, routineInputDigest } from "../../../product/routines/result-access.ts"
+import type { RoutineAdmittedInput, RoutineExecutionSnapshot } from "../../../product/routines/result-access.ts"
 
 function available<T>(result: PortResult<T>) {
   if (result.status !== "ok") throw new Error(`${result.status}: ${result.reason}`)
@@ -63,8 +64,16 @@ test("routine answer uses the real versioned case command and a replay cannot cr
     const routineHost: DecisionRoutineHost = { cases, binding: async () => ({ status: "ok", value: binding }), revalidate: (_binding, context) => host.revalidate(context),
       routines: { catalog: unused, prepareAdmission: async () => { gate.preparations++; return unused() }, readAdmission: async () => ({ status: "ok", value: run }), readRun: async () => ({ status: "ok", value: run }), run: async () => { gate.starts++; return { status: "ok", value: run } } },
     }
-    const body = { schema: "sf-routine-artifact-v1" as const, runRef: "run", resultRef: "result", correlationId: run.correlationId, documentId: run.documentId, publishedVersion: run.publishedVersion, principalRef: run.principalRef, projectId: run.projectId, inputDigest: routineInputDigest(run), sourceRefs: [], content: { questions: ["question"] }, createdAt: at }
-    routineHost.resultAccess = createRoutineResultAccess({ routines: routineHost.routines, authorize: host.revalidate, revalidateArtifact: async (_artifact, context) => host.revalidate(context), readArtifact: async () => ({ status: "ok", value: { ...body, outputDigest: routineArtifactDigest(body) } }) })
+    const admittedInput: RoutineAdmittedInput = { publishedRecipeRef: run.documentId, publishedVersion: run.publishedVersion, planRevisionId: "plan-v1", writeScope: ["cases"], inputRefs: [encodeCaseRef(caseRef)], parameters: { objective: decision.objective, horizon: decision.horizon, currency: decision.currency }, principalRef: run.principalRef, projectId: run.projectId, caseRef: { ...caseRef } }
+    const inputDigest = routineInputDigest(admittedInput)
+    const body = { schema: "sf-routine-artifact-v1" as const, runRef: "run", resultRef: "result", correlationId: run.correlationId, documentId: run.documentId, publishedVersion: run.publishedVersion, principalRef: run.principalRef, projectId: run.projectId, inputDigest, sourceRefs: [], content: { questions: ["question"] }, createdAt: at }
+    const artifact = { ...body, outputDigest: routineArtifactDigest(body) }
+    const execution: RoutineExecutionSnapshot = { runRef: "run", resultRef: "result", state: "completed", revision: "completion:1", outputDigest: artifact.outputDigest }
+    routineHost.resultAccess = createRoutineResultAccess({ routines: routineHost.routines, authorize: host.revalidate, revalidateArtifact: async (_artifact, context) => host.revalidate(context),
+      expectedInputDigest: async () => ({ status: "ok", value: inputDigest }),
+      readExecution: async () => ({ status: "ok", value: structuredClone(execution) }),
+      readArtifact: async () => ({ status: "ok", value: structuredClone(artifact) }),
+    })
     const input = { request: { ...mutation, admissionRef: "admission", runRef: "run" }, context, host: routineHost, decisions: mutations }
     const first = available(await answerDecisionRoutine(input))
     expect(first).toEqual({ caseRef: { ...caseRef, version: 2 }, previousRunRef: "run", requiresNewAdmission: true })

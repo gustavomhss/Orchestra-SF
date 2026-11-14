@@ -15,6 +15,7 @@ test("run discovery reads C08, deduplicates references and suppresses revoked ou
   const context = admission.value
   let allowed = true
   let inconsistent = false
+  let mutateCallback = false
   const product = createSfRoutineProduct({
     publication: {} as Parameters<typeof createSfRoutineProduct>[0]["publication"],
     routines: {
@@ -31,9 +32,15 @@ test("run discovery reads C08, deduplicates references and suppresses revoked ou
       revalidateOutput: async () => true,
       requiredAuthority: { sf_routine_catalog: [], sf_routine_prepare: [], sf_routine_run: [], sf_routine_status: [], sf_routine_result: [], sf_watch_prepare: [] },
     },
-    discovery: { listRunRefs: async () => ({ status: "ok", value: ["run", "run", "private"] }), revalidate: async () => allowed },
+    discovery: { listRunRefs: async () => ({ status: "ok", value: ["run", "run", "private"] }), revalidate: async (_context, runs) => {
+      if (mutateCallback && runs[0]) runs[0].correlationId = "callback-change"
+      return allowed
+    } },
   })
   expect(await product.discoverRuns(context)).toEqual({ status: "ok", value: [run] })
+  mutateCallback = true
+  expect(await product.discoverRuns(context)).toEqual({ status: "ok", value: [run] })
+  expect(run.correlationId).toBe("correlation")
   inconsistent = true
   expect(await product.discoverRuns(context)).toEqual({ status: "unavailable", reason: "routine-index-unavailable" })
   allowed = false

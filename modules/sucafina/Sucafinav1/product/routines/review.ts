@@ -104,8 +104,9 @@ export async function prepareFactualReview(input: {
 }
 
 async function readPreparedTopic(topicRef: string, input: { period?: Period; host: ReviewPreparationHost; context: TrustedDomainContext }): Promise<PreparedTopic> {
-  const result = await input.host.readTopic(topicRef, input.context)
-  if (result.status !== "ok") return hidden("source-unavailable")
+  const read = await input.host.readTopic(topicRef, input.context)
+  if (read.status !== "ok") return hidden("source-unavailable")
+  const result = { value: structuredClone(read.value) }
   if (confirmationCharge(result.value.confirmation) === "unavailable") return hidden("source-unavailable")
   if (input.period && !samePeriod(input.period, result.value.projection.context?.period)) return hidden("period-mismatch")
   if ([result.value.projection, result.value.previousProjection].some((projection) => projection?.missing.some((entry) => entry.reason === "restricted"))) return hidden("source-unavailable")
@@ -128,16 +129,16 @@ async function readPreparedTopic(topicRef: string, input: { period?: Period; hos
 
 async function loadPreviousReview(input: { currentReviewRef?: string; previousReviewRef?: string; host: ReviewPreparationHost; context: TrustedDomainContext }): Promise<{ status: "denied" } | { status: "ok"; value: AuthorizedPriorReview; currentDigest?: string }> {
   if (!input.previousReviewRef) return { status: "ok", value: null }
-  if (!input.currentReviewRef || !input.host.readPreviousReview) return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
-  const current = await input.host.readPreviousReview(input.currentReviewRef, input.context)
-  if (current.status === "denied") return { status: "denied" }
-  if (current.status !== "ok") return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
-  if (current.value.id !== input.currentReviewRef || current.value.previousReviewRef !== input.previousReviewRef) return { status: "ok", value: { status: "unavailable", reason: "prior-review-mismatch" } }
+  if (!input.host.readPreviousReview) return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
+  const current = input.currentReviewRef ? await input.host.readPreviousReview(input.currentReviewRef, input.context) : undefined
+  if (current?.status === "denied") return { status: "denied" }
+  if (current && current.status !== "ok") return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
+  if (current?.status === "ok" && (current.value.id !== input.currentReviewRef || current.value.previousReviewRef !== input.previousReviewRef)) return { status: "ok", value: { status: "unavailable", reason: "prior-review-mismatch" } }
   const read = await input.host.readPreviousReview(input.previousReviewRef, input.context)
   if (read.status === "denied") return { status: "denied" }
   if (read.status !== "ok") return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
   if (read.value.id !== input.previousReviewRef) return { status: "ok", value: { status: "unavailable", reason: "prior-review-mismatch" } }
-  return { status: "ok", value: read.value, currentDigest: digestSfValue(current.value) }
+  return { status: "ok", value: structuredClone(read.value), ...(current?.status === "ok" ? { currentDigest: digestSfValue(current.value) } : {}) }
 }
 
 function draftFrom(topics: readonly PreparedTopic[], period: Period | undefined, previousReview: AuthorizedPriorReview): ReviewDraft {
