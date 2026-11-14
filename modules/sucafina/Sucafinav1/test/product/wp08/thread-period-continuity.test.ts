@@ -75,7 +75,7 @@ for (const selected of [
     const next = available(await port.recipientActions.reply(thread.id, nextBody, nextMutation, await fixture.admit("collaboration.thread.reply", { id: thread.id, body: nextBody, mutation: nextMutation })))
     expect(next.id).toBe(thread.id)
     expect(next.state).toBe("open")
-    expect(next.messages.slice(0, 2)).toEqual(originalReply.messages)
+    expect(next.messages.slice(0, 2)).toEqual([...originalReply.messages])
     const currentMessage = next.messages[2]!
     expect(currentMessage.sourceContext?.period).toEqual(selected.currentPeriod)
     expect(available(await port.threadHistory.readVersion(thread.id, currentMessage.id, currentMessage.incarnation, 1, read)).period).toEqual(selected.currentPeriod)

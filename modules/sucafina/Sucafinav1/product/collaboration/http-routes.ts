@@ -18,6 +18,15 @@ const unavailable = (): PortResult<never> => ({ status: "unavailable", reason: "
 
 /** Route envelopes bind exactly the payload each domain method admits; they contain no authority. */
 export function createCollaborationHttpRoutes(host: Host) {
+  const prepareAnswer = async (questionId: string, answerRef: string, context: TrustedUiContext): Promise<PortResult<unknown>> => {
+    const result = await host.answerReuse?.prepare(questionId, answerRef, context)
+    if (!result) return unavailable()
+    if (result.status !== "ok") return result
+    const value = result.value
+    const observation = value.observation
+    const presented = { ...("evidence" in observation ? { evidence: observation.evidence } : {}), ...("projection" in observation ? { projection: observation.projection } : {}) }
+    return { status: "ok", value: { observationRef: value.observationRef, observedSourceVersion: value.observedSourceVersion, expectedScopeFingerprint: value.expectedScopeFingerprint, answerRef: value.answerRef, answer: value.answer, authorRef: value.authorRef, scope: value.scope, ...presented } }
+  }
   const threadRead = (id: string, context: TrustedUiContext) => createRecipientAwareThreadReads(host.threads, host.recipientThread).read(id, context)
   const threadChange = async (payload: Payload, context: TrustedUiContext, kind: "reply" | "resolve"): Promise<PortResult<unknown>> => {
     const found = await threadRead(payload.id as string, context)
@@ -45,14 +54,12 @@ export function createCollaborationHttpRoutes(host: Host) {
     ["confirmation-prepare", { keys: ["scope"], read: "collaboration.confirmation.prepare", invoke: (p, c) => host.confirmation?.prepare(p.scope as Parameters<NonNullable<Host["confirmation"]>["prepare"]>[0], c) ?? unavailable() }],
     ["confirmation-confirm", { keys: ["scope", "observedSourceVersion", "expectedScopeFingerprint", "expectedStorageVersion", "idempotencyKey"], action: "collaboration.confirmation.confirm", invoke: (p, c) => host.confirmation?.confirm(p as Parameters<NonNullable<Host["confirmation"]>["confirm"]>[0], c) ?? unavailable() }],
     ["confirmation-project", { keys: ["id"], read: "collaboration.confirmation.project", invoke: (p, c) => host.confirmation?.project(p.id as string, c) ?? unavailable() }],
-    ["answer-prepare", { keys: ["questionId", "answerRef"], read: "collaboration.answer.prepare", invoke: async (p, c) => {
-      const result = await host.answerReuse?.prepare(p.questionId as string, p.answerRef as string, c)
-      if (!result) return unavailable()
-      if (result.status !== "ok") return result
-      const value = result.value
-      const observation = value.observation
-      const presented = { ...("evidence" in observation ? { evidence: observation.evidence } : {}), ...("projection" in observation ? { projection: observation.projection } : {}) }
-      return { status: "ok", value: { observationRef: value.observationRef, observedSourceVersion: value.observedSourceVersion, expectedScopeFingerprint: value.expectedScopeFingerprint, answerRef: value.answerRef, answer: value.answer, authorRef: value.authorRef, scope: value.scope, ...presented } }
+    ["answer-prepare", { keys: ["questionId", "answerRef"], read: "collaboration.answer.prepare", invoke: (p, c) => prepareAnswer(p.questionId as string, p.answerRef as string, c) }],
+    ["answer-prepare-message", { keys: ["questionId", "messageId", "incarnation", "version"], read: "collaboration.answer.prepare", validate: (p) => [p.questionId, p.messageId, p.incarnation].every((value) => typeof value === "string" && !!value.trim()) && Number.isSafeInteger(p.version) && (p.version as number) > 0, invoke: async (p, c) => {
+      const issued = await host.answerEvidence.issue(p.questionId as string, p.messageId as string, c)
+      if (issued.status !== "ok") return issued
+      if (issued.value.target.recordId !== p.messageId || issued.value.target.incarnation !== p.incarnation || issued.value.target.version !== p.version) return { status: "stale", reason: "answer-selection-changed" }
+      return prepareAnswer(p.questionId as string, issued.value.refId, c)
     } }],
     ["answer-confirm", { keys: ["questionId", "answerRef", "mutation"], action: "collaboration.answer.confirm", invoke: (p, c) => host.answerReuse?.confirm(p.questionId as string, p.answerRef as string, p.mutation as Parameters<NonNullable<Host["answerReuse"]>["confirm"]>[2], c) ?? unavailable() }],
     ["answer-read", { keys: ["questionId"], read: "collaboration.answer.read", invoke: (p, c) => host.answerReuse?.read(p.questionId as string, c) ?? unavailable() }],

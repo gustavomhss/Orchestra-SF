@@ -1,0 +1,793 @@
+{
+  "schema": "sf2h.wp07.group-hosted-receipt.v1",
+  "work_package": "WP07",
+  "date": "2026-11-14",
+  "product": {
+    "sha": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+    "tree": "993ae9a67abb3050536609bc369843a105753da5"
+  },
+  "snapshot": {
+    "sha": "82889e5df6ce9bee9e572b239879f5b35e609f4e",
+    "tree": "08f1abe0d7f79ccc97cee47ba45d3a96045b73d3"
+  },
+  "run": {
+    "id": 43582480758,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582480758",
+    "job": 132409958684,
+    "cleanupJob": 132411445922,
+    "conclusion": "failure",
+    "attempt": 1,
+    "startedAt": "2026-11-14T09:51:01Z",
+    "completedAt": "2026-11-14T09:57:42Z"
+  },
+  "overall": {
+    "passed": 193,
+    "failed": 4,
+    "tests": 197,
+    "files": 50,
+    "expects": 1671,
+    "seconds": 312.87,
+    "omni": "not applicable (focused: no declaring test ran)",
+    "nativeExecution": "not demonstrated"
+  },
+  "wp07_scope": {
+    "files": 22,
+    "passed": 95,
+    "failed": 0,
+    "status": "PASS_WITHIN_WP07_SELECTION"
+  },
+  "source_log": {
+    "file": "ci03-job.log",
+    "sha256": "3d57e7c2dce048f43dcc092614b513acadff0f6fd9dc66cdcdfe3e863d02f145",
+    "retrieved_by": "root via GitHub MCP"
+  },
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "header_line": 816,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "application consumes agenda, shared review/report/artifact capabilities and a preserved byte download",
+          "duration_ms": 125.83,
+          "log_line": 817
+        },
+        {
+          "status": "PASS",
+          "name": "HTTP opens a pinned C07 factual result and preserves its original values through the same human and report ports",
+          "duration_ms": 132.18,
+          "log_line": 818
+        },
+        {
+          "status": "PASS",
+          "name": "shared dispatcher refuses forged arguments, missing admission, reused leases, expiry and source loss",
+          "duration_ms": 5.31,
+          "log_line": 819
+        },
+        {
+          "status": "PASS",
+          "name": "HTTP rejects cross-site writes, unknown fields, oversized bodies and revoked sources during preparation",
+          "duration_ms": 3.97,
+          "log_line": 820
+        },
+        {
+          "status": "PASS",
+          "name": "explicit refresh creates a new review reference without replacing the previous 1320",
+          "duration_ms": 13.2,
+          "log_line": 821
+        },
+        {
+          "status": "PASS",
+          "name": "Talent allowed in the preview is denied before export without writing a private artifact",
+          "duration_ms": 8.17,
+          "log_line": 822
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/composition.test.ts",
+      "header_line": 824,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "composition consumes the real Planner projection and protected review storage under a UI lease",
+          "duration_ms": 45.77,
+          "log_line": 825
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/services.test.ts",
+      "header_line": 827,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "many cells sharing identical evidence resolve once per authorization pass without caching another read",
+          "duration_ms": 12.08,
+          "log_line": 828
+        },
+        {
+          "status": "PASS",
+          "name": "different evidence bodies sharing a claimed digest are independently checked and refused",
+          "duration_ms": 0.39,
+          "log_line": 829
+        },
+        {
+          "status": "PASS",
+          "name": "evidence revoke during resolution cannot escape the authorization boundary",
+          "duration_ms": 0.29,
+          "log_line": 830
+        },
+        {
+          "status": "PASS",
+          "name": "evidence mutate during resolution cannot escape the authorization boundary",
+          "duration_ms": 0.22,
+          "log_line": 831
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "header_line": 833,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "agenda keeps exact records, chosen order, periods and notes without mutating Dashboard",
+          "duration_ms": 1.2,
+          "log_line": 834
+        },
+        {
+          "status": "PASS",
+          "name": "agenda preserves each competence, represents empty sections and handles removals",
+          "duration_ms": 0.62,
+          "log_line": 835
+        },
+        {
+          "status": "PASS",
+          "name": "agenda handles all Dashboard topic IDs and fails closed for unsupported or private topics",
+          "duration_ms": 1.98,
+          "log_line": 836
+        },
+        {
+          "status": "PASS",
+          "name": "agenda rejects invalid producer counts and preserves producer failure reasons",
+          "duration_ms": 0.35,
+          "log_line": 837
+        },
+        {
+          "status": "PASS",
+          "name": "agenda retains C06 comments, WP05 chart capture and WP14 outcome snapshots only when requested",
+          "duration_ms": 1.36,
+          "log_line": 838
+        },
+        {
+          "status": "PASS",
+          "name": "agenda selection is bounded, expires, revalidates authority and rejects hostile runtime inputs",
+          "duration_ms": 0.58,
+          "log_line": 839
+        },
+        {
+          "status": "PASS",
+          "name": "agenda delegates singleton topic availability to the authenticated producer",
+          "duration_ms": 0.24,
+          "log_line": 840
+        },
+        {
+          "status": "PASS",
+          "name": "agenda pins caller input before awaiting authority and does not adopt a mutated binding",
+          "duration_ms": 0.57,
+          "log_line": 841
+        },
+        {
+          "status": "PASS",
+          "name": "released or expired selection is refused after an in-flight producer read",
+          "duration_ms": 0.76,
+          "log_line": 842
+        },
+        {
+          "status": "PASS",
+          "name": "selection refuses changed preview content while retaining its original observation time",
+          "duration_ms": 0.67,
+          "log_line": 843
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection-age.test.ts",
+      "header_line": 845,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "a Request can be preserved after its stage age advances without changing the captured age",
+          "duration_ms": 1.67,
+          "log_line": 846
+        },
+        {
+          "status": "PASS",
+          "name": "a material stage change still invalidates the Request selection",
+          "duration_ms": 0.46,
+          "log_line": 847
+        },
+        {
+          "status": "PASS",
+          "name": "a material status change still invalidates the Request selection",
+          "duration_ms": 0.36,
+          "log_line": 848
+        },
+        {
+          "status": "PASS",
+          "name": "a material missing-age change still invalidates the Request selection",
+          "duration_ms": 0.29,
+          "log_line": 849
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/routine-selection.test.ts",
+      "header_line": 851,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "a C07 result opens a fresh selection and retains its recorded projection after source changes",
+          "duration_ms": 4.59,
+          "log_line": 852
+        },
+        {
+          "status": "PASS",
+          "name": "client snapshots and changed run/result/digest pins cannot become a review selection",
+          "duration_ms": 2.71,
+          "log_line": 853
+        },
+        {
+          "status": "PASS",
+          "name": "existing selections cannot bypass current authority, result revocation, body tampering or expiry",
+          "duration_ms": 1.89,
+          "log_line": 854
+        },
+        {
+          "status": "PASS",
+          "name": "revocation during the immutable output read releases neither comments nor values",
+          "duration_ms": 0.75,
+          "log_line": 855
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/projection-access.test.ts",
+      "header_line": 857,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "review preview and preserved reads revalidate comparison sources, components and drilldown-only evidence",
+          "duration_ms": 4.16,
+          "log_line": 858
+        },
+        {
+          "status": "PASS",
+          "name": "review admission rejects unknown private bytes inside projection",
+          "duration_ms": 0.36,
+          "log_line": 859
+        },
+        {
+          "status": "PASS",
+          "name": "review admission rejects unknown private bytes inside value",
+          "duration_ms": 0.24,
+          "log_line": 860
+        },
+        {
+          "status": "PASS",
+          "name": "review admission rejects unknown private bytes inside component",
+          "duration_ms": 0.18,
+          "log_line": 861
+        },
+        {
+          "status": "PASS",
+          "name": "review admission rejects unknown private bytes inside missing",
+          "duration_ms": 0.21,
+          "log_line": 862
+        },
+        {
+          "status": "PASS",
+          "name": "review admission rejects unknown private bytes inside comparison",
+          "duration_ms": 0.18,
+          "log_line": 863
+        },
+        {
+          "status": "PASS",
+          "name": "review admission rejects unknown private bytes inside drilldown",
+          "duration_ms": 0.22,
+          "log_line": 864
+        },
+        {
+          "status": "PASS",
+          "name": "known chart and outcome extensions reject unknown nested metadata",
+          "duration_ms": 0.46,
+          "log_line": 865
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-access.test.ts",
+      "header_line": 867,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "captured comment requires the exact thread message, source association and current authority",
+          "duration_ms": 1.54,
+          "log_line": 868
+        },
+        {
+          "status": "PASS",
+          "name": "a later conversation exceeding the capture limit does not revoke preserved comments",
+          "duration_ms": 0.4,
+          "log_line": 869
+        },
+        {
+          "status": "PASS",
+          "name": "a source mapping callback cannot rewrite the captured canonical message",
+          "duration_ms": 0.25,
+          "log_line": 870
+        },
+        {
+          "status": "PASS",
+          "name": "one current thread snapshot serves its messages only within the exact source authorization pass",
+          "duration_ms": 0.6,
+          "log_line": 871
+        },
+        {
+          "status": "PASS",
+          "name": "capture refuses changed thread evidence while its source association is pending",
+          "duration_ms": 0.41,
+          "log_line": 872
+        },
+        {
+          "status": "PASS",
+          "name": "capture returns no comments after authority is revoked during source association",
+          "duration_ms": 0.32,
+          "log_line": 873
+        },
+        {
+          "status": "PASS",
+          "name": "different message periods require explicit producer continuity and keep each original captured period",
+          "duration_ms": 1.31,
+          "log_line": 874
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-producer.test.ts",
+      "header_line": 876,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "WP07 captures a canonical C06 message and reopens its exact C17 association after replies and SQLite reload",
+          "duration_ms": 808.61,
+          "log_line": 877
+        },
+        {
+          "status": "PASS",
+          "name": "WP07 refuses preserved canonical comments after the persisted Dashboard role is revoked",
+          "duration_ms": 403.43,
+          "log_line": 878
+        },
+        {
+          "status": "PASS",
+          "name": "WP07 rejects a deleted source and a same-ID recreation without rebinding its preserved C06 message",
+          "duration_ms": 216.87,
+          "log_line": 879
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-continuity.test.ts",
+      "header_line": 881,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "review reuse retains each message source version after material change and edit, under current ACL",
+          "duration_ms": 14447.24,
+          "log_line": 882
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "header_line": 884,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "preserved review survives changed projections and is denied after access revocation",
+          "duration_ms": 81.7,
+          "log_line": 885
+        },
+        {
+          "status": "PASS",
+          "name": "compact review receipts survive SQLite restart, legacy replay and concurrent preservation",
+          "duration_ms": 134.12,
+          "log_line": 886
+        },
+        {
+          "status": "PASS",
+          "name": "review egress revalidates decision and section sources after the other authorization readers",
+          "duration_ms": 2.45,
+          "log_line": 887
+        },
+        {
+          "status": "PASS",
+          "name": "comparison requires identity and a compatible period before calculating a delta",
+          "duration_ms": 1.75,
+          "log_line": 888
+        },
+        {
+          "status": "PASS",
+          "name": "preserved report exports every selected record from the captured projection",
+          "duration_ms": 30.59,
+          "log_line": 889
+        },
+        {
+          "status": "PASS",
+          "name": "review capability denies a forged binding before selecting source data",
+          "duration_ms": 0.48,
+          "log_line": 890
+        },
+        {
+          "status": "PASS",
+          "name": "financial trajectory exports a captured figure and the same data table in both formats",
+          "duration_ms": 24.83,
+          "log_line": 891
+        },
+        {
+          "status": "PASS",
+          "name": "category charts paginate every captured value in both export formats",
+          "duration_ms": 56.02,
+          "log_line": 892
+        },
+        {
+          "status": "PASS",
+          "name": "ticket flow chart keeps monthly entries as separate periods",
+          "duration_ms": 0.86,
+          "log_line": 893
+        },
+        {
+          "status": "PASS",
+          "name": "timeline export paginates resolved milestones and refuses fabricated completion",
+          "duration_ms": 32.74,
+          "log_line": 894
+        },
+        {
+          "status": "PASS",
+          "name": "waterfall export uses resolved endpoints and marks a mismatched snapshot unavailable",
+          "duration_ms": 43.48,
+          "log_line": 895
+        },
+        {
+          "status": "PASS",
+          "name": "capacity and cost charts require alignment and keep separate units",
+          "duration_ms": 11.94,
+          "log_line": 896
+        },
+        {
+          "status": "PASS",
+          "name": "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+          "duration_ms": 23.24,
+          "log_line": 897
+        },
+        {
+          "status": "PASS",
+          "name": "decision exports retain conditioned coverage and reject an invented complete comparison",
+          "duration_ms": 23.57,
+          "log_line": 898
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/human.test.ts",
+      "header_line": 900,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "human preservation uses the authorized creation target and reconciles an exact retry",
+          "duration_ms": 8.76,
+          "log_line": 901
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+      "header_line": 903,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "artifact retry preserves the first bytes across ZIP timestamps, conflicts on changed intent, and rechecks access",
+          "duration_ms": 2230.59,
+          "log_line": 904
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+      "header_line": 906,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "closure binds an authorized handoff to the immutable review and rereads its action",
+          "duration_ms": 8.91,
+          "log_line": 907
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/contribution.test.ts",
+      "header_line": 909,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "review consumer uses the production C11 reader and never opens material for an absent native output",
+          "duration_ms": 1.36,
+          "log_line": 910
+        },
+        {
+          "status": "PASS",
+          "name": "review consumer reopens a producer-format DecisionBrief from SQLite after reload without inventing result links",
+          "duration_ms": 15.66,
+          "log_line": 911
+        },
+        {
+          "status": "PASS",
+          "name": "review consumer rejects another case and inconsistent persisted brief references",
+          "duration_ms": 232.14,
+          "log_line": 912
+        },
+        {
+          "status": "PASS",
+          "name": "review consumer with the production C11 reader denies semantic and mid-read authority revocation",
+          "duration_ms": 27.63,
+          "log_line": 913
+        },
+        {
+          "status": "PASS",
+          "name": "meeting material consumer preserves artifact order and refuses inconsistent coverage or mixed selections",
+          "duration_ms": 135.37,
+          "log_line": 914
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+      "header_line": 916,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "missing actual remains unavailable and a zero actual remains an observed zero",
+          "duration_ms": 0.3,
+          "log_line": 917
+        },
+        {
+          "status": "PASS",
+          "name": "meeting outcome lines show cutoff, coverage and sources without assigning a cause",
+          "duration_ms": 0.27,
+          "log_line": 918
+        },
+        {
+          "status": "PASS",
+          "name": "outcome access requests the preserved cutoff and refuses a producer that returns a later current observation",
+          "duration_ms": 0.87,
+          "log_line": 919
+        },
+        {
+          "status": "PASS",
+          "name": "outcome reader failure and mid-read source changes fail closed",
+          "duration_ms": 0.5,
+          "log_line": 920
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+      "header_line": 922,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "review browser entry bundles without server runtime dependencies",
+          "duration_ms": 6.45,
+          "log_line": 923
+        },
+        {
+          "status": "PASS",
+          "name": "review workspace entry bundles without server runtime dependencies",
+          "duration_ms": 4.88,
+          "log_line": 924
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/export-completeness.test.ts",
+      "header_line": 926,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "presentation keeps its title and review reference alongside the selected material",
+          "duration_ms": 3.25,
+          "log_line": 927
+        },
+        {
+          "status": "PASS",
+          "name": "25 long project notes, every monthly value, missing series and captured comments survive both formats",
+          "duration_ms": 110.22,
+          "log_line": 928
+        },
+        {
+          "status": "PASS",
+          "name": "an explicit immutable section association keeps both actor scopes and omits unselected comments in DOCX and PPTX",
+          "duration_ms": 18.01,
+          "log_line": 929
+        },
+        {
+          "status": "PASS",
+          "name": "comment association rejects changed digest before inclusion or rendering",
+          "duration_ms": 0.41,
+          "log_line": 930
+        },
+        {
+          "status": "PASS",
+          "name": "comment association rejects changed version before inclusion or rendering",
+          "duration_ms": 0.09,
+          "log_line": 931
+        },
+        {
+          "status": "PASS",
+          "name": "comment association rejects changed membership before inclusion or rendering",
+          "duration_ms": 0.06,
+          "log_line": 932
+        },
+        {
+          "status": "PASS",
+          "name": "comment association rejects changed duplicate before inclusion or rendering",
+          "duration_ms": 0.08,
+          "log_line": 933
+        },
+        {
+          "status": "PASS",
+          "name": "comment association rejects changed metadata before inclusion or rendering",
+          "duration_ms": 0.06,
+          "log_line": 934
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "header_line": 936,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "Chromium preserves the annual agenda, recovers a lost response and removes revoked content",
+          "duration_ms": 29504.44,
+          "log_line": 1096
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/comment-continuity.test.ts",
+      "header_line": 1098,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "authorized C06 capture creates immutable section membership and reopens the current conversation without rewriting the review",
+          "duration_ms": 30505.7,
+          "log_line": 1099
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+      "header_line": 1101,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+          "duration_ms": 1.12,
+          "log_line": 1102
+        },
+        {
+          "status": "PASS",
+          "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+          "duration_ms": 0.43,
+          "log_line": 1103
+        },
+        {
+          "status": "PASS",
+          "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+          "duration_ms": 0.91,
+          "log_line": 1104
+        },
+        {
+          "status": "PASS",
+          "name": "first review and an unavailable referenced predecessor have different states",
+          "duration_ms": 0.45,
+          "log_line": 1105
+        },
+        {
+          "status": "PASS",
+          "name": "comparison rechecks both immutable bases and final authority before returning any data",
+          "duration_ms": 0.57,
+          "log_line": 1106
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/report-layout.test.ts",
+      "header_line": 1108,
+      "assertions": [
+        {
+          "status": "PASS",
+          "name": "slide pagination preserves whole graphemes and all text",
+          "duration_ms": 0.34,
+          "log_line": 1109
+        },
+        {
+          "status": "PASS",
+          "name": "coverage names selected sections and omitted comments without changing counts",
+          "duration_ms": 0.11,
+          "log_line": 1110
+        },
+        {
+          "status": "PASS",
+          "name": "long notes share bounded pages and keep every fragment instead of one slide per visual line",
+          "duration_ms": 3.51,
+          "log_line": 1111
+        },
+        {
+          "status": "PASS",
+          "name": "a paragraph longer than one page continues without losing its final note",
+          "duration_ms": 1.2,
+          "log_line": 1112
+        }
+      ]
+    }
+  ],
+  "visual": {
+    "browser": {
+      "artifact_id": 14109660013,
+      "sha256": "3ff1b8c032e59e651f83186aac8630af1adcb10af4f0fc0a0d4c135bd00b4814",
+      "files": [
+        "wp07-browser-ui.png",
+        "wp07-current-conversation.png",
+        "wp07-browser-visual.json"
+      ],
+      "inspection": "Inspected by root; viewport captures are limited. Full-page evidence is prepared in increment05 and has not run.",
+      "not_claimed": [
+        "complete current conversation text in the limited viewport",
+        "production host UI acceptance"
+      ]
+    },
+    "exports": {
+      "run_id": 43582484277,
+      "job_id": 132409969312,
+      "snapshot_sha": "84e70d31169e2611e65231294b047b859499ba70",
+      "artifact_id": 14108043928,
+      "previous_artifact_id": 14090481238,
+      "unchanged_frames": {
+        "legacy-docx": 6,
+        "legacy-pptx": 26,
+        "preserved-docx": 14,
+        "preserved-pptx": 39
+      },
+      "new_frames": {
+        "historical-docx": 2,
+        "historical-pptx": 6
+      },
+      "inspection": "All eight new historical pages/slides inspected by root. v3/v1 comments intact; missing values distinct from zero; no clipping or overlap. Sparse PPTX coverage slides are intentional. All 85 previous frames compared pixel-identical.",
+      "generation": "GitHub Actions only",
+      "fixtures": "Synthetic export layout/content fixtures; not native execution or host ACL proof"
+    }
+  },
+  "limits": [
+    "The complete run failed; passing individual tests do not make the full selection PASS.",
+    "Actual Schedule/SessionInput consumer tests and controlled native occurrence/output readers do not prove complete governed Relay/Session/SkillLoadReceipt execution.",
+    "UI evidence uses isolated Chromium, SQLite, real Planner/review/HTTP/browser with controlled historical evidence and C06 producer, not a production host mount.",
+    "No product test or typecheck ran locally.",
+    "The v3-to-v4 literal canonical comment scenario is prepared in increment05; this run exercised v1-to-v2 on the real C06/history consumer.",
+    "Baseline proof files remain unchanged. The run result is overall failure despite this WP07 selection passing.",
+    "Typecheck is a separate failing group check. The WP07 Uint8Array generic diagnostic has a prepared increment05 fix, not a reported hosted pass."
+  ]
+}

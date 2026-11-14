@@ -1,3 +1,4 @@
+import { expectUnchangedDomainState } from "./domain-state.ts"
 import { expect, test } from "bun:test"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
 import { createThreadHistoryFixture } from "./thread-history-fixture.ts"
@@ -30,7 +31,7 @@ test("a March answer remains a scoped claim beside the official May project unti
     available(await port.answerReuse.confirm(thread.id, answer.refId, confirmation, await fixture.admit("collaboration.answer.confirm", { questionId: thread.id, answerRef: answer.refId, mutation: confirmation })))
     expect(await port.answerReuse.read(thread.id, fixture.read)).toMatchObject({ status: "ok", value: { answer: body, authorRef: fixture.person.id, observedVersion: source.target.version } })
     expect(available(await fixture.records.read(source.refId, fixture.read))).toEqual(official)
-    expect(await fixture.snapshots()).toEqual(before)
+    expectUnchangedDomainState(before, await fixture.snapshots())
     // This explicit official edit is a separate authorized domain command, never a side effect of the answer.
     await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: before.dashboard.versions["projects:project"]!.version, values: { end: "2026-03-31" } })
     const changedSource = available(await fixture.records.issue({ page: "All Projects", recordType: "projects", recordId: "project", fields: ["name", "end"], period: fixture.period }, fixture.read))

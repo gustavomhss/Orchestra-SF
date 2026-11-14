@@ -1,3 +1,4 @@
+import { expectUnchangedDomainState } from "./domain-state.ts"
 import { expect, test } from "bun:test"
 import { DashboardBudget, budgetData } from "../../../runtime/dashboard-budget.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
@@ -30,12 +31,12 @@ test("equal money and simultaneous record timestamps do not create relations or 
     expect(await fixture.relations.read([project.refId], fixture.read)).toMatchObject({ status: "ok", value: { relations: [{ id: linked.id, fromRef: project.refId, toRef: capexB.refId }] } })
     expect(await fixture.relations.read([unrelated.refId, capexA.refId], fixture.read)).toEqual({ status: "ok", value: { relations: [] } })
     expect(computeBudgetTotals(budgetData((await fixture.snapshots()).dashboard.data), 2026)).toEqual(totals)
-    expect(await fixture.snapshots()).toEqual(before)
+    expectUnchangedDomainState(before, await fixture.snapshots())
     const removal = { expectedStorageVersion: 1, idempotencyKey: "remove-explicit-value-time" }
     available(await fixture.relations.remove(linked.id, pair, removal, await fixture.admit("collaboration.relation.confirm", { operation: "remove", id: linked.id, pair, mutation: removal })))
     expect(await fixture.relations.read([project.refId, unrelated.refId, capexA.refId, capexB.refId], fixture.read)).toEqual({ status: "ok", value: { relations: [] } })
     expect(computeBudgetTotals(budgetData((await fixture.snapshots()).dashboard.data), 2026)).toEqual(totals)
-    expect(await fixture.snapshots()).toEqual(before)
+    expectUnchangedDomainState(before, await fixture.snapshots())
   } finally {
     await fixture.dispose()
   }

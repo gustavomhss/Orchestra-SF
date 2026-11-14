@@ -310,7 +310,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     }
     const screenshot = fileURLToPath(new URL("../../../../e2e/test-results/lean-visual/wp07-browser-ui.png", import.meta.url))
     await mkdir(path.dirname(screenshot), { recursive: true })
-    await timed("screenshot", () => page.screenshot({ path: screenshot, timeout: 5000 }))
+    await timed("screenshot", () => page.screenshot({ path: screenshot, fullPage: true, timeout: 10000 }))
     checkpoint("selection-revoke")
     control.allowed = false
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
@@ -342,10 +342,10 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     await expect(meeting.getByRole("status")).toHaveText("Current conversation opened; the preserved review is unchanged.")
     await expect(currentValue).toBeVisible()
     const conversationScreenshot = fileURLToPath(new URL("../../../../e2e/test-results/lean-visual/wp07-current-conversation.png", import.meta.url))
-    await timed("current-conversation-screenshot", () => page.screenshot({ path: conversationScreenshot, timeout: 5000 }))
+    await timed("current-conversation-screenshot", () => page.screenshot({ path: conversationScreenshot, fullPage: true, timeout: 10000 }))
     await Bun.write(path.join(path.dirname(conversationScreenshot), "wp07-browser-visual.json"), JSON.stringify({
       schema: "wp07-browser-visual-v1", runId: process.env.GITHUB_RUN_ID ?? "unavailable", runAttempt: process.env.GITHUB_RUN_ATTEMPT ?? "unavailable", workflowSha: process.env.GITHUB_SHA ?? "unavailable", productSha: process.env.WP07_PRODUCT_SHA ?? "parent-maps-workflow-sha-to-product",
-      captures: ["wp07-browser-ui.png", "wp07-current-conversation.png"], capturedPhases: ["preserved annual review", "authorized current conversation beside unchanged captured values"],
+      captures: ["wp07-browser-ui.png", "wp07-current-conversation.png"], captureMode: "full-page", capturedPhases: ["preserved annual review", "authorized current conversation beside unchanged captured values"],
       fixture: "isolated Chromium, SQLite, real Planner/review/HTTP/browser; controlled historical evidence and C06 thread producer",
       limits: ["Not a production host mount or native Relay/Session/SkillLoadReceipt execution.", "Images record these phases; the run conclusion and later revocation assertions remain in GitHub Actions results."], visualInspection: "pending",
     }, null, 2))

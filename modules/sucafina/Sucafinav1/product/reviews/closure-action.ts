@@ -15,6 +15,7 @@ import type { ReviewOutcomeComparison } from "./outcome.ts"
 export type ReviewActionHandoff = { intent: HotTopicIntent; sourceRef: string; recipientRef?: string; relationKey: string }
 export type ReviewActionClosure = { kind: "sf-review-action-v1"; id: string; reviewRef: string; reviewDigest: string; principalRef: string; handoff: ReviewActionHandoff; topic: HotTopic; relationId: string }
 export type ReviewActionClosureRead = { closure: ReviewActionClosure; review: PreservedReview; currentAction: HotTopic }
+export type ReviewActionContext = { closureRef: string; reviewRef: string; reviewVersion: number; reviewDigest: string }
 
 /** An explicit human handoff uses WP08/WP02, then records its relation to the immutable review. */
 export function createReviewClosurePort(input: {
@@ -49,6 +50,31 @@ export function createReviewClosurePort(input: {
   }
   return {
     read,
+    /** Read-only context for the existing canonical action. No work item is
+     * created, and an assignment never grants access to its originating review. */
+    async listByAction(topicId: string, context: TrustedDomainContext): Promise<PortResult<readonly ReviewActionContext[]>> {
+      const request = input.host.requestFor(context)
+      if (!request || typeof topicId !== "string" || !topicId.trim() || !await input.host.revalidate(context)) return { status: "denied", reason: "closure-unavailable" }
+      const index = () => input.state.read(request, "documents", (state, authority) => {
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return undefined
+        return Object.entries(state.documents).filter(([id, value]) => {
+          if (!/^review-closure:[a-f0-9]{64}$/.test(id) || !value || typeof value !== "object" || !("principalRef" in value) || value.principalRef !== context.binding.principalRef || !("topic" in value) || !value.topic || typeof value.topic !== "object" || !("id" in value.topic)) return false
+          return value.topic.id === topicId
+        }).map(([id]) => id).sort()
+      })
+      const before = await index()
+      if (before.status !== "ok" || !before.value) return { status: "unavailable", reason: "closure-unavailable" }
+      const first = await Promise.all(before.value.map((ref) => read(ref, context)))
+      const second = await Promise.all(before.value.map((ref) => read(ref, context)))
+      const after = await index()
+      if (after.status !== "ok" || digestSfValue(before.value) !== digestSfValue(after.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "closure-unavailable" }
+      const entries = second.flatMap((entry, position): ReviewActionContext[] => {
+        const prior = first[position]
+        if (entry.status !== "ok" || prior?.status !== "ok" || entry.value.currentAction.id !== topicId || digestSfValue(entry.value) !== digestSfValue(prior.value)) return []
+        return [{ closureRef: entry.value.closure.id, reviewRef: entry.value.review.id, reviewVersion: entry.value.review.version, reviewDigest: entry.value.closure.reviewDigest }]
+      })
+      return { status: "ok", value: entries }
+    },
     async listByReview(reviewRef: string, context: TrustedDomainContext): Promise<PortResult<{ entries: readonly ReviewActionClosureRead[]; coverage: "complete" | "partial"; limitations: readonly string[] }>> {
       const request = input.host.requestFor(context)
       if (!request || typeof reviewRef !== "string" || !reviewRef.trim() || !await input.host.revalidate(context)) return { status: "denied", reason: "closure-unavailable" }
@@ -127,3 +153,4 @@ function validAction(value: HotTopic) {
 function validClosure(value: ReviewActionClosure) {
   return !!value && value.kind === "sf-review-action-v1" && typeof value.id === "string" && /^review-closure:[a-f0-9]{64}$/.test(value.id) && typeof value.principalRef === "string" && !!value.principalRef.trim() && typeof value.reviewRef === "string" && !!value.reviewRef.trim() && typeof value.reviewDigest === "string" && /^[a-f0-9]{64}$/.test(value.reviewDigest) && typeof value.relationId === "string" && !!value.relationId.trim() && validHandoff(value.handoff) && validAction(value.topic)
 }
+

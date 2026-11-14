@@ -10,6 +10,8 @@ import type { CollaborationRecipientAuthority } from "./recipient-authority.ts"
 import { createCollaborationHotTopicHost } from "./hot-topic-host.ts"
 import { createCollaborationHotTopicReadHost } from "./hot-topic-read-host.ts"
 import { createRelationPort } from "./relations.ts"
+import { createHandoffRelationProjection } from "./handoff-relation.ts"
+import type { WorkReviewContexts } from "./work-review-context.ts"
 import { createThreadPort } from "./threads.ts"
 import { createHandoffPort } from "./handoff.ts"
 import { createCollaborationWorkPort } from "./work-port.ts"
@@ -33,6 +35,7 @@ export function createCollaborationComposition(input: {
   procurement: Pick<ReturnType<typeof createProcurementPort>, "list">
   selections: WorkSelectionPort
   signals?: WorkSignals
+  reviewContexts?: WorkReviewContexts
   human: CollaborationHumanAuthority
   recipientAuthority?: CollaborationRecipientAuthority
   recipientThread?: ReturnType<typeof createRecipientThreadReader>
@@ -64,7 +67,7 @@ export function createCollaborationComposition(input: {
     const day = new Date(environment.at).toISOString().slice(0, 10)
     return input.recordEvidence.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: topic.id, fields: ["status"], period: { start: day, end: day } }, context)
   } }
-  const relations = createRelationPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence, reissue: input.reissue, handoffPermit })
+  const relations = createRelationPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence, reissue: input.reissue, projectHandoff: createHandoffRelationProjection({ host: input.host, authorizeSources: authority.sources, reissue: input.reissue, readTopic: hotTopics.read, issueTopic: topicSource.issue }), handoffPermit })
   const threads = createThreadPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence })
   const handoff = createHandoffPort({ hotTopics, relations, human: input.human, permit: handoffPermit, run: async (context, request, work) => {
     if (activeHandoffs.has(context)) return { status: "conflict", reason: "handoff-in-progress" }
@@ -85,7 +88,8 @@ export function createCollaborationComposition(input: {
     if (ref.target.surface !== "dashboard" || ref.target.recordType !== "hotTopics" || ref.target.recordId !== topic.id || !await authority.sources([ref], context)) return { status: "unavailable", reason: "topic-source-unavailable" }
     return { status: "ok", value: { ref: ref.refId, evidence: ref } }
   } })
-  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork, answerWork: input.answerWork, refreshWorkSource: input.refreshWorkSource }, procurement: input.procurement, topicSource, selections: input.selections, signals: input.signals })
+  const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork, answerWork: input.answerWork, refreshWorkSource: input.refreshWorkSource }, procurement: input.procurement, topicSource, selections: input.selections, signals: input.signals, reviewContexts: input.reviewContexts })
   return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion, readVersioned: relations.readVersioned }, threads, handoff, work }
 }
+
 

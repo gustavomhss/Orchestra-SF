@@ -24,6 +24,7 @@ export function createRelationPort(input: {
   human: CollaborationHumanAuthority
   mutationFence: CollaborationMutationFence
   reissue?: ReturnType<typeof createCollaborationReissuer>
+  projectHandoff?: (relation: Relation, context: TrustedDomainContext) => Promise<Relation | undefined>
   handoffPermit: symbol
   createId: () => string
   now: () => string
@@ -31,6 +32,10 @@ export function createRelationPort(input: {
   const checkRecipient = input.checkRecipientAtCommit ?? createRecipientCommitCheck()
   const project = async (relation: Relation, context: TrustedDomainContext): Promise<Relation | undefined> => {
         if (await input.authorizePair(relation, context)) return relation
+        if (relation.kind === "handoff" && input.projectHandoff) {
+          const current = await input.projectHandoff(relation, context)
+          return current && await input.authorizePair(current, context) ? current : undefined
+        }
         if (!input.reissue || relation.evidenceRefs.some((ref) => !ref || typeof ref !== "object" || ref.kind !== "record")) return undefined
         const from = relation.evidenceRefs.findIndex((ref) => ref.refId === relation.fromRef)
         const to = relation.evidenceRefs.findIndex((ref) => ref.refId === relation.toRef)
@@ -183,4 +188,5 @@ function isRelation(value: unknown): value is Relation {
   const relation = value as Record<string, unknown>
   return [relation.id, relation.fromRef, relation.toRef, relation.kind, relation.confirmedBy, relation.confirmedAt].every((part) => typeof part === "string" && !!part.trim()) && Array.isArray(relation.evidenceRefs)
 }
+
 

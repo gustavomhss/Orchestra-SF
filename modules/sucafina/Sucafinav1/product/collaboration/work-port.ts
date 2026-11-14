@@ -20,6 +20,9 @@ import { latestConfirmationWork } from "./confirmation-work.ts"
 import { sameHandoffWorkSource } from "./work-handoff-source.ts"
 import type { AnswerWork } from "./answer-work.ts"
 import type { CollaborationWorkSourceRefresh } from "./work-source-refresh.ts"
+import type { ReviewActionContext } from "../reviews/closure-action.ts"
+import { readWorkReviewContexts } from "./work-review-context.ts"
+import type { WorkReviewContexts } from "./work-review-context.ts"
 
 export type WorkPresentationItem = {
   kind: "clarification" | "handoff" | "procurement" | "confirmation" | "signal"
@@ -36,6 +39,7 @@ export type WorkPresentationItem = {
   state: string
   destination?: { kind: "thread"; threadId: string } | { kind: "hot-topic"; topicId: string } | { kind: "procurement-request"; recordId: string; incarnation: string } | { kind: "confirmation"; confirmationId: string } | { kind: "signal"; ref: string }
   sourceRefs: readonly BusinessEvidenceRef[]
+  reviewContexts?: readonly ReviewActionContext[]
 }
 
 export type ConfirmationWork = { state: "valid" | "stale"; reason?: ConfirmationValidityProjection["reason"]; sourceRefs: readonly BusinessEvidenceRef[]; period: Period; observedVersion: number; sourceVersion?: number }
@@ -49,6 +53,7 @@ export function createCollaborationWorkPort(input: {
   procurement: Pick<ReturnType<typeof createProcurementPort>, "list">
   selections: WorkSelectionPort
   signals?: WorkSignals
+  reviewContexts?: WorkReviewContexts
   topicSource: { issue: (topic: HotTopic, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> }
 }) {
   const collect = async (selection: WorkListRequest, context: TrustedDomainContext): Promise<PortResult<{ list: AuthorizedWorkList; presentation: readonly WorkPresentationItem[] }>> => {
@@ -75,6 +80,7 @@ export function createCollaborationWorkPort(input: {
       const presentation: WorkPresentationItem[] = []
       const presentationProofs: BusinessEvidenceRef[] = []
       const answerProofs: { id: string; value: AnswerWork }[] = []
+      const reviewProofs: { topicId: string; value: readonly ReviewActionContext[] }[] = []
       if (selected.selectionRef.startsWith("sf:case-work-selection:") && !input.signals) return { status: "unavailable", reason: "work-signals-unavailable" }
       const signals = input.signals && selected.selectionRef.startsWith("sf:case-work-selection:") ? await input.signals(selected.selectionRef, selected.period, context) : undefined
       if (signals && signals.status !== "ok") return { status: "unavailable", reason: "work-signals-unavailable" }
@@ -150,8 +156,11 @@ export function createCollaborationWorkPort(input: {
         if (topic.status !== "ok") return { status: "unavailable", reason: "handoff-work-source-unavailable" }
         const current = await input.topicSource.issue(topic.value, context)
         if (current.status !== "ok" || current.value.target.recordId !== topic.value.id || !await input.collaboration.authority.sources([current.value], context) || !await sameHandoffWorkSource(input.host, target, current.value, context)) return { status: "unavailable", reason: "handoff-work-source-unavailable" }
+        const reviews = input.reviewContexts ? await readWorkReviewContexts(input.reviewContexts, topic.value.id, context) : undefined
+        if (reviews && reviews.status !== "ok") return { status: "unavailable", reason: "work-review-context-unavailable" }
+        if (reviews?.status === "ok") reviewProofs.push({ topicId: topic.value.id, value: reviews.value })
         items.push({ actionRef: current.value.refId, ownerRef: own, state: topic.value.status, sourceRefs: [...sourceRefs, current.value] })
-        presentation.push({ kind: "handoff", actionRef: current.value.refId, title: topic.value.action || null, ownerRef: own, ...(topic.value.due.trim() ? { due: topic.value.due } : {}), ...(current.value.target.period ? { period: current.value.target.period } : {}), sourceVersion: current.value.target.version, state: topic.value.status, destination: { kind: "hot-topic", topicId: topic.value.id }, sourceRefs: [...sourceRefs, current.value] })
+        presentation.push({ kind: "handoff", actionRef: current.value.refId, title: topic.value.action || null, ownerRef: own, ...(topic.value.due.trim() ? { due: topic.value.due } : {}), ...(current.value.target.period ? { period: current.value.target.period } : {}), sourceVersion: current.value.target.version, state: topic.value.status, destination: { kind: "hot-topic", topicId: topic.value.id }, sourceRefs: [...sourceRefs, current.value], ...(reviews?.status === "ok" ? { reviewContexts: reviews.value } : {}) })
       }
       const procurement = scope.value.procurement.state === "selected" ? await input.procurement.list(scope.value.procurement.selectionRef, context) : { status: "ok" as const, value: { aging: [] } }
       if (procurement.status !== "ok") return procurement
@@ -202,7 +211,7 @@ export function createCollaborationWorkPort(input: {
       const entries = result.value.items.map((item) => {
         const matches = presentation.filter((entry) => entry.actionRef === item.actionRef)
         const first = matches[0]
-        if (!first || matches.some((entry) => entry.kind !== first.kind || entry.title !== first.title || entry.approvalStage !== first.approvalStage || entry.reason !== first.reason || entry.due !== first.due || entry.sourceVersion !== first.sourceVersion || entry.observedVersion !== first.observedVersion || digestSfValue(entry.period) !== digestSfValue(first.period) || digestSfValue(entry.destination) !== digestSfValue(first.destination))) return undefined
+        if (!first || matches.some((entry) => entry.kind !== first.kind || entry.title !== first.title || entry.approvalStage !== first.approvalStage || entry.reason !== first.reason || entry.due !== first.due || entry.sourceVersion !== first.sourceVersion || entry.observedVersion !== first.observedVersion || digestSfValue(entry.period) !== digestSfValue(first.period) || digestSfValue(entry.destination) !== digestSfValue(first.destination) || digestSfValue(entry.reviewContexts) !== digestSfValue(first.reviewContexts))) return undefined
         return { ...first, sourceRefs: item.sourceRefs }
       })
       if (entries.some((item) => !item)) return { status: "stale", reason: "work-presentation-conflict" }
@@ -214,6 +223,9 @@ export function createCollaborationWorkPort(input: {
       const answersAgain = await Promise.all(answerProofs.map((proof) => input.collaboration.answerWork!(proof.id, context)))
       if (answersAgain.some((answer) => answer.status !== "ok")) return { status: "unavailable", reason: "answer-work-source-unavailable" }
       if (answersAgain.some((answer, index) => answer.status === "ok" && digestSfValue(answer.value) !== digestSfValue(answerProofs[index]!.value))) return { status: "stale", reason: "answer-work-changed" }
+      const reviewsAgain = await Promise.all(reviewProofs.map((proof) => readWorkReviewContexts(input.reviewContexts!, proof.topicId, context)))
+      if (reviewsAgain.some((review) => review.status !== "ok")) return { status: "unavailable", reason: "work-review-context-unavailable" }
+      if (reviewsAgain.some((review, index) => review.status === "ok" && digestSfValue(review.value) !== digestSfValue(reviewProofs[index]!.value))) return { status: "stale", reason: "work-review-context-changed" }
       const finalState = await Promise.all((["threads", "relations", "confirmations"] as const).map((namespace) => input.state.read(request, namespace, (_state, authority) => authority.principalRef === own && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion)))
       if (finalState.some((entry, index) => {
         const prior = before[index]
@@ -233,3 +245,4 @@ export function createCollaborationWorkPort(input: {
     },
   }
 }
+

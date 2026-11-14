@@ -14,6 +14,7 @@ import { createWorkDestinationResolver } from "./destination.ts"
 import { createCollaborationCycleView } from "./cycle-view.ts"
 import type { WorkPresentationItem, WorkSignals } from "./work-port.ts"
 import type { ConfirmationWork } from "./work-port.ts"
+import type { WorkReviewContexts } from "./work-review-context.ts"
 import { createCollaborationCapabilities } from "./capabilities.ts"
 import type { CollaborationCapabilityHost } from "./capabilities.ts"
 import { createCollaborationAuthority } from "./authority.ts"
@@ -63,6 +64,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   caseSelectionWrites?: WeakSet<object>
   threadHistoryWrites?: WeakSet<object>
   workSignals?: WorkSignals
+  reviewContexts?: WorkReviewContexts
   workDestination?: { origin: string; mount: string; resolveDestination: (destination: NonNullable<WorkPresentationItem["destination"]>, context: TrustedDomainContext) => Promise<PortResult<{ href: string }>> }
   cases: Pick<DecisionCasePort, "read">
   readQuestionContribution?: ReturnType<typeof createSfContributionReader>
@@ -139,7 +141,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     return { prepare, confirm, project: port.project, readScope: port.readScope, find: port.find, inspect: port.inspect, work }
   })()
   const answerWork = input.confirmationSource ? createAnswerWorkPort({ host: input.host, state: input.state, source: input.confirmationSource, authorizeSources: authority.sources }) : undefined
-  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, recipientThread, reissue, refreshWorkSource, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, answerWork: answerWork?.project, createId: input.createId, now: input.now })
+  const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, reviewContexts: input.reviewContexts, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, recipientThread, reissue, refreshWorkSource, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, answerWork: answerWork?.project, createId: input.createId, now: input.now })
   const threadReads = createRecipientAwareThreadReads(collaboration.threads, recipientThread)
   const resolveWorkDestination = input.workDestination ? createWorkDestinationResolver({ ...input.workDestination, host: input.host, work: collaboration.work }) : undefined
   const captureWorkSource = async (memberRef: string, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {

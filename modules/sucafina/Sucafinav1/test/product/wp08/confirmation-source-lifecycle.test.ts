@@ -90,12 +90,28 @@ test("real confirmation reevaluates restored access and cannot inherit validity 
     const replacement = available(await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: "project", fields: ["name", "status"], period: fixture.period }, fixture.read))
     expect(replacement.target.projectionDigest).toBe(original.target.projectionDigest)
     expect(replacement.target.incarnation).not.toBe(original.target.incarnation)
-    expect(await port.project(confirmed.id, fixture.read)).toMatchObject({ status: "ok", value: { state: "stale", reason: "source-replaced" } })
+    // The source lifecycle rotates the existing scope entry on replacement; it does not
+    // retain the old incarnation. Without that continuity witness the observer must
+    // remain unavailable, not label the old reference fresh or infer a replacement.
+    const replacementState = await fixture.snapshots()
+    expect(Object.values(replacementState.dashboard.sfSources?.scopes ?? {}).some((entry) => entry.incarnation === original.target.incarnation)).toBe(false)
+    expect(await port.project(confirmed.id, fixture.read)).toMatchObject({ status: "ok", value: { state: "unavailable", reason: "access-unavailable" } })
     fixture.gate.dashboard = false
     expect(await port.project(confirmed.id, fixture.read)).toMatchObject({ status: "ok", value: { state: "unavailable" } })
     fixture.gate.dashboard = true
-    expect(await port.project(confirmed.id, fixture.read)).toMatchObject({ status: "ok", value: { state: "stale", reason: "source-replaced" } })
-    expect(await port.readScope({ ...scope, sourceRef: { ...scope.sourceRef, incarnation: replacement.target.incarnation } }, fixture.read)).toEqual({ status: "ok", value: null })
+    expect(await port.project(confirmed.id, fixture.read)).toMatchObject({ status: "ok", value: { state: "unavailable", reason: "access-unavailable" } })
+    const replacementScope = { ...scope, sourceRef: { ...scope.sourceRef, incarnation: replacement.target.incarnation } }
+    expect(await port.readScope(replacementScope, fixture.read)).toEqual({ status: "ok", value: null })
+    const newDisplay = available(await receipts.prepare(replacementScope, fixture.read))
+    const newCommand = { scope: replacementScope, observedSourceVersion: newDisplay.sourceVersion, expectedScopeFingerprint: newDisplay.scopeFingerprint, expectedStorageVersion: 1, idempotencyKey: "explicit-confirmation-of-new-physical-source" }
+    const renewed = available(await port.confirm(newCommand, await fixture.admit("collaboration.confirmation.confirm", newCommand)))
+    expect(renewed.id).not.toBe(confirmed.id)
+    expect(renewed.auditRef).not.toBe(confirmed.auditRef)
+    expect(await port.readScope(replacementScope, fixture.read)).toMatchObject({ status: "ok", value: { confirmationId: renewed.id, state: "valid" } })
+    const old = available(await port.project(confirmed.id, fixture.read))
+    expect(old).toMatchObject({ state: "unavailable", reason: "access-unavailable" })
+    expect(old).not.toHaveProperty("scopeFingerprint")
+    expect(JSON.stringify(old)).not.toContain(replacement.refId)
     const preserved = await fixture.state.read(fixture.request(), "confirmations", (state) => state.confirmations[confirmed.id])
     if (preserved.status !== "ok") throw new Error("confirmation audit unavailable")
     expect(preserved.value).toMatchObject(confirmed)

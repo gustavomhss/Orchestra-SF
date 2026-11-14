@@ -1,6 +1,6 @@
+import { expectUnchangedDomainState } from "./domain-state.ts"
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
-import { DashboardBudget } from "../../../runtime/dashboard-budget.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
 import { object } from "../../../runtime/contract.ts"
 import { createDashboardConfirmationObserver } from "../../../product/dashboard/confirmation.ts"
@@ -25,7 +25,7 @@ test("real Dashboard dependencies preserve an irrelevant edit and invalidate com
     const port = createConfirmationPort<Extract<DashboardConfirmationObservation, { state: "available" }>>({ host: fixture.host, state: fixture.state, human: fixture.human, creationTarget: fixture.creationTarget, observe: observer.observe, fence: async (selected, observation, context) => await observer.fenceManifest(selected, context) && await observer.fence(selected, observation, context), verifyObserved: receipts.verifyObserved, createId: randomUUID, now: () => "2026-11-13T00:00:00Z" })
     const prepared = available(await receipts.prepare(scope, fixture.read))
     const before = await fixture.snapshots()
-    await fixture.mutate("dashboard", DashboardBudget.domain, { page: "CAPEX Projects", action: "save", id: "capex", version: before.dashboard.versions["capexProjects:capex"]!.version, values: { notes: "Unselected explanatory note" } })
+    await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: before.dashboard.versions["projects:project"]!.version, values: { notes: "Unselected explanatory note" } })
     const afterIrrelevant = await fixture.snapshots()
     const command = { scope, observedSourceVersion: prepared.sourceVersion, expectedScopeFingerprint: prepared.scopeFingerprint, expectedStorageVersion: 0, idempotencyKey: "real-dependencies-confirm" }
     const confirmed = available(await port.confirm(command, await fixture.admit("collaboration.confirmation.confirm", command)))
@@ -33,7 +33,7 @@ test("real Dashboard dependencies preserve an irrelevant edit and invalidate com
     expect(confirmed.observedSourceVersion).toBe(prepared.sourceVersion)
     const reordered = { ...scope, fields: [...scope.fields].reverse(), materialDependencies: [capexSource, projectSource].map((dependency) => ({ ...dependency, fields: [...dependency.fields].reverse() })) }
     expect(await port.readScope(reordered, fixture.read)).toMatchObject({ status: "ok", value: { confirmationId: confirmed.id, state: "valid", reason: "unchanged-scope" } })
-    expect(await fixture.snapshots()).toEqual(afterIrrelevant)
+    expectUnchangedDomainState(afterIrrelevant, await fixture.snapshots())
     const pending = available(await receipts.prepare(scope, fixture.read))
     const concurrent = { ...command, observedSourceVersion: pending.sourceVersion, expectedScopeFingerprint: pending.scopeFingerprint, expectedStorageVersion: 1, idempotencyKey: "real-dependency-race" }
     const unchangedDraft = structuredClone(concurrent)
@@ -52,7 +52,7 @@ test("real Dashboard dependencies preserve an irrelevant edit and invalidate com
     expect(await port.confirm(concurrent, await fixture.admit("collaboration.confirmation.confirm", concurrent))).toEqual({ status: "conflict", reason: "material-scope-changed" })
     expect(concurrent).toEqual(unchangedDraft)
     expect(await port.find(scope, fixture.read)).toEqual({ status: "ok", value: { confirmationIds: [confirmed.id] } })
-    expect(await fixture.snapshots()).toEqual(afterMaterial)
+    expectUnchangedDomainState(afterMaterial, await fixture.snapshots())
     fixture.gate.dashboard = false
     expect(await port.readScope(scope, fixture.read)).toEqual({ status: "unavailable", reason: "confirmation-scope-unavailable" })
   } finally {
@@ -85,7 +85,7 @@ test("real record confirmation preserves absent versus observed zero and the sou
     const confirmed = available(await port.confirm(command, await fixture.admit("collaboration.confirmation.confirm", command)))
     expect(await port.readScope(scope, fixture.read)).toMatchObject({ status: "ok", value: { confirmationId: confirmed.id, state: "valid" } })
     expect(available(await fixture.records.read(ref.refId, fixture.read))).toEqual(projection)
-    expect(await fixture.snapshots()).toEqual(before)
+    expectUnchangedDomainState(before, await fixture.snapshots())
   } finally {
     await fixture.dispose()
   }

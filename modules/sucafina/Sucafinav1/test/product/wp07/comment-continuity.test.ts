@@ -29,9 +29,14 @@ test("authorized C06 capture creates immutable section membership and reopens th
     await f.capture(sourceA, f.author)
     await f.capture(sourceB, f.recipient)
     const version = async () => available(await port.storageVersion("threads", f.author))
-    const draft = { kind: "review" as const, sourceRef: sourceA.refId, sourceIncarnation: sourceA.target.incarnation, observedVersion: sourceA.target.version, period: f.period, recipientRef: "reader-b", body: "PRESERVED-A-V1: review the selected project.", evidenceRefs: [sourceA] }
+    const draft = { kind: "review" as const, sourceRef: sourceA.refId, sourceIncarnation: sourceA.target.incarnation, observedVersion: sourceA.target.version, period: f.period, recipientRef: "reader-b", body: "INITIAL-A-V1: review the selected project.", evidenceRefs: [sourceA] }
     const mutation = { expectedStorageVersion: await version(), idempotencyKey: "wp07-associated-thread" }
     const thread = available(await port.threads.create(draft, mutation, await f.admit("person", "collaboration.thread.create", { draft, mutation })))
+    const preservedBody = "PRESERVED-A-V3: the reviewed project context and the original discussion."
+    for (const [expectedVersion, body] of [[1, "INTERMEDIATE-A-V2: discussion before preservation."], [2, preservedBody]] as const) {
+      const editMutation = { expectedStorageVersion: await version(), idempotencyKey: `wp07-before-preservation-edit-${expectedVersion}` }
+      available(await port.threadHistory.edit(thread.id, thread.messages[0]!.id, expectedVersion, body, editMutation, await f.admit("person", "collaboration.thread.edit", { id: thread.id, messageId: thread.messages[0]!.id, expectedVersion, body, mutation: editMutation })))
+    }
     const body = "PRESERVED-B-V1: the selected source has been reviewed."
     const replyMutation = { expectedStorageVersion: await version(), idempotencyKey: "wp07-associated-reply" }
     available(await port.recipientActions.reply(thread.id, body, replyMutation, await f.admit("reader-b", "collaboration.thread.reply", { id: thread.id, body, mutation: replyMutation })))
@@ -39,7 +44,8 @@ test("authorized C06 capture creates immutable section membership and reopens th
     const comments = createReviewThreadComments({ host: f.host, threads: port.threadReads, history: port.threadHistory, maxMessages: 20, authorizeSourceMapping: createExactReviewThreadSourceMapping({ host: f.host, evidence: f.evidence }), authorizeSourceContinuity: port.authorizeThreadSourceContinuity })
     const projection = available(await f.records.read(sourceA.refId, f.author))
     const captured = available(await comments.capture(thread.id, projection.context.sourceRefs, f.author))
-    expect(captured.map((comment) => comment.content)).toEqual([draft.body, body])
+    expect(captured.map((comment) => comment.content)).toEqual([preservedBody, body])
+    expect(captured.map((comment) => comment.version)).toEqual([3, 1])
     expect(captured.map((comment) => comment.sourceRefs[0]!.incarnation)).toEqual([sourceA.target.incarnation, sourceB.target.incarnation])
     const resolveSources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
       if (!await f.host.revalidate(context)) return false
@@ -63,12 +69,12 @@ test("authorized C06 capture creates immutable section membership and reopens th
     expect(selectedReviewComments(review, ["project"], digestSfValue)).toEqual(captured)
     expect(reviewInclusion(review, ["project"])?.comments).toHaveLength(2)
     const originalDigest = digestSfValue(review)
-    const editBody = "CURRENT-A-V2: this is the current conversation only."
+    const editBody = "CURRENT-A-V4: this is the current conversation only."
     const editMutation = { expectedStorageVersion: await version(), idempotencyKey: "wp07-current-conversation-edit" }
-    available(await port.threadHistory.edit(thread.id, thread.messages[0]!.id, 1, editBody, editMutation, await f.admit("person", "collaboration.thread.edit", { id: thread.id, messageId: thread.messages[0]!.id, expectedVersion: 1, body: editBody, mutation: editMutation })))
+    available(await port.threadHistory.edit(thread.id, thread.messages[0]!.id, 3, editBody, editMutation, await f.admit("person", "collaboration.thread.edit", { id: thread.id, messageId: thread.messages[0]!.id, expectedVersion: 3, body: editBody, mutation: editMutation })))
     const currentThread = createReviewCurrentThread({ reviews: services.reviews, threads: port.threadReads, host: f.host })
     const current = available(await currentThread(review.id, captured[0]!.id, f.author))
-    expect(current).toMatchObject({ threadId: thread.id, view: "current", messages: [{ version: 2, body: editBody }, { version: 1, body }] })
+    expect(current).toMatchObject({ threadId: thread.id, view: "current", messages: [{ version: 4, body: editBody }, { version: 1, body }] })
     expect(digestSfValue(available(await services.reviews.read(review.id, f.author)))).toBe(originalDigest)
     const http = createReviewHttp({ origin: "https://example.test", ui: f.ui, authority: f.domainAuthority, reviews: services.reviews, descriptors: services.descriptors, currentThread, human: { preserve: async () => ({ status: "denied", reason: "not-selected" }) }, download: async () => new Response(null, { status: 503 }), maxBodyBytes: 4096 })
     const request = () => new Request(`https://example.test/product?sf=review-current-thread&reviewRef=${encodeURIComponent(review.id)}&commentId=${encodeURIComponent(captured[0]!.id)}`, { headers: { actor: "person" } })
@@ -84,9 +90,11 @@ test("authorized C06 capture creates immutable section membership and reopens th
       const output = await renderPreservedReview(historical, { title: "Captured comments", format, sectionRefs: ["project"] })
       if (!output.ok) throw new Error("Historical report unavailable")
       const text = (await extractReportText(output.bytes, format)).text.replace(/\s/gu, "")
-      expect(text.split("PRESERVED-A-V1:").length - 1).toBe(1)
+      expect(text.split("PRESERVED-A-V3:").length - 1).toBe(1)
       expect(text.split("PRESERVED-B-V1:").length - 1).toBe(1)
-      expect(text).not.toContain("CURRENT-A-V2:")
+      expect(text).not.toContain("CURRENT-A-V4:")
+      expect(text).not.toContain("INTERMEDIATE-A-V2:")
+      expect(text).not.toContain("INITIAL-A-V1:")
     }
     f.historical.allowed = false
     expect((await services.reviews.read(review.id, f.author)).status).toBe("denied")
