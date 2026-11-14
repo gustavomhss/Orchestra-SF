@@ -32,6 +32,7 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { handleSfAnalysis } from "../../../product/interface/analysis-http.ts"
 import { object } from "../../../runtime/contract.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import type { AssetServices } from "../../../runtime/assets.ts"
 
 type AnalysisInput = Parameters<NonNullable<SfHostServices["analyses"]>["start"]>[1]
 type SourcePersistence = ReturnType<typeof createSfSourcePersistence>
@@ -46,7 +47,7 @@ export type Wp12NativeMissionContext = {
   origin: string
   principalRef: string
   at: string
-  request: (body?: unknown, route?: string) => Request
+  request: (body?: unknown, route?: string, method?: "GET" | "POST") => Request
   human: <T>(action: SfHumanAction, payload: unknown, work: (call: TrustedUiContext) => Promise<T>) => Promise<T>
   ui: <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>) => Promise<T>
 }
@@ -59,6 +60,7 @@ export async function withWp12NativeMissionHost<T>(options: {
   operations: readonly string[]
   humanActions?: readonly SfHumanAction[]
   namespaces?: SfProductGrant["namespaces"]
+  assets?: AssetServices
   initialize: (persistence: SourcePersistence) => Promise<void>
 }, work: (harness: {
   open: <R>(phase: "initial" | "reopened", work: (context: Wp12NativeMissionContext) => Promise<R>) => Promise<R>
@@ -70,10 +72,10 @@ export async function withWp12NativeMissionHost<T>(options: {
   const principalRef = `wp12-synthetic-${options.label}-principal`
   const admittedRequests = new WeakSet<Request>()
   const at = new Date().toISOString()
-  const request = (body?: unknown, route = "/sucafina/planner?sf=analysis") => {
-    const value = new Request(new URL(route, origin), { method: "POST",
+  const request = (body?: unknown, route = "/sucafina/planner?sf=analysis", method: "GET" | "POST" = "POST") => {
+    const value = new Request(new URL(route, origin), { method,
       headers: { origin, "content-type": "application/json", "idempotency-key": randomUUID() },
-      ...(body === undefined ? {} : { body: JSON.stringify(body) }) })
+      ...(method === "GET" || body === undefined ? {} : { body: JSON.stringify(body) }) })
     admittedRequests.add(value)
     return value
   }
@@ -88,6 +90,7 @@ export async function withWp12NativeMissionHost<T>(options: {
       }
       const runtime = await createSfHostRuntime({ installationId: `wp12-native-${options.label}-installation`, directory: sourceRoot, sourceRoot,
         origin, mount: "/sucafina", persistence,
+        ...(options.assets ? { assets: { persistence, services: options.assets } } : {}),
         authenticate: async (incoming, context) => admittedRequests.has(incoming) && context
           ? { id: principalRef, canWrite: true, roles: [{ surface: context.surface, role: context.surface === "planner" ? "finance" : "admin" }] } : null,
         environment: async () => ({ at, id: randomUUID, directory: [{ id: principalRef, name: "Explicit synthetic native mission principal" }] }),

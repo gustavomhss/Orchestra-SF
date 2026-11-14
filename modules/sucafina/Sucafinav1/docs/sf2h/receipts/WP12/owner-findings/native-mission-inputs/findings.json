@@ -1,0 +1,203 @@
+{
+  "schema": "sf-wp12-owner-delta-v1",
+  "id": "WP12-NATIVE-PROCUREMENT-DOCUMENT-INPUTS",
+  "observedProduct": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+  "inspection": "STATIC_ONLY",
+  "productTests": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "foreignSourceEdited": false,
+  "proposalStatus": "NOT_APPLIED",
+  "gnativeAccepted": false,
+  "findings": [
+    {
+      "id": "CONTRACT-SOURCE-SURFACE",
+      "owner": "WP10 host composition",
+      "classification": "statically-confirmed-mounted-producer-and-verifier-mismatch",
+      "sourcePins": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "9b21d9f7d4b115bb690ab82256b2cef0590c6afe"
+        }
+      ],
+      "finding": "createProcurementContractSource issues Dashboard Vendor Contracts and readContractSource accepts only dashboard/contracts. Mounted createSfContractInputProducer and createSfContractReviewVerifier require target.surface=procurement. ContractReviewInput's canonical contractProjectionRef is BusinessEvidenceRef and imposes no Procurement-only surface restriction.",
+      "proposedDelta": "Use the actual dashboard/contracts source selector in the mounted producer and verifier, retaining case membership, exact source digest, current resolution, allowed fields and readContract revalidation. Do not rewrite a returned ref or broaden source access.",
+      "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "actualDriverInputs": "Actual dashboard contract source issuance/read; complete C09/C10 alternative; canonical registered document schema; documentIds=[]; missing notice observed through readContract.",
+      "readyOutputScope": "CommercialGap for an actual missing contract field. Other CommercialGap categories and EvidenceCandidate are not certified by this driver.",
+      "requiredTests": [
+        "Genuine dashboard/contracts source linked to current case prepares successfully.",
+        "Procurement request masquerading as contract is refused.",
+        "Source outside current case, stale version and changed fields are refused.",
+        "The actual output verifier accepts only the currently missing or unavailable field and linked source."
+      ]
+    },
+    {
+      "id": "CONTRACT-SCHEMA-REF-ID",
+      "owner": "WP10 host composition",
+      "classification": "statically-confirmed-mounted-contract-document-branch-mismatch",
+      "sourcePins": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "50e20b20e927f30b5b24e0e3c622c2c8a6b19a76"
+        }
+      ],
+      "finding": "The actual schema resolver accepts schema:<id>:<version> and returns the bare id plus string version. Contract producer compares schema.value.id with the full selected fieldSchemaRef, so every legitimate populated documentIds branch fails that equality.",
+      "proposedDelta": "Compare the human-selected canonical reference with schema:${schema.value.id}:${schema.value.version}; continue verifying the persisted document's schemaRef and schemaVersion against that resolved identity.",
+      "requiredTests": [
+        "Real admitted document, registered schema, stored extraction and linked current case source use the full canonical schema ref.",
+        "Bare id, changed schema version, different document binding and forged DocumentEvidence are refused."
+      ],
+      "exclusions": "Do not label the unused createSfExtractionInputProducer equality as an installed extraction failure: analysis-host-services mounts createSfDocumentAnalysisInput, which correctly resolves canonical refs.",
+      "reproducerStatus": "Document-producing prerequisites implemented; populated contract-document branch remains NOT_RUN and requires an actual source promotion/claim consumer."
+    },
+    {
+      "id": "PURCHASE-ALLOWED-TARGET",
+      "owner": "WP10 with the Procurement source/C12 owner",
+      "classification": "statically-confirmed-ordinary-path-prerequisite-gap-not-proof-that-all-C12-paths-are-unavailable",
+      "sourcePins": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "0332b118846cc8a45399aa24e4694fb6bf055719"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "97cde4dce2858f47b57b446c9c20bad77d367591"
+        }
+      ],
+      "finding": "The mounted business context for an individually issued Procurement source contains sourceRefs=[]. Procurement read preserves that context. Purchase preparation requires a nonempty human targets selection and resolves targets only from purchase.context.sourceRefs or existing choice-linked preparedChanges. A real human choice with an ordinary request and no prior preparedChanges therefore has no selectable allowed target.",
+      "proposedDelta": "Publish or consume the real current allowed-change-target issuer, with exact case/source/field/version/authority binding, or expose the existing legitimate C12 preparation route that supplies those targets. An observed row reference alone must not be treated as authorization to change it.",
+      "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "actualDriverInputs": "Two separate installations/tests: real complete or category-omitted Planner alternatives, issued units, registered human criterion, stored ChoiceRecord, actual Procurement request projection and actual sourcing ranking. The human target selector uses observed request id/fields only; no SourceRef is injected into the input.",
+      "requiredTests": [
+        "Ordinary current request and real choice obtain the explicitly authorized target through the owner route.",
+        "Outside-case request, changed target fields, stale choice and changed source fail preparation.",
+        "DossierDraft reopens without changing the chosen case or Procurement store.",
+        "PreparedChangeSet requires the real change proposal store and its exact choice-linked prepared output; not covered by this DossierDraft driver."
+      ]
+    },
+    {
+      "id": "PURCHASE-COMMERCIAL-BINDING",
+      "owner": "WP10 input/output composition",
+      "classification": "explicitly-unsupported-installed-input-mode",
+      "sourcePins": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63"
+        }
+      ],
+      "finding": "includeCommercialComparisons=true is explicitly unavailable with commercial-comparison-binding-unavailable; the verifier also refuses nonempty commercialComparisons. The driver obtains a genuine domain ranking separately and never calls the empty-array mode a full commercial comparison binding.",
+      "requiredDelta": "Expose the owner-approved stored CommercialComparison binding with current source pins before treating that mode as available.",
+      "nativeInferenceObserved": false
+    },
+    {
+      "id": "EVIDENCE-REVIEW-CLAIM-SELECTOR",
+      "owner": "WP11 claim/acceptance consumer and WP10 input composition; WP00 if a new shared contract is required",
+      "classification": "observed-source-design-prerequisite-gap-with-bounded-writer-inspection",
+      "sourcePins": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "440fdb53772e871cadc2703bad991b1517120b89"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-evidence-review.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "a965fd2d366e14cda8d71531392bda63d8159706"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-review.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "7b0bb3bbe0ef44f3e5c4babe431d9b37e2a22c4a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+          "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+        }
+      ],
+      "finding": "The mounted EvidenceReviewInput producer requires nonempty claimIds found in current.case.assumptions. Real case draft initializes assumptions=[]; the inspected analysis acceptance implementation increments version and appends ledger/outbox without materializing assumptions. Native extraction is a candidate and does not create a case claim. This inspection does not assert that every possible external producer was searched.",
+      "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "actualDriverBehavior": "Select only current case assumptions; empty set is submitted to the mounted preparer and recorded as needs-input, without synthetic C08 claims. The independent native branch uses only an actual extraction author run/output digest, the same exact caseRef, and asserts a distinct run and native Session.",
+      "requiredDelta": "Provide and exercise a real human claim/source adoption producer. Preserve the author's exact run/output target and current case version; do not insert claims directly into C08.",
+      "installedReadyOutputSubset": [
+        "ClaimIssue unsupported for a current claim with no source refs.",
+        "ClaimIssue contradiction only through two real confirmed claim-field bindings with current distinct values."
+      ],
+      "notCertified": [
+        "ClaimIssue stale",
+        "ClaimIssue missing-category",
+        "ClaimIssue invalid-digest",
+        "ClaimIssue access-unavailable",
+        "Document candidate confirmation or financial application by the reviewer"
+      ]
+    }
+  ],
+  "documentFixtureScope": {
+    "actual": [
+      "private local-store blob persistence",
+      "asset metadata tied to real domain contract",
+      "host document discovery/admission",
+      "private parser/index",
+      "human schema registration",
+      "mounted extraction input",
+      "native Session/tools/receipt/output if an installed model exists",
+      "schema and native output/source consumers after host reload"
+    ],
+    "notClaimed": [
+      "asset upload flow",
+      "malware scanner qualification",
+      "human document confirmation",
+      "financial application"
+    ],
+    "scanner": "Fail-closed unused scan service; no accepting scanner stub.",
+    "extractedCandidateResolver": {
+      "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "finding": "No bug asserted. The current resolver verifies extracted candidate bytes/range/RAG proof and may return fresh; BCS confirmation restrictions are separate."
+    }
+  }
+}

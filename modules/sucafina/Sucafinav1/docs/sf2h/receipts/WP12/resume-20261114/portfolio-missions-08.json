@@ -1,0 +1,182 @@
+{
+  "schema": "wp12-owned-increment-v1",
+  "base_product": "70219282bc9f458c41fd670936e793da44d18363",
+  "status": "FROZEN_STATIC_REVIEW_COMPLETE_AWAITING_HOSTED_CI",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-portfolio-preparation.ts",
+      "blob": "5fb4ec57e6ad6b688278b7570ba0d91992a709ea",
+      "sha256": "69b01b45e10e0fb921b7b82292076bbd037617ad9e87c21eb2750d5c9d9ebd17",
+      "bytes": 12420
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+      "blob": "fbfc8cc7948ddd607188bbea2bf40a0b98c51007",
+      "sha256": "4071395d2b217eca175f717a182b947718da825d1917b02929f6c7968e493e2e",
+      "bytes": 21685
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+      "blob": "1d17e9e48d88abe1688d61f26f7df3dcfa1e1b84",
+      "sha256": "8711153af4bdb7bf7bd039686a1300235b1a5280b9e5f1fb3e9f3797b07c0761",
+      "bytes": 14708
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+      "blob": "a1eeb9278ad966a4d5bdf5b83d4b2b8bcf45d5b1",
+      "sha256": "0cedba0d020dab4ee2181b3b48bf12354e0474426fd6f79e5ace3841d4b26add",
+      "bytes": 13960
+    }
+  ],
+  "dependencies_at_freeze": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "blob": "ad0fb691439e56bdb2dd4918440264e44b140bd8",
+      "sha256": "fc2fabd4a9cb9793bb48205999e41dd6974135cb95a11d90e65f544ec9d2f68c",
+      "bytes": 19283
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+      "blob": "fd73921d2e06695945a8d31853d7307fc69c6db1",
+      "sha256": "228f416e819020c6e58baaa699809aab44c1f2b31e7c10021e21391a09bb9bc5",
+      "bytes": 5779
+    }
+  ],
+  "dependency_note": "The shared helper authors own these dependencies. Their observed blobs identify the reviewed call signatures; this increment does not freeze or edit them.",
+  "skills": [
+    {
+      "profile": "sf_portfolio",
+      "skill": "sf-compor-portfolio",
+      "test": "native-execution-portfolio.test.ts",
+      "mounted_input": "PortfolioCompositionInput",
+      "optional_native_outputs": [
+        "PortfolioComparison",
+        "AlternativeDraft"
+      ],
+      "required_native_operations": [
+        "sf_portfolio_evaluate",
+        "sf_scenario_simulate",
+        "sf_alternative_draft"
+      ],
+      "real_consumers": [
+        "createSfPortfolioHttp:decision-portfolio-read",
+        "createSfAnalysisChoiceHttp:alternative-selection-set",
+        "handleSfAnalysis:output/reload"
+      ],
+      "hosted_evidence": "PENDING"
+    },
+    {
+      "profile": "sf_finance",
+      "skill": "sf-avaliar-sensibilidade",
+      "test": "native-execution-portfolio.test.ts",
+      "mounted_input": "SensitivityInput",
+      "optional_native_outputs": [
+        "SensitivityResult"
+      ],
+      "required_native_operations": [
+        "sf_sensitivity_evaluate",
+        "sf_scenario_simulate",
+        "sf_source_get"
+      ],
+      "real_consumers": [
+        "createSfPortfolioHttp:decision-sensitivity-read",
+        "createSfAnalysisChoiceHttp:sensitivity-selection-read",
+        "handleSfAnalysis:output/reload"
+      ],
+      "hosted_evidence": "PENDING"
+    },
+    {
+      "profile": "sf_portfolio",
+      "skill": "sf-revisar-dependencias",
+      "test": "native-execution-dependencies.test.ts",
+      "mounted_input": "DependencyReviewInput",
+      "optional_native_outputs": [
+        "DeliveryAssessment",
+        "DependencyConflict"
+      ],
+      "required_native_operations": [
+        "sf_relation_read",
+        "sf_context_get",
+        "sf_source_get"
+      ],
+      "real_consumers": [
+        "sf_relation_read:readConfirmedRelations",
+        "createSfAnalysisHttp:prepare",
+        "handleSfAnalysis:output/reload"
+      ],
+      "hosted_evidence": "PENDING"
+    },
+    {
+      "profile": "sf_portfolio",
+      "skill": "sf-reavaliar-compromissos",
+      "test": "native-execution-reevaluation.test.ts",
+      "mounted_input": "CommitmentReevaluationInput",
+      "optional_native_outputs": [
+        "ReconsiderationProposal"
+      ],
+      "required_native_operations_for_partial_analysis": [
+        "sf_freshness_check",
+        "sf_context_get",
+        "sf_scenario_compare"
+      ],
+      "canonical_watch_operation": {
+        "operation": "sf_watch_prepare",
+        "state": "NOT_EXECUTED",
+        "human_recipe_selected": false,
+        "admission_ref": null,
+        "source_finding": "Published createSfMemoryServices.prepareWatch has native-watch-admission-port-unavailable fallback; this source finding has not been executed by the new driver."
+      },
+      "real_consumers": [
+        "createSfMemoryHttp:memory-conditions",
+        "createSfMemoryHttp:memory-materiality",
+        "createSfAnalysisHttp:prepare",
+        "handleSfAnalysis:output/reload"
+      ],
+      "hosted_evidence": "PENDING",
+      "full_native_acceptance": false
+    }
+  ],
+  "change": "Build four remaining mission paths from actual source issuers, Planner operations, C10 coverage, C09 promotions, issued sensitivity units, human criterion and choice. Exercise bounded portfolio combinations, duplicate-target refusal, human alternative/sensitivity selection, confirmed C06 relation plus milestone, and registered memory condition/materiality. Reopen actual persisted domain outputs and optional native analyses.",
+  "validation": {
+    "syntax": "node --check passed for all four files; dependency and reevaluation files checked again after prompt-only edits. This parses source without imports or product execution.",
+    "independent_static_review": "own_review_resume checked all four files against inspected ports, grants and shapes. Only requested correction was removing expected state/generated ID/date hints from the conflict objective; applied with assertions preserved. Reevaluation objective likewise no longer tells the model an expected impact state.",
+    "hosted_tests": "PENDING",
+    "hosted_typecheck": "PENDING",
+    "product_tests_local": false
+  },
+  "reviewed_published_sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "commit": "70219282bc9f458c41fd670936e793da44d18363",
+      "blob": "e4a21957da6b91186ecae996a78664c54d7ce41a",
+      "fact": "Numeric operations remain hypothetical with conditioned comparison and null total."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "commit": "70219282bc9f458c41fd670936e793da44d18363",
+      "blob": "f4ccf580aafef9789b9c9acba2f861f05d1c8b08",
+      "fact": "Raw projects and dated milestone shape consumed by real Dashboard projection."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relation-catalog.ts",
+      "commit": "70219282bc9f458c41fd670936e793da44d18363",
+      "blob": "bf3f09f5cbc23ad81b65cfd1de97ff608dd075d8",
+      "fact": "Published pmo-capex relation connects projects and capexProjects."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "commit": "70219282bc9f458c41fd670936e793da44d18363",
+      "blob": "a5c35991f028e723fa5dcfc4f1e481911297ce72",
+      "fact": "Actual portfolio and sensitivity persistence and read paths; no result is inserted by this increment."
+    }
+  ],
+  "scope_limits": [
+    "Only initial raw business rows and explicit human inputs are synthetic. No ScenarioResult, ChoiceRecord, criterion rule, contribution, C08 receipt or state authority is inserted by the drivers.",
+    "Real source issuers and actual host HTTP/capability paths must produce every subsequent domain result. Failure is a concrete CI result, not permission to replace a boundary with a fixture.",
+    "The model-empty branch records unavailable inference and null native output. The model-present branch uses actual Session/SkillLoadReceipt/execution through the shared harness.",
+    "Native output assertions remain pending hosted execution; no full WP12 criterion or GNATIVE acceptance is claimed by this manifest.",
+    "Hypothetical operations retain conditioned comparisons, null totals, coverage conditions and no application. FTE declarations never become confirmed capacity; equal names never become a relation.",
+    "Reevaluation separately observes the real routine catalog but lacks a human-selected published recipe and real watch admission. sf_watch_prepare remains NOT_EXECUTED even if the narrower real native ReconsiderationProposal path eventually succeeds.",
+    "All four files are own WP12 tests/helpers; no foreign implementation, contract, host, financial engine, branch or policy was changed."
+  ]
+}

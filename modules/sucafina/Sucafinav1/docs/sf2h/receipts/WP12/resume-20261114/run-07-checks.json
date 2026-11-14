@@ -1,0 +1,62 @@
+{
+  "schema": "sf-wp12-hosted-check-v1",
+  "phase": "resume-07",
+  "product": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+  "productTree": "5d8caa74eb2214c626931b55ae0c566fc23dee93",
+  "snapshot": "64c560a4d0db472141a30e9c28982473ad4fdd9c",
+  "snapshotTree": "7a980f38e906d6427ca3ebe138a09bd739c8be71",
+  "runId": 43593605604,
+  "jobId": 132443337733,
+  "conclusion": "failure",
+  "commands": {
+    "typecheck": "bun typecheck (working directory modules/sucafina)",
+    "spawnImports": "bun run check:spawn-imports",
+    "guards": "bun run check:guards --base origin/dev"
+  },
+  "typecheck": {
+    "exitCode": 2,
+    "ownDiagnostics": 1,
+    "foreignDiagnostics": 0,
+    "code": "TS2769",
+    "file": "test/product/wp12/publication-lifecycle.test.ts",
+    "line": 205,
+    "reason": "Expected ContributionEnvelope did not admit the explicitly tested undefined branch."
+  },
+  "spawnImports": {
+    "conclusion": "success",
+    "files": 4618,
+    "allowListedSites": 66
+  },
+  "guards": {
+    "conclusion": "success",
+    "rules": 78,
+    "changedPaths": 834,
+    "gate": 0,
+    "warn": 15,
+    "errors": 0
+  },
+  "fix": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+    "blob": "341e72f304f86ff591b0a6b5ba2a44420bbacfac",
+    "sha256": "8541796064118763bf637ef39b1377ca1696f09bc9ebbcd49275badb66c00d6e",
+    "typeOnly": true,
+    "emittedJavaScriptIdentical": true,
+    "emittedJavaScriptSHA256": "c7e2720f9eac38f6874ffd6efd7b00aa9ba6c40b79928a5fe87dcf1d3e7a28e8",
+    "productExecuted": false
+  },
+  "log": {
+    "file": "evidence/resume-07-checks.log",
+    "sha256": "06f52965b1471c459d7971ab4467545c1d20f4440ab266ec11e851e5c70cc051"
+  },
+  "artifact": {
+    "id": 14113432322,
+    "digest": "sha256:47e6537d9069d7467af4febfbcf22b2e4352defb2e6bf22a8e633a5e4ec4a5ff",
+    "expiresAt": "2026-11-28T12:13:27Z"
+  },
+  "productTests": {
+    "status": "not-dispatched-for-W12",
+    "reason": "The existing W11 test flight was still in progress. No equivalent duplicate run was created."
+  },
+  "nativeInference": false,
+  "fullWp12Acceptance": false
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "sf-wp12-own-increment-v1",
+  "status": "FROZEN_FOR_PARENT_PUBLICATION",
+  "basePublishedCommit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "blob": "ad0fb691439e56bdb2dd4918440264e44b140bd8",
+      "sha256": "fc2fabd4a9cb9793bb48205999e41dd6974135cb95a11d90e65f544ec9d2f68c",
+      "bytes": 19283,
+      "kind": "test-or-test-helper"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "blob": "894009c373724a6f68a975ecede289346ff208e1",
+      "sha256": "3ba6fd9a9913bbdcc44f103c81aa07c4ec1e6293e920f88edb4fe75ff920ef2e",
+      "bytes": 10629,
+      "kind": "test-or-test-helper"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+      "blob": "fd73921d2e06695945a8d31853d7307fc69c6db1",
+      "sha256": "228f416e819020c6e58baaa699809aab44c1f2b31e7c10021e21391a09bb9bc5",
+      "bytes": 5779,
+      "kind": "test-or-test-helper"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "blob": "ab61f0e2161b0ff994b15dd41a08482ff6fb773e",
+      "sha256": "f6c6f295132995f0a8c82e733c5b9c733d59b965365bb77614db204b63a80ca5",
+      "bytes": 12218,
+      "kind": "test-or-test-helper"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-document-preparation.ts",
+      "blob": "37a997aa782d1cb695238a5fbe6aeaddfcceb00d",
+      "sha256": "bb86514c2a85a351d29120246d17b8ed5fc6e09ec1f786d7ffe7773e2a89be66",
+      "bytes": 4654,
+      "kind": "test-or-test-helper"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "4c494e718a9a5097b48aeaed40c4c3f8223bd46c",
+      "sha256": "a418544877e7cf066d11d192746c176d34b015461534fa331d892be7cf51b5f0",
+      "bytes": 12754,
+      "kind": "test-or-test-helper"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "blob": "0b3515d747f8976c2e0f719c25364fe7dcf81c01",
+      "sha256": "384242bdcb02cea3b5f3b319b6eaa7fa91410e11c1cfd8f5aad11191f2b770ac",
+      "bytes": 18174,
+      "kind": "test-or-test-helper"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/native-mission-inputs/findings.json",
+      "blob": "35bfa4f894d29b8d53bc97deaf7528088ecff1a0",
+      "sha256": "5001414a02d8e55246e5569ea05361b2dc646624cda3de4f9416422dd95b3341",
+      "bytes": 12919,
+      "kind": "owned-owner-handoff"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/native-mission-inputs/contract-proposal.NOT_APPLIED.patch",
+      "blob": "32645757bedb9207d0f80b0ff5916d64d8bbc4ba",
+      "sha256": "f996892780ea81cc6cdec6b981320a86d2842f5e58517aff826a68b1c7346e7d",
+      "bytes": 3592,
+      "kind": "owned-owner-handoff"
+    }
+  ],
+  "productTestFiles": [
+    "test/product/wp12/native-execution-purchase.test.ts",
+    "test/product/wp12/native-execution-documents-contract.test.ts"
+  ],
+  "productTestsRun": false,
+  "typecheckRun": false,
+  "staticSyntax": "PASS for seven TypeScript files; no imported code evaluated",
+  "sourcePins": "resume-input/own-missions/sisters/current/source-pins.json",
+  "sourceBytesVerified": "resume-input/own-missions/sisters/current/byte-verification.json",
+  "scenarioTypeOnlyIdentity": "resume-input/own-missions/w11-typefix/identity.json",
+  "documentLiteralTypeOnlyIdentity": "resume-input/own-missions/sisters/syntax/manifest.json",
+  "preservedPublishedMissions": {
+    "native-execution-finance.test.ts": "bb212b96ea795aa9d121c06a9609f8931d9dbbca",
+    "native-execution-intent.test.ts": "28c43ff9f5a27db73437edd123b6c4bc02fd2f0c",
+    "native-execution-scenarios-review.test.ts": "041f5e1a18419510e2163ed73003655e8afb6ff6",
+    "native-execution-sourcing.test.ts": "404423ec030ce36c658f7848907b0075a07f3ff4"
+  },
+  "foreignSourceEdited": false,
+  "foreignPatchStatus": "NOT_APPLIED",
+  "gnativeAccepted": false
+}

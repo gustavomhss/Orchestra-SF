@@ -1,0 +1,30 @@
+--- a/apps/cli/src/sucafina-product/input-producer-contract.ts
++++ b/apps/cli/src/sucafina-product/input-producer-contract.ts
+@@ -45,14 +45,14 @@
+   const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, call)
+   if (current.status !== "ok" || current.value.case.id !== request.caseRef.id || current.value.case.incarnation !== request.caseRef.incarnation || current.value.case.version !== request.caseRef.version || !current.value.case.currency.trim() || current.value.case.horizon.start > current.value.case.horizon.end) return undefined
+   const costCoverage = coverageOf(current.value, human.coverage)
+-  const matches = current.value.evidenceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.refId === human.contractRefId && ref.kind === "record" && ref.target.surface === "procurement")
++  const matches = current.value.evidenceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.refId === human.contractRefId && ref.kind === "record" && ref.target.surface === "dashboard" && ref.target.recordType === "contracts")
+   const contractRef = matches.length === 1 ? matches[0] : undefined
+   if (!costCoverage || !contractRef) return undefined
+   const stored = await Promise.all(human.documentIds.map(async (id) => {
+     const item = await readDocumentEvidence(id, call, { state: dependencies.documentHost.state, documents: dependencies.documentHost.documents, requestFor: dependencies.documentHost.host.requestFor, revalidate: dependencies.documentHost.host.revalidate })
+     if (item.status !== "ok" || item.value.evidence.id !== item.value.snapshot.evidence?.id) return undefined
+     const schema = await dependencies.documentHost.resolveFieldSchema(human.fieldSchemaRef, call, item.value.snapshot.documentRef)
+-    return schema.status === "ok" && schema.value.id === human.fieldSchemaRef && item.value.schemaRef === schema.value.id && item.value.schemaVersion === schema.value.version ? item.value.evidence : undefined
++    return schema.status === "ok" && human.fieldSchemaRef === `schema:${schema.value.id}:${schema.value.version}` && item.value.schemaRef === schema.value.id && item.value.schemaVersion === schema.value.version ? item.value.evidence : undefined
+   }))
+   if (stored.some((item) => !item)) return undefined
+   const documentEvidence = stored.flatMap((item) => item ? [item] : [])
+--- a/apps/cli/src/sucafina-product/analysis-verifier-documents.ts
++++ b/apps/cli/src/sucafina-product/analysis-verifier-documents.ts
+@@ -61,7 +61,7 @@
+       const decoded = decodeSfSkillInput("ContractReviewInput", input)
+       if (!decoded.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
+       const value = decoded.value
+-      if (digestSfValue(value.decisionScope.case) !== digestSfValue(request.caseRef) || value.contractProjectionRef.kind !== "record" || value.contractProjectionRef.target.surface !== "procurement") return { status: "needs-input", reason: "analysis-input-mismatch" }
++      if (digestSfValue(value.decisionScope.case) !== digestSfValue(request.caseRef) || value.contractProjectionRef.kind !== "record" || (value.contractProjectionRef.target.surface !== "dashboard" || value.contractProjectionRef.target.recordType !== "contracts")) return { status: "needs-input", reason: "analysis-input-mismatch" }
+       const contractRef = value.contractProjectionRef
+       const read = async (currentCall: TrustedDomainContext) => {
+         const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)

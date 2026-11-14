@@ -1,0 +1,39 @@
+{
+  "schema": "sf-wp12-owner-delta-v1",
+  "id": "WP12-BI-MODEL-ARTIFACT-IDENTITIES",
+  "owners": [
+    "WP10",
+    "WP00 if shared contract revision is needed"
+  ],
+  "classification": "statically-confirmed-input-output-composition-gap-not-observed-inference-failure",
+  "observedProduct": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+      "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+      "blob": "a5cd14609db80287e6f122cfb199338df53a8b50"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-bi-bindings.ts",
+      "blob": "4f21e442aebcc2151b3d07ee5b78595d2322e67f"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-bi.ts",
+      "blob": "7fccb6aad336a780267d776bf06e7c2a4cc81457"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "blob": "87e36883d92f6982cc8765337f8802ffacd6e52c"
+    }
+  ],
+  "finding": "The real producer persists canonical projection/table artifact identities in the private human-selection material. ContextualBIInput contains businessQuestion, approvedViews, projectionRefs (BusinessEvidenceRef[]), authorizedFilters and dashboardSelection, but no canonicalProjectionRefs (string[]) or tableRef. sf_bi_view returns DomainProjection and does not publish these artifact identities. The installed verifier requires exact stored canonicalProjectionRefs and tableRef in ContextualBIProposal.",
+  "requiredDelta": "Expose the already-authorized persisted artifact identities to the real native execution through an owner-approved input/read contract, with case, source, selection and current-authority pins. Keep the verifier strict. Do not derive identifiers from model fields, infer a latest artifact, or supply private expected output through a test objective.",
+  "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+  "testSemantics": "Driver first produces a real Dashboard source, case, input and C08 artifacts; reads WP05 presentation/drilldown before and after host reload. If a model exists it requires actual tools and matching ContextualBIProposal. Read-only C08 artifact observations are separate from consumer proof and never supplied to the model.",
+  "foreignSourceEdited": false,
+  "nativeInferenceObserved": false,
+  "gnativeAccepted": false
+}

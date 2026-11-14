@@ -1,0 +1,47 @@
+{
+  "status": "consumed-in-next-candidate",
+  "count": 1,
+  "sourceCommit": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+  "baseCommit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "sourceCommit": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+      "sourceBlob": "f53d0509b6f727947ec9b00888bce9dae1420094",
+      "baseBlob": "0e5df729ea0e793ec0784d4c2278c72a49fd77ed",
+      "sha256": "ef51b92ed54be17927014868a7beeb1cdaeb892b84aa3f0d34e8c2636c52541c",
+      "reason": "The real WP12 BI08 consumer retains an undated milestone. The base scope drops it before DashboardPort; the published scope emits date:null, preserves missing evidence and filters dated entries to the requested period.",
+      "inseparableDeltas": [
+        "Strips current milestone status outside the observation period and versions current milestone observations by observationDay.",
+        "Treats secActions/secIncidents/secPhishing as current fields for period filtering and observation-day source fencing."
+      ]
+    }
+  ],
+  "importClosure": {
+    "unchangedImports": [
+      "../../runtime/contract.ts",
+      "../../runtime/contract.ts",
+      "../contracts/context.ts",
+      "./port.ts",
+      "../../runtime/dashboard-operations.ts",
+      "../../src/nav.ts",
+      "../contracts/canonical.ts"
+    ],
+    "newFilesRequired": [],
+    "apiChanged": false,
+    "compatiblePortBlob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811"
+  },
+  "tests": {
+    "directConsumer": "./Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+    "ownerMilestoneTest": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/milestones.test.ts",
+      "blob": "79575c5554e0e042f7a1388e56e8285c0fe116ec",
+      "selected": false,
+      "reason": "Already begins from a manufactured DomainProjection with null; does not exercise source scope. The new real BI consumer exercises the exact regression and restart."
+    },
+    "productExecutedLocally": false,
+    "typecheckExecutedLocally": false,
+    "ciDispatched": false
+  },
+  "ownFilesWritten": []
+}
