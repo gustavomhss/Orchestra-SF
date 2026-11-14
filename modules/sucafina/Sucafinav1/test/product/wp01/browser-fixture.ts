@@ -1,118 +1,246 @@
-import type { Browser, BrowserServer } from "@playwright/test"
+import type { Browser } from "@playwright/test"
+import { stat } from "node:fs/promises"
+import { resolve } from "node:path"
 
-type BrowserOwner = {
-  server: BrowserServer
-  child: ReturnType<BrowserServer["process"]>
+// One Chromium for the entire sequential Bun selection. Bun 1.3.14 can finalize
+// an old Chromium extra-stdio handle after its fd has been reused (#47956).
+// Never launch a replacement: every caller receives an exclusive lease, with
+// fresh contexts, and browser-lifecycle.test.ts must be the final selected file.
+const pool: {
   browser?: Browser
-  exit: Promise<void>
-  exited: boolean
-  serverClosed: boolean
-  closing?: Promise<void>
-}
-
-const owners = new WeakMap<Browser, BrowserOwner>()
-const retainedChildren = new Set<ReturnType<BrowserServer["process"]>>()
-// Bun 1.3.14 can finalize an old extra-stdio handle after its fd has been reused
-// by the next Chromium (oven-sh/bun#47956, #47561). Keep every ChildProcess,
-// including terminated children, reachable until the BUN RUNNER exits.
-// This listener roots the Set without replacing spawn or any global API.
-process.once("exit", () => retainedChildren.clear())
+  pid?: number
+  lease?: number
+  launches: number
+  acquisitions: number
+  releases: number
+  releasing: boolean
+  sealed: boolean
+  closing: boolean
+  disconnected: boolean
+  disconnection?: Promise<void>
+  processExited: boolean
+  failed: boolean
+  failure?: unknown
+  shutdown?: Promise<void>
+} = { launches: 0, acquisitions: 0, releases: 0, releasing: false, sealed: false,
+  closing: false, disconnected: false, processExited: false, failed: false }
 
 async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
   try {
     return await Promise.race([operation, new Promise<never>((_, reject) => {
-      timer = setTimeout(() => reject(new Error(`WP01 browser timed out: ${stage}`)), timeout)
+      timer = setTimeout(() => reject(new Error("WP01 browser timed out: " + stage)), timeout)
     })])
   } finally { clearTimeout(timer) }
 }
 
-function ownServer(server: BrowserServer): BrowserOwner {
-  const child = server.process()
-  retainedChildren.add(child)
-  let observedExit = () => {}
-  const exit = new Promise<void>((resolve) => { observedExit = resolve })
-  const owner: BrowserOwner = { server, child, exit, exited: child.exitCode !== null || child.signalCode !== null, serverClosed: false }
-  if (owner.exited) observedExit()
-  else child.once("exit", () => { owner.exited = true; observedExit() })
-  server.once("close", () => { owner.serverClosed = true })
-  return owner
+function poison(error: unknown) {
+  if (!pool.failed) { pool.failed = true; pool.failure = error }
 }
 
-function state(owner: BrowserOwner) {
-  return { pid: owner.child.pid, exitCode: owner.child.exitCode, signal: owner.child.signalCode,
-    exitObserved: owner.exited, serverCloseObserved: owner.serverClosed, connected: owner.browser?.isConnected() ?? false }
-}
-
-function confirmClosed(owner: BrowserOwner) {
-  if (!owner.exited || owner.child.exitCode === null && owner.child.signalCode === null)
-    throw new Error("WP01 browser child termination was not confirmed")
-  if (owner.browser?.isConnected()) throw new Error("WP01 browser client remains connected after process termination")
-}
-
-function closeOwner(owner: BrowserOwner): Promise<void> {
-  if (owner.closing) return owner.closing
-  owner.closing = (async () => {
-    console.info("WP01 browser cleanup starting", state(owner))
-    try {
-      await bounded(Promise.all([owner.browser?.close(), owner.server.close(), owner.exit]), "graceful close and observed exit")
-      confirmClosed(owner)
-      console.info("WP01 browser cleanup complete", { mode: "graceful", ...state(owner) })
-    } catch (gracefulError) {
-      const cause = gracefulError instanceof Error ? { name: gracefulError.name, message: gracefulError.message.replace(/(?:https?|wss?):\/\/\S+/g, "[redacted URL]") } : { name: "Error", message: "Non-Error cleanup failure" }
-      console.warn("WP01 browser graceful cleanup failed; terminating the exclusive test instance", { cause, ...state(owner) })
-      try {
-        // Playwright 1.59.1 BrowserServer.kill kills the process group on Linux
-        // and waits for process cleanup. Independently require the child exit.
-        await bounded(Promise.all([owner.browser?.close(), owner.server.kill(), owner.exit]), "forced close and observed exit")
-        confirmClosed(owner)
-        console.info("WP01 browser cleanup complete", { mode: "forced", ...state(owner) })
-      } catch (forcedError) {
-        throw new AggregateError([gracefulError, forcedError], "WP01 browser process cleanup failed")
-      }
+async function requireFinalizerSelection() {
+  // Autodiscovery and selection/order-changing flags cannot guarantee cleanup.
+  // The integrator must name every file and put the finalizer last; this guard
+  // runs before Playwright is loaded or Chromium is created.
+  // Bun test exposes only the current entry and passthrough in process.argv.
+  // This Linux lane reads its actual OS command line, never a stale request file.
+  const invalid = () => new Error("WP01 browser tests require the Linux lane with explicit test files and browser-lifecycle.test.ts last. Use the named Actions selection; only --timeout is supported. Other platforms, autodiscovery, filters, isolation, sharding and parallel/reordered execution need an integrator-owned lifecycle.")
+  if (process.platform !== "linux") throw invalid()
+  const command = (await bounded(Bun.file("/proc/self/cmdline").text(), "read actual Linux test selection", 5_000)).split("\0")
+  if (command.at(-1) === "") command.pop()
+  const executable = command[0]
+  if (!executable || executable !== "bun" && resolve(executable) !== resolve(process.execPath) || command[1] !== "test") throw invalid()
+  const args = command.slice(2)
+  const files: string[] = []
+  for (let index = 0; index < args.length; index++) {
+    const arg = args[index]
+    if (arg === undefined) throw invalid()
+    if (arg === "--timeout") {
+      if (!/^[1-9]\d*$/.test(args[++index] ?? "")) throw invalid()
+      continue
     }
-  })()
-  return owner.closing
+    if (/^--timeout=[1-9]\d*$/.test(arg)) continue
+    if (arg.startsWith("-") || !arg.endsWith(".test.ts") || /[*?\[\]{}]/.test(arg)) throw invalid()
+    files.push(resolve(arg))
+  }
+  const finalizer = resolve(import.meta.dir, "browser-lifecycle.test.ts")
+  if (files.length < 2 || files.at(-1) !== finalizer || new Set(files).size !== files.length) throw invalid()
+  const entries = await bounded(Promise.allSettled(files.map((file) => stat(file))), "verify named test files", 5_000)
+  if (entries.some((entry) => entry.status !== "fulfilled" || !entry.value.isFile())) throw invalid()
+  console.info("WP01 browser explicit selection admitted", { executable, command: command[1], files, finalizer })
 }
 
-/** Startup has one 10s deadline. A failed startup may need a further 20s to
- * prove cleanup; beforeAll callers allow 35s. No test/assertion retry occurs. */
-export async function launchWp01Browser(): Promise<Browser> {
+function processExists(pid: number): boolean {
+  try { process.kill(pid, 0); return true }
+  catch (error) {
+    if (error && typeof error === "object" && "code" in error && error.code === "ESRCH") return false
+    throw error
+  }
+}
+
+async function observeProcessExit(pid: number) {
+  const deadline = performance.now() + 10_000
+  while (processExists(pid)) {
+    if (performance.now() >= deadline) throw new Error("WP01 browser process " + pid + " remains present after close")
+    await new Promise<void>((resolve) => setTimeout(resolve, 50))
+  }
+  pool.processExited = true
+}
+
+function shutdownBrowser(): Promise<void> {
+  if (pool.shutdown) return pool.shutdown
+  const browser = pool.browser
+  if (!browser) return Promise.reject(new Error("WP01 browser was never acquired in this shared module"))
+  pool.closing = true
+  pool.shutdown = (async () => {
+    const failures: unknown[] = []
+    console.info("WP01 browser final close starting", { pid: pool.pid, connected: browser.isConnected() })
+    try {
+      await bounded(Promise.all([browser.close(), pool.disconnection]), "final close and disconnected event")
+    } catch (error) { failures.push(error) }
+    try {
+      if (pool.pid === undefined) throw new Error("WP01 browser PID was not obtained through CDP")
+      await observeProcessExit(pool.pid)
+    } catch (error) { failures.push(error) }
+    if (!pool.disconnected || browser.isConnected()) failures.push(new Error("WP01 browser disconnected event was not confirmed"))
+    console.info("WP01 browser final close observed", { pid: pool.pid, disconnected: pool.disconnected,
+      connected: browser.isConnected(), processExited: pool.processExited })
+    if (failures.length) throw new AggregateError(failures, "WP01 browser final process cleanup failed")
+  })()
+  return pool.shutdown
+}
+
+async function startBrowser(): Promise<Browser> {
   const deadline = performance.now() + 10_000
   const remaining = () => Math.max(1, Math.ceil(deadline - performance.now()))
-  let expired = false
-  let owner: BrowserOwner | undefined
   try {
     return await bounded((async () => {
+      await requireFinalizerSelection()
+      console.info("WP01 browser launch phase", { phase: "load public Playwright API" })
       const { chromium } = await import("@playwright/test")
-      if (expired) throw new Error("Browser driver loaded after the startup deadline")
-      const server = await chromium.launchServer({ channel: "chrome", headless: true, args: ["--no-sandbox"], host: "127.0.0.1", timeout: remaining() })
-      owner = ownServer(server)
-      if (expired) { await closeOwner(owner); throw new Error("Browser server completed after the startup deadline") }
-      const browser = await chromium.connect(server.wsEndpoint(), { timeout: remaining() })
-      owner.browser = browser
-      owners.set(browser, owner)
-      if (expired) {
-        await bounded(browser.close(), "disconnect late browser client")
-        await closeOwner(owner)
-        throw new Error("Browser client completed after the startup deadline")
+      if (pool.failed || pool.sealed) throw new Error("WP01 browser startup is no longer admitted")
+      console.info("WP01 browser launch phase", { phase: "chromium.launch" })
+      const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: remaining() })
+      pool.browser = browser
+      pool.launches++
+      pool.disconnection = new Promise<void>((resolve) => {
+        browser.once("disconnected", () => {
+          pool.disconnected = true
+          if (!pool.closing) poison(new Error("WP01 shared browser disconnected before its finalizer"))
+          console.info("WP01 browser disconnected", { pid: pool.pid, expected: pool.closing })
+          resolve()
+        })
+      })
+      if (pool.failed || pool.sealed) {
+        await shutdownBrowser()
+        throw new Error("WP01 browser launch completed after its acquisition deadline")
       }
+      console.info("WP01 browser launch phase", { phase: "read actual browser PID through CDP" })
+      const session = await bounded(browser.newBrowserCDPSession(), "open browser CDP session", remaining())
+      const failures: unknown[] = []
+      try {
+        const result = await bounded(session.send("SystemInfo.getProcessInfo"), "read browser process information", remaining())
+        const processes = result.processInfo.filter((entry) => entry.type === "browser")
+        const pid = processes[0]?.id
+        if (processes.length !== 1 || typeof pid !== "number" || !Number.isSafeInteger(pid) || pid <= 0 || pid === process.pid)
+          throw new Error("CDP did not identify exactly one distinct browser process")
+        pool.pid = pid
+        if (!processExists(pid)) throw new Error("The CDP browser PID is absent before cleanup")
+      } catch (error) { failures.push(error) }
+      try { await bounded(session.detach(), "detach browser PID session", remaining()) }
+      catch (error) { failures.push(error) }
+      if (failures.length === 1) throw failures[0]
+      if (failures.length > 1) throw new AggregateError(failures, "WP01 browser PID acquisition and CDP cleanup failed")
+      if (pool.failed || pool.sealed) {
+        await shutdownBrowser()
+        throw new Error("WP01 browser PID acquisition completed after its deadline")
+      }
+      console.info("WP01 browser launch complete", { pid: pool.pid, launches: pool.launches })
       return browser
-    })(), "launch server and connect", 10_000)
+    })(), "single Chromium launch and PID acquisition")
   } catch (error) {
-    expired = true
-    if (owner) {
-      try { await closeOwner(owner) }
-      catch (cleanupError) { throw new AggregateError([error, cleanupError], "WP01 browser startup and cleanup failed") }
+    poison(error)
+    if (pool.browser) {
+      try { await shutdownBrowser() }
+      catch (cleanupError) { throw new AggregateError([error, cleanupError], "WP01 browser acquisition and cleanup failed") }
     }
     throw error
   }
 }
 
-/** At most 10s graceful + 10s forced cleanup. Callers must not wrap this in a
- * shorter deadline; afterAll allows 25s. Product/assertion failures remain errors. */
+/** A lease is reserved before any await. No concurrent caller or replacement
+ * Chromium is admitted. Existing consumers keep isolated contexts per case. */
+export async function launchWp01Browser(): Promise<Browser> {
+  if (pool.sealed) throw new Error("WP01 browser selection has already been finalized")
+  if (pool.failed) throw new Error("WP01 browser pool is unavailable after an earlier failure", { cause: pool.failure })
+  if (pool.lease !== undefined) {
+    const error = new Error("Concurrent WP01 browser leases are not allowed")
+    poison(error)
+    throw error
+  }
+  const lease = pool.acquisitions + 1
+  pool.lease = lease
+  try {
+    const browser = pool.browser ?? await startBrowser()
+    if (pool.failed || !browser.isConnected() || browser.contexts().length !== 0)
+      throw new Error("WP01 browser cannot admit a lease without a connected, empty context set")
+    pool.acquisitions++
+    console.info("WP01 browser lease acquired", { pid: pool.pid, lease, acquisitions: pool.acquisitions })
+    return browser
+  } catch (error) {
+    poison(error)
+    pool.lease = undefined
+    throw error
+  }
+}
+
+/** Release closes pages and contexts, never Chromium. A failed release poisons
+ * the pool so no later file can inherit uncertain state. At most 5s + 5s. */
 export async function closeWp01Browser(browser: Browser): Promise<void> {
-  const owner = owners.get(browser)
-  if (!owner) throw new Error("Browser is not owned by the WP01 fixture")
-  await closeOwner(owner)
+  if (browser !== pool.browser || pool.lease === undefined || pool.releasing || pool.sealed) {
+    const error = new Error("WP01 browser release does not own an active exclusive lease")
+    poison(error)
+    throw error
+  }
+  pool.releasing = true
+  const failures: unknown[] = []
+  const contexts = browser.contexts()
+  try {
+    try {
+      const outcomes = await bounded(Promise.allSettled(contexts.flatMap((context) => context.pages().map((page) => page.close({ runBeforeUnload: false })))), "close lease pages", 5_000)
+      for (const outcome of outcomes) if (outcome.status === "rejected") failures.push(outcome.reason)
+    } catch (error) { failures.push(error) }
+    try {
+      const outcomes = await bounded(Promise.allSettled(contexts.map((context) => context.close())), "close lease contexts", 5_000)
+      for (const outcome of outcomes) if (outcome.status === "rejected") failures.push(outcome.reason)
+    } catch (error) { failures.push(error) }
+    if (!browser.isConnected()) failures.push(new Error("WP01 browser disconnected during lease release"))
+    if (browser.contexts().length !== 0) failures.push(new Error("WP01 browser contexts remain after lease release"))
+    if (failures.length) throw new AggregateError(failures, "WP01 browser lease cleanup failed")
+    pool.releases++
+    console.info("WP01 browser lease released", { pid: pool.pid, lease: pool.lease, releases: pool.releases, contexts: 0 })
+    pool.lease = undefined
+  } catch (error) { poison(error); throw error }
+  finally { pool.releasing = false }
+}
+
+/** Must run in the final selected test file. Seal first, attempt physical cleanup
+ * even on contract violations, and retain every original failure. */
+export async function finishWp01BrowserLifecycle() {
+  if (pool.sealed) throw new Error("WP01 browser lifecycle was already finalized")
+  pool.sealed = true
+  const failures: unknown[] = []
+  const activeLease = pool.lease !== undefined
+  const contexts = pool.browser?.contexts().length ?? 0
+  if (pool.failed) failures.push(pool.failure)
+  if (pool.launches !== 1) failures.push(new Error("WP01 selection did not share exactly one Chromium launch"))
+  if (activeLease || pool.releasing) failures.push(new Error("WP01 browser lease remains active at finalization"))
+  if (contexts !== 0) failures.push(new Error("WP01 browser contexts remain at finalization"))
+  if (pool.acquisitions === 0 || pool.acquisitions !== pool.releases) failures.push(new Error("WP01 browser acquisition/release counts do not match"))
+  try { await shutdownBrowser() } catch (error) { failures.push(error) }
+  const evidence = { launches: pool.launches, acquisitions: pool.acquisitions, releases: pool.releases,
+    pid: pool.pid, activeLease, contexts, disconnected: pool.disconnected, processExited: pool.processExited }
+  console.info("WP01 browser lifecycle final evidence", evidence)
+  if (failures.length) throw new AggregateError(failures, "WP01 browser lifecycle verification failed")
+  return evidence
 }

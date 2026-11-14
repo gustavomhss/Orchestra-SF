@@ -25,6 +25,14 @@ The five record-search tests use the real module, SQLite persistence and durable
 
 No product tests, Bun tests or direct TypeScript compiler were run on the local machine. Hosted gates are `test-ci` with explicit named files, `bun typecheck` in `modules/sucafina`, and `bun run check:guards --base origin/dev` with the real remote base fetched by the runner. `CI.json` will bind product W, request-only snapshot S, exact trees/blobs, request, run/job IDs and conclusions after the checks finish. No epic/full-suite trigger, merge or deployment is part of this WP.
 
+## Hosted browser selection contract
+
+The pinned Bun 1.3.14 runner showed intermittent Chromium transport/cleanup failures. A BrowserServer/WebSocket workaround subsequently failed startup in all 17 browser acquisitions; that failed run remains in the CI history. The current test fixture uses one directly launched Chromium for a sequential selection, with an exclusive lease and fresh, fully closed contexts between consumers. It does not replace the product's authentication, state, HTTP handlers or persistence.
+
+This focused harness targets the Linux lane. It reads the actual command from `/proc/self/cmdline`, because Bun 1.3.14's `process.argv` does not expose the complete test selection. Every selection containing these browser consumers must name `test/product/wp01/browser-lifecycle.test.ts` as its final test file. The finalizer requires balanced leases and no retained contexts, closes Chromium, observes disconnection and verifies that the actual CDP-reported browser PID has exited. A failed acquisition or cleanup poisons the pool; another consumer cannot inherit uncertain state or launch a replacement. Other operating systems, unsupported ordering, isolation, concurrency or filtering fail before browser acquisition. The existing test guard and omni-control preloads remain in force.
+
+The final `CI.json` receipt will archive the canonical, reproducible selections. Automatic discovery or a future whole-package lane must first compose this lifecycle correctly; the focused WP01 result cannot be transferred to such a lane. A minimal preview-plus-finalizer run qualifies shared module state and repeated leases before the complete functional selection is rerun. These process observations concern the test browser only, not native residents, model execution or business effect-once behavior.
+
 ## Remaining dependencies and unclosed work
 
 | ID | Owner / observed producer | Required result and acceptance effect |
