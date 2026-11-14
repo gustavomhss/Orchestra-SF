@@ -1,0 +1,68 @@
+2026-11-14T17:02:47.8639353Z Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts:
+2026-11-14T17:02:47.8847280Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"scanner.ensure","state":"started","elapsedMs":8}
+2026-11-14T17:02:48.1749982Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"scanner.ensure","state":"returned","phaseMs":290,"elapsedMs":298,"aborted":false}
+2026-11-14T17:02:48.1752007Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"scanner.version","state":"started","elapsedMs":298}
+2026-11-14T17:02:48.4894196Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"scanner.version","state":"returned","phaseMs":314,"elapsedMs":612,"aborted":false}
+2026-11-14T17:02:48.8718957Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"procurement.capture-original","state":"started","elapsedMs":995}
+2026-11-14T17:02:48.9863594Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"procurement.capture-original","state":"returned","phaseMs":115,"elapsedMs":1109,"aborted":false}
+2026-11-14T17:02:48.9865515Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"atlas.emit-ledger","state":"started","elapsedMs":1109}
+2026-11-14T17:02:50.9392557Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"atlas.emit-ledger","state":"returned","phaseMs":1953,"elapsedMs":3062,"aborted":false}
+2026-11-14T17:02:50.9632597Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.resolve-original","state":"started","elapsedMs":3086}
+2026-11-14T17:02:51.3007154Z SF_MEMORY_READ_COUNTS {"phase":"memory.resolve-original","persistenceCalls":105,"rootPersistenceCalls":25,"nestedPersistenceCalls":80,"groupedEvidenceFences":2,"c08Reads":5,"caseReads":0,"caseFences":0,"evidenceContextReads":0,"groupedCaseContextReads":0,"atlasCanonicalReads":0,"atlasCanonicalCompleted":0}
+2026-11-14T17:02:51.3010693Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.resolve-original","state":"returned","phaseMs":337,"elapsedMs":3423,"aborted":false}
+2026-11-14T17:02:51.3013024Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.prepare","state":"started","elapsedMs":3423}
+2026-11-14T17:03:29.0831266Z SF_MEMORY_READ_COUNTS {"phase":"memory.prepare","persistenceCalls":11030,"rootPersistenceCalls":3450,"nestedPersistenceCalls":7580,"groupedEvidenceFences":188,"c08Reads":786,"caseReads":24,"caseFences":40,"evidenceContextReads":6,"groupedCaseContextReads":4,"atlasCanonicalReads":2,"atlasCanonicalCompleted":2}
+2026-11-14T17:03:29.0833309Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.prepare","state":"returned","phaseMs":37782,"elapsedMs":41206,"aborted":false}
+2026-11-14T17:03:29.0836943Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.verify","state":"started","elapsedMs":41207}
+2026-11-14T17:04:07.0634178Z SF_MEMORY_READ_COUNTS {"phase":"memory.verify","persistenceCalls":11072,"rootPersistenceCalls":3492,"nestedPersistenceCalls":7580,"groupedEvidenceFences":188,"c08Reads":798,"caseReads":36,"caseFences":52,"evidenceContextReads":6,"groupedCaseContextReads":4,"atlasCanonicalReads":2,"atlasCanonicalCompleted":2}
+2026-11-14T17:04:07.0636929Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.verify","state":"returned","phaseMs":37979,"elapsedMs":79186,"aborted":false}
+2026-11-14T17:04:07.0952435Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.accept-output","state":"started","elapsedMs":79218}
+2026-11-14T17:04:44.9562746Z SF_MEMORY_READ_COUNTS {"phase":"memory.accept-output","persistenceCalls":11072,"rootPersistenceCalls":3492,"nestedPersistenceCalls":7580,"groupedEvidenceFences":188,"c08Reads":798,"caseReads":36,"caseFences":52,"evidenceContextReads":6,"groupedCaseContextReads":4,"atlasCanonicalReads":2,"atlasCanonicalCompleted":2}
+2026-11-14T17:04:44.9566528Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.accept-output","state":"returned","phaseMs":37861,"elapsedMs":117079,"aborted":false}
+2026-11-14T17:04:44.9568883Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.exclude-history-and-isolate","state":"started","elapsedMs":117079}
+2026-11-14T17:05:02.3438677Z SF_MEMORY_READ_COUNTS {"phase":"memory.exclude-history-and-isolate","persistenceCalls":5074,"rootPersistenceCalls":1604,"nestedPersistenceCalls":3470,"groupedEvidenceFences":86,"c08Reads":368,"caseReads":10,"caseFences":17,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:05:02.3442353Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.exclude-history-and-isolate","state":"returned","phaseMs":17387,"elapsedMs":134466,"aborted":false}
+2026-11-14T17:05:02.3548668Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-source","state":"started","elapsedMs":134478}
+2026-11-14T17:05:13.7592225Z SF_MEMORY_READ_COUNTS {"phase":"memory.fence-source","persistenceCalls":3339,"rootPersistenceCalls":829,"nestedPersistenceCalls":2510,"groupedEvidenceFences":62,"c08Reads":234,"caseReads":6,"caseFences":9,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:05:13.7595658Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-source","state":"returned","phaseMs":11404,"elapsedMs":145882,"aborted":false}
+2026-11-14T17:05:13.7747536Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-capture","state":"started","elapsedMs":145898}
+2026-11-14T17:05:25.3356925Z SF_MEMORY_READ_COUNTS {"phase":"memory.fence-capture","persistenceCalls":3393,"rootPersistenceCalls":883,"nestedPersistenceCalls":2510,"groupedEvidenceFences":62,"c08Reads":237,"caseReads":6,"caseFences":10,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:05:25.3359711Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-capture","state":"returned","phaseMs":11561,"elapsedMs":157458,"aborted":false}
+2026-11-14T17:05:25.3593021Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-principal","state":"started","elapsedMs":157482}
+2026-11-14T17:05:35.4228380Z SF_MEMORY_READ_COUNTS {"phase":"memory.fence-principal","persistenceCalls":2836,"rootPersistenceCalls":646,"nestedPersistenceCalls":2190,"groupedEvidenceFences":54,"c08Reads":195,"caseReads":6,"caseFences":9,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:05:35.4232340Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-principal","state":"returned","phaseMs":10063,"elapsedMs":167545,"aborted":false}
+2026-11-14T17:05:35.4335130Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-clock","state":"started","elapsedMs":167556}
+2026-11-14T17:05:47.4435740Z SF_MEMORY_READ_COUNTS {"phase":"memory.fence-clock","persistenceCalls":3392,"rootPersistenceCalls":882,"nestedPersistenceCalls":2510,"groupedEvidenceFences":62,"c08Reads":237,"caseReads":6,"caseFences":10,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:05:47.4439037Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-clock","state":"returned","phaseMs":12010,"elapsedMs":179566,"aborted":false}
+2026-11-14T17:05:47.4539449Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-lease","state":"started","elapsedMs":179577}
+2026-11-14T17:05:57.4957091Z SF_MEMORY_READ_COUNTS {"phase":"memory.fence-lease","persistenceCalls":2835,"rootPersistenceCalls":645,"nestedPersistenceCalls":2190,"groupedEvidenceFences":54,"c08Reads":195,"caseReads":6,"caseFences":9,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:05:57.4959485Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-lease","state":"returned","phaseMs":10042,"elapsedMs":189618,"aborted":false}
+2026-11-14T17:05:57.5134018Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-final-request-headers","state":"started","elapsedMs":189636}
+2026-11-14T17:06:15.5567931Z SF_MEMORY_READ_COUNTS {"phase":"memory.fence-final-request-headers","persistenceCalls":5074,"rootPersistenceCalls":1604,"nestedPersistenceCalls":3470,"groupedEvidenceFences":86,"c08Reads":368,"caseReads":10,"caseFences":17,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:06:15.5570533Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.fence-final-request-headers","state":"returned","phaseMs":18043,"elapsedMs":207679,"aborted":false}
+2026-11-14T17:06:15.5671150Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.same-request-new-proof","state":"started","elapsedMs":207690}
+2026-11-14T17:06:32.8914403Z SF_MEMORY_READ_COUNTS {"phase":"memory.same-request-new-proof","persistenceCalls":4896,"rootPersistenceCalls":1503,"nestedPersistenceCalls":3393,"groupedEvidenceFences":85,"c08Reads":357,"caseReads":8,"caseFences":13,"evidenceContextReads":2,"groupedCaseContextReads":2,"atlasCanonicalReads":1,"atlasCanonicalCompleted":1}
+2026-11-14T17:06:32.8917802Z SF_COMPOSITION_PHASE {"fixture":"historical-memory","phase":"memory.same-request-new-proof","state":"returned","phaseMs":17324,"elapsedMs":225014,"aborted":true}
+2026-11-14T17:06:32.9011960Z 1 | /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */
+2026-11-14T17:06:32.9013227Z 2 | export function compositionTestDeadline(name: string, budgetMs = 105_000) {
+2026-11-14T17:06:32.9014063Z 3 |   const started = performance.now()
+2026-11-14T17:06:32.9014726Z 4 |   const cancellation = new AbortController()
+2026-11-14T17:06:32.9016115Z 5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)
+2026-11-14T17:06:32.9016988Z                                 ^
+2026-11-14T17:06:32.9017753Z error: historical-memory exceeded its 225000ms cooperative deadline
+2026-11-14T17:06:32.9019426Z       at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)
+2026-11-14T17:06:32.9022182Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts:67:124
+2026-11-14T17:06:32.9024103Z (fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225029.32ms]
+2026-11-14T17:06:32.9024924Z 
+2026-11-14T17:06:32.9025464Z Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts:
+
+2026-11-14T17:06:33.6529640Z omni positive control [ce8c5d5dcea8ba2ea7a104d88c06b78a]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts); 2 omni spawn(s), 0 delegated.
+2026-11-14T17:06:33.6531402Z 1 tests failed:
+2026-11-14T17:06:33.6532125Z (fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225029.32ms]
+2026-11-14T17:06:33.6532599Z 
+2026-11-14T17:06:33.6532685Z  45 pass
+2026-11-14T17:06:33.6532877Z  1 fail
+2026-11-14T17:06:33.6533079Z  1904 expect() calls
+2026-11-14T17:06:33.6533367Z Ran 46 tests across 8 files. [391.43s]
+2026-11-14T17:06:33.7090560Z ##[error]Process completed with exit code 1.
+

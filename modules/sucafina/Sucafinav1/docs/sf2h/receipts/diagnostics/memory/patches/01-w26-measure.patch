@@ -1,0 +1,40 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
+@@ -41,6 +41,7 @@
+ import type { ScenarioOperation } from "../../../../product/contracts/operations.ts"
+ import { verifierOutputFixture } from "./verifier-output-fixture.ts"
+ import { compositionTestDeadline } from "../integration/composition-test-deadline.ts"
++import { observeMemoryPersistence } from "../../diagnostics/memory/persistence-observer.ts"
+ import type { DecisionRecallInput } from "../../../../product/contracts/skill-inputs.ts"
+ import atlasPackage from "../../../../../../atlas/boundary/package.json" with { type: "json" }
+ import contractFreeze from "../../../../product/contracts/freeze-v1.json" with { type: "json" }
+@@ -65,22 +66,16 @@
+   if (!transactionAll) throw new Error("Real cross-surface store unavailable")
+   const counters = { persistenceCalls: 0, rootPersistenceCalls: 0, nestedPersistenceCalls: 0, groupedEvidenceFences: 0,
+     c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, groupedCaseContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
+-  const measuredDriver: typeof driver = { ...driver,
+-    transaction: (surface, work, options) => {
+-      counters.persistenceCalls += 1
+-      counters[driver.currentSnapshots?.() ? "nestedPersistenceCalls" : "rootPersistenceCalls"] += 1
+-      return driver.transaction(surface, work, options)
+-    },
+-    transactionAll: (work, options) => {
+-      counters.persistenceCalls += 1
+-      counters[driver.currentSnapshots?.() ? "nestedPersistenceCalls" : "rootPersistenceCalls"] += 1
+-      return transactionAll(work, options)
+-    },
+-  }
++  const persistenceObserver = observeMemoryPersistence(driver, counters, "snapshots")
++  const measuredDriver = persistenceObserver.driver
+   const measure = <Value>(label: string, work: () => Promise<Value>) => deadline.phase(label, async () => {
+     const before = { ...counters }
++    const observedBefore = persistenceObserver.snapshot()
+     try { return await work() }
+-    finally { console.info("SF_MEMORY_READ_COUNTS", JSON.stringify({ phase: label,
++    finally {
++      console.info("SF_MEMORY_PERSISTENCE_TIMING", JSON.stringify({ phase: label, mode: persistenceObserver.mode,
++        ...persistenceObserver.delta(observedBefore) }))
++      console.info("SF_MEMORY_READ_COUNTS", JSON.stringify({ phase: label,
+       ...Object.fromEntries(Object.entries(counters).map(([key, value]) => [key, value - before[key as keyof typeof before]])) })) }
+   })
+   const interleave: { before?: { started: number; remaining: number; work: () => Promise<void> };
