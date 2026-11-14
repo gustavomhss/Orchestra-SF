@@ -4,9 +4,9 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { createSfRunStore, sfRunSourceFence } from "../../../product/ai/run-store.ts"
 import { digestSfContribution } from "../../../product/contracts/canonical.ts"
 import type { SfNativeRunRecord } from "../../../product/contracts/state.ts"
-import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { testPersistence } from "../../fixture/persistence.ts"
+import { sfRunFixture } from "./run-fixture.ts"
 
 test("consumer opens the stored result and refuses revoked or mismatched provenance", async () => {
   const storage = testPersistence()
@@ -16,15 +16,27 @@ test("consumer opens the stored result and refuses revoked or mismatched provena
   const context = { kind: "ui", binding: authority } as unknown as TrustedDomainContext
   const state = createSfProductState({ persistence: storage.persistence, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => access.allowed ? authority : undefined })
   const runs = createSfRunStore({ state, requestFor: () => request, revalidate: async () => access.allowed, preflight: async () => ({ status: "ok", value: { sourceFence: sfRunSourceFence(storage.state.dashboard) } }), revalidateForCommit: async () => ({ status: "ok", value: true }), now: () => "2026-11-13T00:00:00Z" })
-  const caseRef = { id: "case", incarnation: "inc", version: 1 }
-  const receipt = { runId: "run", nativeSessionId: "session", profileId: "sf_finance", profileVersion: "1", profileDigest: "a".repeat(64), skillId: "skill", skillVersion: "1", sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), loadedMessageId: "message", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: "d".repeat(64) }
-  const output = { id: "output", caseRef, kind: "MatchExplanation", schemaVersion: "sf-contribution-v1", state: "ready", payload: { candidateCaseRef: caseRef, matchedCriteria: [], currentDifferences: [], sourceStates: [], limitations: [] }, evidenceRefs: [], runProvenance: { ...receipt, actualModel: "provider/model", contextFingerprint: "context" }, accessRevision: "access", createdAt: "2026-11-13T00:00:00Z", outputDigest: "" } as unknown as ContributionEnvelope
-  output.outputDigest = digestSfContribution(output)
-  const run = { runRef: "run", state: "ready", caseRef, native: { sessionID: "session", skillReceipt: receipt }, outputRef: "output" } as unknown as SfNativeRunRecord
+  const fixture = sfRunFixture()
+  const caseRef = fixture.caseRef
+  const output = fixture.output
+  const run: SfNativeRunRecord = { ...fixture.run, state: "ready", outputRef: "output" }
   await state.transaction(request, { namespace: "contributions", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "e".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (current) => { current.nativeRuns = { run }; current.contributions.output = output; return { commit: true, value: true } })
   const read = createSfContributionReader({ state, runs, requestFor: () => request, revalidate: async () => access.allowed, verify: async () => ({ status: "ok", value: true }) })
   expect(await read({ outputRef: "output", caseRef }, context)).toMatchObject({ status: "ok", value: { output: { id: "output" }, run: { runRef: "run" } } })
   expect(await read({ outputRef: "output", caseRef: { ...caseRef, version: 2 } }, context)).toMatchObject({ status: "unavailable" })
+  const version = await state.read(request, "contributions", () => null)
+  if (version.status !== "ok") throw new Error("contributions unavailable")
+  const forged = { ...output, runProvenance: { ...output.runProvenance, actualModel: "other/model" } }
+  forged.outputDigest = digestSfContribution(forged)
+  await state.transaction(request, { namespace: "contributions", expectedStorageVersion: version.storageVersion, idempotencyKey: "wrong-model", commandDigest: "f".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (current) => {
+    current.contributions.output = forged
+    return { commit: true, value: true }
+  })
+  expect(await read({ outputRef: "output", caseRef }, context)).toEqual({ status: "denied", reason: "contribution-provenance-mismatch" })
+  await state.transaction(request, { namespace: "contributions", expectedStorageVersion: version.storageVersion + 1, idempotencyKey: "restore-model", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (current) => {
+    current.contributions.output = output
+    return { commit: true, value: true }
+  })
   const revokedDuringVerification = createSfContributionReader({ state, runs, requestFor: () => request, revalidate: async () => access.allowed, verify: async () => { access.allowed = false; return { status: "ok", value: true } } })
   expect(await revokedDuringVerification({ outputRef: "output", caseRef }, context)).toMatchObject({ status: "denied" })
   access.allowed = false
