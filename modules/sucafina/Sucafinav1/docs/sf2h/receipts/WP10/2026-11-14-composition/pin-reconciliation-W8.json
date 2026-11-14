@@ -1,0 +1,40 @@
+{
+  "schema": "sf2.wp10.published-pin-reconciliation.v1",
+  "author": "/root",
+  "status": "CLOSED",
+  "basisCandidate": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+  "basisManifestSha256": "ea2b3a5b9c8c0b288db9d2c46ae1c4fc203980ef5858f3bb9cf9ab00b9c1e00e",
+  "historicalConsumedInput": {
+    "path": "apps/cli/src/sucafina-product/analysis-verifier.ts",
+    "blobSha": "94b52f876d9490b35bcc7139e4eb02be7a870496",
+    "sourceCommit": "e4e9ceb5ec97a9c3238a35582cb7ca5401756536",
+    "owner": "WP10",
+    "publisher": "WP06",
+    "mode": "exact-published-blob",
+    "reason": "published compatibility delta"
+  },
+  "ownedPublishedSuccessor": {
+    "sha": "2fb2e13ca7839fe7122c43ba312c7a09e5e5d5e6",
+    "parents": [
+      "09d942cc59af77197179f586fa727de5d62ac16b"
+    ],
+    "message": "feat(sucafina): compose WP10 historical memory, guarded decisions and review privacy\n\nPreserve recovered WP10 ancestry and exact published producer pins. Compose real coverage reassessment and bounded historical scenario reads; close stale private UI and same-call selection amplification. Add finite hosted counterproofs without native/global acceptance claims.",
+    "path": "apps/cli/src/sucafina-product/analysis-verifier.ts",
+    "blobSha": "9c62b6a375e4894f1d487b7eb12ab1c1bba9dd17",
+    "status": "modified",
+    "patch": "@@ -7,11 +7,12 @@ import type { TrustedDomainContext } from \"../../../../modules/sucafina/Sucafina\n import type { ImportManifest } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts\"\n import type { ImportDetail } from \"../../../../modules/sucafina/Sucafinav1/product/imports/store.ts\"\n import { encodeCaseRef } from \"../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts\"\n+import type { SfMemoryPrompt } from \"./analysis-memory-evidence.ts\"\n \n export type SfAnalysisRequest = Omit<Parameters<BusinessPorts[\"analysis\"][\"create\"]>[0], \"contextFingerprint\">\n export type SfAnalysisProof = { current: AuthorizedCaseProjection[\"case\"]; input: unknown; sources: readonly BusinessEvidenceResolution[];\n   /** Only an authorized verifier may add host context beyond the closed skill input. */\n-  promptContext?: { importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail } };\n+  promptContext?: { importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail } } | { decisionRecall: SfMemoryPrompt };\n   acceptsOutput: (output: ContributionEnvelope, call: TrustedDomainContext) => Promise<PortResult<true>> }\n export type SfAnalysisVerifier = { skillIds: readonly string[]; verify: (input: unknown, request: SfAnalysisRequest, call: TrustedDomainContext) => Promise<PortResult<SfAnalysisProof>> }\n export type SfAnalysisDependencies = { cases: DecisionCasePort; planner: PlannerPort; procurement: ProcurementPort; context: BusinessContextService; host: DomainPortHost }",
+    "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/commit/2fb2e13ca7839fe7122c43ba312c7a09e5e5d5e6",
+    "sha256": "014140d2be17d22053b66fc13923b8252c5b0b5a3fef8825a55446152bb8f142",
+    "bytes": 5502,
+    "owner": "WP10"
+  },
+  "reason": "The WP06-published compatibility input remains archived in history. WP10 later extended its owned analysis verifier for authorized decisionRecall in the concurrent published commit 2fb2e13c. The extension preserved importPreview support and was adopted exactly. It must not be represented as an effective unchanged foreign blob.",
+  "historicalPublishedInputRecords": 106,
+  "effectiveExactForeignPins": 105,
+  "ownedDerivedPublishedInputs": 1,
+  "all105EffectivePinBlobsMatchFrozenW7": true,
+  "archiveMutation": false,
+  "productMutation": false,
+  "previousManifestsAndReviewsRewritten": false,
+  "qualification": "Metadata attribution correction only; no native/global acceptance."
+}

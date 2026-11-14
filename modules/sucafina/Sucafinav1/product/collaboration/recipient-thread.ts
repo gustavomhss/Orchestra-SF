@@ -21,6 +21,7 @@ export function createRecipientThreadReader(input: {
   authorize: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
 }) {
   return async (id: string, context: TrustedDomainContext): Promise<PortResult<RecipientThread>> => {
+    if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
     const read = () => input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
@@ -42,3 +43,4 @@ export function createRecipientThreadReader(input: {
     return { status: "ok", value: { id: thread.id, kind: thread.kind, ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}), state: thread.state, messages: thread.messages, observed: { version: thread.observedVersion, period: thread.period }, current: { sourceRef, evidenceRefs: current } } }
   }
 }
+

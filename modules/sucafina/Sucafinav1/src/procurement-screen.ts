@@ -5,7 +5,7 @@ import type { ResolvedActor } from "./identity.ts"
 import { writeVersioned } from "./records.ts"
 import type { Change, Versioned } from "./records.ts"
 import { openProcurement, procurementKeys } from "./nav.ts"
-import { visibleRequests } from "./requests.ts"
+import { requestStageGuidance, visibleRequests } from "./requests.ts"
 import { documentHtml, esc, links, listed, openKey, pageMain } from "./screen-shell.ts"
 import type { Drawn, ScreenActor } from "./screen-shell.ts"
 
@@ -42,6 +42,7 @@ export type RequestView = {
   number?: string
   status: string
   createdBy: string
+  buyerId?: string
   requesterName?: string
   prApprovalBaseCurrency?: string
   pr?: { estAmount?: number | null; title?: string; description?: string; costCenter?: string } | null
@@ -99,28 +100,37 @@ const FILTERS: Record<string, (status: string) => boolean> = {
 }
 
 export function requestValue(request: RequestView, rates: Rates): number | null {
+  if (!/^[A-Z]{3}$/.test(rates.currency)) return null
   const lines = request.po?.lines
-  if (lines && lines.length) {
-    if (lines.some((line) => !Number.isFinite(line.qty) || !Number.isFinite(line.unitPrice) || !Number.isFinite(line.qty * line.unitPrice))) return null
+  if (Array.isArray(lines) && lines.length) {
+    if (lines.some((line) => !line || typeof line !== "object" || !Number.isFinite(line.qty) || !Number.isFinite(line.unitPrice) || !Number.isFinite(line.qty * line.unitPrice))) return null
     const total = lines.reduce((sum, line) => sum + line.qty * line.unitPrice, 0)
     if (!Number.isFinite(total)) return null
-    if (["po_pending", "po_approved", "po_issued"].includes(request.status) && request.po?.approvalBaseCurrency !== rates.currency) return null
-    const currency = request.po?.currency || rates.currency
+    const frozen = request.po?.fxRate != null || request.po?.approval != null || request.po?.approvalBaseCurrency != null || ["po_pending", "po_approved", "po_issued"].includes(request.status)
+    if (frozen && request.po?.approvalBaseCurrency !== rates.currency) return null
+    const currency = request.po?.currency
+    if (typeof currency !== "string" || !/^[A-Z]{3}$/.test(currency)) return null
     if (currency === rates.currency) return total
-    if (request.po?.fxRate != null) return request.po.fxRate > 0 && Number.isFinite(total * request.po.fxRate) ? total * request.po.fxRate : null
-    if (["po_pending", "po_approved", "po_issued"].includes(request.status)) return null
+    if (request.po?.fxRate != null) return typeof request.po.fxRate === "number" && Number.isFinite(request.po.fxRate) && request.po.fxRate > 0 && Number.isFinite(total * request.po.fxRate) ? total * request.po.fxRate : null
+    if (frozen) return null
     return toBase(total, currency, rates, null)
   }
-  const selected = request.sourcing?.quotes?.find((quote) => quote.id === request.sourcing?.selectedId)
+  if (["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(request.status)) return null
+  const selectedId = request.sourcing?.selectedId
+  const matches = typeof selectedId === "string" && selectedId && Array.isArray(request.sourcing?.quotes) ? request.sourcing.quotes.filter((quote) => quote?.id === selectedId) : []
+  const selected = matches.length === 1 ? matches[0] : undefined
+  const frozen = request.sourcing?.fxSnapshot != null || request.sourcing?.approval != null || request.sourcing?.approvalBaseCurrency != null || request.status === "src_pending"
   if (selected) {
     if (typeof selected.total !== "number" || !Number.isFinite(selected.total)) return null
-    if (["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(request.status) && request.sourcing?.approvalBaseCurrency !== rates.currency) return null
-    if (["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(request.status) && request.sourcing?.fxSnapshot == null && selected.currency && selected.currency !== rates.currency) return null
-    const base = toBase(selected.total, selected.currency || rates.currency, rates, request.sourcing?.fxSnapshot)
+    if (typeof selected.currency !== "string" || !/^[A-Z]{3}$/.test(selected.currency)) return null
+    if (frozen && request.sourcing?.approvalBaseCurrency !== rates.currency) return null
+    if (frozen && request.sourcing?.fxSnapshot == null && selected.currency !== rates.currency) return null
+    const base = toBase(selected.total, selected.currency, rates, request.sourcing?.fxSnapshot)
     return base
   }
+  if (frozen || selectedId) return null
   const amount = request.pr?.estAmount
-  if (["pr_pending", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(request.status) && request.prApprovalBaseCurrency !== rates.currency) return null
+  if ((request.prApproval != null || request.prApprovalBaseCurrency != null || ["pr_pending", "sourcing", "src_pending", "src_rejected"].includes(request.status)) && request.prApprovalBaseCurrency !== rates.currency) return null
   if (typeof amount === "number" && Number.isFinite(amount)) return amount
   return null
 }
@@ -181,7 +191,15 @@ export function approvalQueue(requests: RequestView[], actorId: string) {
     if (step?.holderId && step.holderId !== actorId) waitingForOthers.push(request)
     if (!step?.holderId) unassigned.push(request)
   }
-  return { waitingForYou, waitingForOthers, unassigned }
+  const oldest = (left: RequestView, right: RequestView) => {
+    const a = approvalStageEntry(left)
+    const b = approvalStageEntry(right)
+    if (a && b) return Date.parse(a) - Date.parse(b) || (left.number ?? "").localeCompare(right.number ?? "")
+    if (a) return -1
+    if (b) return 1
+    return (left.number ?? "").localeCompare(right.number ?? "")
+  }
+  return { waitingForYou: waitingForYou.sort(oldest), waitingForOthers: waitingForOthers.sort(oldest), unassigned: unassigned.sort(oldest) }
 }
 
 export function myApprovals(requests: RequestView[], actorId: string) {
@@ -358,7 +376,10 @@ function procurementBody(
   }
   if (key === "Requests" && input.requests)
     return requestList(input.requests, input.actor, input.filter, input.query)
-      .map((request) => `<p>${esc(request.number ?? "")} ${esc(request.status)}</p>`)
+      .map((request) => {
+        const guidance = requestStageGuidance(request.status)
+        return `<p>${esc(request.number ?? "")} · ${esc(guidance.stage)} · ${esc(guidance.next)}</p>`
+      })
       .join("")
   if (key === "My approvals" && input.requests) {
     const groups = approvalQueue(input.requests, input.actor.id)
@@ -410,8 +431,12 @@ function matches(request: RequestView, query: string): boolean {
     request.po?.number,
     request.po?.supplier,
     request.requesterName,
+    request.createdBy,
+    request.buyerId,
+    approvalOf(request)?.steps?.find((step) => step.status === "pending")?.holderId,
+    requestStageGuidance(request.status).stage,
   ]
-  return fields.some((field) => typeof field === "string" && field.includes(query))
+  return fields.some((field) => typeof field === "string" && field.toLowerCase().includes(query.toLowerCase()))
 }
 
 function toBase(
@@ -422,10 +447,10 @@ function toBase(
 ): number | null {
   if (!currency || currency === rates.currency) return total
   const snap = snapshot?.[currency]
-  if (snap != null && snap > 0 && Number.isFinite(total * snap)) return total * snap
+  if (typeof snap === "number" && Number.isFinite(snap) && snap > 0 && Number.isFinite(total * snap)) return total * snap
   if (snapshot != null) return null
   const found = rates.fxRates?.find((rate) => rate.code === currency)
-  if (found && found.rate > 0 && Number.isFinite(total * found.rate)) return total * found.rate
+  if (found && typeof found.rate === "number" && Number.isFinite(found.rate) && found.rate > 0 && Number.isFinite(total * found.rate)) return total * found.rate
   return null
 }
 

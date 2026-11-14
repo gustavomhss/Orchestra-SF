@@ -27,6 +27,45 @@ describe("decision reconsideration", () => {
     expect(result.signal?.before?.comparison.comparisonStatus).toBe("conditioned")
     expect(result.signal?.after?.comparison.completeDifference).toBe(-10000)
   })
+  test("coverage resolution names its supported category and component", () => {
+    const pending = { ...coverage, coverageState: "pending" as const, entries: [{ status: "pending" as const, categoryId: "training", reason: "unknown" }], derivedMissingCategoryIds: ["training"] }
+    const complete = { ...coverage, entries: [{ status: "included" as const, categoryId: "training", componentRefs: ["training-cost"], evidenceRefs: [evidence], scopeNote: "training" }] }
+    const prior = { ...resultBefore, comparisonStatus: "conditioned" as const, total: null, costCoverage: pending }
+    const before = { ...comparison("satisfied", 30000), comparisonStatus: "conditioned" as const, completeDifference: null, criterionResults: [{ criterionId: "advantage", state: "unknown" as const, reason: "training pending" }] }
+    const input = { ...condition, choice: { ...condition.choice, comparisonStatus: "conditioned" as const, costCoverage: pending, result: prior, comparison: before } }
+    const next = { ...change, comparison: { ...change.comparison, before, resultBefore: prior, resultAfter: { ...resultAfter, costCoverage: complete } } }
+    const result = classifySfMaterialChange(input, next)
+    expect(result.impact.state).toBe("material")
+    expect(result.signal?.reason).toContain("training:pending->included")
+    expect(result.signal?.reason).toContain("training-cost")
+    const notApplicable = { ...complete, entries: [{ status: "not-applicable" as const, categoryId: "training", justification: "not required", evidenceRefs: [evidence] }] }
+    const resolved = classifySfMaterialChange(input, { ...next, comparison: { ...next.comparison, resultAfter: { ...next.comparison.resultAfter, costCoverage: notApplicable } } })
+    expect(resolved.impact.state).toBe("material")
+    expect(resolved.signal?.reason).toContain("training:pending->not-applicable")
+    expect(input.choice.reason).toBe("Original decision")
+    const unsupported = { ...complete, entries: [{ ...complete.entries[0]!, evidenceRefs: [] }] }
+    expect(classifySfMaterialChange(input, { ...next, comparison: { ...next.comparison, resultAfter: { ...next.comparison.resultAfter, costCoverage: unsupported } } }).impact.state).toBe("unknown")
+  })
+  test("coverage order is not material and duplicate categories are unavailable", () => {
+    const entries = [{ status: "included" as const, categoryId: "a", componentRefs: ["a"], evidenceRefs: [evidence], scopeNote: "included" }, { status: "included" as const, categoryId: "b", componentRefs: ["b"], evidenceRefs: [evidence], scopeNote: "included" }]
+    const before = { ...resultBefore, costCoverage: { ...coverage, entries } }
+    const scope = { ...condition, choice: { ...condition.choice, result: before } }
+    const event = { ...change, comparison: { ...change.comparison, after: condition.choice.comparison, resultBefore: before, resultAfter: { ...before, version: 2, costCoverage: { ...coverage, entries: [...entries].reverse() } } } }
+    expect(classifySfMaterialChange(scope, event).impact.state).toBe("irrelevant")
+    expect(classifySfMaterialChange(scope, { ...event, comparison: { ...event.comparison, resultAfter: { ...before, costCoverage: { ...coverage, entries: [entries[0]!, entries[0]!] } } } }).impact.state).toBe("unknown")
+  })
+  test("refuses a mismatched saved baseline and ignores result metadata alone", () => {
+    expect(classifySfMaterialChange(condition, { ...change, comparison: { ...change.comparison!, resultBefore: { ...resultBefore, knownSubtotal: 1, total: 1 } } }).impact.state).toBe("unknown")
+    expect(classifySfMaterialChange(condition, { ...change, comparison: { ...change.comparison!, after: { ...condition.choice.comparison, baselineResultRef: "new-metadata", criterionResults: [{ ...condition.choice.comparison.criterionResults[0], reason: "unchanged criterion" }] }, resultAfter: { ...resultBefore, version: 2 } } }).impact.state).toBe("irrelevant")
+    expect(classifySfMaterialChange(condition, { ...change, comparison: { ...change.comparison!, after: condition.choice.comparison } }).impact.state).toBe("material")
+  })
+  test("a relevant deadline change has its own reason", () => {
+    const unchanged = { ...change, fields: ["deadline"], comparison: { ...change.comparison, after: condition.choice.comparison, resultAfter: { ...resultBefore, version: 2 } } }
+    const result = classifySfMaterialChange({ ...condition, fields: ["deadline"] }, unchanged)
+    expect(result.impact.state).toBe("material")
+    expect(result.signal?.reason).toBe("deadline-changed")
+    expect(classifySfMaterialChange({ ...condition, fields: ["deadline"] }, { ...unchanged, source }).impact.state).toBe("irrelevant")
+  })
   test("does not reconsider for an unrelated field or period, and never treats unavailable data as valid", () => {
     expect(classifySfMaterialChange(condition, { ...change, fields: ["description"] }).impact.state).toBe("irrelevant")
     expect(classifySfMaterialChange(condition, { ...change, period: { start: "2028-01-01", end: "2028-12-31" } }).impact.state).toBe("irrelevant")
@@ -37,4 +76,17 @@ describe("decision reconsideration", () => {
     expect(classifySfMaterialChange(condition, { ...change, source: { ...change.source, incarnation: "two" }, fields: ["description"] }).impact.reason).toBe("source-replaced")
     expect(classifySfMaterialChange(condition, { ...change, comparison: { ...change.comparison!, before: comparison("satisfied", 31000) } }).impact.state).toBe("unknown")
   })
+})
+
+test("materiality access rechecks evidence and refuses a revoked result", async () => {
+  const { createSfMaterialityAccess } = await import("../../../product/decision-memory/materiality.ts")
+  const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+  const access = { allowed: true, checks: 0 }
+  const read = createSfMaterialityAccess({ load: async () => ({ condition, change }), authorizeEvidence: async () => { access.checks += 1; return access.allowed && access.checks < 4 }, revalidate: async () => access.allowed })
+  const first = await read(condition.id, call)
+  expect(first.status).toBe("ok")
+  if (first.status === "ok") expect(first.signal?.reason).toContain("advantage")
+  expect(await read(condition.id, call)).toEqual({ status: "unavailable" })
+  access.allowed = false
+  expect(await read(condition.id, call)).toEqual({ status: "unavailable" })
 })

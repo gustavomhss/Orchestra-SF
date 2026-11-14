@@ -1,0 +1,52 @@
+{
+  "schema": "sf2.wp10.root-corrections-W6.v1",
+  "builder": "/root",
+  "builderStatus": "CLOSED",
+  "baseProductSha": "7377e364e4870e832e49d99d0d2bdbde9eb63a5f",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "bytes": 13988,
+      "sha256": "573f20f8827d464a1c315ccf23d0bb80abb29d60680111e6316f692645b31010",
+      "blobSha": "779fb0554e6f6d9ef1e1703f92630e2e6fc85af0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/alternative-call-scope.ts",
+      "bytes": 6081,
+      "sha256": "e0292816fcbd05001436921c4ccbd23d396255c381e41503dd7b0aa46ccaa3d8",
+      "blobSha": "a355b2cf5345007e6385695d06e6fdb934335151"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "bytes": 4807,
+      "sha256": "4ee6bc622910c74433745fc3f827130e56dacf62f90b2eb2e29cfd0a78448a5f",
+      "blobSha": "d7f5263d2ea17c9c992b8b819996072a2c1e650a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "bytes": 26018,
+      "sha256": "a0a5d93db2c1ca0b2f65d6eaba393b5b8195a6e8905c5ea2676e0cc48eff8a09",
+      "blobSha": "0e0e58c14622c5d9b0145dd3093970404b42b4b5"
+    }
+  ],
+  "changes": [
+    {
+      "finding": "R1-UX-09",
+      "correction": "Review page/source/update/predecessor discovery and BI source/data issuer preserve denied as403; stale/unavailable remain409. Initial Review agenda maps only exact published fields."
+    },
+    {
+      "finding": "R3-CACHE-TIME-01",
+      "correction": "Per-invocation selection fence captures and rechecks validated host UTC day in addition to actual C08 and all three source snapshots, binding/admission/authority. No cross-invocation cache or expiry relaxation."
+    },
+    {
+      "proof": "Authored actualSQLite/C08/source-issuer contraproof",
+      "detail": "Same-day reuse performs one producer read; midnight invalidates with raw state/source fences unchanged. Clock change during production returnsstale. Hosted execution pending."
+    }
+  ],
+  "validation": {
+    "localProductExecution": false,
+    "independentReview": false,
+    "runtimePass": false,
+    "pending": "Exact published successor hostedCI and three independent reviewers after all builders close."
+  }
+}

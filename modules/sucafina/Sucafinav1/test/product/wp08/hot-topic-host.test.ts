@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { createCollaborationMutationFence } from "../../../product/collaboration/mutation-fence.ts"
 import { createCollaborationHotTopicHost } from "../../../product/collaboration/hot-topic-host.ts"
+import { createCollaborationHotTopicReadHost } from "../../../product/collaboration/hot-topic-read-host.ts"
 import { createHotTopicPort } from "../../../product/dashboard/hot-topics.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
@@ -51,3 +52,37 @@ test("SQLite commits the Hot Topic and its correlation together and revalidates 
     await rm(directory, { recursive: true, force: true })
   }
 })
+
+test("canonical Hot Topic read uses read grants without requesting state writes", async () => {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-hot-topic-read-"))
+  await chmod(directory, 0o700)
+  const store = await openLocalStore(directory)
+  const context = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "viewer", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
+  const source = { schema: "sf-evidence-v1", refId: "project-A", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "projects", recordId: "project-A", incarnation: "inc-A", version: 1, fields: ["name"], projectionDigest: "b".repeat(64) } } as const
+  const gate = { allowed: true, writeAttempts: 0 }
+  const request = new Request("https://example.test/", { headers: { "x-test-principal": "viewer" } })
+  const host = { persistence: store, authenticate: async () => gate.allowed ? { id: "viewer", canWrite: false, roles: [{ surface: "dashboard" as const, role: "domain leader" }] } : null, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "never-write", directory: [{ id: "viewer", name: "Viewer" }] }), requestFor: () => request, revalidate: async () => gate.allowed }
+  const state = createSfProductState({ persistence: store, createId: () => "never-write", resolveTarget: async () => { throw new Error("read must not resolve a mutation target") }, authorize: async (_request, _snapshot, _namespace, mode) => { if (mode === "write") gate.writeAttempts++; return gate.allowed && mode === "read" ? { principalRef: "viewer", policyVersion: "policy", accessRevision: "access" } : undefined } })
+  const evidence: BusinessContextService = { context: async ({ refs }) => gate.allowed ? refs.map((ref) => ({ state: "fresh" as const, ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })) : [], resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
+  const port = createHotTopicPort(createCollaborationHotTopicReadHost({ host, state, evidence, mutationFence: createCollaborationMutationFence(host) }))
+  try {
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.hotTopics = [{ id: "topic", action: "Review", owner: "Viewer", due: "2026-12-01", status: "open", priority: "normal", notes: "" }]
+      snapshot.versions["hotTopics:topic"] = { version: 3, by: "writer" }
+      return { commit: true, value: undefined }
+    })
+    expect(await port.read("topic", [source], context)).toMatchObject({ status: "ok", value: { id: "topic", version: 3 } })
+    expect(gate.writeAttempts).toBe(0)
+    expect(await port.create({ correlationKey: "forbidden", sourceRefs: [source], action: "Must not write", owner: "Viewer", due: "2026-12-01", priority: "normal", notes: "" }, context)).toMatchObject({ status: "denied" })
+    expect(gate.writeAttempts).toBe(0)
+    const snapshot = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
+    expect(snapshot.data.hotTopics).toHaveLength(1)
+    expect(snapshot.data.__sfProductV1).toBeUndefined()
+    gate.allowed = false
+    expect(await port.read("topic", [source], context)).toMatchObject({ status: "denied" })
+  } finally {
+    await store.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+

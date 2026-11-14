@@ -51,8 +51,8 @@ test("human-approved prepared dashboard command and receipt commit together", as
     const state = createSfProductState({ persistence, createId: () => "state", resolveTarget: async (_request, _snapshot, namespace) => ({ incarnation: namespace === "cases" ? "case-inc" : target.incarnation }), authorize: async () => ({ principalRef: actor.id, policyVersion: "1", accessRevision: "1" }) })
     const http = new Request("https://example.test")
     await state.transaction(http, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "case-inc" }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
-    const approval = { human: false }
-    const apply = createSfPreparedApply({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => approval.human, resolveActor: () => actor, resolveMutation: () => mutation, verifyGrant: () => true, receiptVersion: () => 1, environment, createId: () => "receipt", now: () => "2026-11-13T00:00:00Z" })
+    const approval = { human: false, digest: "a".repeat(64) }
+    const apply = createSfPreparedApply({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => approval.human, reviewDigestFor: () => approval.digest, resolveActor: () => actor, resolveMutation: () => mutation, verifyGrant: () => true, receiptVersion: () => 1, environment, createId: () => "receipt", now: () => "2026-11-13T00:00:00Z" })
     const request = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
     expect((await apply.executePrepared(request, context)).status).toBe("denied")
     approval.human = true
@@ -63,6 +63,9 @@ test("human-approved prepared dashboard command and receipt commit together", as
     const lookup = await apply.readReceipt({ surface: "dashboard", targetRef: "o", targetIncarnation: target.incarnation, idempotencyKey: "annual", commandDigest: mutation.commandDigest }, context)
     expect(lookup).toMatchObject({ status: "ok", value: { state: "found", receipt: { id: "receipt" } } })
     expect((await apply.readReceipt({ surface: "dashboard", targetRef: "o", targetIncarnation: target.incarnation, idempotencyKey: "annual", commandDigest: "f".repeat(64) }, context)).status).toBe("conflict")
+    approval.human = false
     expect(await apply.executePrepared(request, context)).toEqual(applied)
+    approval.digest = "b".repeat(64)
+    expect(await apply.executePrepared(request, context)).toMatchObject({ status: "conflict", reason: "idempotency-content-changed" })
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

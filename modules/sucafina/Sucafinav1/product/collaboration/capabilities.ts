@@ -2,7 +2,7 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import { sfOperationInputSchemas } from "../contracts/operations.ts"
 import type { SfOperationInputMap } from "../contracts/operations.ts"
 import { sfOperationOutputSchemas } from "../contracts/output-schemas.ts"
-import type { SfOperationOutputMap } from "../contracts/outputs.ts"
+import type { QuestionProposal, SfOperationOutputMap } from "../contracts/outputs.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { BoundCapabilityReceipt, CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -12,6 +12,7 @@ export type CollaborationCapabilityHost = {
   execute: <K extends Operation>(operation: K, value: SfOperationInputMap[K], context: TrustedDomainContext) => Promise<PortResult<SfOperationOutputMap[K]>>
   createReceipt: (context: TrustedDomainContext, operation: Operation, inputDigest: string, resultDigest?: string) => Promise<BoundCapabilityReceipt | undefined>
   requiredAuthority: Record<Operation, readonly string[]>
+  recordQuestionPreparation?: (result: QuestionProposal, receipt: BoundCapabilityReceipt, context: TrustedDomainContext) => Promise<boolean>
 }
 
 export const listWork = (value: unknown, context: TrustedDomainContext, host: CollaborationCapabilityHost) => execute("sf_work_list", value, context, host)
@@ -42,5 +43,10 @@ async function execute<K extends Operation>(operation: K, value: unknown, contex
   if (!decodeSfOperationOutput(operation, result.value).ok) return { status: "unavailable", reason: "invalid-output", receipt: admission }
   const receipt = await host.createReceipt(context, operation, digest, digestSfValue(result.value))
   if (!receipt) return { status: "denied", reason: "authority-changed", receipt: { kind: "unbound", operation, code: "invalid-binding", at: new Date().toISOString() } }
+  if (operation === "sf_question_prepare" && host.recordQuestionPreparation) {
+    const question = decodeSfOperationOutput("sf_question_prepare", result.value)
+    if (!question.ok || !await host.recordQuestionPreparation(question.value, receipt, context)) return { status: "unavailable", reason: "question-preparation-unavailable", receipt }
+  }
   return { status: "ok", result: result.value, receipt }
 }
+

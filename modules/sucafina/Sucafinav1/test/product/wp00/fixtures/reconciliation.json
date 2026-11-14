@@ -1,0 +1,443 @@
+{
+  "schema": "sf-wp00-corpus-reconciliation-v1",
+  "synthetic": true,
+  "source": "WP00.T03 corpus-v2 and explicit additional diagnostic fixtures; no production data.",
+  "projectImport": {
+    "sheet": "Projects Import",
+    "headers": [
+      "Name",
+      "Description",
+      "Status",
+      "Risk",
+      "Priority",
+      "Project Manager",
+      "IT Leader",
+      "Start Date",
+      "End Date",
+      "Budget (USD)",
+      "Spent (USD)",
+      "% Complete",
+      "Notes"
+    ],
+    "rows": [
+      [
+        "synthetic-project-linked",
+        "Synthetic linked project",
+        "In Progress",
+        "Low",
+        "High",
+        "Synthetic PM A",
+        "Synthetic Finance",
+        "2027-01-01",
+        "2027-12-31",
+        12000,
+        1200,
+        10,
+        "Synthetic original note A"
+      ],
+      [
+        "synthetic-project-unlinked",
+        "Synthetic unlinked project",
+        "Planning",
+        "Medium",
+        "Medium",
+        "Synthetic PM B",
+        "Synthetic Finance",
+        "2027-02-01",
+        "2027-10-31",
+        8000,
+        0,
+        0,
+        "Synthetic original note B"
+      ]
+    ],
+    "alteredRows": [
+      [
+        "synthetic-project-linked",
+        "Synthetic linked project",
+        "In Progress",
+        "Low",
+        "High",
+        "Synthetic PM A",
+        "Synthetic Finance",
+        "2027-01-01",
+        "2027-12-31",
+        16000,
+        1200,
+        10,
+        "Synthetic revised note A"
+      ],
+      [
+        "synthetic-project-unlinked",
+        "Synthetic unlinked project",
+        "Planning",
+        "Medium",
+        "Medium",
+        "Synthetic PM B",
+        "Synthetic Finance",
+        "2027-02-01",
+        "2027-10-31",
+        8000,
+        0,
+        0,
+        "Synthetic original note B"
+      ]
+    ],
+    "expected": {
+      "ids": [
+        "synthetic-imported-project-01",
+        "synthetic-imported-project-02"
+      ],
+      "initialTotal": 20000,
+      "alteredTotal": 24000,
+      "initialSummary": {
+        "added": 2,
+        "updated": 0,
+        "ignored": 0
+      },
+      "reimportSummary": {
+        "added": 0,
+        "updated": 2,
+        "ignored": 0
+      },
+      "note": "updated counts matching input rows, including rows with no changed business value; it is not a material-change count."
+    }
+  },
+  "budget": {
+    "annual": 1200,
+    "entries": [
+      {
+        "ownerId": "synthetic-owner",
+        "year": 2027,
+        "month": 1,
+        "budget": 200,
+        "actual": 0,
+        "forecast": 50
+      },
+      {
+        "ownerId": "synthetic-owner",
+        "year": 2027,
+        "month": 2,
+        "budget": 0,
+        "actual": 20,
+        "forecast": 0
+      },
+      {
+        "ownerId": "synthetic-owner",
+        "year": 2027,
+        "month": 3
+      },
+      {
+        "ownerId": "synthetic-owner",
+        "year": 2026,
+        "month": 1,
+        "budget": 300,
+        "actual": 900,
+        "forecast": 800
+      }
+    ],
+    "expected": {
+      "2026": {
+        "budget": 1400,
+        "actual": 900,
+        "forecast": 800,
+        "monthly": [
+          300,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "2027": {
+        "budget": 1300,
+        "actual": 20,
+        "forecast": 50,
+        "monthly": [
+          200,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100
+        ]
+      },
+      "meaning": "The inherited annual/12 rule is the existing Dashboard policy from corpus-v2; these reference values are not observed monthly actuals."
+    }
+  },
+  "report": {
+    "expectedCount": 25,
+    "expectedBudgetTotal": 40625,
+    "projects": [
+      {
+        "id": "synthetic-report-project-01",
+        "name": "Synthetic project 01",
+        "status": "In Progress",
+        "pm": "Synthetic owner 01",
+        "budget": 125,
+        "spent": 0,
+        "notes": "Note 01 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 01; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 01 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-02",
+        "name": "Synthetic project 02",
+        "status": "Planning",
+        "pm": "Synthetic owner 02",
+        "budget": 250,
+        "spent": 0,
+        "notes": "Note 02 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 02; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 02 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-03",
+        "name": "Synthetic project 03",
+        "status": "In Progress",
+        "pm": "Synthetic owner 03",
+        "budget": 375,
+        "spent": 0,
+        "notes": "Note 03 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 03; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 03 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-04",
+        "name": "Synthetic project 04",
+        "status": "Planning",
+        "pm": "Synthetic owner 04",
+        "budget": 500,
+        "spent": 0,
+        "notes": "Note 04 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 04; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 04 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-05",
+        "name": "Synthetic project 05",
+        "status": "In Progress",
+        "pm": "Synthetic owner 05",
+        "budget": 625,
+        "spent": 0,
+        "notes": "Note 05 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 05; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 05 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-06",
+        "name": "Synthetic project 06",
+        "status": "Planning",
+        "pm": "Synthetic owner 06",
+        "budget": 750,
+        "spent": 0,
+        "notes": "Note 06 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 06; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 06 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-07",
+        "name": "Synthetic project 07",
+        "status": "In Progress",
+        "pm": "Synthetic owner 07",
+        "budget": 875,
+        "spent": 0,
+        "notes": "Note 07 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 07; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 07 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-08",
+        "name": "Synthetic project 08",
+        "status": "Planning",
+        "pm": "Synthetic owner 08",
+        "budget": 1000,
+        "spent": 0,
+        "notes": "Note 08 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 08; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 08 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-09",
+        "name": "Synthetic project 09",
+        "status": "In Progress",
+        "pm": "Synthetic owner 09",
+        "budget": 1125,
+        "spent": 0,
+        "notes": "Note 09 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 09; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 09 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-10",
+        "name": "Synthetic project 10",
+        "status": "Planning",
+        "pm": "Synthetic owner 10",
+        "budget": 1250,
+        "spent": 0,
+        "notes": "Note 10 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 10; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 10 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-11",
+        "name": "Synthetic project 11",
+        "status": "In Progress",
+        "pm": "Synthetic owner 11",
+        "budget": 1375,
+        "spent": 0,
+        "notes": "Note 11 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 11; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 11 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-12",
+        "name": "Synthetic project 12",
+        "status": "Planning",
+        "pm": "Synthetic owner 12",
+        "budget": 1500,
+        "spent": 0,
+        "notes": "Note 12 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 12; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 12 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-13",
+        "name": "Synthetic project 13",
+        "status": "In Progress",
+        "pm": "Synthetic owner 13",
+        "budget": 1625,
+        "spent": 0,
+        "notes": "Note 13 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 13; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 13 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-14",
+        "name": "Synthetic project 14",
+        "status": "Planning",
+        "pm": "Synthetic owner 14",
+        "budget": 1750,
+        "spent": 0,
+        "notes": "Note 14 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 14; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 14 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-15",
+        "name": "Synthetic project 15",
+        "status": "In Progress",
+        "pm": "Synthetic owner 15",
+        "budget": 1875,
+        "spent": 0,
+        "notes": "Note 15 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 15; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 15 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-16",
+        "name": "Synthetic project 16",
+        "status": "Planning",
+        "pm": "Synthetic owner 16",
+        "budget": 2000,
+        "spent": 0,
+        "notes": "Note 16 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 16; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 16 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-17",
+        "name": "Synthetic project 17",
+        "status": "In Progress",
+        "pm": "Synthetic owner 17",
+        "budget": 2125,
+        "spent": 0,
+        "notes": "Note 17 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 17; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 17 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-18",
+        "name": "Synthetic project 18",
+        "status": "Planning",
+        "pm": "Synthetic owner 18",
+        "budget": 2250,
+        "spent": 0,
+        "notes": "Note 18 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 18; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 18 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-19",
+        "name": "Synthetic project 19",
+        "status": "In Progress",
+        "pm": "Synthetic owner 19",
+        "budget": 2375,
+        "spent": 0,
+        "notes": "Note 19 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 19; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 19 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-20",
+        "name": "Synthetic project 20",
+        "status": "Planning",
+        "pm": "Synthetic owner 20",
+        "budget": 2500,
+        "spent": 0,
+        "notes": "Note 20 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 20; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 20 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-21",
+        "name": "Synthetic project 21",
+        "status": "In Progress",
+        "pm": "Synthetic owner 21",
+        "budget": 2625,
+        "spent": 0,
+        "notes": "Note 21 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 21; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 21 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-22",
+        "name": "Synthetic project 22",
+        "status": "Planning",
+        "pm": "Synthetic owner 22",
+        "budget": 2750,
+        "spent": 0,
+        "notes": "Note 22 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 22; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 22 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-23",
+        "name": "Synthetic project 23",
+        "status": "In Progress",
+        "pm": "Synthetic owner 23",
+        "budget": 2875,
+        "spent": 0,
+        "notes": "Note 23 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 23; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 23 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-24",
+        "name": "Synthetic project 24",
+        "status": "Planning",
+        "pm": "Synthetic owner 24",
+        "budget": 3000,
+        "spent": 0,
+        "notes": "Note 24 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 24; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 24 ends.",
+        "milestones": []
+      },
+      {
+        "id": "synthetic-report-project-25",
+        "name": "Synthetic project 25",
+        "status": "In Progress",
+        "pm": "Synthetic owner 25",
+        "budget": 3125,
+        "spent": 0,
+        "notes": "Note 25 begins. Synthetic café & delivery <review> keeps the original project scope, an explicit dependency and the next review decision. This long note belongs only to project 25; the second sentence must survive pagination without silently shortening the project list. Unicode control 🫘 remains intact. Note 25 ends.",
+        "milestones": []
+      }
+    ],
+    "comment": {
+      "id": "synthetic-preserved-comment",
+      "authorRef": "synthetic-comment-author",
+      "content": "Synthetic preserved comment begins. The review retains the selected projects and their original explanations across multiple pages. This deliberately long comment includes café, café, an ampersand & and literal <scope> text so escaped text and Unicode can be checked in the generated documents. Synthetic preserved comment ends."
+    },
+    "omittedCommentMarker": "SYNTHETIC_UNSELECTED_COMMENT_MUST_NOT_APPEAR"
+  }
+}

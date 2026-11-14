@@ -1,0 +1,460 @@
+{
+  "schema": "sf2.wp10.typecheck-triage.v1",
+  "candidate": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+  "runId": 43544864518,
+  "jobId": 132293700346,
+  "logSha256": "6841ecc21620c4e04a22ffd5a06e3129ed74c77a76adc79204095ff86173783b",
+  "diagnostics": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "line": 60,
+      "column": 202,
+      "code": "TS1005",
+      "message": "',' expected.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "line": 66,
+      "column": 157,
+      "code": "TS1005",
+      "message": "',' expected.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/alternative-services.ts",
+      "line": 76,
+      "column": 34,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: string; version: number; components: readonly ProjectionComponent[]; currency: string; horizon: Period; sourceRefs: readonly BusinessEvidenceRef[]; ... 5 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }' is not assignable to parameter of type 'ScenarioResult'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "072a807ebb7516934e7a738db8c7bdc54cb2e230"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-choice-http.ts",
+      "line": 66,
+      "column": 123,
+      "code": "TS2322",
+      "message": "Type 'string' is not assignable to type 'BiViewId'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "9155f3e8a086e30edc25aaf9018c42e398a0ac84"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "line": 114,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "4ced95ae5b0be38626e59010f48909d54c95f4cd"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+      "line": 11,
+      "column": 58,
+      "code": "TS2353",
+      "message": "Object literal may only specify known properties, and 'write' does not exist in type 'BuildConfig'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "a0acdfc3efa262c6bf62eca53b12805467c932fe"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 362,
+      "column": 136,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "87bf04abe9ddbbd445a5f3dcdfb3479a76d7381a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 392,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "87bf04abe9ddbbd445a5f3dcdfb3479a76d7381a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 453,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "87bf04abe9ddbbd445a5f3dcdfb3479a76d7381a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 592,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "87bf04abe9ddbbd445a5f3dcdfb3479a76d7381a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 608,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "87bf04abe9ddbbd445a5f3dcdfb3479a76d7381a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 791,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "87bf04abe9ddbbd445a5f3dcdfb3479a76d7381a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "line": 92,
+      "column": 24,
+      "code": "TS2322",
+      "message": "Type 'Effect<A, E | Held, FSUtil.Service | Service>' is not assignable to type 'Effect<A, E | Held, never>'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "7836795fb527d1d9aef1e6fef4457829ac4082a5"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "line": 93,
+      "column": 27,
+      "code": "TS2322",
+      "message": "Type 'Effect<{ readonly id: string; readonly content: string; readonly sha256: string; }, Refusal, FSUtil.Service | Service>' is not assignable to type 'Effect<{ readonly id: string; readonly content: string; readonly sha256: string; }, Refusal, never>'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "7836795fb527d1d9aef1e6fef4457829ac4082a5"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "line": 95,
+      "column": 9,
+      "code": "TS2322",
+      "message": "Type '(reference: string, authorSessionID: string) => Effect<Anchor, Held, FSUtil.Service | Service>' is not assignable to type '(reference: string, authorSessionID: string) => Effect<Anchor, Held, never>'.",
+      "owner": "WP10",
+      "owned": true,
+      "observedLocalBlob": "7836795fb527d1d9aef1e6fef4457829ac4082a5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "line": 245,
+      "column": 120,
+      "code": "TS2345",
+      "message": "Argument of type '\"cancelled\" | \"failed\" | \"needs-input\" | \"queued\" | \"running\" | \"stale\" | \"unavailable\"' is not assignable to parameter of type '\"needs-input\" | \"unavailable\"'.",
+      "owner": "WP12",
+      "owned": false,
+      "observedLocalBlob": "06b12a8714adb16b87f7f6e8f8a329e164ed5288"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "line": 303,
+      "column": 50,
+      "code": "TS2345",
+      "message": "Argument of type '(context: TrustedDomainContext) => Promise<{ status: \"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"; reason: string; } | ... 6 more ... | { ...; }>' is not assignable to parameter of type '(context: TrustedDomainContext) => Promise<PortResult<{ output?: undefined; readonly run: SfAnalysisRunProgress; }>>'.",
+      "owner": "WP12",
+      "owned": false,
+      "observedLocalBlob": "06b12a8714adb16b87f7f6e8f8a329e164ed5288"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "line": 91,
+      "column": 1060,
+      "code": "TS7006",
+      "message": "Parameter 'field' implicitly has an 'any' type.",
+      "owner": "WP14",
+      "owned": false,
+      "observedLocalBlob": "91b6154c5e932b60ed70d50087961af290b626c6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 221,
+      "column": 35,
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "owner": "WP14",
+      "owned": false,
+      "observedLocalBlob": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 227,
+      "column": 33,
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "owner": "WP14",
+      "owned": false,
+      "observedLocalBlob": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 42,
+      "column": 36,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: string; version: number; components: readonly ProjectionComponent[]; currency: string; horizon: Period; sourceRefs: readonly BusinessEvidenceRef[]; ... 5 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }' is not assignable to parameter of type 'ScenarioResult'.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 44,
+      "column": 58,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; currency: string; ... 7 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }' is not assignable to parameter of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }'.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 50,
+      "column": 213,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; currency: string; ... 7 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }' is not assignable to parameter of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }'.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 51,
+      "column": 39,
+      "code": "TS2322",
+      "message": "Type '{ caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; ... 8 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domai...' is not assignable to type '{ caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }'.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "line": 119,
+      "column": 26,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 48,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 85,
+      "column": 426,
+      "code": "TS2345",
+      "message": "Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 109,
+      "column": 75,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 111,
+      "column": 185,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 114,
+      "column": 74,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 115,
+      "column": 81,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 115,
+      "column": 112,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 116,
+      "column": 183,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "line": 98,
+      "column": 26,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP11",
+      "owned": false,
+      "observedLocalBlob": "304eb80e72a002078e3f6ea8c5cfac507ffdd494"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "line": 54,
+      "column": 3,
+      "code": "TS2322",
+      "message": "Type '(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => { baseDigest?: undefined; commandDigest?: undefined; ... 7 more ...; reason: string; } | { ...; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => { status: \"denied\"; reason: string; by?: undefined; stored?: undefined; ... 8 more ...; summary?: undefined; } | ... 5 more ... | { ...; }'.",
+      "owner": "WP06",
+      "owned": false,
+      "observedLocalBlob": "3a2dbbf47fb9e5d430ccd0edde2efccdf8412437"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "line": 15,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": "484ee7dc8ac3a78a381f73c020a3afc06c5394c7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 41,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": "b1d98fe90c01a6de34f1dcafdff92fcddf83da2d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 79,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": "b1d98fe90c01a6de34f1dcafdff92fcddf83da2d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 96,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": "b1d98fe90c01a6de34f1dcafdff92fcddf83da2d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": "e6313ad315f5235a87442c7094ff47f2c74ca6c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "owner": "WP13",
+      "owned": false,
+      "observedLocalBlob": "e6313ad315f5235a87442c7094ff47f2c74ca6c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "line": 168,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: ProcurementSourceHost; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 9 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'.",
+      "owner": "WP04",
+      "owned": false,
+      "observedLocalBlob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "line": 187,
+      "column": 43,
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; host: ProcurementSourceHost; apply: PreparedApplyPort; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeApplication: (request: { ...; }, change: PreparedChange, context:...' is missing the following properties from type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; apply: PreparedApplyPort; ... 6 more ...; revalidateProducer: (request: { ...; }, context: TrustedDomainContext) => Promise<...>; }': reviewDigestFor, revalidateProducer",
+      "owner": "WP04",
+      "owned": false,
+      "observedLocalBlob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "line": 64,
+      "column": 9,
+      "code": "TS2741",
+      "message": "Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+      "owner": "WP01",
+      "owned": false,
+      "observedLocalBlob": "cd559d550b6fa799549b23c5c2c9f353781145cb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "line": 8,
+      "column": 65,
+      "code": "TS2366",
+      "message": "Function lacks ending return statement and return type does not include 'undefined'.",
+      "owner": "WP01",
+      "owned": false,
+      "observedLocalBlob": "95f3c12a559ff40b010b7774bc7a036da4b2afed"
+    }
+  ],
+  "limit": "W1 diagnostics only. Local file identities may include post-review own fixes; no local compiler was run. W2 qualification is required."
+}

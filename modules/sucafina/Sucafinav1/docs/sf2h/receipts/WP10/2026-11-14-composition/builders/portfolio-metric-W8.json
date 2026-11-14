@@ -1,0 +1,262 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "status": "CLOSED",
+  "builder": "/root/planner_recovery_w6",
+  "role": "author-builder; not an independent reviewer",
+  "scope": "W8 Portfolio criterion metadata observation and own regression/instrumentation",
+  "base": {
+    "W": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+    "tree": "3cb60a653fd340732d0e5f437c2e90f700976f03"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "beforeW7": {
+        "gitBlobSha": "1bad407f07af6fd9f92f5dce65f1987b42f14290",
+        "sha256": "b2dd13a0ac3ce58dae5558a845cbbde038704aaeea5be3547a57b3d87a322ce1",
+        "bytes": 8616
+      },
+      "after": {
+        "gitBlobSha": "d54a6235d72056e5fec0517fef4b611b9660d0d7",
+        "sha256": "507ce9a5ad388670c5b6bb7f89913ad65e64471c8c6f50fd6aad5a1253ac3f88",
+        "bytes": 9622
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "beforeW7": {
+        "gitBlobSha": "85acc13f49c35691390b289fd0d3178e551fe976",
+        "sha256": "a99e273009ac66452fc5bf72db22694aa5167b32dfa597496fab8346aabc3d62",
+        "bytes": 22646
+      },
+      "after": {
+        "gitBlobSha": "6a23a7f7fd79fbcba166405e3c67986dbd17622a",
+        "sha256": "8780e2f5eb875b439be2b9f3e962de376812f4382a431538c09cdd9a4835f2f5",
+        "bytes": 23534
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "beforeW7": null,
+      "after": {
+        "gitBlobSha": "f98f8720f185778be30552911899bb1ac5f03ea6",
+        "sha256": "6113a9b5ebf6be479c38c7f9c7c5ac0b8a3cfcbdaa14a16abbc934e8e321b75b",
+        "bytes": 10754
+      }
+    }
+  ],
+  "lease": "Parent-authorized portfolio-authority.ts, portfolio-promotion.test.ts and one new own WP10 test only. No other product writes, no remote mutations, CI dispatch, merge or deployment by this builder.",
+  "patch": "analysis/portfolio-metric-W8/W7-to-W8.patch",
+  "priorHostedObservation": {
+    "W": "d1ca0b2b02936d4824a9201af5c133d7bbf2056c",
+    "S": "31aaeeb33fc613cb9a8ef2bd3129d3ccf008d6de",
+    "runId": 43557944494,
+    "jobId": 132334945491,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43557944494",
+    "conclusion": "failure",
+    "logSha256": "6224636be71c595446b889d2e6a11d48605203ed6c6c5c01c005e361933d488b",
+    "portfolioPromotion": {
+      "path": "Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "tests": [
+        {
+          "verdict": "fail",
+          "name": "first HTTP promotion commits real coverage and a historical baseline supports a new choice in N+2",
+          "durationMs": 477529.41,
+          "logLine": 1361
+        },
+        {
+          "verdict": "pass",
+          "name": "promotion refuses additional authority fields, changed admitted intent and revoked admission without storing a result",
+          "durationMs": 2023.43,
+          "logLine": 1363
+        },
+        {
+          "verdict": "pass",
+          "name": "promotion rechecks source changed immediately before the real C08 commit",
+          "durationMs": 7828.3,
+          "logLine": 1364
+        },
+        {
+          "verdict": "pass",
+          "name": "promotion rechecks classification changed immediately before the real C08 commit",
+          "durationMs": 10317.25,
+          "logLine": 1365
+        },
+        {
+          "verdict": "pass",
+          "name": "promotion rechecks authority changed immediately before the real C08 commit",
+          "durationMs": 7861.45,
+          "logLine": 1366
+        },
+        {
+          "verdict": "pass",
+          "name": "historical choice rejects removed membership, replaced incarnation, changed alternative digest and stale source",
+          "durationMs": 162506.58,
+          "logLine": 1367
+        }
+      ],
+      "counts": {
+        "fail": 1,
+        "pass": 5
+      },
+      "durationMs": 668066.42
+    },
+    "interpretation": "First HTTP test timed out at 477529.41 ms despite its 300000 ms Bun limit. There were no internal phase markers, so the dominant phase was not measured. Other promotion and historical negatives passed. These are W6 observations, not W8 qualification."
+  },
+  "causeFromSource": {
+    "before": "readMetric invoked the public compareScenarios with empty criteria, which resolves baseline/candidate twice (four actual resolves), then readMetric resolved both again solely to obtain metadata (six total).",
+    "after": "The same public comparator receives a local observing wrapper. Every resolver invocation calls the real scenarios.resolve, clones its result and returns that same snapshot to the comparator. Only after comparator ok does readMetric consume the last baseline/candidate observations. Four mandatory producer resolutions remain; the two metadata-only resolutions are removed.",
+    "limits": "This establishes removed redundant calls by source inspection; it does not establish any measured time reduction. Scenario operations are empty in the slow HTTP fixture, so the prior W7 target-selector optimization does not address this path."
+  },
+  "preservedGuards": [
+    "Candidate readHistoricalScenario remains real, with kind, case id/incarnation and stored-case-version scope checks unchanged in meaning. No new historical-version authorization is introduced.",
+    "Candidate observed result must still match the actual stored resultDigest, and comparison result references must match the captured baseline/candidate references.",
+    "Public comparison still validates initial and repeated scenario snapshots, projection digests, current source identity, coverage basis/assessment and current actor authority before success. No financial producer or policy was edited.",
+    "Final host revalidation remains; after that await, readMetric additionally verifies exact Request identity, no abort, unchanged binding digest and unchanged incoming metric request.",
+    "Known difference, unit, period, evidence references, conditioned/confirmed state and engineVersion come from the public result and its validated producer observations.",
+    "The observation map is allocated per readMetric invocation, never answers a resolver call and is discarded afterwards. There is no cross-call result/authorization cache, TTL change or added financial fallback."
+  ],
+  "counterproofsPrepared": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+    "testCount": 5,
+    "proofs": [
+      "Actual SQLite/C08, UI authority, Planner simulations, stored result writer, stored scenario resolver, human criterion registry and public comparison. Pending cost coverage and case binding of real results are explicit fixtures.",
+      "Exactly four actual scenario resolutions per successful metric read; repeating the read performs four new actual resolutions with the same authorized call, producing identical conditioned metadata.",
+      "Revocation between invocations returns no metric value instead of reusing prior results.",
+      "Changes to source data, current principal access, case membership or incoming request immediately after the fourth real scenario resolution produce no metric value.",
+      "Expected -240 is the actual deterministic known subtotal difference; state stays conditioned, with no complete-cost/human-promotion/native/global acceptance claim."
+    ],
+    "budgetsMs": {
+      "cooperative": 105000,
+      "bun": 120000
+    },
+    "runtime": "NOT_RUN_ON_W8"
+  },
+  "httpFixture": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+    "assertionLinesBefore": 61,
+    "assertionLinesAfter": 61,
+    "removedAssertions": [],
+    "bunBudgetsBefore": [
+      "300_000",
+      "120_000",
+      "180_000",
+      "300_000"
+    ],
+    "bunBudgetsAfter": [
+      "300_000",
+      "120_000",
+      "180_000",
+      "300_000"
+    ],
+    "cooperativeBudgetsMs": [
+      285000,
+      105000,
+      165000,
+      285000
+    ],
+    "phases": [
+      "fixture.initialize",
+      "fixture.sources",
+      "coverage.<operation>",
+      "http.<action>.<operation> for first/second promotion, retries, mismatched choice and accepted choice",
+      "read.exact-baseline",
+      "read.historical-baseline",
+      "criterion.register",
+      "comparison.actual-alternatives",
+      "comparison.promoted-pair",
+      "scoped.read"
+    ],
+    "deadline": "Existing compositionTestDeadline is reused without editing it. Its abort signal reaches real authority and HTTP Requests; host environment checks elapsed time. Cleanup throws on expiration even if a domain port translated abort into denied, so a timeout cannot make a negative pass."
+  },
+  "staticAudit": {
+    "outsideReadMetricUnchanged": true,
+    "allExistingAssertionLinesPreserved": true,
+    "allExistingOuterBudgetsUnchanged": true,
+    "relativeImportsMissing": [],
+    "unchangedSourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "gitBlobSha": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+        "sha256": "23767836ce893bfb803243830ab62bd55d3352a917d55c927157d42ca5160643",
+        "bytes": 7667
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+        "gitBlobSha": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+        "sha256": "90ec6a2211bd8753f1a7d850e06c311b49cf056cc9430521179d980c97a64636",
+        "bytes": 5993
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "gitBlobSha": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+        "sha256": "659c483b654c54765a6f5636e44c93537f9cb0ef19ee136256515b9665f1fbc9",
+        "bytes": 3864
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "gitBlobSha": "dba62042653bd061fa099e2956cae4d11a0475ce",
+        "sha256": "d66bf0f6e47bbd7e8223c362fa1a67a4625f2cc1156eb0d0a46dc1a1c9419456",
+        "bytes": 24849
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+        "gitBlobSha": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+        "sha256": "8b31a503eae2d06fac5b38250c571937e211ea3aed3864e650149e5d589d7162",
+        "bytes": 3128
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+        "gitBlobSha": "c357c6c66aac544394ab355306e1f6f7195395f7",
+        "sha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217",
+        "bytes": 31605
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "gitBlobSha": "0d2977360afb7b9af6d39b19eff6e9198c7c1c55",
+        "sha256": "beff852cf85a71893dc596c3b673dbce638e4bbb9a4787bff476448d66a8377e",
+        "bytes": 13354
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+        "gitBlobSha": "25e6056021a20cbdd1a3608fda515d77e052327f",
+        "sha256": "e1c55c96d638de33536791717d1357a92955becbc1b9bad471e6c4cd65a546e3",
+        "bytes": 4203
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+        "gitBlobSha": "a661aaa134e046b093b300c260870e38c967aa10",
+        "sha256": "7b84489ea7d49d5cd37911e5ef64147662453d61cf9042f2b11affc52cf18796",
+        "bytes": 8808
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "gitBlobSha": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+        "sha256": "034f02c64c3da409c8117530e0eaf80071f5c9ba69228c53c09561d0a3b0d149",
+        "bytes": 9125
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+        "gitBlobSha": "737c19b03fa3d47fcdc7748e4d110b4af30fb7e7",
+        "sha256": "bc8309217742936742c843d82d58d1b4fa456a9b81454e78a8b19779b94d1494",
+        "bytes": 5698
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "gitBlobSha": "3eb140557b597156baf52578d8981d332e52aef3",
+        "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+        "bytes": 2313
+      }
+    ]
+  },
+  "coordination": "Source analysis exchanged with /root/ci_triage; this is builder collaboration, not independent review. Root owns publication and surgical CI.",
+  "qualification": {
+    "sourceWork": "CLOSED",
+    "runtime": "PENDING_HOSTED_SURGICAL_CI",
+    "performance": "NOT_MEASURED_ON_W8",
+    "independentReview": "PENDING; builder cannot replace the three reviewers",
+    "localProductExecution": false,
+    "globalOrNativeAcceptance": false,
+    "criteria": "All 171 criteria and seven tasks remain intact; no criterion is promoted to PASS by source inspection. F05/historical acceptance is not closed here."
+  }
+}

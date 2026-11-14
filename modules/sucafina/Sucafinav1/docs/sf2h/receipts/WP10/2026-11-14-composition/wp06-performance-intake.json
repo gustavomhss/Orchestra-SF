@@ -1,0 +1,173 @@
+{
+  "schema": "wp10-published-performance-intake-v1",
+  "status": "CLOSED",
+  "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+  "baseCommit": "4d65d3acb627ed85825da487248a6f6c4c3f1f11",
+  "candidatePublication": "pending root W3 publication",
+  "scope": "Reduce repeated snapshot copying without changing authorization, codec validation or source identity guards. No local product execution.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "kind": "WP10-owned-reconciled",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "sourceBlobSha": "b9a08694e9cce6f6930fd41998d3f80db052b57e",
+      "publisher": "astra-wp06",
+      "ownershipNote": "WP10",
+      "before": {
+        "blobSha": "b22896f9870a5951b1ddfe1aa166ab612be90fe7",
+        "sha256": "56f46aec6bec2a6e8d16a3ceedf906b1135ef232786aef7ad4408566a3280e9a",
+        "bytes": 22356
+      },
+      "after": {
+        "blobSha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+        "bytes": 22358
+      },
+      "exactPublished": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "kind": "WP10-owned-published-optimization",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "sourceBlobSha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "publisher": "astra-wp06",
+      "ownershipNote": "WP10",
+      "before": {
+        "blobSha": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+        "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289",
+        "bytes": 14100
+      },
+      "after": {
+        "blobSha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+        "sha256": "81cbd49ac10274a29aefce19d23d4739f5d34e97696c16d789440fe2e845c44a",
+        "bytes": 14151
+      },
+      "exactPublished": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "kind": "WP10-owned-published-optimization",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "sourceBlobSha": "b614dee55399f5830c91c8cf07a6a2f29c491abd",
+      "publisher": "astra-wp06",
+      "ownershipNote": "WP10",
+      "before": {
+        "blobSha": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+        "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+        "bytes": 24537
+      },
+      "after": {
+        "blobSha": "b614dee55399f5830c91c8cf07a6a2f29c491abd",
+        "sha256": "747a369204009b512447b71fff9cb899038d4451bd727826280583ee23acbd80",
+        "bytes": 24749
+      },
+      "exactPublished": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "kind": "exact-published-consumption",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "sourceBlobSha": "2d6562176cf2b106945c4478f2f5422f0b454d80",
+      "publisher": "astra-wp06",
+      "ownershipNote": "outside current pack exact/prefix ownership; no authored edits",
+      "before": null,
+      "after": {
+        "blobSha": "2d6562176cf2b106945c4478f2f5422f0b454d80",
+        "sha256": "bc33c9046585e1398a9a85bb73d61e58cfe84a622ed7419de361123b4d8ddc7a",
+        "bytes": 37293
+      },
+      "exactPublished": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts",
+      "kind": "exact-published-consumption",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "sourceBlobSha": "b914e7cedaa4bb500070bce7b46f25ee1f6986d4",
+      "publisher": "astra-wp06",
+      "ownershipNote": "WP06",
+      "before": {
+        "blobSha": "d22a04c649b81c98d40b334e157a20070d069c12",
+        "sha256": "03ba9a781732c18cfa66cb22ad9518db627d0f89a601b4725dc394bd09315473",
+        "bytes": 32203
+      },
+      "after": {
+        "blobSha": "b914e7cedaa4bb500070bce7b46f25ee1f6986d4",
+        "sha256": "c07a7b5efa4bd9c12726518051800a78f5cab8114c1f1e2e417820a0ad611e77",
+        "bytes": 33140
+      },
+      "exactPublished": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "kind": "exact-published-consumption",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "sourceBlobSha": "2504ad32f11df09c409825b7d2e918166f5c6b15",
+      "publisher": "astra-wp06",
+      "ownershipNote": "WP06",
+      "before": {
+        "blobSha": "5e95b5fe30ff7f9ac68b67854f375097d22b5e8f",
+        "sha256": "d955e642a4b51b14169f9c3a6d7535b10c2e8dd344c93befb97ca6a0eddcb5c1",
+        "bytes": 26381
+      },
+      "after": {
+        "blobSha": "2504ad32f11df09c409825b7d2e918166f5c6b15",
+        "sha256": "3c91eed3d4ba9321471970f61bf8f9b12680a15cb9a41ee04f85eec2ec990a3e",
+        "bytes": 27968
+      },
+      "exactPublished": true
+    }
+  ],
+  "preserved": [
+    "All WP10 product-authority role/scope/digest/native/domain/receipt guards and human read permissions.",
+    "Source identity and append-only audit checks; business-restore restores the captured product state as before.",
+    "Snapshot codec encode/decode normalization and validateSnapshot shape/content/blob-generation checks.",
+    "Transactional copy isolation, lock/commit semantics, request cancellation and private write guards.",
+    "Native fixture producer calls/grants/deadline and controlled Core Session input remain unchanged; trace wrappers add timing only."
+  ],
+  "notConsumed": [
+    "product/host-binding/business-context.ts default-reader replacement (kept exact direct Planner projection and current source guard behavior)",
+    "product/integration/planner-sources.ts helper and foreign product/planner/evidence-reader.ts are not dependencies of the consumed optimization",
+    "test/product/wp06/imports/source-fences.test.ts depends on the unconsumed default reader"
+  ],
+  "proof": {
+    "performed": [
+      "Byte comparison against downloaded base and pinned published source.",
+      "Git blob SHA verification for all six downloaded source files.",
+      "Exact-copy verification for three test files consumed outside owned paths.",
+      "Static inspection only; no product tests, build, typecheck or runtime import executed locally."
+    ],
+    "pending": [
+      "Hosted local-store regression tests, affected WP10 tests and WP06 native consumers.",
+      "Independent review of published candidate."
+    ],
+    "performanceClaim": "None; the narrower clone path has not been benchmarked or accepted by hosted evidence in this intake."
+  },
+  "requiredHostedSelection": [
+    "test/local-store.test.ts",
+    "test/product/wp06/native/documents.test.ts",
+    "test/product/wp06/native/import-analysis.test.ts"
+  ],
+  "foreignPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "blobSha": "2d6562176cf2b106945c4478f2f5422f0b454d80",
+      "sha256": "bc33c9046585e1398a9a85bb73d61e58cfe84a622ed7419de361123b4d8ddc7a",
+      "publisher": "astra-wp06"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "blobSha": "b914e7cedaa4bb500070bce7b46f25ee1f6986d4",
+      "sha256": "c07a7b5efa4bd9c12726518051800a78f5cab8114c1f1e2e417820a0ad611e77",
+      "publisher": "astra-wp06"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "sourceCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+      "blobSha": "2504ad32f11df09c409825b7d2e918166f5c6b15",
+      "sha256": "3c91eed3d4ba9321471970f61bf8f9b12680a15cb9a41ee04f85eec2ec990a3e",
+      "publisher": "astra-wp06"
+    }
+  ]
+}

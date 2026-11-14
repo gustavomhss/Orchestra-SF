@@ -20,6 +20,7 @@ import { loadSfSkill } from "../../../../modules/sucafina/Sucafinav1/product/hos
 import type { SfTokenCountReceipt } from "./token-count.ts"
 import type { createSfTokenGate, SfTokenGateTicket } from "./token-gate.ts"
 import { hasSfProviderConflict } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 
 export type SfNativePrepareInput = {
   request: Request
@@ -67,7 +68,7 @@ export type SfNativeHostPolicy = {
   onReady?: (api: SfNativeHostApi) => () => void
   onSkillLoaded?: (observation: SfLoadedSkillObservation) => () => void
   budget?: {
-    gate: ReturnType<typeof createSfTokenGate>
+    gate: Pick<ReturnType<typeof createSfTokenGate>, "reserveSession" | "register" | "revokeSession" | "revoke" | "valid">
     reserveSession: (input: SfNativeBudgetReservation) => Effect.Effect<void, unknown>
     persistReceipt: (binding: TrustedExecutionBinding, receipt: SfTokenCountReceipt) => Effect.Effect<void, unknown>
   }
@@ -80,7 +81,7 @@ export type SfNativeHostPolicy = {
 export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
   const sources = new WeakMap<SkillV2.Interface, SfSourceCapability>()
   const runs = new WeakMap<TrustedExecutionBinding, { admission: SfNativeAdmission; ticket: SfTokenGateTicket; prompt: string; used: boolean; release: () => void }>()
-  const observations = new Set<() => void>()
+  const observations = new Map<SessionSchema.ID, () => void>()
   const lifetime = { open: true }
   const onRegistered = (registration: { skills: SkillV2.Interface; sourceCapability: SfSourceCapability }) => {
     sources.set(registration.skills, registration.sourceCapability)
@@ -94,8 +95,13 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
         const locations = yield* LocationServiceMap.Service
         yield* Effect.addFinalizer(() => Effect.gen(function* () {
           lifetime.open = false
-          yield* Effect.forEach(observations, (release) => Effect.exit(Effect.sync(release)), { discard: true })
+          const owned = [...observations.keys()]
+          // Revoke every grant before waiting on any Session; another root need not own these runs.
+          yield* Effect.forEach(observations.values(), (release) => Effect.exit(Effect.sync(release)), { discard: true })
           observations.clear()
+          yield* Effect.forEach(owned, (sessionID) => Effect.exit(Effect.gen(function* () {
+            if ((yield* session.active).has(sessionID)) yield* session.interrupt(sessionID)
+          })), { discard: true, concurrency: "unbounded" })
         }))
         const authorized = (binding: TrustedExecutionBinding) => {
           const run = runs.get(binding)
@@ -105,7 +111,8 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
         }
         const api = SfNativeHost.of({
           prepare: (request) => Effect.gen(function* () {
-            const args = Object.freeze({ ...freezeHostInput(structuredClone({ selected: request.selected, location: request.location, model: request.model,
+            const args = Object.freeze({ ...freezeHostInput(structuredClone({ selected: request.selected,
+              location: sfNativeLocationRef(request.location), model: sfNativeModelRef(request.model),
               skillId: request.skillId, prompt: request.prompt, runId: request.runId, caseRef: request.caseRef, entryMode: request.entryMode,
               toolCallBudget: request.toolCallBudget, skillLoadBudget: request.skillLoadBudget })), request: request.request })
             if (args.request.signal.aborted || !(yield* Effect.suspend(() => input.admit(args)).pipe(Effect.catch(() => Effect.succeed(false)))))
@@ -123,8 +130,9 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
               const mcp = yield* Mcp.Service
               const sourceCapability = sources.get(skills)
               const available = yield* catalog.model.available()
+              // Core resolves "default" through model.request.variant; only explicit alternatives need a catalog entry.
               const model = available.find((item) => item.providerID === args.model.providerID && item.id === args.model.id &&
-                (args.model.variant === undefined || item.variants.some((variant) => variant.id === args.model.variant)))
+                (args.model.variant === "default" || item.variants.some((variant) => variant.id === args.model.variant)))
               const conflict = yield* Effect.promise(() => hasSfProviderConflict(mcp).catch(() => undefined))
               return { skills, sourceCapability, model, conflict }
             }).pipe(Effect.provide(locations.get(args.location)), Effect.result)
@@ -185,13 +193,14 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
                 acquired.ticket = ticket
                 if (!lifetime.open) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
                 const discard = () => {
-                  if (!observations.delete(discard)) return
+                  if (observations.get(sessionID) !== discard) return
+                  observations.delete(sessionID)
                   budget.gate.revoke(ticket)
                   input.registry.revoke(bound.value)
                   runs.delete(bound.value)
                   release?.()
                 }
-                observations.add(discard)
+                observations.set(sessionID, discard)
                 runs.set(bound.value, { admission, ticket, prompt: args.prompt, used: false, release: discard })
                 acquired.retained = true
                 return { status: "ok", value: { binding: bound.value, sessionID, skillReceipt: loaded.success } } as const
@@ -241,15 +250,16 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
               ? yield* Effect.suspend(() => input.authorizeInterrupt!(run.admission, binding, request)).pipe(Effect.catch(() => Effect.succeed(false))) : false
             if ((!current && !cancelled) || !lifetime.open || runs.get(binding) !== run || (request && request.signal.aborted))
               return { status: "denied", reason: "native-authority-unavailable" } as const
-            yield* session.interrupt(run.admission.sessionID)
             run.release()
+            yield* session.interrupt(run.admission.sessionID)
             return { status: "ok", value: true } as const
           }),
           release: (binding) => Effect.gen(function* () {
             const run = runs.get(binding)
             if (!run) return
-            yield* session.interrupt(run.admission.sessionID)
+            // Revoke owned resources even if the native interruption fails.
             run.release()
+            yield* session.interrupt(run.admission.sessionID)
           }),
         })
         const release = input.onReady?.(api)

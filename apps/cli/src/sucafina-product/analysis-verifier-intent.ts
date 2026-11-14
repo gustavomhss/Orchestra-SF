@@ -5,12 +5,13 @@ import type { createDecisionCasePort } from "../../../../modules/sucafina/Sucafi
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { createSfImportHost } from "../../../../modules/sucafina/Sucafinav1/product/imports/host.ts"
+import type { DecisionIntentInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
 import type { SfAnalysisDependencies, SfAnalysisRequest, SfAnalysisVerifier } from "./analysis-verifier.ts"
 
 export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & {
   replayIntent: ReturnType<typeof createDecisionCasePort>["prepareIntentForCase"]
-  imports: Pick<ReturnType<typeof createSfImportHost>, "readPreviewForAnalysis">
-  selectedPreviewRef: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ previewRef: string }>>
+  imports?: Pick<ReturnType<typeof createSfImportHost>, "readPreviewForAnalysis">
+  selectedPreviewRef?: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext, input: DecisionIntentInput) => Promise<PortResult<{ previewRef: string }>>
 }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-enquadrar-decisao"],
@@ -28,16 +29,17 @@ export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & {
           value.context.sourceRefs.some((source) => source.surface !== value.context.surface || !value.selectedSourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === source.surface && ref.target.recordType === source.type && ref.target.recordId === source.id && ref.target.incarnation === source.incarnation && ref.target.version === source.version && ref.target.period?.start === source.period.start && ref.target.period.end === source.period.end && source.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field))))) return undefined
         const preview = await (async () => {
           if (!value.importPreview) return null
-          const selected = await dependencies.selectedPreviewRef(request.caseRef, currentCall)
+          if (!dependencies.imports || !dependencies.selectedPreviewRef) return undefined
+          const selected = await dependencies.selectedPreviewRef(request.caseRef, currentCall, value)
           if (selected.status !== "ok" || !selected.value.previewRef.trim()) return undefined
           const result = await dependencies.imports.readPreviewForAnalysis({ previewRef: selected.value.previewRef, request: value.importPreview }, currentCall)
           if (result.status !== "ok") return undefined
           const manifest = result.value.manifest
-          if (manifest.id !== selected.value.previewRef || manifest.state !== "preview" || manifest.domainApplied || manifest.receipts.length || manifest.issues.length ||
+          if (manifest.id !== selected.value.previewRef || manifest.state !== "preview" || manifest.domainApplied || manifest.receipts.length ||
             manifest.context.installationId !== currentCall.binding.installationId || manifest.context.projectId !== currentCall.binding.projectId || manifest.context.principalRef !== currentCall.binding.principalRef || manifest.context.accessRevision !== currentCall.binding.accessRevision || manifest.context.policyVersion !== currentCall.binding.policyVersion ||
             manifest.context.surface !== value.context.surface || digestSfValue(manifest.context.period) !== digestSfValue(value.context.period) || manifest.context.currency !== value.context.currency ||
             digestSfValue(manifest.context.sourceRefs) !== digestSfValue(value.context.sourceRefs) || digestSfValue(manifest.baseIdentity) !== digestSfValue(value.context.sourceRefs)) return undefined
-          return { previewRef: selected.value.previewRef, digest: result.value.digest }
+          return { previewRef: selected.value.previewRef, digest: result.value.digest, manifest, detail: result.value.detail }
         })()
         if (preview === undefined) return undefined
         const sources = await dependencies.context.context({ refs: value.selectedSourceRefs }, currentCall)
@@ -46,7 +48,9 @@ export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & {
       }
       const proof = await read(call)
       if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
-      return { status: "ok", value: { current: proof.current, input: value, sources: proof.sources, acceptsOutput: async (output, currentCall) => {
+      return { status: "ok", value: { current: proof.current, input: value, sources: proof.sources,
+        ...(proof.preview ? { promptContext: { importPreview: { importPreviewRef: proof.preview.previewRef, manifest: proof.preview.manifest, detail: proof.preview.detail } } } : {}),
+        acceptsOutput: async (output, currentCall) => {
         if (output.state !== "ready" || output.kind !== "IntentFrame" ||
           digestSfValue(output.evidenceRefs) !== digestSfValue(value.selectedSourceRefs) || digestSfValue(output.payload.sourceRefs) !== digestSfValue(value.selectedSourceRefs) ||
           digestSfValue(output.payload.horizon) !== digestSfValue(value.context.period) || output.payload.currency !== value.context.currency || output.payload.gaps.length) return { status: "unavailable", reason: "analysis-output-unverified" }

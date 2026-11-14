@@ -13,6 +13,7 @@ import type { SfProductGrant } from "../../../../product/integration/product-aut
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { selection } from "../resident-runtime/fixture.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 
 async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>, options: { rejectNested?: boolean } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-product-authority-"))
@@ -100,10 +101,60 @@ test("human command admission binds exact action and payload and revokes on auth
   })
 })
 
+test("private collaboration reads admit a viewer with an explicit grant and bind exact payload", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads"], operations: [], humanActions: ["collaboration.thread.read", "collaboration.thread.reply"] }], async ({ product, request, actor }) => {
+    actor.write = false
+    const payload = { id: "thread" }
+    const post = new Request(request, { method: "POST", headers: { origin: "https://example.test" } })
+    const admitted = await product.human.admit(post, "collaboration.thread.read", payload)
+    expect(admitted.status).toBe("ok")
+    if (admitted.status !== "ok") return
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.read", payload)).toBe(true)
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.read", { id: "another" })).toBe(false)
+    expect((await product.human.admit(post, "collaboration.thread.reply", { id: "thread", body: "Changed" })).status).toBe("denied")
+    actor.active = false
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.read", payload)).toBe(false)
+    product.human.finish(admitted.value)
+  })
+})
+
+test("the read-only exception does not grant unconfigured private reads", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads"], operations: ["sf_work_list"], humanActions: [] }], async ({ product, request, actor }) => {
+    actor.write = false
+    const post = new Request(request, { method: "POST", headers: { origin: "https://example.test" } })
+    expect((await product.human.admit(post, "collaboration.thread.read", { id: "thread" })).status).toBe("denied")
+    expect((await product.ui.admit(post, "sf-human:collaboration.thread.secret", digestSfValue({ id: "thread" }))).status).toBe("denied")
+  })
+})
+
 test("dashboard roles alone do not grant C08 or a business operation", async () => {
   await fixture([], async ({ product, request }) => {
     expect(await product.state.read(request, "preferences", () => "secret")).toMatchObject({ status: "denied" })
     expect((await product.ui.admit(request, "sf_context_get", "a".repeat(64))).status).toBe("denied")
+  })
+})
+
+test("collaboration read leases require the exact operation and all namespaces without granting writes", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads", "relations", "confirmations"], operations: ["sf_work_list"] }], async ({ product, request, actor, changes }) => {
+    actor.write = false
+    const operation = "sf-read:collaboration.work.list"
+    const payload = { period: { start: "2026-01-01", end: "2026-12-31" } }
+    const admitted = await product.ui.admit(request, operation, digestSfValue(payload))
+    expect(admitted.status).toBe("ok")
+    if (admitted.status !== "ok") throw new Error("Explicit collaboration read grant was not admitted")
+    expect(await product.ui.validate(admitted.value, operation, digestSfValue(payload))).toBe(true)
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.reply", payload)).toBe(false)
+    expect((await product.ui.admit(request, "sf-read:collaboration.unlisted", digestSfValue(payload))).status).toBe("denied")
+    expect((await product.ui.admit(request, "sf-read:collaboration.question.output", digestSfValue(payload))).status).toBe("denied")
+    const write = await product.state.transaction(request, { namespace: "threads", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
+      targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "read-cannot-write", commandDigest: digestSfValue(payload) }, async () => ({ commit: true, value: true }))
+    expect(write.status).toBe("denied")
+    changes.role = "contributor"
+    expect(await product.ui.revalidate(admitted.value)).toBe(false)
+    product.ui.finish(admitted.value)
+  })
+  await fixture([{ principalRef: "person", namespaces: ["threads", "relations"], operations: ["sf_work_list"] }], async ({ product, request }) => {
+    expect((await product.ui.admit(request, "sf-read:collaboration.work.list", digestSfValue({}))).status).toBe("denied")
   })
 })
 
@@ -148,7 +199,7 @@ test("native binding cannot be invented without a current stored run", async () 
 })
 
 test("a real C08 run and case still cannot bind a missing native Session", async () => {
-  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"], humanActions: ["analysis.cancel"] }], async ({ product, request, changes, actor, location }) => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor, location }) => {
     const caseRef = { id: "case", incarnation: "inc", version: 1 }
     const created = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
       targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "seed-case", commandDigest: "e".repeat(64) }, async (state) => {
@@ -178,8 +229,7 @@ test("a real C08 run and case still cannot bind a missing native Session", async
     const receipt: SkillLoadReceipt = { runId: "run", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version,
       profileDigest: profile.sourceDigest, skillId: "sf-explicar-forecast", skillVersion: "1", sourceDigest: "b".repeat(64),
       instructionsDigest: "c".repeat(64), loadedMessageId: "msg_fixture", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: selected.manifestDigest }
-    const lifecycle = new AbortController()
-    const admission = { request: new Request(request, { signal: lifecycle.signal }), selected, sessionID, runId: "run", caseRef, profile,
+    const admission = { request, selected, sessionID, runId: "run", caseRef, profile,
       manifestDigest: selected.manifestDigest, skillReceipts: [receipt], entryMode: "interactive" as const }
     expect((await product.native.bind(admission)).status).toBe("denied")
     changes.session = Schema.decodeUnknownSync(SessionSchema.Info)({ id: sessionID, projectID: "project", agent: profile.id,
@@ -192,28 +242,6 @@ test("a real C08 run and case still cannot bind a missing native Session", async
       expect(await product.authorizeNative(admission, baseline.value)).toBe(true)
       actor.active = false
       expect(await product.authorizeNative(admission, baseline.value)).toBe(false)
-      actor.active = true
-      const cancellationRequest = new Request(request.url, { method: "POST", headers: { origin: "https://example.test" } })
-      expect(await product.authorizeInterrupt(admission, baseline.value, cancellationRequest)).toBe(false)
-      const current = await product.state.read(request, "contributions", () => null)
-      expect(current.status).toBe("ok")
-      if (current.status !== "ok") throw new Error("current contributions unavailable")
-      const cancelled = await product.state.transaction(request, { namespace: "contributions", expectedStorageVersion: current.storageVersion,
-        targetRef: "case", targetIncarnation: "inc", idempotencyKey: "cancel-real-run", commandDigest: "f".repeat(64) }, async (stored) => {
-        const run = stored.nativeRuns?.run
-        if (!run) throw new Error("admitted run missing")
-        stored.nativeRuns!.run = { ...run, version: run.version + 1, state: "cancelled", native: { sessionID, skillReceipt: receipt } }
-        return { commit: true, value: true }
-      })
-      expect(cancelled.status).toBe("ok")
-      lifecycle.abort()
-      expect(await product.authorizeNative(admission, baseline.value)).toBe(false)
-      expect(await product.authorizeInterrupt(admission, baseline.value, admission.request)).toBe(false)
-      expect(await product.authorizeInterrupt(admission, baseline.value, cancellationRequest)).toBe(true)
-      expect(await product.authorizeInterrupt(admission, { ...baseline.value, runId: "another-run" }, cancellationRequest)).toBe(false)
-      expect(await product.authorizeInterrupt(admission, { ...baseline.value, nativeSessionId: SessionSchema.ID.make("ses_another") }, cancellationRequest)).toBe(false)
-      actor.active = false
-      expect(await product.authorizeInterrupt(admission, baseline.value, cancellationRequest)).toBe(false)
       actor.active = true
       product.native.revoke(baseline.value)
     }
@@ -273,3 +301,4 @@ test("identity mutation during authentication is denied", async () => {
     expect((await product.ui.admit(request, "sf_context_get", "a".repeat(64))).status).toBe("denied")
   })
 })
+

@@ -1,0 +1,562 @@
+{
+  "schema": "sf2.wp10.external-published-intake.v1",
+  "status": "CLOSED_READ_ONLY",
+  "agent": "/root/external_intake_w6",
+  "observedAt": "2026-11-14 04:25:15 UTC",
+  "candidateContext": {
+    "publishedW5": "7377e364e4870e832e49d99d0d2bdbde9eb63a5f",
+    "treeW5": "907b15dedacaf767c267ed05b6264d5f34ffecbe",
+    "successor": "W6 mutable; not yet qualified"
+  },
+  "method": "GitHub MCP GET refs and immutable fetch_file only for remote data; local JSON/source/hash inspection; no product execution or repository mutation.",
+  "headObservations": [
+    {
+      "owner": "WP01",
+      "branch": "astra-wp01",
+      "previousHead": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "observedHead": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/astra-wp01"
+    },
+    {
+      "owner": "WP04",
+      "branch": "astra-wp04",
+      "previousHead": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "observedHead": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/astra-wp04"
+    },
+    {
+      "owner": "WP08",
+      "branch": "astra-wp08",
+      "previousHead": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "observedHead": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/astra-wp08"
+    },
+    {
+      "owner": "WP11",
+      "branch": "astra-wp11",
+      "previousHead": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "observedHead": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/astra-wp11"
+    },
+    {
+      "owner": "WP12",
+      "branch": "sf2-ai-ready",
+      "previousHead": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "observedHead": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/sf2-ai-ready"
+    },
+    {
+      "owner": "WP13",
+      "branch": "sf2-portfolio-ready",
+      "previousHead": "27375325788fa571d39137728ec7f0666e89f22c",
+      "observedHead": "27375325788fa571d39137728ec7f0666e89f22c",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/sf2-portfolio-ready"
+    },
+    {
+      "owner": "WP14",
+      "branch": "sf2-memory-ready",
+      "previousHead": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "observedHead": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/sf2-memory-ready"
+    },
+    {
+      "owner": "WP09",
+      "branch": "astra-wp09",
+      "previousHead": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "observedHead": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "unchanged": true,
+      "sourceUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/astra-wp09"
+    }
+  ],
+  "diagnosticFileChecks": [
+    {
+      "id": "W1-F01",
+      "owner": "WP01",
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "sourceCommit": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "expectedBlob": "cd559d550b6fa799549b23c5c2c9f353781145cb",
+      "group": "WP01-ALTERNATIVE-DRAFT",
+      "diagnosticCount": 1,
+      "observedBlob": "cd559d550b6fa799549b23c5c2c9f353781145cb",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 11099,
+      "candidateW5Blob": "cd559d550b6fa799549b23c5c2c9f353781145cb",
+      "sameAsW5": true,
+      "candidateW5Sha256": "423a27494a02363a2e6b34d7a1ff751c6f9b83d5c7da8a33723ae7bfd089b43f",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F02",
+      "owner": "WP01",
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "sourceCommit": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "expectedBlob": "95f3c12a559ff40b010b7774bc7a036da4b2afed",
+      "group": "WP01-ALTERNATIVE-DRAFT",
+      "diagnosticCount": 1,
+      "observedBlob": "95f3c12a559ff40b010b7774bc7a036da4b2afed",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 12241,
+      "candidateW5Blob": "95f3c12a559ff40b010b7774bc7a036da4b2afed",
+      "sameAsW5": true,
+      "candidateW5Sha256": "5128c9edb74f9f6abbf2d0f8bf0401ad9ee6d7849fde6368f6cd140f6179cc4d",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F03",
+      "owner": "WP04",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "sourceCommit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "expectedBlob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "group": "WP04-C12-CALLBACKS",
+      "diagnosticCount": 2,
+      "observedBlob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 40885,
+      "candidateW5Blob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "sameAsW5": true,
+      "candidateW5Sha256": "2724422b8e7dbeb60b344fbdc437151618957851b571f9e19084c27c958c2f00",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F05",
+      "owner": "WP11",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "sourceCommit": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "expectedBlob": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a",
+      "group": "WP11-ALTERNATIVE-DISCRIMINANT",
+      "diagnosticCount": 4,
+      "observedBlob": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 6288,
+      "candidateW5Blob": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a",
+      "sameAsW5": true,
+      "candidateW5Sha256": "588f33414d0b374b903804dd49e09f637ea9d009947694af43f18c707e44cfd3",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F06",
+      "owner": "WP11",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "sourceCommit": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "expectedBlob": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e",
+      "group": "WP11-REDUNDANT-NARROWING",
+      "diagnosticCount": 1,
+      "observedBlob": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 35924,
+      "candidateW5Blob": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e",
+      "sameAsW5": true,
+      "candidateW5Sha256": "aafab15ce407e6d6cbc808e05cbad7f3cb15238f2fe53941434405caef3b36ba",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F07",
+      "owner": "WP11",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sourceCommit": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "expectedBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a",
+      "group": "WP11-APPLY-TRANSACTION-TYPE",
+      "diagnosticCount": 8,
+      "observedBlob": "60c1b9d21f82f0871a8d15886f1949e1396de57a",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 14605,
+      "candidateW5Blob": "60c1b9d21f82f0871a8d15886f1949e1396de57a",
+      "sameAsW5": true,
+      "candidateW5Sha256": "7dd20ec50a9c5123387995efe56dc9eb5656b88b2ee38503187a88b83bd09e98",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F08",
+      "owner": "WP11",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "sourceCommit": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "expectedBlob": "304eb80e72a002078e3f6ea8c5cfac507ffdd494",
+      "group": "WP11-REDUNDANT-NARROWING",
+      "diagnosticCount": 1,
+      "observedBlob": "304eb80e72a002078e3f6ea8c5cfac507ffdd494",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 15143,
+      "candidateW5Blob": "304eb80e72a002078e3f6ea8c5cfac507ffdd494",
+      "sameAsW5": true,
+      "candidateW5Sha256": "dfdded626948cb36fc0de55844de600eb751f47ccb4cb526b21f570740fda00c",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F09",
+      "owner": "WP12",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "sourceCommit": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "expectedBlob": "06b12a8714adb16b87f7f6e8f8a329e164ed5288",
+      "group": "WP12-ASYNC-RESULT-TYPES",
+      "diagnosticCount": 2,
+      "observedBlob": "06b12a8714adb16b87f7f6e8f8a329e164ed5288",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 25403,
+      "candidateW5Blob": "06b12a8714adb16b87f7f6e8f8a329e164ed5288",
+      "sameAsW5": true,
+      "candidateW5Sha256": "b9efbadbf45320bff6cb615bacd1e2923b74c73db16e369ed78344dcf4860245",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F10",
+      "owner": "WP13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "sourceCommit": "27375325788fa571d39137728ec7f0666e89f22c",
+      "expectedBlob": "484ee7dc8ac3a78a381f73c020a3afc06c5394c7",
+      "group": "WP13-REDUNDANT-NARROWING",
+      "diagnosticCount": 1,
+      "observedBlob": "484ee7dc8ac3a78a381f73c020a3afc06c5394c7",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 3671,
+      "candidateW5Blob": "484ee7dc8ac3a78a381f73c020a3afc06c5394c7",
+      "sameAsW5": true,
+      "candidateW5Sha256": "6bd00755e8b3da0f3d6ac4b149255b9adbbfffd9d0b0ac084aa2c8d316ee9a28",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F11",
+      "owner": "WP13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "sourceCommit": "27375325788fa571d39137728ec7f0666e89f22c",
+      "expectedBlob": "b1d98fe90c01a6de34f1dcafdff92fcddf83da2d",
+      "group": "WP13-REDUNDANT-NARROWING",
+      "diagnosticCount": 3,
+      "observedBlob": "b1d98fe90c01a6de34f1dcafdff92fcddf83da2d",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 8842,
+      "candidateW5Blob": "b1d98fe90c01a6de34f1dcafdff92fcddf83da2d",
+      "sameAsW5": true,
+      "candidateW5Sha256": "2a02971dfd904fe4d1bfa104312f9de607a2d6d07d90c7a6e57aec620af681fb",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F12",
+      "owner": "WP13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "sourceCommit": "27375325788fa571d39137728ec7f0666e89f22c",
+      "expectedBlob": "e6313ad315f5235a87442c7094ff47f2c74ca6c3",
+      "group": "WP13-SCENARIO-CLOSURE",
+      "diagnosticCount": 2,
+      "observedBlob": "e6313ad315f5235a87442c7094ff47f2c74ca6c3",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 14982,
+      "candidateW5Blob": "e6313ad315f5235a87442c7094ff47f2c74ca6c3",
+      "sameAsW5": true,
+      "candidateW5Sha256": "05ae743244fc921e3e8a03bfad07de6842b81e12eca29f90e58e6e70557c4b54",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F13",
+      "owner": "WP13",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "sourceCommit": "27375325788fa571d39137728ec7f0666e89f22c",
+      "expectedBlob": "c9dc2eab887eb7624fabcb335b31972532f9b4b9",
+      "group": "WP13-TEST-PARSE",
+      "diagnosticCount": 2,
+      "observedBlob": "c9dc2eab887eb7624fabcb335b31972532f9b4b9",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 5947,
+      "candidateW5Blob": "c9dc2eab887eb7624fabcb335b31972532f9b4b9",
+      "sameAsW5": true,
+      "candidateW5Sha256": "da52ebe8488146fb1951ecc1b04cc8cb828c4e41f3ae2aecf04c0e4155a24b45",
+      "consumedPin": null,
+      "candidateComparisonMethod": "GitHub MCP immutable fetch at W5; file not hydrated in local manifest"
+    },
+    {
+      "id": "W1-F14",
+      "owner": "WP14",
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "sourceCommit": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "expectedBlob": "91b6154c5e932b60ed70d50087961af290b626c6",
+      "group": "WP14-SIGNAL-FIELD-TYPE",
+      "diagnosticCount": 1,
+      "observedBlob": "91b6154c5e932b60ed70d50087961af290b626c6",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 9913,
+      "candidateW5Blob": "91b6154c5e932b60ed70d50087961af290b626c6",
+      "sameAsW5": true,
+      "candidateW5Sha256": "d6b31f4b0cccd0a725cc95fe2f8330472582aea5eb5f8547a80544b60347aad1",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F15",
+      "owner": "WP14",
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "sourceCommit": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "expectedBlob": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1",
+      "group": "WP14-RESOLVER-SHAPE",
+      "diagnosticCount": 2,
+      "observedBlob": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1",
+      "sameBlob": true,
+      "method": "GitHub MCP immutable fetch at unchanged observed owner head",
+      "contentCharacters": 26135,
+      "candidateW5Blob": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1",
+      "sameAsW5": true,
+      "candidateW5Sha256": "e590c1e022e5bfb5e7c9b5a37ad2d5057b4c4b7eaa184ca51e1d694173d9ec53",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "id": "W1-F04",
+      "owner": "WP06",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "sourceCommit": "357177bff8d9ed8c82f3ff47988a2336dd73f882",
+      "expectedBlob": "3a2dbbf47fb9e5d430ccd0edde2efccdf8412437",
+      "group": "WP06-BACKUP-PREVIEW-TYPE",
+      "diagnosticCount": 1,
+      "previousSourceCommit": "4d65d3acb627ed85825da487248a6f6c4c3f1f11",
+      "observedBlob": "3a2dbbf47fb9e5d430ccd0edde2efccdf8412437",
+      "sameBlob": true,
+      "contentCharacters": 9735,
+      "method": "GitHub MCP immutable diagnostic-source fetch only; root owns separate WP06 test intake",
+      "candidateW5Blob": "3a2dbbf47fb9e5d430ccd0edde2efccdf8412437",
+      "sameAsW5": true,
+      "candidateW5Sha256": "6510647c9d5f2ad6ba131874fdf528848011c72d8bae46f174c9be2e0101a177",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    }
+  ],
+  "gapFileChecks": [
+    {
+      "owner": "WP11",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+      "ref": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "observedBlob": "6834ac4460c8f98fa3b6c2db0743e0d1e39769c5",
+      "contentCharacters": 6874,
+      "excerpts": [
+        {
+          "line": 21,
+          "text": "    const load = () => input.state.read(source, \"cases\", (state, authority) => authority.principalRef === ctx.binding.principalRef && authority.policyVersion === ctx.binding.policyVersion && authority.accessRevision === ctx.binding.accessRevision ? { current: state.cases[request.caseRef.id], results: Object.values(state.decisionResults ?? {}).filter((stored) => stored.kind === \"portfolio\" && stored.caseRef.id === request.caseRef.id && stored.caseRef.incarnation === request.caseRef.incarnation && stored.caseRef.version < request.caseRef.version) } : undefined)"
+        },
+        {
+          "line": 40,
+          "text": "    if (!allowed(first.value.current, request.caseRef, ctx) || stored.kind !== \"portfolio\" || stored.resultRef !== request.resultRef || stored.caseRef.id !== request.caseRef.id || stored.caseRef.incarnation !== request.caseRef.incarnation || stored.caseRef.version >= first.value.current.version || stored.resultDigest !== digestSfValue(stored.result) || !/^[a-f0-9]{64}$/.test(stored.requestDigest) || !decodeSfOperationOutput(\"sf_portfolio_evaluate\", stored.result).ok) return { status: \"denied\", reason: \"portfolio-history-access-unavailable\" }"
+        }
+      ],
+      "candidateW5Blob": "6834ac4460c8f98fa3b6c2db0743e0d1e39769c5",
+      "sameAsW5": true,
+      "candidateW5Sha256": "66717974b6e98094356fc6e72358626359e8522e3d2ada104f3a2a5cfa226769",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "owner": "WP11",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "ref": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+      "observedBlob": "2a8111a810d878a4cf6133c3842c5320fb1f5b9e",
+      "contentCharacters": 17477,
+      "excerpts": [
+        {
+          "line": 70,
+          "text": "      if (!result || result.kind !== \"portfolio\" || binding.resultRef !== request.resultRef || result.resultRef !== request.resultRef || binding.caseRef.id !== request.caseRef.id || binding.caseRef.incarnation !== request.caseRef.incarnation || binding.caseRef.version >= request.caseRef.version || digestSfValue(result.caseRef) !== digestSfValue(binding.caseRef) || binding.resultDigest !== result.resultDigest || result.resultDigest !== digestSfValue(result.result) || binding.requestDigest !== result.requestDigest || binding.requestDigest !== digestSfValue(binding.request) || binding.bindingDige"
+        }
+      ],
+      "candidateW5Blob": "2a8111a810d878a4cf6133c3842c5320fb1f5b9e",
+      "sameAsW5": true,
+      "candidateW5Sha256": "f12a9b77ba62dc5a957623d5f5bd8ac14821951be173d61d3ac86df6defb46a3",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "owner": "WP13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "ref": "27375325788fa571d39137728ec7f0666e89f22c",
+      "observedBlob": "4a3049d462c5fc24b81163c8468b8bd314d8aa61",
+      "contentCharacters": 5042,
+      "excerpts": [
+        {
+          "line": 40,
+          "text": "        const result = await input.cases.read({ caseRef }, context).catch(() => undefined)"
+        }
+      ],
+      "candidateW5Blob": "4a3049d462c5fc24b81163c8468b8bd314d8aa61",
+      "sameAsW5": true,
+      "candidateW5Sha256": "7f03659087419c1de1e6cd238b62928a51aea067cff45f720aa25fca210c8dd9",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "owner": "WP08",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "ref": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "observedBlob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f",
+      "contentCharacters": 17933,
+      "excerpts": [
+        {
+          "line": 20,
+          "text": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "line": 78,
+          "text": "    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === \"ui\" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })"
+        },
+        {
+          "line": 91,
+          "text": "    const factory = createCollaborationHost({ host, state, human, creationTarget, scopedSources: persistence, evidence, cases, workCaseAuthority: authorizeCase, issueForActor, prepareReissueScope: observer.prepareReissueScope, caseSelectionWrites: new WeakSet<object>(), workSignals, procurement: { list: async () => ({ status: \"unavailable\", reason: \"not-selected\" }) }, collections: { resolveRequestCollection: async () => ({ status: \"unavailable\", reason: \"not-selected\" }) }, confirmationSource: observer, authority, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read:"
+        }
+      ],
+      "candidateW5Blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f",
+      "sameAsW5": true,
+      "candidateW5Sha256": "eabb3c19dc21f827ae62f3d833408f10e04c16a2bb2261eb6f65565a18e94cc4",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    },
+    {
+      "owner": "WP08",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "ref": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "observedBlob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "contentCharacters": 19652,
+      "excerpts": [
+        {
+          "line": 4,
+          "text": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "line": 44,
+          "text": "    const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === \"ui\" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), evidence: f.evidence, createId: randomUUID, now })"
+        }
+      ],
+      "candidateW5Blob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "sameAsW5": true,
+      "candidateW5Sha256": "f689b3581cbb2ef74f415bb6a0fec2fbd34845faecbc400014a2018c5d79287d",
+      "consumedPin": null,
+      "candidateComparisonMethod": "frozen W5 manifest"
+    }
+  ],
+  "newPublishedNecessaryDeltas": [],
+  "pending": [
+    {
+      "id": "WP01-ALTERNATIVE-DRAFT",
+      "owners": [
+        "WP01"
+      ],
+      "state": "OPEN_PUBLISHED_SOURCE_UNCHANGED",
+      "required": "Publish the canonical AlternativeDraft label and typed ready renderer; preserve proposal-only/domainApplied:false, source references and human actions."
+    },
+    {
+      "id": "C12-PROCUREMENT",
+      "owners": [
+        "WP04",
+        "WP11"
+      ],
+      "state": "OPEN_PUBLISHED_SOURCE_UNCHANGED",
+      "required": "Compose real authorized reviewDigestFor in both factories and revalidateProducer at execution; prove prepare/apply/retry and stale review/revocation/CAS negatives."
+    },
+    {
+      "id": "F05-PORTFOLIO-HISTORY",
+      "owners": [
+        "WP11",
+        "WP13"
+      ],
+      "state": "OPEN_PUBLISHED_SOURCE_UNCHANGED",
+      "required": "Explicit authorized historical read for N/N as well as N/N+1; replace strict historical version-only eligibility and current fresh-source candidate dependency only through a legitimate historical provenance port; preserve ACL/incarnation/digests/receipts."
+    },
+    {
+      "id": "C07-NATIVE-TASK-RELAY",
+      "owners": [
+        "Native Task/Relay public API owner",
+        "WP09",
+        "WP10 integration"
+      ],
+      "state": "NO_NEW_WP09_PUBLICATION_OBSERVED",
+      "required": "Publish/install real RoutinePublicationHost and SfRoutineNativePort using governed Task parent/assistant/tool-call context and persisted Relay/native receipts; no fabricated IDs, private engine bypass or fixture acceptance.",
+      "limit": "Only the named current WP09 branch and known integration input were rechecked; this observation does not prove absence on every repository branch or produce native execution evidence."
+    },
+    {
+      "id": "WP08-CONTRACT-CONSUMERS",
+      "owners": [
+        "WP08"
+      ],
+      "state": "OPEN_FIXTURE_BLOBS_UNCHANGED",
+      "required": "Supply the real scenario-operation verifier and share one private caseSelectionWrites set between C08 and collaboration fixture; preserve negative cases."
+    },
+    {
+      "id": "FOREIGN-TYPECHECK",
+      "owners": [
+        "WP01",
+        "WP04",
+        "WP06",
+        "WP11",
+        "WP12",
+        "WP13",
+        "WP14"
+      ],
+      "state": "32_DIAGNOSTICS_IN_W5_CHECK_WITH_UNCHANGED_PUBLISHED_SOURCE",
+      "required": "Owners publish compatible fixes for the 15 exact files, then WP10 pins/imports only necessary outputs and reruns scoped hosted checks.",
+      "limit": "Source equality is not a new execution; two WP13 parse errors limit full Sucafina semantic diagnosis."
+    }
+  ],
+  "wp06SeparateIntake": {
+    "reportedHead": "357177bff8d9ed8c82f3ff47988a2336dd73f882",
+    "rootOwnedTestConsumption": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+    "diagnosticSource": "product/imports/dashboard.ts independently fetched at this head; blob remains unchanged",
+    "repeatedTestIntake": false
+  },
+  "authorizationAndCompatibility": {
+    "writesToRepo": false,
+    "writesToForeignBranches": false,
+    "writesToSf2Stack": false,
+    "archivedInputsModified": false,
+    "consumptionRecommendation": "No additional delta from the eight rechecked heads. Keep existing pins and pending owner requests; root's separate exact WP06 test intake is not a fix for the imports/dashboard type diagnostic.",
+    "futureConsumption": "Exact published bytes only after scope/dependency review; no copying unrelated owner branches or modifying excluded foreign source to hide errors."
+  },
+  "limits": [
+    "Not an independent review, criterion acceptance, current W6 typecheck, runtime/native evidence or global acceptance.",
+    "No local product tests, builds, typechecks, imports, servers or browser execution.",
+    "No messages sent to external recipients; findings are handed to root for the authorized review package."
+  ],
+  "summary": {
+    "observedHeads": 8,
+    "unchangedHeads": 8,
+    "diagnosticFilesReopened": 15,
+    "diagnosticFilesMatchingW5": 15,
+    "diagnosticsAssociatedWithThoseFiles": 32,
+    "additionalGapFilesReopened": 5,
+    "additionalGapFilesMatchingW5": 5,
+    "candidateManifestComparisons": 19,
+    "candidateRemoteComparisons": 1,
+    "additionalOutputsToConsume": 0
+  },
+  "inputHashes": {
+    "analysis/external-deltas.md": "7625fcbc621d2cd51f341ce8aefb436e085107f8abe13c9f432ea1b083d401b1",
+    "analysis/hosted/foreign-blockers-W1.json": "922ed612d845208b265100d76c047ceddf59cf0f30480793e8df4db4e4ea9d30",
+    "analysis/foreign-runtime-triage-W7.json": "93c2aaeb56ca498b4b0d027170e3892b5962f79b62fe1d7c2485aca3d0e76793",
+    "analysis/frozen-W5/manifest.json": "f336393c9c6862ded4f2669265bffab23cf7ae595d57ce62cb8c800c8a6611c0",
+    "analysis/hosted/W5-check-results.json": "822ac2a1659ed71f5523b738aa93269c2abb5b9709205ba2676f92b6f6c9a152",
+    "context/intake.json": "07727885ba769558a3dafb65a1adae21400ca7653cfd206532b316771d860e82",
+    "analysis/external-intake-W6-remote-wp13.json": "525b26cf35516b5506ce0971bc2dd11489ccb4581691580112b7969bafa7e987"
+  }
+}

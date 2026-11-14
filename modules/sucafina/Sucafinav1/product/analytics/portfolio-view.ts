@@ -11,7 +11,7 @@ export function presentPortfolio(result: PortfolioResult) {
 }
 
 /** The caller supplies a freshly authorized result; this view performs no portfolio evaluation. */
-export function renderPortfolioView(result: PortfolioResult, openSource?: (reference: SourceRef) => void, openEvidence?: (reference: BusinessEvidenceRef) => void, openCoverage?: (reference: string) => void, openCase?: (reference: string) => void) {
+export function renderPortfolioView(result: PortfolioResult, openSource?: (reference: SourceRef) => void, openEvidence?: (reference: BusinessEvidenceRef) => void, openCoverage?: (reference: string) => void, openCase?: (reference: string) => void, openQuestion?: (reference: string) => void, openResult?: (reference: string) => void) {
   const data = presentPortfolio(result)
   const section = document.createElement("section")
   const title = document.createElement("h2")
@@ -47,6 +47,7 @@ export function renderPortfolioView(result: PortfolioResult, openSource?: (refer
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", reference)
       button.textContent = `Abrir caso ${reference}`
       button.addEventListener("click", () => openCase(reference))
       cases.append(button)
@@ -88,6 +89,7 @@ export function renderPortfolioView(result: PortfolioResult, openSource?: (refer
         }
         const button = document.createElement("button")
         button.type = "button"
+        button.setAttribute("data-bi-focus", reference.id)
         button.textContent = `Abrir ${reference.type} ${reference.id}`
         button.addEventListener("click", () => openSource(reference))
         origin.append(button)
@@ -107,6 +109,7 @@ export function renderPortfolioView(result: PortfolioResult, openSource?: (refer
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", reference)
       button.textContent = `Abrir cobertura ${reference}`
       button.addEventListener("click", () => openCoverage(reference))
       item.append(button)
@@ -114,7 +117,18 @@ export function renderPortfolioView(result: PortfolioResult, openSource?: (refer
     if (combination.analysis?.scenarioResultRef.trim() && combination.analysis.comparisonRef.trim()) {
       const references = document.createElement("p")
       references.textContent = `Cenário: ${combination.analysis.scenarioResultRef}; comparação: ${combination.analysis.comparisonRef}`
-      item.append(references, renderDecisionView(combination.analysis.scenario, combination.analysis.comparison, undefined, openSource, openEvidence, openCoverage))
+      item.append(references)
+      if (openResult) {
+        for (const reference of [combination.analysis.scenarioResultRef, combination.analysis.comparisonRef]) {
+          const button = document.createElement("button")
+          button.type = "button"
+          button.setAttribute("data-bi-focus", reference)
+          button.textContent = `Abrir resultado ${reference}`
+          button.addEventListener("click", () => openResult(reference))
+          item.append(button)
+        }
+      }
+      item.append(renderDecisionView(combination.analysis.scenario, combination.analysis.comparison, undefined, openSource, openEvidence, openCoverage, openQuestion, openResult))
     }
     if (!combination.analysis?.scenarioResultRef.trim() || !combination.analysis.comparisonRef.trim()) {
       const unavailable = document.createElement("p")
@@ -132,6 +146,7 @@ export function renderPortfolioView(result: PortfolioResult, openSource?: (refer
     }
     const button = document.createElement("button")
     button.type = "button"
+    button.setAttribute("data-bi-focus", reference.refId)
     button.textContent = `Abrir evidência do portfólio ${reference.refId}`
     button.addEventListener("click", () => openEvidence(reference))
     section.append(button)
