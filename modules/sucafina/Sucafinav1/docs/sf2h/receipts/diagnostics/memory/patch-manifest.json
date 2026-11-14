@@ -1,0 +1,159 @@
+{
+  "schema": "orchestra-sf.memory-patch.v1",
+  "status": "NOT_APPLIED",
+  "targetPath": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+  "integrationRequires": [
+    "modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.ts"
+  ],
+  "alternatives": {
+    "W26": {
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "patches": [
+        {
+          "path": "patches/01-w26-measure.patch",
+          "status": "NOT_APPLIED",
+          "preimage": {
+            "gitBlob": "a56e9a13b84d67cf5367b3abd609989fb4e1e3b7",
+            "sha256": "e43d2c13137e1ccadc42ada89b0e9e2b8514fc8412704a14e5c7fc386d5ac3fd",
+            "utf8Bytes": 47804
+          },
+          "postimage": {
+            "gitBlob": "e6406541d5ebec67c0fcc4d6ffb902e940a2fad3",
+            "sha256": "a69a19938a006f911f9beed545784f129bb2ff6da860257ee85bba8a7f8cb801",
+            "utf8Bytes": 47735
+          },
+          "patch": {
+            "gitBlob": "d3495bc34aacfdd35b7edfd47dae1198a160c4ba",
+            "sha256": "1c0ffdb51035743066790ba69aeeb8fa0f71f66fe35f8b4c5478bac68dadf865",
+            "utf8Bytes": 2719
+          },
+          "requires": null
+        },
+        {
+          "path": "patches/02-w26-remove-classifier-copies.patch",
+          "status": "NOT_APPLIED",
+          "preimage": {
+            "gitBlob": "e6406541d5ebec67c0fcc4d6ffb902e940a2fad3",
+            "sha256": "a69a19938a006f911f9beed545784f129bb2ff6da860257ee85bba8a7f8cb801",
+            "utf8Bytes": 47735
+          },
+          "postimage": {
+            "gitBlob": "54eec0cde8119d0048ea9230d248ff98441ce2f3",
+            "sha256": "fbdcb0ac291408d3d0d84ee7fb7195c2e68fa52bfcfde218a2e9446189cc9084",
+            "utf8Bytes": 47740
+          },
+          "patch": {
+            "gitBlob": "f906579ef9ccadfefec5bc9b3a140281da53e71c",
+            "sha256": "e958761d363844d97600dc52ce65523a8cbff3a5ca93b6e8bbe563ac6493085d",
+            "utf8Bytes": 947
+          },
+          "requires": "patches/01-w26-measure.patch"
+        }
+      ],
+      "assertionLinesUnchanged": 85,
+      "entireTailFromInterleaveUnchanged": true,
+      "budgetsUnchanged": [
+        225000,
+        240000
+      ]
+    },
+    "W27": {
+      "sourceCommit": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "patches": [
+        {
+          "path": "patches/01-w27-measure.patch",
+          "status": "NOT_APPLIED",
+          "preimage": {
+            "gitBlob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+            "sha256": "7af2197cbad8b0456dab995d097ea86e9468e8d560cc58546f57e1c16b7e99fd",
+            "utf8Bytes": 48710
+          },
+          "postimage": {
+            "gitBlob": "52cd87243ce336f3d03fce77c19cdaf7020fcba0",
+            "sha256": "cf9685d3ce7836a8768c457e3b3ad46e296c1318159358c930fd9369e1d0cf9c",
+            "utf8Bytes": 48641
+          },
+          "patch": {
+            "gitBlob": "1a75150b3ea4a19832632f3bf77d31146d501210",
+            "sha256": "4e1c9d81836df3f601cd7b5e6b62a30139336e5ca9155d64c72f053d8dd8ed5c",
+            "utf8Bytes": 2692
+          },
+          "requires": null
+        },
+        {
+          "path": "patches/02-w27-remove-classifier-copies.patch",
+          "status": "NOT_APPLIED",
+          "preimage": {
+            "gitBlob": "52cd87243ce336f3d03fce77c19cdaf7020fcba0",
+            "sha256": "cf9685d3ce7836a8768c457e3b3ad46e296c1318159358c930fd9369e1d0cf9c",
+            "utf8Bytes": 48641
+          },
+          "postimage": {
+            "gitBlob": "586a6b406b618c154b3a28443391b69d48dfbb96",
+            "sha256": "53bd5c4f764bf45624c80ce2d99ad59c47aa87c36c2976ca11deeb2d651ffd1b",
+            "utf8Bytes": 48646
+          },
+          "patch": {
+            "gitBlob": "efbdf949d08b03808735636404598afa95a08676",
+            "sha256": "7613aafe0db8a15949c21c05333742c2184f25415ee2bf9f2feeee0fc6287545",
+            "utf8Bytes": 920
+          },
+          "requires": "patches/01-w27-measure.patch"
+        }
+      ],
+      "assertionLinesUnchanged": 93,
+      "entireTailFromInterleaveUnchanged": true,
+      "budgetsUnchanged": [
+        225000,
+        240000
+      ]
+    }
+  },
+  "staticValidation": {
+    "productExecuted": false,
+    "testsRun": false,
+    "typecheckRun": false,
+    "method": "Exact string preconditions, Git blob hashes, difflib unified hunks and content preservation; no product/runtime import",
+    "independentUnifiedHunkApplication": [
+      {
+        "patch": "patches/01-w26-measure.patch",
+        "hunksApplyExactly": true,
+        "postimageMatches": true
+      },
+      {
+        "patch": "patches/02-w26-remove-classifier-copies.patch",
+        "hunksApplyExactly": true,
+        "postimageMatches": true
+      },
+      {
+        "patch": "patches/01-w27-measure.patch",
+        "hunksApplyExactly": true,
+        "postimageMatches": true
+      },
+      {
+        "patch": "patches/02-w27-remove-classifier-copies.patch",
+        "hunksApplyExactly": true,
+        "postimageMatches": true
+      }
+    ],
+    "assertionLineDefinition": "Lines containing expect( or expectSpawn(; exact order and bytes compared"
+  },
+  "diagnosticInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.ts",
+      "gitBlob": "a2b3917c8a186ae3ea024bd2df50b0a919550bc1",
+      "sha256": "c088c19d77600c34345e350929cc89adcfe2847dbb2e4cb6682ad207c343f220",
+      "bytes": 5477,
+      "testExecution": "NOT_RUN",
+      "typecheck": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.test.ts",
+      "gitBlob": "8cccdc2a4fab35115e01f5e3e6b87ee9878464a5",
+      "sha256": "c4367f2028ada27fa819ef30f040a36cbfb5b4e77e95db6a42862facddb5ba0e",
+      "bytes": 5296,
+      "testExecution": "NOT_RUN",
+      "typecheck": "NOT_RUN"
+    }
+  ]
+}
