@@ -1,0 +1,213 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S7-CS2Coverage",
+  "productSha": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+  "productTree": "0f108eeab2750ec969ea1e6c4d7044ea7705ecb6",
+  "snapshotSha": "4b50417d9ddb49e308aaa72799b215e8c4cbf878",
+  "snapshotTree": "b3564824ac39e66b31e065306704ca86cf4d9367",
+  "branch": "ci-run-linux-astra-wp13-a3df1c49-9fc30f7a-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "a6d3702d3a1c85afb4f61d581b3d374504877258"
+  },
+  "runId": 43591217664,
+  "jobId": 132436140835,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 132436140835,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-14T11:41:27Z",
+      "completed_at": "2026-11-14T11:50:13Z"
+    },
+    {
+      "id": 132438204947,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T11:50:15Z",
+      "completed_at": "2026-11-14T11:50:21Z"
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "Sucafinav1/test/product/wp13/coverage.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "9fc30f7ae4fe618c66edde50934dbaa3c1fe669928280e5a6446696cacf1ea51",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "sha": "606591b793eecf9a97ba1459dd0c02d6f9d352f7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "sha": "33e3051ccfe3aa69350628eb0adff169a30dcbb1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "sha": "0a5f3d28435378bae4637d629ff991fb03993f27"
+    }
+  ],
+  "log": {
+    "sha256": "863b1d6653b36df04fa59be6fcf53bb7b769010fdc94727860b121ad7df189fc",
+    "bytes": 72251
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 21,
+    "failed": 2,
+    "summary": "Ran 23 tests across 3 files. [447.39s]",
+    "expectCalls": 115
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp13/history-provenance.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > accepts an original binding and selection when current case and evidence remain authorized",
+        "milliseconds": 4.15
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > accepts authenticated source history at the same case version and still rejects revocation",
+        "milliseconds": 1.46
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a candidate whose case incarnation was replaced",
+        "milliseconds": 0.31
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects revoked historical sources",
+        "milliseconds": 0.43
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a historical candidate missing from the authorized case",
+        "milliseconds": 0.28
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a same-version alternative whose original payload changed",
+        "milliseconds": 0.27
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects ambiguous duplicate alternatives and a case older than the candidate",
+        "milliseconds": 0.42
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a binding supplied for a different current owner case",
+        "milliseconds": 0.11
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > keeps the first candidate observation when the provider reuses mutable objects",
+        "milliseconds": 0.74
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects caller mutation during historical provenance verification",
+        "milliseconds": 0.7
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects an owner observation changed during the first binding read",
+        "milliseconds": 0.75
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a binding whose digest does not cover its contents",
+        "milliseconds": 0.2
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a selection that differs from the binding proof",
+        "milliseconds": 0.19
+      },
+      {
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a binding that changes between provenance passes",
+        "milliseconds": 0.69
+      },
+      {
+        "status": "pass",
+        "name": "historical portfolio reads the original C08 candidate after WP11 replaces alternative v1 with v2",
+        "milliseconds": 5152.34
+      },
+      {
+        "status": "pass",
+        "name": "historical candidate rejects a naked digest when the original C08 case snapshot and choice are absent",
+        "milliseconds": 4664.96
+      },
+      {
+        "status": "pass",
+        "name": "historical candidate rejects changed C08 request ancestry and revoked evidence",
+        "milliseconds": 5480.19
+      },
+      {
+        "status": "pass",
+        "name": "historical chosen candidate selects its witnessed C08 among equivalent writes and requires the exact WP11 ledger",
+        "milliseconds": 5520.43
+      }
+    ],
+    "Sucafinav1/test/product/wp13/persistence-recovery.test.ts": [
+      {
+        "status": "fail",
+        "name": "portfolio retry binds the persisted orphan without allocating another C08 result",
+        "milliseconds": 173038.49
+      },
+      {
+        "status": "fail",
+        "name": "portfolio retry recovers a lost binding reply without allocating or binding twice",
+        "milliseconds": 188178.61
+      },
+      {
+        "status": "pass",
+        "name": "sensitivity retry binds the persisted orphan without allocating another C08 result",
+        "milliseconds": 32621.34
+      },
+      {
+        "status": "pass",
+        "name": "sensitivity retry recovers a lost binding reply without allocating or binding twice",
+        "milliseconds": 32579.48
+      }
+    ],
+    "Sucafinav1/test/product/wp13/coverage.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio distinguishes omitted training from sourced zero using WP11 coverage",
+        "milliseconds": 4.3
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": false,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "Sucafinav1/test/product/wp13/coverage.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

@@ -13,16 +13,16 @@ import { createSfDecisionResultStore } from "../../../product/decisions/result-s
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
 import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
-import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
-import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
 import { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
-import { createWp05SensitivityFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
-import { createWp05ImplementationRevision, createWp05TrainingRevision } from "../wp05/engine-revision-fixture.ts"
+import { wp05Horizon } from "../wp05/engine-fixture.ts"
 import { renewalCoverage } from "./renewal-coverage-fixture.ts"
 import { createWp11FixtureTrace } from "./fixture-trace.ts"
+import { createRenewalQuoteRevision, createRenewalSourceFixture, renewalEvidenceContext } from "./renewal-source-fixture.ts"
+import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
+import { createRenewalRestartReader } from "./renewal-restart-reader.ts"
 
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 const now = () => "2026-11-13T02:00:00Z"
@@ -32,11 +32,11 @@ const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [],
 export async function createRenewalChoiceHistory(options: { training: "omitted" | "bundled" } = { training: "omitted" }) {
   const trace = createWp11FixtureTrace("renewal-choice-history")
   await trace.checkpoint("bootstrap-start")
-  const upstream = await createWp05SensitivityFixture({ mode: "renewal-usd", training: options.training, composed: true })
+  const upstream = await createRenewalSourceFixture(options.training)
   const fixture = { ...upstream, host: { ...upstream.host, revalidate: (context: Parameters<typeof upstream.host.revalidate>[0]) => trace.measure("host.revalidate", () => upstream.host.revalidate(context)) } }
   try {
     const writes = new WeakSet<object>()
-    const current = { sources: fixture.sources, evidence: fixture.evidence, identity: "wp11-history", next: 0, ruleVersion: 1, sourceFenceValid: true }
+    const current = { sources: fixture.sources, evidence: fixture.evidence, identity: "wp11-history", next: 0, ruleVersion: 0, sourceFenceValid: true }
     const declarations = new Map<string, { ref: RecordEvidence; entries: readonly CostCoverageEntry[] }>()
     const classifications: ReturnType<typeof classifyCoverage>[] = []
     const coverageVersions = new Map<string, number>()
@@ -56,7 +56,7 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
         ? { state: "fresh", ref, currentRef: ref, accessRevision: context.binding.accessRevision, checkedAt: now() }
         : current.evidence.resolve(ref, context)
     }
-    const evidence: BusinessContextService = { ...fixture.evidence, resolve, context: async ({ refs }, context) => Promise.all(refs.map((ref) => resolve(ref, context))) }
+    const evidence: BusinessContextService = { ...fixture.evidence, resolve, context: renewalEvidenceContext(resolve) }
     const verifyEvidence = async (refs: readonly BusinessEvidenceRef[]) => (await evidence.context({ refs }, fixture.context)).every((value) => value.state === "fresh")
     const snapshotMatches = (snapshot: Parameters<Parameters<typeof createDecisionBaselineCoverage>[0]["verifySnapshot"]>[0], refs: readonly BusinessEvidenceRef[]) => refs.every((ref) => {
       if (declarations.has(ref.refDigest)) return digestSfValue(declarations.get(ref.refDigest)!.ref) === digestSfValue(ref)
@@ -93,10 +93,13 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
       resolveForecastSource: (reference, context) => trace.measure("operation-source", () => current.sources.resolveForecastSource(reference, context)),
       resolveForecastCoverage: (reference, context) => trace.measure("operation-coverage", () => current.sources.resolveForecastCoverage(reference, context)),
     }
-    const operationPlanner = createPlannerPort({ host: fixture.host, sources: operationSources, evidence })
-    const verifyOperations = createPlannerOperationVerifier({ host: fixture.host, planner: operationPlanner, sources: operationSources, scenarioInputs: createPlannerScenarioInputs({ planner: operationPlanner, sources: operationSources }) })
-    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => trace.measure("planner.verifyOperation", () => verifyOperations(alternative.scenario, context))))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })
-    const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+    // Stored scenarios retain their persisted C10 result and basis. This port
+    // supplies only the canonical source DomainProjection; judgment and preview
+    // keep the classified Planner and revalidate their complete C10 observations.
+    const sourcePlanner = createPlannerPort({ host: fixture.host, sources: operationSources })
+    const verifyOperations = createRenewalOperationVerifier(fixture.host, operationSources, trace)
+    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })
+    const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: sourcePlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
     const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({ host: fixture.host, sources, scenarios, planner }, request, context)
     const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
     const rules = createCriterionRuleRegistry({ state, host: fixture.host, authorizeCase, authorizeRule: async () => true, verifyEvidence: (rule) => verifyEvidence(rule.evidenceRefs), verifySnapshot: (snapshot, rule) => snapshotMatches(snapshot, rule.evidenceRefs), readMetric: (request, context) => { if (!metrics.read) throw new Error("Metric not composed"); return metrics.read(request, context) }, verifyMetric: (metric) => verifyEvidence(metric.evidenceRefs), operationIdentity: () => current.identity, proposalCoverageWrites: writes, now })
@@ -130,7 +133,7 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
     const preparePhase = async (source: RecordEvidence, basis: CostCoverageBasis, scenario: ScenarioRequest, training: "omitted" | "confirmed" | "bundled") => {
       await checkpoint(`prepare:${source.refId}:start`)
       const phaseRefs = [...basis.sourceRefs].filter((ref): ref is RecordEvidence => ref.kind === "record")
-      const coverage = await renewalCoverage({ ...fixture, state, planner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
+      const coverage = await renewalCoverage({ ...fixture, planner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
       declarations.set(coverage.statement.refDigest, { ref: coverage.statement, entries: coverage.entries })
       const selectedCoverageRef = await register(source, basis, coverage.entries)
       const renewalSource = phaseRefs.find((ref) => ref.refId === fixture.baselineScenario.baseRef)
@@ -192,13 +195,13 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
       return { caseRef: recorded.value.caseRef, choice: structuredClone(choice), retry: () => { current.identity = "human-records-original-choice"; return mutation.recordChoice(request, fixture.context) } }
     }
     const resolveTraining = async () => {
-      const revision = await createWp05TrainingRevision(fixture)
+      const revision = await createRenewalQuoteRevision(fixture, "training")
       current.sources = revision.sources
       current.evidence = revision.evidence
       return preparePhase(revision.source, revision.basis, { baseRef: revision.source.refId, operations: [], assumptions: [] }, "confirmed")
     }
     const reviseImplementation = async () => {
-      const revision = await createWp05ImplementationRevision(fixture)
+      const revision = await createRenewalQuoteRevision(fixture, "implementation")
       current.sources = revision.sources
       current.evidence = revision.evidence
       return preparePhase(revision.source, revision.basis, { baseRef: revision.source.refId, operations: [], assumptions: [] }, "bundled")
@@ -214,7 +217,12 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
       try { return await mutation.addAlternative({ caseRef: refFor(decision), alternativeRef: { id: selected.id, version: selected.version }, title: selected.title, scenario: selected.scenario, coverageRef: coverage.value.coverageRef }, fixture.context) }
       finally { current.sourceFenceValid = true }
     }
-    return { fixture, before, choose, resolveTraining, reviseImplementation, readCase, state, checkpoint, rejectLockedSourceCheck, cleanup: fixture.cleanup }
+    const restart = async () => {
+      await checkpoint("restart:start")
+      await fixture.closeStore()
+      return createRenewalRestartReader(fixture.directory, fixture.caseRef, trace)
+    }
+    return { fixture, before, choose, resolveTraining, reviseImplementation, readCase, state, checkpoint, restart, rejectLockedSourceCheck, cleanup: fixture.cleanup }
   } catch (error) {
     await fixture.cleanup()
     throw error

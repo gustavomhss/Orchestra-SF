@@ -1,0 +1,76 @@
+{
+  "status": "STATIC_REVIEW_AND_OWN_ADAPTATION_PENDING_HOSTED_CI",
+  "productBase": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+  "requiredIntakes": [
+    {
+      "owner": "Finance",
+      "publishedRef": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "path": "reference/latest-intake/Finance/modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "bytes": 22570,
+      "gitBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8"
+    },
+    {
+      "owner": "WP11",
+      "publishedRef": "c41d7277be5941bafb105654360a32adea7f0347",
+      "path": "reference/latest-intake/WP11/modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "bytes": 5144,
+      "gitBlob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "sha256": "f2149ed78166add2869fd2612d1936007c3a94862ebacdb277e0dba7c6f56ddf"
+    }
+  ],
+  "ownChangedFile": {
+    "path": "repo/modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+    "bytes": 9717,
+    "gitBlob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+    "sha256": "c1bd849c0d0c716caf2ca55fb1b8cb0ef58af8297e3e1daa6a5b3f88951f0aec"
+  },
+  "ownChange": "Use createWp05ComparisonFixture instead of createWp05SensitivityFixture. Required Planner/C08 scenarios, source references, human-registered criterion and persisted comparison remain. No unrelated bootstrap sensitivity is evaluated or stored. Each WP13 consumer still performs its required sensitivity proof.",
+  "staticReview": {
+    "financeDiff": "Function extraction only: original body becomes createWp05ComparisonFixture minus final evaluateAndStore; compatibility createWp05SensitivityFixture invokes that base, evaluates/stores and returns required saved result. No import, monetary input, canonical producer, authority or oracle changes.",
+    "typePrerequisite": "Published WP11 renewalCoverage accepts Pick of sourceRefs/scenario/planner/context/evidence/caseRef/basis/sources; all fields exist on comparison fixture. No fabricated saved property or cast is needed.",
+    "consumerSavedUse": "Neither coverage-preview nor coverage-sensitivity-integration reads fixture.saved. Their saved identifiers are local results from the own persistence flow.",
+    "persistence": "Comparison remains stored and bound before fixture returns. Own persistence test still creates sensitivity through createPersistentSensitivityPort and cold-recreates services.",
+    "authority": "Current source, case, rule, C10 statement and evidence gates remain unchanged. Declared synthetic host admission remains a fixture limitation.",
+    "semantics": "Omitted vs null vs zero vs confirmed training, USD/EUR missing FX, shared categories/N-A, threshold55000/15000 and adjacent witnesses unchanged.",
+    "cleanup": "Comparison base cleans failures during bootstrap; compatibility wrapper cleans sensitivity failure. Own fixture retains cleanup on later classification failure.",
+    "performance": "Removes an unused bootstrap evaluateAndStore of three sensitivity points plus its exact/persistence verification. Actual runtime improvement unmeasured; repeated own verifySensitivity replay still exists."
+  },
+  "consumerEdges": [
+    {
+      "file": "test/product/wp13/coverage-preview.test.ts",
+      "impact": "Direct own fixture dependency, no assertions/budget changed; previously unaccepted timeout selection must run new pin."
+    },
+    {
+      "file": "test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "impact": "Direct own fixture dependency for first five test cases; human-history case uses separate WP11 fixture. No assertion/budget changed. Repeated persistent verification not optimized."
+    },
+    {
+      "file": "test/product/wp03/source-scenario.test.ts",
+      "impact": "Imports legacy createWp05SensitivityFixture. Behavior retained by wrapper; transitive file bytes change, so keep prior accepted evidence pinned and do not silently claim new-head execution."
+    },
+    {
+      "file": "test/product/wp13/reconciliation-price-integration.test.ts",
+      "impact": "Imports wp05Horizon (unchanged export); WP11 renewal inputs separately reviewed by root."
+    },
+    {
+      "file": "test/product/wp11/renewal-choice-fixture.ts",
+      "impact": "Current local legacy dependency; root is reviewing new owner fixture family independently."
+    }
+  ],
+  "verification": {
+    "productTestsRunLocally": false,
+    "typecheckRunLocally": false,
+    "ciDispatched": false,
+    "remoteMutations": false,
+    "verifierRestored": {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "bytes": 17055,
+      "gitBlob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+      "sha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320"
+    },
+    "cacheDraft": "reference/wp13-replay-scope-deferred/",
+    "noCacheOptInPublished": true
+  },
+  "nextAction": "Root consumes the two exact owner blobs with pins, publishes own fixture adaptation with required closure, then dispatches only pending affected selectors. Do not repeat already accepted unrelated file groups or report performance PASS from this static diff."
+}

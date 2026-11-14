@@ -33,6 +33,10 @@ test("the same durable choice preserves omitted training while a confirmed sourc
     expect(after.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
     expect(after.scenario.operations).toEqual([])
     expect(after.selectedResult.id.startsWith("source-scenario:")).toBe(true)
+    const training = after.selectedResult.components.filter((component) => component.id.startsWith("training:"))
+    expect(training).toHaveLength(12)
+    expect(training.filter((component) => component.amount === 0 && component.evidenceState === "confirmed")).toHaveLength(11)
+    expect(training.find((component) => component.id === "training:11")).toMatchObject({ amount: 40000, currency: "USD", evidenceState: "confirmed" })
     expect(after.selectedResult).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } })
     expect(after.selectedResult.components.every((component) => component.evidenceState === "confirmed")).toBe(true)
     expect(after.comparison).toMatchObject({ knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete", criterionResults: [{ criterionId: "renewal-difference", state: "failed" }] })
@@ -73,5 +77,23 @@ test("the same durable choice preserves omitted training while a confirmed sourc
       expect(persisted.value.result).toMatchObject({ caseRef: after.caseRef, kind: "scenario", result: { total: 250000, comparisonStatus: "complete" } })
     } finally { await reopened.dispose() }
     await history.checkpoint("history-reopened:complete")
+    // Dispose the original store/UI, rebuild the reader from SQLite, and read the
+    // SAME financial choice with the second explicitly authorized participant.
+    const restarted = await history.restart()
+    try {
+      expect(await history.fixture.host.revalidate(history.fixture.context)).toBe(false)
+      const collaborator = await restarted.read()
+      expect(collaborator.status).toBe("ok")
+      if (collaborator.status !== "ok") throw new Error(`Collaborator read failed:${collaborator.reason}`)
+      expect(collaborator.value.context.principalRef).toBe("collaborator")
+      expect(collaborator.value.case).toMatchObject({ id: decision.id, incarnation: decision.incarnation, version: decision.version, state: "reconsidering", choices: [chosen.choice], preparedChanges: [], receipts: [] })
+      expect(digestSfValue(collaborator.value.case.choices[0])).toBe(choiceDigest)
+      expect(collaborator.value.case.alternatives.find((alternative) => alternative.id === "selected")?.result).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: "complete" })
+      expect(collaborator.value.events.filter((event) => event.kind === "choice-recorded")).toHaveLength(1)
+      expect(await restarted.read("outsider")).toMatchObject({ status: "denied", reason: "case-access-unavailable" })
+      await restarted.checkpoint("history-restarted-collaborator:complete")
+      restarted.revoke()
+      expect((await restarted.read()).status).toBe("denied")
+    } finally { await restarted.close() }
   } finally { await history.cleanup() }
 }, 180000)
