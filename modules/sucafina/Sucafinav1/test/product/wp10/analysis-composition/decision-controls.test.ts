@@ -190,11 +190,22 @@ test("Chromium navigates the own decision controls, saves real classification an
     expect(await casePicker.getAttribute("aria-label")).toBe("Caso de decisão")
     expect(await casePicker.locator("option").allTextContents()).toContain("Renovação de licenças · revisão 1")
     await casePicker.selectOption({ label: "Renovação de licenças · revisão 1" })
-    await page.getByRole("button", { name: "Abrir caso", exact: true }).click()
+    const selectedCase = await casePicker.inputValue()
+    // Both pickers submit real GET forms. Read their controls only after the
+    // destination document exists; a response can precede context replacement.
+    await Promise.all([
+      page.waitForURL((url) => url.searchParams.get("sf") === "decision-controls" && url.searchParams.get("case") === selectedCase,
+        { waitUntil: "domcontentloaded", timeout: 15_000 }),
+      page.getByRole("button", { name: "Abrir caso", exact: true }).click(),
+    ])
     const forecastChoices = await page.getByLabel("Forecast para classificar", { exact: true }).locator('option').allTextContents()
     expect(new Set(forecastChoices).size).toBe(forecastChoices.length)
     await page.getByLabel("Forecast para classificar", { exact: true }).selectOption(state.secondSource.refDigest)
-    await page.getByRole("button", { name: "Abrir forecast", exact: true }).click()
+    await Promise.all([
+      page.waitForURL((url) => url.searchParams.get("sf") === "decision-controls" && url.searchParams.get("case") === selectedCase && url.searchParams.get("source") === state.secondSource.refDigest,
+        { waitUntil: "domcontentloaded", timeout: 15_000 }),
+      page.getByRole("button", { name: "Abrir forecast", exact: true }).click(),
+    ])
     await page.locator('[data-classification-version="0"]').waitFor()
     const groups = page.locator('[data-decision-action="decision-coverage"] fieldset')
     expect(await groups.count()).toBe(RENEWAL_TRANSITION_CATEGORIES.length)

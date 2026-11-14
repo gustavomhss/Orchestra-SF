@@ -94,12 +94,12 @@ export function createPortfolioProofVerifier(input: {
     const initial = await input.readSourceFences(context)
     if (!initial) return false
     const initialFence = digestSfValue(initial)
-    const issued = await input.units.resolve(binding.request, context)
+    const issued = structuredClone(await input.units.resolve(binding.request, context))
     if (issued.status !== "ok" || issued.value.ruleRef !== binding.ruleRef || issued.value.ruleVersion !== binding.ruleVersion || digestSfValue(issued.value.caseRef) !== digestSfValue(binding.caseRef)) return false
     const unitBinding = issued.value
-    const source = await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context)
-    const baseline = await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context)
-    if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.requestDigest !== digestSfValue(unitBinding.scenario)) return false
+    const source = structuredClone(await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context))
+    const baseline = structuredClone(await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context))
+    if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.resultRef !== binding.request.scenarioRef || baseline.value.resultRef !== unitBinding.baselineRef || source.value.requestDigest !== digestSfValue(unitBinding.scenario) || [source.value, baseline.value].some((value) => value.resultDigest !== digestSfValue(value.result) || value.caseRef.id !== binding.caseRef.id || value.caseRef.incarnation !== binding.caseRef.incarnation || value.caseRef.version > binding.caseRef.version)) return false
     const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean }[] = []
     const exact: { value?: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] } } = {}
     const evaluate = createSensitivityEvaluator({
@@ -116,13 +116,16 @@ export function createPortfolioProofVerifier(input: {
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.kind !== "scenario" || source.value.kind !== "scenario" || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = await input.exactThreshold(binding.request, unitBinding, trusted)
         if (result.status === "ok") exact.value = result.value
         return result
       },
       revalidate: async (_samples, _threshold, trusted) => {
         if (!await input.units.revalidate(unitBinding, trusted) || samples.length !== expectedResult.evaluated.length) return false
+        const currentSource = await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, trusted)
+        const currentBaseline = await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, trusted)
+        if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
         if (!exact.value) return true
         if (!input.exactThreshold) return false
         const current = await input.exactThreshold(binding.request, unitBinding, trusted)

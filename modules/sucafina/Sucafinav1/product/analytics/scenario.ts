@@ -5,6 +5,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { BiPresentationPort } from "./capabilities.ts"
 import type { BiPresentation } from "./semantics.ts"
 import type { StoredScenarioSelection } from "./stored-scenario.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
 import { sameBiProjection } from "./projection.ts"
 
 export type ScenarioBiHost = {
@@ -20,16 +21,26 @@ export function bindStoredScenarioBiPort(input: {
 }): ScenarioBiHost {
   return {
     revalidate: input.revalidate,
-    async readView(request, context) {
-      const selection = await input.resolve(request, context)
-      if (selection.status !== "ok") return selection
-      if (!selection.value.scenarioResultRef.trim() || !selection.value.comparisonRef.trim() || (request.viewId === "BI11" && !selection.value.sensitivityResultRef?.trim())) return { status: "unavailable", reason: "decision-unavailable" }
-      const projection = await input.readProjection({ selectionRef: request.selectionRef, scenarioResultRef: selection.value.scenarioResultRef, comparisonRef: selection.value.comparisonRef, ...(selection.value.sensitivityResultRef ? { sensitivityResultRef: selection.value.sensitivityResultRef } : {}) }, context)
+    async readView(incoming, context) {
+      const request = structuredClone(incoming)
+      const forwarded = structuredClone(request)
+      const resolved = await input.resolve(forwarded, context)
+      if (resolved.status !== "ok") return resolved
+      if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "selection-changed" }
+      const present = resolved.value.present
+      const selection: StoredScenarioSelection = { selectionRef: request.selectionRef, scenarioResultRef: resolved.value.scenarioResultRef, comparisonRef: resolved.value.comparisonRef, ...(resolved.value.sensitivityResultRef ? { sensitivityResultRef: resolved.value.sensitivityResultRef } : {}) }
+      if (!selection.scenarioResultRef.trim() || !selection.comparisonRef.trim() || (request.viewId === "BI11" && !selection.sensitivityResultRef?.trim())) return { status: "unavailable", reason: "decision-unavailable" }
+      const selected = structuredClone(selection)
+      const projection = structuredClone(await input.readProjection(selected, context))
       if (projection.status !== "ok") return projection
+      if (digestSfValue(selected) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
       if (projection.value.context.period.start !== request.period.start || projection.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
       const decision = projection.value.decision
-      if (decision?.kind !== "scenario" || decision.scenarioResultRef !== selection.value.scenarioResultRef || decision.comparisonRef !== selection.value.comparisonRef || (selection.value.sensitivityResultRef && (!("sensitivityResultRef" in decision) || decision.sensitivityResultRef !== selection.value.sensitivityResultRef || !decision.sensitivity)) || (request.viewId === "BI11" && !decision.sensitivity)) return { status: "stale", reason: "decision-reference-mismatch" }
-      return { status: "ok", value: { projection: projection.value, presentation: selection.value.present(projection.value) } }
+      if (decision?.kind !== "scenario" || decision.scenarioResultRef !== selection.scenarioResultRef || decision.comparisonRef !== selection.comparisonRef || (selection.sensitivityResultRef && (!("sensitivityResultRef" in decision) || decision.sensitivityResultRef !== selection.sensitivityResultRef || !decision.sensitivity)) || (request.viewId === "BI11" && !decision.sensitivity)) return { status: "stale", reason: "decision-reference-mismatch" }
+      const presentationInput = structuredClone(projection.value)
+      const presentation = structuredClone(present(presentationInput))
+      if (!sameBiProjection(presentationInput, projection.value)) return { status: "stale", reason: "projection-changed-by-presentation" }
+      return { status: "ok", value: { projection: projection.value, presentation } }
     },
   }
 }

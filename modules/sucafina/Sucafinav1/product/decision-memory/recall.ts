@@ -77,8 +77,7 @@ export async function rankSfRecalledCasesAuthorized(input: RecallInput & {
       const context = candidate.case.context
       if (context.kind !== input.call.kind || (context.kind === "native" && (input.call.kind !== "native" || context.profileId !== input.call.binding.profileId))) return false
       if (!await input.revalidate(input.call) || !await input.authorizeAtlas(candidate, input.call, phase)) return false
-      // An event and its dependencies may repeat the same complete reference within this phase.
-      const refs = [...new Map([...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies].flatMap(expandEvidence).map((ref) => [digestSfValue(ref), ref])).values()]
+      const refs = [...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies].flatMap(expandEvidence)
       if (!refs.length) return false
       for (const ref of refs) {
         const resolutions = candidate.resolutions.filter((item) => digestSfValue(item.ref) === digestSfValue(ref) && item.accessRevision === binding.accessRevision)

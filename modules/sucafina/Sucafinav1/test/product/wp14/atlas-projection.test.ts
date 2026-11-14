@@ -31,4 +31,23 @@ describe("Atlas translation", () => {
     expect(mapSfAtlasEntry({ kind: "project", projection: { ...policy, rule: "Different rule" } }).status).toBe("refused")
     expect(mapSfAtlasEntry({ kind: "project", projection: { ...policy, context: { installationId: "install", projectId: "project", principalRef: "principal", accessRevision: "a1", policyVersion: "p1", kind: "ui" } } }).status).toBe("refused")
   })
+  test("rejects a nested foreign source even when every digest is valid", () => {
+    const foreignBase = { ...evidence, projectId: "another-project" }
+    const foreign = { ...foreignBase, refDigest: digestSfEvidenceRef(foreignBase) }
+    const calculationBase = { schema: "sf-evidence-v1", refId: "calculation", installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", kind: "calculation", target: { calculationId: "calculation", runId: "run", engineVersion: "1", inputDigest: "a".repeat(64), resultDigest: "b".repeat(64), sourceRefs: [foreign], period: projection.case.horizon, currency: "USD" } } as const satisfies BusinessEvidenceRef
+    const calculation = { ...calculationBase, refDigest: digestSfEvidenceRef(calculationBase) }
+    const nestedEvent = { ...event, evidenceRefs: [calculation] }
+    const nestedBase = { ...bundle, target: { ...bundle.target, evidenceRefs: [calculation] } }
+    const nestedBundle = { ...nestedBase, refDigest: digestSfEvidenceRef(nestedBase) }
+    const nestedProjection = { ...projection, evidenceRefs: [calculation], events: [nestedEvent], case: { ...projection.case, ledger: [nestedEvent] } }
+    expect(mapSfAtlasEntry({ kind: "task", projection: nestedProjection, eventId: event.id, bundleRef: nestedBundle })).toEqual({ status: "refused", reason: "invalid-evidence-scope" })
+    expect(mapSfAtlasEntry({ kind: "project", projection: { ...policy, dependencies: [calculation] } })).toEqual({ status: "refused", reason: "invalid-evidence-scope" })
+  })
+  test("requires current case access and a real ledger event identity", () => {
+    const input = { kind: "task" as const, projection, eventId: event.id, bundleRef: bundle }
+    expect(mapSfAtlasEntry({ ...input, projection: { ...projection, context: { ...context, principalRef: "outsider" } } }).status).toBe("refused")
+    const invalidEvent = { ...event, at: "not-a-date" }
+    expect(mapSfAtlasEntry({ ...input, projection: { ...projection, events: [invalidEvent], case: { ...projection.case, ledger: [invalidEvent] } } }).status).toBe("refused")
+    expect(mapSfAtlasEntry({ ...input, projection: { ...projection, context: { ...context, accessRevision: "" } } }).status).toBe("refused")
+  })
 })

@@ -40,10 +40,11 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
   deadline.own(() => rm(directory, { recursive: true, force: true }))
   const storeDirectory = path.join(directory, "store")
   const at = "2027-02-02T00:00:00Z"
+  const clock = { at }
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
-  const control = { active: true, coverageReads: 0 }
-  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void> } = {}
+  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, coverageIssue: "fixture-training-unresolved" }
+  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: () => Promise<void>; outbox?: () => Promise<void> } = {}
   let store = await openLocalStore(storeDirectory)
   deadline.own(() => store.dispose())
   const services: { current?: ReturnType<typeof createSfBusinessServices> } = {}
@@ -58,7 +59,7 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
   if (probe.exitCode !== 0 || !version) throw new Error("Scanner version unavailable")
   const open = async (initialize: boolean) => {
     const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources,
-      projectScope: createSfSourceScopeProjector(() => at) }) }
+      projectScope: createSfSourceScopeProjector(() => clock.at) }) }
     if (initialize) {
       for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
       await persistence.transaction("planner", async (snapshot) => {
@@ -83,13 +84,30 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
         delete interleave.environment
         await waiting?.()
         checkDeadline()
-        return { at, id: randomUUID, directory: [] }
+        return { at: clock.at, id: randomUUID, directory: [] }
       }, createId: randomUUID, now: Date.now,
       commandIdentity: async () => { checkDeadline(); return randomUUID() },
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
       providerGeneration: async () => 1, authorizeDocument: async () => undefined })
+    const readState = authority.state.read
+    authority.state.read = async (request, namespace, read) => {
+      const result = await readState(request, namespace, read)
+      if (namespace === "outbox" && result.status === "ok") await interleave.outbox?.()
+      return result
+    }
     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
     services.current = business
+    const resolveCalculation = business.calculations.resolveEvidence
+    business.calculations.resolveEvidence = async (ref, call) => {
+      const sequence = ++control.calculationResolves, began = performance.now()
+      console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence, state: "started" }))
+      try { return await resolveCalculation(ref, call) }
+      finally {
+        control.calculationResolved++
+        console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence,
+          state: "returned", elapsedMs: Math.round(performance.now() - began), completed: control.calculationResolved, entered: control.calculationResolves }))
+      }
+    }
     business.bindForecastCoverage(async (reference, call) => {
       control.coverageReads++
       const waiting = interleave.coverage
@@ -100,11 +118,18 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
       return { status: "ok", value: { coverageRef: "fixture:explicit-pending-coverage", basis: { id: "fixture-basis", version: 1,
         decisionType: "renewal-transition-v1", categoryIds: ["training"], additionalCategoryIds: [], sourceRefs: [source.value.evidence] },
         assessment: { basisId: "fixture-basis", basisVersion: 1, alternativeId: "baseline", alternativeVersion: 1, currency: "USD", horizon: period,
-          issues: ["fixture-training-unresolved"], evaluatedSourceRefs: [source.value.evidence], coverageState: "pending",
+          issues: [control.coverageIssue], evaluatedSourceRefs: [source.value.evidence], coverageState: "pending",
           entries: [{ status: "pending", categoryId: "training", reason: "Fixture has no training evidence" }], derivedMissingCategoryIds: ["training"] } } }
     })
     const atlas = business.initializeAtlas(initialize ? { spec, version } : undefined,
       { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
+    const resolveEvidence = atlas.context.resolve
+    atlas.context.resolve = async (ref, call) => {
+      const waiting = interleave.evidence
+      delete interleave.evidence
+      await waiting?.()
+      return resolveEvidence(ref, call)
+    }
     const ui = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>) => {
       const admitted = await authority.ui.admit(request(), operation, digestSfValue(payload))
       if (admitted.status !== "ok" || !await authority.ui.validate(admitted.value, operation, digestSfValue(payload))) throw new Error(`UI ${operation} unavailable`)
@@ -182,7 +207,7 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     phase("reopened-sqlite-and-authority")
     return { reopened, eventRef }
   }
-  return { first, produced, calculation, caseRef, control, interleave, reopen, change, phase }
+  return { first, produced, calculation, caseRef, control, clock, interleave, reopen, change, phase }
 }
 
 async function withCalculation(name: string, work: (fixture: Awaited<ReturnType<typeof calculationFixture>>) => Promise<void>) {
@@ -265,14 +290,19 @@ test("Planner calculation survives SQLite and Atlas reopen with continuity, orig
 
 test("Planner calculation recalls the actual reopened Atlas record and does not append it twice", async () => {
   expectSpawn(import.meta.path)
-  await withCalculation("reopen-and-recall", async ({ calculation, caseRef, reopen, phase }) => {
+  await withCalculation("reopen-and-recall", async ({ calculation, caseRef, reopen, control, phase }) => {
     const { reopened, eventRef } = await reopen()
     const payload = { evidenceRef: calculation }
     await reopened.ui("sf_evidence_get", payload, async (call) => {
+      phase("starting-reopened-calculation-resolve-before-recall")
       expect((await reopened.business.context.resolve(calculation, call)).state).toBe("fresh")
+      phase("finished-reopened-calculation-resolve-before-recall")
+      phase("starting-real-atlas-recall")
+      const beforeRecall = control.calculationResolves
       const recalled = await reopened.atlas.memory.recall(caseRef, call)
       expect(recalled.status).toBe("ok")
       if (recalled.status === "ok") expect(recalled.records).toHaveLength(1)
+      expect(control.calculationResolves - beforeRecall).toBe(1)
       phase("real-atlas-recall-authorized")
       expect((await reopened.business.context.emitFromLedger(eventRef, call)).status).toBe("already-committed")
     })
@@ -347,7 +377,10 @@ test("Planner overlapping replays and Atlas recall disclose nothing after princi
     const { reopened } = await reopen()
     const payload = { evidenceRef: calculation }
     await reopened.ui("sf_evidence_get", payload, async (call) => {
+      phase("starting-reopened-calculation-resolve-before-overlap")
       expect((await reopened.business.context.resolve(calculation, call)).state).toBe("fresh")
+      phase("finished-reopened-calculation-resolve-before-overlap")
+      phase("starting-real-atlas-recall-before-overlap")
       const recalled = await reopened.atlas.memory.recall(caseRef, call)
       expect(recalled.status).toBe("ok")
       if (recalled.status === "ok") expect(recalled.records).toHaveLength(1)
@@ -384,6 +417,99 @@ test("Planner calculation becomes unavailable after its real persisted source ch
     await reopened.persistence.transaction("planner", async (snapshot) => { snapshot.data.entities = [{ id: "changed-source", name: "Changed source" }]; return { commit: true, value: true } })
     await reopened.ui("sf_evidence_get", payload, async (call) => {
       expect((await reopened.business.context.resolve(calculation, call)).state).toBe("unavailable")
+    })
+  })
+}, 120_000)
+
+// The first real cases.read completes the financial proof before Atlas calls
+// its public evidence resolver. Each mutation below therefore challenges a
+// completed proof, not a denied admission or fabricated calculation result.
+for (const mutation of ["source", "membership", "capture", "coverage", "selector", "clock", "principal", "lease"] as const) {
+  test(`Planner reopened recall rejects ${mutation} drift after a completed calculation proof`, async () => {
+    expectSpawn(import.meta.path)
+    await withCalculation(`recall-proof-${mutation}`, async ({ calculation, caseRef, reopen, change, control, clock, interleave, phase }) => {
+      const { reopened } = await reopen()
+      await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+        const selected = { ...caseRef }, before = control.calculationResolves
+        let applied = 0, outboxReads = 0, finalEnvironmentReads = 0
+        const mutate = async () => {
+          expect(control.calculationResolved).toBe(control.calculationResolves)
+          expect(control.calculationResolves - before).toBe(1)
+          applied++
+          if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
+            snapshot.data.entities = [{ id: "after-completed-proof", name: "Changed source" }]
+            return { commit: true, value: undefined }
+          })
+          if (mutation === "membership") await change((state) => { state.cases[caseRef.id]!.participants = [] })
+          if (mutation === "capture") await change((state) => {
+            const captures = Object.values(state.atlas).map((partition) => object(object(partition).originals)).filter((originals) => originals[calculation.refDigest])
+            expect(captures).toHaveLength(1)
+            delete captures[0]![calculation.refDigest]
+          })
+          if (mutation === "coverage") control.coverageIssue = "changed-after-completed-proof"
+          if (mutation === "selector") selected.incarnation = "different-case-incarnation"
+          if (mutation === "clock") clock.at = "2027-02-03T00:00:00Z"
+          if (mutation === "principal") control.active = false
+          if (mutation === "lease") reopened.authority.ui.finish(call)
+          phase(`mutated-${mutation}-after-completed-proof`)
+        }
+        const final = mutation === "clock" || mutation === "principal" || mutation === "lease"
+        if (!final) interleave.evidence = mutate
+        if (final) interleave.outbox = async () => {
+          if (++outboxReads !== 2) return
+          delete interleave.outbox
+          // The second actual outbox read is the canonical memory reader's
+          // final snapshot. Its subsequent authorization and the private case
+          // egress must complete before the new final fence reads environment.
+          const observeFinalEnvironment = async () => {
+            finalEnvironmentReads++
+            // Two clocks in the first C08 proof, one in the real record reader,
+            // then two in the final C08 proof. Mutate at that last clock await.
+            if (finalEnvironmentReads === 5) await mutate()
+            else interleave.environment = observeFinalEnvironment
+          }
+          interleave.environment = observeFinalEnvironment
+        }
+        phase(`starting-recall-proof-${mutation}`)
+        const result = await reopened.atlas.memory.recall(selected, call)
+        expect(applied).toBe(1)
+        expect(result.status).toBe("unavailable")
+        expect("records" in result).toBe(false)
+        expect(control.calculationResolves - before).toBe(1)
+        if (final) {
+          expect(outboxReads).toBe(2)
+          expect(finalEnvironmentReads).toBe(5)
+        }
+        phase(`rejected-recall-proof-${mutation}`)
+      })
+    })
+  }, 120_000)
+}
+
+test("Planner recall proof stays lexical while an independent same-call calculation resolves in parallel", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("recall-proof-lexical-isolation", async ({ calculation, caseRef, reopen, control, interleave, phase }) => {
+    const { reopened } = await reopen()
+    await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+      const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+      const before = control.calculationResolves
+      interleave.evidence = async () => { entered.resolve(); await release.promise }
+      const running = reopened.atlas.memory.recall(caseRef, call)
+      try {
+        await Promise.race([entered.promise, running.then(() => { throw new Error("Real Atlas recall did not reach its warmed evidence boundary") })])
+        expect(control.calculationResolves - before).toBe(1)
+        // This continuation was created outside recall's AsyncLocalStorage.
+        // It must run the actual producer even though the same UI call is live.
+        const independent = await reopened.business.context.resolve(calculation, call)
+        expect(independent.state).toBe("fresh")
+        expect(control.calculationResolves - before).toBe(2)
+        phase("independent-calculation-did-not-borrow-recall-proof")
+      } finally { release.resolve(); delete interleave.evidence; await running }
+      const recalled = await running
+      expect(recalled.status).toBe("ok")
+      if (recalled.status === "ok") expect(recalled.records).toHaveLength(1)
+      expect(control.calculationResolves - before).toBe(2)
+      phase("lexically-isolated-real-atlas-recall-authorized")
     })
   })
 }, 120_000)

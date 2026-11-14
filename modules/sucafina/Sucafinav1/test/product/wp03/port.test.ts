@@ -183,7 +183,7 @@ test("forecast port compares the real engine, and detects source changes", async
       await state.transaction(source, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = decision; return { commit: true, value: true } })
       const access = { allowed: true }
       const store = createSfDecisionResultStore({ state, host: { requestFor: () => source, revalidate: async () => access.allowed }, authorizeCase: async () => access.allowed, verifySources: async (_result, evidence) => access.allowed && evidence.every((ref) => ref.kind === "record"), createId: () => "result", now: () => "2026-11-13T00:00:00Z" })
-      const persist = createPlannerResultPersistence({ store, resolveCase: async () => ({ status: "ok", value: { id: "case", incarnation: "inc", version: 1 } }) })
+      const persist = createPlannerResultPersistence({ store, replay: port, resolveCase: async () => ({ status: "ok", value: { id: "case", incarnation: "inc", version: 1 } }) })
       const request = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] }
       const saved = await persist({ kind: "scenario", request, result: simulated.value }, "call", binding)
       expect(saved.status).toBe("ok")

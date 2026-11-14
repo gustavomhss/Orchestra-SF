@@ -8,7 +8,7 @@ type BrowserResponse = NonNullable<Awaited<ReturnType<BrowserRequest["response"]
 /** Real browser, producer and HTTP handler; route transport forwards exact handler bytes.
  * This seam does not qualify TCP hosting, installed identity, native AI or global E2E.
  */
-export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; url: string; privateText: string; signal: AbortSignal }) {
+export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; reviewAsset: () => Promise<string>; url: string; privateText: string; signal: AbortSignal }) {
   const { chromium } = await import("@playwright/test")
   const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
   input.signal.throwIfAborted()
@@ -133,6 +133,20 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
         // Capture only actual host output. Status, headers and bytes are never
         // synthesized to emulate a successful projection or a denied response.
         const forwarded = { status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) }
+        if (mode === "review" && response.status === 200) {
+          // Read the actual checked-in entry's built asset. JSON bootstrap data
+          // is excluded from this byte proof and from its diagnostic output.
+          const asset = await ready(input.reviewAsset())
+          const inline = asset.replace(/<\/script/gi, "<\\/script")
+          const inserted = [...forwarded.body.toString("utf8").matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)].at(-1)?.[1]
+          const matches = inserted === inline
+          const digest = (value: string) => new Bun.CryptoHasher("sha256").update(value).digest("hex")
+          console.info("SF_REVIEW_BROWSER_ASSET", JSON.stringify({ page: pageName(page), matches,
+            assetBytes: Buffer.byteLength(asset), inlineBytes: Buffer.byteLength(inline), insertedBytes: inserted === undefined ? null : Buffer.byteLength(inserted),
+            assetSha256: digest(asset), inlineSha256: digest(inline), insertedSha256: inserted === undefined ? null : digest(inserted),
+            substitutionTokens: { match: asset.split("$&").length - 1, prefix: asset.split("$`").length - 1, suffix: asset.split("$'").length - 1 } }))
+          if (!matches) throw new Error("WP10_REVIEW_BROWSER_ASSET_CHANGED_BY_HTML_COMPOSITION")
+        }
         if (watch) watch.handledStatus = response.status
         watch?.handled.resolve(response.status)
         console.info("SF_REVIEW_BROWSER_HTTP", JSON.stringify({ page: page === focusPage ? "focus" : "source", mode, state: "handled", status: response.status, elapsedMs: Math.round(performance.now() - at) }))

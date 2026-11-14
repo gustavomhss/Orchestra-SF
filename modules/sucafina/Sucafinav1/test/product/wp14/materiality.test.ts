@@ -20,6 +20,16 @@ describe("decision reconsideration", () => {
     expect(result.signal?.originalReason).toBe("Original decision")
     expect(classifySfMaterialChange(condition, change).signal?.correlationKey).toBe(result.signal?.correlationKey)
   })
+  test("re-reading the same material event does not reopen a signal", () => {
+    const withComponent = { ...change, comparison: { ...change.comparison, resultAfter: { ...resultAfter, components: [{ id: "cost", amount: 250000, currency: "USD", period: source.period, evidenceState: "confirmed" as const, sourceRefs: [change.source] }] } } }
+    const first = classifySfMaterialChange(condition, withComponent)
+    const refreshed = classifySfMaterialChange(condition, { ...withComponent, source: { ...change.source, observedAt: "2026-11-14T12:00:00Z" }, comparison: { ...withComponent.comparison, resultAfter: { ...withComponent.comparison.resultAfter, components: withComponent.comparison.resultAfter.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map((ref) => ({ ...ref, observedAt: "2026-11-14T12:00:00Z" })) })) } } })
+    expect(first.impact.state).toBe("material")
+    expect(refreshed.signal?.correlationKey).toBe(first.signal?.correlationKey)
+    expect(refreshed.impact.changeDigest).toBe(first.impact.changeDigest)
+    const changed = classifySfMaterialChange(condition, { ...withComponent, source: { ...change.source, version: 3, observedAt: "2026-11-14T12:00:00Z" } })
+    expect(changed.signal?.correlationKey).not.toBe(first.signal?.correlationKey)
+  })
   test("a conditioned choice becomes material when a missing cost resolves and breaks the criterion", () => {
     const before = { ...comparison("satisfied", 30000), comparisonStatus: "conditioned" as const, completeDifference: null, criterionResults: [{ criterionId: "advantage", state: "unknown" as const, reason: "training missing" }], unresolvedConditions: ["training"] }
     const result = classifySfMaterialChange({ ...condition, choice: { ...condition.choice, comparison: before } }, { ...change, comparison: { ...change.comparison!, before } })
@@ -89,4 +99,16 @@ test("materiality access rechecks evidence and refuses a revoked result", async 
   expect(await read(condition.id, call)).toEqual({ status: "unavailable" })
   access.allowed = false
   expect(await read(condition.id, call)).toEqual({ status: "unavailable" })
+})
+
+test("materiality access distinguishes an advancing observation clock from a mutable financial result", async () => {
+  const { createSfMaterialityAccess } = await import("../../../product/decision-memory/materiality.ts")
+  const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }
+  const shared: { condition: MaterialCondition; change: MaterialChangeEvent } = structuredClone({ condition, change })
+  let reads = 0
+  const read = createSfMaterialityAccess({ load: async () => { reads += 1; shared.change.source.observedAt = new Date(Date.UTC(2026, 10, 14, 12, 0, reads)).toISOString(); return shared }, authorizeEvidence: async () => true, revalidate: async () => true })
+  expect((await read(condition.id, call)).status).toBe("ok")
+  reads = 0
+  const mutating = createSfMaterialityAccess({ load: async () => { reads += 1; if (reads > 1) shared.change.comparison!.resultAfter.knownSubtotal = 999999; return shared }, authorizeEvidence: async () => true, revalidate: async () => true })
+  expect(await mutating(condition.id, call)).toEqual({ status: "unavailable" })
 })

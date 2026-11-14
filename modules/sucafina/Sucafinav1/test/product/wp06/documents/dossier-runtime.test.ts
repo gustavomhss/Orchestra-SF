@@ -9,8 +9,9 @@ import { createWp06Runtime } from "../runtime-fixture.ts"
 import { documentFormatFixture } from "./format-fixtures.ts"
 
 test.each(["txt", "docx", "pdf"] as const)("%s real Request dossier composes default services and preserves pending, confirmed and revoked document identity", async (format) => {
-  const fixture = await createWp06Runtime({ additionalOperations: ["sf_request_read", "sf_work_list"] })
-  const business = createSfBusinessServices({ authority: fixture.authority, persistence: fixture.store, proposalCoverageWrites: new WeakSet(), documentRead: fixture.documents.documents.reader })
+  const procurementEvidenceWrites = new WeakSet<object>()
+  const fixture = await createWp06Runtime({ additionalOperations: ["sf_request_read", "sf_work_list"], procurementEvidenceWrites })
+  const business = createSfBusinessServices({ authority: fixture.authority, persistence: fixture.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites, documentRead: fixture.documents.documents.reader })
   const dossier = createSfDossierServices({ runtime: fixture.runtime, authority: fixture.authority, business, documents: fixture.documents })
   if (!dossier) throw new Error("Dossier service did not compose")
   const request = async (mode: string, query: Record<string, string> = {}, cookie = fixture.cookie) => {

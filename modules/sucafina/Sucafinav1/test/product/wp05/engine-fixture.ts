@@ -16,8 +16,10 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
 import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
+import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
+import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
 import { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
 import { createPlannerSensitivity } from "../../../product/portfolio/planner-sensitivity.ts"
@@ -31,7 +33,7 @@ const november = { start: "2027-11-01", end: "2027-11-30" }
 const now = () => "2026-11-13T00:00:00Z"
 const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
-type FixtureOptions = { mode?: "eur-missing-fx" | "renewal-usd"; training?: "bundled" | "omitted" | "confirmed" | "zero" | "null" }
+type FixtureOptions = { mode?: "eur-missing-fx" | "renewal-usd"; training?: "bundled" | "omitted" | "confirmed" | "zero" | "null"; composed?: boolean }
 
 function initial(options: FixtureOptions): Snapshot {
   const line = (id: string, amount: number | null) => ({ id, sec: "opex", el: "licenses", cur: "USD", b: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0), a: Array(12).fill(null), f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) })
@@ -119,7 +121,7 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
       recall: async () => [], emitFromLedger: async () => { throw new Error("Unexpected memory write in WP05 engine fixture") },
     }
     const parameterRef = options.mode === "renewal-usd" ? "implementation:11" : "line:11"
-    const scenario: ScenarioRequest = { baseRef: selectedSourceId, operations: [{ kind: "replace", targetRef: parameterRef, amount: options.mode === "renewal-usd" ? 45000 : 112000, currency: options.mode === "renewal-usd" ? "USD" : "EUR", period: november }], assumptions: [] }
+    const scenario: ScenarioRequest = { baseRef: selectedSourceId, operations: [{ kind: "replace", targetRef: parameterRef, amount: options.mode === "renewal-usd" ? 45000 : 112000, currency: options.mode === "renewal-usd" ? "USD" : "EUR", period: november }, ...(options.composed && options.mode === "renewal-usd" ? [{ kind: "replace" as const, targetRef: "bridge:11", amount: 60000, currency: "USD", period: november }, { kind: "replace" as const, targetRef: "new-service:11", amount: 105000, currency: "USD", period: november }] : [])], assumptions: [] }
     const baselineScenario: ScenarioRequest = options.mode === "renewal-usd"
       ? { baseRef: baselineSourceId, operations: [{ kind: "replace", targetRef: "renewal:11", amount: 240000, currency: "USD", period: november }], assumptions: [] }
       : { ...scenario, operations: [{ ...scenario.operations[0]!, amount: 100000 }] }
@@ -140,7 +142,9 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
     if (selectedStored.status !== "ok" || baselineStored.status !== "ok") throw new Error(`Scenario persistence unavailable: ${JSON.stringify({ selectedStored, baselineStored })}`)
     const selectedRef = selectedStored.value.resultRef
     const baselineRef = baselineStored.value.resultRef
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "wp05-case", authorizeCase: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now })
+    const scenarioInputs = createPlannerScenarioInputs({ planner, sources, verifyAssumption: async () => ({ status: "unavailable", reason: "human-confirmation-required" }) })
+    const verifyOperations = createPlannerOperationVerifier({ host, planner, sources, scenarioInputs })
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "wp05-case", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => "unused", now })
     coverageAccess.resolve = createDecisionCoverageAccess({ state, host, authorizeCase: async () => access.allowed, verifyEvidence: async (coverageBasis, assessment) => access.allowed && coverageBasis.sourceRefs.every(sourceMatches) && assessment.evaluatedSourceRefs.every(sourceMatches) })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
     const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted)
@@ -179,7 +183,7 @@ export async function createWp05SensitivityFixture(options: FixtureOptions = {})
     const saved = await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)
     if (saved.status !== "ok") throw new Error(`Sensitivity persistence unavailable: ${JSON.stringify(saved)}`)
     return {
-      context, host, planner, plannerWithCriteria, sources, sourceRefs, basis, cases, caseRef,
+      context, host, state, store, directory, request, decision, rules, planner, plannerWithCriteria, sources, sourceRefs, basis, cases, caseRef,
       scenario, baselineScenario, selectedResult, baselineResult, selectedRef, baselineRef,
       results, persistent, comparisonBindings, comparisonRef, comparison: compared.value,
       saved: saved.value, sensitivityRequest, issuer, exact, exactCalls, preview, evidence: evidenceService,

@@ -74,6 +74,42 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
 
     const services = runtime.services?.()
     if (!services) throw new Error("host services unavailable after host startup")
+    expect(services.selected).toHaveLength(5)
+    for (const selected of services.selected) {
+      expect(selected.skills.length).toBeGreaterThan(0)
+      expect(selected.operationIds.length).toBeGreaterThan(0)
+      for (const operation of selected.operationIds) {
+        expect(selected.profile.allowedOperations).toContain(operation)
+        expect(selected.skills.some((skill) => skill.allowedOperations.includes(operation))).toBe(true)
+      }
+    }
+    const unauthenticated = await fetch(`${origin}/sucafina/dashboard?sf=workbench-analysis`, { method: "POST",
+      headers: { origin, "sec-fetch-site": "same-origin", "content-type": "application/json", "idempotency-key": randomUUID() },
+      body: JSON.stringify({ action: "read", runRef: "sf-run-forged-reference" }) })
+    expect(unauthenticated.status).toBe(403)
+    const uninitialized = await post({ action: "read", runRef: "sf-run-forged-reference" })
+    expect(uninitialized.status).toBe(503)
+    expect(await uninitialized.json()).toEqual({ status: "unavailable" })
+    // C06 source initialization does not create C08. Initialize through the real
+    // authenticated state port before testing the missing-run authorization path.
+    const stateRequest = new Request(`${origin}/sucafina/dashboard`, { method: "POST",
+      headers: { cookie: cookie ?? "", origin, "sec-fetch-site": "same-origin", "idempotency-key": "analysis-c08-initialize" } })
+    const initialized = await services.state.transaction(stateRequest, { namespace: "cases", expectedStorageVersion: 0,
+      targetRef: services.creationTarget.ref, targetIncarnation: services.creationTarget.incarnation,
+      idempotencyKey: "analysis-c08-initialize", commandDigest: digestSfValue({ purpose: "initialize-analysis-state" }) },
+    async () => ({ commit: true, value: true }))
+    expect(initialized.status).toBe("ok")
+    expect((await post({ action: "read", runRef: "sf-run-forged-reference" })).status).toBe(403)
+    const missingOutput = await post({ action: "output", runRef: "sf-run-forged-reference" })
+    expect(missingOutput.status).toBe(503)
+    expect(await missingOutput.json()).toEqual({ status: "unavailable" })
+    const forgedList = await post({ action: "list", caseRef: { id: "missing", incarnation: "missing", version: 1 } })
+    expect(forgedList.status).toBe(403)
+    expect(await forgedList.text()).not.toContain("nativeSessionId")
+    const cancel = await post({ action: "cancel", runRef: "sf-run-forged-reference" })
+    expect(cancel.status).toBe(503)
+    expect(await cancel.text()).not.toContain("nativeSessionId")
+
     const command = (operation: string, input: unknown) => fetch(`${origin}/sucafina/dashboard?sf=workbench-command`, {
       method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() },
       body: JSON.stringify({ operation, input }),
@@ -168,18 +204,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       expect(start.status).toBe(400)
     }
 
-    const unauthenticated = await fetch(`${origin}/sucafina/dashboard?sf=workbench-analysis`, { method: "POST",
-      headers: { origin, "sec-fetch-site": "same-origin", "content-type": "application/json", "idempotency-key": randomUUID() },
-      body: JSON.stringify({ action: "read", runRef: "sf-run-forged-reference" }) })
-    expect(unauthenticated.status).toBe(403)
-    expect((await post({ action: "read", runRef: "sf-run-forged-reference" })).status).toBe(403)
-    expect((await post({ action: "output", runRef: "sf-run-forged-reference" })).status).toBe(403)
-    const forgedList = await post({ action: "list", caseRef: { id: "missing", incarnation: "missing", version: 1 } })
-    expect(forgedList.status).toBe(403)
-    expect(await forgedList.text()).not.toContain("nativeSessionId")
-    const cancel = await post({ action: "cancel", runRef: "sf-run-forged-reference" })
-    expect(cancel.status).toBe(503)
-    expect(await cancel.text()).not.toContain("nativeSessionId")
+
 
     const crossOrigin = await post({ action: "read", runRef: "sf-run-forged-reference" }, { origin: "https://other.example" })
     expect(crossOrigin.status).toBe(403)
@@ -187,6 +212,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     expect(crossSite.status).toBe(403)
     const missingIdempotency = await post({ action: "read", runRef: "sf-run-forged-reference" }, { "idempotency-key": "" })
     expect(missingIdempotency.status).toBe(400)
+    const unchanged = await services.state.read(stateRequest, "contributions", (state) => ({ runs: Object.keys(state.nativeRuns ?? {}), outputs: Object.keys(state.contributions) }))
+    expect(unchanged.status === "ok" && unchanged.value).toEqual({ runs: [], outputs: [] })
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie: cookie ?? "", origin } }))
     expect((await post(intentPrepare)).status).toBe(403)
   } finally {

@@ -169,8 +169,19 @@ export function createSfExtendedHttp(input: {
       const inline = script.replace(/<\/script/gi, "<\\/script")
       const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`
       const title = mode === "review" ? "Review and reports" : "Business intelligence"
-      const html = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "")
-        .replace("</body>", `${bootstrapHtml}<script>${inline}</script></body>`)
+      const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "")
+      // BI owns its live selection, refresh and cancellation lifecycle. The
+      // generic shell replaces main with server HTML without mounting that
+      // client again. Exclude that whole script, never rewrite published code.
+      // A changed shell shape requires an explicit integration update.
+      const shellScripts = mode === "bi" ? [...shell.matchAll(/<script\b([^>]*)>[\s\S]*?<\/script\s*>/gi)] : []
+      if (mode === "bi" && (shellScripts.length !== 1 || shellScripts[0]![1]!.trim()))
+        return json({ status: "unavailable", reason: "browser-shell-unavailable" }, 503)
+      const layout = mode === "bi" ? shell.slice(0, shellScripts[0]!.index!) + shell.slice(shellScripts[0]!.index! + shellScripts[0]![0].length) : shell
+      const html = layout
+        // A replacement string would interpret dollar sequences in the bundle
+        // or bootstrap as substitutions of the surrounding document.
+        .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { authority.ui.finish(call) }
   }

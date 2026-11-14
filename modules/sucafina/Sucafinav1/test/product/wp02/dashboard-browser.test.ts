@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { launchBrowserDriver } from "./browser-driver-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -13,6 +15,7 @@ import { object, rows } from "../../../runtime/contract.ts"
 // Browser events reach the production module, encrypted operator identity and SQLite.
 // Only the initial business records and the clock are fixed by this test.
 test("Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation", async () => {
+  expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp02-dashboard-browser-"))
   await chmod(directory, 0o700)
   const driver = await openLocalStore(directory)
@@ -33,8 +36,10 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
     }
     return response
   }
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browserDriver = await launchBrowserDriver("dashboard-monthly").catch(async (error) => {
+    await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }); throw error
+  })
+  const browser = browserDriver.browser
   try {
     await persistence.initializeSources("dashboard")
     await persistence.transaction("dashboard", async (snapshot) => {
@@ -113,7 +118,7 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
     const finalNote = "Approved renewal shifted the January forecast. Supplier timing is confirmed."
     await deviation.getByLabel("Deviation notes").fill(finalNote)
     delayed.release?.()
-    await page.getByText("The submitted changes were saved. New edits remain unsaved; review them before saving again.", { exact: true }).waitFor()
+    await page.getByText("The submitted changes were saved. Later edits remain unsaved; review them before continuing.", { exact: true }).waitFor()
     expect(await deviation.getByLabel("Deviation notes").inputValue()).toBe(finalNote)
     expect(await deviation.getAttribute("data-dirty")).toBe("true")
     expect(await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: object(snapshot.data.deviations)["opex-owner-1-2026-1"] }))).toEqual({ flag: "dev-amber", text: "Approved renewal shifted the January forecast." })
@@ -173,9 +178,8 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
     expect(errors).toEqual([])
   } finally {
     delayed.release?.()
-    await browser.close()
-    await server.stop(true)
-    await driver.dispose()
-    await rm(directory, { recursive: true, force: true })
+    try { await browserDriver.close() }
+    finally { await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
   }
+  browserDriver.report()
 }, 60000)

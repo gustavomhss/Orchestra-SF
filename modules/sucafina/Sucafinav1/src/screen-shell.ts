@@ -2,6 +2,8 @@
 // Não importa superfície. Não há localStorage.
 
 import { shellStateScript } from "../product/ui/shell-state.ts"
+import { shellCommandScript } from "../product/ui/shell-command.ts"
+import { shellPreviewScript } from "../product/ui/shell-preview.ts"
 import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV, showPage } from "./nav.ts"
 
 export const UNSAVED = "A escrita não ficou gravada."
@@ -20,6 +22,8 @@ type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; st
 const SCRIPT = `
 const unsaved = ${JSON.stringify(UNSAVED)}
 ${shellStateScript}
+${shellCommandScript}
+${shellPreviewScript}
 function assignValue(target, name, value) {
   const path = name.replace(/\\[(\\d+)\\]/g, ".$1").split(".")
   if (path.some((part) => ["__proto__", "constructor", "prototype"].includes(part))) throw new Error("Invalid field")
@@ -68,6 +72,7 @@ function showResult(result, attempt, form, status = result?.status) {
   if (status === 409) {
     const describe = (value) => value == null ? "Not provided" : Array.isArray(value) ? value.map(describe).join("; ") : typeof value === "object" ? Object.entries(value).map(([key, item]) => key + ": " + describe(item)).join(" · ") : String(value)
     notice("This record changed since you opened it. Your edits are still here. Current: " + describe(result?.stored) + ". Your attempt: " + describe(attempt) + ". Review the current record before retrying.")
+    offerLatestVersion(form)
     return
   }
   notice(result && result.errors ? result.errors.join(" · ") : unsaved)
@@ -77,16 +82,6 @@ function beginWrite() {
   pending.generation++
   pending.html = null
   return () => { pending.writing--; pending.generation++; pending.html = null }
-}
-async function send(command, form) {
-  const finish = beginWrite()
-  try {
-  const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(command) })
-  const result = await response.json()
-  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values, form, response.status); return false }
-  notice(result.warnings && result.warnings.length ? result.warnings.join(" · ") : "Saved.")
-  return true
-  } finally { finish() }
 }
 async function press(name) {
   if (name === "Import JSON" && !window.confirm("Substitui para toda a gente.")) return
@@ -111,6 +106,39 @@ function attach() {
     target.searchParams.delete("own")
     anchor.href = target.toString()
     if (target.searchParams.get("page") === document.querySelector("main")?.dataset.page) anchor.setAttribute("aria-current", "page")
+  })
+  document.querySelectorAll("[data-dashboard-signal-link]").forEach((anchor) => {
+    const target = new URL(anchor.href)
+    for (const key of stateKeys) if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
+    anchor.href = target.toString()
+  })
+  document.querySelectorAll("[data-dashboard-signals]").forEach((section) => {
+    if (section.dataset.bound) return
+    section.dataset.bound = "true"
+    const records = [...section.querySelectorAll("[data-signal-priority]")].map((button, index) => ({ button, row: button.closest("tr"), id: button.dataset.signalPriority, index }))
+    const authorized = new Set(records.map((item) => item.id))
+    const pinned = new Set(current.searchParams.getAll("signalPriority").filter((id) => authorized.has(id)))
+    const order = () => {
+      const sorted = [...records].sort((a, b) => Number(pinned.has(b.id)) - Number(pinned.has(a.id)) || a.index - b.index)
+      for (const item of sorted) {
+        item.row.parentElement.append(item.row)
+        item.button.setAttribute("aria-pressed", String(pinned.has(item.id)))
+        item.button.textContent = pinned.has(item.id) ? "Remove priority" : "Prioritize"
+        item.button.setAttribute("aria-label", (pinned.has(item.id) ? "Remove priority for " : "Prioritize ") + item.button.dataset.signalLabel)
+      }
+      section.querySelector("[data-signal-order]").textContent = pinned.size + " of " + records.length + " signals prioritized by you. Your priorities first, then recorded date; undated records follow. Priorities belong to this view and do not change the records."
+    }
+    for (const item of records) item.button.addEventListener("click", () => {
+      if (pinned.has(item.id)) pinned.delete(item.id)
+      else pinned.add(item.id)
+      const url = new URL(location.href)
+      url.searchParams.delete("signalPriority")
+      for (const id of pinned) url.searchParams.append("signalPriority", id)
+      history.replaceState(history.state, "", url)
+      order()
+      item.button.focus()
+    })
+    order()
   })
   document.querySelectorAll("[data-notifications]").forEach((menu) => {
     if (menu.dataset.bound) return
@@ -189,7 +217,10 @@ function attach() {
     button.dataset.bound = "true"
     const dialog = button.closest("td").querySelector("dialog")
     const form = dialog.querySelector("form[data-command]")
-    button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record]) : ""
+    button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record, ...["year", "month"].map((name) => {
+      const input = [...form.elements].find((element) => element.name === name)
+      return input ? input.defaultValue ?? input.value : null
+    })]) : ""
     dialog.id ||= "record-editor-" + crypto.randomUUID()
     dialog.tabIndex = -1
     button.setAttribute("aria-haspopup", "dialog")
@@ -208,10 +239,12 @@ function attach() {
       applyRefresh()
     })
     dialog.addEventListener("cancel", (event) => {
+      const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
+      if (active) { event.preventDefault(); commandBlocked(active); return }
       const dirty = dialog.querySelectorAll("form[data-dirty]")
       if (!dirty.length) return
       if (!window.confirm("Discard unsaved changes?")) { event.preventDefault(); return }
-      dirty.forEach((form) => delete form.dataset.dirty)
+      dirty.forEach((form) => { delete form.dataset.dirty; discardDashboardPreview(form) })
       setTimeout(() => void refresh(true), 0)
     })
     dialog.addEventListener("keydown", (event) => {
@@ -229,8 +262,10 @@ function attach() {
     button.dataset.bound = "true"
     button.addEventListener("click", () => {
       const dialog = button.closest("dialog")
+      const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
+      if (active) { commandBlocked(active); return }
       if (dialog.querySelector("form[data-dirty]") && !window.confirm("Discard unsaved changes?")) return
-      dialog.querySelectorAll("form[data-dirty]").forEach((form) => delete form.dataset.dirty)
+      dialog.querySelectorAll("form[data-dirty]").forEach((form) => { delete form.dataset.dirty; discardDashboardPreview(form) })
       dialog.close()
       void refresh(true)
     })
@@ -317,6 +352,7 @@ function attach() {
     form.dataset.bound = "true"
     form.addEventListener("submit", async (event) => {
       event.preventDefault()
+      if (pending.closed || form.dataset.saving === "true" || commandBlocked(form)) return
       const errorScope = form.closest("section") || form
       errorScope.querySelectorAll("[data-field-error]").forEach((message) => {
         errorScope.querySelectorAll("[aria-describedby]").forEach((input) => {
@@ -328,6 +364,7 @@ function attach() {
       })
       const confirmed = /import|delete|replace|restore/.test(form.dataset.command)
       if (confirmed && !window.confirm("Confirm this change?")) return
+      form.dataset.saving = "true"
       const buttons = [...form.querySelectorAll("button")]
       buttons.forEach((button) => button.disabled = true)
       try {
@@ -340,58 +377,12 @@ function attach() {
         const values = submitsEditor ? { ...await valuesOf(editors[0]), ...await valuesOf(form) } : await valuesOf(form)
         const command = { page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true }
         if (document.body.dataset.surface === "dashboard" && ["OPEX Detail", "CAPEX Projects"].includes(command.page) && ["year-amount", "annual-entry", "save-entry"].includes(command.action)) {
-          const revision = form.dataset.previewRevision || "0"
-          const finish = beginWrite()
-          try {
-            const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "preview-change", version: 0, values: { command: { ...command, confirmed: false } } }) })
-            const result = await response.json()
-            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values, form, response.status); return }
-            if ((form.dataset.previewRevision || "0") !== revision) { notice("The draft changed. Review a new preview."); return }
-            const preview = result.value
-            const panel = document.createElement("section")
-            panel.dataset.preview = "true"
-            panel.setAttribute("aria-label", "Review changes")
-            const heading = document.createElement("h3")
-            heading.textContent = "Review changes before applying"
-            panel.append(heading)
-            const format = (item) => item?.state === "absent" ? "Absent" : item?.state === "undefined" ? "Undefined" : item?.state === "value" ? (item.value == null ? "Not provided" : typeof item.value === "object" ? JSON.stringify(item.value) : String(item.value)) : "Unavailable"
-            const list = document.createElement("ul")
-            for (const change of preview.changes || []) { const row = document.createElement("li"); row.textContent = change.path + ": " + format(change.before) + " → " + format(change.after); list.append(row) }
-            if (!list.children.length) { const row = document.createElement("li"); row.textContent = "No changes."; list.append(row) }
-            panel.append(list)
-            for (const warning of preview.warnings || []) { const message = document.createElement("p"); message.textContent = warning; panel.append(message) }
-            if (preview.summary) { const summary = document.createElement("p"); summary.textContent = "Added: " + preview.summary.added + " · Updated: " + preview.summary.updated + " · Ignored: " + preview.summary.ignored; panel.append(summary) }
-            const apply = document.createElement("button")
-            apply.type = "button"
-            apply.textContent = "Confirm and apply"
-            apply.addEventListener("click", async () => {
-              if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The draft changed. Review a new preview."); return }
-              apply.disabled = true
-              const done = beginWrite()
-              try {
-                const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "apply-preview", version: 0, values: { previewRef: preview.previewRef } }) })
-                const result = await response.json()
-                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values, form, response.status); if (response.status === 409) panel.remove(); return }
-                if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The reviewed changes were saved. New edits remain unsaved; review them before applying."); return }
-                delete form.dataset.dirty
-                const dialog = form.closest("dialog")
-                if (dialog) { pending.focus = dialog.closest("td").querySelector("[data-open-editor]").dataset.editorKey; dialog.close() }
-                notice("Saved.")
-                pending.again = true
-              } catch { notice(unsaved) }
-              finally { done(); apply.disabled = false; if (pending.again) { pending.again = false; void refresh() } }
-            })
-            panel.append(apply)
-            form.querySelector("[data-preview]")?.remove()
-            form.append(panel)
-            heading.tabIndex = -1
-            heading.focus()
-          } finally { finish() }
+          await reviewDashboardCommand(form, command, formRevision)
           return
         }
         const saved = await send(command, form)
         if (saved) {
-          if ((form.dataset.previewRevision || "0") !== formRevision) { notice("The submitted changes were saved. Later edits remain unsaved; review them before continuing."); return }
+          if ((form.dataset.previewRevision || "0") !== formRevision) { form.dataset.dirty = "true"; notice("The submitted changes were saved. Later edits remain unsaved; review them before continuing."); return }
           if (submitsEditor && (editors[0].dataset.previewRevision || "0") !== editorRevision) { notice("The submission was saved. Later edits remain unsaved; review them before continuing."); return }
           if (submitsEditor) delete editors[0].dataset.dirty
           delete form.dataset.dirty
@@ -406,7 +397,7 @@ function attach() {
           await refresh()
         }
       } catch { notice(unsaved) }
-      finally { buttons.forEach((button) => button.disabled = false) }
+      finally { delete form.dataset.saving; buttons.forEach((button) => button.disabled = false) }
     })
   })
   document.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", () => press(button.getAttribute("data-action"))))
@@ -420,7 +411,7 @@ function attach() {
   }) })
 }
 function applyRefresh() {
-  if (!pending.html || document.querySelector("form[data-dirty], dialog[open]") || document.activeElement && document.activeElement.closest("form")) return
+  if (!pending.html || document.querySelector("form[data-dirty], dialog[open], [data-sf-retain-view]") || document.activeElement && document.activeElement.closest("form")) return
   const next = new DOMParser().parseFromString(pending.html, "text/html")
   const main = next.querySelector("main")
   if (!main) { pending.html = null; return }
@@ -434,7 +425,7 @@ function applyRefresh() {
   }
 }
 async function refresh(silent = false) {
-  if (pending.closed || pending.writing) return
+  if (pending.closed) return
   if (pending.loading) { if (!silent) pending.again = true; return }
   const generation = pending.generation
   pending.loading = true
@@ -460,16 +451,17 @@ async function refresh(silent = false) {
   } catch { if (!silent && !pending.closed) notice("Could not refresh. Your current view and unsaved edits are unchanged. Try again.") }
   finally { clearTimeout(deadline); pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
 }
-const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
+const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); if (!outstandingCommand(form)) discardDashboardPreview(form) } }
 document.addEventListener("input", markDirty)
 document.addEventListener("change", markDirty)
 const businessTimer = setInterval(() => { if (!document.hidden) void refresh(true) }, 30000)
 window.addEventListener("pagehide", () => { pending.closed = true; clearInterval(businessTimer); pending.controller?.abort(); rememberView() })
 window.addEventListener("beforeunload", (event) => { if (document.querySelector("form[data-dirty]")) { event.preventDefault(); event.returnValue = "" } })
 window.addEventListener("pageshow", (event) => { if (event.persisted) { location.reload(); return }; restoreView() })
-window.sucafinaRefresh = refresh
+window.sucafinaRefresh = async () => { pending.generation++; pending.html = null; await refresh() }
 document.addEventListener("focusout", () => setTimeout(applyRefresh, 0))
 attach()
+void restoreDashboardPreviews()
 `
 
 export function press(

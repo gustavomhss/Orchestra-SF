@@ -96,6 +96,8 @@ test("an invocation confines real proof reuse to its UTC day and rejects revocat
         return { status: "ok", value: true }
       } finally { release.resolve() }
     }))
-    expect(revoked).toEqual({ status: "ok", value: true })
+    // Revocation tombstones the real UI admission; the invocation cannot
+    // return its earlier successful value after that authority is gone.
+    expect(revoked).toEqual({ status: "denied", reason: "alternative-call-authority-unavailable" })
   } finally { authority.ui.finish(call); await fixture.dispose() }
 }, 120_000)

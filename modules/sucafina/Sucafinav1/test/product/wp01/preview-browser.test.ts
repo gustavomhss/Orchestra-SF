@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { documentHtml, links, pageMain } from "../../../src/screen-shell.ts"
 import { DASHBOARD_PAGES } from "../../../src/nav.ts"
@@ -55,6 +57,7 @@ test("procurement submission carries edits from its record's editor", async () =
 }, 30000)
 
 test("edits made while an apply is in flight remain unsaved in the real shell", async () => {
+  expectSpawn(import.meta.path)
   const state: { release?: () => void; started?: () => void; applied: number } = { applied: 0 }
   const started = new Promise<void>((resolve) => { state.started = resolve })
   const html = documentHtml("Dashboard", "dashboard", "", pageMain({ drawn: true, key: "OPEX Detail", index: 3 }, form("OPEX Detail", "year-amount", "line", 1, fields([{ name: "amount", label: "Amount", value: "10" }]))), "")
@@ -69,7 +72,8 @@ test("edits made while an apply is in flight remain unsaved in the real shell", 
     }
     return Response.json({ ok: false }, { status: 400 })
   } })
-  const browser = await launchWp01Browser()
+  const browserDriver = await launchBrowserDriver("preview-in-flight").catch(async (error) => { await server.stop(true); throw error })
+  const browser = browserDriver.browser
   try {
     const page = await browser.newPage()
     await page.goto(server.url.href)
@@ -86,7 +90,8 @@ test("edits made while an apply is in flight remain unsaved in the real shell", 
     expect(state.applied).toBe(1)
   } finally {
     state.release?.()
-    await closeWp01Browser(browser)
-    await server.stop(true)
+    try { await browserDriver.close() }
+    finally { await server.stop(true) }
   }
+  browserDriver.report()
 }, 30000)

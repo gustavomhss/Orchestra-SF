@@ -6,11 +6,15 @@ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createDecisionComparisonService } from "../../../../modules/sucafina/Sucafinav1/product/decisions/comparison.ts"
+import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
+import type { PlannerScenarioHost } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 
 type Compare = ReturnType<typeof createDecisionComparisonService>
 type Value = Extract<Awaited<ReturnType<Compare>>, { status: "ok" }>["value"]
-type Scope = { request: Request; binding: string; proofs: Map<string, { fence: string; value: Value }> }
+type ScenarioValue = Extract<Awaited<ReturnType<PlannerScenarioHost["resolve"]>>, { status: "ok" }>["value"]
+type Scope = { request: Request; binding: string; proofs: Map<string, { fence: string; value: Value }>;
+  scenarios: Map<string, { fence: string; value: ScenarioValue }>; reading: Set<string> }
 export type SfComparisonInvocation = <T>(call: TrustedDomainContext, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
 
 /** Completed canonical comparisons may be reused only inside one lexical invocation.
@@ -21,6 +25,7 @@ export function createSfPortfolioComparisonScope(input: {
   authority: ReturnType<typeof createSfProductAuthority>
   business: Pick<ReturnType<typeof createSfBusinessServices>, "selectedCase" | "lockedSourceFences" | "plannerSources">
   compareCanonical: Compare
+  scenarios?: PlannerScenarioHost
 }) {
   const host = input.authority.host
   const active = new WeakMap<TrustedDomainContext, Scope>()
@@ -31,7 +36,7 @@ export function createSfPortfolioComparisonScope(input: {
     const at = (await host.environment(request)).at
     return typeof at === "string" && Number.isFinite(Date.parse(at)) ? new Date(at).toISOString().slice(0, 10) : undefined
   }
-  const sample = async (call: TrustedDomainContext, scope: Scope, caseRef: Parameters<Compare>[0]["caseRef"]) => {
+  const sample = async (call: TrustedDomainContext, scope: Scope, caseRef: Parameters<Compare>[0]["caseRef"], reference?: string) => {
     if (!current(call, scope) || !await host.revalidate(call) || !current(call, scope)) return undefined
     const beforeDay = await day(scope.request)
     const selected = await input.business.selectedCase(call)
@@ -46,13 +51,24 @@ export function createSfPortfolioComparisonScope(input: {
         !decision.participants.includes(actor.principalRef) || !current(call, scope)) return undefined
       const refs = plannerOnlyEvidence(decision)
       if (!refs) return undefined
+      // This only selects the supported dependency closure. The first read is
+      // still the actual stored-scenario reader, with its historical/result checks.
+      const stored = reference ? state.decisionResults?.[reference] : undefined
+      const alternatives = stored?.kind === "scenario" ? decision.alternatives.filter((value) =>
+        digestSfValue(value.scenario) === stored.requestDigest && digestSfValue(value.result) === stored.resultDigest) : []
+      const alternative = alternatives.length === 1 ? alternatives[0] : undefined
+      const source = alternative?.result.sourceRefs.filter((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef &&
+        ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+      const scenario = alternative && source?.length === 1 && source[0]?.kind === "record"
+        ? { reference, source: source[0], coverageRef: decisionCoverageRef(selected.value, alternative.id, alternative.version) } : undefined
+      if (reference && !scenario) return undefined
       const afterDay = await day(scope.request)
       const authorized = await host.revalidate(call)
       const sources = input.business.lockedSourceFences()
       // The complete state, including preferences, audit, transactions and
       // native runs, participates. Only synchronous checks follow this await.
       return sources && afterDay === beforeDay && authorized && current(call, scope)
-        ? { refs, digest: digestSfValue({ state, sources, day: afterDay, caseRef: selected.value, binding: scope.binding, actor }) } : undefined
+        ? { refs, scenario, digest: digestSfValue({ state, sources, day: afterDay, caseRef: selected.value, binding: scope.binding, actor, reference }) } : undefined
     })
     return found.status === "ok" && found.value && current(call, scope) ? found.value : undefined
   }
@@ -69,6 +85,55 @@ export function createSfPortfolioComparisonScope(input: {
     return after && after.digest === before.digest && digestSfValue(after.refs) === digestSfValue(before.refs) ? after.digest : undefined
   }
   const denied = (): PortResult<never> => ({ status: "denied", reason: "portfolio-comparison-invocation-unavailable" })
+  const scenarioFence = async (reference: string, call: TrustedDomainContext, scope: Scope, caseRef: Parameters<Compare>[0]["caseRef"]) => {
+    const before = await sample(call, scope, caseRef, reference)
+    if (!before?.scenario) return undefined
+    // Granular source and both actual coverage callbacks remain real. In
+    // particular forecast coverage is not inferred from a C08 digest alone.
+    for (const ref of before.refs) {
+      const source = await input.business.plannerSources.resolveForecastSource(ref.refId, call)
+      if (source.status !== "ok" || digestSfValue(source.value.evidence) !== digestSfValue(ref) || !current(call, scope)) return undefined
+    }
+    const forecast = await input.business.plannerSources.resolveForecastCoverage(before.scenario.source.refId, call)
+    const coverage = await input.business.plannerSources.resolveForecastCoverage(before.scenario.coverageRef, call)
+    if (forecast.status !== "ok" || coverage.status !== "ok" || !current(call, scope)) return undefined
+    const after = await sample(call, scope, caseRef, reference)
+    return after?.scenario && after.digest === before.digest && digestSfValue(after.refs) === digestSfValue(before.refs) &&
+      digestSfValue(after.scenario) === digestSfValue(before.scenario) && current(call, scope)
+      ? digestSfValue({ snapshot: after.digest, forecast: forecast.value, coverage: coverage.value }) : undefined
+  }
+  const resolveScenario: PlannerScenarioHost["resolve"] = async (reference, call) => {
+    if (!input.scenarios) return { status: "unavailable", reason: "portfolio-scenario-reader-unavailable" }
+    const scope = active.get(call)
+    if (scope && !current(call, scope)) return denied()
+    if (!scope) return input.scenarios.resolve(reference, call)
+    const selected = await input.business.selectedCase(call)
+    if (selected.status !== "ok" || !current(call, scope)) return denied()
+    const key = digestSfValue({ reference, caseRef: selected.value, binding: scope.binding })
+    // Only completed data is reusable. A recursive request never waits on the
+    // in-flight producer or receives its unfinished result.
+    if (scope.reading.has(key)) return denied()
+    scope.reading.add(key)
+    try {
+      const before = await scenarioFence(reference, call, scope, selected.value)
+      if (!current(call, scope)) return denied()
+      const proof = scope.scenarios.get(key)
+      if (before && proof?.fence === before) {
+        const value = structuredClone(proof.value)
+        const after = await scenarioFence(reference, call, scope, selected.value)
+        return after === before && current(call, scope) ? { status: "ok", value } : denied()
+      }
+      scope.scenarios.delete(key)
+      const result = await input.scenarios.resolve(reference, call)
+      if (result.status !== "ok") return result
+      if (!before) return current(call, scope) ? result : denied()
+      const after = await scenarioFence(reference, call, scope, selected.value)
+      if (!after || !current(call, scope)) return denied()
+      if (after !== before) return { status: "stale", reason: "portfolio-scenario-proof-changed" }
+      scope.scenarios.set(key, { fence: after, value: structuredClone(result.value) })
+      return result
+    } finally { scope.reading.delete(key) }
+  }
   const compare: Compare = async (request, call) => {
     const captured = structuredClone(request)
     const requestDigest = digestSfValue(captured)
@@ -107,7 +172,7 @@ export function createSfPortfolioComparisonScope(input: {
     if (prior) return current(call, prior) ? work() : denied()
     const request = host.requestFor(call)
     if (!request || request.signal.aborted || !await host.revalidate(call) || active.has(call) || host.requestFor(call) !== request || request.signal.aborted) return denied()
-    const scope: Scope = { request, binding: digestSfValue([call.kind, call.binding]), proofs: new Map() }
+    const scope: Scope = { request, binding: digestSfValue([call.kind, call.binding]), proofs: new Map(), scenarios: new Map(), reading: new Set() }
     active.set(call, scope)
     return execution.run(scope, async () => {
       try {
@@ -118,7 +183,7 @@ export function createSfPortfolioComparisonScope(input: {
       } finally { if (active.get(call) === scope) active.delete(call) }
     })
   }
-  return { compare, run }
+  return { compare, run, scenarios: input.scenarios ? { resolve: resolveScenario } : undefined }
 }
 
 function plannerOnlyEvidence(decision: DecisionCase): readonly Extract<BusinessEvidenceRef, { kind: "record" }>[] | undefined {

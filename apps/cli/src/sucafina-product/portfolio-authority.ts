@@ -80,14 +80,14 @@ export function createSfPortfolioAuthority(input: {
       return current.status === "ok" && digestSfValue(current.value) === digestSfValue(metric) && await fresh(metric.evidenceRefs, call)
     },
   })
-  const planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
-    compareScenarios({ host, sources: business.plannerSources, scenarios, criteria: { evaluate: async (criterion, binding) => {
+  const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
+    compareScenarios({ host, sources: business.plannerSources, scenarios: comparisons.scenarios ?? scenarios, criteria: { evaluate: async (criterion, binding) => {
       const selected = await business.resolveCase(binding)
       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
     } } }, request, call) : business.planner.compareScenarios }
   const compareCanonical = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
-  const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical })
-  const compare = comparisons.compare
+  const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios })
+  const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
   const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,
     authorizeSelection: (request, call) => intent.authorize(call, "decisions.select-portfolio", request),
     verifySnapshot: (_snapshot, request, _selection, call) => intent.verify(call, "decisions.select-portfolio", request),

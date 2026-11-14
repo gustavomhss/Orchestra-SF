@@ -25,6 +25,14 @@ import type { runSfAnalysis } from "../ai/analysis-port.ts"
 export type SfPlannerMonthlyInput = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
 export type SfPlannerMonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
 
+/** Human-authorized preparation shared by import, document and other analysis consumers. */
+export type SfAnalysisInputPort = {
+  prepare: (context: TrustedUiContext, input: {
+    request: Omit<Parameters<typeof runSfAnalysis>[0]["request"], "contextFingerprint">
+    selection: Record<string, unknown>
+  }) => Promise<PortResult<unknown>>
+}
+
 /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
 export type SfHostSessionPort = {
   prepare: (input: { request: Request; selected: SfSelectedRuntime; location: Location.Ref; model: ModelV2.Ref; skillId: string; prompt: string;
@@ -55,6 +63,7 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   sourcingInputs?: {
     prepare: (context: TrustedUiContext, input: { requestRef: string; caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<SourcingComparisonInput>>
   }
+  analysisInputs?: SfAnalysisInputPort
   plannerMonthly?: {
     preview: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
     apply: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>

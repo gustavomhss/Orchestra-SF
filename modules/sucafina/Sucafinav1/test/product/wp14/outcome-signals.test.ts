@@ -47,6 +47,16 @@ test("signal policy deduplicates, resolves and reopens without carrying revoked 
   expect(reconcileSfSignal(first.state, { kind: "unavailable" })).toEqual({ action: "unavailable" })
 })
 
+test("a complete label cannot promote a conditioned or mismatched recorded baseline", () => {
+  const input = { caseRef: observation.caseRef, choice, observation, metric }
+  const conditioned = { ...result, comparisonStatus: "conditioned" as const, total: null }
+  expect(compareSfExpectedObserved({ ...input, choice: { ...choice, result: conditioned } }).status).toBe("unavailable")
+  const pendingComparison = { ...comparison, comparisonStatus: "conditioned" as const, completeDifference: null }
+  expect(compareSfExpectedObserved({ ...input, choice: { ...choice, comparison: pendingComparison } }).status).toBe("unavailable")
+  expect(compareSfExpectedObserved({ ...input, choice: { ...choice, costCoverage: { ...coverage, basisVersion: 2 } } }).status).toBe("unavailable")
+  expect(compareSfExpectedObserved({ ...input, choice: { ...choice, result: { ...result, currency: "EUR" } } }).status).toBe("unavailable")
+})
+
 test("outcome access rechecks source authority before returning the comparison", async () => {
   const { createSfObservedOutcomeAccess } = await import("../../../product/decision-memory/outcome.ts")
   const call: import("../../../product/contracts/sf-execution.ts").TrustedDomainContext = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "p", accessRevision: "1", policyVersion: "1", requestId: "r", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as import("../../../product/contracts/sf-execution.ts").TrustedUiLease }

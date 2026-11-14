@@ -18,7 +18,7 @@ import type { TrustedUiContext } from "../../../product/contracts/sf-execution.t
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
 
 /** Real SQLite, persisted local credentials and product authority; not a native Session or scanner witness. */
-export async function createWp06Runtime(options: { additionalOperations?: readonly string[]; additionalHumanActions?: readonly SfHumanAction[] } = {}) {
+export async function createWp06Runtime(options: { additionalOperations?: readonly string[]; additionalHumanActions?: readonly SfHumanAction[]; procurementEvidenceWrites?: WeakSet<object> } = {}) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp06-runtime-"))
   const driver = await openLocalStore(directory)
   const at = "2026-11-13T00:00:00Z"
@@ -43,7 +43,7 @@ export async function createWp06Runtime(options: { additionalOperations?: readon
   const otherPrincipal = await otherIdentity.person(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie: otherCookie } }))
   if (!principal || !otherPrincipal) throw new Error("Local principal missing")
   const installation = { installationId: operator.installationId, hostId: "test-host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
-  const authority = createSfProductAuthority({ identity: () => installation, installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate, environment,
+  const authority = createSfProductAuthority({ identity: () => installation, installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate, environment, procurementEvidenceWrites: options.procurementEvidenceWrites,
     grants: [principal, otherPrincipal].map((person) => ({ principalRef: person.id, namespaces: ["documents", "receipts"] as const, operations: ["sf_document_extract", "sf_knowledge_search", "sf_evidence_get", "sf_import_preview", ...options.additionalOperations ?? []], humanActions: ["documents.schema", "documents.confirm", "imports.admit", "imports.apply", ...options.additionalHumanActions ?? []] as const })),
     createId: randomUUID, now: () => Date.parse(at), commandIdentity: async (request, operation) => { if (request.method === "GET" || request.method === "HEAD") return randomUUID(); const key = request.headers.get("Idempotency-Key"); return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined },
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1,

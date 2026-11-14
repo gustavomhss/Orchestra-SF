@@ -3,6 +3,7 @@ import { decodeSfContributionEnvelope } from "../contracts/schema-admission.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { SfNativeRunRecord } from "../contracts/state.ts"
 import type { ContributionEnvelope } from "../contracts/resident-ai.ts"
+import { hasSfRunSkillReceipt } from "./run-provenance.ts"
 
 /** The host supplies the model from the actual completed assistant message and its own identifiers. */
 export function buildSfContribution(input: {
@@ -12,7 +13,7 @@ export function buildSfContribution(input: {
   outputId: string
   createdAt: string
 }): PortResult<ContributionEnvelope> {
-  if (input.run.state !== "running" || !input.run.native || !input.outputId.trim() || !Number.isFinite(Date.parse(input.createdAt)) || digestSfValue(input.actualModel) !== digestSfValue(input.run.model)) return { status: "denied", reason: "invalid-native-output-context" }
+  if (input.run.state !== "running" || !input.run.native || !hasSfRunSkillReceipt(input.run) || !input.outputId.trim() || !Number.isFinite(Date.parse(input.createdAt)) || digestSfValue(input.actualModel) !== digestSfValue(input.run.model)) return { status: "denied", reason: "invalid-native-output-context" }
   const candidate = input.candidate
   if (!candidate || typeof candidate !== "object" || Array.isArray(candidate) || ![Object.prototype, null].includes(Object.getPrototypeOf(candidate)) || Reflect.ownKeys(candidate).some((key) => typeof key !== "string" || !["kind", "payload", "evidenceRefs"].includes(key)) || !("kind" in candidate) || !("payload" in candidate) || !("evidenceRefs" in candidate) || typeof candidate.kind !== "string") return { status: "denied", reason: "invalid-native-output" }
   const kind = candidate.kind

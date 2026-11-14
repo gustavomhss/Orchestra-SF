@@ -49,7 +49,7 @@ jobs:
           if (delivery) {
             git('merge-base', '--is-ancestor', input.candidateSha, input.productSha)
             const changes = git('diff', '--name-status', input.candidateSha, input.productSha).split('\n').filter(Boolean)
-            if (!changes.length || changes.some(line => !/^A\tmodules\/sucafina\/Sucafinav1\/docs\/sf2h\/receipts\/WP10\/.+\.(json|md|log|txt|patch|png)$/.test(line)))
+            if (!changes.length || changes.some(line => !/^A\tmodules\/sucafina\/Sucafinav1\/docs\/sf2h\/receipts\/WP10\/.+\.(json|md|txt)$/.test(line)))
               throw new Error('Delivery must add only WP10 evidence; it cannot edit candidate or existing receipts')
             for (const line of changes) {
               const path = line.slice(2)
@@ -95,6 +95,16 @@ jobs:
         run: |
           set -o pipefail
           bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/cli-typecheck.log"
+
+      # Keep the full package check above. A foreign test parse error can stop
+      # its semantic pass; this additional scope checks the WP10 test consumers
+      # and their real imports without weakening or accepting the full result.
+      - name: Typecheck WP10 test consumers
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
+        working-directory: modules/sucafina/Sucafinav1
+        run: |
+          set -o pipefail
+          bun typecheck --project test/product/wp10/tsconfig.json 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/wp10-test-typecheck.log"
 
       - name: Verify canonical Atlas generation
         if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}

@@ -87,10 +87,14 @@ async function fixture() {
   expect(seeded.status).toBe("ok")
   const store = createSfDecisionResultStore({ state, host, authorizeCase, verifySources: async (_value, refs) => refs.every(authorizedEvidence), createId: () => `result-${++control.ids}`, now: () => at })
   const resolveCase = async () => ({ status: "ok" as const, value: caseRef })
-  const saveScenario = createPlannerResultPersistence({ store, resolveCase })
+  const saveScenario = createPlannerResultPersistence({ store, resolveCase, replay: { simulateScenario: async (request) => {
+    const selected = available.find((entry) => digestSfValue(entry.request) === digestSfValue(request))
+    return selected && control.sourceFresh ? { status: "ok", value: structuredClone(selected.result) } : { status: "unavailable", reason: "fixture-scenario-unavailable" }
+  } } })
   const scenarioRefs = [] as string[]
   for (const entry of available) scenarioRefs.push(ok(await saveScenario({ kind: "scenario", request: entry.request, result: entry.result }, `seed-${entry.result.id}`, context)).resultRef)
-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => control.operation, authorizeCase, evidence, createId: () => "unused", now: () => at })
+  // These source-provider fixtures contain no mutation operations; reject any introduced one.
+  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => control.operation, authorizeCase, verifyScenarioOperations: async (value) => control.allowed && control.sourceFresh && value.alternatives.every((entry) => entry.scenario.operations.length === 0 && entry.scenario.assumptions.length === 0), evidence, createId: () => "unused", now: () => at })
   const scenarios = createStoredPlannerScenarioHost({ store, cases, coverageRefFor: (_ref, entry) => `coverage-${entry.id}`, planner: { compareForecast: async (input) => {
     const current = available.find((entry) => entry.source.refId === input.baseRef)
     if (!current || !control.sourceFresh) return { status: "unavailable", reason: "fixture-source-unavailable" }

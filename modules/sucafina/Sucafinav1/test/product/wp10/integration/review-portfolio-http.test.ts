@@ -331,10 +331,10 @@ for (const revocation of ["case", "session"] as const) {
 }
 
 test("Review browser clears selected content after case revocation while the session remains authenticated", async () => {
-  await withReviewPortfolio("browser-case-revocation", async ({ deadline, browserChecks, http, original, period, mutate, caseRef, fixture, authority, call, get, getSource }) => {
+  await withReviewPortfolio("browser-case-revocation", async ({ deadline, browserChecks, http, assets, original, period, mutate, caseRef, fixture, authority, call, get, getSource }) => {
     await deadline.phase("browser.prepare", async () => {
       // Own the browser before phase's post-await deadline check can throw.
-      browserChecks.current = await prepareSfReviewAccessBrowser({ http, signal: deadline.signal, privateText: "Selected Portfolio",
+      browserChecks.current = await prepareSfReviewAccessBrowser({ http, reviewAsset: assets.reviews, signal: deadline.signal, privateText: "Selected Portfolio",
         url: `https://example.test/dashboard?${new URLSearchParams({ sf: "review", reviewRef: original.id, sectionId: "portfolio", start: period.start, end: period.end })}` })
     })
     await mutate((state) => { state.cases[caseRef.id]!.participants = [] })

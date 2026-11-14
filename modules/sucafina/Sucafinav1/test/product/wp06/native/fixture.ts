@@ -140,7 +140,8 @@ async function compose(input: {
   const operations = [...new Set(input.selected.flatMap((value) => value.operationIds))]
   const humanActions = ["documents.schema", "documents.confirm", "imports.admit", "imports.apply", "analysis.prepare", "analysis.start", "analysis.read"] as const
   const proposalCoverageWrites = new WeakSet<object>()
-  const authority = createSfProductAuthority({ ...app.runtime, identity: () => lifetime.open ? installation : undefined, proposalCoverageWrites,
+  const procurementEvidenceWrites = new WeakSet<object>()
+  const authority = createSfProductAuthority({ ...app.runtime, identity: () => lifetime.open ? installation : undefined, proposalCoverageWrites, procurementEvidenceWrites,
     policyVersion: "wp06-native-mechanism-v1", grants: [app.principal, app.otherPrincipal].map((person) => ({ principalRef: person.id,
       namespaces: ["cases", "contributions", "documents", "receipts", "preferences"] as const, operations, humanActions })),
     createId: randomUUID, now: Date.now, commandIdentity: async (request, operation) => {
@@ -152,7 +153,7 @@ async function compose(input: {
   const documents = createSfDocumentServices({ runtime: app.runtime, authority })
   const imports = createSfImportServices({ runtime: app.runtime, authority })
   if (!documents || !imports) throw new Error("Native fixture services unavailable")
-  const business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites, documentRead: documents.documents.reader,
+  const business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites, procurementEvidenceWrites, documentRead: documents.documents.reader,
     extraDescriptors: [...documents.descriptors, ...imports.descriptors] })
   business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
     manifestVersion: input.selected[0]!.manifestDigest, skillVersion: digestSfValue(input.selected.flatMap((selection) => selection.skills)

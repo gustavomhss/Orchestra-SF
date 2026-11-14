@@ -9,6 +9,7 @@ import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import type { BaselineCoverageRequest } from "../../../../product/decisions/baseline-coverage.ts"
 import { createSfBiCallScope } from "../../../../../../../apps/cli/src/sucafina-product/bi-call-scope.ts"
+import { createSfBiServices } from "../../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
 import { sfDecisionBiSelection } from "../../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
@@ -176,6 +177,61 @@ test("BI proof starts only after real UI consumption, clones within one invocati
       return changed
     }))
     expect(midnight.status).toBe("stale")
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("BI exported source and Review cannot borrow a completed proof from an overlapping presentation dispatch", async () => {
+  const deadline = compositionTestDeadline("bi-call-scope-lexical")
+  try {
+    const fixture = await prepare(deadline)
+    const scenarios = fixture.business.plannerProduct.scenarios
+    if (!scenarios) throw new Error("Actual stored Planner scenarios unavailable")
+    const observations = { scenarioReads: 0, held: false }
+    const observedBusiness = { ...fixture.business, plannerProduct: { ...fixture.business.plannerProduct, scenarios: { ...scenarios,
+      resolve: async (...args: Parameters<typeof scenarios.resolve>) => {
+        observations.scenarioReads++
+        return scenarios.resolve(...args)
+      },
+    } } }
+    const bi = createSfBiServices({ authority: fixture.authority, business: observedBusiness, portfolio: fixture.portfolio })
+    const { request, call } = await fixture.admit()
+    const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+    const originalRead = bi.source.read
+    bi.source.read = async (incoming, context) => {
+      // Suspend only after the real producer, its source checks and the holder's
+      // first completed proof have returned. All responses remain unchanged.
+      const value = await originalRead(incoming, context)
+      if (!observations.held && context === call && value.status === "ok") {
+        observations.held = true
+        reached.resolve()
+        await release.promise
+      }
+      return value
+    }
+    const pending = deadline.phase("dispatch.presentation", () => bi.dispatchPresentation(request, call))
+    try {
+      await Promise.race([reached.promise, pending.then(() => { throw new Error("Actual BI dispatch did not produce its first projection") })])
+      expect(observations.scenarioReads).toBe(3)
+      expect(await fixture.authority.host.revalidate(call)).toBe(true)
+      const source = await deadline.phase("outside.source", () => bi.source.read(request, call))
+      expect(source).toEqual({ status: "denied", reason: "bi-call-invocation-unavailable" })
+      expect(source).not.toHaveProperty("value")
+      const review = await deadline.phase("outside.review", () => bi.readForReview(request, call))
+      expect(review).toEqual({ status: "denied", reason: "bi-call-invocation-unavailable" })
+      expect(review).not.toHaveProperty("value")
+      expect(observations.scenarioReads).toBe(3)
+      expect(await bi.dispatchPresentation(request, call)).toEqual({ status: "denied", reason: "bi-call-already-active" })
+      release.resolve()
+      const completed = await pending
+      expect(completed.status).toBe("ok")
+      expect(observations.scenarioReads).toBe(3)
+      console.info("SF_BI_LEXICAL_PROOF", JSON.stringify({ completed: completed.status, source: source.status, review: review.status,
+        scenarioResolves: observations.scenarioReads, transport: "Real exported source and dispatcher; only the completed producer return was suspended" }))
+    } finally {
+      release.resolve()
+      await pending.catch(() => undefined)
+      bi.source.read = originalRead
+    }
   } finally { await deadline.close() }
 }, 120_000)
 

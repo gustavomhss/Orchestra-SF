@@ -12,7 +12,7 @@ export function createPortfolioCatalog(input: { cases: DecisionCasePort; revalid
     if (!await input.revalidate(context)) return { status: "denied", reason: "invalid-binding" } as const
     const current = await Promise.all(request.caseRefs.map((caseRef) => input.cases.read({ caseRef }, context)))
     const failure = current.find((item) => item.status !== "ok")
-    if (failure && failure.status !== "ok") return failure
+    if (failure) return failure
     if (current.some((item, index) => { const ref = parseCaseRef(request.caseRefs[index]!); return !ref || item.status !== "ok" || item.value.case.id !== ref.id || item.value.case.incarnation !== ref.incarnation })) return { status: "stale", reason: "portfolio-catalog-changed" } as const
     if (!input.validateSources || !(await Promise.all(current.map((item) => item.status === "ok" && input.validateSources!(item.value, context)))).every(Boolean)) return { status: "unavailable", reason: "portfolio-catalog-sources-unavailable" } as const
     const entries = current.flatMap((item, index) => {

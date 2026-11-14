@@ -2,7 +2,7 @@
 
 Este módulo pertence à instalação Sucafina. O candidato WP10 compõe outputs publicados dos domínios no host existente do Orchestra. A entrega está **em revisão, com pendências de integração**. Commit e PR publicados não representam homologação, execução nativa, aceite global ou deploy.
 
-A entrada é `createModule(mount, services)` em [index.ts](index.ts). O factory [local/entry.ts](local/entry.ts) usa o processo, listener, identidade e armazenamento da instalação. [O pacote WP10](docs/sf2h/receipts/WP10/) reúne pins, mapa dos 171 critérios, requests, evidências e deltas para S0 e os demais owners. O planejamento em `docs/sf2h/control/` permanece normativo.
+A entrada é `createModule(mount, services)` em [index.ts](index.ts). O factory [local/entry.ts](local/entry.ts) usa o processo, listener, identidade e armazenamento da instalação. [O pacote WP10](docs/sf2h/receipts/WP10/) reúne pins, mapa dos 171 critérios, requests, evidências e deltas para S0 e os demais owners. O [plano aprovado](https://github.com/gustavomhss/Orchestra-SF/tree/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan) permanece normativo; `docs/sf2h/control/` reúne os handoffs operacionais.
 
 ## Trabalhar com os dados
 
@@ -77,7 +77,7 @@ Revise a prévia antes de confirmar importação. O parser não executa macros o
 | Outra pessoa salvou depois da leitura | Conflito com estado atual; confirmação anterior não autoriza sobrescrita. |
 | Permissão revogada durante a operação | Recusa no retorno ou commit; sessão/recibo não é grant. |
 | Scanner ou serviço documental indisponível | Indisponibilidade explícita, sem escrita fictícia. |
-| Interrupção antes do commit | Zero efeito parcial; conferir estado antes do retry. |
+| Interrupção antes do commit | Nenhum efeito na transação daquele domínio. Em operações entre domínios, conferir os recibos das etapas já confirmadas antes do retry; a composição pode permanecer parcial. |
 | Resposta perdida após commit | Retry idêntico recupera identidade durável; mesma chave com outro conteúdo é conflito. |
 | Memória sem fonte atual autorizada | Não mostrar precedente inteiro como válido. Recuperar recibo difere de autorizar recall. |
 | Rotina sem admissão C07 real | Permanecer pendente; publicação ou Session avulsa não substitui admissão governada. |
@@ -110,6 +110,8 @@ A composição de análise registra os 18 pares canônicos de produtor/verificad
 Quatro rotas humanas, acessíveis pelas três superfícies do Workbench, registram cobertura de baseline, regra de critério, seleção de portfólio e condição: `decision-coverage`, `decision-criteria`, `decision-select-portfolio` e `decision-condition`. Exigem POST da mesma origem, payload completo, ação humana específica e caso atual. Classificação de custo usa projeção real do Planner; prova de categoria não aplicável continua indisponível. A métrica `planner:known-subtotal-difference` permanece condicionada. Seleção e unidade não são deduzidas do texto do critério.
 
 O link **Controles da decisão** nas áreas Dashboard, Planner e Procurement abre o consumidor próprio desses registros. Escolha um caso autorizado e o forecast que deseja classificar. Para cada categoria, selecione os componentes incluídos ou descreva a pendência; o subtotal permanece condicionado enquanto a cobertura não estiver completa. Para registrar um critério numérico, escolha dois cenários armazenados e um parâmetro, confira as unidades emitidas pelo Planner e informe o limite. Uma regra não transforma uma métrica condicionada em confirmada. O acompanhamento de condição exige uma escolha registrada, dois cenários distintos, uma fonte atual e um responsável do caso. Ele registra o vínculo; agendamento e execução Relay continuam sujeitos à integração C07. A página revalida acesso e fontes em cada leitura/gravação. Se o caso mudar enquanto o acesso continua autorizado, suas entradas ficam em um rascunho local para copiar; a página remove as projeções anteriores e bloqueia novos envios até você reabrir o caso. Revogação de acesso limpa também esse rascunho.
+
+Quando já existe uma classificação de cobertura, o resumo mostra a versão registrada. O formulário prepara uma **nova versão completa**: classifique novamente todas as categorias e confirme a substituição antes de salvar. Campos vazios não conservam implicitamente a classificação anterior. A nova versão só aparece depois da gravação confirmada; recarregue para conferir o registro persistido.
 
 O seletor identifica cada forecast por seu registro autorizado, período, moeda e revisão. Uma mudança em outro caso não apaga os campos que você está preenchendo. Se o caso ou suas fontes mudarem, o rascunho permanece visível e a gravação fica bloqueada para reconciliação; perda de acesso remove o conteúdo restrito.
 

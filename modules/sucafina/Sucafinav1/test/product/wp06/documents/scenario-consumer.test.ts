@@ -18,8 +18,9 @@ import contractFreeze from "../../../../product/contracts/freeze-v1.json" with {
 test("a confirmed document amount reaches the real Planner scenario through HTTP without copying, applying or surviving source revocation", async () => {
   const root = path.resolve(import.meta.dir, "../../../../product/ai")
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
-  const fixture = await createWp06Runtime({ additionalOperations: ["sf_scenario_simulate"], additionalHumanActions: ["planner.preview"] })
-  const business = createSfBusinessServices({ authority: fixture.authority, persistence: fixture.store, proposalCoverageWrites: new WeakSet(), documentRead: fixture.documents.documents.reader })
+  const procurementEvidenceWrites = new WeakSet<object>()
+  const fixture = await createWp06Runtime({ additionalOperations: ["sf_scenario_simulate"], additionalHumanActions: ["planner.preview"], procurementEvidenceWrites })
+  const business = createSfBusinessServices({ authority: fixture.authority, persistence: fixture.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites, documentRead: fixture.documents.documents.reader })
   // Repository version metadata is real; the absent scanner is explicit and is not Atlas qualification.
   business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
     manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })

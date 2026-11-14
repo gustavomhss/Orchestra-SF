@@ -230,10 +230,11 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     caseBindings.set(call, scope)
     try { return await action() } finally { releaseCaseScope(call, scope) }
   }
-  // This private entry receives a case only from the authenticated calculation
-  // request/result stores. Avoid cases.read: that projection can itself cite the
-  // calculation currently being resolved by the BCS.
-  const withCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+  // This private entry receives a case from authenticated calculation stores
+  // or the recall's current C08 selection. Avoid cases.read: that projection
+  // can itself cite the calculation currently being resolved by the BCS.
+  const withCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>,
+    egress?: (result: PortResult<T>) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const source = host.requestFor(call)
     const binding = callBindingDigest(call)
     const captured = structuredClone(selected)
@@ -273,8 +274,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         return { status: "denied", reason: "calculation-case-authority-changed" }
       const result = await work()
       const checked = await selectedCase(call)
-      return checked.status === "ok" && digestSfValue(checked.value) === selectedDigest && currentCaseAuthority(call, source, binding) && (!scope || caseBindings.get(call) === scope)
-        ? result : { status: "denied", reason: "calculation-case-authority-changed" }
+      if (checked.status !== "ok" || digestSfValue(checked.value) !== selectedDigest || !currentCaseAuthority(call, source, binding) || scope && caseBindings.get(call) !== scope)
+        return { status: "denied", reason: "calculation-case-authority-changed" }
+      if (!egress) return result
+      // Atlas fences its completed calculation proof after selectedCase's final
+      // await, while coverage still owns this exact private case retainer.
+      const final = await egress(result)
+      return digestSfValue(captured) === selectedDigest && currentCaseAuthority(call, source, binding) && (!scope || caseBindings.get(call) === scope && digestSfValue(scope.selected) === selectedDigest)
+        ? final : { status: "denied", reason: "calculation-case-authority-changed" }
     } finally { if (scope) releaseCaseScope(call, scope) }
   }
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
@@ -327,7 +334,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   decisionEvidence.current = procurementDecisions
   scenarioOperationAccess = createSfScenarioOperationAccess({ host, sources: plannerSources, projectPlanner: projectPlannerEvidence, scenarioInputs: product.scenarioInputs,
     readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation })
-  const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
+  const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
     writes: input.proposalCoverageWrites, sources: plannerSources, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
   const persist = calculations.persist
@@ -391,7 +398,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
       procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner, project: projectPlannerEvidence, readEvidence: projectPlannerEvidence.readEvidence },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
-      caseForEvidence, calculation: calculations.resolveEvidence, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
+      caseForEvidence, calculation: calculations.resolveEvidence, withCalculationCase, lockedSourceFences, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
         runtimeVersions: versions, featuresForCase,
         contextSelections: async (request, call) => {
           const refs: BusinessEvidenceRef[] = []

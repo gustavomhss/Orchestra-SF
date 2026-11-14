@@ -27,6 +27,14 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   const admitted = await runtime.human.admit(request, action === "list" || action === "output" || action === "read" ? "analysis.read" : action === "cancel" ? "analysis.cancel" : "analysis.start", input)
   if (admitted.status !== "ok") return reply({ status: admitted.status }, admitted.status === "unavailable" ? 503 : 403)
   try {
+    if (action === "read" && "runRef" in input) {
+      const result = await runtime.analyses.read(admitted.value, input.runRef).catch(() => undefined)
+      if (!result) return reply({ status: "unavailable" }, 503)
+      if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+      if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+      const run = result.value
+      return reply({ status: "ok", value: { runRef: run.runRef, state: run.state, version: run.version, ...(run.outputRef ? { outputRef: run.outputRef } : {}) } }, 200)
+    }
     if (action === "prepare" && "selection" in input) {
       const selected = runtime.selected.find((entry) => entry.profile.id === input.request.profileId && entry.profile.version === input.request.profileVersion && entry.manifestDigest === input.request.manifestDigest)
       const skill = selected?.skills.find((entry) => entry.id === input.request.skillId && entry.version === input.request.skillVersion)
@@ -42,17 +50,12 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
       return reply({ status: "ok", value: prepared.value }, 200)
     }
     const result = await (action === "start" && "request" in input && "skillInput" in input ? runtime.analyses.start(admitted.value, input)
-      : action === "read" && "runRef" in input ? runtime.analyses.read(admitted.value, input.runRef)
       : action === "output" && "runRef" in input ? runtime.analyses.output(admitted.value, input.runRef)
       : action === "list" && "caseRef" in input ? runtime.analyses.list(admitted.value, input.caseRef)
       : action === "cancel" && "runRef" in input ? runtime.analyses.cancel(admitted.value, input.runRef) : Promise.resolve(undefined)).catch(() => undefined)
     if (!result) return reply({ status: "unavailable" }, 503)
     if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-    if (action === "read") {
-      if (!("runRef" in result.value) || !("state" in result.value) || !("version" in result.value)) return reply({ status: "unavailable" }, 503)
-      return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...("outputRef" in result.value && typeof result.value.outputRef === "string" && result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
-    }
     if (action === "output" && "kind" in result.value) {
       const output = result.value
       const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)

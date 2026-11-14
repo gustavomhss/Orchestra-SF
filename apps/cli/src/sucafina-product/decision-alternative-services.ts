@@ -1,6 +1,6 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
-import type { CostCoverageEntry } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import type { CostCoverageEntry, DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { ScenarioRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { SfHostServices } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
@@ -31,6 +31,7 @@ type CaseRef = { id: string; incarnation: string; version: number }
 type SelectedScenario = { caseRef: CaseRef; scenario: ScenarioRequest; coverageRef: string }
 type AnalysisStart = Parameters<NonNullable<SfHostServices["analyses"]>["start"]>[1]
 type ComparisonSelection = SelectedScenario & { caseDigest: string; selection: PortfolioSelection; coverageDigest: string }
+type ComparisonCase = { selected: CaseRef; decision: DecisionCase; alternatives: DecisionCase["alternatives"] }
 export type SfAdmittedAlternativeSelection = ComparisonSelection & {
   schema: "sf-admitted-alternative-selection-v1"
   requestDigest: string
@@ -60,7 +61,7 @@ export function createSfDecisionAlternativeServices(input: {
     lockedSourceFences: business.lockedSourceFences, verifiedInputFor: input.verifiedInputFor,
     verifiedAlternativeSelectionFor: input.verifiedAlternativeSelectionFor, hasAdmittedInputContext: input.hasAdmittedInputContext })
   const withComparisonScope: SfComparisonInvocation = (call, work) => input.selection.withComparisonScope ? input.selection.withComparisonScope(call, work) : work()
-  const comparisonSelection = async (comparison: ScenarioComparisonInput, selection: PortfolioSelection, call: TrustedDomainContext): Promise<PortResult<ComparisonSelection>> => {
+  const comparisonCase = async (comparison: ScenarioComparisonInput, call: TrustedDomainContext): Promise<PortResult<ComparisonCase>> => {
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok") return selected
     const current = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
@@ -68,35 +69,43 @@ export function createSfDecisionAlternativeServices(input: {
       return { status: "unavailable", reason: "alternative-selected-case-unavailable" }
     const decision = current.value.case
     if (comparison.alternatives.length !== 2 || comparison.alternatives[0]!.id === comparison.alternatives[1]!.id ||
-      comparison.currency !== decision.currency || !same(comparison.horizon, decision.horizon) || !same(comparison.costCoverageBases, decision.costCoverageBases) ||
-      !same(selection.caseRef, selected.value) || selection.principalRef !== call.binding.principalRef || selection.accessRevision !== call.binding.accessRevision ||
-      selection.policyVersion !== call.binding.policyVersion || selection.baselineAlternativeId === selection.alternativeId)
+      comparison.currency !== decision.currency || !same(comparison.horizon, decision.horizon) || !same(comparison.costCoverageBases, decision.costCoverageBases))
       return { status: "denied", reason: "alternative-comparison-selection-outside-input" }
     const matched = comparison.alternatives.map((chosen) => decision.alternatives.filter((alternative) => alternative.id === chosen.id && alternative.version === chosen.version &&
       alternative.title === chosen.title && same(alternative.result, chosen.result)))
     if (matched.some((alternatives) => alternatives.length !== 1)) return { status: "stale", reason: "alternative-comparison-input-changed" }
     const alternatives = matched.map((alternatives) => alternatives[0]!)
-    if (!same(comparison.operations, alternatives.flatMap((alternative) => alternative.scenario.operations)) ||
+    if (!same(comparison.operations, alternatives.flatMap((alternative) => alternative.scenario.operations)))
+      return { status: "denied", reason: "alternative-comparison-selection-outside-input" }
+    return { status: "ok", value: { selected: selected.value, decision, alternatives } }
+  }
+  const comparisonSelection = async (comparison: ScenarioComparisonInput, selection: PortfolioSelection, call: TrustedDomainContext,
+    prepared?: ComparisonCase): Promise<PortResult<ComparisonSelection>> => {
+    const checked = prepared ? { status: "ok" as const, value: prepared } : await comparisonCase(comparison, call)
+    if (checked.status !== "ok") return checked
+    const { selected, decision, alternatives } = checked.value
+    if (!same(selection.caseRef, selected) || selection.principalRef !== call.binding.principalRef || selection.accessRevision !== call.binding.accessRevision ||
+      selection.policyVersion !== call.binding.policyVersion || selection.baselineAlternativeId === selection.alternativeId ||
       !alternatives.some((alternative) => alternative.id === selection.baselineAlternativeId) || !alternatives.some((alternative) => alternative.id === selection.alternativeId))
       return { status: "denied", reason: "alternative-comparison-selection-outside-input" }
     const chosen = alternatives.filter((alternative) => alternative.id === selection.alternativeId)
     if (chosen.length !== 1) return { status: "denied", reason: "alternative-comparison-selection-outside-input" }
     const alternative = chosen[0]!
     const scenario = decodeSfOperationInput("sf_scenario_simulate", alternative.scenario)
-    const coverageRef = decisionCoverageRef(selected.value, alternative.id, alternative.version)
+    const coverageRef = decisionCoverageRef(selected, alternative.id, alternative.version)
     const coverage = await business.plannerSources.resolveForecastCoverage(coverageRef, call)
     if (!scenario.ok || coverage.status !== "ok") return { status: "stale", reason: "alternative-comparison-coverage-changed" }
     if (coverage.value.coverageRef !== coverageRef || !same(coverage.value.assessment, alternative.result.costCoverage) ||
       comparison.costCoverageBases.filter((basis) => same(basis, coverage.value.basis)).length !== 1)
       return { status: "stale", reason: "alternative-comparison-coverage-changed" }
-    const active = await input.selection.read({ caseRef: selected.value }, call)
-    const again = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
+    const active = await input.selection.read({ caseRef: selected }, call)
+    const again = await business.cases.read({ caseRef: encodeCaseRef(selected) }, call)
     const coverageAgain = await business.plannerSources.resolveForecastCoverage(coverageRef, call)
     const selectedAgain = await input.selectedCase(call)
     if (active.status !== "ok" || !same(active.value, selection) || again.status !== "ok" || !same(again.value.case, decision) ||
-      coverageAgain.status !== "ok" || !same(coverageAgain.value, coverage.value) || selectedAgain.status !== "ok" || !same(selectedAgain.value, selected.value) || !await host.revalidate(call))
+      coverageAgain.status !== "ok" || !same(coverageAgain.value, coverage.value) || selectedAgain.status !== "ok" || !same(selectedAgain.value, selected) || !await host.revalidate(call))
       return { status: "stale", reason: "alternative-admitted-selection-changed" }
-    return { status: "ok", value: { caseRef: selected.value, caseDigest: digestSfValue(decision), selection: structuredClone(selection), scenario: scenario.value,
+    return { status: "ok", value: { caseRef: selected, caseDigest: digestSfValue(decision), selection: structuredClone(selection), scenario: scenario.value,
       coverageRef, coverageDigest: digestSfValue(coverage.value) } }
   }
   const captureAlternativeSelection = async (incomingRequest: AnalysisStart["request"] & { contextFingerprint: string }, incoming: AnalysisStart, call: TrustedDomainContext): Promise<PortResult<SfAdmittedAlternativeSelection>> => {
@@ -108,9 +117,14 @@ export function createSfDecisionAlternativeServices(input: {
       return { status: "denied", reason: "alternative-comparison-human-admission-required" }
     const decoded = decodeSfSkillInput("ScenarioComparisonInput", start.skillInput)
     if (!decoded.ok) return { status: "needs-input", reason: "alternative-comparison-input-required" }
+    // The same fully authorized case/source read used below checks the supplied
+    // input before a rejected payload can trigger the financial comparison.
+    // Keep its complete case for the existing egress comparison, not across calls.
+    const current = await comparisonCase(decoded.value, call)
+    if (current.status !== "ok") return current
     const selected = await input.selection.read({ caseRef: request.caseRef }, call)
     if (selected.status !== "ok") return selected
-    const checked = await comparisonSelection(decoded.value, selected.value, call)
+    const checked = await comparisonSelection(decoded.value, selected.value, call, current.value)
     if (checked.status !== "ok") return checked
     if (!same(checked.value.caseRef, request.caseRef) || !same(incomingRequest, request) || !same(incoming, start) ||
       !await input.authority.human.authorize(call, "analysis.start", start) || !await host.revalidate(call))
@@ -121,8 +135,6 @@ export function createSfDecisionAlternativeServices(input: {
   const resolveSelectedScenario = async (call: TrustedDomainContext): Promise<PortResult<SelectedScenario>> => {
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok") return selected
-    const current = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
-    if (current.status !== "ok" || current.value.case.version !== selected.value.version) return { status: "unavailable", reason: "alternative-selected-case-unavailable" }
     if (call.kind === "native" || input.hasAdmittedInputContext?.(call)) {
       if (!input.verifiedInputFor) return { status: "unavailable", reason: "alternative-run-input-unavailable" }
       const admitted = await input.verifiedInputFor(call)
@@ -135,6 +147,8 @@ export function createSfDecisionAlternativeServices(input: {
         if (captured.value.schema !== "sf-admitted-alternative-selection-v1" || captured.value.inputDigest !== digestSfValue(admitted.value) ||
           !same(captured.value.caseRef, selected.value) || !same(captured.value.authority, selectionAuthority(call)))
           return { status: "denied", reason: "alternative-comparison-selection-outside-input" }
+        const current = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
+        if (current.status !== "ok" || current.value.case.version !== selected.value.version) return { status: "unavailable", reason: "alternative-selected-case-unavailable" }
         const checked = await comparisonSelection(comparison.value, captured.value.selection, call)
         if (checked.status !== "ok") return checked
         const snapshot: ComparisonSelection = { caseRef: captured.value.caseRef, caseDigest: captured.value.caseDigest, selection: captured.value.selection,
@@ -148,6 +162,8 @@ export function createSfDecisionAlternativeServices(input: {
       const decoded = decodeSfSkillInput("PortfolioCompositionInput", admitted.value)
       if (!decoded.ok || decoded.value.candidates.length !== 1 || decoded.value.request.candidateRefs.length !== 1 || decoded.value.costCoverageRefs.length !== 1 ||
         !same(decoded.value.candidates[0]!.case, selected.value)) return { status: "needs-input", reason: "alternative-single-bound-candidate-required" }
+      const current = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
+      if (current.status !== "ok" || current.value.case.version !== selected.value.version) return { status: "unavailable", reason: "alternative-selected-case-unavailable" }
       const ref = decoded.value.request.candidateRefs[0]!
       const resolved = await candidate(ref, call)
       if (resolved.status !== "ok") return resolved
@@ -160,6 +176,8 @@ export function createSfDecisionAlternativeServices(input: {
       if (!scenario.ok || decoded.value.costCoverageRefs[0] !== coverageRef || again.status !== "ok" || !same(again.value, admitted.value) || !await host.revalidate(call)) return { status: "unavailable", reason: "alternative-run-selection-changed" }
       return { status: "ok", value: { caseRef: selected.value, scenario: scenario.value, coverageRef } }
     }
+    const current = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
+    if (current.status !== "ok" || current.value.case.version !== selected.value.version) return { status: "unavailable", reason: "alternative-selected-case-unavailable" }
     const approved = await input.selection.read({ caseRef: selected.value }, call)
     if (approved.status !== "ok") return approved
     const alternatives = current.value.case.alternatives.filter((value) => value.id === approved.value.alternativeId)

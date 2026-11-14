@@ -28,8 +28,36 @@ if (root) {
   const status = document.createElement("p"), content = document.createElement("div")
   status.setAttribute("role", "status"); status.setAttribute("aria-live", "polite")
   root.replaceChildren(form, links, status, content)
-  let generation = 0, optionsGeneration = 0
+  let generation = 0, optionsGeneration = 0, activeReads = 0
+  let stopped = false, accessChanged = false
   let controller: AbortController | undefined, optionsController: AbortController | undefined
+  let refreshTimer: ReturnType<typeof setTimeout> | undefined
+  const pendingReads = new Set<AbortController>()
+  const stopRefresh = () => { if (refreshTimer) clearTimeout(refreshTimer); refreshTimer = undefined }
+  const scheduleRefresh = () => {
+    stopRefresh()
+    if (stopped || accessChanged || activeReads || document.hidden) return
+    refreshTimer = setTimeout(() => {
+      refreshTimer = undefined
+      if (selection.value) void load()
+      else void loadOptions(true)
+    }, 30_000)
+  }
+  const boundedRead = async <T>(parent: AbortController, work: (signal: AbortSignal) => Promise<T>) => {
+    const current = new AbortController()
+    const abort = () => current.abort(parent.signal.reason)
+    parent.signal.addEventListener("abort", abort, { once: true })
+    if (parent.signal.aborted) abort()
+    pendingReads.add(current); activeReads++; stopRefresh()
+    // Bound headers and body together. A stalled read cannot suspend access
+    // checks forever; this is separate from the host's authorization decision.
+    const timer = setTimeout(() => current.abort(new Error("A leitura demorou demais. Recarregue os dados autorizados.")), 30_000)
+    const cancelTimer = () => clearTimeout(timer)
+    current.signal.addEventListener("abort", cancelTimer, { once: true })
+    if (current.signal.aborted) cancelTimer()
+    try { return await work(current.signal) }
+    finally { clearTimeout(timer); current.signal.removeEventListener("abort", cancelTimer); parent.signal.removeEventListener("abort", abort); pendingReads.delete(current); activeReads--; scheduleRefresh() }
+  }
   const option = (value: string, label: string) => { const node = document.createElement("option"); node.value = value; node.textContent = label; return node }
   const choiceState = () => {
     planner.hidden = selection.value !== "planner"
@@ -40,12 +68,20 @@ if (root) {
     return url.origin === location.origin && ["dashboard", "planner", "procurement"].some((surface) => url.pathname === `${prefix}/${surface}`) ? url : undefined
   }
   const clearPrivate = () => {
+    accessChanged = true; stopRefresh()
     generation++; optionsGeneration++; controller?.abort(); optionsController?.abort()
+    for (const pending of pendingReads) pending.abort()
     selection.replaceChildren(option("", "Escolha os dados autorizados")); baseline.replaceChildren(option("", "Escolha a versão base")); candidate.replaceChildren(option("", "Escolha a versão candidata"))
     links.replaceChildren(); content.replaceChildren(); choiceState()
     status.textContent = "O acesso mudou. Abra novamente os dados autorizados."
   }
+  const readJson = (url: URL, parent: AbortController) => boundedRead(parent, async (signal) => {
+    const response = await fetch(url, { credentials: "same-origin", cache: "no-store", signal })
+    if (response.status === 401 || response.status === 403) { clearPrivate(); await response.body?.cancel(); return undefined }
+    return { response, body: await response.json() }
+  })
   const loadOptions = async (preserveSelection = false) => {
+    if (stopped) return false
     const held = preserveSelection ? { selection: selection.value, baseline: baseline.value, candidate: candidate.value } : undefined
     optionsController?.abort(); optionsController = new AbortController(); controller?.abort(); generation++
     const attempt = ++optionsGeneration
@@ -54,9 +90,9 @@ if (root) {
     const endpoint = new URL(location.href)
     endpoint.search = new URLSearchParams({ sf: "bi-options", viewId: view.value, start: start.value, end: end.value }).toString()
     try {
-      const response = await fetch(endpoint, { credentials: "same-origin", cache: "no-store", signal: optionsController.signal })
-      if (response.status === 401 || response.status === 403) { clearPrivate(); return false }
-      const body = await response.json()
+      const found = await readJson(endpoint, optionsController)
+      if (!found) return false
+      const { response, body } = found
       if (attempt !== optionsGeneration) return false
       if (!response.ok || body?.status !== "ok" || !Array.isArray(body.value?.choices) || !Array.isArray(body.value?.versions) || !Array.isArray(body.value?.links) || !Array.isArray(body.value?.limitations)) throw new Error(typeof body?.reason === "string" ? body.reason : "Escolhas indisponíveis")
       const data: SfBiOptions = body.value
@@ -75,11 +111,14 @@ if (root) {
       else if (previous === "planner" && data.versions.some((entry) => entry.ref === held?.baseline) && data.versions.some((entry) => entry.ref === held?.candidate)) { selection.value = "planner"; baseline.value = held!.baseline; candidate.value = held!.candidate }
       else if (!previous && ["BI01", "BI07", "BI08"].includes(view.value) && data.choices.length === 1) selection.value = data.choices[0]!.selectionRef
       status.textContent = ["Escolha os dados e atualize a visualização.", ...data.limitations].join(" ")
+      accessChanged = false
       choiceState()
       return true
     } catch (error) { if (attempt === optionsGeneration) status.textContent = `Não foi possível obter as escolhas: ${error instanceof Error ? error.message : "indisponível"}. Recarregue após verificar o acesso e o período.`; return false }
+    finally { scheduleRefresh() }
   }
   const load = async (explicitSelection = true) => {
+    if (stopped) return
     controller?.abort(); controller = new AbortController(); const attempt = ++generation
     const endpoint = new URL(location.href)
     endpoint.search = new URLSearchParams({ sf: "bi-data", viewId: view.value, start: start.value, end: end.value }).toString()
@@ -91,9 +130,9 @@ if (root) {
     button.disabled = true; content.replaceChildren(); status.textContent = "Carregando dados autorizados…"
     try {
       const active = controller
-      const response = await fetch(endpoint, { credentials: "same-origin", cache: "no-store", signal: active.signal })
-      if (response.status === 401 || response.status === 403) { clearPrivate(); return }
-      const body = await response.json()
+      const found = await readJson(endpoint, active)
+      if (!found) return
+      const { response, body } = found
       if (attempt !== generation) return
       if (!response.ok || !body || typeof body !== "object" || !("request" in body) || !("projection" in body) || !("presentation" in body)) throw new Error(typeof body?.reason === "string" ? body.reason : "Seleção indisponível")
       const request = decodeSfOperationInput("sf_bi_view", body.request), projection = decodeSfOperationOutput("sf_bi_view", body.projection)
@@ -103,9 +142,9 @@ if (root) {
         try {
         const source = new URL(location.href)
         source.search = new URLSearchParams({ sf: "bi-source", selectionRef: selected.selectionRef, viewId: request.value.viewId, start: request.value.period.start, end: request.value.period.end, valueId: selected.valueId }).toString()
-        const opened = await fetch(source, { credentials: "same-origin", cache: "no-store", signal: active.signal })
-        if (opened.status === 401 || opened.status === 403) { clearPrivate(); return }
-        const value = await opened.json()
+        const found = await readJson(source, active)
+        if (!found) return
+        const opened = found.response, value = found.body
         if (attempt !== generation || active.signal.aborted) return
         if (!opened.ok || !Array.isArray(value?.links) || !value.links.length) { status.textContent = "A origem não está disponível para esta seleção. Recarregue as escolhas e confira seu acesso."; return }
         const sources = document.createElement("nav"); sources.setAttribute("aria-label", "Origens autorizadas do valor")
@@ -113,21 +152,41 @@ if (root) {
         content.append(sources)
         } catch { if (attempt === generation && !active.signal.aborted) status.textContent = "A origem não está disponível. Recarregue as escolhas autorizadas." }
       }, body.presentation as BiPresentation)
-      content.replaceChildren(chart); status.textContent = "Dados atualizados."
+      content.replaceChildren(chart); status.textContent = "Dados atualizados."; accessChanged = false
     } catch (error) { if (attempt === generation) status.textContent = `Seleção indisponível: ${error instanceof Error ? error.message : "erro de leitura"}. Recarregue as escolhas; nenhum resultado alternativo foi selecionado.` }
-    finally { if (attempt === generation) choiceState() }
+    finally { if (attempt === generation) choiceState(); scheduleRefresh() }
   }
   selection.addEventListener("change", choiceState); baseline.addEventListener("change", choiceState); candidate.addEventListener("change", choiceState); currency.addEventListener("input", choiceState)
   view.addEventListener("change", () => { void loadOptions() }); start.addEventListener("change", () => { void loadOptions() }); end.addEventListener("change", () => { void loadOptions() })
   reload.addEventListener("click", () => { void loadOptions() }); form.addEventListener("submit", (event) => { event.preventDefault(); void load() })
-  let checkingFocus = false
-  window.addEventListener("focus", async () => {
-    if (checkingFocus) return
-    checkingFocus = true
+  let checkingAccess = false
+  const refreshAuthorized = async () => {
+    if (stopped || checkingAccess) return
+    checkingAccess = true
     const selected = !!selection.value
     try { if (await loadOptions(true) && selected && selection.value && !button.disabled) await load() }
-    finally { checkingFocus = false }
+    finally { checkingAccess = false; scheduleRefresh() }
+  }
+  window.addEventListener("focus", () => { void refreshAuthorized() })
+  document.addEventListener("visibilitychange", () => { if (document.hidden) stopRefresh(); else void refreshAuthorized() })
+  for (const refresh of document.querySelectorAll<HTMLButtonElement>("[data-refresh-view]"))
+    refresh.addEventListener("click", () => { void refreshAuthorized() })
+  for (const logout of document.querySelectorAll<HTMLButtonElement>("[data-logout]")) logout.addEventListener("click", async () => {
+    if (stopped) return
+    logout.disabled = true
+    try {
+      // Preserve the mounted shell's actual sign-out protocol and destination.
+      const response = await boundedRead(new AbortController(), (signal) => fetch(new URL("./auth/logout", location.href), { method: "POST", credentials: "same-origin", signal }))
+      void response.body?.cancel().catch(() => undefined)
+      if (!response.ok) { status.textContent = "Sign out failed. Please retry."; return }
+      stopped = true; clearPrivate()
+      location.assign(new URL("./auth/login", location.href).href)
+    } catch { if (!stopped) status.textContent = "Sign out failed. Please retry." }
+    finally { logout.disabled = false }
   })
-  window.addEventListener("pagehide", clearPrivate, { once: true })
+  const stop = () => { stopped = true; clearPrivate() }
+  window.addEventListener("sf-access-revoked", stop, { once: true })
+  window.addEventListener("pagehide", stop, { once: true })
+  window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
   void loadOptions().then((loaded) => { if (loaded && ["BI01", "BI07", "BI08"].includes(view.value) && !initial.searchParams.has("selectionRef")) void load(false) })
 }
