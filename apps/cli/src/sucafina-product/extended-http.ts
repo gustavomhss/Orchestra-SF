@@ -10,6 +10,12 @@ import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfBiServices } from "./bi-services.ts"
 import type { createSfReviewServices } from "./review-services.ts"
 import type { createSfExtendedAssets } from "./extended-assets.ts"
+import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+import { createSfExtendedBiOptions } from "./extended-bi-options.ts"
+import { readSfDecisionBiSelection, sfPlannerBiSelection } from "./bi-selections.ts"
+import { createSfExtendedReviewCycle } from "./extended-review-cycle.ts"
+import { sfExtendedSourceLinks } from "./extended-source-links.ts"
+import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 
 export function createSfExtendedHttp(input: {
   authority: ReturnType<typeof createSfProductAuthority>
@@ -22,37 +28,79 @@ export function createSfExtendedHttp(input: {
 }) {
   const { authority, business } = input
   const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
+  const options = createSfExtendedBiOptions(input)
+  const reviewCycle = createSfExtendedReviewCycle(input)
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const reviewed = await input.reviews?.http(request, surface)
     if (reviewed) return reviewed
     const url = new URL(request.url), mode = url.searchParams.get("sf")
-    if (!["bi", "bi-data", "bi-source", "review"].includes(mode ?? "")) return undefined
+    if (!["bi", "bi-data", "bi-source", "bi-options", "review", "review-update", "review-source"].includes(mode ?? "")) return undefined
     const json = (value: unknown, status = 200) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted) return json({ status: "denied", reason: "surface-unavailable" }, 403)
     if (request.method !== "GET" && request.method !== "HEAD") return json({ status: "denied", reason: "read-method-required" }, 405)
-    const allowed = mode === "review" ? ["sf", "page", "reviewRef", "start", "end"] : mode === "bi-source" ? ["sf", "selectionRef"] : ["sf", "viewId", "selectionRef", "start", "end"]
+    const allowed = mode === "review" ? ["sf", "page", "reviewRef", "previousReviewRef", "sectionId", "start", "end"] : mode === "review-update" ? ["sf", "reviewRef"] : mode === "review-source" ? ["sf", "reviewRef", "referenceId"] : mode === "bi-source" ? ["sf", "selectionRef", "viewId", "start", "end", "valueId"] : mode === "bi-options" ? ["sf", "page", "viewId", "start", "end"] : ["sf", "page", "viewId", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]
     if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return json({ status: "needs-input", reason: "invalid-query" }, 400)
     const period = { start: url.searchParams.get("start") ?? `${new Date().getUTCFullYear()}-01-01`, end: url.searchParams.get("end") ?? `${new Date().getUTCFullYear()}-12-31` }
+    if (!isSfPeriod(period)) return json({ status: "needs-input", reason: "invalid-period" }, 400)
     const viewId = url.searchParams.get("viewId") ?? "BI01"
-    const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef") }
+    const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef"), baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), previousReviewRef: url.searchParams.get("previousReviewRef"), sectionId: url.searchParams.get("sectionId"), referenceId: url.searchParams.get("referenceId"), valueId: url.searchParams.get("valueId") }
     const digest = digestSfValue(bootstrap)
-    const admitted = await authority.ui.admit(request, mode === "review" ? "sf_review_prepare" : "sf_dashboard_read", digest)
+    const action = mode?.startsWith("review") ? "sf_review_prepare" : "sf_dashboard_read"
+    const admitted = await authority.ui.admit(request, action, digest)
     if (admitted.status !== "ok") return json(admitted, 403)
     const call = admitted.value
     try {
-      if (!await authority.ui.validate(call, mode === "review" ? "sf_review_prepare" : "sf_dashboard_read", digest)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+      if (!await authority.ui.validate(call, action, digest)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+      if (mode === "review-update") {
+        const reference = url.searchParams.get("reviewRef")
+        if (!reference || reference.length > 2048) return json({ status: "needs-input", reason: "invalid-review-reference" }, 400)
+        const result = await reviewCycle.update(reference, call)
+        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : 409)
+      }
+      if (mode === "review-source") {
+        const reference = url.searchParams.get("reviewRef"), referenceId = url.searchParams.get("referenceId")
+        if (!input.reviews || !reference || !referenceId || reference.length > 2048 || referenceId.length > 16384) return json({ status: "needs-input", reason: "invalid-review-source" }, 400)
+        const reviewed = await input.reviews.reviews.read(reference, call)
+        if (reviewed.status !== "ok") return json(reviewed, 409)
+        let sources = reviewCycle.evidence(reviewed.value, referenceId)
+        if (!sources.length && reviewed.value.previousReviewRef) {
+          const previous = await input.reviews.reviews.read(reviewed.value.previousReviewRef, call)
+          if (previous.status !== "ok") return json(previous, 409)
+          sources = reviewCycle.evidence(previous.value, referenceId)
+        }
+        if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
+        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url })
+        return links.length ? json({ links }) : json({ status: "unavailable", reason: "source-replaced-changed-or-revoked" }, 409)
+      }
+      if (mode === "bi-options") {
+        const found = await options.read(viewId, period, call)
+        return json(found, found.status === "ok" ? 200 : found.status === "denied" ? 403 : 409)
+      }
       if (mode === "bi-source") {
         const ref = url.searchParams.get("selectionRef")
         if (!ref || ref.length > 16_384) return json({ status: "needs-input", reason: "invalid-selection" }, 400)
-        const current = await business.dashboardSources.resolveDashboardSource(ref, call)
-        if (current.status !== "ok") return json(current, 409)
-        const source = current.value.evidence.target
-        if (!source.period || !await authority.ui.revalidate(call)) return json({ status: "denied", reason: "source-access-changed" }, 403)
-        return json({ url: `${url.pathname}?${new URLSearchParams({ page: current.value.page, year: source.period.start.slice(0, 4) })}`, source: { id: source.recordId, version: source.version } })
+        const selectedCase = readSfDecisionBiSelection(ref) ? await options.caseFor(ref, call) : undefined
+        if (readSfDecisionBiSelection(ref) && !selectedCase) return json({ status: "denied", reason: "bi-case-selection-unavailable" }, 403)
+        const read = async () => {
+          const current = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)
+          if (current.status !== "ok") return current
+          const value = current.value.values.find((entry) => entry.id === url.searchParams.get("valueId"))
+          if (!value?.drilldown) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
+          const links = await sfExtendedSourceLinks({ business, reference: value.drilldown, call, url })
+          return links.length ? { status: "ok" as const, value: { links } } : { status: "unavailable" as const, reason: "source-replaced-changed-or-revoked" }
+        }
+        const result = selectedCase ? await business.withCase(call, selectedCase, {}, read) : await read()
+        return result.status === "ok" ? json(result.value) : json(result, 409)
       }
       if (mode === "bi-data") {
         let selectionRef = url.searchParams.get("selectionRef")
+        if (url.searchParams.has("baseRef") || url.searchParams.has("candidateRef") || url.searchParams.has("currency")) {
+          if (selectionRef || !["BI01", "BI02", "BI03", "BI04"].includes(viewId)) return json({ status: "needs-input", reason: "ambiguous-bi-selection" }, 400)
+          const selected = decodeSfOperationInput("sf_forecast_compare", { baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), period })
+          if (!selected.ok) return json({ status: "needs-input", reason: "choose-two-versions-and-currency" }, 422)
+          selectionRef = sfPlannerBiSelection(selected.value)
+        }
         if (!selectionRef) {
           const route = resolveDashboardBiSelection(viewId, period)
           if (!route) return json({ status: "needs-input", reason: "choose-producer-selection" }, 422)
@@ -65,7 +113,9 @@ export function createSfExtendedHttp(input: {
         const next = await authority.ui.admit(request, "sf_bi_view", digestSfValue(payload))
         if (next.status !== "ok") return json(next, 403)
         try {
-          const result = await input.bi.dispatchPresentation(payload, next.value)
+          const selectedCase = readSfDecisionBiSelection(selectionRef) ? await options.caseFor(selectionRef, next.value) : undefined
+          if (readSfDecisionBiSelection(selectionRef) && !selectedCase) return json({ status: "denied", reason: "bi-case-selection-unavailable" }, 403)
+          const result = selectedCase ? await business.withCase(next.value, selectedCase, {}, () => input.bi.dispatchPresentation(payload, next.value)) : await input.bi.dispatchPresentation(payload, next.value)
           return result.status === "ok" ? json(result.value) : json(result, result.status === "denied" ? 403 : 409)
         } finally { authority.ui.finish(next.value) }
       }
@@ -76,7 +126,14 @@ export function createSfExtendedHttp(input: {
         if (reviewRef) {
           const current = await input.reviews.reviews.read(reviewRef, call)
           if (current.status !== "ok") return json(current, 409)
-          data = { reviewRef }
+          const sectionId = url.searchParams.get("sectionId")
+          const selectedSection = sectionId ? current.value.sections.find((section) => section.id === sectionId) : undefined
+          if (sectionId && !selectedSection) return json({ status: "denied", reason: "review-section-unavailable" }, 403)
+          data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
+        } else if (url.searchParams.has("previousReviewRef")) {
+          const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
+          if (updated.status !== "ok") return json(updated, 409)
+          data = updated.value
         } else {
           const current = await business.dashboardServices.discover({ page: url.searchParams.get("page") ?? "Budget Overview", period }, call)
           if (current.status !== "ok") return json(current, 409)

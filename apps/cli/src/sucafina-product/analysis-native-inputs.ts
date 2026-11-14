@@ -159,6 +159,7 @@ export function createSfAlternativeRunState(input: {
     if (command.namespace !== "contributions" || command.additionalNamespaces.length !== 1 || command.sourceFence !== "all")
       return { status: "denied", reason: "alternative-publication-scope-invalid" }
     let publication: AlternativeCapabilityProvenance | undefined
+    let vetoed = false
     const guarded: typeof work = async (state, actor, snapshot) => {
       const before = structuredClone(state.preferences)
       const result = await work(state, actor, snapshot)
@@ -166,19 +167,33 @@ export function createSfAlternativeRunState(input: {
       const run = state.nativeRuns?.[input.runRef]
       const output = run?.outputRef ? state.contributions[run.outputRef] : undefined
       const added = Object.entries(state.preferences).filter(([key, value]) => !same(value, before[key]))
-      if (!run || !output || run.state !== "ready" || added.length !== 1 || Object.keys(before).some((key) => !Object.hasOwn(state.preferences, key))) return { ...result, commit: false }
+      if (!run || !output || run.state !== "ready" || added.length !== 1 || Object.keys(before).some((key) => !Object.hasOwn(state.preferences, key))) {
+        vetoed = true
+        return { ...result, commit: false }
+      }
       const [key, raw] = added[0]!
       const record = raw as AlternativeCapabilityProvenance
       try {
         if (key !== alternativeProvenanceKey(record) || Object.hasOwn(before, key) || !verifyAlternativePublication(record, run, output) ||
           record.receipt.runId !== input.runRef || input.captures().filter((capture) => same(capture, record)).length !== 1 ||
-          command.idempotencyKey !== `run:${run.runRef}:${run.version}` || command.commandDigest !== digestSfValue({ record: run, output, alternative: record }) || !input.captureCurrent(record)) return { ...result, commit: false }
-      } catch { return { ...result, commit: false } }
+          command.idempotencyKey !== `run:${run.runRef}:${run.version}` || command.commandDigest !== digestSfValue({ record: run, output, alternative: record }) || !input.captureCurrent(record)) {
+          vetoed = true
+          return { ...result, commit: false }
+        }
+      } catch { vetoed = true; return { ...result, commit: false } }
       publication = record
       return result
     }
     input.proposalCoverageWrites.add(guarded)
-    input.nativePublicationGuards.set(guarded, () => !!publication && input.captureCurrent(publication))
-    try { return await input.state.transaction(request, command, guarded) } finally { input.proposalCoverageWrites.delete(guarded); input.nativePublicationGuards.delete(guarded) }
+    input.nativePublicationGuards.set(guarded, () => {
+      const current = !!publication && input.captureCurrent(publication)
+      if (!current) vetoed = true
+      return current
+    })
+    try {
+      const result = await input.state.transaction(request, command, guarded)
+      // C08 preserves a preview callback's value; an inner ready value cannot escape a host veto.
+      return vetoed ? { status: "denied", reason: "alternative-publication-vetoed" } : result
+    } finally { input.proposalCoverageWrites.delete(guarded); input.nativePublicationGuards.delete(guarded) }
   } }
 }

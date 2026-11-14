@@ -38,9 +38,9 @@ export function createSfPortfolioAuthority(input: {
   const readMetric: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
     if (!scenarios || request.metricRef !== "planner:known-subtotal-difference" || !request.baselineRef)
       return { status: "unavailable", reason: "criterion-metric-producer-unavailable" }
-    const stored = await business.results.read({ kind: "scenario", resultRef: request.scenarioRef }, call)
+    const stored = await business.results.readHistoricalScenario({ resultRef: request.scenarioRef }, call)
     if (stored.status !== "ok") return stored
-    if (stored.value.kind !== "scenario" || digestSfValue(stored.value.caseRef) !== digestSfValue(request.caseRef))
+    if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== request.caseRef.id || stored.value.caseRef.incarnation !== request.caseRef.incarnation || stored.value.caseRef.version > request.caseRef.version)
       return { status: "denied", reason: "criterion-scenario-scope-mismatch" }
     const result = await business.planner.compareScenarios({ scenarioRefs: [request.baselineRef, request.scenarioRef], criteria: [] }, call)
     if (result.status !== "ok") return result
@@ -90,5 +90,5 @@ export function createSfPortfolioAuthority(input: {
     verifyBinding: async (binding, result, call) => await fresh(result.sourceRefs, call) && await (input.proof()?.verifyPortfolio(binding, result, call) ?? Promise.resolve(false)),
     verifySnapshot: (snapshot, binding, call) => input.proof()?.verifySnapshot(snapshot, binding, call) ?? false,
   })
-  return { rules, planner, compare, selection, sensitivityBindings, comparisonBindings, portfolioBindings, intent, authorizeCase }
+  return { rules, planner, compare, selection, sensitivityBindings, comparisonBindings, portfolioBindings, intent, authorizeCase, readMetric }
 }

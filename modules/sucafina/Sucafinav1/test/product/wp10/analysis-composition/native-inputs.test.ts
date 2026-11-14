@@ -17,6 +17,10 @@ import { createSfSourcePersistence } from "../../../../product/integration/sourc
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { createSfRunStore, sfRunSourceFence } from "../../../../product/ai/run-store.ts"
+import { buildSfContribution } from "../../../../product/ai/contribution-builder.ts"
+import { captureAlternativeProvenance } from "../../../../product/decisions/alternative-provenance.ts"
+import type { SfOperationOutputMap } from "../../../../product/contracts/outputs.ts"
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
 import type { SfProductStatePort } from "../../../../product/contracts/state.ts"
 import type { TrustedExecutionBinding } from "../../../../product/contracts/sf-execution.ts"
@@ -24,7 +28,7 @@ import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { selection } from "../resident-runtime/fixture.ts"
 
 // Session metadata and receipts are explicit boundary fixtures. No model, skill loader or native execution is claimed.
-async function fixture() {
+async function fixture(operation = "sf_forecast_compare", payload: unknown = { boundary: true }) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-native-input-authority-"))
   const driver = await openLocalStore(path.join(directory, "store"))
   const persistence = { ...driver, ...createSfSourcePersistence({ persistence: driver, createId: randomUUID, enumerate: enumerateSfSources,
@@ -35,19 +39,21 @@ async function fixture() {
   const nativePublicationGuards = new WeakMap<object, () => boolean>()
   const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
   const request = new Request("https://example.test/product", { method: "POST", headers: { origin: "https://example.test" } })
-  const profile: ResidentProfile = { id: "sf_finance", version: "1", mission: "Finance", sourcePath: "profile.json", sourceDigest: "a".repeat(64),
-    allowedSkills: ["sf-explicar-forecast"], allowedOperations: ["sf_forecast_compare"], outputTypes: ["FinancialAnalysis"], contextBudgetTokens: 1000,
+  const skillId = operation === "sf_alternative_draft" ? "sf-compor-portfolio" : "sf-explicar-forecast"
+  const profile: ResidentProfile = { id: operation === "sf_alternative_draft" ? "sf_portfolio" : "sf_finance", version: "1", mission: "Boundary", sourcePath: "profile.json", sourceDigest: "a".repeat(64),
+    allowedSkills: [skillId], allowedOperations: [operation], outputTypes: operation === "sf_alternative_draft" ? ["AlternativeDraft"] : ["FinancialAnalysis"], contextBudgetTokens: 1000,
     maxSteps: 2, maxDelegations: 0, modelClass: "reasoning", resumePolicy: "fresh" }
-  const selected = selection(profile)
+  const baseSelection = selection(profile)
+  const selected = { ...baseSelection, skills: baseSelection.skills.map((skill) => ({ ...skill, id: skillId, allowedProfiles: [profile.id], allowedOperations: profile.allowedOperations, outputSchemaRefs: profile.outputTypes })) }
   const sessionID = SessionSchema.ID.make("ses_native_input_boundary")
   const receipt: SkillLoadReceipt = { runId: "run", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version, profileDigest: profile.sourceDigest,
-    skillId: "sf-explicar-forecast", skillVersion: "1", sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), loadedMessageId: "msg_boundary",
+    skillId, skillVersion: "1", sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), loadedMessageId: "msg_boundary",
     loadedAt: "2026-11-14T00:00:00Z", manifestDigest: selected.manifestDigest }
   const session = Schema.decodeUnknownSync(SessionSchema.Info)({ id: sessionID, projectID: identity.projectId, agent: profile.id, location: identity.location,
     model: { providerID: "openai", id: "model" }, cost: 0, tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
     time: { created: Date.now(), updated: Date.now() }, title: "Authority boundary fixture" })
   const authority: ReturnType<typeof createSfProductAuthority> = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "policy", persistence,
-    grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions"], operations: ["sf_forecast_compare"], humanActions: [] }],
+    grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions"], operations: [operation], humanActions: [] }],
     proposalCoverageWrites, nativePublicationGuards, now: Date.now, createId: randomUUID,
     authenticate: async (_request, scope) => {
       if (control.revokeDuringAuthentication && control.binding) { authority.native.revoke(control.binding); control.revokeDuringAuthentication = false }
@@ -67,7 +73,7 @@ async function fixture() {
   })
   if (created.status !== "ok") throw new Error("C08 case initialization failed")
   const admitted: SfAdmittedAnalysisInput = { request: { caseRef, profileId: profile.id, profileVersion: profile.version, skillId: receipt.skillId, skillVersion: receipt.skillVersion,
-    manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_forecast_compare"], objective: "Boundary", contextFingerprint: "fixture-context" },
+    manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [operation], objective: "Boundary", contextFingerprint: "fixture-context" },
     input: { selectedByHuman: "boundary-fixture" } }
   const principal = await authority.state.read(request, "contributions", (_state, actor) => actor)
   if (principal.status !== "ok") throw new Error("Contributions authority unavailable")
@@ -94,14 +100,14 @@ async function fixture() {
   if (recorded.status !== "ok") throw new Error("C08 running fixture unavailable")
   // Tool.Context fields outside identity are irrelevant to this boundary; no Tool or model is executed.
   const tool = { sessionID, agent: profile.id, assistantMessageID: "msg_capability", toolCallID: "call_boundary" } as Parameters<typeof authority.native.lease>[0]
-  const digest = digestSfValue({ boundary: true })
-  const leased = await authority.native.lease(tool, "sf_forecast_compare", digest)
-  if (leased.status !== "ok" || !authority.native.consume(leased.value, "sf_forecast_compare", digest)) throw new Error("Real one-use capability lease unavailable")
+  const digest = digestSfValue(payload)
+  const leased = await authority.native.lease(tool, operation, digest)
+  if (leased.status !== "ok" || !authority.native.consume(leased.value, operation, digest)) throw new Error("Real one-use capability lease unavailable")
   const call = leased.value
   const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
   const readers = createSfNativeAnalysisInputs({ authority, selectedCase: business.selectedCase, requestForRun: (id) => id === "run" ? request : undefined,
     admittedInput: (id) => id === "run" ? admitted : undefined, captures: () => [], revalidateCapture: async () => false })
-  const snapshot = () => authority.state.read(request, "contributions", (state) => ({ run: state.nativeRuns?.run, preferences: state.preferences, version: state.revision }))
+  const snapshot = () => authority.state.read(request, "contributions", (state) => ({ run: state.nativeRuns?.run, contributions: state.contributions, preferences: state.preferences, version: state.revision }))
   const versions = async () => {
     const value = await authority.state.read(request, "contributions", (state) => state.versions)
     if (value.status !== "ok") throw new Error("Current storage versions unavailable")
@@ -184,6 +190,62 @@ test("the C08 final publication guard rejects native revocation during authentic
       expect(await state.snapshot()).toEqual(before)
       expect(state.authority.native.requestFor(state.call)).toBeUndefined()
     } finally { state.nativePublicationGuards.delete(work) }
+  } finally { await state.close() }
+})
+
+test.each([false, true])("actual run-store publication exposes no ready preview after native capture veto=%s", async (veto) => {
+  const request = { caseRef: "case:case:case-inc", proposal: { title: "Alternative", description: "Boundary fixture", sourceRefs: [] }, sourceRefs: [] }
+  const state = await fixture("sf_alternative_draft", request)
+  try {
+    const horizon = { start: "2026-01-01", end: "2026-12-31" }
+    // Explicit semantic output fixture; the real run-store, capture, lease and C08 transaction are exercised.
+    const payload: SfOperationOutputMap["sf_alternative_draft"] = { caseRef: request.caseRef,
+      proposal: { id: "alternative", version: 1, title: "Alternative", scenario: { baseRef: "base", operations: [], assumptions: [] },
+        result: { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [], unresolvedConditions: ["training"], restrictions: [],
+          comparisonStatus: "conditioned", costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon,
+            issues: [], evaluatedSourceRefs: [], coverageState: "pending", entries: [], derivedMissingCategoryIds: ["training"] }, knownSubtotal: null, total: null } },
+      costCoverageBasis: { id: "basis", version: 1, decisionType: "renewal-transition-v1", categoryIds: ["training"], additionalCategoryIds: [], sourceRefs: [] }, coverageRef: "coverage", domainApplied: false }
+    const receipt = state.authority.native.receiptFor(state.call, "sf_alternative_draft", digestSfValue(request), digestSfValue(payload))
+    const operation = state.authority.native.operationIdentity?.(state.call)
+    const captured = receipt && operation ? captureAlternativeProvenance(request, payload, receipt, state.call, operation) : undefined
+    if (!captured) throw new Error("Actual consumed capability capture unavailable")
+    const ui = await state.authority.ui.admit(state.request, "sf_alternative_draft", digestSfValue(request))
+    if (ui.status !== "ok" || !await state.authority.ui.validate(ui.value, "sf_alternative_draft", digestSfValue(request))) throw new Error("Independent UI publication authority unavailable")
+    try {
+      const before = await state.snapshot()
+      if (before.status !== "ok" || !before.value.run) throw new Error("Stored running record unavailable")
+      const built = buildSfContribution({ candidate: { kind: "AlternativeDraft", payload, evidenceRefs: [] }, run: before.value.run,
+        actualModel: before.value.run.model, outputId: "alternative-output", createdAt: "2026-11-14T00:00:00Z" })
+      if (built.status !== "ok") throw new Error(built.reason)
+      const callbacks: object[] = []
+      const observed: SfProductStatePort = { ...state.authority.state, transaction: (source, command, work) => {
+        callbacks.push(work)
+        return state.authority.state.transaction(source, command, work)
+      } }
+      const scoped = createSfAlternativeRunState({ state: observed, proposalCoverageWrites: state.proposalCoverageWrites,
+        nativePublicationGuards: state.nativePublicationGuards, runRef: "run", captures: () => [captured],
+        captureCurrent: () => state.authority.native.requestFor(state.call) === state.request })
+      const lateVeto: SfProductStatePort = { ...scoped, transaction: (source, command, work) => scoped.transaction(source, command, async (stored, actor, snapshot) => {
+        const result = await work(stored, actor, snapshot)
+        if (result.commit && veto) state.authority.native.revoke(state.call.binding)
+        return result
+      }) }
+      const runs = createSfRunStore({ state: lateVeto, requestFor: state.authority.host.requestFor, revalidate: state.authority.host.revalidate,
+        preflight: async () => ({ status: "ok", value: { sourceFence: await state.authority.host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) })) } }),
+        readCapturedAlternative: async () => ({ status: "ok", value: captured }),
+        revalidateForCommit: async () => ({ status: "ok", value: true }), now: () => "2026-11-14T00:00:00Z" })
+      const published = await runs.publish("run", before.value.run.version, built.value, ui.value, captured)
+      expect(await state.authority.ui.revalidate(ui.value)).toBe(true)
+      expect(callbacks.length).toBeGreaterThan(0)
+      expect(callbacks.every((work) => !state.proposalCoverageWrites.has(work) && !state.nativePublicationGuards.has(work))).toBe(true)
+      if (!veto) {
+        expect(published).toMatchObject({ status: "ok", value: { state: "ready", outputRef: built.value.id } })
+        return
+      }
+      expect(published).toEqual({ status: "denied", reason: "alternative-publication-vetoed" })
+      expect(await state.snapshot()).toEqual(before)
+      expect(state.authority.native.requestFor(state.call)).toBeUndefined()
+    } finally { state.authority.ui.finish(ui.value) }
   } finally { await state.close() }
 })
 

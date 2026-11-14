@@ -1,6 +1,6 @@
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
-import type { BiViewId } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import { biViews } from "../../../../modules/sucafina/Sucafinav1/product/analytics/catalog.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBiArtifacts } from "./bi-artifacts.ts"
 import type { createSfAnalysisChoiceServices } from "./analysis-choice-services.ts"
@@ -63,9 +63,8 @@ export function createSfAnalysisChoiceHttp(input: {
           !view || Object.keys(view).some((key) => !["viewId", "version", "filters"].includes(key)) || typeof view.viewId !== "string" || view.version !== 1 || !Array.isArray(view.filters) || view.filters.length ||
           !mutation || !caseRef || !dashboard.ok || !isSfPeriod(selected.period)) return json({ status: "needs-input", reason: "invalid-bi-artifact-selection" }, 400)
         const viewRequest = decodeSfOperationInput("sf_bi_view", { viewId: view.viewId, selectionRef: dashboard.value.selectionRef, period: selected.period })
-        if (!viewRequest.ok) return json({ status: "needs-input", reason: "invalid-bi-view" }, 400)
-        const viewId = viewRequest.value.viewId
-        if (!isBiViewId(viewId)) return json({ status: "needs-input", reason: "invalid-bi-view" }, 400)
+        const viewId = biViews.find((entry) => entry.id === view.viewId)?.id
+        if (!viewRequest.ok || !viewId) return json({ status: "needs-input", reason: "invalid-bi-view" }, 400)
         const value = await input.business.withCase(call, caseRef, {}, () => input.artifacts.save({ caseRef, selection: { viewId, version: 1, filters: [] }, dashboardSelection: dashboard.value, period: viewRequest.value.period }, mutation, call))
         return json(value, value.status === "ok" ? 200 : 409)
       }
@@ -99,10 +98,6 @@ export function createSfAnalysisChoiceHttp(input: {
   }
 }
 
-function isBiViewId(value: string): value is BiViewId {
-  return value === "BI01" || value === "BI02" || value === "BI03" || value === "BI04" || value === "BI05" || value === "BI06" ||
-    value === "BI07" || value === "BI08" || value === "BI09" || value === "BI10" || value === "BI11"
-}
 function record(value: unknown): Record<string, unknown> | undefined { return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : undefined }
 function decodeCase(value: unknown) {
   const row = record(value)

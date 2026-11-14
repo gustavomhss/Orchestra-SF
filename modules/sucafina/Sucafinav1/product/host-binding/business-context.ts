@@ -156,12 +156,14 @@ export function createSfEvidenceRouter(input: {
   procurement: ReturnType<typeof createSfProcurementSourceAccess>
   document?: ReturnType<typeof createSfDocumentSourceAccess>
   planner?: ReturnType<typeof createSfDashboardSourceAccess>
+  calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
   dashboardProof: ReturnType<typeof createSfDashboardContinuityProof>
   caseEventProof: ReturnType<typeof createSfSourceContinuityProof>
   procurementProof: ReturnType<typeof createSfSourceContinuityProof>
   dashboardRecordProof?: ReturnType<typeof createSfSourceContinuityProof>
   documentProof?: ReturnType<typeof createSfSourceContinuityProof>
   plannerProof?: ReturnType<typeof createSfSourceContinuityProof>
+  calculationProof?: ReturnType<typeof createSfSourceContinuityProof>
   receipt?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
   receiptProof?: ReturnType<typeof createSfSourceContinuityProof>
 }) {
@@ -174,6 +176,7 @@ export function createSfEvidenceRouter(input: {
       if (ref.kind === "receipt" && ref.target.surface === "procurement" && input.receipt) return input.receipt(ref, call)
       if (ref.kind === "document" && input.document) return input.document(ref, call)
       if (ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version" && input.planner) return input.planner(ref, call)
+      if (ref.kind === "calculation" && input.calculation) return input.calculation(ref, call)
       return Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
     },
     proveContinuity(original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext): Promise<boolean> {
@@ -184,6 +187,7 @@ export function createSfEvidenceRouter(input: {
       if (original.kind === "receipt" && original.target.surface === "procurement" && input.receiptProof) return input.receiptProof(original, current, call)
       if (original.kind === "document" && input.documentProof) return input.documentProof(original, current, call)
       if (original.kind === "record" && original.target.surface === "planner" && original.target.recordType === "planner-version" && input.plannerProof) return input.plannerProof(original, current, call)
+      if (original.kind === "calculation" && input.calculationProof) return input.calculationProof(original, current, call)
       return Promise.resolve(false)
     },
   }
@@ -204,6 +208,7 @@ export function createSfAtlasBusiness(input: {
   procurementEvidence?: Pick<ReturnType<typeof import("../procurement/decision-host.ts").createProcurementDecisionHost>, "resolveEvidence" | "proveContinuity">
   documentRead: Parameters<typeof createSfDocumentSourceAccess>[0]["read"]
   planner?: { sources: PlannerSourceHost; port: PlannerPort; project?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<import("../contracts/ports.ts").PortResult<import("../contracts/context.ts").DomainProjection>> }
+  calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
   caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
@@ -254,7 +259,7 @@ export function createSfAtlasBusiness(input: {
     return await check() && await check()
   }
   const router = createSfEvidenceRouter({
-    dashboard, dashboardRecord, caseEvent, procurement, document, planner,
+    dashboard, dashboardRecord, caseEvent, procurement, document, planner, calculation: input.calculation,
     dashboardProof: createSfDashboardContinuityProof({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard, readOriginal }),
     dashboardRecordProof,
     caseEventProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: caseEvent }),
@@ -270,6 +275,7 @@ export function createSfAtlasBusiness(input: {
     },
     documentProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: document }),
     plannerProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: planner }),
+    calculationProof: input.calculation ? createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: input.calculation }) : undefined,
   })
   const assembled = assembleSfBusinessContext({
     revalidate: input.host.revalidate, ...router,

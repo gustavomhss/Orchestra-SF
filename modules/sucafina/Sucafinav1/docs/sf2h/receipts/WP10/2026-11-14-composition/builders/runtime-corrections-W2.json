@@ -1,0 +1,169 @@
+{
+  "schema": "sf2.wp10.builder-correction.v1",
+  "builder": "/root/runtime_analysis",
+  "independentReview": false,
+  "status": "CLOSED_AWAITING_HOSTED_CI_AND_INDEPENDENT_RECHECK",
+  "issuedAt": "2026-11-14T02:43:44.020322+00:00",
+  "baseReviewedCandidate": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "bytes": 13993,
+      "sha256": "3d49a7009963a040f32d58af1d302adf056dbd05590be94d7271f613a5ad4d7e",
+      "blobSha": "5f97181307f700e7ff022398bdaab96bd2472d34"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-execution.ts",
+      "bytes": 19794,
+      "sha256": "f52bf0398d3a067a29bfa781340f80face2321d9c58705a6cf6724a53ea98d0f",
+      "blobSha": "7beadb3b0348848749e6b55b26c86f977aa7ee17"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "bytes": 18993,
+      "sha256": "2f52fb86a74ed7ae0be8dcdac5770634d00c80d8e864babf3ceb5c2c9c68d49c",
+      "blobSha": "2103dd8d13c6dd16f4c4df2272ea87a681056165"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "bytes": 12474,
+      "sha256": "0a227c197f6c5030b821b0cd354ae37049945e81265a937f43ed524b0f5b4b4d",
+      "blobSha": "a7926e7b50016eee324dcfb74bb7627afbd6295f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "bytes": 24389,
+      "sha256": "ff75a1dd28693c54b7ddd446406b77a8c8aa72bcb85d1c3d3f8769b6e722b8bc",
+      "blobSha": "e48a4441fc26b948ee34c5cc052b0293e0611a30"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "bytes": 23840,
+      "sha256": "4c6209058d70641dbc77fd99368abecb50cffa505b195342c44a4387b1bdeb42",
+      "blobSha": "34f2ba7495db931b70bf3745e91c65f1ee7da873"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "bytes": 16772,
+      "sha256": "31d505c6545ce5bbbd46eaacc16fd558fc96c5d521340894bde403de8673c7c5",
+      "blobSha": "7b14498a286b8af185c9ea364231fbcbf353b0b5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "bytes": 15974,
+      "sha256": "8a5274305b40acf8981226deed37332b0fc430d4fc16b0036a401c737b25f07c",
+      "blobSha": "ac40579bdd8882f0f4cfd9c9e47b61b52311b0cd"
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blobSha": "a1d2b84c59732b05c5944cd81be82f247c2c9c91",
+      "sourceCommit": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "remoteRead": "GitHub MCP",
+      "localExact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blobSha": "848fe10663e14ba04ae09c36e1a34bca0c3744c6",
+      "sourceCommit": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "remoteRead": "GitHub MCP",
+      "localExact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blobSha": "0d2977360afb7b9af6d39b19eff6e9198c7c1c55",
+      "sourceCommit": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "remoteRead": "GitHub MCP",
+      "localExact": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-identity.ts",
+      "blobSha": "dfece223dc3b6e0c1a94f74992afe9a62a928707",
+      "sourceCommit": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af",
+      "remoteRead": "GitHub MCP",
+      "localExact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "blobSha": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+      "sourceCommit": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af",
+      "remoteRead": "GitHub MCP",
+      "localExact": true
+    }
+  ],
+  "localProductExecution": {
+    "tests": 0,
+    "build": 0,
+    "typecheck": 0,
+    "productImports": 0
+  },
+  "remoteWrites": 0,
+  "findings": {
+    "R3-C11-01": {
+      "change": "Outer C08 veto returns denied without an inner ready value; final native guard and atomic namespace scope retained.",
+      "tests": [
+        "native-inputs.test.ts: actual run-store+C08 positive control and post-staging native revocation while UI remains valid"
+      ],
+      "criteria": [
+        "WP10.T01.INV.02",
+        "WP10.T01.INV.03",
+        "WP10.T01.CHK.05",
+        "WP10.T06.CHK.04",
+        "WP10.T06.QLT.60"
+      ]
+    },
+    "R3-LIFE-01": {
+      "change": "Unretained preparation always releases host resources after attempted interrupt, including attach failure/throw and announcement failure. releaseRun removes own registries even if release throws. Native host releases grants before interrupting.",
+      "tests": [
+        "native-host-disposal.test.ts: real Core Session/skill/registry ownership; abort/revoke/attach throw/announcement throw; failure injection only persistence outcomes and interruption"
+      ],
+      "criteria": [
+        "WP10.T06.CHK.04",
+        "WP10.T06.CHK.06",
+        "WP10.T06.QLT.01",
+        "WP10.T06.CMP.01",
+        "WP10.T06.INV.40"
+      ]
+    },
+    "R2-F02": {
+      "change": "Published record-only Planner calculation producer composed with original request persistence, genuine engine replay, lossless authorized result projection, router and original-capture continuity.",
+      "tests": [
+        "planner-calculation.test.ts: real source issuer/Planner/result/request stores/UI source capability/BCS/SQLite/real scanner, tampered refs, cycle and aggregate budget refusal, revocation, append/reopen/recall"
+      ],
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T07.DOD.01",
+        "WP10.T07.CMP.01",
+        "WP10.T07.SUC.01",
+        "WP10.SUC.10"
+      ]
+    }
+  },
+  "integrationByRoot": {
+    "file": "apps/cli/src/sucafina-product/business-services.ts",
+    "hooks": [
+      "createSfPlannerCalculationServices after base persistence",
+      "createPlannerCapabilities uses calculations.persist",
+      "createSfAtlasBusiness calculation=calculations.resolveEvidence",
+      "raw C08 withCalculationCase avoids recursive case projection",
+      "exposed calculations.issue and requests.read"
+    ]
+  },
+  "limitations": [
+    "All tests are prepared, not locally executed; hosted CI and independent reviewer recheck remain necessary.",
+    "Producer readForCalculation and scenario-request-store.read require exact current case version. A calculation from N becomes unavailable after case advances to N+1. No historical acceptance or weakened digest is introduced.",
+    "Calculation supports published record-only replay: no request assumptions, no replacementRef, no non-record coverage closure. Other valid scenarios retain original persistence and do not get a calculation binding.",
+    "Calculation projection copies original components and the full persisted result as structured JSON metadata; total null and incomplete coverage remain explicit. decision/comparison is omitted because no real comparison is available.",
+    "Lifecycle fixture uses actual Core ownership but injects persistence results to reach failure windows; no external model or C15 qualification.",
+    "Calculation integration fixture declares pending coverage and a ledger event at the original case version. It proves memory mechanism, not C09 human acceptance or global qualification."
+  ],
+  "minimalProducerDeltaForHistoricalCalculation": {
+    "owner": "WP03/WP12 (C09 result/request producer)",
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
+    ],
+    "required": "An explicitly authorized historical record-only scenario reader and original request binding reader preserving current membership/incarnation/native case authorization, full immutable input/result/engine/source digests and original request authenticity."
+  }
+}

@@ -1,6 +1,6 @@
 import type { Application } from "../../runtime/application.ts"
 
-export type SfProductHtml = NonNullable<Application["productHtml"]>
+export type SfProductHtml = (html: string, surface: Parameters<NonNullable<Application["productHtml"]>>[1], page: string, request?: Request) => string
 
 /** Optional private composition hook; the application has already authorized the page. */
 export function getSfProductHtml(host: object | undefined): SfProductHtml | undefined {

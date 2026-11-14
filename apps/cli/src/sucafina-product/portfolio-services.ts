@@ -11,8 +11,11 @@ import { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucaf
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfPortfolioAuthority } from "./portfolio-authority.ts"
+import { createSfPortfolioPreparation } from "./portfolio-preparation.ts"
+import { createSfPortfolioHttp } from "./portfolio-http.ts"
 
 type Mutations = Parameters<typeof createDecisionMutations>[0]
+type Product = ReturnType<typeof createPortfolioProduct>
 export type SfPortfolioPreparation = Pick<Mutations, "prepareDomainCommands" | "resolveChoiceValues" | "confirmChoice" | "confirmAnswer"> &
   Partial<Pick<Mutations, "portfolioParent" | "authorizeMutation" | "verifyMutation" | "coverageEvidence">>
 
@@ -21,24 +24,27 @@ export function createSfPortfolioServices(input: {
   authority: ReturnType<typeof createSfProductAuthority>
   business: ReturnType<typeof createSfBusinessServices>
   proposalCoverageWrites: WeakSet<object>
+  procurementEvidenceWrites?: WeakSet<object>
   preparation?: SfPortfolioPreparation
 }) {
   const { authority, business } = input
   const verification: { proof?: ReturnType<typeof createPortfolioProofVerifier> } = {}
   const registries = createSfPortfolioAuthority({ ...input, proof: () => verification.proof })
+  const composed = createSfPortfolioPreparation({ ...input, registries })
+  const preparation = input.preparation ?? composed
   const action = (operation: DecisionMutationOperation) => operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : "decisions.answer-question"
   const mutations = createDecisionMutations({ state: authority.state, host: authority.host, planner: registries.planner, sources: business.plannerSources,
     authorizeCase: registries.authorizeCase, operationIdentity: business.operationIdentity,
-    authorizeMutation: input.preparation?.authorizeMutation ?? ((operation, request, call) => registries.intent.authorize(call, action(operation), request)),
-    verifyMutation: input.preparation?.verifyMutation ?? ((_snapshot, operation, request, call) => registries.intent.verify(call, action(operation), request)),
-    ...(input.preparation?.portfolioParent ? { portfolioParent: input.preparation.portfolioParent } : {}),
+    authorizeMutation: preparation.authorizeMutation ?? ((operation, request, call) => registries.intent.authorize(call, action(operation), request)),
+    verifyMutation: preparation.verifyMutation ?? ((_snapshot, operation, request, call) => registries.intent.verify(call, action(operation), request)),
+    ...(preparation.portfolioParent ? { portfolioParent: preparation.portfolioParent } : {}),
     ...(input.preparation?.coverageEvidence ? { coverageEvidence: input.preparation.coverageEvidence } : {}),
-    confirmChoice: input.preparation?.confirmChoice ?? (async () => false),
-    confirmAnswer: input.preparation?.confirmAnswer ?? (async () => false),
+    confirmChoice: preparation.confirmChoice,
+    confirmAnswer: preparation.confirmAnswer,
     resolveQuestion: business.collaboration.resolveQuestion,
     resolveAnswer: business.collaboration.resolveAnswer,
-    resolveChoiceValues: input.preparation?.resolveChoiceValues ?? (async () => ({ status: "unavailable", reason: "portfolio-human-choice-values-unavailable" })),
-    prepareDomainCommands: input.preparation?.prepareDomainCommands ?? (async () => ({ status: "unavailable", reason: "portfolio-domain-command-preparation-unavailable" })),
+    resolveChoiceValues: preparation.resolveChoiceValues,
+    prepareDomainCommands: preparation.prepareDomainCommands,
     readScenarioResult: (resultRef, call) => business.results.read({ resultRef, kind: "scenario" }, call),
     createId: randomUUID, now: () => new Date().toISOString(),
   })
@@ -69,15 +75,28 @@ export function createSfPortfolioServices(input: {
     },
     sensitivityPreview: (request, call) => comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: registries.planner }, request, call),
   })
-  const product = scenarios ? createPortfolioProduct({ host: authority.host, cases: business.cases, evidence: business.context,
+  const rawProduct = scenarios ? createPortfolioProduct({ host: authority.host, cases: business.cases, evidence: business.context,
     planner: { planner: registries.planner, sources: business.plannerSources, scenarios }, results: business.results,
     rules: registries.rules, selection: registries.selection, sensitivityBindings: registries.sensitivityBindings,
     comparisonBindings: registries.comparisonBindings, portfolioBindings: registries.portfolioBindings,
     decisions: mutations, createReceipt, caseFor: business.resolveCase,
     idempotencyKey,
   }) : undefined
+  const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,
+    prepare: (request: Parameters<Product["http"]["prepare"]>[0], call: Parameters<Product["http"]["prepare"]>[1]) =>
+      composed.handoff.run("decisions.prepare-portfolio", request, call, () => rawProduct.http.prepare(request, call), mutations.replayPortfolio),
+    promote: (request: Parameters<Product["http"]["promote"]>[0], call: Parameters<Product["http"]["promote"]>[1]) =>
+      composed.handoff.run("decisions.promote-portfolio", request, call, () => rawProduct.http.promote(request, call), mutations.replayPortfolio),
+  }, contribution: { ...rawProduct.contribution,
+    prepareChoice: (request: Parameters<Product["contribution"]["prepareChoice"]>[0], call: Parameters<Product["contribution"]["prepareChoice"]>[1]) =>
+      composed.handoff.run("decisions.prepare-portfolio", request, call, () => rawProduct.contribution.prepareChoice(request, call), mutations.replayPortfolio),
+    promoteAlternative: (request: Parameters<Product["contribution"]["promoteAlternative"]>[0], call: Parameters<Product["contribution"]["promoteAlternative"]>[1]) =>
+      composed.handoff.run("decisions.promote-portfolio", request, call, () => rawProduct.contribution.promoteAlternative(request, call), mutations.replayPortfolio),
+  } } : undefined
   return { ...registries, mutations, product, units, proof: verification.proof, descriptors: product?.contribution.capabilities ?? [],
+    http: (config: { origin: string; mount: string }) => createSfPortfolioHttp({ ...config, authority, business, product, mutations }),
+    dispose: composed.dispose,
     unavailable: [...(scenarios ? [] : ["portfolio-planner-stored-scenarios-unavailable"]),
-      ...(input.preparation ? [] : ["portfolio-domain-command-preparation-unavailable", "portfolio-human-choice-values-unavailable"])],
+      ...(input.preparation ? [] : composed.unavailable)],
   }
 }

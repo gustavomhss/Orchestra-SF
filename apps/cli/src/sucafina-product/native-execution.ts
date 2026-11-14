@@ -72,26 +72,37 @@ export function createSfNativeExecution(input: {
         return preparedRun
       }
       const run = preparedRun.value
-      const attached = await input.withRunContext(record.runRef, (context) => sameAuthority(context, run.binding)
-        ? input.store.attach(record.runRef, created.value.version, run.sessionID, run.skillReceipt, context)
-        : Promise.resolve({ status: "denied", reason: "native-authority-mismatch" } as const))
-      if (attached.status !== "ok") {
-        await Effect.runPromise(input.host.interrupt(run.binding)).catch(() => undefined)
-        return attached
+      const ownership: { retained: boolean; ticket?: SfNativeExecutionTicket } = { retained: false }
+      try {
+        const attached = await input.withRunContext(record.runRef, (context) => sameAuthority(context, run.binding)
+          ? input.store.attach(record.runRef, created.value.version, run.sessionID, run.skillReceipt, context)
+          : Promise.resolve({ status: "denied", reason: "native-authority-mismatch" } as const))
+        if (attached.status !== "ok") return attached
+        const ticket = Object.freeze({ [ticketMark]: true as const })
+        assertTicket(ticket)
+        ownership.ticket = ticket
+        tickets.set(ticket, { run, request: native.request, record: attached.value, phase: "prepared" })
+        const entry = { ticket, run, record: attached.value, cancelling: false, cancelled: false }
+        active.set(record.runRef, entry)
+        const announced = await Promise.resolve().then(() => { input.onAdmitted?.(record.runRef); return true }).catch(() => false)
+        if (!announced) {
+          await input.withRunContext(record.runRef, (context) => input.store.transition(record.runRef, attached.value.version, "unavailable", "native-admission-not-announced", context))
+          return { status: "unavailable", reason: "native-admission-not-announced" }
+        }
+        if (native.request.signal.aborted || active.get(record.runRef) !== entry || !tickets.has(ticket)) return { status: "denied", reason: "native-admission-no-longer-active" }
+        ownership.retained = true
+        return { status: "ok", value: { runRef: record.runRef, sessionID: run.sessionID, skillReceipt: run.skillReceipt, executionTicket: ticket } }
+      } catch {
+        return { status: "unavailable", reason: "native-admission-unavailable" }
+      } finally {
+        if (!ownership.retained) {
+          if (ownership.ticket) tickets.delete(ownership.ticket)
+          if (active.get(record.runRef)?.run === run) active.delete(record.runRef)
+          await Promise.resolve().then(() => Effect.runPromise(input.host.interrupt(run.binding))).catch(() => undefined)
+          // Host ownership survives request revocation; release never requires a business grant.
+          await Promise.resolve().then(() => Effect.runPromise(input.host.release(run.binding))).catch(() => undefined)
+        }
       }
-      const ticket = Object.freeze({ [ticketMark]: true as const })
-      assertTicket(ticket)
-      tickets.set(ticket, { run, request: native.request, record: attached.value, phase: "prepared" })
-      active.set(record.runRef, { ticket, run, record: attached.value, cancelling: false, cancelled: false })
-      const announced = await Promise.resolve().then(() => { input.onAdmitted?.(record.runRef); return true }).catch(() => false)
-      if (!announced) {
-        active.delete(record.runRef)
-        tickets.delete(ticket)
-        await Effect.runPromise(input.host.interrupt(run.binding)).catch(() => undefined)
-        await input.withRunContext(record.runRef, (context) => input.store.transition(record.runRef, attached.value.version, "unavailable", "native-admission-not-announced", context))
-        return { status: "unavailable", reason: "native-admission-not-announced" }
-      }
-      return { status: "ok", value: { runRef: record.runRef, sessionID: run.sessionID, skillReceipt: run.skillReceipt, executionTicket: ticket } }
     },
     execute: async (ticket) => {
       const entry = tickets.get(ticket)
@@ -208,9 +219,8 @@ export function createSfNativeExecution(input: {
       if (entry.cancelDone) await entry.cancelDone
       if (active.get(runRef) !== entry) return undefined
       const aborted = tickets.get(entry.ticket)?.request.signal.aborted === true
-      await Effect.runPromise(input.host.release(entry.run.binding))
-      tickets.delete(entry.ticket)
-      active.delete(runRef)
+      try { await Effect.runPromise(input.host.release(entry.run.binding)) }
+      finally { tickets.delete(entry.ticket); active.delete(runRef) }
       if (!aborted && !entry.cancelled) return undefined
       return { runRef, principalRef: entry.record.principalRef, accessRevision: entry.record.accessRevision, policyVersion: entry.record.policyVersion,
         caseRef: structuredClone(entry.record.caseRef), sessionID: entry.run.sessionID, receiptDigest: digestSfValue(entry.run.skillReceipt), cancelled: entry.cancelled }

@@ -1,0 +1,182 @@
+{
+  "candidate": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+  "reports": [
+    {
+      "path": "analysis/reviews/R1-product-W.json",
+      "sha256": "ace5d4d5b82c6b604bdf65e74ef79204490984adeb18f80dfd7d358be0ff4807"
+    },
+    {
+      "path": "analysis/reviews/R2-finance-W.json",
+      "sha256": "ff0093a812d10221e4ca7e5bf11b44bac83718a9a4a299cc21a65d44fcd7b051"
+    },
+    {
+      "path": "analysis/reviews/R3-runtime-W.json",
+      "sha256": "5a2e532d46babf5cee6e908e886318bc3e725a5d5762f1e5454d03746878b245"
+    }
+  ],
+  "findingCount": 11,
+  "findings": [
+    {
+      "id": "R1-UX-01",
+      "severity": "P2",
+      "mandatory": true,
+      "classification": "correctable-within-WP10",
+      "title": "A navega\u00e7\u00e3o para review e BI perde o per\u00edodo selecionado",
+      "criteria_ids": [
+        "WP10.T01.QLT.01",
+        "WP10.T01.CMP.01",
+        "WP10.T02.CMP.01",
+        "WP10.T02.QLT.01",
+        "CAMP.INV.03"
+      ]
+    },
+    {
+      "id": "R1-UX-02",
+      "severity": "P1",
+      "mandatory": true,
+      "classification": "correctable-within-WP10",
+      "title": "Review preservado n\u00e3o oferece atualiza\u00e7\u00e3o utiliz\u00e1vel nem conserva o contexto do sucessor",
+      "criteria_ids": [
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.01",
+        "WP10.T02.CHK.02",
+        "WP10.T02.CMP.01",
+        "WP10.T05.CHK.02",
+        "CAMP.INV.06"
+      ]
+    },
+    {
+      "id": "R1-UX-03",
+      "severity": "P1",
+      "mandatory": true,
+      "classification": "correctable-within-WP10",
+      "title": "Forecast legado prepara entrada sem o registro can\u00f4nico exigido no start",
+      "criteria_ids": [
+        "WP10.T01.CHK.02",
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.01",
+        "WP10.T02.CMP.01",
+        "WP10.T06.CHK.01",
+        "WP10.T06.SUC.01",
+        "WP10.T06.SUC.60"
+      ]
+    },
+    {
+      "id": "R1-UX-04",
+      "severity": "P1",
+      "mandatory": true,
+      "classification": "correctable-within-WP10",
+      "title": "O seletor de BI oferece oito visualiza\u00e7\u00f5es sem caminho para escolher seus produtores",
+      "criteria_ids": [
+        "WP10.T01.CHK.02",
+        "WP10.T01.DOD.01",
+        "WP10.T01.CMP.01",
+        "WP10.T01.SUC.01",
+        "WP10.T02.CMP.01",
+        "WP10.T05.CHK.02",
+        "CAMP.CMP.04"
+      ]
+    },
+    {
+      "id": "R1-UX-05",
+      "severity": "P2",
+      "mandatory": true,
+      "classification": "correctable-within-WP10",
+      "title": "Saved views recusa filtros que o contrato e a pr\u00f3pria p\u00e1gina permitem salvar",
+      "criteria_ids": [
+        "WP10.T01.CHK.04",
+        "WP10.T01.CMP.02",
+        "WP10.T01.SUC.10",
+        "WP10.T02.CMP.01",
+        "CAMP.QLT.03"
+      ]
+    },
+    {
+      "id": "R2-F01",
+      "severity": "high",
+      "mandatory": true,
+      "owner": "WP10 composition",
+      "title": "Portfolio preparation is composed with permanently unavailable callbacks",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.01",
+        "WP10.SUC.10"
+      ]
+    },
+    {
+      "id": "R2-F02",
+      "severity": "high",
+      "mandatory": true,
+      "owner": "WP10 composition; WP03 if a new producer seam is required",
+      "title": "C17 calculation evidence producer is published but not connected to the evidence router",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T07.DOD.01",
+        "WP10.T07.CMP.01",
+        "WP10.T07.SUC.01",
+        "WP10.SUC.10"
+      ]
+    },
+    {
+      "id": "R2-F03",
+      "severity": "high",
+      "mandatory": true,
+      "owner": "WP10 review composition; source-owner changes only when necessary",
+      "title": "A preserved review becomes unreadable after an ordinary authorized source edit",
+      "criteria": [
+        "WP10.T02.CHK.02",
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.10",
+        "WP10.T03.CHK.01"
+      ]
+    },
+    {
+      "id": "R3-C11-01",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "WP10 / host native-input composition",
+      "classification": "owned-fix",
+      "title": "Alternative publication veto can return success without any commit",
+      "criteria": [
+        "WP10.T01.INV.02",
+        "WP10.T01.INV.03",
+        "WP10.T01.CHK.05",
+        "WP10.T06.CHK.04",
+        "WP10.T06.QLT.60"
+      ]
+    },
+    {
+      "id": "R3-LIFE-01",
+      "severity": "P2",
+      "mandatory": true,
+      "owner": "WP10 / native-execution lifecycle",
+      "classification": "owned-fix",
+      "title": "Preparation that cannot attach leaks host-owned run resources after revocation or abort",
+      "criteria": [
+        "WP10.T06.CHK.04",
+        "WP10.T06.CHK.06",
+        "WP10.T06.QLT.01",
+        "WP10.T06.CMP.01",
+        "WP10.T06.INV.40"
+      ]
+    },
+    {
+      "id": "R3-C07",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "Native Task/Relay owner and WP09 producer; WP10 consumes the published seam",
+      "classification": "foreign-native-prerequisite",
+      "title": "Real Relay publication is mounted but native routine admission and execution are not",
+      "criteria": [
+        "WP10.T01.CHK.03",
+        "WP10.T01.DOD.01",
+        "WP10.T06.CHK.07",
+        "WP10.T06.CHK.60",
+        "WP10.T06.DOD.60",
+        "WP10.T06.SUC.60"
+      ]
+    }
+  ],
+  "status": "All findings remain mandatory until independent recheck; builders are correcting own composition.",
+  "acceptance": false
+}

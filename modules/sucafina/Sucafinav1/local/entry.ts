@@ -28,6 +28,7 @@ import { decorateSfProductHtml } from "../product/interface/html.ts"
 import { decorateSfDecisionControlsHtml } from "../product/integration/decision-controls-link.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
 import { getSfProductHtml } from "../product/integration/host-presentation.ts"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import freeze from "../product/contracts/freeze-v1.json"
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
@@ -98,6 +99,7 @@ export async function createLocalInstallation(context: { origin: string; createH
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
+  const presentationRequest = new AsyncLocalStorage<Request>()
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
@@ -113,7 +115,7 @@ export async function createLocalInstallation(context: { origin: string; createH
     },
     productHtml: (html, surface, page) => {
       const productHtml = getSfProductHtml(runtime?.services?.())
-      const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page) ?? decorateSfProductHtml(html, surface, page)
+      const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page, presentationRequest.getStore()) ?? decorateSfProductHtml(html, surface, page)
       // Keep WP06 document/import navigation while composing WP04's fenced page projection.
       return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`), surface)
     },
@@ -200,7 +202,7 @@ export async function createLocalInstallation(context: { origin: string; createH
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
-      const response = await business(request)
+      const response = await presentationRequest.run(request, () => business(request))
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)

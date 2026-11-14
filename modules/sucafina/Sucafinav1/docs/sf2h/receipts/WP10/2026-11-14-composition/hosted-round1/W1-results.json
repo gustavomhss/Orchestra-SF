@@ -1,0 +1,169 @@
+{
+  "schema": "sf2.wp10.hosted-round1.v1",
+  "candidate": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+  "runs": [
+    {
+      "kind": "unit",
+      "W": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "treeW": "dcfc04896c3a83e6a69d3ecd1d948ff54231ddf7",
+      "S": "d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5",
+      "tree": "f9c769637c11e3dd3e9b12a4d634fb6d77423fa4",
+      "branch": "ci-run-linux-astra-wp10-eee00ac3-d6de984b-1",
+      "requestSha256": "d6de984b117757a8ea772e8c832c2ec3dcd3d21fde77e3fabad98c2b27447547",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/decision-domain.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+          "Sucafinav1/test/product/wp10/integration/analysis-http.test.ts",
+          "Sucafinav1/test/product/wp10/integration/analysis-services-selection.test.ts",
+          "Sucafinav1/test/product/wp10/integration/authority-composition.test.ts",
+          "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+          "Sucafinav1/test/product/wp10/integration/cross-surface.test.ts",
+          "Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts",
+          "Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts",
+          "Sucafinav1/test/product/wp10/integration/extended-composition.test.ts",
+          "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+          "Sucafinav1/test/product/wp10/integration/native-evidence.test.ts",
+          "Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+          "Sucafinav1/test/product/wp10/integration/procurement-sources.test.ts",
+          "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "Sucafinav1/test/product/wp10/integration/public-state.test.ts",
+          "Sucafinav1/test/product/wp10/integration/roster-source.test.ts",
+          "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts",
+          "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+          "Sucafinav1/test/product/wp10/integration/token-budget.test.ts",
+          "Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+          "Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+          "Sucafinav1/test/product/wp10/native-host/execution-host-guard.test.ts",
+          "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+          "Sucafinav1/test/product/wp10/native-host/native-host.test.ts",
+          "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts",
+          "Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+          "Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+          "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "branchResult": {
+        "branch": "ci-run-linux-astra-wp10-eee00ac3-d6de984b-1"
+      },
+      "runId": 43544861337,
+      "jobId": 132293688965,
+      "conclusion": "failure",
+      "counts": {
+        "pass": 156,
+        "fail": 13,
+        "tests": 169,
+        "files": 42
+      },
+      "envelope": {
+        "kind": "unit",
+        "W": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+        "S": "d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5",
+        "status": "ahead",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added",
+            "sha": "cec759f8ec0781f56d1e25100651c8f49c4070d5"
+          }
+        ],
+        "parents": [
+          "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b"
+        ]
+      },
+      "log": "job-132293688965.log",
+      "logSha256": "d6548bb8df3a0ff6c41ac723433a14f878e9f064e94cfc4a6a1063373f6371ab"
+    },
+    {
+      "kind": "check",
+      "W": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "treeW": "dcfc04896c3a83e6a69d3ecd1d948ff54231ddf7",
+      "S": "e216f8c3ce944eb81d4869828959ed189068a73d",
+      "tree": "f54bd23f521b70ad535a906014560fa6ad3e9829",
+      "previous": "1286d5f41bb01300d7718ce21de3134bbbe4b814",
+      "request": {
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "productSha": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b"
+      },
+      "result": {
+        "success": true
+      },
+      "runId": 43544864518,
+      "jobId": 132293700346,
+      "conclusion": "failure",
+      "steps": {
+        "sucafinaTypecheck": "failure",
+        "cliTypecheck": "failure",
+        "atlasGenerate": "success",
+        "atlasGeneratedDiff": "success",
+        "atlasTypecheck": "success",
+        "spawnImports": "success",
+        "productGuards": "success"
+      },
+      "envelope": {
+        "kind": "check",
+        "W": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+        "S": "e216f8c3ce944eb81d4869828959ed189068a73d",
+        "status": "ahead",
+        "files": [
+          {
+            "path": ".astra-wp10-check.json",
+            "status": "added",
+            "sha": "567297fb56ab0da7820f818afeacd5c63cc6050c"
+          }
+        ],
+        "parents": [
+          "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+          "1286d5f41bb01300d7718ce21de3134bbbe4b814"
+        ]
+      },
+      "artifacts": [
+        {
+          "id": 14093761496,
+          "name": "astra-wp10-check-1",
+          "size_in_bytes": 6725,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14093761496",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14093761496/zip",
+          "expired": false,
+          "created_at": "2026-11-14T02:13:38Z",
+          "expires_at": "2026-11-28T02:13:38Z",
+          "updated_at": "2026-11-14T02:13:38Z",
+          "digest": "sha256:a2687c008f006d6eafac96e62dbda3f1111e4e230205e501b1d8c36635bb2036",
+          "workflow_run": {
+            "id": 43544864518,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp10",
+            "head_sha": "e216f8c3ce944eb81d4869828959ed189068a73d"
+          }
+        }
+      ],
+      "log": "job-132293700346.log",
+      "logSha256": "6841ecc21620c4e04a22ffd5a06e3129ed74c77a76adc79204095ff86173783b"
+    }
+  ],
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "localProductExecution": false
+}

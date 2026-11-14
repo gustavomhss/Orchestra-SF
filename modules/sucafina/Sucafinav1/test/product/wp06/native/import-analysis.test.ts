@@ -47,19 +47,24 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const ui = await readNativeResponse<ImportManifest>(await fixture.http("import", "import-preview", request))
     expect(ui.domainApplied).toBe(false)
     expect(ui.issues).toContainEqual({ row: 0, field: "domain", reason: "Unknown currency; the existing currency is retained." })
-    const uiReceipt = await fixture.ui("sf_import_preview", request, (call) => fixture.dispatch("sf_import_preview", request, call))
+    const uiReceipt = await fixture.uiDispatch("sf_import_preview", request)
+    if (uiReceipt.status !== "ok") throw new Error(`UI sf_import_preview: ${uiReceipt.reason}`)
     expect(uiReceipt.status).toBe("ok")
-    if (uiReceipt.status !== "ok") throw new Error(uiReceipt.reason)
     expect(uiReceipt.receipt).toMatchObject({ kind: "ui", handlerExport: "previewImport", inputDigest: digestSfValue(request) })
     const uiDispatched = decodeSfOperationOutput("sf_import_preview", uiReceipt.result)
     if (!uiDispatched.ok) throw new Error("UI C04 output schema invalid")
     expect(manifestSemantics(uiDispatched.value)).toEqual(manifestSemantics(ui))
-    const previewRun = await fixture.bind("sf-explicar-forecast")
+    const previewRun = await fixture.bind("sf-explicar-forecast", {}, undefined, "recorded-explicit")
+    expect(previewRun.requestedModel.variant?.toString()).toBe("recorded-explicit")
+    expect(previewRun.record.model.variant).toBe("recorded-explicit")
+    const storedPreviewSession = await Effect.runPromise(fixture.sessionStore.get(previewRun.session.id))
+    expect(digestSfValue(storedPreviewSession?.model)).toBe(digestSfValue(previewRun.record.model))
+    expect(digestSfValue(storedPreviewSession?.location)).toBe(digestSfValue(fixture.installation.location))
     const previews: ImportManifest[] = []
     for (const surface of ["native", "mcp"] as const) {
       const result = await previewRun.call(surface, "sf_import_preview", request)
+      if (result.status !== "ok") throw new Error(`${surface} sf_import_preview: ${result.reason}`)
       expect(result.status).toBe("ok")
-      if (result.status !== "ok") throw new Error(result.reason)
       const decoded = decodeSfOperationOutput("sf_import_preview", result.result)
       if (!decoded.ok) throw new Error("C04 output schema invalid")
       expect(manifestSemantics(decoded.value)).toEqual(manifestSemantics(ui))
@@ -82,11 +87,11 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const analyze = createPlannerImportAnalysis({ host: fixture.authority.host, issueSource: fixture.business.plannerProduct.issueSource,
       readPreview: fixture.imports.imports.readPreparedPreviewForAnalysis, verifyTarget })
     const replay = await fixture.ui("sf_import_preview", request, (call) => analyze(selection, call))
-    expect(replay.status).toBe("ok")
     if (replay.status !== "ok") throw new Error(replay.reason)
+    expect(replay.status).toBe("ok")
     expect(replay.value).toMatchObject({ importPreviewRef: chosen.id, analysisBasis: "import-preview", domainApplied: false, knownDifference: 12000, completeDifference: null })
     const beforeCase = await fixture.authority.state.read(app.request(), "cases", () => null)
-    if (beforeCase.status !== "ok") throw new Error("Case state unavailable")
+    if (beforeCase.status !== "ok") throw new Error(`Case state: ${"reason" in beforeCase ? beforeCase.reason : beforeCase.status}`)
     const updated = await fixture.authority.state.transaction(app.request(), { namespace: "cases", expectedStorageVersion: beforeCase.storageVersion,
       idempotencyKey: crypto.randomUUID(), commandDigest: digestSfValue(replay.value.sourceRefs), targetRef: `case:${fixture.caseRef.id}:${fixture.caseRef.incarnation}`,
       targetIncarnation: fixture.caseRef.incarnation }, async (state) => {
@@ -95,7 +100,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       current.version++
       return { commit: true, value: current.version }
     })
-    if (updated.status !== "ok") throw new Error("Case source selection failed")
+    if (updated.status !== "ok") throw new Error(`Case source selection: ${"reason" in updated ? updated.reason : updated.status}`)
     fixture.caseRef.version = updated.value
     for (const surface of ["native", "mcp"] as const) expect((await previewRun.call(surface, "sf_import_preview", request)).status).toBe("denied")
     const dependencies = { cases: fixture.business.cases, planner: fixture.business.planner, procurement: fixture.business.procurement,
@@ -105,8 +110,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       matchesIntent: async (call, operation, digest) => operation === "analysis.prepare" && digest === digestSfValue(selection) &&
         await fixture.authority.human.authorize(call, "analysis.prepare", selection) })
     const prepared = await fixture.human("analysis.prepare", selection, (call) => fixture.business.withCase(call, fixture.caseRef, {}, () => producer.prepare(call, selection)))
-    expect(prepared.status).toBe("ok")
     if (prepared.status !== "ok") throw new Error(prepared.reason)
+    expect(prepared.status).toBe("ok")
     expect(prepared.value.forecastComparison.importPreviewRef).toBe(chosen.id)
     const analysisRequest = { caseRef: fixture.caseRef, profileId: previewRun.admission.profile.id, profileVersion: previewRun.admission.profile.version,
       skillId: previewRun.receipt.skillId, skillVersion: previewRun.receipt.skillVersion, manifestDigest: previewRun.receipt.manifestDigest,
@@ -116,6 +121,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(forecastProof.value.promptContext?.importPreview.manifest).toEqual(chosen)
     const forecastPrompt = sfAnalysisPrompt(analysisRequest.objective, forecastProof.value)
     const native = await fixture.bind("sf-explicar-forecast", prepared.value, forecastPrompt)
+    expect(native.requestedModel).not.toHaveProperty("variant")
+    expect(native.record.model.variant).toBe("default")
     expect(native.promptAdmission?.prompt.text).toBe(forecastPrompt)
     expect(native.promptAdmission?.sessionID).toBe(native.session.id)
     const complete = await native.complete({ kind: "FinancialAnalysis", payload: prepared.value.forecastComparison, evidenceRefs: prepared.value.sourceRefs }, async (output, call) => {
@@ -131,8 +138,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(contribution.runProvenance).toMatchObject({ ...native.receipt, actualModel: "wp06-recorded-ingress/deterministic-public-events" })
     expect(contribution.payload.importPreviewRef).toBe(chosen.id)
     const persisted = await fixture.authority.state.read(app.request(), "contributions", (state) => state.contributions[complete.output.id])
+    if (persisted.status !== "ok") throw new Error(`Contribution persistence: ${"reason" in persisted ? persisted.reason : persisted.status}`)
     expect(persisted.status).toBe("ok")
-    if (persisted.status !== "ok") throw new Error("Contribution not persisted")
     expect(persisted.value).toEqual(complete.output)
     const assistant = await Effect.runPromise(fixture.sessionStore.message(complete.assistantMessageID))
     expect(assistant?.message.type).toBe("assistant")
@@ -156,8 +163,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data) }))).toBe(domainBefore)
     await fixture.human("analysis.read", { runRef: native.record.runRef }, async (call) => {
       const proof = await producer.verifier.verify(prepared.value, analysisRequest, call)
-      expect(proof.status).toBe("ok")
       if (proof.status !== "ok") throw new Error(proof.reason)
+      expect(proof.status).toBe("ok")
       expect((await proof.value.acceptsOutput({ ...contribution, payload: { ...comparison, importPreviewRef: ui.id } }, call)).status).not.toBe("ok")
     })
     const intentSelection = { caseRef: fixture.caseRef, previewRef: chosen.id, importRequest: request, intentText: "Frame the decision from this exact import preview" }
@@ -166,8 +173,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       operationIdentity: (call) => call.kind === "ui" ? fixture.authority.ui.operationIdentity(call) : undefined,
       authorize: async (call, value) => digestSfValue(value) === digestSfValue(expected) && await fixture.authority.human.authorize(call, "analysis.prepare", expected) })
     const intentPrepared = await fixture.human("analysis.prepare", intentSelection, (call) => fixture.business.withCase(call, fixture.caseRef, {}, () => createIntent().prepare(call, intentSelection)))
-    expect(intentPrepared.status).toBe("ok")
     if (intentPrepared.status !== "ok") throw new Error(intentPrepared.reason)
+    expect(intentPrepared.status).toBe("ok")
     expect(decodeSfSkillInput("DecisionIntentInput", intentPrepared.value).ok).toBe(true)
     expect(intentPrepared.value.importPreview).toEqual(request)
     const competingSelection = { ...intentSelection, previewRef: ui.id }
@@ -182,8 +189,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     // A new composition has no in-memory selection cache. It must recover the C08 binding.
     const intentProducer = createIntent()
     const intentProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) => intentProducer.verifier.verify(intentPrepared.value, intentRequest, call))
-    expect(intentProof.status).toBe("ok")
     if (intentProof.status !== "ok") throw new Error(intentProof.reason)
+    expect(intentProof.status).toBe("ok")
     expect(intentProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
     const intentPrompt = sfAnalysisPrompt(intentRequest.objective, intentProof.value)
     const intentNative = await fixture.bind("sf-enquadrar-decisao", intentPrepared.value, intentPrompt)
@@ -194,8 +201,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const draftRequest = { objective: intentSelection.intentText, horizon: intentPrepared.value.context.period,
       currency: intentPrepared.value.context.currency, criteria: ["Review the changed forecast before applying the file"], sourceRefs: intentPrepared.value.selectedSourceRefs }
     const drafted = await intentNative.call("mcp", "sf_case_draft", draftRequest)
+    if (drafted.status !== "ok") throw new Error(`MCP sf_case_draft: ${drafted.reason}`)
     expect(drafted.status).toBe("ok")
-    if (drafted.status !== "ok") throw new Error(drafted.reason)
     const intentFrame = decodeSfOperationOutput("sf_case_draft", drafted.result)
     if (!intentFrame.ok) throw new Error("Real Case intent producer output invalid")
     expect(intentFrame.value).toMatchObject({ objective: intentSelection.intentText, analysisBasis: "domain", domainApplied: false })
@@ -212,8 +219,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(intentComplete.run).toMatchObject({ state: "ready", native: { sessionID: intentNative.session.id, skillReceipt: intentNative.receipt }, outputRef: intentOutput.id })
     expect(intentPayload.importPreviewRef).toBe(chosen.id)
     const persistedIntent = await fixture.authority.state.read(app.request(), "contributions", (state) => state.contributions[intentOutput.id])
+    if (persistedIntent.status !== "ok") throw new Error(`Intent contribution persistence: ${"reason" in persistedIntent ? persistedIntent.reason : persistedIntent.status}`)
     expect(persistedIntent.status).toBe("ok")
-    if (persistedIntent.status !== "ok") throw new Error("Intent contribution not persisted")
     expect(persistedIntent.value).toEqual(intentOutput)
     const intentLink = renderedPreviewUrl(intentOutput, app.origin)
     expect(intentLink.searchParams.get("importPreviewRef")).toBe(chosen.id)
@@ -254,7 +261,11 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const currentRequest: ImportPreviewRequest = { ...request, admittedFileRef: currentFile.ref }
     const revocable = await fixture.bind("sf-enquadrar-decisao")
     expect((await fixture.http("import", "import-preview", currentRequest)).status).toBe(200)
-    for (const surface of ["native", "mcp"] as const) expect((await revocable.call(surface, "sf_import_preview", currentRequest)).status).toBe("ok")
+    for (const surface of ["native", "mcp"] as const) {
+      const result = await revocable.call(surface, "sf_import_preview", currentRequest)
+      if (result.status !== "ok") throw new Error(`${surface} current import before logout: ${result.reason}`)
+      expect(result.status).toBe("ok")
+    }
     const beforeLogout = await app.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
     const logout = await app.identity.handle(new Request(`${app.origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie: app.cookie, origin: app.origin } }))
     expect(logout?.status).toBe(204)

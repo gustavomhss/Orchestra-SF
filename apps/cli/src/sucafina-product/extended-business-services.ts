@@ -21,6 +21,7 @@ import { biViews } from "../../../../modules/sucafina/Sucafinav1/product/analyti
 import { createDecisionCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/decisions/capabilities.ts"
 import { createSfChangeProposalServices } from "./change-proposal-services.ts"
 import { createSfAlternativeServices } from "./alternative-services.ts"
+import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/product/integration/host-presentation.ts"
 
 /** Composition of published domain factories over the installation's existing authorities and persistence. */
 export function createSfExtendedBusinessServices(input: {
@@ -29,6 +30,7 @@ export function createSfExtendedBusinessServices(input: {
   persistence: SfScopedSourcePort
   proposalCoverageWrites: WeakSet<object>
   analysisSelectionWrites: WeakSet<object>
+  procurementEvidenceWrites?: WeakSet<object>
   origin: string
   preparation?: SfPortfolioPreparation
   reviewReaders?: SfReviewReaders
@@ -36,7 +38,7 @@ export function createSfExtendedBusinessServices(input: {
   assets?: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
 }) {
   const portfolioServices = createSfPortfolioServices({ authority: input.authority, business: input.business,
-    proposalCoverageWrites: input.proposalCoverageWrites, preparation: input.preparation })
+    proposalCoverageWrites: input.proposalCoverageWrites, procurementEvidenceWrites: input.procurementEvidenceWrites, preparation: input.preparation })
   const decisions = createSfChangeProposalServices(input)
   const alternatives = createSfAlternativeServices(input)
   const bi = createSfBiServices({ authority: input.authority, business: input.business, portfolio: portfolioServices })
@@ -63,9 +65,13 @@ export function createSfExtendedBusinessServices(input: {
     alternatives: alternatives.choices, business: input.business })
   let disposed = false
   const productHttp: NonNullable<Application["product"]> = async (request, surface) => disposed ? undefined : await choiceHttp(request, surface) ?? await http(request, surface)
-  const productHtml: NonNullable<Application["productHtml"]> = (html, surface, page) => {
+  const productHtml: SfProductHtml = (html, surface, page, request) => {
     if (disposed || surface !== "dashboard" || html.includes("data-sf-extended-navigation")) return html
-    const links = `<nav data-sf-extended-navigation aria-label="Business analysis"><a href="?sf=bi">Business intelligence</a>${reviews ? ` <a href="?sf=review&amp;page=${encodeURIComponent(page)}">Prepare review and reports</a>` : ""}</nav>`
+    const current = request ? new URL(request.url) : undefined
+    const year = current?.searchParams.get("year") ?? String(new Date().getUTCFullYear())
+    const period = { start: current?.searchParams.get("start") ?? `${year}-01-01`, end: current?.searchParams.get("end") ?? `${year}-12-31` }
+    const link = (mode: string) => `?${new URLSearchParams({ sf: mode, page, ...period }).toString().replaceAll("&", "&amp;")}`
+    const links = `<nav data-sf-extended-navigation aria-label="Business analysis"><a href="${link("bi")}">Business intelligence</a>${reviews ? ` <a href="${link("review")}">Prepare review and reports</a>` : ""}</nav>`
     return html.replace("</main>", `${links}</main>`)
   }
   return {
@@ -81,6 +87,6 @@ export function createSfExtendedBusinessServices(input: {
       ...(portfolioServices.proof ? { portfolioProof: portfolioServices.proof } : {}), ...(portfolioServices.units ? { units: portfolioServices.units } : {}),
     },
     unavailable: [...portfolioServices.unavailable, ...bi.unavailable, ...reviewServices.unavailable, ...decisions.unavailable],
-    dispose: () => { disposed = true; ownAssets?.dispose() },
+    dispose: () => { disposed = true; portfolioServices.dispose(); ownAssets?.dispose() },
   }
 }

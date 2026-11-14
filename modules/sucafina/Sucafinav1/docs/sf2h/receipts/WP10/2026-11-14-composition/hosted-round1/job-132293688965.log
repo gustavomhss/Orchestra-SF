@@ -1,0 +1,1406 @@
+﻿2026-11-14T02:11:11.4204571Z Current runner version: '2.338.2'
+2026-11-14T02:11:11.4225348Z ##[group]Runner Image Provisioner
+2026-11-14T02:11:11.4226009Z Hosted Compute Agent
+2026-11-14T02:11:11.4226499Z Version: 20261103.629
+2026-11-14T02:11:11.4226972Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T02:11:11.4227598Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T02:11:11.4228104Z Worker ID: {ccf741a9-ec53-4f32-92d2-40572e0c2210}
+2026-11-14T02:11:11.4228638Z Region: us-east-1
+2026-11-14T02:11:11.4229061Z Cloud: AWS
+2026-11-14T02:11:11.4229443Z ##[endgroup]
+2026-11-14T02:11:11.4230403Z ##[group]Operating System
+2026-11-14T02:11:11.4230852Z Ubuntu
+2026-11-14T02:11:11.4231483Z 24.04.5
+2026-11-14T02:11:11.4231879Z LTS
+2026-11-14T02:11:11.4232246Z ##[endgroup]
+2026-11-14T02:11:11.4232693Z ##[group]Runner Image
+2026-11-14T02:11:11.4233158Z Image: ubuntu-24.04
+2026-11-14T02:11:11.4233600Z Version: 20261111.127.1
+2026-11-14T02:11:11.4234629Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T02:11:11.4235870Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+2026-11-14T02:11:11.4236622Z ##[endgroup]
+2026-11-14T02:11:11.4237458Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T02:11:11.4239268Z Contents: read
+2026-11-14T02:11:11.4239699Z Metadata: read
+2026-11-14T02:11:11.4240122Z ##[endgroup]
+2026-11-14T02:11:11.4241959Z Secret source: Actions
+2026-11-14T02:11:11.4242674Z Cache mode: write
+2026-11-14T02:11:11.4243170Z Prepare workflow directory
+2026-11-14T02:11:11.4522192Z Prepare all required actions
+2026-11-14T02:11:11.4559146Z Getting action download info
+2026-11-14T02:11:11.6434632Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-11-14T02:11:12.9995748Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-14T02:11:13.0899665Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-11-14T02:11:13.1842796Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-14T02:11:13.4339304Z Complete job name: test (ubuntu-24.04)
+2026-11-14T02:11:13.5166136Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-14T02:11:13.5167470Z with:
+2026-11-14T02:11:13.5168296Z   repository: gustavomhss/Orchestra-SF
+2026-11-14T02:11:13.5175049Z   token: ***
+2026-11-14T02:11:13.5175830Z   ssh-strict: true
+2026-11-14T02:11:13.5176573Z   ssh-user: git
+2026-11-14T02:11:13.5177307Z   persist-credentials: true
+2026-11-14T02:11:13.5178134Z   clean: true
+2026-11-14T02:11:13.5178914Z   sparse-checkout-cone-mode: true
+2026-11-14T02:11:13.5179782Z   fetch-depth: 1
+2026-11-14T02:11:13.5180538Z   fetch-tags: false
+2026-11-14T02:11:13.5181483Z   show-progress: true
+2026-11-14T02:11:13.5182295Z   lfs: false
+2026-11-14T02:11:13.5182997Z   submodules: false
+2026-11-14T02:11:13.5183766Z   set-safe-directory: true
+2026-11-14T02:11:13.5184755Z ##[endgroup]
+2026-11-14T02:11:14.7925679Z Syncing repository: gustavomhss/Orchestra-SF
+2026-11-14T02:11:14.7927325Z ##[group]Getting Git version info
+2026-11-14T02:11:14.7928089Z Working directory is '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T02:11:14.7928955Z [command]/usr/bin/git version
+2026-11-14T02:11:14.8777423Z git version 2.56.1
+2026-11-14T02:11:14.8789541Z ##[endgroup]
+2026-11-14T02:11:14.8799479Z Temporarily overriding HOME='/home/runner/work/_temp/e3c9fb30-d9b7-4017-afe7-c846c533b2c7' before making global git config changes
+2026-11-14T02:11:14.8800336Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T02:11:14.8803676Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T02:11:14.8856012Z Deleting the contents of '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T02:11:14.8858577Z ##[group]Initializing the repository
+2026-11-14T02:11:14.8861959Z [command]/usr/bin/git init /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T02:11:14.8991012Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-14T02:11:14.8991791Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-14T02:11:14.8992420Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-14T02:11:14.8992834Z hint: call:
+2026-11-14T02:11:14.8993065Z hint:
+2026-11-14T02:11:14.8993434Z hint: 	git config --global init.defaultBranch <name>
+2026-11-14T02:11:14.8993743Z hint:
+2026-11-14T02:11:14.8994062Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-14T02:11:14.8994545Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-14T02:11:14.8994922Z hint:
+2026-11-14T02:11:14.8995196Z hint: 	git branch -m <name>
+2026-11-14T02:11:14.8995700Z hint:
+2026-11-14T02:11:14.8996064Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-14T02:11:14.9006336Z Initialized empty Git repository in /home/runner/work/Orchestra-SF/Orchestra-SF/.git/
+2026-11-14T02:11:14.9012933Z [command]/usr/bin/git remote add origin https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T02:11:14.9058119Z ##[endgroup]
+2026-11-14T02:11:14.9058840Z ##[group]Disabling automatic garbage collection
+2026-11-14T02:11:14.9060344Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-14T02:11:14.9082373Z ##[endgroup]
+2026-11-14T02:11:14.9083034Z ##[group]Setting up auth
+2026-11-14T02:11:14.9086978Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T02:11:14.9114282Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T02:11:15.1062105Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T02:11:15.1090226Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T02:11:15.1247870Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T02:11:15.1271398Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T02:11:15.1422427Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-14T02:11:15.1450615Z ##[endgroup]
+2026-11-14T02:11:15.1451620Z ##[group]Fetching the repository
+2026-11-14T02:11:15.1466312Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5:refs/remotes/origin/ci-run-linux-astra-wp10-eee00ac3-d6de984b-1
+2026-11-14T02:11:18.3909268Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T02:11:18.3910306Z  * [new ref]           d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5 -> origin/ci-run-linux-astra-wp10-eee00ac3-d6de984b-1
+2026-11-14T02:11:18.3913675Z ##[endgroup]
+2026-11-14T02:11:18.3914405Z ##[group]Determining the checkout info
+2026-11-14T02:11:18.3915603Z ##[endgroup]
+2026-11-14T02:11:18.3920426Z [command]/usr/bin/git sparse-checkout disable
+2026-11-14T02:11:18.4002474Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-14T02:11:18.4014597Z ##[group]Checking out the ref
+2026-11-14T02:11:18.4015258Z [command]/usr/bin/git checkout --progress --force -B ci-run-linux-astra-wp10-eee00ac3-d6de984b-1 refs/remotes/origin/ci-run-linux-astra-wp10-eee00ac3-d6de984b-1
+2026-11-14T02:11:19.1768818Z Switched to a new branch 'ci-run-linux-astra-wp10-eee00ac3-d6de984b-1'
+2026-11-14T02:11:19.1774574Z branch 'ci-run-linux-astra-wp10-eee00ac3-d6de984b-1' set up to track 'origin/ci-run-linux-astra-wp10-eee00ac3-d6de984b-1'.
+2026-11-14T02:11:19.1790448Z ##[endgroup]
+2026-11-14T02:11:19.1829298Z [command]/usr/bin/git log -1 --format=%H
+2026-11-14T02:11:19.1849394Z d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5
+2026-11-14T02:11:19.2072776Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-14T02:11:19.2073160Z with:
+2026-11-14T02:11:19.2073412Z   node-version: 24.15
+2026-11-14T02:11:19.2073635Z   always-auth: false
+2026-11-14T02:11:19.2074047Z   check-latest: false
+2026-11-14T02:11:19.2076107Z   token: ***
+2026-11-14T02:11:19.2076321Z ##[endgroup]
+2026-11-14T02:11:19.3576525Z Attempting to download 24.15...
+2026-11-14T02:11:19.3748730Z (node:2250) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T02:11:19.3749362Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T02:11:19.8734413Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-11-14T02:11:20.1171297Z Extracting ...
+2026-11-14T02:11:20.1252058Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/67b53346-3ad5-4b74-a73e-7213ea69b5ab -f /home/runner/work/_temp/f0a2946a-2a72-4374-97bc-baf3da9efb8c
+2026-11-14T02:11:21.1302786Z Adding to the cache ...
+2026-11-14T02:11:22.0440122Z ##[group]Environment details
+2026-11-14T02:11:22.3344900Z node: v24.15.0
+2026-11-14T02:11:22.3345357Z npm: 11.12.1
+2026-11-14T02:11:22.3345657Z yarn: 1.22.22
+2026-11-14T02:11:22.3346405Z ##[endgroup]
+2026-11-14T02:11:22.3470824Z ##[group]Run node --input-type=module <<'NODE'
+2026-11-14T02:11:22.3471548Z [36;1mnode --input-type=module <<'NODE'[0m
+2026-11-14T02:11:22.3472105Z [36;1mimport { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-14T02:11:22.3472570Z [36;1mimport path from 'node:path'[0m
+2026-11-14T02:11:22.3472964Z [36;1mimport { omniControlScope, validateRequest } from './script/test-ci-request.ts'[0m
+2026-11-14T02:11:22.3473442Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-14T02:11:22.3473871Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-14T02:11:22.3474354Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-14T02:11:22.3474755Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-14T02:11:22.3475107Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-14T02:11:22.3475529Z [36;1mwriteFileSync('.ci-run.json', JSON.stringify(request))[0m
+2026-11-14T02:11:22.3475957Z [36;1mmkdirSync('test-ci-evidence', { recursive: true })[0m
+2026-11-14T02:11:22.3476376Z [36;1mwriteFileSync('test-ci-evidence/request.json', JSON.stringify({ request,[0m
+2026-11-14T02:11:22.3476845Z [36;1m  platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))[0m
+2026-11-14T02:11:22.3477266Z [36;1mappendFileSync(process.env.GITHUB_OUTPUT,[0m
+2026-11-14T02:11:22.3477767Z [36;1m  `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)[0m
+2026-11-14T02:11:22.3478223Z [36;1mNODE[0m
+2026-11-14T02:11:22.6877724Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:11:22.6878143Z ##[endgroup]
+2026-11-14T02:11:22.7575993Z (node:2290) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/src/module-catalog.ts is not specified and it doesn't parse as CommonJS.
+2026-11-14T02:11:22.7589595Z Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+2026-11-14T02:11:22.7590974Z To eliminate this warning, add "type": "module" to /home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/package.json.
+2026-11-14T02:11:22.7596892Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-11-14T02:11:22.7920909Z Prepare all required actions
+2026-11-14T02:11:22.7921695Z Getting action download info
+2026-11-14T02:11:22.8846987Z Download action repository 'oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6' (SHA:0c5077e51419868618aeaa5fe8019c62421857d6)
+2026-11-14T02:11:22.9845565Z Download action repository 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-11-14T02:11:23.1288388Z ##[group]Run ./.github/actions/setup-bun
+2026-11-14T02:11:23.1288662Z with:
+2026-11-14T02:11:23.1288892Z ##[endgroup]
+2026-11-14T02:11:23.1341714Z ##[start-action display=Setup Node;id=__self.__actions_setup-node]
+2026-11-14T02:11:23.1391910Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-14T02:11:23.1392238Z with:
+2026-11-14T02:11:23.1392440Z   node-version: 24
+2026-11-14T02:11:23.1392679Z   always-auth: false
+2026-11-14T02:11:23.1392911Z   check-latest: false
+2026-11-14T02:11:23.1394853Z   token: ***
+2026-11-14T02:11:23.1395134Z ##[endgroup]
+2026-11-14T02:11:23.2488292Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-14T02:11:23.2491850Z (node:2301) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T02:11:23.2492730Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T02:11:23.2493388Z ##[group]Environment details
+2026-11-14T02:11:24.4338906Z node: v24.22.2
+2026-11-14T02:11:24.4339495Z npm: 11.19.1
+2026-11-14T02:11:24.4339767Z yarn: 1.22.22
+2026-11-14T02:11:24.4340397Z ##[endgroup]
+2026-11-14T02:11:24.4405277Z ##[end-action id=__self.__actions_setup-node;outcome=success;conclusion=success;duration_ms=1306]
+2026-11-14T02:11:24.4407773Z ##[start-action display=Get baseline download URL;id=__self.bun-url]
+2026-11-14T02:11:24.4424854Z ##[group]Run if [ "$RUNNER_ARCH" = "X64" ]; then
+2026-11-14T02:11:24.4425190Z [36;1mif [ "$RUNNER_ARCH" = "X64" ]; then[0m
+2026-11-14T02:11:24.4425612Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-14T02:11:24.4425974Z [36;1m  case "$RUNNER_OS" in[0m
+2026-11-14T02:11:24.4426219Z [36;1m    macOS)   OS=darwin ;;[0m
+2026-11-14T02:11:24.4426473Z [36;1m    Linux)   OS=linux ;;[0m
+2026-11-14T02:11:24.4426721Z [36;1m    Windows) OS=windows ;;[0m
+2026-11-14T02:11:24.4426968Z [36;1m  esac[0m
+2026-11-14T02:11:24.4427399Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-${OS}-x64-baseline.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T02:11:24.4427922Z [36;1melif [ "$RUNNER_OS-$RUNNER_ARCH" = "Windows-ARM64" ]; then[0m
+2026-11-14T02:11:24.4428309Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-14T02:11:24.4428826Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-windows-aarch64.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T02:11:24.4429256Z [36;1mfi[0m
+2026-11-14T02:11:24.5087614Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:11:24.5087984Z ##[endgroup]
+2026-11-14T02:11:24.5393900Z ##[end-action id=__self.bun-url;outcome=success;conclusion=success;duration_ms=98]
+2026-11-14T02:11:24.5396275Z ##[start-action display=Setup Bun;id=__self.__oven-sh_setup-bun]
+2026-11-14T02:11:24.5439397Z ##[group]Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+2026-11-14T02:11:24.5439752Z with:
+2026-11-14T02:11:24.5440186Z   bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-14T02:11:24.5440615Z   no-cache: false
+2026-11-14T02:11:24.5442973Z   token: ***
+2026-11-14T02:11:24.5443230Z ##[endgroup]
+2026-11-14T02:11:24.6626046Z Obtained version 1.3.14 from package.json
+2026-11-14T02:11:24.6632471Z Downloading a new version of Bun: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-14T02:11:25.0623559Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/5c852f73-fb81-40de-b8b5-46ef494adc99.zip
+2026-11-14T02:11:25.6559386Z [command]/home/runner/.bun/bin/bun --revision
+2026-11-14T02:11:25.6594657Z 1.3.14+0d9b296af
+2026-11-14T02:11:25.6656272Z ##[end-action id=__self.__oven-sh_setup-bun;outcome=success;conclusion=success;duration_ms=1125]
+2026-11-14T02:11:25.6658512Z ##[start-action display=Get cache directory;id=__self.cache]
+2026-11-14T02:11:25.6673806Z ##[group]Run echo "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"
+2026-11-14T02:11:25.6674194Z [36;1mecho "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T02:11:25.6702245Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:11:25.6702562Z ##[endgroup]
+2026-11-14T02:11:25.6779423Z ##[end-action id=__self.cache;outcome=success;conclusion=success;duration_ms=12]
+2026-11-14T02:11:25.6782239Z ##[start-action display=Compute dependency cache keys;id=__self.keys]
+2026-11-14T02:11:25.7808189Z ##[group]Run echo "bun=Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131" >> "$GITHUB_OUTPUT"
+2026-11-14T02:11:25.7808971Z [36;1mecho "bun=Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T02:11:25.7809642Z [36;1mecho "modules=Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T02:11:25.7837168Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:11:25.7837474Z ##[endgroup]
+2026-11-14T02:11:25.7885349Z ##[end-action id=__self.keys;outcome=success;conclusion=success;duration_ms=110]
+2026-11-14T02:11:25.7887402Z ##[start-action display=Restore node_modules;id=__self.modules-cache]
+2026-11-14T02:11:25.7916654Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T02:11:25.7917014Z with:
+2026-11-14T02:11:25.7917558Z   path: node_modules
+packages/*/node_modules
+packages/*/*/node_modules
+apps/*/node_modules
+modules/*/node_modules
+modules/*/*/node_modules
+tooling/*/node_modules
+native/*/*/node_modules
+native/*/*/*/node_modules
+
+2026-11-14T02:11:25.7918346Z   key: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-14T02:11:25.7918771Z   enableCrossOsArchive: false
+2026-11-14T02:11:25.7919020Z   fail-on-cache-miss: false
+2026-11-14T02:11:25.7919267Z   lookup-only: false
+2026-11-14T02:11:25.7919485Z ##[endgroup]
+2026-11-14T02:11:25.8719290Z (node:2383) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T02:11:25.8720314Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T02:11:25.9227044Z Cache not found for input keys: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-14T02:11:25.9273862Z ##[end-action id=__self.modules-cache;outcome=success;conclusion=success;duration_ms=138]
+2026-11-14T02:11:25.9276131Z ##[start-action display=Restore Bun dependencies;id=__self.bun-cache]
+2026-11-14T02:11:25.9319753Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T02:11:25.9320121Z with:
+2026-11-14T02:11:25.9320354Z   path: /home/runner/.bun/install/cache
+2026-11-14T02:11:25.9320738Z   key: Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131
+2026-11-14T02:11:25.9321397Z   restore-keys: Linux-X64-bun-v3-
+
+2026-11-14T02:11:25.9321788Z   enableCrossOsArchive: false
+2026-11-14T02:11:25.9322070Z   fail-on-cache-miss: false
+2026-11-14T02:11:25.9322298Z   lookup-only: false
+2026-11-14T02:11:25.9322519Z ##[endgroup]
+2026-11-14T02:11:26.0092359Z (node:2396) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T02:11:26.0093032Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T02:11:26.0673141Z Cache not found for input keys: Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131, Linux-X64-bun-v3-
+2026-11-14T02:11:26.0711967Z ##[end-action id=__self.bun-cache;outcome=success;conclusion=success;duration_ms=143]
+2026-11-14T02:11:26.0714163Z ##[start-action display=Install setuptools for distutils compatibility;id=__self.__run]
+2026-11-14T02:11:26.0729413Z ##[group]Run python3 -m pip install setuptools || pip install setuptools || true
+2026-11-14T02:11:26.0729893Z [36;1mpython3 -m pip install setuptools || pip install setuptools || true[0m
+2026-11-14T02:11:26.0758222Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:11:26.0758546Z ##[endgroup]
+2026-11-14T02:11:26.8249530Z Defaulting to user installation because normal site-packages is not writeable
+2026-11-14T02:11:27.6322882Z Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (68.1.2)
+2026-11-14T02:11:27.8535673Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=1782]
+2026-11-14T02:11:27.8538152Z ##[start-action display=Install dependencies;id=__self.__run_2]
+2026-11-14T02:11:27.8556936Z ##[group]Run # Workaround for patched peer variants
+2026-11-14T02:11:27.8557350Z [36;1m# Workaround for patched peer variants[0m
+2026-11-14T02:11:27.8557689Z [36;1m# e.g. ./patches/ for standard-openapi[0m
+2026-11-14T02:11:27.8558016Z [36;1m# https://github.com/oven-sh/bun/issues/28147[0m
+2026-11-14T02:11:27.8558305Z [36;1mif [ "$RUNNER_OS" = "Windows" ]; then[0m
+2026-11-14T02:11:27.8558691Z [36;1m  # Bun can leave a patched package directory half-renamed on Windows.[0m
+2026-11-14T02:11:27.8559161Z [36;1m  # The hoisted layout nests several copies of a patched package (e.g. @ai-sdk/openai-compatible),[0m
+2026-11-14T02:11:27.8559667Z [36;1m  # and Bun applies the patch once per copy; concurrent renames into the same cache entry race[0m
+2026-11-14T02:11:27.8560200Z [36;1m  # with ENOTEMPTY. Every attempt starts from an empty cache because the loser may leave it partial.[0m
+2026-11-14T02:11:27.8560635Z [36;1m  cache_dir="$PWD/.bun-install-cache"[0m
+2026-11-14T02:11:27.8560971Z [36;1m  trap 'rm -rf "$cache_dir"' EXIT[0m
+2026-11-14T02:11:27.8561600Z [36;1m  for attempt in 1 2 3 4 5; do[0m
+2026-11-14T02:11:27.8561881Z [36;1m    rm -rf "$cache_dir"[0m
+2026-11-14T02:11:27.8562433Z [36;1m    rm -rf node_modules[0m
+2026-11-14T02:11:27.8562754Z [36;1m    if bun install --no-cache --cache-dir "$cache_dir" --linker hoisted ; then[0m
+2026-11-14T02:11:27.8563127Z [36;1m      exit 0[0m
+2026-11-14T02:11:27.8563337Z [36;1m    fi[0m
+2026-11-14T02:11:27.8563703Z [36;1m    echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"[0m
+2026-11-14T02:11:27.8564155Z [36;1m  done[0m
+2026-11-14T02:11:27.8564360Z [36;1m  exit 1[0m
+2026-11-14T02:11:27.8564600Z [36;1melse[0m
+2026-11-14T02:11:27.8564811Z [36;1m  bun install [0m
+2026-11-14T02:11:27.8565016Z [36;1mfi[0m
+2026-11-14T02:11:27.8592425Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:11:27.8592846Z ##[endgroup]
+2026-11-14T02:11:27.8662273Z bun install v1.3.14 (0d9b296a)
+2026-11-14T02:11:27.8809467Z Resolving dependencies
+2026-11-14T02:11:33.6703368Z Resolved, downloaded and extracted [466]
+2026-11-14T02:11:33.6704117Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-arm64 - 404
+2026-11-14T02:11:33.6704480Z 
+2026-11-14T02:11:33.6704788Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-musl - 404
+2026-11-14T02:11:33.6705143Z 
+2026-11-14T02:11:33.6705479Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-x64 - 404
+2026-11-14T02:11:33.6705783Z 
+2026-11-14T02:11:33.6706137Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-musl - 404
+2026-11-14T02:11:33.6706453Z 
+2026-11-14T02:11:33.6706785Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-gnu - 404
+2026-11-14T02:11:33.6707142Z 
+2026-11-14T02:11:33.6707435Z warn: GET https://registry.npmjs.org/hugr-omni-win32-arm64-msvc - 404
+2026-11-14T02:11:33.6707785Z 
+2026-11-14T02:11:33.6708092Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-gnu - 404
+2026-11-14T02:11:33.6708436Z 
+2026-11-14T02:11:33.6709151Z warn: GET https://registry.npmjs.org/hugr-omni-win32-x64-msvc - 404
+2026-11-14T02:12:04.4458894Z Saved lockfile
+2026-11-14T02:12:04.4459111Z 
+2026-11-14T02:12:04.4485888Z $ bun run --cwd packages/core fix-node-pty
+2026-11-14T02:12:04.4486552Z $ bun run script/fix-node-pty.ts
+2026-11-14T02:12:04.4635746Z $ husky
+2026-11-14T02:12:04.4945429Z 
+2026-11-14T02:12:04.4946003Z + @actions/artifact@5.0.1 (v6.3.1 available)
+2026-11-14T02:12:04.4946394Z + @tsconfig/bun@1.0.9 (v1.0.11 available)
+2026-11-14T02:12:04.4946781Z + @types/mime-types@3.0.1
+2026-11-14T02:12:04.4947133Z + @typescript/native-preview@7.0.0-dev.20251207.1
+2026-11-14T02:12:04.4947482Z + glob@13.0.5 (v14.0.4 available)
+2026-11-14T02:12:04.4947738Z + husky@9.1.7
+2026-11-14T02:12:04.4947956Z + oxlint@1.60.0
+2026-11-14T02:12:04.4948206Z + oxlint-tsgolint@0.21.0
+2026-11-14T02:12:04.4948486Z + prettier@3.6.2 (v3.9.10 available)
+2026-11-14T02:12:04.4948950Z + semver@7.8.1 (v7.8.6 available)
+2026-11-14T02:12:04.4949250Z + turbo@2.10.2
+2026-11-14T02:12:04.4949665Z + @ai-sdk/openai-compatible@2.0.41 (v3.0.90 available)
+2026-11-14T02:12:04.4950058Z + heap-snapshot-toolkit@1.1.3
+2026-11-14T02:12:04.4950398Z + typescript@5.8.2 (v7.0.2 available)
+2026-11-14T02:12:04.4950621Z 
+2026-11-14T02:12:04.4950799Z 2953 packages installed [36.63s]
+2026-11-14T02:12:04.5192147Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=36665]
+2026-11-14T02:12:04.5195979Z ##[start-action display=Save Bun dependencies;id=__self.__actions_cache]
+2026-11-14T02:12:04.5213168Z ##[end-action id=__self.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T02:12:04.5215335Z ##[start-action display=Save node_modules;id=__self.__actions_cache_2]
+2026-11-14T02:12:04.5339236Z ##[end-action id=__self.__actions_cache_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T02:12:04.5414448Z Prepare all required actions
+2026-11-14T02:12:04.5414914Z Getting action download info
+2026-11-14T02:12:04.6310515Z ##[group]Run ./.github/actions/ripgrep
+2026-11-14T02:12:04.6310738Z with:
+2026-11-14T02:12:04.6310881Z   save: false
+2026-11-14T02:12:04.6311445Z ##[endgroup]
+2026-11-14T02:12:04.6316305Z ##[start-action display=Select ripgrep release;id=__self_2.release]
+2026-11-14T02:12:04.6326788Z ##[group]Run version=15.2.0
+2026-11-14T02:12:04.6327028Z [36;1mversion=15.2.0[0m
+2026-11-14T02:12:04.6327233Z [36;1mcase "$RUNNER_OS-$RUNNER_ARCH" in[0m
+2026-11-14T02:12:04.6327674Z [36;1m  Linux-X64) platform=x86_64-unknown-linux-musl; ext=tar.gz; sha=33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c ;;[0m
+2026-11-14T02:12:04.6328329Z [36;1m  Linux-ARM64) platform=aarch64-unknown-linux-gnu; ext=tar.gz; sha=a740b91c82eaf9914cfedd353572f2791cbe0162c84101ee0951058f4dcbc90d ;;[0m
+2026-11-14T02:12:04.6329001Z [36;1m  macOS-ARM64) platform=aarch64-apple-darwin; ext=tar.gz; sha=3750b2e93f37e0c692657da574d7019a101c0084da05a790c83fd335bad973e4 ;;[0m
+2026-11-14T02:12:04.6329818Z [36;1m  macOS-X64) platform=x86_64-apple-darwin; ext=tar.gz; sha=af7825fcc69a2afc7a7aea55fc9af90e26421d8f20fe59df32e233c0b8a231c1 ;;[0m
+2026-11-14T02:12:04.6330472Z [36;1m  Windows-X64) platform=x86_64-pc-windows-msvc; ext=zip; sha=71b2fef860abe467217a538ff31de02f5258807c0129f771846f87bd029aafc5 ;;[0m
+2026-11-14T02:12:04.6331245Z [36;1m  Windows-ARM64) platform=aarch64-pc-windows-msvc; ext=zip; sha=e4abca10c3a64ebea742667dd7009449d49403db5460dd6873e389fa2945360f ;;[0m
+2026-11-14T02:12:04.6331741Z [36;1m  *) echo "::error::no pinned ripgrep for $RUNNER_OS-$RUNNER_ARCH"; exit 1 ;;[0m
+2026-11-14T02:12:04.6332017Z [36;1mesac[0m
+2026-11-14T02:12:04.6332172Z [36;1m{[0m
+2026-11-14T02:12:04.6332328Z [36;1m  echo "version=$version"[0m
+2026-11-14T02:12:04.6332545Z [36;1m  echo "root=ripgrep-$version-$platform"[0m
+2026-11-14T02:12:04.6332763Z [36;1m  echo "ext=$ext"[0m
+2026-11-14T02:12:04.6332942Z [36;1m  echo "sha=$sha"[0m
+2026-11-14T02:12:04.6333155Z [36;1m  echo "archives=$RUNNER_TEMP/ripgrep-archives"[0m
+2026-11-14T02:12:04.6333412Z [36;1m  echo "bin=$RUNNER_TEMP/ripgrep-$version"[0m
+2026-11-14T02:12:04.6333738Z [36;1m} >> "$GITHUB_OUTPUT"[0m
+2026-11-14T02:12:04.6361838Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:04.6362092Z ##[endgroup]
+2026-11-14T02:12:04.6413247Z ##[end-action id=__self_2.release;outcome=success;conclusion=success;duration_ms=9]
+2026-11-14T02:12:04.6414636Z ##[start-action display=Restore ripgrep archive;id=__self_2.restore]
+2026-11-14T02:12:04.6435631Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T02:12:04.6435898Z with:
+2026-11-14T02:12:04.6436078Z   path: /home/runner/work/_temp/ripgrep-archives
+2026-11-14T02:12:04.6436515Z   key: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-14T02:12:04.6436949Z   enableCrossOsArchive: false
+2026-11-14T02:12:04.6437135Z   fail-on-cache-miss: false
+2026-11-14T02:12:04.6437306Z   lookup-only: false
+2026-11-14T02:12:04.6437458Z ##[endgroup]
+2026-11-14T02:12:04.7248442Z (node:2786) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T02:12:04.7249172Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T02:12:04.7762910Z Cache not found for input keys: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-14T02:12:04.7801714Z ##[end-action id=__self_2.restore;outcome=success;conclusion=success;duration_ms=138]
+2026-11-14T02:12:04.7809600Z ##[start-action display=Download ripgrep archive (cache miss);id=__self_2.__run]
+2026-11-14T02:12:04.7825481Z ##[group]Run set -euo pipefail
+2026-11-14T02:12:04.7825726Z [36;1mset -euo pipefail[0m
+2026-11-14T02:12:04.7825918Z [36;1mmkdir -p "$ARCHIVES"[0m
+2026-11-14T02:12:04.7826416Z [36;1m# https only, redirects included. --retry covers timeouts and HTTP 408, 429, 500, 502, 503 and 504 (GitHub's[0m
+2026-11-14T02:12:04.7826901Z [36;1m# release CDN has answered 504 for this file); a 404 or another client error fails at once.[0m
+2026-11-14T02:12:04.7827361Z [36;1mcurl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \[0m
+2026-11-14T02:12:04.7827813Z [36;1m  --retry 6 --retry-connrefused --retry-delay 5 --connect-timeout 20 --max-time 120 \[0m
+2026-11-14T02:12:04.7828315Z [36;1m  -o "$ARCHIVES/$ROOT.$EXT" "https://github.com/BurntSushi/ripgrep/releases/download/$VERSION/$ROOT.$EXT"[0m
+2026-11-14T02:12:04.7854882Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:04.7855133Z env:
+2026-11-14T02:12:04.7855285Z   VERSION: 15.2.0
+2026-11-14T02:12:04.7855472Z   ROOT: ripgrep-15.2.0-x86_64-unknown-linux-musl
+2026-11-14T02:12:04.7855678Z   EXT: tar.gz
+2026-11-14T02:12:04.7855871Z   ARCHIVES: /home/runner/work/_temp/ripgrep-archives
+2026-11-14T02:12:04.7856082Z ##[endgroup]
+2026-11-14T02:12:04.8594263Z ##[end-action id=__self_2.__run;outcome=success;conclusion=success;duration_ms=78]
+2026-11-14T02:12:04.8597576Z ##[start-action display=Verify and extract ripgrep;id=__self_2.__run_2]
+2026-11-14T02:12:04.8608984Z ##[group]Run set -euo pipefail
+2026-11-14T02:12:04.8609248Z [36;1mset -euo pipefail[0m
+2026-11-14T02:12:04.8609433Z [36;1marchive="$ARCHIVES/$ROOT.$EXT"[0m
+2026-11-14T02:12:04.8609770Z [36;1m# Hashed from stdin: given a Windows path, sha256sum escapes its output with a leading backslash.[0m
+2026-11-14T02:12:04.8610186Z [36;1mactual=$( (sha256sum 2>/dev/null || shasum -a 256) < "$archive" | cut -d' ' -f1)[0m
+2026-11-14T02:12:04.8610482Z [36;1mif [ "$actual" != "$SHA" ]; then[0m
+2026-11-14T02:12:04.8610770Z [36;1m  echo "::error::ripgrep archive sha256 $actual does not match the pinned $SHA"[0m
+2026-11-14T02:12:04.8611292Z [36;1m  exit 1[0m
+2026-11-14T02:12:04.8611449Z [36;1mfi[0m
+2026-11-14T02:12:04.8611623Z [36;1mwork=$(mktemp -d)[0m
+2026-11-14T02:12:04.8611802Z [36;1mcp "$archive" "$work/"[0m
+2026-11-14T02:12:04.8612032Z [36;1mif [ "$EXT" = zip ] && command -v unzip >/dev/null; then[0m
+2026-11-14T02:12:04.8612393Z [36;1m  (cd "$work" && unzip -q "$ROOT.$EXT")[0m
+2026-11-14T02:12:04.8612611Z [36;1melif [ "$EXT" = zip ]; then[0m
+2026-11-14T02:12:04.8612835Z [36;1m  (cd "$work" && 7z x -y "$ROOT.$EXT" >/dev/null)[0m
+2026-11-14T02:12:04.8613048Z [36;1melse[0m
+2026-11-14T02:12:04.8613224Z [36;1m  (cd "$work" && tar -xzf "$ROOT.$EXT")[0m
+2026-11-14T02:12:04.8613419Z [36;1mfi[0m
+2026-11-14T02:12:04.8613563Z [36;1mrm -rf "$BIN"[0m
+2026-11-14T02:12:04.8613729Z [36;1mmkdir -p "$BIN"[0m
+2026-11-14T02:12:04.8613900Z [36;1mcp "$work/$ROOT/rg"* "$BIN/"[0m
+2026-11-14T02:12:04.8614090Z [36;1mrm -rf "$work"[0m
+2026-11-14T02:12:04.8640017Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:04.8640266Z env:
+2026-11-14T02:12:04.8640467Z   ROOT: ripgrep-15.2.0-x86_64-unknown-linux-musl
+2026-11-14T02:12:04.8640683Z   EXT: tar.gz
+2026-11-14T02:12:04.8640910Z   SHA: 33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-14T02:12:04.8641332Z   ARCHIVES: /home/runner/work/_temp/ripgrep-archives
+2026-11-14T02:12:04.8641591Z   BIN: /home/runner/work/_temp/ripgrep-15.2.0
+2026-11-14T02:12:04.8641789Z ##[endgroup]
+2026-11-14T02:12:04.9194777Z ##[end-action id=__self_2.__run_2;outcome=success;conclusion=success;duration_ms=59]
+2026-11-14T02:12:04.9196527Z ##[start-action display=Save ripgrep archive;id=__self_2.__actions_cache]
+2026-11-14T02:12:04.9199694Z ##[end-action id=__self_2.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T02:12:04.9201602Z ##[start-action display=Put ripgrep on PATH;id=__self_2.__run_3]
+2026-11-14T02:12:04.9212085Z ##[group]Run set -euo pipefail
+2026-11-14T02:12:04.9212331Z [36;1mset -euo pipefail[0m
+2026-11-14T02:12:04.9212545Z [36;1m[ "$RUNNER_OS" = Windows ] || chmod +x "$BIN/rg"[0m
+2026-11-14T02:12:04.9212894Z [36;1mreported=$("$BIN/rg" --version | head -1)[0m
+2026-11-14T02:12:04.9213113Z [36;1mcase "$reported" in[0m
+2026-11-14T02:12:04.9213314Z [36;1m  "ripgrep $VERSION"*) echo "$reported" ;;[0m
+2026-11-14T02:12:04.9213616Z [36;1m  *) echo "::error::expected ripgrep $VERSION, got: $reported"; exit 1 ;;[0m
+2026-11-14T02:12:04.9213876Z [36;1mesac[0m
+2026-11-14T02:12:04.9214032Z [36;1mecho "$BIN" >> "$GITHUB_PATH"[0m
+2026-11-14T02:12:04.9214285Z [36;1mecho "ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD=1" >> "$GITHUB_ENV"[0m
+2026-11-14T02:12:04.9240871Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:04.9241290Z env:
+2026-11-14T02:12:04.9241454Z   VERSION: 15.2.0
+2026-11-14T02:12:04.9241639Z   BIN: /home/runner/work/_temp/ripgrep-15.2.0
+2026-11-14T02:12:04.9241840Z ##[endgroup]
+2026-11-14T02:12:04.9303383Z ripgrep 15.2.0 (rev e89fff89ac)
+2026-11-14T02:12:04.9310889Z ##[end-action id=__self_2.__run_3;outcome=success;conclusion=success;duration_ms=10]
+2026-11-14T02:12:04.9336939Z ##[group]Run # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-14T02:12:04.9337417Z [36;1m# Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that[0m
+2026-11-14T02:12:04.9337862Z [36;1m# name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.[0m
+2026-11-14T02:12:04.9338174Z [36;1minstall_sandbox() {[0m
+2026-11-14T02:12:04.9338366Z [36;1m  sudo apt-get update -qq[0m
+2026-11-14T02:12:04.9338587Z [36;1m  sudo apt-get install -y -qq bubblewrap socat[0m
+2026-11-14T02:12:04.9338795Z [36;1m}[0m
+2026-11-14T02:12:04.9338944Z [36;1mif ! install_sandbox; then[0m
+2026-11-14T02:12:04.9339333Z [36;1m  for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do[0m
+2026-11-14T02:12:04.9339728Z [36;1m    [ -f "$file" ] || continue[0m
+2026-11-14T02:12:04.9340077Z [36;1m    sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"[0m
+2026-11-14T02:12:04.9340344Z [36;1m  done[0m
+2026-11-14T02:12:04.9340494Z [36;1m  install_sandbox[0m
+2026-11-14T02:12:04.9340656Z [36;1mfi[0m
+2026-11-14T02:12:04.9340935Z [36;1m# Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.[0m
+2026-11-14T02:12:04.9341588Z [36;1msudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0[0m
+2026-11-14T02:12:04.9362506Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:04.9362748Z env:
+2026-11-14T02:12:04.9362912Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:04.9363106Z ##[endgroup]
+2026-11-14T02:12:14.2764902Z Selecting previously unselected package bubblewrap.
+2026-11-14T02:12:14.4609665Z (Reading database ... 
+2026-11-14T02:12:14.4609945Z (Reading database ... 5%
+2026-11-14T02:12:14.4610142Z (Reading database ... 10%
+2026-11-14T02:12:14.4610326Z (Reading database ... 15%
+2026-11-14T02:12:14.4610507Z (Reading database ... 20%
+2026-11-14T02:12:14.4610871Z (Reading database ... 25%
+2026-11-14T02:12:14.4611265Z (Reading database ... 30%
+2026-11-14T02:12:14.4611465Z (Reading database ... 35%
+2026-11-14T02:12:14.4611648Z (Reading database ... 40%
+2026-11-14T02:12:14.4611835Z (Reading database ... 45%
+2026-11-14T02:12:14.4612008Z (Reading database ... 50%
+2026-11-14T02:12:14.4693759Z (Reading database ... 55%
+2026-11-14T02:12:14.5603770Z (Reading database ... 60%
+2026-11-14T02:12:14.6553256Z (Reading database ... 65%
+2026-11-14T02:12:14.7860536Z (Reading database ... 70%
+2026-11-14T02:12:14.8716770Z (Reading database ... 75%
+2026-11-14T02:12:15.0031366Z (Reading database ... 80%
+2026-11-14T02:12:15.5178979Z (Reading database ... 85%
+2026-11-14T02:12:16.7376370Z (Reading database ... 90%
+2026-11-14T02:12:17.6213084Z (Reading database ... 95%
+2026-11-14T02:12:17.6213516Z (Reading database ... 100%
+2026-11-14T02:12:17.6214033Z (Reading database ... 216380 files and directories currently installed.)
+2026-11-14T02:12:17.6258952Z Preparing to unpack .../bubblewrap_0.9.0-1ubuntu0.3_amd64.deb ...
+2026-11-14T02:12:17.6272559Z Unpacking bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-11-14T02:12:17.6495890Z Selecting previously unselected package socat.
+2026-11-14T02:12:17.6598499Z Preparing to unpack .../socat_1.8.0.0-4ubuntu0.1_amd64.deb ...
+2026-11-14T02:12:17.6601330Z Unpacking socat (1.8.0.0-4ubuntu0.1) ...
+2026-11-14T02:12:17.6973326Z Setting up bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-11-14T02:12:17.7001499Z Setting up socat (1.8.0.0-4ubuntu0.1) ...
+2026-11-14T02:12:17.7013067Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-11-14T02:12:17.7032231Z Not building database; man-db/auto-update is not 'true'.
+2026-11-14T02:12:18.2402716Z 
+2026-11-14T02:12:18.2403336Z Running kernel seems to be up-to-date.
+2026-11-14T02:12:18.2403614Z 
+2026-11-14T02:12:18.2403734Z No services need to be restarted.
+2026-11-14T02:12:18.2403857Z 
+2026-11-14T02:12:18.2404080Z No containers need to be restarted.
+2026-11-14T02:12:18.2404222Z 
+2026-11-14T02:12:18.2404778Z No user sessions are running outdated binaries.
+2026-11-14T02:12:18.2404945Z 
+2026-11-14T02:12:18.2405147Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-14T02:12:19.0778584Z kernel.apparmor_restrict_unprivileged_userns = 0
+2026-11-14T02:12:19.0814091Z ##[group]Run git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+2026-11-14T02:12:19.0814591Z [36;1mgit config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"[0m
+2026-11-14T02:12:19.0814957Z [36;1mgit config --global user.name "github-actions[bot]"[0m
+2026-11-14T02:12:19.0841201Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:19.0841462Z env:
+2026-11-14T02:12:19.0841632Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:19.0841825Z ##[endgroup]
+2026-11-14T02:12:19.0923315Z ##[group]Run jq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do
+2026-11-14T02:12:19.0923830Z [36;1mjq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do[0m
+2026-11-14T02:12:19.0924251Z [36;1m  key=${line%%=*}[0m
+2026-11-14T02:12:19.0924426Z [36;1m  value=${line#*=}[0m
+2026-11-14T02:12:19.0924690Z [36;1m  case "$key" in[0m
+2026-11-14T02:12:19.0924938Z [36;1m    ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER) pattern='^(1|strict)$' ;;[0m
+2026-11-14T02:12:19.0925236Z [36;1m    ORCHESTRA_CHANNEL) pattern='^prod$' ;;[0m
+2026-11-14T02:12:19.0925540Z [36;1m    *) echo "::error::.ci-run.json env key $key is not allow-listed"; exit 2 ;;[0m
+2026-11-14T02:12:19.0925814Z [36;1m  esac[0m
+2026-11-14T02:12:19.0926083Z [36;1m  # Omni permits only its two on states; channel checks permit only the production value.[0m
+2026-11-14T02:12:19.0926461Z [36;1m  if ! printf '%s' "$value" | grep -Eq "$pattern"; then[0m
+2026-11-14T02:12:19.0926804Z [36;1m    echo "::error::.ci-run.json env value for $key is not allowed"[0m
+2026-11-14T02:12:19.0927051Z [36;1m    exit 2[0m
+2026-11-14T02:12:19.0927201Z [36;1m  fi[0m
+2026-11-14T02:12:19.0927365Z [36;1m  echo "$key=$value" >> "$GITHUB_ENV"[0m
+2026-11-14T02:12:19.0927563Z [36;1mdone[0m
+2026-11-14T02:12:19.0948762Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:19.0949024Z env:
+2026-11-14T02:12:19.0949193Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:19.0949391Z ##[endgroup]
+2026-11-14T02:12:19.1061755Z Prepare all required actions
+2026-11-14T02:12:19.1062195Z Getting action download info
+2026-11-14T02:12:19.2139092Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-14T02:12:19.3547551Z ##[group]Run ./.github/actions/omni-binaries
+2026-11-14T02:12:19.3547773Z with:
+2026-11-14T02:12:19.3547919Z   save: false
+2026-11-14T02:12:19.3548064Z env:
+2026-11-14T02:12:19.3548217Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:19.3548435Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-14T02:12:19.3548637Z ##[endgroup]
+2026-11-14T02:12:19.3552580Z ##[start-action display=Download same-run omni binaries;id=__self_3.__actions_download-artifact]
+2026-11-14T02:12:19.3555312Z ##[end-action id=__self_3.__actions_download-artifact;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T02:12:19.3556574Z ##[start-action display=Restore omni binaries;id=__self_3.restore]
+2026-11-14T02:12:19.4782911Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T02:12:19.4783197Z with:
+2026-11-14T02:12:19.4783493Z   path: native/omni/target/release/*hugr_omni_node.*
+native/omni/target/release/hugr-omni-supervisor*
+
+2026-11-14T02:12:19.4783980Z   key: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-14T02:12:19.4784326Z   enableCrossOsArchive: false
+2026-11-14T02:12:19.4784512Z   fail-on-cache-miss: false
+2026-11-14T02:12:19.4784685Z   lookup-only: false
+2026-11-14T02:12:19.4784837Z env:
+2026-11-14T02:12:19.4784990Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:19.4785259Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-14T02:12:19.4785461Z ##[endgroup]
+2026-11-14T02:12:19.5556057Z (node:3293) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T02:12:19.5556898Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T02:12:19.6116832Z Cache not found for input keys: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-14T02:12:19.6156657Z ##[end-action id=__self_3.restore;outcome=success;conclusion=success;duration_ms=259]
+2026-11-14T02:12:19.6158313Z ##[start-action display=Build omni binaries (cache miss);id=__self_3.__run]
+2026-11-14T02:12:19.6172285Z ##[group]Run # The toolchain pinned by native/omni/rust-toolchain.toml.
+2026-11-14T02:12:19.6172637Z [36;1m# The toolchain pinned by native/omni/rust-toolchain.toml.[0m
+2026-11-14T02:12:19.6172952Z [36;1mrustup show active-toolchain || rustup toolchain install[0m
+2026-11-14T02:12:19.6173270Z [36;1mcargo build --release -p hugr-omni-node -p omni-supervisor[0m
+2026-11-14T02:12:19.6199395Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:19.6199783Z env:
+2026-11-14T02:12:19.6199962Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:19.6200209Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-14T02:12:19.6200422Z ##[endgroup]
+2026-11-14T02:12:19.6886412Z info: syncing channel updates for 1.98.0-x86_64-unknown-linux-gnu
+2026-11-14T02:12:19.8735618Z info: latest update on 2026-08-20 for version 1.98.0 (88d9e12ae 2026-08-18)
+2026-11-14T02:12:19.8739432Z info: downloading 5 components
+2026-11-14T02:12:27.1178394Z warn: the missing active toolchain `1.98.0-x86_64-unknown-linux-gnu` has been auto-installed
+2026-11-14T02:12:27.1178865Z warn: auto-installation is deprecated for most `rustup` commands
+2026-11-14T02:12:27.1179274Z warn: scripts relying on this behavior in `rustup` may stop working in the future
+2026-11-14T02:12:27.1180006Z 1.98.0-x86_64-unknown-linux-gnu (overridden by '/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/rust-toolchain.toml')
+2026-11-14T02:12:27.1180604Z warn: to install the active toolchain, use `rustup install` instead
+2026-11-14T02:12:27.1181024Z warn: see <https://github.com/rust-lang/rustup/issues/4836> for more info
+2026-11-14T02:12:27.1666631Z     Updating crates.io index
+2026-11-14T02:12:27.3006333Z  Downloading crates ...
+2026-11-14T02:12:27.3241747Z   Downloaded tokio-util v0.7.19
+2026-11-14T02:12:27.3303573Z   Downloaded napi-derive-backend v6.1.4
+2026-11-14T02:12:27.3313647Z   Downloaded bytes v1.12.1
+2026-11-14T02:12:27.3333338Z   Downloaded futures-core v0.3.34
+2026-11-14T02:12:27.3341195Z   Downloaded slab v0.4.12
+2026-11-14T02:12:27.3348956Z   Downloaded cfg-if v1.0.5
+2026-11-14T02:12:27.3358932Z   Downloaded futures-util v0.3.34
+2026-11-14T02:12:27.3419843Z   Downloaded syn v3.0.6
+2026-11-14T02:12:27.3473551Z   Downloaded bitflags v2.13.2
+2026-11-14T02:12:27.3491394Z   Downloaded memchr v2.8.3
+2026-11-14T02:12:27.3515393Z   Downloaded napi-sys v3.4.0
+2026-11-14T02:12:27.3519695Z   Downloaded nohash-hasher v0.2.0
+2026-11-14T02:12:27.3523587Z   Downloaded futures-io v0.3.34
+2026-11-14T02:12:27.3529209Z   Downloaded futures-macro v0.3.34
+2026-11-14T02:12:27.3530418Z   Downloaded futures-sink v0.3.34
+2026-11-14T02:12:27.3534184Z   Downloaded napi-build v2.6.0
+2026-11-14T02:12:27.3538332Z   Downloaded pin-project-lite v0.2.17
+2026-11-14T02:12:27.3559046Z   Downloaded futures-channel v0.3.34
+2026-11-14T02:12:27.3567506Z   Downloaded socket2 v0.6.5
+2026-11-14T02:12:27.3577378Z   Downloaded unicode-segmentation v1.13.3
+2026-11-14T02:12:27.3593547Z   Downloaded futures v0.3.34
+2026-11-14T02:12:27.3615000Z   Downloaded mio v1.2.3
+2026-11-14T02:12:27.3641308Z   Downloaded proc-macro2 v1.0.107
+2026-11-14T02:12:27.3655022Z   Downloaded libc v0.2.189
+2026-11-14T02:12:27.3833770Z   Downloaded rustc-hash v2.1.3
+2026-11-14T02:12:27.3838475Z   Downloaded quote v1.0.47
+2026-11-14T02:12:27.3849334Z   Downloaded unicode-ident v1.0.26
+2026-11-14T02:12:27.3861338Z   Downloaded libloading v0.9.0
+2026-11-14T02:12:27.3871480Z   Downloaded futures-executor v0.3.34
+2026-11-14T02:12:27.3877569Z   Downloaded napi-derive v3.6.10
+2026-11-14T02:12:27.3884630Z   Downloaded convert_case v0.12.0
+2026-11-14T02:12:27.3893289Z   Downloaded futures-task v0.3.34
+2026-11-14T02:12:27.3897652Z   Downloaded ctor v1.0.13
+2026-11-14T02:12:27.3910833Z   Downloaded semver v1.0.28
+2026-11-14T02:12:27.3920593Z   Downloaded syn v2.0.119
+2026-11-14T02:12:27.3974031Z   Downloaded sysinfo v0.39.6
+2026-11-14T02:12:27.4025759Z   Downloaded tokio v1.53.1
+2026-11-14T02:12:27.4214175Z   Downloaded napi v3.14.0
+2026-11-14T02:12:27.4459097Z    Compiling proc-macro2 v1.0.107
+2026-11-14T02:12:27.4459760Z    Compiling unicode-ident v1.0.26
+2026-11-14T02:12:27.4460581Z    Compiling quote v1.0.47
+2026-11-14T02:12:27.4486702Z    Compiling libc v0.2.189
+2026-11-14T02:12:27.4910472Z    Compiling futures-core v0.3.34
+2026-11-14T02:12:27.5529402Z    Compiling futures-sink v0.3.34
+2026-11-14T02:12:27.5613966Z    Compiling pin-project-lite v0.2.17
+2026-11-14T02:12:27.5871274Z    Compiling memchr v2.8.3
+2026-11-14T02:12:27.5895541Z    Compiling napi-build v2.6.0
+2026-11-14T02:12:27.7602701Z    Compiling futures-channel v0.3.34
+2026-11-14T02:12:27.9972677Z    Compiling futures-task v0.3.34
+2026-11-14T02:12:28.0423121Z    Compiling syn v3.0.6
+2026-11-14T02:12:28.0765141Z    Compiling futures-io v0.3.34
+2026-11-14T02:12:28.1659217Z    Compiling slab v0.4.12
+2026-11-14T02:12:28.2709468Z    Compiling cfg-if v1.0.5
+2026-11-14T02:12:28.2918461Z    Compiling mio v1.2.3
+2026-11-14T02:12:28.3132660Z    Compiling socket2 v0.6.5
+2026-11-14T02:12:28.5685510Z    Compiling bytes v1.12.1
+2026-11-14T02:12:28.8052465Z    Compiling unicode-segmentation v1.13.3
+2026-11-14T02:12:29.0758756Z    Compiling napi-sys v3.4.0
+2026-11-14T02:12:29.1062302Z    Compiling convert_case v0.12.0
+2026-11-14T02:12:29.1362279Z    Compiling tokio v1.53.1
+2026-11-14T02:12:29.2792761Z    Compiling libloading v0.9.0
+2026-11-14T02:12:29.2962534Z    Compiling syn v2.0.119
+2026-11-14T02:12:29.4194004Z    Compiling napi v3.14.0
+2026-11-14T02:12:29.4902708Z    Compiling omni-proto v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/crates/omni-proto)
+2026-11-14T02:12:29.8722426Z    Compiling semver v1.0.28
+2026-11-14T02:12:30.0992609Z    Compiling sysinfo v0.39.6
+2026-11-14T02:12:30.7572351Z    Compiling futures-macro v0.3.34
+2026-11-14T02:12:31.1874179Z    Compiling futures-util v0.3.34
+2026-11-14T02:12:32.7329430Z    Compiling tokio-util v0.7.19
+2026-11-14T02:12:33.1491618Z    Compiling napi-derive-backend v6.1.4
+2026-11-14T02:12:33.5492740Z    Compiling futures-executor v0.3.34
+2026-11-14T02:12:33.8782473Z    Compiling futures v0.3.34
+2026-11-14T02:12:33.8992777Z    Compiling hugr-omni-node v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/bindings/node)
+2026-11-14T02:12:33.9682271Z    Compiling nohash-hasher v0.2.0
+2026-11-14T02:12:33.9902403Z    Compiling bitflags v2.13.2
+2026-11-14T02:12:34.0072555Z    Compiling ctor v1.0.13
+2026-11-14T02:12:34.1242717Z    Compiling rustc-hash v2.1.3
+2026-11-14T02:12:34.2232239Z    Compiling hugr-omni v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/crates/hugr-omni)
+2026-11-14T02:12:34.9646749Z    Compiling napi-derive v3.6.10
+2026-11-14T02:12:35.7374801Z    Compiling omni-supervisor v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/crates/omni-supervisor)
+2026-11-14T02:12:43.2639551Z     Finished `release` profile [optimized] target(s) in 16.11s
+2026-11-14T02:12:43.2883407Z ##[end-action id=__self_3.__run;outcome=success;conclusion=success;duration_ms=23672]
+2026-11-14T02:12:43.2885290Z ##[start-action display=Save omni binaries;id=__self_3.__actions_cache]
+2026-11-14T02:12:43.2889225Z ##[end-action id=__self_3.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T02:12:43.2890715Z ##[start-action display=Export omni paths;id=__self_3.__run_2]
+2026-11-14T02:12:43.2905102Z ##[group]Run dir="$GITHUB_WORKSPACE/native/omni/target/release"
+2026-11-14T02:12:43.2905534Z [36;1mdir="$GITHUB_WORKSPACE/native/omni/target/release"[0m
+2026-11-14T02:12:43.2905831Z [36;1mcase "$RUNNER_OS" in[0m
+2026-11-14T02:12:43.2906210Z [36;1m  Linux) addon=libhugr_omni_node.so; supervisor=hugr-omni-supervisor ;;[0m
+2026-11-14T02:12:43.2906732Z [36;1m  macOS) addon=libhugr_omni_node.dylib; supervisor=hugr-omni-supervisor ;;[0m
+2026-11-14T02:12:43.2907259Z [36;1m  Windows) addon=hugr_omni_node.dll; supervisor=hugr-omni-supervisor.exe ;;[0m
+2026-11-14T02:12:43.2907736Z [36;1m  *) echo "::error::unsupported omni runner: $RUNNER_OS"; exit 1 ;;[0m
+2026-11-14T02:12:43.2908081Z [36;1mesac[0m
+2026-11-14T02:12:43.2908343Z [36;1mfor file in "$dir/$addon" "$dir/$supervisor"; do[0m
+2026-11-14T02:12:43.2908863Z [36;1m  if [ ! -f "$file" ] || [ ! -s "$file" ]; then echo "::error::omni binary missing or empty: $file"; exit 1; fi[0m
+2026-11-14T02:12:43.2909297Z [36;1mdone[0m
+2026-11-14T02:12:43.2909656Z [36;1m# upload/download-artifact transfers file bytes, not Unix execute bits.[0m
+2026-11-14T02:12:43.2910075Z [36;1mif [ "$RUNNER_OS" != Windows ]; then[0m
+2026-11-14T02:12:43.2910394Z [36;1m  chmod +x "$dir/$supervisor"[0m
+2026-11-14T02:12:43.2911278Z [36;1m  [ -x "$dir/$supervisor" ] || { echo "::error::omni supervisor is not executable"; exit 1; }[0m
+2026-11-14T02:12:43.2911702Z [36;1mfi[0m
+2026-11-14T02:12:43.2911968Z [36;1mecho "HUGR_OMNI_ADDON=$dir/$addon" >> "$GITHUB_ENV"[0m
+2026-11-14T02:12:43.2912370Z [36;1mecho "HUGR_OMNI_SUPERVISOR=$dir/$supervisor" >> "$GITHUB_ENV"[0m
+2026-11-14T02:12:43.2939399Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:43.2939655Z env:
+2026-11-14T02:12:43.2939882Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:43.2940162Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-14T02:12:43.2940373Z ##[endgroup]
+2026-11-14T02:12:43.2997450Z ##[end-action id=__self_3.__run_2;outcome=success;conclusion=success;duration_ms=10]
+2026-11-14T02:12:43.3026583Z ##[group]Run nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+2026-11-14T02:12:43.3027336Z [36;1mnonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")[0m
+2026-11-14T02:12:43.3027928Z [36;1mecho "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"[0m
+2026-11-14T02:12:43.3028317Z [36;1mecho "omni control nonce: $nonce"[0m
+2026-11-14T02:12:43.3057356Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:43.3057716Z env:
+2026-11-14T02:12:43.3057956Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:43.3058279Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-14T02:12:43.3058843Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-14T02:12:43.3059595Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-14T02:12:43.3060167Z ##[endgroup]
+2026-11-14T02:12:43.3375969Z omni control nonce: 1a7b818e7a1111aeb03e1a4c852830d0
+2026-11-14T02:12:43.3394500Z ##[group]Run if [ "$RUNNER" = playwright ]; then
+2026-11-14T02:12:43.3394831Z [36;1mif [ "$RUNNER" = playwright ]; then[0m
+2026-11-14T02:12:43.3395075Z [36;1m  node --input-type=module <<'NODE'[0m
+2026-11-14T02:12:43.3395386Z [36;1mimport { readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-14T02:12:43.3395730Z [36;1mimport path from 'node:path'[0m
+2026-11-14T02:12:43.3395959Z [36;1mimport { spawnSync } from 'node:child_process'[0m
+2026-11-14T02:12:43.3396398Z [36;1mimport { benchmarkEnvironment, playwrightArgs, validateRequest, validateSelection } from './script/test-ci-request.ts'[0m
+2026-11-14T02:12:43.3396883Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-14T02:12:43.3397269Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-14T02:12:43.3397657Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-14T02:12:43.3398017Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-14T02:12:43.3398311Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-14T02:12:43.3398567Z [36;1mconst cwd = path.resolve(request.directory)[0m
+2026-11-14T02:12:43.3398937Z [36;1mconst benchmark = benchmarkEnvironment(request.benchmarkRenderer, process.env.GITHUB_SHA)[0m
+2026-11-14T02:12:43.3399403Z [36;1mwriteFileSync('test-ci-evidence/benchmark-runtime.json', JSON.stringify(benchmark))[0m
+2026-11-14T02:12:43.3399752Z [36;1mconst env = { ...process.env, ...benchmark }[0m
+2026-11-14T02:12:43.3400107Z [36;1mconst args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure'][0m
+2026-11-14T02:12:43.3400577Z [36;1mconst listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })[0m
+2026-11-14T02:12:43.3401615Z [36;1mif (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)[0m
+2026-11-14T02:12:43.3402153Z [36;1mwriteFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)[0m
+2026-11-14T02:12:43.3402583Z [36;1mconst report = JSON.parse(listed.stdout)[0m
+2026-11-14T02:12:43.3402968Z [36;1mconst hasTests = (suite) => suite.specs?.some((spec) => spec.tests?.length > 0) || (suite.suites ?? []).some(hasTests)[0m
+2026-11-14T02:12:43.3403450Z [36;1mvalidateSelection(request.args.map((file) => path.resolve(cwd, file)),[0m
+2026-11-14T02:12:43.3403873Z [36;1m  report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))[0m
+2026-11-14T02:12:43.3404407Z [36;1m// The flaky reporter lists tests that passed only on a retry in the log and the job summary.[0m
+2026-11-14T02:12:43.3404797Z [36;1mconst flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')[0m
+2026-11-14T02:12:43.3405279Z [36;1mconst reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'[0m
+2026-11-14T02:12:43.3405742Z [36;1mconst run = spawnSync('bun', [...args, `--reporter=${reporters}`], { cwd, stdio: 'inherit',[0m
+2026-11-14T02:12:43.3406174Z [36;1m  env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),[0m
+2026-11-14T02:12:43.3406619Z [36;1m    PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })[0m
+2026-11-14T02:12:43.3407117Z [36;1mif (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)[0m
+2026-11-14T02:12:43.3407487Z [36;1mprocess.exit(run.status)[0m
+2026-11-14T02:12:43.3407674Z [36;1mNODE[0m
+2026-11-14T02:12:43.3407823Z [36;1m  exit $?[0m
+2026-11-14T02:12:43.3407974Z [36;1mfi[0m
+2026-11-14T02:12:43.3408121Z [36;1margs=()[0m
+2026-11-14T02:12:43.3408396Z [36;1mwhile IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.args[]' .ci-run.json | tr -d '\r')[0m
+2026-11-14T02:12:43.3408701Z [36;1mcd "$DIRECTORY"[0m
+2026-11-14T02:12:43.3408944Z [36;1mcase "$RUNNER" in[0m
+2026-11-14T02:12:43.3409190Z [36;1m  pytest) python -m pytest -p no:cacheprovider "${args[@]}" ;;[0m
+2026-11-14T02:12:43.3409440Z [36;1m  bun)[0m
+2026-11-14T02:12:43.3409694Z [36;1m    # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a[0m
+2026-11-14T02:12:43.3410074Z [36;1m    # browser-only export that fails under bun's default (`node`) conditions.[0m
+2026-11-14T02:12:43.3410462Z [36;1m    # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx[0m
+2026-11-14T02:12:43.3410879Z [36;1m    # source, which does not make that import. test-ci bypasses the package's own[0m
+2026-11-14T02:12:43.3411451Z [36;1m    # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.[0m
+2026-11-14T02:12:43.3411853Z [36;1m    # test-browser/ files follow `test:browser` instead: solid-js has no `solid`[0m
+2026-11-14T02:12:43.3412243Z [36;1m    # export, so under `solid` it falls through to `node` and loads its server build,[0m
+2026-11-14T02:12:43.3412643Z [36;1m    # where memos never recompute and onMount never runs. They also preload happydom.[0m
+2026-11-14T02:12:43.3412989Z [36;1m    if [ "$DIRECTORY" = "packages/app-shell" ]; then[0m
+2026-11-14T02:12:43.3413216Z [36;1m      unit=()[0m
+2026-11-14T02:12:43.3413389Z [36;1m      browser=()[0m
+2026-11-14T02:12:43.3413556Z [36;1m      common=()[0m
+2026-11-14T02:12:43.3413815Z [36;1m      # Only generated --timeout, -t and --test-name-pattern consume the next[0m
+2026-11-14T02:12:43.3414186Z [36;1m      # entry, including an empty name pattern. Other dash-prefixed tokens are[0m
+2026-11-14T02:12:43.3414516Z [36;1m      # one common token each; this is not a Bun CLI parser.[0m
+2026-11-14T02:12:43.3414796Z [36;1m      for ((index=0; index<${#args[@]}; index=index+1)); do[0m
+2026-11-14T02:12:43.3415033Z [36;1m        arg="${args[$index]}"[0m
+2026-11-14T02:12:43.3415228Z [36;1m        case "$arg" in[0m
+2026-11-14T02:12:43.3415443Z [36;1m          --timeout|-t|--test-name-pattern)[0m
+2026-11-14T02:12:43.3415709Z [36;1m            index=$((index+1))[0m
+2026-11-14T02:12:43.3415929Z [36;1m            if [ "$index" -ge "${#args[@]}" ]; then[0m
+2026-11-14T02:12:43.3416251Z [36;1m              echo "::error::$arg needs a following value"[0m
+2026-11-14T02:12:43.3416476Z [36;1m              exit 2[0m
+2026-11-14T02:12:43.3416645Z [36;1m            fi[0m
+2026-11-14T02:12:43.3416825Z [36;1m            common+=("$arg" "${args[$index]}")[0m
+2026-11-14T02:12:43.3417025Z [36;1m            ;;[0m
+2026-11-14T02:12:43.3417182Z [36;1m          -*)[0m
+2026-11-14T02:12:43.3417363Z [36;1m            common+=("$arg")[0m
+2026-11-14T02:12:43.3417544Z [36;1m            ;;[0m
+2026-11-14T02:12:43.3417785Z [36;1m          test-browser|test-browser/*|./test-browser/*) browser+=("$arg") ;;[0m
+2026-11-14T02:12:43.3418062Z [36;1m          *) unit+=("$arg") ;;[0m
+2026-11-14T02:12:43.3418243Z [36;1m        esac[0m
+2026-11-14T02:12:43.3418399Z [36;1m      done[0m
+2026-11-14T02:12:43.3418555Z [36;1m      status=0[0m
+2026-11-14T02:12:43.3418762Z [36;1m      if [ ${#unit[@]} -gt 0 ] || [ ${#browser[@]} -eq 0 ]; then[0m
+2026-11-14T02:12:43.3419129Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=solid "${unit[@]}" "${common[@]}" || status=$?[0m
+2026-11-14T02:12:43.3419456Z [36;1m      fi[0m
+2026-11-14T02:12:43.3419627Z [36;1m      if [ ${#browser[@]} -gt 0 ]; then[0m
+2026-11-14T02:12:43.3420136Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?[0m
+2026-11-14T02:12:43.3420617Z [36;1m      fi[0m
+2026-11-14T02:12:43.3420767Z [36;1m      exit $status[0m
+2026-11-14T02:12:43.3420935Z [36;1m    fi[0m
+2026-11-14T02:12:43.3421250Z [36;1m    GITHUB_ACTIONS=false bun test "${args[@]}"[0m
+2026-11-14T02:12:43.3421461Z [36;1m    ;;[0m
+2026-11-14T02:12:43.3421614Z [36;1m  node)[0m
+2026-11-14T02:12:43.3421847Z [36;1m    for file in "${args[@]}"; do[0m
+2026-11-14T02:12:43.3422051Z [36;1m      case "$file" in[0m
+2026-11-14T02:12:43.3422278Z [36;1m        *.node-smoke.mjs) ;;[0m
+2026-11-14T02:12:43.3422603Z [36;1m        *) echo "::error::the node runner runs only *.node-smoke.mjs files, not $file"; exit 2 ;;[0m
+2026-11-14T02:12:43.3422918Z [36;1m      esac[0m
+2026-11-14T02:12:43.3423068Z [36;1m    done[0m
+2026-11-14T02:12:43.3423276Z [36;1m    node --experimental-strip-types --test "${args[@]}"[0m
+2026-11-14T02:12:43.3423511Z [36;1m    ;;[0m
+2026-11-14T02:12:43.3423656Z [36;1mesac[0m
+2026-11-14T02:12:43.3444205Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T02:12:43.3444458Z env:
+2026-11-14T02:12:43.3444637Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-14T02:12:43.3444858Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-14T02:12:43.3445232Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-14T02:12:43.3445771Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-14T02:12:43.3446191Z   ORCHESTRA_OMNI_CONTROL_NONCE: 1a7b818e7a1111aeb03e1a4c852830d0
+2026-11-14T02:12:43.3446473Z   ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: false
+2026-11-14T02:12:43.3446754Z   ORCHESTRA_OMNI_CONTROL: declared
+2026-11-14T02:12:43.3446943Z   PACKAGE: sucafina
+2026-11-14T02:12:43.3447109Z   DIRECTORY: modules/sucafina
+2026-11-14T02:12:43.3447296Z   RUNNER: bun
+2026-11-14T02:12:43.3447437Z ##[endgroup]
+2026-11-14T02:12:43.3524169Z bun test v1.3.14 (0d9b296a)
+2026-11-14T02:12:43.3607756Z 
+2026-11-14T02:12:43.3608090Z Sucafinav1/test/product/wp02/atlas-consumer.test.ts:
+2026-11-14T02:12:43.8488422Z SF_ATLAS_PHASE {"scenario":"metadata-durable","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:43.8494464Z SF_ATLAS_PHASE {"scenario":"metadata-durable","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:45.2696447Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:45.2698489Z SF_ATLAS_PHASE {"scenario":"metadata-durable","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1420}
+2026-11-14T02:12:45.2830523Z SF_ATLAS_PHASE {"scenario":"metadata-durable","phase":"composition.open","state":"started"}
+2026-11-14T02:12:45.5399569Z SF_ATLAS_PHASE {"scenario":"metadata-durable","phase":"composition.open","state":"threw","elapsedMs":257}
+2026-11-14T02:12:45.5400555Z SF_ATLAS_PHASE {"scenario":"metadata-durable","phase":"fixture.create","state":"threw","elapsedMs":1691}
+2026-11-14T02:12:45.5471720Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:45.5472730Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:45.5473754Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:45.5474708Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:45.5475232Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:45.5475564Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:45.5475828Z                            ^
+2026-11-14T02:12:45.5476139Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:45.5476748Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:45.5478009Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:45.5478652Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:45.5479342Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:45.5480019Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:45.5480460Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:45.5480881Z (fail) C17 real Atlas preserves Dashboard source metadata and durable memory after reopen [1700.57ms]
+2026-11-14T02:12:45.5481625Z SF_ATLAS_PHASE {"scenario":"capability-authority","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:45.5482155Z SF_ATLAS_PHASE {"scenario":"capability-authority","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:46.8501470Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:46.8502894Z SF_ATLAS_PHASE {"scenario":"capability-authority","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1302}
+2026-11-14T02:12:46.8594692Z SF_ATLAS_PHASE {"scenario":"capability-authority","phase":"composition.open","state":"started"}
+2026-11-14T02:12:47.1013911Z SF_ATLAS_PHASE {"scenario":"capability-authority","phase":"composition.open","state":"threw","elapsedMs":242}
+2026-11-14T02:12:47.1014884Z SF_ATLAS_PHASE {"scenario":"capability-authority","phase":"fixture.create","state":"threw","elapsedMs":1553}
+2026-11-14T02:12:47.1090276Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:47.1091492Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:47.1092526Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:47.1093286Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:47.1093734Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:47.1094057Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:47.1094287Z                            ^
+2026-11-14T02:12:47.1094629Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:47.1095283Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:47.1095999Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:47.1096676Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:47.1097354Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:47.1098016Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:47.1098455Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:47.1098949Z (fail) C17 Atlas capability validates its schema and denies caller-selected ownership and another principal [1561.66ms]
+2026-11-14T02:12:47.1099514Z SF_ATLAS_PHASE {"scenario":"source-fingerprint","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:47.1100148Z SF_ATLAS_PHASE {"scenario":"source-fingerprint","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:48.4071973Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:48.4073238Z SF_ATLAS_PHASE {"scenario":"source-fingerprint","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1298}
+2026-11-14T02:12:48.4146448Z SF_ATLAS_PHASE {"scenario":"source-fingerprint","phase":"composition.open","state":"started"}
+2026-11-14T02:12:48.6540211Z SF_ATLAS_PHASE {"scenario":"source-fingerprint","phase":"composition.open","state":"threw","elapsedMs":239}
+2026-11-14T02:12:48.6541334Z SF_ATLAS_PHASE {"scenario":"source-fingerprint","phase":"fixture.create","state":"threw","elapsedMs":1544}
+2026-11-14T02:12:48.6582869Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:48.6583651Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:48.6584358Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:48.6585073Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:48.6585586Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:48.6585976Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:48.6586237Z                            ^
+2026-11-14T02:12:48.6586546Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:48.6587243Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:48.6588115Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:48.6589247Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:48.6589940Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:48.6590616Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:48.6591236Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:48.6591738Z (fail) C17 a changed Dashboard fingerprint invalidates its memory while an independent source stays readable [1549.22ms]
+2026-11-14T02:12:48.6592301Z SF_ATLAS_PHASE {"scenario":"replacement-current-acl","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:48.6592857Z SF_ATLAS_PHASE {"scenario":"replacement-current-acl","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:49.9479237Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:49.9480548Z SF_ATLAS_PHASE {"scenario":"replacement-current-acl","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1289}
+2026-11-14T02:12:49.9552995Z SF_ATLAS_PHASE {"scenario":"replacement-current-acl","phase":"composition.open","state":"started"}
+2026-11-14T02:12:50.1871485Z SF_ATLAS_PHASE {"scenario":"replacement-current-acl","phase":"composition.open","state":"threw","elapsedMs":232}
+2026-11-14T02:12:50.1872473Z SF_ATLAS_PHASE {"scenario":"replacement-current-acl","phase":"fixture.create","state":"threw","elapsedMs":1528}
+2026-11-14T02:12:50.1915035Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:50.1915954Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:50.1916808Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:50.1917659Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:50.1918202Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:50.1918510Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:50.1918751Z                            ^
+2026-11-14T02:12:50.1919054Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:50.1919800Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:50.1920560Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:50.1921433Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:50.1922144Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:50.1922814Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:50.1923277Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:50.1923746Z (fail) C17 replacement record identity and current ACL withdrawal cannot inherit prior Atlas authority [1533.16ms]
+2026-11-14T02:12:50.1924444Z SF_ATLAS_PHASE {"scenario":"storage-reconciliation","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:50.1925013Z SF_ATLAS_PHASE {"scenario":"storage-reconciliation","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:51.4880894Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:51.4882684Z SF_ATLAS_PHASE {"scenario":"storage-reconciliation","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1296}
+2026-11-14T02:12:51.4957798Z SF_ATLAS_PHASE {"scenario":"storage-reconciliation","phase":"composition.open","state":"started"}
+2026-11-14T02:12:51.7300964Z SF_ATLAS_PHASE {"scenario":"storage-reconciliation","phase":"composition.open","state":"threw","elapsedMs":234}
+2026-11-14T02:12:51.7302014Z SF_ATLAS_PHASE {"scenario":"storage-reconciliation","phase":"fixture.create","state":"threw","elapsedMs":1538}
+2026-11-14T02:12:51.7341711Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:51.7342670Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:51.7343540Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:51.7344371Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:51.7344898Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:51.7345255Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:51.7345508Z                            ^
+2026-11-14T02:12:51.7345810Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:51.7346847Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:51.7347618Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:51.7348463Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:51.7349151Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:51.7349818Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:51.7350268Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:51.7350745Z (fail) C17 Atlas storage reconciles rollback and a lost committed reply while rejecting a corrupted capture [1542.68ms]
+2026-11-14T02:12:51.7351538Z SF_ATLAS_PHASE {"scenario":"scanner-failure-paths","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:51.7352064Z SF_ATLAS_PHASE {"scenario":"scanner-failure-paths","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:53.0305535Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:53.0306636Z SF_ATLAS_PHASE {"scenario":"scanner-failure-paths","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1296}
+2026-11-14T02:12:53.0376192Z SF_ATLAS_PHASE {"scenario":"scanner-failure-paths","phase":"composition.open","state":"started"}
+2026-11-14T02:12:53.2751607Z SF_ATLAS_PHASE {"scenario":"scanner-failure-paths","phase":"composition.open","state":"threw","elapsedMs":237}
+2026-11-14T02:12:53.2752431Z SF_ATLAS_PHASE {"scenario":"scanner-failure-paths","phase":"fixture.create","state":"threw","elapsedMs":1540}
+2026-11-14T02:12:53.2791810Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:53.2792509Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:53.2793178Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:53.2793821Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:53.2794248Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:53.2794544Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:53.2794764Z                            ^
+2026-11-14T02:12:53.2795071Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:53.2795742Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:53.2796592Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:53.2797299Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:53.2798115Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:53.2798883Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:53.2799369Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:53.2799979Z (fail) C17 the qualified real scanner refuses unsafe memory and fails closed when absent or timed out [1545.04ms]
+2026-11-14T02:12:53.2800552Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-source","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:53.2801247Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-source","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:54.6007876Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:54.6009373Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-source","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1321}
+2026-11-14T02:12:54.6088346Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-source","phase":"composition.open","state":"started"}
+2026-11-14T02:12:54.8420412Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-source","phase":"composition.open","state":"threw","elapsedMs":233}
+2026-11-14T02:12:54.8421623Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-source","phase":"fixture.create","state":"threw","elapsedMs":1562}
+2026-11-14T02:12:54.8490378Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:54.8491277Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:54.8491978Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:54.8492748Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:54.8493237Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:54.8493640Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:54.8493896Z                            ^
+2026-11-14T02:12:54.8494232Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:54.8495332Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:54.8496221Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:54.8496966Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:54.8497842Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:54.8498544Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:54.8498986Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:54.8499410Z (fail) C17 bounded recall rejects a persisted source change after its protected observation [1569.81ms]
+2026-11-14T02:12:54.8499970Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-access","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:54.8500522Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-access","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:56.1342883Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:56.1344195Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-access","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1285}
+2026-11-14T02:12:56.1411728Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-access","phase":"composition.open","state":"started"}
+2026-11-14T02:12:56.3719150Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-access","phase":"composition.open","state":"threw","elapsedMs":231}
+2026-11-14T02:12:56.3719834Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-access","phase":"fixture.create","state":"threw","elapsedMs":1522}
+2026-11-14T02:12:56.3761952Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:56.3762811Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:56.3763729Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:56.3764649Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:56.3765177Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:56.3765520Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:56.3765820Z                            ^
+2026-11-14T02:12:56.3766212Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:56.3766935Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:56.3767670Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:56.3768344Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:56.3769020Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:56.3769706Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:56.3770152Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:56.3770830Z (fail) C17 bounded recall rejects withdrawn access after its protected observation [1527.10ms]
+2026-11-14T02:12:56.3771565Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-capture","phase":"fixture.create","state":"started"}
+2026-11-14T02:12:56.3772138Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-capture","phase":"scanner.provision-and-qualify","state":"started"}
+2026-11-14T02:12:57.6738492Z SF_ATLAS_SCANNER_QUALIFICATION {"version":"8.30.1","archiveSha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb","controlSha256":"9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403","clean":false,"syntheticControl":true}
+2026-11-14T02:12:57.6739802Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-capture","phase":"scanner.provision-and-qualify","state":"returned","elapsedMs":1297}
+2026-11-14T02:12:57.6809762Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-capture","phase":"composition.open","state":"started"}
+2026-11-14T02:12:57.9119749Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-capture","phase":"composition.open","state":"threw","elapsedMs":231}
+2026-11-14T02:12:57.9120424Z SF_ATLAS_PHASE {"scenario":"recall-concurrent-capture","phase":"fixture.create","state":"threw","elapsedMs":1535}
+2026-11-14T02:12:57.9159385Z 194 |       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+2026-11-14T02:12:57.9160225Z 195 |       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
+2026-11-14T02:12:57.9161405Z 196 |     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
+2026-11-14T02:12:57.9162759Z 197 |     const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+2026-11-14T02:12:57.9163411Z 198 |       const atlas = business.initializeAtlas(value, versions)
+2026-11-14T02:12:57.9163851Z 199 |       const recall = atlas.memory.recall
+2026-11-14T02:12:57.9164226Z                            ^
+2026-11-14T02:12:57.9164635Z TypeError: undefined is not an object (evaluating 'atlas.memory')
+2026-11-14T02:12:57.9165567Z       at configureScanner (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:199:22)
+2026-11-14T02:12:57.9166735Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:219:55
+2026-11-14T02:12:57.9167707Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:57.9168804Z       at createFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:225:34)
+2026-11-14T02:12:57.9169660Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer-fixture.ts:114:17
+2026-11-14T02:12:57.9170116Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:12:57.9170532Z (fail) C17 bounded recall rejects a corrupted capture after its protected egress read [1539.76ms]
+2026-11-14T02:12:57.9170799Z 
+2026-11-14T02:12:57.9171180Z Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts:
+2026-11-14T02:12:57.9226944Z (pass) SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation [2.57ms]
+2026-11-14T02:12:57.9236059Z (pass) concurrent sessions with the same profile retain distinct request authorities [0.95ms]
+2026-11-14T02:12:57.9240553Z (pass) the selected manifest limits operations even when the profile and skill allow more [0.45ms]
+2026-11-14T02:12:57.9246217Z (pass) authentication and binding retain the same admission when the caller mutates its inputs [0.55ms]
+2026-11-14T02:12:57.9246663Z 
+2026-11-14T02:12:57.9246979Z Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts:
+2026-11-14T02:12:58.0186887Z (pass) UI dispatch consumes real private authority once and rejects a changed receipt [2.19ms]
+2026-11-14T02:12:58.0191845Z 
+2026-11-14T02:12:58.0192420Z Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts:
+2026-11-14T02:12:58.0415928Z (pass) private MCP traverses native lease and refuses a normalized configured namesake [23.15ms]
+2026-11-14T02:12:58.0416273Z 
+2026-11-14T02:12:58.0416510Z Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts:
+2026-11-14T02:12:58.2932866Z (pass) resident registration rejects a missing skill and accepts the same skill from its reserved directory [36.32ms]
+2026-11-14T02:12:58.2966602Z (pass) resident source grants only exact registered skills and operations or a strict subset [5.89ms]
+2026-11-14T02:12:58.2992354Z 
+2026-11-14T02:12:58.3009806Z Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts:
+2026-11-14T02:12:58.3010414Z (pass) dashboard administrator is denied without product authority [1.84ms]
+2026-11-14T02:12:58.3146200Z (pass) exact retry recovers the result, digest reuse conflicts and principals remain isolated [14.08ms]
+2026-11-14T02:12:58.3151472Z (pass) concurrent different commands at the same version commit once [0.47ms]
+2026-11-14T02:12:58.3156187Z (pass) a retry after authority revocation never discloses the stored result [0.51ms]
+2026-11-14T02:12:58.3163576Z (pass) failure before commit rolls back all staged changes [0.73ms]
+2026-11-14T02:12:58.3167723Z (pass) read callback cannot mutate persisted state [0.42ms]
+2026-11-14T02:12:58.3175972Z (pass) thread messages are append-only outside the authorized history writer [0.80ms]
+2026-11-14T02:12:58.3191985Z (pass) revoked authority at egress prevents read disclosure and write commit [0.70ms]
+2026-11-14T02:12:58.3192540Z (pass) preview does not persist state or consume the command [0.46ms]
+2026-11-14T02:12:58.3194905Z (pass) writes in another namespace do not invalidate section CAS [0.74ms]
+2026-11-14T02:12:58.3208408Z (pass) legacy state adopts the BI namespace without resetting existing versions or granting cross-namespace writes [1.33ms]
+2026-11-14T02:12:58.3214141Z (pass) replacing the actual target blocks replay of the old receipt [0.60ms]
+2026-11-14T02:12:58.3216674Z (pass) target replacement during work prevents commit and disclosure [0.26ms]
+2026-11-14T02:12:58.3230775Z (pass) a callback cannot mutate a different namespace, versions, or receipts [1.39ms]
+2026-11-14T02:12:58.3233237Z (pass) malformed command digest is rejected without work or persistence [0.25ms]
+2026-11-14T02:12:58.3247212Z (pass) admitted Atlas and outbox commit atomically with independent versions [1.38ms]
+2026-11-14T02:12:58.3253452Z (pass) stale secondary namespace blocks all work [0.64ms]
+2026-11-14T02:12:58.3264763Z (pass) read-only namespace guards enforce CAS without granting writes or advancing versions [1.09ms]
+2026-11-14T02:12:58.3267852Z (pass) revoked read authority for a guarded namespace prevents commit and retry disclosure [0.31ms]
+2026-11-14T02:12:58.3271419Z (pass) secondary authority revoked at egress rolls back both sections [0.35ms]
+2026-11-14T02:12:58.3278341Z (pass) retry with a changed admitted namespace scope conflicts without executing [0.69ms]
+2026-11-14T02:12:58.3282281Z (pass) runtime rejects internal and prototype-key namespaces before work [0.38ms]
+2026-11-14T02:12:58.3282562Z 
+2026-11-14T02:12:58.3282822Z Sucafinav1/test/product/wp10/integration/native-evidence.test.ts:
+2026-11-14T02:12:58.3568587Z (pass) native denial markers survive SQLite reopen and ordinary preference replacement cannot erase them [20.05ms]
+2026-11-14T02:12:58.3568924Z 
+2026-11-14T02:12:58.3569122Z Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts:
+2026-11-14T02:12:58.3756249Z (pass) source incarnation survives reopen and deletion/recreation gets a new identity [15.18ms]
+2026-11-14T02:12:58.3828096Z (pass) preview, thrown callback and cancellation leave lifecycle unchanged [7.21ms]
+2026-11-14T02:12:58.3966554Z (pass) dataset replacement renews identity and retains the trusted protected product namespace [13.81ms]
+2026-11-14T02:12:58.4224216Z (pass) authorized projection revisions persist and ignore restricted changes while observing intermediate writes [25.76ms]
+2026-11-14T02:12:58.4365470Z (pass) resolving an old scoped incarnation refuses deletion and recreation between lookup and observation [14.09ms]
+2026-11-14T02:12:58.4365799Z 
+2026-11-14T02:12:58.4366014Z Sucafinav1/test/product/wp10/integration/workspace-services.test.ts:
+2026-11-14T02:12:58.4634687Z (pass) real workspace descriptors survive Atlas initialization and a second initialization does not duplicate operations [15.00ms]
+2026-11-14T02:12:58.4899210Z (pass) workspace HTTP permits an explicitly granted viewer read but cannot turn that lease or a human action grant into a write [26.41ms]
+2026-11-14T02:12:58.5084534Z (pass) the real collaboration read rejects a revoked live lease and the HTTP route rejects a new admission [18.54ms]
+2026-11-14T02:12:58.5085258Z 
+2026-11-14T02:12:58.5085902Z Sucafinav1/test/product/wp10/integration/product-authority.test.ts:
+2026-11-14T02:12:58.5172012Z (pass) product authority revalidates current surfaces without opening a nested transaction [4.51ms]
+2026-11-14T02:12:58.5240143Z (pass) human writes require their own action grant and cannot borrow a consumed read lease [6.80ms]
+2026-11-14T02:12:58.5288653Z (pass) human command admission binds exact action and payload and revokes on authority change [4.86ms]
+2026-11-14T02:12:58.5338403Z (pass) private collaboration reads admit a viewer with an explicit grant and bind exact payload [4.99ms]
+2026-11-14T02:12:58.5365635Z (pass) the read-only exception does not grant unconfigured private reads [2.71ms]
+2026-11-14T02:12:58.5426736Z (pass) dashboard roles alone do not grant C08 or a business operation [6.14ms]
+2026-11-14T02:12:58.5493216Z (pass) collaboration read leases require the exact operation and all namespaces without granting writes [6.56ms]
+2026-11-14T02:12:58.5559451Z (pass) private grants narrow namespaces and operations; role changes revoke existing UI authority [6.65ms]
+2026-11-14T02:12:58.5598195Z (pass) write requires current write authority and document targets do not accept unverified identifiers [3.86ms]
+2026-11-14T02:12:58.5633328Z (pass) native binding cannot be invented without a current stored run [3.53ms]
+2026-11-14T02:12:58.5841882Z (pass) a real C08 run and case still cannot bind a missing native Session [20.83ms]
+2026-11-14T02:12:58.5938135Z (pass) assignment and domain revocation invalidate authority without incorporating other principals [9.60ms]
+2026-11-14T02:12:58.6052763Z (pass) workspace target is limited to explicit creation namespaces and still requires current grant and write access [11.49ms]
+2026-11-14T02:12:58.6079542Z (pass) identity mutation during authentication is denied [2.69ms]
+2026-11-14T02:12:58.6079816Z 
+2026-11-14T02:12:58.6080080Z Sucafinav1/test/product/wp10/integration/roster-source.test.ts:
+2026-11-14T02:12:58.6129646Z (pass) roster evidence follows the authorized Planner scope and physical roster revision [1.40ms]
+2026-11-14T02:12:58.6130135Z 
+2026-11-14T02:12:58.6130428Z Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts:
+2026-11-14T02:12:58.7419037Z (pass) authenticated Request issues a scoped selector without exposing private revisions [125.26ms]
+2026-11-14T02:12:58.7447559Z (pass) dashboard record scope projects only granted fields on an authorized page [2.87ms]
+2026-11-14T02:12:58.7447849Z 
+2026-11-14T02:12:58.7448047Z Sucafinav1/test/product/wp10/integration/cross-surface.test.ts:
+2026-11-14T02:12:58.7576832Z (pass) C08 receipt and Planner change commit together and replay only once across restart [8.86ms]
+2026-11-14T02:12:58.7623789Z (pass) cross-surface preview, failure, cancellation and missing transactionAll never persist either surface [4.73ms]
+2026-11-14T02:12:58.7677524Z (pass) proposal coverage records require their own private write capability [5.37ms]
+2026-11-14T02:12:58.7741690Z (pass) document writes require a transaction holding every source surface [6.38ms]
+2026-11-14T02:12:58.7780690Z (pass) explicit all-source fence holds every surface and is bound to idempotency [3.89ms]
+2026-11-14T02:12:58.7781235Z 
+2026-11-14T02:12:58.7781548Z Sucafinav1/test/product/wp10/integration/memory-services.test.ts:
+2026-11-14T02:13:07.4724917Z (pass) registered condition IDs select exact material changes and retain the full original criterion set [8686.36ms]
+2026-11-14T02:13:35.2558676Z (pass) material signals reconcile durably once and do not resolve without an actual resolution proof [27783.33ms]
+2026-11-14T02:13:35.4220939Z (pass) a real source write between selection and C08 commit prevents condition persistence [166.27ms]
+2026-11-14T02:13:46.7890435Z (pass) outcomes use an explicitly selected closed-month actual and never substitute the latest source [11366.86ms]
+2026-11-14T02:13:47.2346006Z (pass) private memory routes bind writes to the human intent and reread authority at egress [445.54ms]
+2026-11-14T02:13:47.2350295Z (pass) material selection parsing rejects invented scope and duplicated identities [0.55ms]
+2026-11-14T02:13:47.2350652Z 
+2026-11-14T02:13:47.2350892Z Sucafinav1/test/product/wp10/integration/token-budget.test.ts:
+2026-11-14T02:13:47.2433337Z (pass) counts actual prepared input and tools before emission, reserves output and persists provenance [3.58ms]
+2026-11-14T02:13:47.2446525Z (pass) oracle over-budget response blocks emission even for short input [1.33ms]
+2026-11-14T02:13:47.2456349Z (pass) revocation after counting and unavailable receipt storage both block emission [0.99ms]
+2026-11-14T02:13:47.2459755Z (pass) model mismatch and unsupported endpoint fail before any counter or inference request [0.35ms]
+2026-11-14T02:13:47.2473256Z (pass) interrupting durable receipt work cancels the same fiber before inference [1.33ms]
+2026-11-14T02:13:47.2473667Z 
+2026-11-14T02:13:47.2474210Z Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts:
+2026-11-14T02:13:47.3078378Z (pass) HTTP preview persists across reload and applies once with the domain receipt in the same commit [46.11ms]
+2026-11-14T02:13:47.3078852Z 
+2026-11-14T02:13:47.3079170Z Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts:
+2026-11-14T02:13:47.3176617Z 43 |     const planner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => {
+2026-11-14T02:13:47.3177269Z 44 |       live.coverageReads++
+2026-11-14T02:13:47.3177747Z 45 |       return { status: "unavailable", reason: "coverage-not-registered" }
+2026-11-14T02:13:47.3178141Z 46 |     } })
+2026-11-14T02:13:47.3178511Z 47 |     const source = await planner.issueSource("v0", call)
+2026-11-14T02:13:47.3179108Z 48 |     if (source.status !== "ok") throw new Error(`Planner source unavailable: ${source.reason}`)
+2026-11-14T02:13:47.3179636Z                                                ^
+2026-11-14T02:13:47.3180140Z error: Planner source unavailable: source-authority-unavailable
+2026-11-14T02:13:47.3180958Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts:48:43)
+2026-11-14T02:13:47.3182262Z (fail) coverage evidence projects exact whole months through Planner without recursively reading coverage [6.32ms]
+2026-11-14T02:13:47.3182734Z 
+2026-11-14T02:13:47.3183009Z Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts:
+2026-11-14T02:13:47.3327559Z (pass) nested reads see staged same-surface state and the same transaction's cross-surface blobs without sharing snapshot writes [10.38ms]
+2026-11-14T02:13:47.3374514Z (pass) nested commit write is refused and poisons the outer commit even when caught [4.75ms]
+2026-11-14T02:13:47.3450359Z (pass) nested blob write is refused and poisons the outer commit even when caught [7.57ms]
+2026-11-14T02:13:47.3492824Z (pass) nested outer-blob write is refused and poisons the outer commit even when caught [4.27ms]
+2026-11-14T02:13:47.3536101Z (pass) nested secret write is refused and poisons the outer commit even when caught [4.31ms]
+2026-11-14T02:13:47.3643374Z (pass) aborted nested work rolls back outer state and inherited closed scopes cannot reenter [10.73ms]
+2026-11-14T02:13:47.3703871Z (pass) independent stores retain independent scopes while another outer writer waits [6.04ms]
+2026-11-14T02:13:47.3780788Z (pass) outer commit refuses an unjoined nested read and closes the inherited scope [7.70ms]
+2026-11-14T02:13:47.3828813Z (pass) nested blob capability expires at its callback boundary even while its parent remains open [4.78ms]
+2026-11-14T02:13:47.3870179Z (pass) a nested callback cannot turn a caught write refusal into a successful read [4.15ms]
+2026-11-14T02:13:47.3941663Z (pass) an external async caller cannot mutate captured outer blobs during a nested read [7.12ms]
+2026-11-14T02:13:47.3941971Z 
+2026-11-14T02:13:47.3942183Z Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts:
+2026-11-14T02:13:47.4253325Z (pass) read-only source fence checks staged material and authorization without refreshing identity [27.49ms]
+2026-11-14T02:13:47.4319945Z (pass) replacing a surface cannot bypass source, audit or restore guards across reopen [6.68ms]
+2026-11-14T02:13:47.4320346Z 
+2026-11-14T02:13:47.4320670Z Sucafinav1/test/product/wp10/integration/procurement-sources.test.ts:
+2026-11-14T02:13:47.5325636Z (pass) scoped procurement collection ignores hidden rows and private fields but tracks status ABA [96.61ms]
+2026-11-14T02:13:47.5326088Z 
+2026-11-14T02:13:47.5326323Z Sucafinav1/test/product/wp10/integration/public-state.test.ts:
+2026-11-14T02:13:47.5367208Z (pass) real backup download excludes private product state without deleting storage [0.49ms]
+2026-11-14T02:13:47.5386136Z (pass) backup import refuses private state and preserves current state on accepted replacement [1.91ms]
+2026-11-14T02:13:47.5415244Z (pass) legacy audit rendering suppresses internal product state from historical entries [2.91ms]
+2026-11-14T02:13:47.5415949Z 
+2026-11-14T02:13:47.5416276Z Sucafinav1/test/product/wp10/integration/analysis-services-selection.test.ts:
+2026-11-14T02:13:47.5498722Z (pass) human review selectors cannot introduce native sessions, tickets, or a foreign case binding [0.16ms]
+2026-11-14T02:13:47.5511580Z (pass) pre-choice critique assembles an input only after replaying the saved author comparison [1.38ms]
+2026-11-14T02:13:47.5514749Z (pass) pre-choice critique refuses a changed comparison and cannot invent an answered-question effect [0.36ms]
+2026-11-14T02:13:47.5515217Z 
+2026-11-14T02:13:47.5515505Z Sucafinav1/test/product/wp10/integration/blob-generations.test.ts:
+2026-11-14T02:13:47.5670204Z (pass) blob generations survive ABA, removal and restart while rollback and forgery fail [15.08ms]
+2026-11-14T02:13:47.5713827Z (pass) caught generation overflow cannot commit blob changes [4.40ms]
+2026-11-14T02:13:47.5714080Z 
+2026-11-14T02:13:47.5714292Z Sucafinav1/test/product/wp10/integration/authority-composition.test.ts:
+2026-11-14T02:13:47.5766307Z (pass) composition write capabilities protect both prefixes and cannot authorize each other's writes [1.39ms]
+2026-11-14T02:13:47.5773520Z (pass) a Dashboard host capability does not bypass earlier protected preferences or the BI namespace [0.75ms]
+2026-11-14T02:13:47.5777820Z (pass) target revalidation receives the same command at admission, commit and receipt retry [0.43ms]
+2026-11-14T02:13:47.5988291Z (pass) domain receipt targets cannot borrow a case with the same ID and require the current prepared binding [20.96ms]
+2026-11-14T02:13:47.6059375Z (pass) Procurement receipt authority is live, domain-specific and checked again on retries [7.13ms]
+2026-11-14T02:13:47.6059830Z 
+2026-11-14T02:13:47.6060170Z Sucafinav1/test/product/wp10/integration/extended-composition.test.ts:
+2026-11-14T02:13:47.8755863Z (pass) the installed factories mount six unique canonical operations and read BI through the real source store [258.15ms]
+2026-11-14T02:13:47.8764448Z (pass) analysis selections require the exact private write capability and an authenticated actor [0.94ms]
+2026-11-14T02:13:47.8768344Z (pass) BI selector envelopes cannot introduce extra scope fields or malformed operation input [0.40ms]
+2026-11-14T02:13:47.8915712Z (pass) the hosted build creates real BI and review browser bundles and memoizes successful outputs [14.50ms]
+2026-11-14T02:13:47.8916156Z 
+2026-11-14T02:13:47.8916358Z Sucafinav1/test/product/wp10/integration/analysis-http.test.ts:
+2026-11-14T02:13:47.8968409Z (pass) analysis composition rejects cross-origin work before obtaining the runtime [0.80ms]
+2026-11-14T02:13:47.8971277Z (pass) history remains delegated with the original request body readable [0.65ms]
+2026-11-14T02:13:47.8978184Z (pass) missing runtime never yields a prepared analysis or a native start receipt [0.66ms]
+2026-11-14T02:13:47.8983259Z (pass) analysis body limits finish without waiting for an unread tee branch [0.51ms]
+2026-11-14T02:13:47.8990200Z (pass) import choices are recognized and never fall through to an incompatible foreign action handler [0.68ms]
+2026-11-14T02:13:47.8990580Z 
+2026-11-14T02:13:47.8990765Z Sucafinav1/test/product/wp10/integration/ui-authority.test.ts:
+2026-11-14T02:13:47.9061195Z (pass) UI lease pins the private Request and consumes once across concurrent dispatches [3.36ms]
+2026-11-14T02:13:47.9062748Z (pass) serializing UI context never recovers authority, and selectors cannot change its operation [0.21ms]
+2026-11-14T02:13:47.9064369Z (pass) revocation and changed access revision dispose UI admission before disclosure [0.17ms]
+2026-11-14T02:13:47.9065605Z (pass) expired UI context and invalid operation cannot acquire a Request or receipt [0.13ms]
+2026-11-14T02:13:47.9067225Z (pass) a transport readmission has a new call identity and preserves the host command intention [0.15ms]
+2026-11-14T02:13:47.9067554Z 
+2026-11-14T02:13:47.9067862Z Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts:
+2026-11-14T02:13:47.9706252Z [02:13:47.970] WARN (#293): OS keychain unavailable: stored credentials are encrypted with a key file in the data directory, which is weaker {
+2026-11-14T02:13:47.9706816Z   path: "/home/runner/.local/share/orchestra/credential.key",
+2026-11-14T02:13:47.9707077Z }
+2026-11-14T02:13:48.7507521Z [02:13:48.750] INFO (#293): watcher backend {
+2026-11-14T02:13:48.7508330Z   directory: "/tmp/sf-host-disposal-y4blQM",
+2026-11-14T02:13:48.7508777Z   platform: "linux",
+2026-11-14T02:13:48.7509545Z   backend: "inotify",
+2026-11-14T02:13:48.7509845Z }
+2026-11-14T02:13:48.7510235Z [02:13:48.750] INFO (#450): project copy refresh started {
+2026-11-14T02:13:48.7510594Z   projectID: "global",
+2026-11-14T02:13:48.7510834Z }
+2026-11-14T02:13:48.7525589Z [02:13:48.752] INFO (#450): project copy refresh done {
+2026-11-14T02:13:48.7525995Z   projectID: "global",
+2026-11-14T02:13:48.7526253Z   updated: [],
+2026-11-14T02:13:48.7526492Z   removed: [],
+2026-11-14T02:13:48.7526715Z }
+2026-11-14T02:13:48.7903224Z [02:13:48.789] INFO (#567): all LSPs are disabled
+2026-11-14T02:13:48.8080896Z [02:13:48.807] INFO (#293): booting location services {
+2026-11-14T02:13:48.8081583Z   directory: "/tmp/sf-host-disposal-y4blQM",
+2026-11-14T02:13:48.8081994Z   workspaceID: undefined,
+2026-11-14T02:13:48.8082244Z }
+2026-11-14T02:13:49.3479604Z 111 |           const runs: SfNativeRun[] = []
+2026-11-14T02:13:49.3480448Z 112 |           for (const suffix of ["first", "second", "idle"]) {
+2026-11-14T02:13:49.3481832Z 113 |             const prepared = yield* host.prepare({ request: new Request("https://example.test/sf"), selected: runtime, location, model,
+2026-11-14T02:13:49.3482969Z 114 |               skillId: "sf-explicar-forecast", prompt: "Lifecycle fixture", runId: suffix, caseRef: { id: suffix, incarnation: suffix, version: 1 },
+2026-11-14T02:13:49.3484018Z 115 |               entryMode: "interactive", toolCallBudget: 1, skillLoadBudget: 0 })
+2026-11-14T02:13:49.3484711Z 116 |             expect(prepared.status).toBe("ok")
+2026-11-14T02:13:49.3485167Z       ^
+2026-11-14T02:13:49.3486019Z error: expect(received).toBe(expected)
+2026-11-14T02:13:49.3486218Z 
+2026-11-14T02:13:49.3486301Z Expected: "ok"
+2026-11-14T02:13:49.3486733Z Received: "denied"
+2026-11-14T02:13:49.3486839Z 
+2026-11-14T02:13:49.3486917Z       at toBe (unknown:1:1)
+2026-11-14T02:13:49.3487446Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts:116:37
+2026-11-14T02:13:49.3488246Z       at ~effect/Effect/successCont (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:910:23)
+2026-11-14T02:13:49.3488995Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:420:66)
+2026-11-14T02:13:49.3489733Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-14T02:13:49.3490405Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-14T02:13:49.3490846Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:13:49.3491473Z (fail) native host disposal revokes owned runs and isolates interruption failure=%s [1434.35ms]
+2026-11-14T02:13:49.6911350Z [02:13:49.690] INFO (#2150): watcher backend {
+2026-11-14T02:13:49.6911879Z   directory: "/tmp/sf-host-disposal-xOWqwU",
+2026-11-14T02:13:49.6912223Z   platform: "linux",
+2026-11-14T02:13:49.6912472Z   backend: "inotify",
+2026-11-14T02:13:49.6912700Z }
+2026-11-14T02:13:49.6913188Z [02:13:49.691] INFO (#2299): project copy refresh started {
+2026-11-14T02:13:49.6913615Z   projectID: "global",
+2026-11-14T02:13:49.6913919Z }
+2026-11-14T02:13:49.6918371Z [02:13:49.691] INFO (#2299): project copy refresh done {
+2026-11-14T02:13:49.6918816Z   projectID: "global",
+2026-11-14T02:13:49.6919102Z   updated: [],
+2026-11-14T02:13:49.6919317Z   removed: [],
+2026-11-14T02:13:49.6920011Z }
+2026-11-14T02:13:49.7036576Z [02:13:49.702] INFO (#2416): all LSPs are disabled
+2026-11-14T02:13:49.7151249Z [02:13:49.714] INFO (#2150): booting location services {
+2026-11-14T02:13:49.7151694Z   directory: "/tmp/sf-host-disposal-xOWqwU",
+2026-11-14T02:13:49.7151993Z   workspaceID: undefined,
+2026-11-14T02:13:49.7152207Z }
+2026-11-14T02:13:50.1627765Z 111 |           const runs: SfNativeRun[] = []
+2026-11-14T02:13:50.1636316Z 112 |           for (const suffix of ["first", "second", "idle"]) {
+2026-11-14T02:13:50.1637327Z 113 |             const prepared = yield* host.prepare({ request: new Request("https://example.test/sf"), selected: runtime, location, model,
+2026-11-14T02:13:50.1638538Z 114 |               skillId: "sf-explicar-forecast", prompt: "Lifecycle fixture", runId: suffix, caseRef: { id: suffix, incarnation: suffix, version: 1 },
+2026-11-14T02:13:50.1639482Z 115 |               entryMode: "interactive", toolCallBudget: 1, skillLoadBudget: 0 })
+2026-11-14T02:13:50.1640126Z 116 |             expect(prepared.status).toBe("ok")
+2026-11-14T02:13:50.1640505Z       ^
+2026-11-14T02:13:50.1641601Z error: expect(received).toBe(expected)
+2026-11-14T02:13:50.1641914Z 
+2026-11-14T02:13:50.1642029Z Expected: "ok"
+2026-11-14T02:13:50.1642272Z Received: "denied"
+2026-11-14T02:13:50.1642421Z 
+2026-11-14T02:13:50.1642525Z       at toBe (unknown:1:1)
+2026-11-14T02:13:50.1643310Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts:116:37
+2026-11-14T02:13:50.1644704Z       at ~effect/Effect/successCont (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:910:23)
+2026-11-14T02:13:50.1645954Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:420:66)
+2026-11-14T02:13:50.1647151Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-14T02:13:50.1648287Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-14T02:13:50.1649569Z       at processTicksAndRejections (unknown:7:39)
+2026-11-14T02:13:50.1650219Z (fail) native host disposal revokes owned runs and isolates interruption failure=%s [815.61ms]
+2026-11-14T02:13:50.1650628Z 
+2026-11-14T02:13:50.1650950Z Sucafinav1/test/product/wp10/native-host/execution-host-guard.test.ts:
+2026-11-14T02:13:50.2694777Z (pass) execution host denies SF turns while preserving the actual non-SF host [98.99ms]
+2026-11-14T02:13:50.2695091Z 
+2026-11-14T02:13:50.2695287Z Sucafinav1/test/product/wp10/native-host/native-host.test.ts:
+2026-11-14T02:13:50.2915167Z (pass) native host adds no reserved service and refuses execution without a C15 gate [9.83ms]
+2026-11-14T02:13:50.2915842Z 
+2026-11-14T02:13:50.2916463Z Sucafinav1/test/product/wp10/native-host/routine-services.test.ts:
+2026-11-14T02:13:50.3150987Z (pass) routine host registers every producer descriptor and refuses absent native admission explicitly [5.34ms]
+2026-11-14T02:13:50.3609660Z (pass) routine host consumes pinned publication and native receipts without promoting a reference to completion [45.56ms]
+2026-11-14T02:13:50.3736211Z error: Task requires an exported process-global service: @orchestra/v2/Session
+2026-11-14T02:13:50.3736759Z Task requires an exported process-global service: @orchestra/v2/Session
+2026-11-14T02:13:50.3737250Z (fail) routine publication uses the existing Location graph and revokes retained ports on disposal [13.06ms]
+2026-11-14T02:13:50.3737552Z 
+2026-11-14T02:13:50.3737785Z Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts:
+2026-11-14T02:13:50.4015694Z (pass) analysis input rejects a read lease and a different human payload before producer access [18.71ms]
+2026-11-14T02:13:50.4310218Z (pass) a missing factory is unavailable and a stale case does not reach the producer [29.24ms]
+2026-11-14T02:13:50.5072426Z (pass) the current human choice is prepared but revocation during preparation prevents its return [76.33ms]
+2026-11-14T02:13:50.5570174Z (pass) a producer cannot rewrite the human choice while obtaining a valid proof [49.88ms]
+2026-11-14T02:13:50.5816218Z (pass) case reads reject an operation whose hidden target has no authorized source [24.52ms]
+2026-11-14T02:13:50.5816637Z 
+2026-11-14T02:13:50.5816978Z Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts:
+2026-11-14T02:13:50.6845512Z (pass) native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation [95.48ms]
+2026-11-14T02:13:50.7271294Z (pass) alternative publication adapter cannot grant arbitrary preferences or provenance writes and clears both private guards [42.52ms]
+2026-11-14T02:13:50.7613030Z (pass) the C08 final publication guard rejects native revocation during authentication after the work callback [34.12ms]
+2026-11-14T02:13:50.7949489Z (pass) decision registry HTTP routes reject malformed or foreign-origin inputs and never upgrade a read grant [33.69ms]
+2026-11-14T02:13:50.7950057Z 
+2026-11-14T02:13:50.7950402Z Sucafinav1/test/product/wp10/analysis-composition/decision-domain.test.ts:
+2026-11-14T02:13:50.8638628Z (pass) real decision composition mounts four unique descriptors and keeps missing facts unavailable [64.05ms]
+2026-11-14T02:13:50.8794409Z (pass) read admission cannot register criterion or portfolio selection, including for a viewer [15.61ms]
+2026-11-14T02:13:50.9013970Z (pass) generic preferences writes cannot forge domain proof or signal registries [21.95ms]
+2026-11-14T02:13:50.9183284Z (pass) the Planner actor fence accepts its real snapshot and rejects changed access or revocation [16.91ms]
+2026-11-14T02:13:54.2043011Z (pass) human classification over a real issued Planner source enables conditioned simulation and rejects revocation [3285.87ms]
+2026-11-14T02:13:54.2043595Z 
+2026-11-14T02:13:54.2044042Z Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts:
+2026-11-14T02:13:54.5380690Z (pass) exact human selections survive scope reconstruction and coexist without latest fallback [328.22ms]
+2026-11-14T02:13:54.5527218Z (pass) read admission and a changed human payload cannot create a selection [14.66ms]
+2026-11-14T02:13:54.6325008Z (pass) generic preferences writers cannot forge or replace a prepared selection [79.79ms]
+2026-11-14T02:13:54.6684729Z (pass) revocation while preparing prevents both the value and its durable selection [35.92ms]
+2026-11-14T02:13:54.7807393Z (pass) the stored selection expires and never crosses principals or case versions [112.22ms]
+2026-11-14T02:13:54.9033168Z (pass) verification rechecks authority after the reader awaits [122.56ms]
+2026-11-14T02:13:55.1662886Z (pass) fresh human preparation renews an expired generation with CAS and remains idempotent [261.54ms]
+2026-11-14T02:13:55.4187231Z (pass) a fresh human prepare renews an expired exact selection without reviving it on read [253.88ms]
+2026-11-14T02:13:55.4187559Z 
+2026-11-14T02:13:55.4187771Z Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts:
+2026-11-14T02:13:55.4240843Z (pass) over-budget evidence ancestry is refused before source IO [0.85ms]
+2026-11-14T02:13:55.4250824Z (pass) shared event dependencies resolve independently in sibling branches [1.02ms]
+2026-11-14T02:13:55.4259095Z (pass) duplicate evidence shares one pass without retaining authority for the next read [0.82ms]
+2026-11-14T02:13:55.4268691Z (pass) aggregate evidence budget is checked before deduplication or source IO [0.95ms]
+2026-11-14T02:13:55.4277250Z (pass) historical evidence keeps its original identity and requires authorized historical content [0.84ms]
+2026-11-14T02:13:55.4286602Z (pass) recall rejects forged source versions after current authorization [0.96ms]
+2026-11-14T02:13:55.4286902Z 
+2026-11-14T02:13:55.4287107Z Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts:
+2026-11-14T02:13:56.8428010Z (pass) scanner probe pins an observed executable and version [1409.83ms]
+2026-11-14T02:13:56.8428468Z (pass) an absent scanner fails closed [0.13ms]
+2026-11-14T02:13:56.8441288Z 
+2026-11-14T02:13:56.8441610Z Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts:
+2026-11-14T02:13:56.8620550Z (pass) snapshot store preserves ordered canonical events and deduplicates identical records [8.11ms]
+2026-11-14T02:13:56.8631553Z (pass) snapshot store reports tampered or duplicate event identities [1.12ms]
+2026-11-14T02:13:56.8631946Z 
+2026-11-14T02:13:56.8632212Z Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts:
+2026-11-14T02:14:27.4579771Z (pass) WP10 Atlas fences writes and recovers a durable receipt after reopen without a scanner [30589.30ms]
+2026-11-14T02:14:27.4581346Z 
+2026-11-14T02:14:27.4581943Z Sucafinav1/test/product/wp06/imports/analysis-options.test.ts:
+2026-11-14T02:14:27.8516647Z [02:14:27.851] INFO (#5146): watcher backend {
+2026-11-14T02:14:27.8517187Z   directory: "/tmp/sf-wp06-runtime-hASZOt",
+2026-11-14T02:14:27.8517540Z   platform: "linux",
+2026-11-14T02:14:27.8517791Z   backend: "inotify",
+2026-11-14T02:14:27.8518037Z }
+2026-11-14T02:14:27.8519069Z [02:14:27.851] INFO (#5295): project copy refresh started {
+2026-11-14T02:14:27.8519418Z   projectID: "global",
+2026-11-14T02:14:27.8519594Z }
+2026-11-14T02:14:27.8532352Z [02:14:27.853] INFO (#5295): project copy refresh done {
+2026-11-14T02:14:27.8532629Z   projectID: "global",
+2026-11-14T02:14:27.8532846Z   updated: [],
+2026-11-14T02:14:27.8533035Z   removed: [],
+2026-11-14T02:14:27.8533200Z }
+2026-11-14T02:14:27.8813962Z [02:14:27.881] INFO (#5412): all LSPs are disabled
+2026-11-14T02:14:27.8849440Z [02:14:27.884] INFO (#5146): booting location services {
+2026-11-14T02:14:27.8849796Z   directory: "/tmp/sf-wp06-runtime-hASZOt",
+2026-11-14T02:14:27.8850076Z   workspaceID: undefined,
+2026-11-14T02:14:27.8850257Z }
+2026-11-14T02:14:28.0035152Z (pass) import analysis choices read actual authorized cases and installed skills without needing a provider or changing the import [528.44ms]
+2026-11-14T02:14:28.0035558Z 
+2026-11-14T02:14:28.0036034Z Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts:
+2026-11-14T02:14:31.9738604Z (pass) a confirmed document amount reaches the real Planner scenario through HTTP without copying, applying or surviving source revocation [3958.80ms]
+2026-11-14T02:14:31.9739047Z 
+2026-11-14T02:14:31.9739259Z Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts:
+2026-11-14T02:14:35.8434721Z (pass) txt real Request dossier composes default services and preserves pending, confirmed and revoked document identity [3842.14ms]
+2026-11-14T02:14:40.1461832Z (pass) docx real Request dossier composes default services and preserves pending, confirmed and revoked document identity [4302.64ms]
+2026-11-14T02:14:45.0896777Z (pass) pdf real Request dossier composes default services and preserves pending, confirmed and revoked document identity [4943.55ms]
+2026-11-14T02:14:45.0901782Z 
+2026-11-14T02:14:45.0901921Z 13 tests failed:
+2026-11-14T02:14:45.0902391Z (fail) C17 real Atlas preserves Dashboard source metadata and durable memory after reopen [1700.57ms]
+2026-11-14T02:14:45.0903189Z (fail) C17 Atlas capability validates its schema and denies caller-selected ownership and another principal [1561.66ms]
+2026-11-14T02:14:45.0904023Z (fail) C17 a changed Dashboard fingerprint invalidates its memory while an independent source stays readable [1549.22ms]
+2026-11-14T02:14:45.0904711Z (fail) C17 replacement record identity and current ACL withdrawal cannot inherit prior Atlas authority [1533.16ms]
+2026-11-14T02:14:45.0905303Z (fail) C17 Atlas storage reconciles rollback and a lost committed reply while rejecting a corrupted capture [1542.68ms]
+2026-11-14T02:14:45.0905884Z (fail) C17 the qualified real scanner refuses unsafe memory and fails closed when absent or timed out [1545.04ms]
+2026-11-14T02:14:45.0906644Z (fail) C17 bounded recall rejects a persisted source change after its protected observation [1569.81ms]
+2026-11-14T02:14:45.0907150Z (fail) C17 bounded recall rejects withdrawn access after its protected observation [1527.10ms]
+2026-11-14T02:14:45.0907642Z (fail) C17 bounded recall rejects a corrupted capture after its protected egress read [1539.76ms]
+2026-11-14T02:14:45.0908831Z omni positive control [1a7b818e7a1111aeb03e1a4c852830d0]: pass (declared: 11 test(s) in Sucafinav1/test/product/wp02/atlas-consumer.test.ts, Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts, Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts); 38 omni spawn(s), 0 delegated.
+2026-11-14T02:14:45.0909959Z (fail) coverage evidence projects exact whole months through Planner without recursively reading coverage [6.32ms]
+2026-11-14T02:14:45.0910614Z (fail) native host disposal revokes owned runs and isolates interruption failure=%s [1434.35ms]
+2026-11-14T02:14:45.0911255Z (fail) native host disposal revokes owned runs and isolates interruption failure=%s [815.61ms]
+2026-11-14T02:14:45.0911786Z (fail) routine publication uses the existing Location graph and revokes retained ports on disposal [13.06ms]
+2026-11-14T02:14:45.0912068Z 
+2026-11-14T02:14:45.0912183Z  156 pass
+2026-11-14T02:14:45.0912326Z  13 fail
+2026-11-14T02:14:45.0912510Z  1172 expect() calls
+2026-11-14T02:14:45.0912765Z Ran 169 tests across 42 files. [121.74s]
+2026-11-14T02:14:45.1260561Z ##[error]Process completed with exit code 1.
+2026-11-14T02:14:45.1797718Z Post job cleanup.
+2026-11-14T02:14:45.1800907Z ##[start-action display=Setup Bun;id=__e49295c2-84e4-4649-b943-91afd53e6caf.__oven-sh_setup-bun]
+2026-11-14T02:14:45.1802883Z ##[end-action id=__e49295c2-84e4-4649-b943-91afd53e6caf.__oven-sh_setup-bun;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T02:14:45.1804262Z ##[start-action display=Setup Node;id=__e49295c2-84e4-4649-b943-91afd53e6caf.__actions_setup-node]
+2026-11-14T02:14:45.1805589Z ##[end-action id=__e49295c2-84e4-4649-b943-91afd53e6caf.__actions_setup-node;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T02:14:45.1848669Z Post job cleanup.
+2026-11-14T02:14:45.2494526Z [command]/usr/bin/git version
+2026-11-14T02:14:45.2527019Z git version 2.56.1
+2026-11-14T02:14:45.2550531Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/fb6c1165-a724-4e5f-bdd2-66a7ab25835e/.gitconfig'
+2026-11-14T02:14:45.2557636Z Temporarily overriding HOME='/home/runner/work/_temp/fb6c1165-a724-4e5f-bdd2-66a7ab25835e' before making global git config changes
+2026-11-14T02:14:45.2558695Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T02:14:45.2561972Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T02:14:45.2592757Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T02:14:45.2617510Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T02:14:45.2814858Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T02:14:45.2833985Z http.https://github.com/.extraheader
+2026-11-14T02:14:45.2841387Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-14T02:14:45.2867793Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T02:14:45.3043409Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T02:14:45.3067378Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T02:14:45.3376593Z Cleaning up orphan processes
+2026-11-14T02:14:45.3614818Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830, actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

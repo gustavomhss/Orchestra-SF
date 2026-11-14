@@ -6,9 +6,10 @@ import { release, tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import type { UiCorpusReceipt } from "../wp00/flows.ts"
+import { qualifyWp10ExtendedUi } from "./extended-flows.ts"
 
 const origin = "http://localhost:4110"
-const flowNames = ["dashboard-budget", "workbench-create-reopen", "procurement-requests", "bi-table"] as const
+const flowNames = ["dashboard-budget", "workbench-create-reopen", "procurement-requests", "bi-table", "extended-ui"] as const
 type Flow = typeof flowNames[number]
 type Observation = {
   flow: Flow
@@ -316,6 +317,10 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           expect(statusOf(refused)).toBe("needs-input")
           expect(reasonOf(refused)).toBe("invalid-query")
           await table.scrollIntoViewIfNeeded()
+        })
+
+        await observe("extended-ui", async (record) => {
+          Object.assign(record.facts, await qualifyWp10ExtendedUi({ page, origin, testInfo }))
         })
 
         const failed = observations.filter((record) => record.outcome !== "passed")

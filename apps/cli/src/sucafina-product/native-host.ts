@@ -257,8 +257,9 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
           release: (binding) => Effect.gen(function* () {
             const run = runs.get(binding)
             if (!run) return
-            yield* session.interrupt(run.admission.sessionID)
+            // Revoke owned resources even if the native interruption fails.
             run.release()
+            yield* session.interrupt(run.admission.sessionID)
           }),
         })
         const release = input.onReady?.(api)

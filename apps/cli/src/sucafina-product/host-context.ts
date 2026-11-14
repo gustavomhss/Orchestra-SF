@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto"
-import { dashboardPages, plannerKeys, procurementKeys } from "../../../../modules/sucafina/Sucafinav1/src/nav.ts"
-import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { createSfPersonalViews } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
+import { createSfPersonalViewAuthority } from "./personal-view-authority.ts"
 import path from "node:path"
 import { makeGlobalNode } from "@orchestra/core/effect/app-node"
 import { ProjectV2 } from "@orchestra/core/project"
@@ -52,6 +51,7 @@ import { createSfAnalysisAuthorReader } from "./analysis-author.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
 import { createSfAnalysisHostServices } from "./analysis-host-services.ts"
 import { createSfAnalysisHttp } from "./analysis-http.ts"
+import { createSfForecastInputAdapter } from "./forecast-input-adapter.ts"
 import { sfAnalysisSourceNamespaces } from "./analysis-namespaces.ts"
 import type { SfAnalysisStartInput } from "./analysis-http.ts"
 import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/product/integration/host-presentation.ts"
@@ -257,7 +257,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const captures = createSfAlternativeCaptures({ authority, captures: alternativeCaptures,
     active: (record) => !!identity() && captureCurrent(record) })
   const outcomeReader: { current?: NonNullable<SfReviewReaders["outcome"]> } = {}
-  const extended = createSfExtendedBusinessServices({ authority, business, persistence: input.persistence, proposalCoverageWrites, analysisSelectionWrites, origin: input.origin,
+  const extended = createSfExtendedBusinessServices({ authority, business, persistence: input.persistence, proposalCoverageWrites, analysisSelectionWrites, procurementEvidenceWrites, origin: input.origin,
     reviewReaders: { contributions: { contributions: readContribution, results: business.results }, outcome: {
       read: (request, call) => outcomeReader.current?.read(request, call) ?? Promise.resolve({ status: "unavailable" }),
       authorize: (call, observations) => outcomeReader.current?.authorize(call, observations) ?? Promise.resolve(false),
@@ -269,6 +269,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     hasAdmittedInputContext: nativeInputs.hasAdmittedInputContext, readAlternativeCapture: nativeInputs.readAlternativeCapture })
   business.bindDecisionDomain(decisionDomain)
   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })
+  const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
   outcomeReader.current = memory.reviewOutcome
   const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
   for (const replacement of extended.replacements) {
@@ -361,7 +362,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         const run = stored.nativeRuns?.[runRef]
         return run && run.principalRef === actor.principalRef && run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion ? run.intentDigest : undefined
       })
-      if (claim.status !== "ok") return "reason" in claim ? claim : { status: "unavailable", reason: "analysis-state-unavailable" }
+      if (claim.status !== "ok") return "reason" in claim ? { status: claim.status, reason: claim.reason } : { status: "unavailable", reason: "analysis-state-unavailable" }
       if (claim.value !== undefined && !/^[a-f0-9]{64}$/.test(claim.value)) return { status: "unavailable", reason: "analysis-legacy-intent-unavailable" }
       if (claim.value !== undefined && claim.value !== intentDigest) return { status: "conflict", reason: "analysis-idempotency-content-changed" }
       const model = Schema.decodeUnknownOption(ModelV2.Ref)(captured.model)
@@ -391,7 +392,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           const run = stored.nativeRuns?.[runRef]
           return run && run.principalRef === actor.principalRef && run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion ? run : undefined
         })
-        if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
+        if (found.status !== "ok") return "reason" in found ? { status: found.status, reason: found.reason } : { status: "unavailable", reason: "analysis-state-unavailable" }
         if (!found.value) return undefined
         const run = found.value
         if (!run.intentDigest || !/^[a-f0-9]{64}$/.test(run.intentDigest)) return { status: "unavailable", reason: "analysis-legacy-intent-unavailable" }
@@ -456,7 +457,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           return run && current && current.incarnation === run.caseRef.incarnation && current.version >= run.caseRef.version && current.participants.includes(actor.principalRef) &&
             run.principalRef === actor.principalRef && run.policyVersion === actor.policyVersion && run.accessRevision === actor.accessRevision ? run : undefined
         })
-        if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
+        if (found.status !== "ok") return "reason" in found ? { status: found.status, reason: found.reason } : { status: "unavailable", reason: "analysis-state-unavailable" }
         return found.value && await authority.host.revalidate(call) ? { status: "ok", value: found.value } : { status: "denied", reason: "analysis-authority-unavailable" }
       }
       const runState = createSfAlternativeRunState({ state: authority.state, proposalCoverageWrites, nativePublicationGuards, captureCurrent, runRef,
@@ -610,8 +611,8 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const found = await authority.state.read(request, "contributions", (stored, actor) => Object.values(stored.nativeRuns ?? {})
         .filter((run) => run.principalRef === actor.principalRef && run.policyVersion === actor.policyVersion && run.accessRevision === actor.accessRevision &&
           run.caseRef.id === caseRef.id && run.caseRef.incarnation === caseRef.incarnation && run.caseRef.version <= caseRef.version)
-        .map((run) => ({ runRef: run.runRef, state: run.state, version: run.version })))
-      if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
+        .map((run) => ({ runRef: run.runRef, state: run.state, version: run.version, ...("outputRef" in run && run.outputRef ? { outputRef: run.outputRef } : {}) })))
+      if (found.status !== "ok") return "reason" in found ? { status: found.status, reason: found.reason } : { status: "unavailable", reason: "analysis-state-unavailable" }
       const again = await business.cases.read({ caseRef: encodeCaseRef(caseRef) }, context)
       if (again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || !await authority.human.authorize(context, "analysis.read", intent))
         return { status: "denied", reason: "analysis-authority-unavailable" }
@@ -626,7 +627,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         return run && current && current.incarnation === run.caseRef.incarnation && current.participants.includes(actor.principalRef) && run.principalRef === actor.principalRef &&
           run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion ? run : undefined
       })
-      if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
+      if (found.status !== "ok") return "reason" in found ? { status: found.status, reason: found.reason } : { status: "unavailable", reason: "analysis-state-unavailable" }
       if (!found.value || !await authority.human.authorize(context, "analysis.read", { runRef })) return { status: "denied", reason: "analysis-authority-unavailable" }
       const again = await authority.state.read(request, "contributions", (stored, actor) => {
         const run = stored.nativeRuns?.[runRef]
@@ -801,31 +802,14 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   })
   const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget,
     operationIdentity: (call) => call.kind === "ui" ? authority.ui.operationIdentity(call) : undefined, humanAuthorize: (call, action, payload) => authority.human.authorize(call, action, payload),
-    authorizeView: async (view, call) => {
-      if (Object.keys(view.filters?.selections ?? {}).some((key) => !["year", "own", "execYear", "opsYear", "secYear", "month", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"].includes(key))) return false
-      const request = authority.host.requestFor(call)
-      if (!request || !await authority.host.revalidate(call)) return false
-      const allowed = await input.persistence.transaction(view.surface, async (snapshot) => {
-        const principal = await authority.host.authenticate(request, { surface: view.surface, roleMap: roleMap(snapshot, view.surface) })
-        if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: false }
-        const access = object(object(snapshot.data.access)[principal.id])
-        const roles = principal.roles.filter((role) => role.surface === view.surface).map((role) => role.role)
-        const actor = { id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles,
-          assigned: Array.isArray(access.assigned) ? access.assigned.filter((entry): entry is string => typeof entry === "string") : [],
-          domains: Array.isArray(access.domains) ? access.domains.filter((entry): entry is string => typeof entry === "string") : [] }
-        const summaries = Array.isArray(snapshot.data.summaries) ? snapshot.data.summaries.filter((entry): entry is string => typeof entry === "string") : []
-        const pages = view.surface === "dashboard" ? dashboardPages(actor, summaries) : view.surface === "planner" ? plannerKeys(actor) : procurementKeys(actor)
-        return { commit: false, value: pages.includes(view.page) }
-      }, { signal: request.signal })
-      return allowed && await authority.host.revalidate(call)
-    } })
+    authorizeView: createSfPersonalViewAuthority({ authority }) })
   const analysisHttp = createSfAnalysisHttp({ origin: input.origin, mount: input.mount,
     runtime: () => identity() ? { human: authority.human, selected, models: async () => state.models ? state.models() : [], inputs: analysisInputs, start: analyses.start,
       choices: (request) => readSfImportAnalysisChoices(request, services) } : undefined })
   const services: SfHostServices & { analysisInputs: SfAnalysisInputPort; productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
-    procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, sourcingInputs, work: business.collaboration.work,
+    procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
-    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }

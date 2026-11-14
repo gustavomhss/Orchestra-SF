@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfAnalysisSelectionScope } from "../../../../../../../apps/cli/src/sucafina-product/analysis-selection-scope.ts"
+import { createSfForecastInputAdapter } from "../../../../../../../apps/cli/src/sucafina-product/forecast-input-adapter.ts"
 import type { SfAnalysisPreparation } from "../../../../../../../apps/cli/src/sucafina-product/analysis-services.ts"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
@@ -14,6 +15,8 @@ import { enumerateSfSources } from "../../../../product/integration/source-inven
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
+import type { ForecastExplainInput } from "../../../../product/contracts/skill-inputs.ts"
+import { selection } from "../resident-runtime/fixture.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 
 // These are authority/persistence boundary fixtures, not skill outputs or native model evidence.
@@ -57,7 +60,7 @@ async function fixture() {
     }))
   const records = () => authority.state.read(request, "preferences", (state) => Object.entries(state.preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
   const close = async () => { business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
-  return { actor, authority, request, caseRef, incoming, create, admit, prepared, prepare, records, close }
+  return { actor, authority, business, request, caseRef, incoming, create, admit, prepared, prepare, records, close }
 }
 
 test("exact human selections survive scope reconstruction and coexist without latest fallback", async () => {
@@ -229,5 +232,54 @@ test("a fresh human prepare renews an expired exact selection without reviving i
     expect(after.status === "ok" && after.value[0]![0]).toEqual(before.value[0]![0])
     expect(after.status === "ok" && after.value[0]![1]).not.toEqual(before.value[0]![1])
     state.authority.human.finish(fresh)
+  } finally { await state.close() }
+})
+
+// The financial payload is a deliberately empty boundary fixture. This verifies
+// the old form's human admission and durable selection, never financial/native acceptance.
+test("published Forecast form persists the exact canonical selection and denies changed or revoked intent", async () => {
+  const state = await fixture()
+  try {
+    const period = { start: "2026-01-01", end: "2026-12-31" }
+    const legacy = { caseRef: state.caseRef, baseRef: "baseline", candidateRef: "candidate", period, currency: "USD" }
+    const runtime = selection({ id: "sf_finance", version: "1", mission: "Finance", sourcePath: "profile.json", sourceDigest: "a".repeat(64),
+      allowedSkills: ["sf-explicar-forecast"], allowedOperations: ["sf_forecast_compare"], outputTypes: ["FinancialAnalysis"], contextBudgetTokens: 1000,
+      maxSteps: 2, maxDelegations: 0, modelClass: "reasoning", resumePolicy: "fresh" })
+    const projection = { context: { installationId: "installation", projectId: "project", principalRef: "person", accessRevision: "boundary", policyVersion: "policy",
+      surface: "planner" as const, period, currency: "USD", sourceRefs: [], capabilities: [] }, version: 1, engineVersion: "boundary-fixture", components: [], values: [], missing: [] }
+    const prepared: ForecastExplainInput = { selectedPeriod: period, currency: "USD", sourceRefs: [], registeredReasons: [], forecastComparison: {
+      baseline: projection, candidate: projection, sourceRefs: [], gaps: ["Boundary fixture has no financial sources"], explanation: "Boundary fixture",
+      comparison: { baselineResultRef: "baseline", alternativeResultRef: "candidate", costCoverageRefs: [], criterionResults: [], unresolvedConditions: ["No source"],
+        comparisonStatus: "unavailable", knownDifference: null, completeDifference: null }, knownDifference: null, completeDifference: null, analysisBasis: "domain", domainApplied: false } }
+    const scope = state.create()
+    let wanted: SfAnalysisPreparation | undefined
+    let calls = 0
+    let revoke = false
+    const adapter = createSfForecastInputAdapter({ authority: state.authority, business: state.business, selected: [runtime], inputs: { prepare: async (call, input) => {
+      calls++
+      wanted = structuredClone(input)
+      const result = await scope.selectionScope.prepare(input, call, () => scope.selectionScope.verify(prepared, input.request, call, async () => ({ status: "ok", value: prepared })))
+      if (revoke) state.actor.active = false
+      return result
+    } } })
+    const original = await state.authority.ui.admit(state.request, "sf_forecast_compare", digestSfValue(legacy))
+    if (original.status !== "ok") throw new Error("Forecast UI admission unavailable")
+    expect(await adapter.prepare(original.value, legacy)).toEqual({ status: "ok", value: prepared })
+    expect(wanted?.selection).toEqual(legacy)
+    expect(wanted?.request.objective).toBe("Review")
+    expect(wanted?.request.manifestDigest).toBe(runtime.manifestDigest)
+    const stored = await state.records()
+    expect(stored.status === "ok" && stored.value.length).toBe(1)
+    if (!wanted) throw new Error("Canonical preparation absent")
+    const followup = await state.admit(wanted)
+    const reopened = state.create()
+    expect(await reopened.selectionScope.verify(prepared, wanted.request, followup, () => reopened.read(state.caseRef, wanted!.request.skillId, followup)))
+      .toEqual({ status: "ok", value: { selection: legacy, material: {} } })
+    state.authority.human.finish(followup)
+    expect((await adapter.prepare(original.value, { ...legacy, candidateRef: "changed-without-human-admission" })).status).toBe("denied")
+    expect(calls).toBe(1)
+    revoke = true
+    expect((await adapter.prepare(original.value, legacy)).status).not.toBe("ok")
+    state.authority.ui.finish(original.value)
   } finally { await state.close() }
 })
