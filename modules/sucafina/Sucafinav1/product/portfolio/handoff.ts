@@ -5,7 +5,7 @@ import type { PortfolioResult } from "../contracts/decisions.ts"
 import type { PortfolioRequest, ScenarioOperation } from "../contracts/operations.ts"
 import type { DecisionCasePort, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { PortfolioHost, PortfolioPort } from "./port.ts"
+import type { PortfolioCandidate, PortfolioHost, PortfolioPort } from "./port.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type DecisionPreparation = {
@@ -38,7 +38,7 @@ export async function preparePortfolioChoice(input: {
   if (selected.eligibility === "ineligible" || selected.eligibility === "unavailable") return { status: "conflict", reason: "combination-not-available" }
   const resolved = await Promise.all(input.selectedCandidateRefs.map((ref) => input.host.resolveCandidate(ref, context)))
   const failure = resolved.find((item) => item.status !== "ok")
-  if (failure && failure.status !== "ok") return failure
+  if (failure) return failure
   const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
   const operations = [...input.request.operations, ...candidates.flatMap((candidate) => candidate.operations)]
   if (digestSfValue({ candidates: candidates.map((candidate) => candidate.ref), operations }) !== input.combinationId) return { status: "stale", reason: "combination-changed" }
@@ -49,7 +49,8 @@ export async function preparePortfolioChoice(input: {
   const choice = current.value.case.choices.find((item) => item.id === input.choiceId)
   if (!choice || digestSfValue(choice.scenario.operations) !== digestSfValue(operations) || candidates.some((candidate) => candidate.scenario.baseRef !== choice.scenario.baseRef || candidate.scenario.assumptions.some((assumption) => !choice.scenario.assumptions.some((item) => digestSfValue(item) === digestSfValue(assumption))))) return { status: "conflict", reason: "choice-does-not-match-combination" }
   if (plannerComponentDigest(choice.result.components) !== plannerComponentDigest(selected.components) || choice.result.currency !== input.request.scope.currency || choice.result.horizon.start !== input.request.scope.horizon.start || choice.result.horizon.end !== input.request.scope.horizon.end) return { status: "stale", reason: "choice-result-changed" }
-  if (!(await input.host.revalidate(context))) return { status: "stale", reason: "authority-changed" }
+  const checked = await revalidateCandidates(input.host, input.selectedCandidateRefs, candidates, context)
+  if (checked.status !== "ok") return checked
   return input.decisions.prepareChanges({ caseRef: input.caseRef, choiceId: input.choiceId, operations }, context)
 }
 
@@ -75,7 +76,7 @@ export async function promotePortfolioAlternative(input: {
   if (selected.eligibility === "ineligible" || selected.eligibility === "unavailable") return { status: "conflict", reason: "combination-not-available" }
   const resolved = await Promise.all(input.selectedCandidateRefs.map((ref) => input.host.resolveCandidate(ref, context)))
   const failure = resolved.find((item) => item.status !== "ok")
-  if (failure && failure.status !== "ok") return failure
+  if (failure) return failure
   const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
   const operations = [...input.request.operations, ...candidates.flatMap((candidate) => candidate.operations)]
   if (digestSfValue({ candidates: candidates.map((candidate) => candidate.ref), operations }) !== input.combinationId) return { status: "stale", reason: "combination-changed" }
@@ -83,6 +84,21 @@ export async function promotePortfolioAlternative(input: {
   if (!first || candidates.some((candidate) => candidate.scenario.baseRef !== first.scenario.baseRef)) return { status: "conflict", reason: "portfolio-base-mismatch" }
   const assumptions = candidates.flatMap((candidate) => candidate.scenario.assumptions)
   if (assumptions.some((item) => assumptions.some((other) => other.id === item.id && digestSfValue(other) !== digestSfValue(item)))) return { status: "conflict", reason: "portfolio-assumption-conflict" }
-  if (!await input.host.revalidate(context)) return { status: "stale", reason: "authority-changed" }
+  const checked = await revalidateCandidates(input.host, input.selectedCandidateRefs, candidates, context)
+  if (checked.status !== "ok") return checked
   return input.decisions.addAlternative({ caseRef: input.caseRef, title: input.title, coverageRef: input.coverageRef, scenario: { baseRef: first.scenario.baseRef, operations, assumptions: assumptions.filter((item, index) => assumptions.findIndex((other) => digestSfValue(other) === digestSfValue(item)) === index) } }, context)
+}
+
+async function revalidateCandidates(host: PortfolioHost, refs: readonly string[], expected: readonly PortfolioCandidate[], context: TrustedDomainContext): Promise<PortResult<true>> {
+  try {
+    const resolved = await Promise.all(refs.map((ref) => host.resolveCandidate(ref, context)))
+    const failure = resolved.find((item) => item.status !== "ok")
+    if (failure) return failure
+    const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
+    if (digestSfValue(candidates) !== digestSfValue(expected)) return { status: "stale", reason: "candidate-changed-before-handoff" }
+    if (!await host.revalidate(context)) return { status: "stale", reason: "authority-changed" }
+    return { status: "ok", value: true }
+  } catch {
+    return { status: "unavailable", reason: "candidate-revalidation-unavailable" }
+  }
 }

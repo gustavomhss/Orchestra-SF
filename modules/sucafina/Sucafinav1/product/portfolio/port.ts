@@ -27,14 +27,15 @@ export type PortfolioPort = {
 }
 
 export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { evaluateWithSelections: (request: PortfolioRequest, context: TrustedDomainContext) => Promise<PortResult<{ portfolio: PortfolioResult; selections: readonly { combinationId: string; selectedCandidateRefs: readonly string[] }[] }>> } {
-  const evaluate = async (request: PortfolioRequest, context: TrustedDomainContext, selections: { combinationId: string; selectedCandidateRefs: readonly string[] }[] = []): Promise<PortResult<PortfolioResult>> => {
+  const evaluate = async (incoming: PortfolioRequest, context: TrustedDomainContext, selections: { combinationId: string; selectedCandidateRefs: readonly string[] }[] = []): Promise<PortResult<PortfolioResult>> => {
+    const request = structuredClone(incoming)
     if (!(await host.revalidate(context))) return { status: "denied", reason: "invalid-binding" }
     if (!request.candidateRefs.length || request.candidateRefs.length > 64 || new Set(request.candidateRefs).size !== request.candidateRefs.length || !Number.isSafeInteger(request.explorationLimit) || request.explorationLimit < 1 || request.explorationLimit > 1024 || !request.scope.currency || request.scope.horizon.start > request.scope.horizon.end)
       return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
     const resolved = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
     const failure = resolved.find((item) => item.status !== "ok")
     if (failure && failure.status !== "ok") return failure
-    const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
+    const candidates = resolved.flatMap((item) => item.status === "ok" ? [structuredClone(item.value)] : [])
     if (candidates.some((item) => !item.operations.length || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
     if (candidates.some((item, index) => item.ref !== request.candidateRefs[index] || digestSfValue(item.operations) !== digestSfValue(item.scenario.operations))) return { status: "stale", reason: "candidate-reference-changed" }
     // Enumerate a bounded prefix without computing 2 ** n or materializing the power set.
@@ -55,7 +56,7 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
         combinations.push({ id, caseRefs: selected.map((candidate) => candidate.caseRef), components: [], costCoverageRefs: [], conflicts: [...new Set(duplicateTargets)].map((target) => `duplicate-target:${target}`), restrictions: [], eligibility: "ineligible", comparisonStatus: "incompatible" })
         continue
       }
-      const evaluated = await host.evaluate({ request, candidates: selected, operations }, context)
+      const evaluated = structuredClone(await host.evaluate(structuredClone({ request, candidates: selected, operations }), context))
       if (evaluated.status !== "ok") return evaluated
       const scenario = evaluated.value.scenario
       evaluatedSources.push({ scenario, costCoverageRefs: evaluated.value.costCoverageRefs, analysis: evaluated.value.analysis, candidates: selected })
