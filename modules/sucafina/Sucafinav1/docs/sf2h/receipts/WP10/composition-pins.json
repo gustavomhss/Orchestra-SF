@@ -1,6 +1,6 @@
 {
   "schema": "sf2.wp10.composition.v1",
-  "status": "COMPOSED_W6_PENDING_HOSTED_VERIFICATION",
+  "status": "COMPOSED_W7_PENDING_HOSTED_VERIFICATION",
   "seed": "d41ea01b8d9aa068301c1643c1ec3dc088900533",
   "target": "sf2-stack",
   "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
@@ -3645,8 +3645,8 @@
     }
   ],
   "wp10Deltas": {
-    "parent": "4041575a60e57ff6180f86215da4bcd87f449a00",
-    "status": "OWN_COMPOSITION_W6_NO_NATIVE_OR_GLOBAL_ACCEPTANCE",
+    "parent": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+    "status": "W7_REVIEW_CORRECTIONS_PENDING_HOSTED_PROOF",
     "ownFiles": [
       {
         "path": ".github/workflows/astra-wp10-check.yml",
@@ -3666,7 +3666,7 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
-        "blobSha": "50e7ff0822812d4b2beaf624325f553635a48d7a"
+        "blobSha": "3e141ac9e7c78c94c57b7b3bcd6a18e609c6b0ad"
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-selection-scope.ts",
@@ -3698,7 +3698,7 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/business-services.ts",
-        "blobSha": "0ce1c76b0cb14cad904301a139b8b935ae521da1"
+        "blobSha": "ba89d80c77c1300aeeb18a16d10e6198cc0285d7"
       },
       {
         "path": "apps/cli/src/sucafina-product/contribution.ts",
@@ -3718,7 +3718,7 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/decision-change-services.ts",
-        "blobSha": "ffe982457859fa4216b8a71840e3c6e76bc96f68"
+        "blobSha": "46c95ba57b1daf726cdd4c1576d73e782827580d"
       },
       {
         "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
@@ -3830,7 +3830,7 @@
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-domain.test.ts",
-        "blobSha": "234b0d11da743ca0eaf4daeafb948af63c77aa7b"
+        "blobSha": "416d08711a2fe9d0e26034c80d317950c81f9394"
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
@@ -3993,6 +3993,16 @@
           "apps/cli/src/sucafina-product/analysis-verifier-documents.ts"
         ],
         "mode": "Adapt only extraction schema selector and extracted-document reader; preserve current purchase/change verifier."
+      },
+      {
+        "owner": "WP10",
+        "paths": [
+          "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+          "apps/cli/src/sucafina-product/decision-change-services.ts",
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-domain.test.ts"
+        ],
+        "mode": "Fix two own hosted type errors; consume the real UI lease in the domain fixture; isolate source projection from decision coverage; preserve absent-vs-denied case selection and test baseline idempotency/classification. Review findings FIN-W6-01 and FIN-W6-02, not yet accepted."
       }
     ]
   },
@@ -4072,6 +4082,28 @@
       "ownDiagnostics": 2,
       "foreignDiagnostics": 47,
       "note": "The two own BI diagnostics corrected in W6, requiring hosted recheck; foreign deltas unchanged."
+    },
+    {
+      "product": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+      "run": 43543628377,
+      "job": 132289644720,
+      "conclusion": "failure",
+      "pass": 80,
+      "fail": 7,
+      "errors": 2,
+      "files": 13,
+      "assertions": 667,
+      "seconds": 147.85,
+      "note": "Three own decision-domain fixture failures before baseline and four WP04 C12 consumer failures; native boundary tests pass without model execution; Omni not applicable."
+    },
+    {
+      "product": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+      "run": 43543639877,
+      "job": 132289681671,
+      "conclusion": "failure",
+      "ownDiagnostics": 2,
+      "foreignDiagnostics": 47,
+      "note": "Atlas generate/check:generated/typecheck and both guards pass. W7 corrects own diagnostics, requires recheck."
     }
   ],
   "archivedForeignInputs": {

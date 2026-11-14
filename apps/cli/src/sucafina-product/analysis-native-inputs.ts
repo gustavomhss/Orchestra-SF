@@ -105,7 +105,9 @@ export function createSfNativeAnalysisInputs(input: {
   const readCapturedAlternative = async (runRef: string, callId: string, call: TrustedDomainContext): Promise<PortResult<AlternativeCapabilityProvenance>> => {
     const records = input.captures(runRef).filter((record) => record.receipt.callId === callId)
     if (records.length !== 1) return unavailable()
-    const found = await readAlternativeCapture(runRef, records[0]!.receipt.resultDigest, call)
+    const resultDigest = records[0]!.receipt.resultDigest
+    if (typeof resultDigest !== "string") return unavailable()
+    const found = await readAlternativeCapture(runRef, resultDigest, call)
     return found.status === "ok" && found.value.run.state === "running" && same(found.value.record, records[0]) &&
       input.captures(runRef).filter((record) => same(record, records[0])).length === 1 && await input.revalidateCapture(found.value.record)
       ? { status: "ok", value: found.value.record } : unavailable()

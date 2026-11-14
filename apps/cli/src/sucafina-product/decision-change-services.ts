@@ -127,7 +127,7 @@ export function createSfDecisionChangeServices(input: {
       const resolved = await Promise.all(request.operations.map((operation, index) => prepare({ operation, choice: selected.choice,
         operationId: `${identity}:${index}`, idempotencyKey: `${identity}:${index}` }, call)))
       const failed = resolved.find((result) => result.status !== "ok")
-      if (failed && failed.status !== "ok") return failed
+      if (failed) return failed
       const again = await selectedChoice(request, call)
       if (!again || !same(again.current.case, selected.current.case) || !await host.revalidate(call)) return { status: "stale", reason: "preparation-case-changed" }
       return { status: "ok", value: { changes: resolved.flatMap((value) => value.status === "ok" ? [value.value] : []), conditions: choiceConditions(selected.choice) } }

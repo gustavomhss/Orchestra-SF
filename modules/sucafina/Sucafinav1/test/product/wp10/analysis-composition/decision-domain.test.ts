@@ -50,8 +50,9 @@ async function fixture() {
   const domain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites, selectedCase: business.selectedCase })
   business.bindDecisionDomain(domain)
   const readCall = async () => {
-    const admitted = await authority.ui.admit(request, "sf_forecast_compare", digestSfValue({ caseRef }))
-    if (admitted.status !== "ok") throw new Error("Real UI read admission unavailable")
+    const digest = digestSfValue({ caseRef })
+    const admitted = await authority.ui.admit(request, "sf_forecast_compare", digest)
+    if (admitted.status !== "ok" || !await authority.ui.validate(admitted.value, "sf_forecast_compare", digest)) throw new Error("Real UI read admission unavailable")
     return admitted.value
   }
   const close = async () => { domain.dispose(); business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
@@ -165,6 +166,11 @@ test("human classification over a real issued Planner source enables conditioned
     const saved = await state.business.withCase(call, state.caseRef, {}, () => state.domain.baselineCoverage.register(request, call))
     expect(saved.status).toBe("ok")
     const checked = await state.business.withCase(call, state.caseRef, {}, async () => {
+      const beforeRetry = await state.authority.state.read(state.request, "preferences", () => null)
+      expect(await state.domain.baselineCoverage.register(request, call)).toEqual(saved)
+      const afterRetry = await state.authority.state.read(state.request, "preferences", () => null)
+      expect(beforeRetry.status === "ok" && afterRetry.status === "ok" && afterRetry.storageVersion === beforeRetry.storageVersion).toBe(true)
+      expect((await state.domain.baselineCoverage.readClassification(issued.value.evidence.refId, call)).status).toBe("ok")
       const coverage = await state.domain.baselineCoverage.resolveForecastCoverage(issued.value.evidence.refId, call)
       if (coverage.status !== "ok") throw new Error(`Registered coverage unavailable: ${coverage.reason}`)
       expect(coverage.value.assessment.coverageState).toBe("pending")

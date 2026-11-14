@@ -205,6 +205,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   type DecisionDomain = { proposalCoverage: { resolveForecastCoverage: Parameters<typeof createPlannerCoverageRouter>[0]["forecast"] }; plannerCriteria: NonNullable<Parameters<typeof createPlannerProduct>[0]["criteria"]> }
   const decisionDomain: { current?: DecisionDomain } = {}
   const plannerHolder: { current?: ReturnType<typeof createPlannerProduct>["planner"] } = {}
+  // Source evidence must not consult a decision coverage registry which itself
+  // resolves that evidence. This port still authenticates the original sources.
+  const sourcePlanner = createPlannerProduct({ host, scopedSources: input.persistence,
+    coverageFor: async () => ({ status: "unavailable", reason: "source-projection-has-no-decision-coverage" }) })
   const baselineCoverage = createSfDecisionBaselineServices({ authority: input.authority, evidence: context, selectedCase,
     planner: () => plannerHolder.current, proposalCoverageWrites: input.proposalCoverageWrites, readSourceFences, lockedSourceFences })
   const bindDecisionDomain = (value: DecisionDomain) => {
@@ -212,9 +216,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     decisionDomain.current = value
   }
   const product = createPlannerProduct({ host, scopedSources: input.persistence, evidence: context,
-    coverageFor: createPlannerCoverageRouter({ forecast: (ref, call) => ref.startsWith("proposal-coverage:")
-      ? decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" })
-      : baselineCoverage.resolveForecastCoverage(ref, call), decision: coverage }),
+    coverageFor: createPlannerCoverageRouter({ forecast: async (ref, call) => {
+      if (ref.startsWith("proposal-coverage:")) return decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? { status: "unavailable", reason: "decision-domain-not-initialized" }
+      // A forecast can be read without choosing a decision case. A present but
+      // inaccessible selection still reaches the registry and retains its denial.
+      if (call.kind === "ui" && !caseBindings.has(call)) return await host.revalidate(call)
+        ? { status: "unavailable", reason: "baseline-coverage-case-not-selected" } : { status: "denied", reason: "baseline-coverage-access-unavailable" }
+      return baselineCoverage.resolveForecastCoverage(ref, call)
+    }, decision: coverage }),
     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
   const planner = product.planner
@@ -278,7 +287,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     }
     const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords,
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
-      procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner },
+      procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: sourcePlanner.sources, port: sourcePlanner.planner },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
       caseForEvidence, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
         runtimeVersions: versions, featuresForCase,
