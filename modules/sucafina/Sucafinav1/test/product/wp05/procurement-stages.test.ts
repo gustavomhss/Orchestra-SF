@@ -237,10 +237,15 @@ test("approver opens the oldest proven request while a missing age stays visible
       }, { url, view })
       expect(await page.locator('svg [data-bi-series="aging"]').count()).toBe(2)
       expect(await page.locator("body").textContent()).toContain("Idade indisponível: 1 de 3 pedidos nesta seleção.")
-      for (const value of ages) {
-        const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: value.id, exact: true }) })
-        expect(await row.getByRole("cell").nth(1).textContent()).toBe(value.value === null ? "Indisponível" : String(value.value))
-      }
+      const renderedRows = await page.locator("table tbody tr").evaluateAll((rows) => rows.map((row) => Array.from(row.querySelectorAll("td")).slice(0, 6).map((cell) => cell.textContent)))
+      expect(renderedRows).toEqual(view.projection.values.map((value) => [
+        value.id,
+        value.value === null || value.evidenceState === "absent" ? "Indisponível" : String(value.value),
+        value.unit ?? value.currency ?? "—",
+        `${value.period.start} – ${value.period.end}`,
+        value.granularity,
+        value.evidenceState,
+      ]))
       const mark = page.locator('svg [data-bi-focus="' + known.id + '"]')
       expect(await mark.getAttribute("aria-label")).toContain(": 10 Review · days")
       await mark.click()
