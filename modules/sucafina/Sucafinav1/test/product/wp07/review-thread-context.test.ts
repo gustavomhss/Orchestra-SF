@@ -287,7 +287,7 @@ test("a second C05 observation cannot rebind the first observation to a replacem
       tampered: await source.fence(scope, { ...first, sourceVersion: first.sourceVersion + 1, accessLeaseRef: second.accessLeaseRef }, f.basis, f.recipient),
     } }))
     expect(fenced).toEqual({ first: false, second: true, tampered: false })
-    expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await source.fence(scope, structuredClone(first), f.basis, f.recipient) })))).toBe(false)
+    expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await source.fence(scope, structuredClone(first), f.basis, f.recipient) }))).toBe(false)
   } finally { await f.dispose() }
 }, 120000)
 
