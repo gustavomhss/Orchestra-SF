@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { sameBiProjection } from "../../../product/analytics/projection.ts"
+import { hasBiDecision, sameBiProjection } from "../../../product/analytics/projection.ts"
 import type { DomainProjection, SourceRef } from "../../../product/contracts/context.ts"
 
 const period = { start: "2027-01-01", end: "2027-12-31" }
@@ -26,4 +26,19 @@ test("nested decision source observation times are ignored without ignoring mate
   expect(sameBiProjection(portfolioProjection, { ...portfolioProjection, decision: { kind: "portfolio", portfolioResultRef: "portfolio-ref", portfolio: { combinations: [{ ...combination, components: laterComponents, analysis: { ...analysis, scenario: { ...scenario, components: laterComponents } } }], limitations: [], evidenceRefs: [] } } })).toBe(true)
   expect(sameBiProjection(scenarioProjection, { ...scenarioProjection, decision: { kind: "scenario", ...analysis, scenario: { ...scenario, components: [{ ...laterComponents[0]!, amount: 2 }] } } })).toBe(false)
   expect(sameBiProjection(portfolioProjection, { ...portfolioProjection, decision: { kind: "portfolio", portfolioResultRef: "different", portfolio: { combinations: [combination], limitations: [], evidenceRefs: [] } } })).toBe(false)
+})
+
+
+test("sensitivity requires its paired persisted reference", () => {
+  const scenario = { id: "scenario", version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [], unresolvedConditions: [], restrictions: [], comparisonStatus: "conditioned" as const, knownSubtotal: 1, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "scenario", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [], coverageState: "pending" as const, entries: [], derivedMissingCategoryIds: [] } }
+  const comparison = { baselineResultRef: "baseline", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: [], comparisonStatus: "conditioned" as const, knownDifference: 1, completeDifference: null }
+  const sensitivity = { scenarioRef: "scenario-ref", parameterRef: "parameter", bounds: { minimum: 0, maximum: 1, steps: 1 }, evaluated: [], threshold: null, thresholdEvidence: { state: "unavailable" as const, reason: "not-evaluated" }, unit: "USD", engineVersion: "engine", costCoverageRefs: ["coverage"], comparisonStatus: "conditioned" as const, unresolvedConditions: [], evidenceRefs: [] }
+  const decision = { kind: "scenario" as const, scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison }
+  expect(hasBiDecision({ ...projection, decision }, "BI09")).toBe(true)
+  expect(hasBiDecision({ ...projection, decision }, "BI11")).toBe(false)
+  expect(hasBiDecision({ ...projection, decision: { ...decision, sensitivity } }, "BI09")).toBe(false)
+  const paired = { ...decision, sensitivity, sensitivityResultRef: "sensitivity-ref" }
+  expect(hasBiDecision({ ...projection, decision: paired }, "BI11")).toBe(true)
+  const blank = { ...paired, sensitivityResultRef: "" }
+  expect(hasBiDecision({ ...projection, decision: blank }, "BI11")).toBe(false)
 })
