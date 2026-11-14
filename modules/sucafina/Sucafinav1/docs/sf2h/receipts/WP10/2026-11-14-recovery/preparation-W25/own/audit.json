@@ -1,0 +1,37 @@
+{
+  "schema": "wp10-w25-own-fixture-type-only-correction-v1",
+  "baseProduct": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+  "before": {
+    "bytes": 30371,
+    "sha256": "18931358f1eaf0fe9b5c3e6c5c337bb80b5bb19ed68b636e85c41e7f7a0ba3ea",
+    "blobSha": "863aabc6fef39b87701f1dac005793309b3372a6"
+  },
+  "after": {
+    "bytes": 30531,
+    "sha256": "36baf329bef7dbb74cecccb14d69fdc526c11203cd14bde2aebe2b874ee73687",
+    "blobSha": "20c02e25b9c26b34b9cbecf407027bd80de48dae"
+  },
+  "hostedCause": {
+    "runId": 43614178262,
+    "jobId": 132505501377,
+    "snapshot": "5f8626d87c211343777ebc27ed51ce1091a8395c",
+    "code": "TS7006",
+    "line": 268,
+    "uniqueOwnDiagnostics": 2,
+    "ownOccurrences": 4,
+    "foreignUniqueDiagnostics": 13
+  },
+  "cause": "LocalStore is Persistence & AssetPersistence; the callback overload requires explicit types for the two actual runtime arguments.",
+  "correction": "Two type-only imports from existing public contracts and explicit Snapshot/BlobTransaction callback parameter annotations.",
+  "preservation": {
+    "onlyTypeImportsAndAnnotations": true,
+    "runtimeTextAfterRemovingOnlyAddedTypesByteExact": true,
+    "allTestsAndAssertions": true,
+    "allBudgets": true,
+    "productHelpersByteExact": true,
+    "foreignFilesUnchanged": true
+  },
+  "localProductExecution": false,
+  "candidateHostedAcceptance": false
+}

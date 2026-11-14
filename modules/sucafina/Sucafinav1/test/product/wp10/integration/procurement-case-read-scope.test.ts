@@ -7,6 +7,8 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { Location } from "@orchestra/core/location"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { object } from "../../../../runtime/contract.ts"
+import type { Snapshot } from "../../../../runtime/contract.ts"
+import type { BlobTransaction } from "../../../../runtime/assets.ts"
 import { domain } from "../../../../runtime/procurement.ts"
 import { initialProcurementSettings } from "../../../../src/initial-settings.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
@@ -265,7 +267,7 @@ async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, leg
     transaction: (surface, work, options) => {
       metrics.persistenceCalls++
       if (!store.currentSnapshots?.()) metrics.rootTransactions++
-      return store.transaction(surface, async (snapshot, blobs) => { const result = await work(snapshot, blobs); if (result.commit) metrics.commitRequests++; return result }, options)
+      return store.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => { const result = await work(snapshot, blobs); if (result.commit) metrics.commitRequests++; return result }, options)
     },
     transactionAll: async (work, options) => {
       metrics.persistenceCalls++
