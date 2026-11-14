@@ -1,0 +1,1345 @@
+{
+  "schema": "wp05-external-blocker-map-v1",
+  "observed_date": "2026-11-13",
+  "method": "Read-only static inspection; all remote evidence via GitHub MCP; no product tests run.",
+  "blockers": [
+    {
+      "id": "EXT-CONTRACTS",
+      "owners": [
+        "WP00",
+        "S0"
+      ],
+      "kind": "package-verification-gate",
+      "status": "OWNER_DELTA_AVAILABLE_NOT_INTEGRATED",
+      "source_commit": "72342f0efbbe099231aa2e30a964769b14e4fbb2",
+      "facts": "Seed contracts omit imported BI presentation types and SfBiArtifact; seed output schema does not admit sensitivityResultRef. Owner pin now supplies them. Canonical typecheck/runtime-schema proof on WP05 HEAD remains dependent on owner integration. No typecheck was run by reviewer.",
+      "criterion_ids": [
+        "WP05.QLT.10",
+        "WP05.T04.QLT.18",
+        "WP05.DOD.10"
+      ],
+      "interpretation": "A package-wide gate; do not mark all 108 behavioral criteria failed or proved from this single issue. Exact numerical/UI invariants still need their own evidence.",
+      "remedy": "Owner/S0 integrates minimal compatible shared contract/schema delta, then CI runs canonical typecheck and operation-output positive/negative tests."
+    },
+    {
+      "id": "EXT-HOST-CATALOG",
+      "owners": [
+        "WP10"
+      ],
+      "kind": "real-consumer-composition",
+      "status": "BLOCKED_EXTERNAL_CONSUMER",
+      "source_commit": "dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f",
+      "facts": "The pinned shared bi-http entrypoint is identical to the WP05 seed: Dashboard-only composition and BI01/BI07/BI08 description. Exporting the new WP05 factory/consumer does not register BI02-06/09-11 or bind canonical source/result stores.",
+      "criterion_ids": [
+        "WP05.DOD.03",
+        "WP05.DOD.04",
+        "WP05.DOD.10",
+        "WP05.CMP.03",
+        "WP05.CMP.04",
+        "WP05.SUC.03",
+        "WP05.SUC.10",
+        "WP05.T04.DOD.01",
+        "WP05.T04.CMP.02",
+        "WP05.T04.SUC.02",
+        "WP05.T04.CHK.05",
+        "WP05.T04.CHK.06",
+        "WP05.T05.DOD.01"
+      ],
+      "interpretation": "Component or engine-adapter proof is partial for these composite criteria. No integrated classification until all required producers are reached through the shared host.",
+      "remedy": "WP10 registers all exact source adapters, preserves authorized producer selection, and records per-view actual producer/case plus consumer check against the same commit."
+    },
+    {
+      "id": "EXT-EXACT-DETAIL",
+      "owners": [
+        "WP10"
+      ],
+      "kind": "exact-destination-and-return",
+      "status": "BLOCKED_EXTERNAL_CONSUMER",
+      "source_commit": "dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f",
+      "facts": "Pinned bi-source accepts only sf and selectionRef and returns a Dashboard overview URL; it does not consume valueId/C17/version/context. The new readBiDestination seam is not registered there.",
+      "criterion_ids": [
+        "WP05.INV.01",
+        "WP05.CMP.02",
+        "WP05.SUC.01",
+        "WP05.SUC.20",
+        "WP05.T01.CHK.05",
+        "WP05.T01.SUC.02",
+        "WP05.T02.CMP.02",
+        "WP05.T02.CHK.05",
+        "WP05.T02.SUC.01",
+        "WP05.T03.DOD.01",
+        "WP05.T03.CMP.02",
+        "WP05.T03.CHK.05",
+        "WP05.T03.SUC.01",
+        "WP05.T04.QLT.02",
+        "WP05.T04.CHK.04",
+        "WP05.T05.SUC.01",
+        "WP05.T05.SUC.20"
+      ],
+      "interpretation": "Local callback identity/focus tests remain useful but do not prove the real detail consumer. The independent period-brush mismatch was corrected statically in WP05 with visualPeriod; its prepared regression still awaits CI and does not remove this outside-owner host blocker.",
+      "remedy": "WP10 exposes exact mark re-read/C17 resolution, retains display selection and case, returns to the original focus, and verifies eight real chart-to-detail journeys including restricted context."
+    },
+    {
+      "id": "EXT-NATIVE-RESIDENT",
+      "owners": [
+        "WP10"
+      ],
+      "kind": "native-runtime-and-durable-consumer",
+      "status": "BLOCKED_EXTERNAL_RUNTIME_PROOF",
+      "source_commit": "dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f",
+      "facts": "A UI lease test uses actual UI authority/dispatcher, but injected producer/business callbacks and about:blank rendering do not execute native/MCP provider-bound runtime. The preserved host supports bi-artifacts storage but supplies no observed final ContextualBI choice/artifact consumer/reload witness here.",
+      "criterion_ids": [
+        "WP05.DOD.10",
+        "WP05.CMP.10",
+        "WP05.SUC.10",
+        "WP05.T04.DOD.18",
+        "WP05.T04.QLT.18",
+        "WP05.T04.CMP.18",
+        "WP05.T04.SUC.18",
+        "WP05.T04.CHK.18"
+      ],
+      "interpretation": "The descriptor, closed schema, direct-call refusal and UI lease can be proved locally. The full criterion still requires production native authority, same base/result/version, revocation/generation negatives and actual resident consumption.",
+      "remedy": "WP10 runs UI/native/MCP against the same handler and source binding, produces attributable receipts, rejects direct/ungranted/revoked/provider-swap calls, persists and reopens human-approved artifacts through real readers."
+    },
+    {
+      "id": "EXT-UNDATED-PRODUCER",
+      "owners": [
+        "WP02",
+        "S0"
+      ],
+      "kind": "missing-origin-record",
+      "status": "OWNER_DELTA_AVAILABLE_NOT_INTEGRATED",
+      "source_commit": "38d340a8857b96904f7246320091c14c051f1929",
+      "facts": "WP02 current scope.ts (blob f53d0509b6f727947ec9b00888bce9dae1420094) and port.ts preserve the undated milestone/current status and project an absent date. The seed drops undated at both scope and port; a renderer fixture cannot recover the missing source row.",
+      "criterion_ids": [
+        "WP05.T04.CMP.01",
+        "WP05.T04.CHK.03"
+      ],
+      "related_criterion_ids": [
+        "WP05.T04.DOD.01",
+        "WP05.T04.INV.02",
+        "WP05.T04.QLT.01",
+        "WP05.T04.SUC.01"
+      ],
+      "interpretation": "Hard dependency applies to the real-producer undated witness, not to the renderer invariant itself. Do not mark the no-artificial-date invariant failed solely because upstream omits the record.",
+      "remedy": "Integrate the WP02 producer delta and run actual planned/completed/undated producer-to-renderer evidence."
+    }
+  ],
+  "not_inevitably_external": [
+    {
+      "issue": "Missing foreign test fixture in seed",
+      "paths": [
+        "test/product/wp13/sensitivity-fixture.ts"
+      ],
+      "available_pin": "27375325788fa571d39137728ec7f0666e89f22c",
+      "criterion_ids": [
+        "WP05.T05.CHK.01",
+        "WP05.T05.CHK.20"
+      ],
+      "reason": "A WP05-owned fixture invoking the real available Planner/Scenario/Portfolio code can remove the foreign-test import dependency. It must not literalize threshold or prepopulate omitted training; absence of the WP13 test fixture is not intrinsically a product blocker."
+    },
+    {
+      "issue": "Canonical numeric and coverage oracles",
+      "criterion_ids": [
+        "WP05.T05.CHK.01",
+        "WP05.T05.CHK.20",
+        "WP05.T05.INV.01",
+        "WP05.T05.INV.20",
+        "WP05.T05.QLT.20",
+        "WP05.T05.CMP.01",
+        "WP05.T05.CMP.20",
+        "WP05.T05.CHK.03"
+      ],
+      "reason": "Own tests can invoke the real engine to prove values/coverage; a geometry-only object or hardcoded exactThreshold cannot stand in for producer proof. Separate the engine witness from the actual BI/host consumption witness."
+    },
+    {
+      "issue": "Accessible rendering, missing/zero/signs and temporal semantics",
+      "criterion_ids": [
+        "WP05.INV.02",
+        "WP05.INV.03",
+        "WP05.QLT.01",
+        "WP05.QLT.02",
+        "WP05.T01.CHK.01",
+        "WP05.T01.CHK.02",
+        "WP05.T01.CHK.03",
+        "WP05.T02.CHK.01",
+        "WP05.T02.CHK.03",
+        "WP05.T03.INV.01",
+        "WP05.T04.INV.01"
+      ],
+      "reason": "These conditions can be meaningfully verified in WP05-owned code and scoped CI, while separate integrated journeys stay blocked."
+    }
+  ],
+  "criteria": [
+    {
+      "criterion_id": "WP05.DOD.01",
+      "scope": "WP05",
+      "family": "dod",
+      "requirement": "Os oito gráficos têm pergunta explícita, eixos/unidades, fonte C02, comportamento de ausência e drilldown exportado, com evidências verificáveis para cada um.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.DOD.02",
+      "scope": "WP05",
+      "family": "dod",
+      "requirement": "Os gráficos são consumidores do C02 real: o pacote não calcula salários, OPEX/CAPEX, alçadas, ranking, aging ou métricas de tickets a partir de dados brutos.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.DOD.03",
+      "scope": "WP05",
+      "family": "dod",
+      "requirement": "A entrega inclui tabela equivalente, operações por teclado e recibo de filtros/referências; WP10 verifica os gráficos nos entrypoints comuns com os produtores reais.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.DOD.04",
+      "scope": "WP05",
+      "family": "dod",
+      "requirement": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.DOD.20",
+      "scope": "WP05",
+      "family": "dod",
+      "requirement": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.DOD.10",
+      "scope": "WP05",
+      "family": "dod",
+      "requirement": "As entregas residentes atribuídas a WP05 têm produção, consumo e provas reais completos.",
+      "external_blockers": [
+        "EXT-CONTRACTS",
+        "EXT-HOST-CATALOG",
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.INV.01",
+      "scope": "WP05",
+      "family": "invariants",
+      "requirement": "A mesma seleção contextual do domínio produz os mesmos valores no gráfico e no detalhe; moeda, período, versão e recorte autorizado não mudam silenciosamente no drilldown.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.INV.02",
+      "scope": "WP05",
+      "family": "invariants",
+      "requirement": "Ausente não é zero, estoque não é funil/coorte, prazo planejado não é conclusão real e idade sem evento comprovado não é duração conhecida.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.INV.03",
+      "scope": "WP05",
+      "family": "invariants",
+      "requirement": "Componentes financeiros são os fornecidos por C02; diferenças não reconciliadas ficam visíveis e não são escondidas por uma parcela de ajuste criada no BI.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.INV.20",
+      "scope": "WP05",
+      "family": "invariants",
+      "requirement": "Gráfico não calcula completude nem converte lacuna em zero, ganho confirmado ou ajuste residual.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.INV.10",
+      "scope": "WP05",
+      "family": "invariants",
+      "requirement": "WP05 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.QLT.01",
+      "scope": "WP05",
+      "family": "quality_standards",
+      "requirement": "Cada gráfico permite responder uma pergunta concreta sem depender apenas de cor, hover ou memória da escala.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.QLT.02",
+      "scope": "WP05",
+      "family": "quality_standards",
+      "requirement": "Sinais, unidades, eixos, arredondamento e granularidade ficam claros; FTE e moeda usam painéis alinhados em vez de um eixo duplo que sugira equivalência.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.QLT.03",
+      "scope": "WP05",
+      "family": "quality_standards",
+      "requirement": "Estados vazio, parcial, indisponível e restrito são distintos e não inventam números para preencher espaço.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.QLT.20",
+      "scope": "WP05",
+      "family": "quality_standards",
+      "requirement": "Rótulo de condicionado acompanha valor/limiar e a lista acessível explica categorias sem quantificação.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.QLT.10",
+      "scope": "WP05",
+      "family": "quality_standards",
+      "requirement": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "external_blockers": [
+        "EXT-CONTRACTS"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.CMP.01",
+      "scope": "WP05",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir os oito gráficos, seus filtros e caminhos de drilldown, incluindo dados parciais, negativos, nulos e séries/tempos indisponíveis.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.CMP.02",
+      "scope": "WP05",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir navegação por teclado, tabela equivalente, foco/retorno e contexto de dados restritos em cada par de gráficos.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.CMP.03",
+      "scope": "WP05",
+      "family": "completeness_criteria",
+      "requirement": "Identificar o produtor C02 e a referência de origem de cada marca ou agregado; fixtures de contrato não substituem a prova final com consumidores reais.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.CMP.04",
+      "scope": "WP05",
+      "family": "completeness_criteria",
+      "requirement": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.CMP.20",
+      "scope": "WP05",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir omissão inteira, pending, zero confirmado, fonte restrita e atualização que inverte a diferença.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.CMP.10",
+      "scope": "WP05",
+      "family": "completeness_criteria",
+      "requirement": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "external_blockers": [
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.SUC.01",
+      "scope": "WP05",
+      "family": "success_criteria",
+      "requirement": "Nos roteiros, o usuário identifica desvio, contribuição, capacidade ou pendência e abre os registros que explicam o resultado sem refazer filtros.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.SUC.02",
+      "scope": "WP05",
+      "family": "success_criteria",
+      "requirement": "Mudar os valores projetados pelo domínio muda as marcas correspondentes; inserir um cálculo divergente, zero fictício ou registro fora do recorte faz uma verificação falhar.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.SUC.03",
+      "scope": "WP05",
+      "family": "success_criteria",
+      "requirement": "Oito visualizações funcionam com dados disponíveis e degradam honestamente quando o C02 não suporta uma série, componente ou data.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.SUC.20",
+      "scope": "WP05",
+      "family": "success_criteria",
+      "requirement": "Usuário encontra a categoria que muda a comparação e abre sua origem com o mesmo contexto.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.SUC.10",
+      "scope": "WP05",
+      "family": "success_criteria",
+      "requirement": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG",
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.DOD.01",
+      "scope": "WP05.T01",
+      "family": "dod",
+      "requirement": "Trajetória e waterfall estão exportados com tabela equivalente e produtor C02 identificável.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.DOD.02",
+      "scope": "WP05.T01",
+      "family": "dod",
+      "requirement": "Granularidade, lacunas e reconciliação têm resultados esperados e falhas demonstráveis.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.INV.01",
+      "scope": "WP05.T01",
+      "family": "invariants",
+      "requirement": "Nenhum mês, realizado ou contribuição é fabricado para completar a visualização.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.INV.02",
+      "scope": "WP05.T01",
+      "family": "invariants",
+      "requirement": "O waterfall usa valores de domínio e não recalcula a semântica do cenário.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.QLT.01",
+      "scope": "WP05.T01",
+      "family": "quality_standards",
+      "requirement": "Competência, moeda, referência e cenário ficam legíveis na própria visualização.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.QLT.02",
+      "scope": "WP05.T01",
+      "family": "quality_standards",
+      "requirement": "Lacunas e contribuições negativas preservam significado em cor e texto.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.CMP.01",
+      "scope": "WP05.T01",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir trajetória completa/parcial/anual e waterfall com aumentos, reduções, zero e falha de reconciliação.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.CMP.02",
+      "scope": "WP05.T01",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir seleção por mouse/teclado e equivalência entre marcas e tabela.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.SUC.01",
+      "scope": "WP05.T01",
+      "family": "success_criteria",
+      "requirement": "O usuário distingue o que é orçamento, realizado disponível e outlook sem tratar previsão como realizado.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.SUC.02",
+      "scope": "WP05.T01",
+      "family": "success_criteria",
+      "requirement": "O usuário explica o delta de um cenário por seus componentes e acessa sua origem com o contexto preservado.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.01",
+      "scope": "WP05.T01",
+      "family": "checks",
+      "requirement": "Receber apenas total anual sem distribuição mensal: a trajetória não gera 12 pontos por divisão/interpolação; informa granularidade disponível e não aparenta conhecer um perfil mensal.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.02",
+      "scope": "WP05.T01",
+      "family": "checks",
+      "requirement": "Dado actual desconhecido em uma competência e zero confirmado em outra: o primeiro produz lacuna/indisponibilidade, o segundo marca zero; os dois casos não compartilham tooltip/representação.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.03",
+      "scope": "WP05.T01",
+      "family": "checks",
+      "requirement": "Usar cenário C02 com referência 100, contribuições +20 e -5 e final 115: waterfall termina em 115 e cada seleção preserva seu componente; trocar o final para 116 deve sinalizar não reconciliação, não criar '+1 ajuste'.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.04",
+      "scope": "WP05.T01",
+      "family": "checks",
+      "requirement": "Alterar moeda, competência ou versão entre contexto e projeção: o gráfico recusa a mistura ou apresenta grupos explicitamente separados conforme C02, sem sobrepor valores incompatíveis.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.05",
+      "scope": "WP05.T01",
+      "family": "checks",
+      "requirement": "Abrir uma contribuição por teclado: destino recebe a referência e os filtros exatos e retorna mantendo foco; componente sem autorização nunca aparece no gráfico ou na tabela.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.DOD.01",
+      "scope": "WP05.T02",
+      "family": "dod",
+      "requirement": "Contribuições e FTE/custo estão exportados com eixos, unidades, tabelas e referências reais.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.DOD.02",
+      "scope": "WP05.T02",
+      "family": "dod",
+      "requirement": "A entrega documenta a origem de agrupamentos e o tratamento de componentes restritos/ausentes.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.INV.01",
+      "scope": "WP05.T02",
+      "family": "invariants",
+      "requirement": "Sinal da contribuição e unidade de cada medida não são alterados por ordenação ou formatação.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.INV.02",
+      "scope": "WP05.T02",
+      "family": "invariants",
+      "requirement": "FTE e custo permanecem medidas distintas e os dados pessoais ausentes do C02 não são reconstruídos.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.QLT.01",
+      "scope": "WP05.T02",
+      "family": "quality_standards",
+      "requirement": "As maiores contribuições positivas e negativas são comparáveis sem um gráfico visualmente dominado por valores absolutos.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.QLT.02",
+      "scope": "WP05.T02",
+      "family": "quality_standards",
+      "requirement": "Painéis alinhados mostram o mesmo recorte e usam escalas explícitas sem eixo duplo enganoso.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.CMP.01",
+      "scope": "WP05.T02",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir positivos, negativos, zero, desconhecido, Top N parcial e agrupamento reconciliado.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.CMP.02",
+      "scope": "WP05.T02",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir recorte agregado e restrito, filtro conjunto e drilldown autorizado dos dois painéis.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.SUC.01",
+      "scope": "WP05.T02",
+      "family": "success_criteria",
+      "requirement": "O usuário localiza quem aumenta e quem reduz o desvio e consegue abrir o componente correspondente.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.SUC.02",
+      "scope": "WP05.T02",
+      "family": "success_criteria",
+      "requirement": "O usuário compara capacidade e custo sem inferir produtividade ou custo unitário que o domínio não fornece.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.01",
+      "scope": "WP05.T02",
+      "family": "checks",
+      "requirement": "Projetar contribuições +40 e -30: mostrar ambas com sinais corretos e delta 10 somente quando fornecido/reconciliado pelo C02; usar valor absoluto ou omitir a contribuição negativa deve falhar.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.02",
+      "scope": "WP05.T02",
+      "family": "checks",
+      "requirement": "Receber Top N sem agregado do restante: não apresentar o subtotal como total; com 'outros' C02, a marca e o drilldown preservam os componentes definidos pelo produtor.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.03",
+      "scope": "WP05.T02",
+      "family": "checks",
+      "requirement": "No mesmo recorte, FTE confirmado como zero e custo ausente: mostrar zero de FTE e custo indisponível, sem converter nenhum deles no outro ou presumir custo zero.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.04",
+      "scope": "WP05.T02",
+      "family": "checks",
+      "requirement": "Aplicar um filtro/período: ambos os painéis usam o mesmo contexto, mantendo unidades e escalas separadas; nomes/custos pessoais removidos pelo C02 não podem aparecer em tooltip, tabela ou referência.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.05",
+      "scope": "WP05.T02",
+      "family": "checks",
+      "requirement": "Navegar categoria por teclado e abrir detalhe: manter grupo, período, moeda, versão e retorno de foco; nenhuma seleção depende exclusivamente de hover.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.DOD.01",
+      "scope": "WP05.T03",
+      "family": "dod",
+      "requirement": "Estoque e aging consomem as projeções reais de Procurement e têm drilldown para os pedidos correspondentes.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.DOD.02",
+      "scope": "WP05.T03",
+      "family": "dod",
+      "requirement": "Estoque/coorte e idade comprovada/indisponível estão diferenciados na UI e nas contraprovas.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.INV.01",
+      "scope": "WP05.T03",
+      "family": "invariants",
+      "requirement": "A quantidade em etapas atuais não é convertida em taxa de conversão, abandono ou produtividade.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.INV.02",
+      "scope": "WP05.T03",
+      "family": "invariants",
+      "requirement": "Analytics não inventa idade nem exclui do universo os pedidos sem evento confiável.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.QLT.01",
+      "scope": "WP05.T03",
+      "family": "quality_standards",
+      "requirement": "Título e legenda deixam claro que a primeira visualização é estoque e a segunda é tempo na etapa.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.QLT.02",
+      "scope": "WP05.T03",
+      "family": "quality_standards",
+      "requirement": "Responsável desconhecido, idade indisponível e prazo informado são distinguíveis sem uso exclusivo de cor.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.CMP.01",
+      "scope": "WP05.T03",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir todas as etapas abertas e aprovações, holder ausente, rejeição/ressubmissão e histórico insuficiente.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.CMP.02",
+      "scope": "WP05.T03",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir filtros por papel e reconciliação entre agregado, pontos e lista autorizada.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.SUC.01",
+      "scope": "WP05.T03",
+      "family": "success_criteria",
+      "requirement": "O gestor identifica concentração de trabalho e abre seus pedidos sem inferir uma conversão inexistente.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.SUC.02",
+      "scope": "WP05.T03",
+      "family": "success_criteria",
+      "requirement": "O aprovador encontra o pedido mais antigo dentre os tempos comprovados e vê quantos não podem ser comparados.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.01",
+      "scope": "WP05.T03",
+      "family": "checks",
+      "requirement": "Dado estoque com 7 PRs, 2 sourcings e 3 POs distintos: mostrar contagens atuais sem taxas entre barras, abandono ou conversão; rejeição/retorno muda a etapa de um pedido sem criar uma coorte histórica.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.02",
+      "scope": "WP05.T03",
+      "family": "checks",
+      "requirement": "Receber do C02 pedido ressubmetido há 2 dias e salvo hoje: aging continua 2 dias; analytics não recalcula pelo save nem lê o histórico bruto.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.03",
+      "scope": "WP05.T03",
+      "family": "checks",
+      "requirement": "Dois pedidos sem entrada comprovada: ambos aparecem no grupo 'idade indisponível' e no denominador autorizado; não entram em zero dias ou numa média fabricada.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.04",
+      "scope": "WP05.T03",
+      "family": "checks",
+      "requirement": "Filtrar por requester restrito: contagem das barras, pontos e tabela corresponde exatamente aos pedidos visíveis no domínio; pedido alheio não vaza por agregado ou drilldown.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.05",
+      "scope": "WP05.T03",
+      "family": "checks",
+      "requirement": "Clicar numa etapa e depois num pedido mantém o filtro e abre a referência correta; linha de SLA só existe se recebida com política/origem explícita, não pelo mero uso de uma cor vermelha.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.DOD.01",
+      "scope": "WP05.T04",
+      "family": "dod",
+      "requirement": "Tickets e agenda estão exportados e o catálogo identifica os oito gráficos, produtores e destinos reais.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [
+        "EXT-UNDATED-PRODUCER"
+      ],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.DOD.02",
+      "scope": "WP05.T04",
+      "family": "dod",
+      "requirement": "O recibo de interação/ausência/restrição permite a WP10 verificar composição sem descobrir contratos novos.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.DOD.18",
+      "scope": "WP05.T04",
+      "family": "dod",
+      "requirement": "Descritores C16 de sf_bi_view são implementados e consumidos por T06 com referências reais.",
+      "external_blockers": [
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.INV.01",
+      "scope": "WP05.T04",
+      "family": "invariants",
+      "requirement": "Fotografia atual não se transforma em histórico de tickets e data planejada não se transforma em conclusão.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.INV.02",
+      "scope": "WP05.T04",
+      "family": "invariants",
+      "requirement": "Nenhum marco sem data recebe data artificial e nenhuma fonte restrita é recuperada fora do C02.",
+      "external_blockers": [],
+      "related_external_dependencies": [
+        "EXT-UNDATED-PRODUCER"
+      ],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.INV.18",
+      "scope": "WP05.T04",
+      "family": "invariants",
+      "requirement": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.QLT.01",
+      "scope": "WP05.T04",
+      "family": "quality_standards",
+      "requirement": "A operação distingue entrada, conclusão, planejamento e desconhecido com texto, formas e unidades claros.",
+      "external_blockers": [],
+      "related_external_dependencies": [
+        "EXT-UNDATED-PRODUCER"
+      ],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.QLT.02",
+      "scope": "WP05.T04",
+      "family": "quality_standards",
+      "requirement": "Os oito gráficos têm interação equivalente por teclado/tabela e retorno contextual previsível.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.QLT.18",
+      "scope": "WP05.T04",
+      "family": "quality_standards",
+      "requirement": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "external_blockers": [
+        "EXT-CONTRACTS",
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CMP.01",
+      "scope": "WP05.T04",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir tickets com série válida e só fotografia, além de marcos planejados, concluídos e sem data.",
+      "external_blockers": [
+        "EXT-UNDATED-PRODUCER"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CMP.02",
+      "scope": "WP05.T04",
+      "family": "completeness_criteria",
+      "requirement": "Fechar o catálogo de oito gráficos com estados vazio/parcial/restrito, filtros e drilldowns verificáveis.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CMP.18",
+      "scope": "WP05.T04",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "external_blockers": [
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.SUC.01",
+      "scope": "WP05.T04",
+      "family": "success_criteria",
+      "requirement": "O time identifica o que entrou/foi concluído quando há evidência e localiza os marcos do horizonte sem interpretar planejado como entregue.",
+      "external_blockers": [],
+      "related_external_dependencies": [
+        "EXT-UNDATED-PRODUCER"
+      ],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.SUC.02",
+      "scope": "WP05.T04",
+      "family": "success_criteria",
+      "requirement": "WP10 compõe o catálogo e verifica os consumidores reais sem refazer cálculo financeiro ou aceitar uma demonstração desconectada como entrega.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.SUC.18",
+      "scope": "WP05.T04",
+      "family": "success_criteria",
+      "requirement": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "external_blockers": [
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.01",
+      "scope": "WP05.T04",
+      "family": "checks",
+      "requirement": "Receber apenas contagem/status atual de tickets sem eventos ou agregados datados: mostrar fotografia com data de referência, sem série semanal nem taxa de resolução inventada; ao fornecer série C02 válida, os pontos reproduzem cada período.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.02",
+      "scope": "WP05.T04",
+      "family": "checks",
+      "requirement": "Ticket aberto num período e fechado em outro segue os eventos/projeção do produtor; mover apenas status atual não deve retroativamente reescrever uma série histórica fornecida.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.03",
+      "scope": "WP05.T04",
+      "family": "checks",
+      "requirement": "Marco planejado, marco concluído e marco sem data: os dois primeiros são distinguíveis e o terceiro permanece listado sem receber hoje, primeiro dia do mês ou outro fallback.",
+      "external_blockers": [
+        "EXT-UNDATED-PRODUCER"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.04",
+      "scope": "WP05.T04",
+      "family": "checks",
+      "requirement": "Para os oito gráficos, abrir por teclado uma marca/agregado com filtro, voltar e comparar com o detalhe: referência, versão, período, moeda, recorte e foco são preservados; falhar se o destino cair num overview sem a seleção.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.05",
+      "scope": "WP05.T04",
+      "family": "checks",
+      "requirement": "Injetar valor ausente, componente restrito e série parcial nos consumidores reais de C02: nenhum aparece como zero ou dado completo em marca, tooltip ou tabela; registrar qual produtor/caso foi usado.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.06",
+      "scope": "WP05.T04",
+      "family": "checks",
+      "requirement": "No handoff, cada gráfico aponta seu produtor real e check de composição WP10; um stub/fixture sem produtor identificável impede classificar o gráfico como integrado.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.18",
+      "scope": "WP05.T04",
+      "family": "checks",
+      "requirement": "Executar sf_bi_view pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "external_blockers": [
+        "EXT-NATIVE-RESIDENT"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.DOD.01",
+      "scope": "WP05.T05",
+      "family": "dod",
+      "requirement": "As três perguntas analíticas novas e as oito antigas são respondidas com produtores reais e valores reconciliados.",
+      "external_blockers": [
+        "EXT-HOST-CATALOG"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.DOD.20",
+      "scope": "WP05.T05",
+      "family": "dod",
+      "requirement": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.INV.01",
+      "scope": "WP05.T05",
+      "family": "invariants",
+      "requirement": "Geometria usa o resultado do motor; visualização não recalcula regra de negócio nem estima probabilidades ausentes.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.INV.20",
+      "scope": "WP05.T05",
+      "family": "invariants",
+      "requirement": "Gráfico não calcula completude nem converte lacuna em zero, ganho confirmado ou ajuste residual.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.QLT.01",
+      "scope": "WP05.T05",
+      "family": "quality_standards",
+      "requirement": "Rótulos legíveis, sinais/unidades claros, comparação no mesmo horizonte e dados acessíveis por tabela e teclado.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.QLT.20",
+      "scope": "WP05.T05",
+      "family": "quality_standards",
+      "requirement": "Rótulo de condicionado acompanha valor/limiar e a lista acessível explica categorias sem quantificação.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.CMP.01",
+      "scope": "WP05.T05",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir custo incerto, componente ausente, moeda, limite atingido/não atingido, cenário inviável e referência removida.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.CMP.20",
+      "scope": "WP05.T05",
+      "family": "completeness_criteria",
+      "requirement": "Cobrir omissão inteira, pending, zero confirmado, fonte restrita e atualização que inverte a diferença.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.SUC.01",
+      "scope": "WP05.T05",
+      "family": "success_criteria",
+      "requirement": "Usuário identifica qual componente ou premissa inverte a escolha e abre sua origem sem perder o caso.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.SUC.20",
+      "scope": "WP05.T05",
+      "family": "success_criteria",
+      "requirement": "Usuário encontra a categoria que muda a comparação e abre sua origem com o mesmo contexto.",
+      "external_blockers": [
+        "EXT-EXACT-DETAIL"
+      ],
+      "related_external_dependencies": [],
+      "review_status": "REQUIRES_REAL_CONSUMER_OR_OWNER_DELTA",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.01",
+      "scope": "WP05.T05",
+      "family": "checks",
+      "requirement": "Com outros custos 165 mil e referência 240 mil/meta 20 mil, limiteimplantação 55 mil provém do engine.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.02",
+      "scope": "WP05.T05",
+      "family": "checks",
+      "requirement": "Atraso sem regra financeira não inventa economia ou obrigação eliminada.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.03",
+      "scope": "WP05.T05",
+      "family": "checks",
+      "requirement": "Tabela e marcas retornam exatamente os mesmos valores autorizados.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.20",
+      "scope": "WP05.T05",
+      "family": "checks",
+      "requirement": "A mesma revisão de AI-RENEWAL-OMITTED-CATEGORY aparece no gráfico e tabela: pending sem barra zero; training = 40000 altera total210000→250000 e diferença 30000→-10000, com fontes e snapshot histórico preservados.",
+      "external_blockers": [],
+      "related_external_dependencies": [],
+      "review_status": "NOT_EVALUATED",
+      "note": "No PASS is assigned by this static dependency inventory."
+    }
+  ]
+}

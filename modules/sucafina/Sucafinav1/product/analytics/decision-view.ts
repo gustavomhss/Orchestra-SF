@@ -8,6 +8,8 @@ import { sensitivityGeometry, timelineGeometry } from "./geometry.ts"
 export function renderDecisionView(result: ScenarioResult, comparison: ScenarioComparison, sensitivity?: SensitivityResult, openSource?: (source: SourceRef) => void, openEvidence?: (reference: BusinessEvidenceRef) => void, openCoverage?: (reference: string) => void, openQuestion?: (reference: string) => void, openResult?: (reference: string) => void) {
   const data = presentScenario(result, comparison)
   const section = document.createElement("section")
+  section.style.minWidth = "0"
+  section.style.overflowWrap = "anywhere"
   const heading = document.createElement("h2")
   heading.textContent = "Composição e sensibilidade da decisão"
   section.append(heading)
@@ -23,10 +25,26 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     const chart = document.createElementNS("http://www.w3.org/2000/svg", "svg")
     chart.setAttribute("viewBox", `-5 -5 610 ${Math.max(30, marks.length * 24 + 10)}`)
     chart.setAttribute("width", "100%")
-    chart.setAttribute("role", "img")
+    chart.setAttribute("role", "group")
     chart.setAttribute("aria-label", "Períodos no horizonte selecionado; os detalhes estão na lista seguinte")
     marks.forEach((mark, index) => {
       if (mark.x1 === null || mark.x2 === null) return
+      const component = data.rows[index]
+      const source = component?.sourceRefs[0]
+      const group = document.createElementNS(chart.namespaceURI, "g")
+      if (component && source && openSource) {
+        group.setAttribute("tabindex", "0")
+        group.setAttribute("role", "button")
+        group.setAttribute("data-bi-focus", source.id)
+        group.setAttribute("aria-label", `${component.id}: ${component.period.start} – ${component.period.end}; abrir origem ${source.id}`)
+        group.addEventListener("click", () => openSource(source))
+        group.addEventListener("keydown", (event) => {
+          if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault()
+            openSource(source)
+          }
+        })
+      }
       const line = document.createElementNS(chart.namespaceURI, "line")
       line.setAttribute("x1", String(mark.x1))
       line.setAttribute("x2", String(mark.x2))
@@ -37,7 +55,10 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       const description = document.createElementNS(chart.namespaceURI, "title")
       description.textContent = `${mark.id}${mark.clipped ? ": período parcialmente fora do horizonte" : ""}`
       line.append(description)
-      chart.append(line)
+      group.append(line)
+      group.addEventListener("focus", () => line.setAttribute("stroke-width", "9"))
+      group.addEventListener("blur", () => line.setAttribute("stroke-width", "5"))
+      chart.append(group)
     })
     section.append(chart)
     if (marks.some((mark) => mark.clipped)) {
@@ -85,6 +106,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", source.id)
       button.textContent = `Abrir ${source.type} ${source.id} v${source.version}`
       button.addEventListener("click", () => openSource(source))
       origin.append(button)
@@ -104,6 +126,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     if (entry.status === "pending" && entry.questionRef && openQuestion) {
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", entry.questionRef)
       button.textContent = `Abrir pergunta sobre ${entry.categoryId}`
       button.addEventListener("click", () => openQuestion(entry.questionRef!))
       item.append(button)
@@ -116,6 +139,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
         }
         const button = document.createElement("button")
         button.type = "button"
+        button.setAttribute("data-bi-focus", reference.refId)
         button.textContent = `Abrir evidência de ${entry.categoryId}: ${reference.refId}`
         button.addEventListener("click", () => openEvidence(reference))
         item.append(button)
@@ -143,6 +167,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     }
     const button = document.createElement("button")
     button.type = "button"
+    button.setAttribute("data-bi-focus", reference)
     button.textContent = `Abrir cobertura ${reference}`
     button.addEventListener("click", () => openCoverage(reference))
     section.append(button)
@@ -156,6 +181,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     }
     const button = document.createElement("button")
     button.type = "button"
+    button.setAttribute("data-bi-focus", reference.refId)
     button.textContent = `Abrir fonte do cenário ${reference.refId}`
     button.addEventListener("click", () => openEvidence(reference))
     section.append(button)
@@ -169,11 +195,12 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
     const threshold = evaluated.thresholdEvidence.state === "sampled" && Number.isFinite(evaluated.thresholdEvidence.interval.minimum) && Number.isFinite(evaluated.thresholdEvidence.interval.maximum) && evaluated.thresholdEvidence.interval.minimum <= evaluated.thresholdEvidence.interval.maximum ? `intervalo amostrado ${evaluated.thresholdEvidence.interval.minimum} – ${evaluated.thresholdEvidence.interval.maximum}` : evaluated.threshold !== null ? `limiar exato ${evaluated.threshold}` : "limiar indisponível"
     const bounds = Number.isFinite(evaluated.bounds.minimum) && Number.isFinite(evaluated.bounds.maximum) ? `${evaluated.bounds.minimum} – ${evaluated.bounds.maximum}` : "indisponível"
     const thresholdUnit = evaluated.parameterUnit?.trim() ? evaluated.parameterUnit : "não especificada"
-    description.textContent = `Parâmetro ${evaluated.parameterRef}; intervalo ${bounds}; unidade informada ${evaluated.unit}; ${threshold}; unidade do limiar ${thresholdUnit}; ${evaluated.comparisonStatus}; motor ${evaluated.engineVersion}`
+    const qualification = data.status === "complete" && evaluated.comparisonStatus === "complete" ? "" : " (condicionado à cobertura e às premissas informadas)"
+    description.textContent = `Parâmetro ${evaluated.parameterRef}; intervalo ${bounds}; unidade informada ${evaluated.unit}; ${threshold}${qualification}; unidade do limiar ${thresholdUnit}; ${evaluated.comparisonStatus}; motor ${evaluated.engineVersion}`
     section.append(description)
     if (!evaluated.parameterUnit?.trim() || !evaluated.resultUnit?.trim()) {
       const warning = document.createElement("p")
-      warning.textContent = "Gráfico indisponível: unidades dos eixos não fornecidas; os pontos permanecem na lista."
+      warning.textContent = "Gráfico indisponível: unidades dos eixos não fornecidas; os pontos permanecem na tabela."
       section.append(warning)
     }
     if (evaluated.parameterUnit?.trim() && evaluated.resultUnit?.trim()) {
@@ -184,7 +211,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       svg.setAttribute("viewBox", "-5 -5 610 170")
       svg.setAttribute("width", "100%")
       svg.setAttribute("role", "group")
-      svg.setAttribute("aria-label", "Pontos de sensibilidade; valores e referências na lista equivalente")
+      svg.setAttribute("aria-label", "Pontos de sensibilidade; valores e referências na tabela equivalente")
       for (const point of sensitivityGeometry(evaluated.evaluated, 600, 160)) {
         if (point.x === null || point.y === null) continue
         const group = document.createElementNS(svg.namespaceURI, "g")
@@ -217,26 +244,44 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       section.append(svg)
     }
     const list = document.createElement("ul")
-    for (const point of evaluated.evaluated) {
-      const item = document.createElement("li")
-      item.append(document.createTextNode(`${point.parameterValue ?? "indisponível"}: ${point.value ?? "indisponível"} `))
-      if (openResult) {
-        const button = document.createElement("button")
-        button.type = "button"
-        button.setAttribute("data-bi-focus", point.resultRef)
-        button.textContent = `Abrir resultado ${point.resultRef}`
-        button.addEventListener("click", () => openResult(point.resultRef))
-        item.append(button)
-      }
-      if (!openResult) item.append(document.createTextNode(`(${point.resultRef})`))
-      list.append(item)
-    }
+    list.setAttribute("aria-label", "Condições de sensibilidade pendentes")
     for (const condition of evaluated.unresolvedConditions) {
       const item = document.createElement("li")
       item.textContent = `${condition.category}: ${condition.reason}`
       list.append(item)
     }
     section.append(list)
+    const table = document.createElement("table")
+    const caption = document.createElement("caption")
+    caption.textContent = "Pontos de sensibilidade fornecidos pelo motor"
+    table.append(caption)
+    const header = table.createTHead().insertRow()
+    for (const label of [`Parâmetro (${evaluated.parameterUnit?.trim() || "unidade indisponível"})`, `Resultado (${evaluated.resultUnit?.trim() || "unidade indisponível"})`, "Referência"]) {
+      const cell = document.createElement("th")
+      cell.scope = "col"
+      cell.textContent = label
+      header.append(cell)
+    }
+    const body = table.createTBody()
+    for (const point of evaluated.evaluated) {
+      const row = body.insertRow()
+      row.insertCell().textContent = String(point.parameterValue ?? "indisponível")
+      row.insertCell().textContent = String(point.value ?? "indisponível")
+      const reference = row.insertCell()
+      if (!openResult) reference.textContent = point.resultRef
+      if (openResult) {
+        const button = document.createElement("button")
+        button.type = "button"
+        button.textContent = `Abrir resultado ${point.resultRef}`
+        button.setAttribute("data-bi-focus", point.resultRef)
+        button.addEventListener("click", () => openResult(point.resultRef))
+        reference.append(button)
+      }
+    }
+    const container = document.createElement("div")
+    container.style.overflowX = "auto"
+    container.append(table)
+    section.append(container)
     for (const reference of evaluated.costCoverageRefs) {
       if (!openCoverage) {
         const label = document.createElement("p")
@@ -246,6 +291,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", reference)
       button.textContent = `Abrir cobertura de sensibilidade ${reference}`
       button.addEventListener("click", () => openCoverage(reference))
       section.append(button)
@@ -260,6 +306,7 @@ export function renderDecisionView(result: ScenarioResult, comparison: ScenarioC
       }
       const button = document.createElement("button")
       button.type = "button"
+      button.setAttribute("data-bi-focus", reference.refId)
       button.textContent = `Abrir fonte da sensibilidade ${reference.refId}`
       button.addEventListener("click", () => openEvidence(reference))
       section.append(button)

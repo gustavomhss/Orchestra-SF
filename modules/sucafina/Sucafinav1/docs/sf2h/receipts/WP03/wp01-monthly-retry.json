@@ -1,0 +1,13 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "owner": "WP01",
+  "source_commit": "73ee7fd812d233f898ef79a9378014d4339d9875",
+  "source_path": "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+  "source_git_blob": "9646f368cbef6affd39f4bf22f400e7b3e4f3141",
+  "reason": "UI currently blocks all saving if any row has an error and requires refresh after conflicts. Proposed delta preserves per-row revisions, valid saves and explicit draft retry without refresh.",
+  "tests_required": [
+    "Playwright paste two rows and two months; mark one invalid; preview and save valid row; correct only invalid cell.",
+    "Concurrent edit on same row: show stored vs local; choose displayed revision; preview again; save without losing unrelated draft."
+  ],
+  "not_claimed": "Patch is not an integrated consumer and has not been executed."
+}

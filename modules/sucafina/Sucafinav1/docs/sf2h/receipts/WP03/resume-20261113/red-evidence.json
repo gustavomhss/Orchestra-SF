@@ -1,0 +1,110 @@
+{
+  "schema": "wp03-resume-red-evidence-v1",
+  "wp": "WP03",
+  "scope": "Sucafina",
+  "resumed_from": "f1eca7591b14e6cf8fda7cfb7b7a7a77959314be",
+  "product_sha": "0b41cf9072fac93597ebd9b36b52b58f4e307cfd",
+  "product_tree": "7052148bd0b3c4354b9b50d459d9bce846f1ae0d",
+  "snapshot_sha": "ca75f98b6aa4e048fe855e3a32a515efd7452b3b",
+  "snapshot_tree": "106faf72f6b433efe277fd9581ad1b8cb2f3a823",
+  "product_delta": "Only the two new regression test files were added; production code equals the resumed source.",
+  "snapshot_delta": [
+    {
+      "filename": ".ci-run.json",
+      "status": "added",
+      "additions": 10,
+      "deletions": 0,
+      "changes": 10,
+      "previous_filename": null
+    }
+  ],
+  "request_sha256": "efc839bcab1af28a4c99051f22ae3f869309b6314144f62137dd436e69b6a74e",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp03/resume-ui-host-boundaries.test.ts",
+      "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts"
+    ],
+    "env": {}
+  },
+  "run_id": 43527686283,
+  "job_id": 132237395611,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43527686283",
+  "conclusion": "failure",
+  "tests": {
+    "total": 21,
+    "pass": 2,
+    "fail": 19,
+    "files": 2,
+    "assertions": 28
+  },
+  "omni": {
+    "nonce": "f76fac72c6b465c8b7768384625002fc",
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "spawn": false,
+    "delegated": false,
+    "native_proof": false
+  },
+  "observed_failures": [
+    {
+      "area": "monthly/Headcount preview identities",
+      "tests": 5,
+      "expected": "Repeated previews are equal, reserve no host IDs and avoid live/tombstone identities",
+      "observed": "Second preview used committed-1 instead of the first preview's committed-0"
+    },
+    {
+      "area": "monthly rejected-write egress",
+      "tests": 1,
+      "expected": "denied/monthly-authority-changed; no durable change",
+      "observed": "unavailable/monthly-apply-outcome-requires-reconciliation"
+    },
+    {
+      "area": "catalog environment/authority failures",
+      "tests": 3,
+      "expected": "unavailable or denied closed result",
+      "observed": "Environment offline or Authority unavailable escaped"
+    },
+    {
+      "area": "catalog duplicate identities",
+      "tests": 6,
+      "expected": "needs-input/catalog-target-unavailable",
+      "observed": "Preview returned ok and outcome.ok true"
+    },
+    {
+      "area": "shared scenario resolver cache",
+      "tests": 1,
+      "expected": "knownDifference 12000",
+      "observed": "knownDifference 0"
+    },
+    {
+      "area": "criterion cache mutation between observations",
+      "tests": 1,
+      "expected": "stale/criterion-or-authority-changed",
+      "observed": "ok with mutated criterion"
+    },
+    {
+      "area": "shared criterion cache across distinct IDs",
+      "tests": 1,
+      "expected": "Independent results for delivery and capacity",
+      "observed": "unavailable/criterion-result-invalid"
+    },
+    {
+      "area": "preview baseline mutation",
+      "tests": 1,
+      "expected": "stale/scenario-or-authority-changed, no metric/sample",
+      "observed": "ok with zero difference and metric/sample"
+    }
+  ],
+  "passing_controls": [
+    "monthly egress revocation distinguishes a committed write",
+    "stable preview remains conditioned with the canonical cost difference and preserved domain"
+  ],
+  "limits": [
+    "RED exits at each first failing assertion; later apply/persistence checks are not claimed until GREEN.",
+    "No import, fixture setup, timeout or unexpected infrastructure failure was observed.",
+    "This is hosted producer/host evidence, not browser or resident runtime evidence."
+  ]
+}
+
