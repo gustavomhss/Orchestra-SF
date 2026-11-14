@@ -216,6 +216,138 @@ async function withCalculation(name: string, work: (fixture: Awaited<ReturnType<
   finally { await deadline.close() }
 }
 
+test("Planner ledger history preserves the protected original after case advance and cannot authorize current execution", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("historical-case-advance", async ({ calculation, caseRef, reopen, change, interleave, phase }) => {
+    const { reopened } = await reopen()
+    await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+      const capture = await reopened.atlas.memory.readOriginalCapture(caseRef, calculation.refDigest, call)
+      if (!capture) throw new Error("Actual protected calculation capture unavailable")
+      await change((state) => { state.cases[caseRef.id]!.version = 2 })
+      let reentered = false
+      interleave.coverage = async () => {
+        reentered = true
+        const nested = await reopened.business.calculations.resolveHistoricalEvidence(calculation, call, reopened.atlas.memory.readOriginalCapture)
+        expect(nested.state).toBe("unavailable")
+        expect(nested.authorizedProjection).toBeUndefined()
+      }
+      const resolved = await reopened.business.context.resolve(calculation, call)
+      expect(resolved).toMatchObject({ state: "historical", ref: calculation, currentRef: calculation,
+        accessRevision: call.binding.accessRevision, differences: [{ field: "case.version", before: 1, after: 2 }] })
+      expect(resolved.authorizedProjection).toEqual(capture.projection)
+      expect(reentered).toBe(true)
+      const advanced = { ...caseRef, version: 2 }
+      expect(await reopened.atlas.memory.readOriginalCapture(advanced, calculation.refDigest, call)).toEqual(capture)
+      expect(await reopened.business.calculations.issue(calculation.target.runId, call))
+        .toEqual({ status: "unavailable", reason: "scenario-request-unavailable" })
+      expect(await reopened.business.calculations.requests.read(calculation.target.runId, call))
+        .toEqual({ status: "unavailable", reason: "scenario-request-unavailable" })
+      expect(await reopened.business.resolveCase(call)).toEqual({ status: "unavailable", reason: "case-selection-unavailable" })
+      phase("historical-original-preserved-current-execution-denied")
+    })
+  })
+}, 120_000)
+
+test("Planner calculation history requires its actual ledger, case incarnation, request, result, capture and fresh sources", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("historical-integrity", async ({ calculation, caseRef, reopen, change, phase }) => {
+    const { reopened } = await reopen()
+    await change((state) => { state.cases[caseRef.id]!.version = 2 })
+    await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+      const saved = await reopened.authority.state.read(reopened.request(), "cases", (state) => ({ decision: state.cases[caseRef.id],
+        result: state.decisionResults?.[calculation.target.runId], preferences: state.preferences, atlas: state.atlas }))
+      if (saved.status !== "ok" || !saved.value.decision || !saved.value.result) throw new Error("Actual historical C08 fixture unavailable")
+      const original = { ...saved.value, decision: saved.value.decision, result: saved.value.result }
+      expect((await reopened.business.context.resolve(calculation, call)).state).toBe("historical")
+      const mutations: readonly ((state: SfProductState) => void)[] = [
+        (state) => { state.cases[caseRef.id]!.participants = [] },
+        (state) => { state.cases[caseRef.id]!.ledger = [] },
+        (state) => { state.cases[caseRef.id]!.incarnation = "replacement-incarnation" },
+        (state) => { const decision = state.cases[caseRef.id]!; decision.ledger = [...decision.ledger, structuredClone(decision.ledger[0]!)] },
+        (state) => { state.decisionResults![calculation.target.runId]!.resultDigest = "0".repeat(64) },
+        (state) => {
+          const key = `sf:proposal-coverage:scenario-request:${digestSfValue(calculation.target.runId)}`
+          state.preferences[key] = { ...object(state.preferences[key]), engineVersion: "replaced-engine" }
+        },
+        (state) => { state.atlas = {} },
+      ]
+      const restore = (state: SfProductState) => {
+        state.cases[caseRef.id] = structuredClone(original.decision)
+        state.decisionResults![calculation.target.runId] = structuredClone(original.result)
+        state.preferences = structuredClone(original.preferences)
+        state.atlas = structuredClone(original.atlas)
+      }
+      for (const mutate of mutations) {
+        await change((state) => { restore(state); mutate(state) })
+        const denied = await reopened.business.context.resolve(calculation, call)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+      }
+      await change(restore)
+      expect(await reopened.authority.host.revalidate(call)).toBe(true)
+      // The explicit historical lane does not replay a new result from old
+      // source bytes. Material source drift remains unavailable until the
+      // producer supplies that separate authenticated historical closure.
+      await reopened.persistence.transaction("planner", async (snapshot) => {
+        snapshot.data.entities = [{ id: "historical-source-change", name: "Changed source after capture" }]
+        return { commit: true, value: undefined }
+      })
+      const changed = await reopened.business.context.resolve(calculation, call)
+      expect(changed.state).toBe("unavailable")
+      expect(changed.authorizedProjection).toBeUndefined()
+      phase("historical-tamper-replacement-and-source-drift-closed")
+    })
+  })
+}, 120_000)
+
+test("Planner calculation history denies disclosure after principal, Request or lease revocation", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("historical-replay-revocation", async ({ calculation, caseRef, reopen, change, control, interleave, phase }) => {
+    const { reopened } = await reopen()
+    await change((state) => { state.cases[caseRef.id]!.version = 2 })
+    await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+      const positive = await reopened.business.calculations.resolveHistoricalEvidence(calculation, call, reopened.atlas.memory.readOriginalCapture)
+      expect(positive.state).toBe("historical")
+      expect(positive.authorizedProjection).toBeDefined()
+      let revokedDuringReplay = false
+      interleave.coverage = async () => { revokedDuringReplay = true; control.active = false }
+      try {
+        const denied = await reopened.business.context.resolve(calculation, call)
+        expect(revokedDuringReplay).toBe(true)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+        expect(await reopened.authority.host.revalidate(call)).toBe(false)
+      } finally { control.active = true }
+      phase("historical-real-replay-revocation-closed")
+    })
+    for (const mutation of ["abort", "finish"] as const) {
+      const controller = new AbortController(), base = reopened.request()
+      const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
+      const payload = { evidenceRef: calculation }, digest = digestSfValue(payload)
+      const admitted = await reopened.authority.ui.admit(request, "sf_evidence_get", digest)
+      if (admitted.status !== "ok" || !await reopened.authority.ui.validate(admitted.value, "sf_evidence_get", digest)) throw new Error("Actual historical read admission unavailable")
+      try {
+        let captured = false
+        const denied = await reopened.business.calculations.resolveHistoricalEvidence(calculation, admitted.value, async (selection, refDigest, call) => {
+          const original = await reopened.atlas.memory.readOriginalCapture(selection, refDigest, call)
+          if (!original) throw new Error("Actual capture unavailable before Request revocation")
+          captured = true
+          if (mutation === "abort") controller.abort(new Error("Fixture abort after protected read"))
+          else reopened.authority.ui.finish(admitted.value)
+          return original
+        })
+        expect(captured).toBe(true)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+      } finally { reopened.authority.ui.finish(admitted.value) }
+    }
+    phase("historical-request-abort-and-lease-loss-closed")
+  })
+}, 120_000)
+
 test("Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors", async () => {
   expectSpawn(import.meta.path)
   await withCalculation("ui-and-selectors", async ({ first, produced, calculation, control, interleave, phase }) => {

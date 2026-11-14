@@ -8,10 +8,10 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import atlasPackage from "../../../../../atlas/boundary/package.json" with { type: "json" }
 import contractFreeze from "../../../product/contracts/freeze-v1.json" with { type: "json" }
-import { createApplication } from "../../../runtime/application.ts"
+import { createApplication, htmlPolicy } from "../../../runtime/application.ts"
 import type { Application } from "../../../runtime/application.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
-import { object } from "../../../runtime/contract.ts"
+import { object, rows } from "../../../runtime/contract.ts"
 import { domain } from "../../../runtime/procurement.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -29,6 +29,8 @@ import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
 import { createProcurementDecisionHttp } from "../../../product/procurement/decision-http.ts"
 import { createProcurementDecisionHost } from "../../../product/procurement/decision-host.ts"
+import { decisionApplyForms, decisionApplyScript } from "../../../product/ui/decision-apply.ts"
+import { closeWp01Browser, launchWp01Browser } from "../wp01/browser-fixture.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 const initialAt = "2026-11-13T00:00:00Z"
@@ -74,6 +76,60 @@ test("real host composes C06 confirmation, current evidence routing and the WP09
     const dossierAfter = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     expect(dossierAfter).toEqual(dossierBefore)
 
+    await fixture.persistence.transaction("procurement", async (snapshot) => {
+      const store = object(snapshot.data.store)
+      object(store.settings).fxRates = [{ code: "USD", rate: 1 }, { code: "EUR", rate: 2 }]
+      object(object(object(store.requests)["PR-1"]).request).sourcing = {
+        selectedId: "B", selectionJustification: "Recorded Request choice", approvalBaseCurrency: "USD", fxSnapshot: { USD: 1, EUR: 1.08 },
+        quotes: [
+          { id: "A", supplier: "A", total: 32400, currency: "USD", techPass: true, scores: [5, 4, 4, 4, 4], cscores: [null, 4, 4] },
+          { id: "B", supplier: "B", total: 28000, currency: "EUR", techPass: true, scores: [4, 4, 4, 3, 4], cscores: [null, 5, 4] },
+        ],
+      }
+      return { commit: true, value: undefined }
+    })
+    await fixture.select()
+    const commercial = await fixture.business.individual.issue("procurement-request", "PR-1", call)
+    if (commercial.status !== "ok") throw new Error("commercial Request source unavailable")
+    const source = await fixture.business.sourcingEvidence(commercial.value, call)
+    if (source.status !== "ok") throw new Error(`real sourcing facts unavailable: ${source.reason}`)
+    const termsBefore = await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+    const withTerms = await fixture.business.procurementDossier.prepare(commercial.value, call)
+    expect(withTerms.status).toBe("ok")
+    if (withTerms.status !== "ok") throw new Error(`commercial dossier unavailable: ${withTerms.reason}`)
+    expect(withTerms.value.sourcing).toEqual(source.value)
+    expect(withTerms.value.comparison).toEqual(source.value.comparison)
+    expect(withTerms.value.request.version).toBe(source.value.evidence.target.version)
+    expect(withTerms.value.request.context).toEqual(source.value.context)
+    expect(withTerms.value.request.values.length).toBeGreaterThan(0)
+    expect(withTerms.value.request.values.every((entry) => digestSfValue(entry.sourceRefs) === digestSfValue([source.value.evidence]))).toBe(true)
+    expect(withTerms.value.commercialSources.proposalTerms).toEqual({ status: "available", sourceRef: source.value.evidence,
+      offers: source.value.offers, submittedBaseCurrency: "USD", submittedFx: [{ from: "EUR", rate: 1.08 }, { from: "USD", rate: 1 }] })
+    expect(source.value.offers).toEqual([
+      { offerRef: "A", version: source.value.evidence.target.version, amount: 32400, currency: "USD", technicalPass: true },
+      { offerRef: "B", version: source.value.evidence.target.version, amount: 28000, currency: "EUR", technicalPass: true },
+    ])
+    expect(source.value.comparison?.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
+    expect(withTerms.value.explanation.selection).toMatchObject({ state: "recorded", proposalRef: "B", message: expect.stringContaining("Recorded Request choice") })
+    expect(withTerms.value.commercialSources.supplierRegister).toEqual({ status: "not-selected" })
+    expect(withTerms.value.draft).toMatchObject({ domainApplied: false, sourceRefs: [source.value.evidence] })
+    expect(await fixture.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))).toEqual(termsBefore)
+
+    let sourceChangedDuringReread = false
+    fixture.afterSourcingFactsRead(2, async () => {
+      sourceChangedDuringReread = true
+      await fixture.persistence.transaction("procurement", async (snapshot) => {
+        const sourcing = object(object(object(object(snapshot.data.store).requests)["PR-1"]).request).sourcing
+        rows(object(sourcing).quotes)[0]!.total = 99999
+        return { commit: true, value: undefined }
+      })
+    })
+    const changedDossier = await fixture.business.procurementDossier.prepare(commercial.value, call)
+    expect(sourceChangedDuringReread).toBe(true)
+    expect(changedDossier).toMatchObject({ status: "denied", reason: "access-changed" })
+    expect(changedDossier).not.toHaveProperty("value")
+    expect((await fixture.business.procurementDossier.prepare(commercial.value, call)).status).toBe("stale")
+
     await fixture.edit({ description: "Unrelated description" })
     expect(await confirmation.project(confirmed.value.id, call)).toMatchObject({ status: "ok", value: { state: "valid" } })
     await fixture.edit({ title: "Materially changed subject" })
@@ -85,7 +141,19 @@ test("real host composes C06 confirmation, current evidence routing and the WP09
     const attached = await fixture.business.individual.issue("procurement-request", "PR-1", call)
     if (attached.status !== "ok") throw new Error("attached Request source unavailable")
     expect((await fixture.business.procurementDossier.prepare(attached.value, call)).status).toBe("unavailable")
-    fixture.revoke("alice")
+    await fixture.persistence.transaction("procurement", async (snapshot) => {
+      object(object(object(object(snapshot.data.store).requests)["PR-1"]).request).attachments = []
+      return { commit: true, value: undefined }
+    })
+    const current = await fixture.business.individual.issue("procurement-request", "PR-1", call)
+    if (current.status !== "ok") throw new Error("current dossier Request source unavailable")
+    let revokedDuringReread = false
+    fixture.afterSourcingFactsRead(2, async () => { revokedDuringReread = true; fixture.revoke("alice") })
+    const revokedDossier = await fixture.business.procurementDossier.prepare(current.value, call)
+    expect(revokedDuringReread).toBe(true)
+    expect(revokedDossier).toMatchObject({ status: "denied", reason: "access-changed" })
+    expect(revokedDossier).not.toHaveProperty("value")
+    expect((await fixture.business.procurementDossier.prepare(current.value, call)).status).toBe("denied")
     expect((await confirmation.project(confirmed.value.id, call)).status).toBe("denied")
     expect((await fixture.business.context.resolve(issued.value.evidence, call)).state).toBe("unavailable")
   } finally { await fixture.dispose() }
@@ -385,7 +453,143 @@ test("C12 rereads the real review producer before the first application and reje
   } finally { await fixture.dispose() }
 }, 25_000)
 
-async function hostFixture(scenario: string, controlledReviewClock = false) {
+test("real Procurement UI carries the reviewed proof and retries one durable application after a withheld response", async () => {
+  const { expect } = await import("@playwright/test")
+  let browser: Awaited<ReturnType<typeof launchWp01Browser>> | undefined
+  let fixture: Awaited<ReturnType<typeof hostFixture>> | undefined
+  let prepared: Awaited<ReturnType<typeof prepareChange>> | undefined
+  const traffic: { mode: string | null; body: string; key: string | null; origin: string | null; authorized: boolean; originalStatus: number; deliveredStatus: number; result: Record<string, unknown> }[] = []
+  const navigationKeys: (string | null)[] = []
+  let withheld = false
+  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => {
+    const url = new URL(request.url)
+    const current = fixture, change = prepared
+    if (!current || !change) return new Response("Fixture unavailable", { status: 503 })
+    if (url.pathname !== "/sf/procurement") return new Response("Not found", { status: 404 })
+    if (request.method === "POST") {
+      const body = await request.clone().text()
+      // The real Application receives the original browser Request, including its
+      // origin, actor, idempotency key and unchanged body. Only delivery may fail.
+      const response = await current.application(request)
+      if (!response) throw new Error("real Procurement Application did not handle its browser request")
+      const result = object(await response.clone().json())
+      const mode = url.searchParams.get("sf")
+      const loseResponse = mode === "decision-apply" && response.status === 200 && !withheld
+      traffic.push({ mode, body, key: request.headers.get("idempotency-key"), origin: request.headers.get("origin"),
+        authorized: request.headers.get("authorization") === "Bearer alice", originalStatus: response.status,
+        deliveredStatus: loseResponse ? 503 : response.status, result })
+      if (loseResponse) {
+        withheld = true
+        return Response.json({ status: "unavailable", reason: "fixture-response-withheld" }, { status: 503 })
+      }
+      return response
+    }
+    if (request.method !== "GET" || url.search) return new Response("Not found", { status: 404 })
+    navigationKeys.push(request.headers.get("idempotency-key"))
+    const stored = await current.authority.state.read(request, "cases", (state) => state.cases[change.request.caseRef.id])
+    if (stored.status !== "ok" || !stored.value) return new Response("Case unavailable", { status: 403 })
+    const input = { caseRef: encodeCaseRef(stored.value) }, inputDigest = digestSfValue(input)
+    const admitted = await current.authority.ui.admit(request, "sf_case_read", inputDigest)
+    if (admitted.status !== "ok") return new Response("Case unavailable", { status: 403 })
+    try {
+      if (!await current.authority.ui.validate(admitted.value, "sf_case_read", inputDigest)) return new Response("Case unavailable", { status: 403 })
+      const projection = await current.business.cases.read(input, admitted.value)
+      if (projection.status !== "ok" || !await current.authority.host.revalidate(admitted.value)) return new Response("Case unavailable", { status: 403 })
+      const html = `<!doctype html><html lang="en"><head><title>Procurement prepared changes</title></head><body><main><h1>Procurement</h1>${decisionApplyForms(projection.value)}</main><script>${decisionApplyScript}</script></body></html>`
+      return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Content-Security-Policy": htmlPolicy(html), "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+    } finally { current.authority.ui.finish(admitted.value) }
+  } })
+  try {
+    browser = await launchWp01Browser()
+    const origin = server.url.origin
+    fixture = await hostFixture("H09", false, origin, true)
+    prepared = await prepareChange(fixture)
+    const context = await browser.newContext({ extraHTTPHeaders: { Authorization: "Bearer alice" } })
+    const page = await context.newPage()
+    const loaded = await page.goto(`${origin}/sf/procurement`)
+    expect(loaded?.status()).toBe(200)
+    expect(loaded?.headers()["content-security-policy"]).toContain("script-src 'sha256-")
+    expect(navigationKeys).toEqual([null])
+    const article = page.locator("[data-decision-apply]")
+    await expect(article).toHaveCount(1)
+    const review = article.getByRole("button", { name: "Review current changes", exact: true })
+    const confirmation = article.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true })
+    const apply = article.getByRole("button", { name: "Apply reviewed change", exact: true })
+    await expect(confirmation).toBeDisabled()
+    await expect(apply).toBeDisabled()
+    expect(traffic.filter((entry) => entry.mode === "decision-apply")).toHaveLength(0)
+
+    const reviewed = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-review")
+    await review.click()
+    const reviewResponse = await reviewed
+    expect(reviewResponse.status()).toBe(200)
+    const reviewDigest = readReviewDigest(object(await reviewResponse.json()))
+    await expect(article.locator("[data-change-review]")).toContainText("originalAmount: 100")
+    await expect(article.locator("[data-change-review]")).toContainText("→ 150")
+    await expect(confirmation).toBeEnabled()
+    await expect(confirmation).not.toBeChecked()
+    await expect(apply).toBeDisabled()
+    expect(traffic.filter((entry) => entry.mode === "decision-apply")).toHaveLength(0)
+    expect(object((await fixture.material()).request.pr).estAmount).toBe(100)
+    await confirmation.check()
+    await expect(apply).toBeEnabled()
+
+    const attempted = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-apply")
+    await apply.click()
+    expect((await attempted).status()).toBe(503)
+    await expect(article.locator("[data-change-status]")).toHaveText("Could not confirm application. The reviewed request is locked; retry the same request to reconcile its receipt.")
+    await expect(review).toBeDisabled()
+    await expect(confirmation).toBeDisabled()
+    const retry = article.getByRole("button", { name: "Retry same application", exact: true })
+    await expect(retry).toBeEnabled()
+    const first = traffic.filter((entry) => entry.mode === "decision-apply")
+    expect(first).toHaveLength(1)
+    expect(first[0]).toMatchObject({ originalStatus: 200, deliveredStatus: 503, authorized: true, origin })
+    expect(first[0]!.key).toBeTruthy()
+    expect(JSON.parse(first[0]!.body)).toEqual({ ...prepared.request, reviewDigest })
+    expect(object(first[0]!.result.value)).toMatchObject({ surface: "procurement", version: 1, outcome: "applied", receiptId: expect.any(String) })
+    const committed = await fixture.material()
+    expect(object(committed.request.pr).estAmount).toBe(150)
+    expect(committed.request.history).toHaveLength(1)
+    expect(fixture.receiptCommits).toHaveLength(1)
+    expect((await fixture.storedCase()).value.receipts).toHaveLength(1)
+    // A retry must be authorized from durable proof after this owned cache clears.
+    // The process, SQLite store and browser stay alive; this is not a restart test.
+    fixture.business.procurementDecisions.dispose()
+    const reconciled = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-apply")
+    const reloaded = page.waitForEvent("domcontentloaded")
+    await retry.click()
+    const replay = await reconciled
+    expect(replay.status()).toBe(200)
+    expect(await replay.json()).toEqual(first[0]!.result)
+    await reloaded
+    await expect(article.getByText("State: applied", { exact: true })).toBeVisible()
+    expect(navigationKeys).toEqual([null, null])
+    const applications = traffic.filter((entry) => entry.mode === "decision-apply")
+    expect(applications).toHaveLength(2)
+    expect(applications[1]).toMatchObject({ body: applications[0]!.body, key: applications[0]!.key, originalStatus: 200, deliveredStatus: 200, authorized: true, origin, result: applications[0]!.result })
+    expect(traffic.filter((entry) => entry.mode === "decision-review")).toHaveLength(1)
+    expect(await fixture.material()).toEqual(committed)
+    expect(fixture.receiptCommits).toHaveLength(1)
+    const stored = await fixture.storedCase()
+    expect(stored.value.state).toBe("applied")
+    expect(stored.value.receipts).toHaveLength(1)
+    const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
+    expect(receipts.status).toBe("ok")
+    if (receipts.status !== "ok") throw new Error("durable receipt namespace unavailable")
+    expect(receipts.value).toHaveLength(1)
+    console.info("SF_PROCUREMENT_UI_PROOF", JSON.stringify({ scenario: "H09", reviewDigest, receiptId: object(first[0]!.result.value).receiptId,
+      applyRequests: applications.length, identicalRequestBody: applications[0]!.body === applications[1]!.body,
+      identicalIdempotencyKey: applications[0]!.key === applications[1]!.key, durableReceipts: receipts.value.length,
+      domainHistoryEntries: rows(committed.request.history).length, deliveryOnlyFault: true, reviewCacheCleared: true,
+      processRestarted: false, humanTimingMeasured: false, nativeModelSession: false, readNavigationIdentity: "fixture-host-generated" }))
+  } finally {
+    try { if (browser) await closeWp01Browser(browser) }
+    finally { await server.stop(true); await fixture?.dispose() }
+  }
+}, 60_000)
+
+async function hostFixture(scenario: string, controlledReviewClock = false, origin = "https://local.invalid", allowCaseNavigation = false) {
   const started = performance.now()
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-procurement-host-"))
   await chmod(directory, 0o700)
@@ -406,9 +610,8 @@ async function hostFixture(scenario: string, controlledReviewClock = false) {
   }
   const clock = { at: initialAt }
   const permitted = new Set(["alice", "bob"])
-  const origin = "https://local.invalid"
   const sources = createSfSourcePersistence({ persistence: meteredStore, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at), createId: randomUUID })
-  const scheduling: { afterReceipt?: () => Promise<void>; afterCaptured?: () => Promise<void> } = {}
+  const scheduling: { afterReceipt?: () => Promise<void>; afterCaptured?: () => Promise<void>; afterSourcingRead?: { remaining: number; work: () => Promise<void> } } = {}
   const receiptCommits: { beforeCases: number; afterCases: number }[] = []
   // This adapter changes only scheduling: both competing transactions commit through
   // the same real lifecycle and SQLite store. It supplies no data or consumer result.
@@ -419,6 +622,16 @@ async function hostFixture(scenario: string, controlledReviewClock = false) {
       const interleave = scheduling.afterCaptured
       scheduling.afterCaptured = undefined
       await interleave?.()
+    }
+    // The real source transaction has returned; only its next comparison/read is interleaved.
+    const facts = object(captured.value)
+    const sourcing = scheduling.afterSourcingRead
+    if (sourcing && surface === "procurement" && captured.status === "ok" && typeof facts.stage === "string" && Array.isArray(facts.offers) && facts.evidence) {
+      sourcing.remaining -= 1
+      if (sourcing.remaining === 0) {
+        scheduling.afterSourcingRead = undefined
+        await sourcing.work()
+      }
     }
     return result
   }, transactionAll: async (work, options) => {
@@ -460,7 +673,13 @@ async function hostFixture(scenario: string, controlledReviewClock = false) {
   const authority = createSfProductAuthority({
     identity: () => ({ installationId: "i", hostId: "procurement-integration", projectId: "p", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }), installationId: "i", origin, policyVersion: "p1", persistence, authenticate, environment,
     grants: ["alice", "bob"].map((principalRef): SfProductGrant => ({ principalRef, namespaces: ["cases", "preferences", "confirmations", "receipts", "threads", "relations"], operations: ["sf_work_list", "sf_request_read", "sf_case_draft", "sf_case_read", "sf_context_read", "sf_sourcing_compare"], humanActions: ["collaboration.confirmation.confirm", "decisions.prepare-changes", "decisions.portfolio.read", "decisions.apply"] })),
-    createId: randomUUID, now: Date.now, commandIdentity: async (value, operation, inputDigest) => value.headers.get("idempotency-key") ? digestSfValue({ key: value.headers.get("idempotency-key"), operation, inputDigest }) : undefined,
+    createId: randomUUID, now: Date.now, commandIdentity: async (value, operation, inputDigest) => {
+      // H09's read-only navigation has no browser intention key. As in the real
+      // CLI host, the host creates its read identity; POST keys remain untouched.
+      // This opt-in changes neither the eight existing scenarios nor other reads.
+      if (allowCaseNavigation && value.method === "GET" && operation === "sf_case_read" && !value.headers.has("idempotency-key")) return randomUUID()
+      return value.headers.get("idempotency-key") ? digestSfValue({ key: value.headers.get("idempotency-key"), operation, inputDigest }) : undefined
+    },
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined, proposalCoverageWrites, procurementEvidenceWrites,
     authorizePreparedTarget: (value, snapshot, targetRef, current) => mounted.business?.procurementDecisions.authorizeReceiptTarget(value, snapshot, targetRef, current) ?? Promise.resolve(undefined),
   })
@@ -513,6 +732,7 @@ async function hostFixture(scenario: string, controlledReviewClock = false) {
   return { authority, business, persistence, application, request, ui, select, storedCase, evidence: source.value.evidence, receiptCommits,
     afterReceiptCommit: (work: () => Promise<void>) => { scheduling.afterReceipt = work },
     afterApplyTargetCaptured: (work: () => Promise<void>) => { scheduling.afterCaptured = work },
+    afterSourcingFactsRead: (count: number, work: () => Promise<void>) => { scheduling.afterSourcingRead = { remaining: count, work } },
     advance: (milliseconds: number) => { clock.at = new Date(Date.parse(clock.at) + milliseconds).toISOString() }, revoke: (actor: string) => { permitted.delete(actor) },
     material: () => persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: { request: structuredClone(object(object(object(object(snapshot.data.store).requests)["PR-1"]).request)), version: structuredClone(snapshot.versions["requests:PR-1"]) } })),
     edit: async (pr: Record<string, unknown>) => {

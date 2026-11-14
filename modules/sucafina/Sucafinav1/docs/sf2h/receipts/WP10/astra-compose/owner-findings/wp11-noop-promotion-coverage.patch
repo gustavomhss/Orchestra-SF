@@ -1,0 +1,15 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/mutations.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/mutations.ts
+@@ -90,7 +90,9 @@
+       const basis = coverage.value.basis
+       const reassessed = digestSfValue(scenario.value.costCoverage) !== digestSfValue(coverage.value.assessment)
+-      const entries = reassessed && input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined
++      // Even unchanged coverage needs the current producer proof consumed by
++      // the synchronous source fence in saveCase; a matching assessment is not authorization.
++      const entries = input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined
+       if (entries && entries.status !== "ok") return entries
+-      const result = !reassessed ? attributed : input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : undefined
++      const result = input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : !reassessed ? attributed : undefined
+       if (!result) return { status: "unavailable", reason: "scenario-coverage-reassessment-unavailable" }
+       if (result.comparisonStatus === "complete" && !input.coverageEvidence) return { status: "unavailable", reason: "scenario-source-fence-unavailable" }
+

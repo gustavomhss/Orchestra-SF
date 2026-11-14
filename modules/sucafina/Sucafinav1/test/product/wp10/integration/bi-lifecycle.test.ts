@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test"
+import { afterEach, expect, test } from "bun:test"
 import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -23,75 +23,123 @@ import { sfPlannerBiSelection } from "../../../../../../../apps/cli/src/sucafina
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
 
+const liveLifecycleFixtures = new Set<() => Promise<void>>()
+afterEach(async () => {
+  // Bun can report an exception from a transport event before the test's
+  // awaited setup settles. Own provisional fixtures before their first await.
+  const outcomes = await Promise.allSettled([...liveLifecycleFixtures].map((close) => close()))
+  const failures = outcomes.flatMap((outcome) => outcome.status === "rejected" ? [outcome.reason] : [])
+  if (failures.length) throw new AggregateError(failures, "BI lifecycle fixture cleanup failed")
+})
+
 // Real local-operator cookie/revocation, SQLite, C08, C16, source producers,
 // HTTP shell and compiled BI bundle. The operator/domain seed is a fixture;
 // this does not claim installed OS identity, native inference or global proof.
-async function prepareBiLifecycle(signal: AbortSignal) {
-  signal.throwIfAborted()
-  const { chromium } = await import("@playwright/test")
-  const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
-  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-bi-lifecycle-"))
-  await chmod(directory, 0o700)
-  const driver = await openLocalStore(directory)
-  const route: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-  const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await route.handle?.(request) ?? new Response(null, { status: 503 }) })
-  const origin = server.url.origin, mount = "/sucafina"
-  const operator = { installationId: randomUUID(), uid: 1000, name: "BI lifecycle fixture operator" }
-  const identity = createOperatorIdentity({ origin, mount, operator, secrets: driver.secrets, key: randomBytes(32) })
-  const now = () => "2026-11-14T12:00:00Z"
-  const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources,
-    projectScope: createSfSourceScopeProjector(now), createId: randomUUID })
-  const environment = async (request: Request) => {
-    signal.throwIfAborted()
-    const directory = await identity.directory(request)
-    signal.throwIfAborted()
-    return { at: now(), id: randomUUID, directory }
-  }
-  const principalRef = `macos:${operator.installationId}:${operator.uid}`
-  const guards = { proposalCoverageWrites: new WeakSet<object>(), dashboardHostWrites: new WeakSet<object>(), procurementEvidenceWrites: new WeakSet<object>(),
-    caseSelectionWrites: new WeakSet<object>(), threadHistoryWrites: new WeakSet<object>(), analysisSelectionWrites: new WeakSet<object>() }
-  const authority = createSfProductAuthority({ installationId: operator.installationId, origin, policyVersion: "bi-lifecycle-fixture", persistence,
-    identity: () => ({ installationId: operator.installationId, hostId: "bi-lifecycle-host", projectId: operator.installationId,
-      location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }), ...guards,
-    grants: [{ principalRef, namespaces: ["cases", "preferences", "bi-artifacts", "reviews", "documents", "threads", "relations", "confirmations", "receipts", "outbox"],
-      operations: ["sf_dashboard_read", "sf_bi_view", "sf_work_list", "sf_case_read", "sf_forecast_compare", "sf_scenario_simulate", "sf_scenario_compare", "sf_portfolio_evaluate", "sf_sensitivity_evaluate"], humanActions: [] }],
-    createId: randomUUID, now: Date.now, commandIdentity: async () => undefined, authenticate: identity.authenticate, environment,
-    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
-    providerGeneration: async () => 1, authorizeDocument: async () => undefined })
-  const business = createSfBusinessServices({ authority, persistence, ...guards })
-  business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
-  const portfolio = createSfPortfolioServices({ authority, business, ...guards })
-  const bi = createSfBiServices({ authority, business, portfolio }), assets = createSfExtendedAssets()
-  const http = createSfExtendedHttp({ authority, business, bi, reviews: undefined, persistence, origin, assets })
-  const app = createModule(mount, { persistence, authenticate: identity.authenticate, environment, product: http, maxJsonBytes: 100_000 })
-  const observations: { mode: string; method: string; status: number }[] = []
-  const failures: string[] = [], aborted: string[] = []
+async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDeadline>) {
+  const cancellation = new AbortController(), signal = cancellation.signal
+  const releases: (() => void | Promise<void>)[] = []
+  const transports: (() => void | Promise<void>)[] = []
+  const acquiring = new Set<Promise<unknown>>()
   type Hold = { reached: ReturnType<typeof Promise.withResolvers<{ status: number; request: Request }>>;
     release: ReturnType<typeof Promise.withResolvers<void>>; finished: ReturnType<typeof Promise.withResolvers<void>> }
   const held = new Map<string, Hold>(), pending = new Set<Hold>()
-  const holdNext = (mode: string) => {
-    signal.throwIfAborted()
-    if (held.has(mode)) throw new Error(`A ${mode} response is already held`)
-    const gate: Hold = { reached: Promise.withResolvers(), release: Promise.withResolvers(), finished: Promise.withResolvers() }
-    void gate.reached.promise.catch(() => undefined)
-    held.set(mode, gate); pending.add(gate)
-    return gate
-  }
   const stop = () => {
     for (const gate of pending) { gate.reached.reject(signal.reason); gate.release.resolve() }
   }
   signal.addEventListener("abort", stop, { once: true })
-  let closeBrowser: (() => Promise<void>) | undefined, closed = false
-  const dispose = async () => {
-    if (closed) return
-    closed = true
+  let closing: Promise<void> | undefined
+  const dispose = () => closing ??= (async () => {
+    cancellation.abort(new Error("BI lifecycle fixture closed"))
+    deadline.signal.removeEventListener("abort", relay)
+    // Acquisition owns its value before it can observe cancellation. Wait for
+    // every pending acquisition before taking the final cleanup stack.
+    await Promise.allSettled([...acquiring])
+    const failures: unknown[] = []
+    for (const close of [...transports, ...releases.toReversed()]) {
+      try { await close() } catch (error) { failures.push(error) }
+    }
+    liveLifecycleFixtures.delete(dispose)
     signal.removeEventListener("abort", stop)
-    for (const gate of pending) gate.release.resolve()
-    try { await closeBrowser?.() }
-    finally { await server.stop(true); assets.dispose(); portfolio.dispose(); business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
+    if (failures.length) throw new AggregateError(failures, "BI lifecycle resources did not close")
+  })()
+  const relay = () => {
+    cancellation.abort(deadline.signal.reason)
+    // Start cancellation even while an awaited browser transport is pending;
+    // the deadline owner and afterEach both await the same closing promise.
+    void dispose().catch(() => undefined)
   }
+  deadline.own(dispose)
+  liveLifecycleFixtures.add(dispose)
+  deadline.signal.addEventListener("abort", relay, { once: true })
+  if (deadline.signal.aborted) relay()
+  const acquire = async <Value>(open: () => Promise<Value>, close: (value: Value) => void | Promise<void>): Promise<Value> => {
+    signal.throwIfAborted()
+    const task = Promise.resolve().then(open).then((value) => {
+      releases.push(() => close(value))
+      return value
+    })
+    acquiring.add(task)
+    try { const value = await task; signal.throwIfAborted(); return value }
+    finally { acquiring.delete(task) }
+  }
+  let stage = "imports"
   try {
     signal.throwIfAborted()
+    const { chromium } = await import("@playwright/test")
+    const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
+    signal.throwIfAborted()
+    const temporary = await realpath(tmpdir())
+    signal.throwIfAborted()
+    const directory = await acquire(() => mkdtemp(join(temporary, "sf-bi-lifecycle-")), (value) => rm(value, { recursive: true, force: true }))
+    await chmod(directory, 0o700)
+    signal.throwIfAborted()
+    const driver = await acquire(() => openLocalStore(directory), (value) => value.dispose())
+    const route: { handle?: (request: Request) => Promise<Response | undefined> } = {}
+    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await route.handle?.(request) ?? new Response(null, { status: 503 }) })
+    transports.push(async () => { route.handle = undefined; await server.stop(true) })
+    const origin = server.url.origin, mount = "/sucafina"
+    const operator = { installationId: randomUUID(), uid: 1000, name: "BI lifecycle fixture operator" }
+    const identity = createOperatorIdentity({ origin, mount, operator, secrets: driver.secrets, key: randomBytes(32) })
+    const now = () => "2026-11-14T12:00:00Z"
+    const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources,
+      projectScope: createSfSourceScopeProjector(now), createId: randomUUID })
+    const environment = async (request: Request) => {
+      signal.throwIfAborted()
+      const directory = await identity.directory(request)
+      signal.throwIfAborted()
+      return { at: now(), id: randomUUID, directory }
+    }
+    const principalRef = `macos:${operator.installationId}:${operator.uid}`
+    const guards = { proposalCoverageWrites: new WeakSet<object>(), dashboardHostWrites: new WeakSet<object>(), procurementEvidenceWrites: new WeakSet<object>(),
+      caseSelectionWrites: new WeakSet<object>(), threadHistoryWrites: new WeakSet<object>(), analysisSelectionWrites: new WeakSet<object>() }
+    const authority = createSfProductAuthority({ installationId: operator.installationId, origin, policyVersion: "bi-lifecycle-fixture", persistence,
+      identity: () => ({ installationId: operator.installationId, hostId: "bi-lifecycle-host", projectId: operator.installationId,
+        location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }), ...guards,
+      grants: [{ principalRef, namespaces: ["cases", "preferences", "bi-artifacts", "reviews", "documents", "threads", "relations", "confirmations", "receipts", "outbox"],
+        operations: ["sf_dashboard_read", "sf_bi_view", "sf_work_list", "sf_case_read", "sf_forecast_compare", "sf_scenario_simulate", "sf_scenario_compare", "sf_portfolio_evaluate", "sf_sensitivity_evaluate"], humanActions: [] }],
+      createId: randomUUID, now: Date.now, commandIdentity: async () => undefined, authenticate: identity.authenticate, environment,
+      inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
+      providerGeneration: async () => 1, authorizeDocument: async () => undefined })
+    const business = createSfBusinessServices({ authority, persistence, ...guards })
+    releases.push(() => business.dispose())
+    business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
+    const portfolio = createSfPortfolioServices({ authority, business, ...guards })
+    releases.push(() => portfolio.dispose())
+    const bi = createSfBiServices({ authority, business, portfolio }), assets = createSfExtendedAssets()
+    releases.push(() => assets.dispose())
+    const http = createSfExtendedHttp({ authority, business, bi, reviews: undefined, persistence, origin, assets })
+    const app = createModule(mount, { persistence, authenticate: identity.authenticate, environment, product: http, maxJsonBytes: 100_000 })
+    const observations: { mode: string; method: string; status: number }[] = []
+    const failures: string[] = [], aborted: string[] = []
+    const holdNext = (mode: string) => {
+      signal.throwIfAborted()
+      if (held.has(mode)) throw new Error(`A ${mode} response is already held`)
+      const gate: Hold = { reached: Promise.withResolvers(), release: Promise.withResolvers(), finished: Promise.withResolvers() }
+      void gate.reached.promise.catch(() => undefined)
+      held.set(mode, gate); pending.add(gate)
+      return gate
+    }
+    stage = "source.initialize"
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     await persistence.transaction("dashboard", async (snapshot) => {
       snapshot.data.opexOwners = [{ id: "owner", name: "Lifecycle private owner", budget: 1200 }]
@@ -99,6 +147,7 @@ async function prepareBiLifecycle(signal: AbortSignal) {
       snapshot.data.capexProjects = []; snapshot.data.capexEntries = []
       return { commit: true, value: undefined }
     })
+    signal.throwIfAborted()
     route.handle = async (request) => {
       const url = new URL(request.url)
       const mode = url.pathname.endsWith("/auth/logout") ? "logout" : url.searchParams.get("sf") ?? "other"
@@ -116,30 +165,55 @@ async function prepareBiLifecycle(signal: AbortSignal) {
       }
       return response
     }
+    stage = "browser.asset"
     await assets.bi()
     signal.throwIfAborted()
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
-    try { closeBrowser = await captureChromiumCleanup(browser) }
-    catch (error) { await browser.close(); throw error }
-    const context = await browser.newContext({ serviceWorkers: "block" })
-    const enrolled = await context.request.get(`${origin}${mount}/auth/local?code=${await identity.enroll()}`)
-    expect(enrolled.status()).toBe(200)
-    const parameters = new URLSearchParams({ sf: "bi-options", viewId: "BI01", start: "2026-01-01", end: "2026-12-31" })
-    const choicesResponse = await context.request.get(`${origin}${mount}/dashboard?${parameters}`)
-    expect(choicesResponse.status()).toBe(200)
-    const choices: { status: string; value?: SfBiOptions } = await choicesResponse.json()
-    const selectionRef = choices.value?.choices[0]?.selectionRef
-    if (choices.status !== "ok" || !selectionRef) throw new Error("Real authorized BI selection unavailable")
-    parameters.set("sf", "bi"); parameters.set("selectionRef", selectionRef)
+    stage = "browser.acquire"
+    const owned = await acquire(async () => {
+      const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
+      try { return { browser, close: await captureChromiumCleanup(browser) } }
+      catch (error) { await browser.close(); throw error }
+    }, (value) => value.close())
+    const context = await owned.browser.newContext({ serviceWorkers: "block" })
+    signal.throwIfAborted()
     const page = await context.newPage()
+    signal.throwIfAborted()
     page.setDefaultTimeout(10_000); page.setDefaultNavigationTimeout(15_000)
     page.on("pageerror", (error) => failures.push(error.message))
     page.on("requestfailed", (request) => { aborted.push(new URL(request.url()).searchParams.get("sf") ?? "other") })
     await page.clock.install({ time: new Date("2026-11-14T12:00:00Z") })
     await page.clock.pauseAt(new Date("2026-11-14T12:00:01Z"))
-    const initial = await page.goto(`${origin}${mount}/dashboard?${parameters}`)
+    signal.throwIfAborted()
+    stage = "browser.enrollment"
+    // Chromium performs the actual redirect/cookie protocol. Avoid the
+    // Playwright APIRequestContext Node HTTP adapter under Bun, whose cookie
+    // parser received a relative response URL in CI despite absolute input.
+    const enrollment = new URL(`${mount}/auth/local`, origin)
+    enrollment.searchParams.set("code", await identity.enroll())
+    signal.throwIfAborted()
+    const enrolled = await page.goto(enrollment.href, { waitUntil: "domcontentloaded" })
+    expect(enrolled?.status()).toBe(200)
+    signal.throwIfAborted()
+    const parameters = new URLSearchParams({ sf: "bi-options", viewId: "BI01", start: "2026-01-01", end: "2026-12-31" })
+    const choicesUrl = new URL(`${mount}/dashboard`, origin)
+    choicesUrl.search = parameters.toString()
+    stage = "browser.choices"
+    const choicesResponse: { status: number; body: { status: string; value?: SfBiOptions } } = await page.evaluate(async (url) => {
+      const response = await fetch(url, { credentials: "same-origin", cache: "no-store" })
+      return { status: response.status, body: await response.json() }
+    }, choicesUrl.href)
+    expect(choicesResponse.status).toBe(200)
+    signal.throwIfAborted()
+    const selectionRef = choicesResponse.body.value?.choices[0]?.selectionRef
+    if (choicesResponse.body.status !== "ok" || !selectionRef) throw new Error("Real authorized BI selection unavailable")
+    parameters.set("sf", "bi"); parameters.set("selectionRef", selectionRef)
+    const destination = new URL(`${mount}/dashboard`, origin)
+    destination.search = parameters.toString()
+    stage = "browser.bi"
+    const initial = await page.goto(destination.href)
     expect(initial?.status()).toBe(200)
     expect(initial?.headers()["x-sf-access-revision"]).toMatch(/^[a-f0-9]{64}$/)
+    signal.throwIfAborted()
     await page.waitForFunction((ref) => (document.querySelector('select[aria-label="Dados para visualizar"]') as HTMLSelectElement)?.value === ref, selectionRef)
     const first = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
     await page.getByRole("button", { name: "Atualizar visualização", exact: true }).click()
@@ -148,16 +222,20 @@ async function prepareBiLifecycle(signal: AbortSignal) {
     expect(await page.locator("[data-sf-bi] table").count()).toBeGreaterThan(0)
     const workspace = await page.locator("[data-sf-bi][data-sf-retain-view]").elementHandle()
     if (!workspace) throw new Error("Real retained BI workspace unavailable")
+    signal.throwIfAborted()
     const count = (mode: string) => observations.filter((entry) => entry.mode === mode).length
     return { page, context, origin, mount, workspace, observations, failures, aborted, holdNext, count, dispose }
-  } catch (error) { await dispose(); throw error }
+  } catch (error) {
+    console.error("SF_BI_LIFECYCLE_SETUP", JSON.stringify({ stage, cancelled: signal.aborted, error: error instanceof Error ? error.message : String(error) }))
+    await dispose()
+    throw error
+  }
 }
 
 test("BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success", async () => {
   const deadline = compositionTestDeadline("bi-lifecycle-controls")
   try {
-    const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline.signal))
-    deadline.own(world.dispose)
+    const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
     const { page } = world
     const refresh = async (action: () => Promise<unknown>, shell: boolean) => {
       const before = world.count("bi-data"), beforeShell = world.count("bi")
@@ -201,8 +279,7 @@ test("BI keeps the canonical shell, refreshes on manual focus and timer, and sig
 test("the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render", async () => {
   const deadline = compositionTestDeadline("bi-lifecycle-authority")
   try {
-    const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline.signal))
-    deadline.own(world.dispose)
+    const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
     const { page } = world
     // Keep the BI read's own 30s deadline after the shell's first interval.
     // The clock stays paused while real HTTP work completes.
@@ -212,9 +289,12 @@ test("the canonical shell still polls authority while BI awaits a held result an
     expect((await deadline.phase("hold-real-data", () => success.reached.promise)).status).toBe(200)
     const beforeShell = world.count("bi")
     // Revoke the real encrypted operator session from a separate HTTP caller
-    // sharing the cookie jar; the mounted page receives no fabricated event.
-    const revoked = await world.context.request.post(`${world.origin}${world.mount}/auth/logout`, { headers: { origin: world.origin } })
-    expect(revoked.status()).toBe(204)
+    // with the observed cookie. The browser keeps its old cookie, so the
+    // server's durable revocation, not a fabricated client event, denies it.
+    const cookies = await world.context.cookies(world.origin)
+    const revoked = await fetch(new URL(`${world.mount}/auth/logout`, world.origin).href, { method: "POST", signal: deadline.signal,
+      headers: { origin: world.origin, cookie: cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; ") }, redirect: "manual" })
+    expect(revoked.status).toBe(204)
     expect(world.aborted).not.toContain("bi-data")
     await page.clock.runFor(29_000)
     await page.locator("[data-access-unavailable]").waitFor()
@@ -237,8 +317,7 @@ test("the canonical shell still polls authority while BI awaits a held result an
 test("clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection", async () => {
   const deadline = compositionTestDeadline("bi-lifecycle-selection")
   try {
-    const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline.signal))
-    deadline.own(world.dispose)
+    const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
     const { page } = world
     const options = world.holdNext("bi-options"), beforeData = world.count("bi-data")
     await page.getByRole("button", { name: "Refresh data", exact: true }).click()

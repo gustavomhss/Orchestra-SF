@@ -2,7 +2,7 @@ import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, ProjectionValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
@@ -10,6 +10,8 @@ import { createPlannerCalculationEvidence } from "../../../../modules/sucafina/S
 import { createPlannerPort } from "../../../../modules/sucafina/Sucafinav1/product/planner/port.ts"
 import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import type { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
+import { createSfPlannerCalculationHistory } from "./planner-calculation-history.ts"
+import type { SfCalculationCaseScope } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
 
 type SourceFences = { dashboard: string; planner: string; procurement: string }
 type ProducerInput = Parameters<typeof createScenarioRequestStore>[0]
@@ -32,7 +34,7 @@ export function createSfPlannerCalculationServices(input: {
   persist: Persist
   readSourceFences: (call: TrustedDomainContext) => Promise<SourceFences | undefined>
   lockedSourceFences: () => SourceFences | undefined
-  withCalculationCase: <T>(call: TrustedDomainContext, caseRef: { id: string; incarnation: string; version: number }, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
+  withCalculationCase: SfCalculationCaseScope
 }) {
   const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences }>()
   // Track ancestors of one invocation; parallel readers of the same real run
@@ -74,6 +76,8 @@ export function createSfPlannerCalculationServices(input: {
       return coverage
     },
   } })
+  const historical = createSfPlannerCalculationHistory({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, evidence: input.evidence,
+    replayRecordOnly: recordOnly.simulateScenario, withCalculationCase: input.withCalculationCase, lockedSourceFences: input.lockedSourceFences })
   const recordCalculation = createPlannerCalculationEvidence({ host: input.host,
     loadRecordOnlyRequest: requests.read,
     readForCalculation: (request, call) => request.kind === "scenario"
@@ -198,7 +202,7 @@ export function createSfPlannerCalculationServices(input: {
       return { state: "fresh", ref, currentRef: issued.value, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
     } catch { return unavailable() }
   }
-  return { persist, issue, resolveEvidence, verifyCalculationSources, requests: { read: requests.read } }
+  return { persist, issue, resolveEvidence, resolveHistoricalEvidence: historical.resolve, verifyCalculationSources, requests: { read: requests.read } }
 }
 
 function plannerRecordSources(stored: StoredScenario): readonly PlannerRecord[] | undefined {

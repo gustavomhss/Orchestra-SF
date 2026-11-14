@@ -1,0 +1,594 @@
+{
+  "schema": "astra-compose-owner-intake-w8-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "pr": 34,
+    "head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548",
+    "source_base": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "delta_commits": 2,
+    "changed_paths": 36,
+    "deleted_paths": 0
+  },
+  "comparison": {
+    "target_head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "target_tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+    "source_branch": "astra-operations",
+    "no_worktree_changes": true
+  },
+  "summary": {
+    "eligible_paths": 1,
+    "test_fixture_paths": 1,
+    "source_paths": 0,
+    "foreign_snapshots_selected": 0,
+    "textual_conflicts": 0,
+    "old_cases_preserved": 8,
+    "new_cases_total": 9,
+    "fixed_type_diagnostics": 0,
+    "open_type_diagnostics": 7
+  },
+  "accepted": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+      "pin": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "source_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "tree": "5cc00703f04845c62448a2a3239683d266d8d548",
+      "pr": 34,
+      "owner": "WP04 Operations",
+      "base_head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "base_tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "target_blob_at_wp10": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "worktree_blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "worktree_materialized": true,
+      "base_verified_from": "MCP fetch W7 + byte equality with worktree",
+      "source_base_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_base_blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "source_base_relation": "EXACT_SAME_AS_W7_TARGET",
+      "content_sha256": "1e3c4025a9cda489246cb4309ca157a0248476f15c7ca31bfc45e872c783581c",
+      "content_blob_verified": true,
+      "source_tree_match": "MCP file fetch at exact commit; commit tree pinned",
+      "staged_source": "incoming-cache/group34-w8-src/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_WITH_RECORDED_COMPOSITION_DEPENDENCIES",
+      "why": "Preserves eight existing host cases, adds real sourcing terms/egress refusal H01 and real browser/C12 same-payload retry H09.",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    }
+  ],
+  "excluded": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "source_status": "modified",
+      "reason": "FOREIGN_OWNER_SNAPSHOT_NOT_IMPORTED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-independent-review.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-independent-review.md",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-second-dossier-manifest.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-second-dossier.patch",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-real-ui-manifest.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-real-ui.patch",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-root-review.md",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-REGRESSION.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-REGRESSION.md",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-REGRESSION.patch",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-callers.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-39c8f4fc67bf.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-50db1678eb15.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-633db0dffd2f.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-6351481af961.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-969c15e5ee5c.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-ac700252f96a.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-c85f6d5633b6.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-caca42acdbb2.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-d203569af630.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-f3d530fc4796.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-UI-intake-manifest.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-browser-diagnostic-intake.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-intake-W5.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-intake-independent-review-W5.md",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/browser-43582881446-c2a0f610654f.png",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci-screenshot-manifest.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/collaboration-producer-refresh.json",
+      "source_status": "added",
+      "reason": "RECEIPT_OR_IMAGE_EVIDENCE_ONLY_NOT_PRODUCT_PAYLOAD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "source_status": "modified",
+      "reason": "FOREIGN_OWNER_SNAPSHOT_NOT_IMPORTED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "source_status": "modified",
+      "reason": "FOREIGN_OWNER_SNAPSHOT_NOT_IMPORTED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "source_status": "added",
+      "reason": "FOREIGN_OWNER_SNAPSHOT_NOT_IMPORTED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "source_status": "added",
+      "reason": "FOREIGN_OWNER_SNAPSHOT_NOT_IMPORTED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "source_status": "added",
+      "reason": "FOREIGN_OWNER_SNAPSHOT_NOT_IMPORTED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "source_status": "added",
+      "reason": "FOREIGN_OWNER_SNAPSHOT_NOT_IMPORTED"
+    }
+  ],
+  "required_composition_dependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "4b96a408bd43e73a6e614977f959b6f58f9559e0",
+      "source": "W7 published target",
+      "status": "SATISFIED_EXACT_HUNK_ALREADY_PRESENT",
+      "reason": "All four owner delta hunks already present in W7: import, wrapper, initial caller and egress caller. No foreign snapshot needed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "owner": "WP11 / Finance",
+      "status": "REQUIRES_PUBLISHED_OWNER_CAS_RECONCILIATION_FIX",
+      "expected_owner_patch_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "reason": "H02/H03/H05 prior source failures post-domain CAS; H09 requires real first apply. Root reconciles Finance producer separately; Operations foreign snapshot is excluded."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "owner": "WP01 / Interface",
+      "expected_blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "status": "W7_INPUT_PRESENT",
+      "reason": "Actual reviewDigest, explicit checkbox and unchanged-payload retry UI."
+    },
+    {
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts"
+      ],
+      "owner": "WP01/WP02",
+      "status": "W7_PUBLIC_API_PRESENT_EXACT_FOREIGN_SNAPSHOT_NOT_IMPORTED",
+      "reason": "Existing launchWp01Browser/closeWp01Browser exports. Actions ordered startup, host-integration, lifecycle. No native proof inferred."
+    }
+  ],
+  "static_checks": {
+    "exact_published_blobs_verified": 16,
+    "relative_imports": [
+      {
+        "specifier": "../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../../../atlas/boundary/package.json",
+        "path": "modules/atlas/boundary/package.json",
+        "new": false,
+        "local_materialized": false,
+        "status": "EXACT_W7_MCP_IMPORT_VERIFIED_UNHYDRATED",
+        "remote_blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7"
+      },
+      {
+        "specifier": "../../../product/contracts/freeze-v1.json",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../runtime/application.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../runtime/application.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../runtime/local-store.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../runtime/contract.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../runtime/procurement.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../src/initial-settings.ts",
+        "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/contracts/canonical.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/contracts/business-context.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/contracts/context.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/contracts/decisions.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/contracts/operations.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/ai/resident.ts",
+        "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/integration/product-authority.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/integration/product-authority.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/integration/source-lifecycle.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/integration/source-inventory.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/integration/source-projections.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/decisions/case-port.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/decisions/choice.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/choice.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/procurement/decision-http.ts",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/procurement/decision-host.ts",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "new": false,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../../../product/ui/decision-apply.ts",
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "new": true,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      },
+      {
+        "specifier": "../wp01/browser-fixture.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "new": true,
+        "local_materialized": true,
+        "status": "LOCAL_PRESENT",
+        "remote_blob": null
+      }
+    ],
+    "missing_imports_in_product": 0,
+    "preexisting_unhydrated_local_imports_verified_by_MCP": 1,
+    "all_prior_test_titles_preserved": true,
+    "worktree_edits": false,
+    "product_execution": false,
+    "new_tests_executed": false
+  },
+  "source_evidence": {
+    "source_head_run_query_total": 0,
+    "query_limitation": "Exact-head query does not establish absence of runs on separate CI snapshots. No equivalent c4a2 source validation verified in this intake; owner H09 manifest explicitly pending.",
+    "H01_manifest_source_blob": "362b51b7aa01b5dafc2fcf8d49e10456d6d6289b",
+    "H01_intermediate_blob": "b65dc1e315f88dd535881b1f8a895661e95e485b",
+    "H09_final_manifest_source_blob": "7e1edb18843a33b57d1332a357bdd2e8b48047f5",
+    "H09_final_blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+    "source_independent_review": "Owner manifest reports ci_coordination against a718; retained as source report only, not independent review of integrated bundle.",
+    "historical_run_43582205250": "Previous product644:114pass/3fail. Not transferred to new test or target."
+  },
+  "open_findings": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "line": 4,
+      "column": 10,
+      "code": "TS2305",
+      "message": "Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "owner": "WP04",
+      "owner_current_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "owner_current_blob": "987f7179101ffe3db0276d9c6172b3bcf6024329",
+      "unchanged_from_W7": true,
+      "status": "OPEN_OWNER_FIX_NOT_PUBLISHED_IN_THIS_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "line": 388,
+      "column": 65,
+      "code": "TS2322",
+      "message": "Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "owner": "WP04",
+      "owner_current_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "owner_current_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "unchanged_from_W7": true,
+      "status": "OPEN_OWNER_FIX_NOT_PUBLISHED_IN_THIS_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "line": 394,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "owner": "WP04",
+      "owner_current_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "owner_current_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "unchanged_from_W7": true,
+      "status": "OPEN_OWNER_FIX_NOT_PUBLISHED_IN_THIS_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 130,
+      "column": 47,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "owner": "WP06",
+      "owner_current_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "owner_current_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "unchanged_from_W7": true,
+      "status": "OPEN_OWNER_FIX_NOT_PUBLISHED_IN_THIS_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 166,
+      "column": 47,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "owner": "WP06",
+      "owner_current_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "owner_current_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "unchanged_from_W7": true,
+      "status": "OPEN_OWNER_FIX_NOT_PUBLISHED_IN_THIS_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 205,
+      "column": 45,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "owner": "WP06",
+      "owner_current_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "owner_current_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "unchanged_from_W7": true,
+      "status": "OPEN_OWNER_FIX_NOT_PUBLISHED_IN_THIS_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 324,
+      "column": 37,
+      "code": "TS2554",
+      "message": "Expected 1 arguments, but got 2.",
+      "owner": "WP06",
+      "owner_current_head": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "owner_current_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "unchanged_from_W7": true,
+      "status": "OPEN_OWNER_FIX_NOT_PUBLISHED_IN_THIS_DELTA"
+    }
+  ],
+  "required_next_actions": [
+    "Compose one exact test blob with declared dependencies; root consumes Finance CAS fix separately.",
+    "Actions order: ./Sucafinav1/test/product/wp01/browser-startup.test.ts, ./Sucafinav1/test/product/wp04/host-integration.test.ts, ./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts; cwd modules/sucafina; env ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=1.",
+    "Retain seven type diagnostics until actual owner fixes.",
+    "Do not import Operations copies of own WP10/business-services or other owners sources."
+  ],
+  "native_or_global_claim": false,
+  "independent_final_review": false
+}

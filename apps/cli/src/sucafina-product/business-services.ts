@@ -403,7 +403,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
       procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner, project: projectPlannerEvidence, readEvidence: projectPlannerEvidence.readEvidence },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
-      caseForEvidence, calculation: calculations.resolveEvidence, withCalculationCase, lockedSourceFences, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
+      caseForEvidence, calculation: calculations.resolveEvidence, calculationHistorical: calculations.resolveHistoricalEvidence,
+      withCalculationCase, lockedSourceFences, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
         runtimeVersions: versions, featuresForCase,
         contextSelections: async (request, call) => {
           const refs: BusinessEvidenceRef[] = []

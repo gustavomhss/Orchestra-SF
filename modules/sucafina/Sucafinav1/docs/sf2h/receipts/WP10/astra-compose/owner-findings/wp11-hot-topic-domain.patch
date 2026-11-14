@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
+@@ -105,7 +105,7 @@
+         return { commit: true, value: { draftRef, version } }
+       }
+       input.proposalCoverageWrites.add(work)
+-      const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `hot-topic-draft:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.proposalCoverageWrites.delete(work))
++      const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "dashboard", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `hot-topic-draft:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.proposalCoverageWrites.delete(work))
+       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "hot-topic-draft-unavailable" }
+       const checked = await readCurrent({ caseRef: request.caseRef, draftRef: saved.value.draftRef }, context)
+       if (checked.status !== "ok" || !await input.authorizeDraft(request, context)) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }

@@ -87,6 +87,8 @@ async function prepare(deadline: ReturnType<typeof compositionTestDeadline>) {
     const payload = { caseRef, title: index ? "BI candidate" : "BI baseline", scenario: { baseRef: sources[index]!.refId, operations: [], assumptions: [] }, coverageRef: classifications[index]!.coverageRef }
     const response = await deadline.phase(`promotion.${index}`, () => mutationHttp(new Request("https://example.test/product/planner?sf=decision-promote", {
       method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": `bi-promote-${index}` }, body: JSON.stringify(payload) }), "planner"))
+    if (response?.status !== 200) console.error("SF_BI_PROMOTION_RESPONSE", JSON.stringify({ fixture: "bi-call-scope", index, caseRef, status: response?.status,
+      body: response ? await response.clone().text() : null }))
     expect(response?.status).toBe(200)
     const receipt = ok(await response!.json() as PortResult<{ caseRef: typeof initialRef; resultRef?: string }>, "Promote real BI scenario")
     if (!receipt.resultRef) throw new Error("Actual promotion did not persist its scenario")

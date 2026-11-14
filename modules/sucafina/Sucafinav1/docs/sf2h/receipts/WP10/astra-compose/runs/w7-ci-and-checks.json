@@ -1,0 +1,123 @@
+{
+  "product": {
+    "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1"
+  },
+  "ci4": {
+    "W": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "./Sucafinav1/test/product/wp01/components.test.ts",
+        "./Sucafinav1/test/product/wp01/alternative-contribution.test.ts",
+        "./Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+        "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "./Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+        "./Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "./Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+        "./Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+        "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "requestText": "{\n  \"package\": \"sucafina\",\n  \"directory\": \"modules/sucafina\",\n  \"packageSelector\": \"packages/sucafina\",\n  \"runner\": \"bun\",\n  \"args\": [\n    \"./Sucafinav1/test/product/wp01/browser-startup.test.ts\",\n    \"./Sucafinav1/test/product/wp01/components.test.ts\",\n    \"./Sucafinav1/test/product/wp01/alternative-contribution.test.ts\",\n    \"./Sucafinav1/test/product/wp01/decision-mutations.test.ts\",\n    \"./Sucafinav1/test/product/wp01/shell-refresh.test.ts\",\n    \"./Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts\",\n    \"./Sucafinav1/test/product/wp05/planner-origins.test.ts\",\n    \"./Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts\",\n    \"./Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts\",\n    \"./Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts\",\n    \"./Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts\",\n    \"./Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts\",\n    \"./Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts\",\n    \"./Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts\",\n    \"./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts\",\n    \"--timeout\",\n    \"120000\"\n  ],\n  \"env\": {\n    \"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\": \"1\"\n  }\n}\n",
+    "requestSha256": "718794b3f1a350649f73d0a5c38a6450c47bee60f798fe9c0aeb1048bcc5844f",
+    "branch": "ci-run-linux-astra-compose-a1e9eb62-718794b3-a1",
+    "protocol_blobs": [
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+      },
+      {
+        "path": "script/test-ci.ts",
+        "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+      },
+      {
+        "path": "script/test-ci-location.ts",
+        "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+      }
+    ],
+    "snapshotTree": "4a02509f1961da906d45707d11e9ceb84ece0370",
+    "S": "8d03f8e6e15d2da63f35e4eefd2a6ae2ed092ec9",
+    "run": 43584781236,
+    "job": 132416826537,
+    "conclusion": "failure",
+    "pass": 36,
+    "fail": 11,
+    "tests": 47,
+    "files": 15,
+    "assertions": 993,
+    "seconds": 112.22,
+    "omni": {
+      "verdict": "pass",
+      "nonce": "084263e379840a47dd760a750ec8957f",
+      "declared_tests": 1,
+      "spawns": 1,
+      "delegated": 0
+    },
+    "artifacts": []
+  },
+  "check5": {
+    "W": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+    "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "previous": "d2d3416732e08f7c17830c0ded3d2f3ac99e804d",
+    "branch": "astra-check-compose",
+    "snapshotTree": "b887eae9822b590d5b70646d86de89788c15b7c2",
+    "S": "b9ab9e5bf6916ccc6b08693baae2fec95913343f",
+    "run": 43584817547,
+    "job": 132416925256,
+    "conclusion": "failure",
+    "sucafina_diagnostics": 20,
+    "cli_diagnostics": 0,
+    "own_diagnostics": 0,
+    "atlas": "PASS generate/check:generated/typecheck/diff",
+    "spawn": "PASS",
+    "guards": {
+      "rules": 78,
+      "paths": 1293,
+      "gate": 0,
+      "warn": 46,
+      "error": 0
+    },
+    "artifacts": [
+      {
+        "id": 14109941408,
+        "name": "astra-compose-check-1",
+        "size_in_bytes": 4124,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109941408",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109941408/zip",
+        "expired": false,
+        "created_at": "2026-11-14T10:23:33Z",
+        "expires_at": "2026-11-28T10:23:32Z",
+        "updated_at": "2026-11-14T10:23:33Z",
+        "digest": "sha256:ac51c5f46192df5463df2073b1cf949e35ffcd009415de1090f2971b6a5356c6",
+        "workflow_run": {
+          "id": 43584817547,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-compose",
+          "head_sha": "b9ab9e5bf6916ccc6b08693baae2fec95913343f"
+        }
+      }
+    ]
+  }
+}
