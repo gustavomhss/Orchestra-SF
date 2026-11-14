@@ -82,7 +82,11 @@ export function bindPortfolioBiPort(input: {
 /** The host resolves a scoped BI selection to a persisted portfolio result, never a fabricated reference. */
 export function bindStoredPortfolioBiPort(input: {
   readProjection: (request: { selectionRef: string; portfolioResultRef: string }, context: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
-  resolve: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{ portfolioResultRef: string; present: (projection: DomainProjection) => BiPresentation }>>
+  resolve: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{
+    portfolioResultRef: string
+    present: (projection: DomainProjection) => BiPresentation
+    project?: (projection: DomainProjection, context: TrustedDomainContext) => Promise<PortResult<PortfolioBiBundle>>
+  }>>
   revalidate: PortfolioBiHost["revalidate"]
 }): PortfolioBiHost {
   return {
@@ -90,18 +94,40 @@ export function bindStoredPortfolioBiPort(input: {
     async readView(incoming, context) {
       const request = structuredClone(incoming)
       const forwarded = structuredClone(request)
+      const readProjection = input.readProjection
+      const authority = digestSfValue({ kind: context.kind, binding: context.binding })
       const resolved = await input.resolve(forwarded, context)
       if (resolved.status !== "ok") return resolved
       if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "selection-changed" }
       const selection = { selectionRef: request.selectionRef, portfolioResultRef: resolved.value.portfolioResultRef }
       const present = resolved.value.present
+      const project = resolved.value.project
       if (!selection.portfolioResultRef.trim()) return { status: "unavailable", reason: "decision-unavailable" }
       const selected = structuredClone(selection)
-      const projection = structuredClone(await input.readProjection(selected, context))
+      const projection = structuredClone(await readProjection(selected, context))
       if (projection.status !== "ok") return projection
       if (digestSfValue(selected) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
       if (projection.value.context.period.start !== request.period.start || projection.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
       if (projection.value.decision?.kind !== "portfolio" || projection.value.decision.portfolioResultRef !== selection.portfolioResultRef) return { status: "stale", reason: "portfolio-reference-mismatch" }
+      if (project) {
+        const projectedInput = structuredClone(projection.value)
+        const projected = structuredClone(await project(projectedInput, context))
+        if (digestSfValue(projectedInput) !== digestSfValue(projection.value)) return { status: "stale", reason: "projection-changed-by-projector" }
+        if (authority !== digestSfValue({ kind: context.kind, binding: context.binding })) return { status: "denied", reason: "portfolio-projection-authority-changed" }
+        if (digestSfValue(incoming) !== digestSfValue(request) || digestSfValue(forwarded) !== digestSfValue(request) || digestSfValue(selected) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
+        if (projected.status !== "ok") return projected
+        // The canonical producer may replace visual values/components only. In
+        // particular it cannot erase portfolio gaps or change persisted results.
+        if (projected.value.presentation.viewId !== request.viewId) return { status: "unavailable", reason: "view-mismatch" }
+        if (digestSfValue({ ...projected.value.projection, values: [], components: [] }) !== digestSfValue({ ...projection.value, values: [], components: [] })) return { status: "stale", reason: "portfolio-projection-envelope-changed" }
+        const rereadSelection = structuredClone(selection)
+        const latest = structuredClone(await readProjection(rereadSelection, context))
+        if (authority !== digestSfValue({ kind: context.kind, binding: context.binding })) return { status: "denied", reason: "portfolio-projection-authority-changed" }
+        if (digestSfValue(incoming) !== digestSfValue(request) || digestSfValue(forwarded) !== digestSfValue(request) || digestSfValue(selected) !== digestSfValue(selection) || digestSfValue(rereadSelection) !== digestSfValue(selection)) return { status: "stale", reason: "selection-changed" }
+        if (latest.status !== "ok") return latest
+        if (!sameBiProjection(latest.value, projection.value)) return { status: "stale", reason: "portfolio-source-changed-during-projection" }
+        return projected
+      }
       const presentationInput = structuredClone(projection.value)
       const presentation = structuredClone(present(presentationInput))
       if (!sameBiProjection(presentationInput, projection.value)) return { status: "stale", reason: "projection-changed-by-presentation" }

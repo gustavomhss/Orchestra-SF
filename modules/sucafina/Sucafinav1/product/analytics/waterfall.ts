@@ -29,7 +29,9 @@ export function resolveWaterfall(projection: DomainProjection, plan: WaterfallPl
   const final = number(plan.finalValueId)
   const incomplete = final === null || segments.some((segment) => segment.start === null || segment.end === null || segment.amount === null)
   const continuous = segments.every((segment, index) => index === 0 || segments[index - 1]?.end === segment.start)
-  const endpointsMatch = segments.length > 0 && continuous && segments.at(-1)?.end === final
+  // Validate the supplied geometry; never repair a producer's inconsistent delta.
+  const contributionsMatch = segments.every((segment) => segment.start !== null && segment.amount !== null && segment.end === segment.start + segment.amount)
+  const endpointsMatch = segments.length > 0 && continuous && contributionsMatch && segments.at(-1)?.end === final
   const reconciliation = incomplete || plan.reconciliation === "unavailable" ? "unavailable" : !endpointsMatch || plan.reconciliation === "unreconciled" ? "unreconciled" : "reconciled"
   const initialId = plan.segments[0]?.startValueId
   return { status: "ok", segments, initial: initialId ? number(initialId) : null, initialSource: initialId ? values.get(initialId) : undefined, final, finalSource: values.get(plan.finalValueId)!, reconciliation } as const
@@ -47,13 +49,13 @@ export function renderWaterfall(projection: DomainProjection, selectionRef: stri
     section.append(status)
     return section
   }
-  status.textContent = `Reconciliação: ${data.reconciliation}; valor inicial: ${data.initial ?? "indisponível"}; valor final: ${data.final ?? "indisponível"} ${projection.context.currency}; ${projection.context.period.start} – ${projection.context.period.end}; v${projection.version}.`
+  const knownSubtotal = projection.decision?.kind === "portfolio" || projection.decision?.kind === "scenario" && projection.decision.comparison.comparisonStatus !== "complete"
+  status.textContent = `${knownSubtotal ? "Composição dos subtotais conhecidos; custos pendentes permanecem na tabela. " : ""}Reconciliação: ${data.reconciliation}; valor inicial: ${data.initial ?? "indisponível"}; valor final: ${data.final ?? "indisponível"} ${projection.context.currency}; ${projection.context.period.start} – ${projection.context.period.end}; v${projection.version}.`
   section.append(status)
-  const conditioned = projection.decision?.kind === "scenario" && projection.decision.comparison.comparisonStatus !== "complete"
   const rows = [
-    ...(data.initialSource ? [{ label: conditioned ? "Subtotal conhecido inicial" : "Total inicial", componentValueId: data.initialSource.id, start: 0, end: data.initial, amount: data.initial, source: data.initialSource, total: true }] : []),
+    ...(data.initialSource ? [{ label: knownSubtotal ? "Subtotal conhecido inicial" : "Total inicial", componentValueId: data.initialSource.id, start: 0, end: data.initial, amount: data.initial, source: data.initialSource, total: true }] : []),
     ...data.segments.map((segment) => ({ ...segment, total: false })),
-    { label: conditioned ? "Subtotal conhecido final" : "Total final", componentValueId: plan.finalValueId, start: 0, end: data.final, amount: data.final, source: data.finalSource, total: true },
+    { label: knownSubtotal ? "Subtotal conhecido final" : "Total final", componentValueId: plan.finalValueId, start: 0, end: data.final, amount: data.final, source: data.finalSource, total: true },
   ]
   const chooseSource = createBiSourceChooser(section, open)
   const selectionFor = (source: DomainProjection["values"][number]): BiSelection => ({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: source.id, reference: source.drilldown })

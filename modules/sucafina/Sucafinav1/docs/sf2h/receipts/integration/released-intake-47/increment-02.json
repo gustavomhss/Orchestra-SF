@@ -1,0 +1,513 @@
+{
+  "schema": "sf2h.released-intake-47.increment.v1",
+  "mission": 47,
+  "epoch": "S0-C-e9-browser47",
+  "increment": 2,
+  "candidate_symbol": "C14",
+  "candidate_identity": "Containing commit and tree; resolved identity in next checkpoint and PR65.",
+  "expected_parent": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+  "prior_material": {
+    "symbol": "C13",
+    "sha": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+    "tree": "26830e38d957219cb4af04050d7bdb0f9b79b4f6",
+    "parent": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+    "increment": 1,
+    "sources": [
+      34
+    ]
+  },
+  "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "input": {
+    "branch": "astra-wp05",
+    "pr": 24,
+    "release": "0fa2bad41da484f47cd2576be20e713dbd1f45cc",
+    "product": "f1642ba926738befceb4cba66dc463f9c847cd02",
+    "product_tree": "eeb05ef64f82776c95ef1fab1859607a61ae40f2",
+    "lease": "bi-waterfall-browser38",
+    "authority": "EXPLICIT_TERMINAL_RELEASED_SELECTIVE_INTAKE",
+    "stale_consumer": 33,
+    "reconciled_consumer": 47
+  },
+  "decision": "ACCEPTED_COMPLETE_TEN_PATH_BI38_PATCH",
+  "material_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "operation": "modify",
+      "integration_preimage_blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+      "postimage_blob": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+      "source_preimage_blob": null,
+      "preimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/preimages/apps/cli/src/sucafina-product/bi-services.ts.txt",
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/apps/cli/src/sucafina-product/bi-services.ts.txt",
+      "bytes": 23812,
+      "mode": "100644",
+      "actual_target_preimage": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+      "actual_source_postimage": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "operation": "modify",
+      "integration_preimage_blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "postimage_blob": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+      "source_preimage_blob": "e0b5273332d45b8de7cd973ba7f9ced4888161c9",
+      "preimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/preimages/modules/sucafina/Sucafinav1/product/analytics/scenario.ts.txt",
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/product/analytics/scenario.ts.txt",
+      "bytes": 11626,
+      "mode": "100644",
+      "actual_target_preimage": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "actual_source_postimage": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+      "operation": "modify",
+      "integration_preimage_blob": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+      "postimage_blob": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+      "source_preimage_blob": "0003638987cb4a62a9e5b4746282bc58493de161",
+      "preimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/preimages/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts.txt",
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts.txt",
+      "bytes": 11572,
+      "mode": "100644",
+      "actual_target_preimage": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+      "actual_source_postimage": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "operation": "modify",
+      "integration_preimage_blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "postimage_blob": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+      "source_preimage_blob": "f62b7379ac0c7c54c3845d453589b891bd10d0d8",
+      "preimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/preimages/modules/sucafina/Sucafinav1/product/analytics/view.ts.txt",
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/product/analytics/view.ts.txt",
+      "bytes": 27838,
+      "mode": "100644",
+      "actual_target_preimage": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "actual_source_postimage": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "operation": "modify",
+      "integration_preimage_blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "postimage_blob": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab",
+      "source_preimage_blob": "3069adb2469219916cff2d695885bccc6f9552a8",
+      "preimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/preimages/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts.txt",
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts.txt",
+      "bytes": 9481,
+      "mode": "100644",
+      "actual_target_preimage": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "actual_source_postimage": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "operation": "add",
+      "integration_preimage_blob": null,
+      "postimage_blob": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "source_preimage_blob": null,
+      "preimage_copy": null,
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts.txt",
+      "bytes": 12854,
+      "mode": "100644",
+      "actual_target_preimage": null,
+      "actual_source_postimage": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts",
+      "operation": "add",
+      "integration_preimage_blob": null,
+      "postimage_blob": "68db3d81dee9d557434c925d2ad446ae9a145284",
+      "source_preimage_blob": null,
+      "preimage_copy": null,
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts.txt",
+      "bytes": 10133,
+      "mode": "100644",
+      "actual_target_preimage": null,
+      "actual_source_postimage": "68db3d81dee9d557434c925d2ad446ae9a145284",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "operation": "add",
+      "integration_preimage_blob": null,
+      "postimage_blob": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "source_preimage_blob": null,
+      "preimage_copy": null,
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts.txt",
+      "bytes": 20141,
+      "mode": "100644",
+      "actual_target_preimage": null,
+      "actual_source_postimage": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts",
+      "operation": "add",
+      "integration_preimage_blob": null,
+      "postimage_blob": "b04f95fe9159af96308115598effda649534d57b",
+      "source_preimage_blob": null,
+      "preimage_copy": null,
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts.txt",
+      "bytes": 10978,
+      "mode": "100644",
+      "actual_target_preimage": null,
+      "actual_source_postimage": "b04f95fe9159af96308115598effda649534d57b",
+      "preimage_matched": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts",
+      "operation": "add",
+      "integration_preimage_blob": null,
+      "postimage_blob": "63ed564458b4d05ff8c193d19614cadc77fe6ca3",
+      "source_preimage_blob": null,
+      "preimage_copy": null,
+      "postimage_copy": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts.txt",
+      "bytes": 10910,
+      "mode": "100644",
+      "actual_target_preimage": null,
+      "actual_source_postimage": "63ed564458b4d05ff8c193d19614cadc77fe6ca3",
+      "preimage_matched": true
+    }
+  ],
+  "source_receipts": {
+    "source_commit": "0fa2bad41da484f47cd2576be20e713dbd1f45cc",
+    "source_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/",
+    "source_tree": "453ac1eff1b0ee2a367f96dedbbd12810391942d",
+    "target_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/bi38",
+    "count": 28,
+    "files": [
+      {
+        "path": "ACK-38.json",
+        "sha": "6d922b8c80bb5836fedd8c80ee48328c1ecadcea",
+        "mode": "100644",
+        "size": 2846
+      },
+      {
+        "path": "CONSUMER-33.ci-request.json",
+        "sha": "4e0e3417464497a3922f7eea3869c1999167eac2",
+        "mode": "100644",
+        "size": 561
+      },
+      {
+        "path": "CRITERIA-38.json",
+        "sha": "6d4806d30d9d6516b4d18ebf3cf21f2ea3bbf3be",
+        "mode": "100644",
+        "size": 3831
+      },
+      {
+        "path": "DEPENDENCY-PINS.json",
+        "sha": "65ff6377459584e33b69692548b48042f5d22fd6",
+        "mode": "100644",
+        "size": 5519
+      },
+      {
+        "path": "HANDOFF-38.md",
+        "sha": "7b5f8bbe7cf3b063a0e03184a050dcbb504104f1",
+        "mode": "100644",
+        "size": 13323
+      },
+      {
+        "path": "IMPLEMENTATION.md",
+        "sha": "64261b2195e4b7bb259cf04d961a4a74e4f3f2bc",
+        "mode": "100644",
+        "size": 9543
+      },
+      {
+        "path": "SOURCE.ci-request.json",
+        "sha": "9592db818e806199b7270bc7025db4bb52874217",
+        "mode": "100644",
+        "size": 480
+      },
+      {
+        "path": "TERMINAL-38.json",
+        "sha": "9700265a3060eec86f781a6a8685b5682af9fabe",
+        "mode": "100644",
+        "size": 2903
+      },
+      {
+        "path": "TYPECHECK-DELTA.json",
+        "sha": "695ada28d0472d6307f39ae2f6e38f969e13d540",
+        "mode": "100644",
+        "size": 63436
+      },
+      {
+        "path": "VALIDATION.json",
+        "sha": "425408a0c222d8469ef4ba6190c138189554b98e",
+        "mode": "100644",
+        "size": 20768
+      },
+      {
+        "path": "criteria-preflight.json",
+        "sha": "559a0110606fe64d0e519ae01f6303927354bca0",
+        "mode": "100644",
+        "size": 2034
+      },
+      {
+        "path": "integration-manifest.json",
+        "sha": "515615e9fc21f1a1240ccff9b5a8097db14f2aac",
+        "mode": "100644",
+        "size": 11788
+      },
+      {
+        "path": "integration/M38-BI09-WATERFALL.patch",
+        "sha": "ab4363ef9831caa4aea957ce0e2d3b35e22ffb64",
+        "mode": "100644",
+        "size": 96834
+      },
+      {
+        "path": "integration/postimages/apps/cli/src/sucafina-product/bi-services.ts.txt",
+        "sha": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+        "mode": "100644",
+        "size": 23812
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts.txt",
+        "sha": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+        "mode": "100644",
+        "size": 11572
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/product/analytics/scenario.ts.txt",
+        "sha": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+        "mode": "100644",
+        "size": 11626
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/product/analytics/view.ts.txt",
+        "sha": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+        "mode": "100644",
+        "size": 27838
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts.txt",
+        "sha": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab",
+        "mode": "100644",
+        "size": 9481
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts.txt",
+        "sha": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "mode": "100644",
+        "size": 12854
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts.txt",
+        "sha": "68db3d81dee9d557434c925d2ad446ae9a145284",
+        "mode": "100644",
+        "size": 10133
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts.txt",
+        "sha": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "mode": "100644",
+        "size": 20141
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts.txt",
+        "sha": "b04f95fe9159af96308115598effda649534d57b",
+        "mode": "100644",
+        "size": 10978
+      },
+      {
+        "path": "integration/postimages/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts.txt",
+        "sha": "63ed564458b4d05ff8c193d19614cadc77fe6ca3",
+        "mode": "100644",
+        "size": 10910
+      },
+      {
+        "path": "integration/preimages/apps/cli/src/sucafina-product/bi-services.ts.txt",
+        "sha": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+        "mode": "100644",
+        "size": 18183
+      },
+      {
+        "path": "integration/preimages/modules/sucafina/Sucafinav1/product/analytics/portfolio.ts.txt",
+        "sha": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+        "mode": "100644",
+        "size": 9134
+      },
+      {
+        "path": "integration/preimages/modules/sucafina/Sucafinav1/product/analytics/scenario.ts.txt",
+        "sha": "b7174b16b485323f767d63e6842f3d61284245eb",
+        "mode": "100644",
+        "size": 5234
+      },
+      {
+        "path": "integration/preimages/modules/sucafina/Sucafinav1/product/analytics/view.ts.txt",
+        "sha": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+        "mode": "100644",
+        "size": 27122
+      },
+      {
+        "path": "integration/preimages/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts.txt",
+        "sha": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+        "mode": "100644",
+        "size": 9063
+      }
+    ],
+    "original_bytes_preserved": true
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/integration/M38-BI09-WATERFALL.patch",
+    "git_blob": "ab4363ef9831caa4aea957ce0e2d3b35e22ffb64",
+    "declared_sha256": "b9574dc964d46fa22929ad814264e9922871e7309cffcacf09e5bb080ca0f827",
+    "checks": [
+      {
+        "path": "apps/cli/src/sucafina-product/bi-services.ts",
+        "hunks": 4,
+        "contextLinesChecked": 38,
+        "preimage_sha": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+        "postimage_sha": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "hunks": 2,
+        "contextLinesChecked": 15,
+        "preimage_sha": "b7174b16b485323f767d63e6842f3d61284245eb",
+        "postimage_sha": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+        "hunks": 2,
+        "contextLinesChecked": 25,
+        "preimage_sha": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+        "postimage_sha": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "hunks": 1,
+        "contextLinesChecked": 6,
+        "preimage_sha": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+        "postimage_sha": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+        "hunks": 2,
+        "contextLinesChecked": 20,
+        "preimage_sha": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+        "postimage_sha": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+        "hunks": 1,
+        "contextLinesChecked": 0,
+        "preimage_sha": null,
+        "postimage_sha": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "exact": true,
+        "absence_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts",
+        "hunks": 1,
+        "contextLinesChecked": 0,
+        "preimage_sha": null,
+        "postimage_sha": "68db3d81dee9d557434c925d2ad446ae9a145284",
+        "exact": true,
+        "absence_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+        "hunks": 1,
+        "contextLinesChecked": 0,
+        "preimage_sha": null,
+        "postimage_sha": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "exact": true,
+        "absence_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts",
+        "hunks": 1,
+        "contextLinesChecked": 0,
+        "preimage_sha": null,
+        "postimage_sha": "b04f95fe9159af96308115598effda649534d57b",
+        "exact": true,
+        "absence_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts",
+        "hunks": 1,
+        "contextLinesChecked": 0,
+        "preimage_sha": null,
+        "postimage_sha": "63ed564458b4d05ff8c193d19614cadc77fe6ca3",
+        "exact": true,
+        "absence_verified": true
+      }
+    ],
+    "method": "Text-only unified-diff reconstruction in JS; all old/context lines and hunk counts checked and output compared with complete remote source content",
+    "source_execution": false
+  },
+  "behavior": [
+    "Only BI09 scenario changes to projectedScenario; BI10 and BI11 retain existing scenarioHost paths, BI11 missing-sensitivity refusal.",
+    "createScenarioCostBiHost reads actual persisted comparison, permits older baseline of same case incarnation but requires current candidate/comparison case equality; uses canonical plannerScenarioBiPresentation and existing read-only LocalStore wrapper.",
+    "Canonical producer supplies values/deltas/endpoint accumulation. Adapter rereads source, comparison and historical result pair; compares material projection stamps and receipts before returning.",
+    "Portfolio bridge accepts exactly one matching combination/analysis, requires scenario/components equality, uses canonical pair projection, restores original portfolio envelope and permits only values/components changes. Binding clones callback inputs/outputs, pins reader and rereads source.",
+    "Renderer checks end===start+amount using same additive operation as producer; it does not repair numbers, use tolerance or infer residual. Missing/absent values and null full totals stay distinct from real zero.",
+    "All five added files read completely (fixture + four tests); 45 prepared cases include real SQLite/human promotion/persistence/dispatcher and renderer paths, no prior target tests replaced.",
+    "No additional mount identified in target42; all 19 declared dependencies match, all 108 direct relative imports to 50 unique paths resolve to target or selected postimages.",
+    "Prior accepted runtime/C12/Apply remain outside the ten-path write set."
+  ],
+  "proof_limits": {
+    "W2_run": 43649817896,
+    "W2_check": 43649821021,
+    "adapter_pass": 17,
+    "load_failures": 3,
+    "bodies_not_executed": 28,
+    "omni": "MISSING_NOT_PASS",
+    "typecheck": "FAIL_334",
+    "guards": "SOURCE_PASS_13_UNCHANGED_WARNINGS",
+    "consumer": "NOT_RUN",
+    "prior_failures": "W1 17 PASS/3 load failures and typecheck335; predecessor Full35 114PASS/3FAIL retained in source receipts",
+    "source_green_transferred": false
+  },
+  "pending": [
+    {
+      "owner": "45/S0",
+      "action": "Qualify actual candidate: four M38 test files + existing wp10/integration/bi-decision-navigation.test.ts (48 planned cases), relevant package typechecks and guards; mission47 no dispatch."
+    },
+    {
+      "owner": "WP05/S0",
+      "action": "BI10 timeline/global8+3 and literal CHK20 historical training=40000 remain open; M27-BI09-WATERFALL-MOUNT implementation can be integrated but runtime qualified status remains pending."
+    }
+  ],
+  "verification": {
+    "complete_patch_reconstruction": true,
+    "hunks": 16,
+    "old_context_lines": 104,
+    "postimages_exact": true,
+    "current_parent_preimages": "Matched against complete terminal42 SF tree and C13 CLI listing, then verified complete C13 delta has no BI target changes.",
+    "archive": "28 exact blobs, all regular100644, complete recursive tree.",
+    "prior_commit": {
+      "commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "files": 72,
+      "exact_paths_and_known_blobs": true,
+      "unexpected": [],
+      "missing": [],
+      "deletions": 0
+    }
+  },
+  "consumer_ack": {
+    "id": "ACK47-02",
+    "source_release": "0fa2bad41da484f47cd2576be20e713dbd1f45cc",
+    "status": "CONSUMED_IN_CONTAINING_C14_NOT_RUNTIME_QUALIFIED",
+    "behavior": "BI09 canonical paired scenario and exact portfolio combination waterfall; immutable reads, historical pair validation and unknown/full-total semantics preserved.",
+    "next_owner": "45 checks; S0 runtime, BI10 and global acceptance",
+    "original_consumer_receipts_unchanged": true
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "final_acceptance": "S0",
+  "GLOBAL_RELEASE": false
+}

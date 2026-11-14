@@ -78,6 +78,19 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     const heading = document.createElement("h2")
     heading.textContent = view.question
     section.prepend(heading)
+    const context = document.createElement("p")
+    context.textContent = `${projection.context.period.start} – ${projection.context.period.end} · ${projection.context.currency} · v${projection.version}`
+    section.append(context)
+    if (presentation?.viewId === request.viewId && resolveBiPresentation(projection, presentation).status === "ok") {
+      const limitations = document.createElement("ul")
+      limitations.setAttribute("aria-label", "Limitações da visualização")
+      for (const limitation of presentation.limitations) {
+        const item = document.createElement("li")
+        item.textContent = limitation
+        limitations.append(item)
+      }
+      section.append(limitations)
+    }
     return section
   }
   const data = presentProjection(projection, request.selectionRef)

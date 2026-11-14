@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h-mission38-criteria-v1",
+  "mission": 38,
+  "finding": "M27-BI09-WATERFALL-MOUNT",
+  "finding_status": "IMPLEMENTED_BUT_NOT_QUALIFIED_IN_INSTALLED_CONSUMER",
+  "source_product": "f1642ba926738befceb4cba66dc463f9c847cd02",
+  "existing_108_criterion_history": "Preserved unchanged in earlier WP05 receipts; no previous scoped PASS is promoted or revoked by this source-only run",
+  "criteria": [
+    {
+      "id": "WP05.DOD.04",
+      "text": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "M38_status": "PARTIAL_IMPLEMENTATION_RUNTIME_PROOF_BLOCKED",
+      "full_acceptance": "NOT_ACCEPTED",
+      "evidence": "Five product files plus prepared actual-domain/renderer tests; executed 17 adapter cases only",
+      "gap": "The literal criterion covers broader 8+3 views; M38 qualifies none of that global scope"
+    },
+    {
+      "id": "WP05.CMP.04",
+      "text": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "M38_status": "PARTIAL_IMPLEMENTATION_RUNTIME_PROOF_BLOCKED",
+      "full_acceptance": "NOT_ACCEPTED",
+      "evidence": "Five product files plus prepared actual-domain/renderer tests; executed 17 adapter cases only",
+      "gap": "The literal criterion covers broader 8+3 views; M38 qualifies none of that global scope"
+    },
+    {
+      "id": "WP05.T05.CHK.03",
+      "text": "Tabela e marcas retornam exatamente os mesmos valores autorizados.",
+      "M38_status": "PARTIAL_IMPLEMENTATION_RUNTIME_PROOF_BLOCKED",
+      "full_acceptance": "NOT_ACCEPTED",
+      "evidence": "Five product files plus prepared actual-domain/renderer tests; executed 17 adapter cases only",
+      "gap": "Exact SVG/table assertions prepared but blocked before test loading"
+    },
+    {
+      "id": "WP05.T05.CHK.20",
+      "text": "A mesma revisão de AI-RENEWAL-OMITTED-CATEGORY aparece no gráfico e tabela: pending sem barra zero; training = 40000 altera total210000→250000 e diferença 30000→-10000, com fontes e snapshot histórico preservados.",
+      "M38_status": "NOT_REPRODUCED_LITERAL_HISTORICAL_ORACLE",
+      "full_acceptance": "NOT_ACCEPTED",
+      "evidence": "Five product files plus prepared actual-domain/renderer tests; executed 17 adapter cases only",
+      "gap": "AI-RENEWAL-OMITTED-CATEGORY training=40000, 210000→250000 and 30000→-10000 with same historical snapshot was not executed by M38"
+    },
+    {
+      "id": "WP05.T05.DOD.01",
+      "text": "As três perguntas analíticas novas e as oito antigas são respondidas com produtores reais e valores reconciliados.",
+      "M38_status": "PARTIAL_IMPLEMENTATION_RUNTIME_PROOF_BLOCKED",
+      "full_acceptance": "NOT_ACCEPTED",
+      "evidence": "Five product files plus prepared actual-domain/renderer tests; executed 17 adapter cases only",
+      "gap": "The literal criterion covers broader 8+3 views; M38 qualifies none of that global scope"
+    },
+    {
+      "id": "WP05.T05.DOD.20",
+      "text": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+      "M38_status": "PARTIAL_IMPLEMENTATION_RUNTIME_PROOF_BLOCKED",
+      "full_acceptance": "NOT_ACCEPTED",
+      "evidence": "Five product files plus prepared actual-domain/renderer tests; executed 17 adapter cases only",
+      "gap": "Real persisted result/coverage assertions prepared but blocked before test loading"
+    }
+  ],
+  "BI10": "NOT_CLOSED",
+  "BI11": "Preserved route and missing-sensitivity rejection prepared; positive existing navigation test requested for consumer, not executed here",
+  "global_release": false,
+  "independent_bundle_approval": false
+}

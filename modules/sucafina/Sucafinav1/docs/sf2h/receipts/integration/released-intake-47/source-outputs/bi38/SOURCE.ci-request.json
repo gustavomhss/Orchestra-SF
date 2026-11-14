@@ -1,0 +1,15 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts",
+    "./Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts",
+    "./Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+    "./Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}

@@ -10,6 +10,8 @@ import type { BiPresentationPort } from "../../../../modules/sucafina/Sucafinav1
 import { createStoredScenarioBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts"
 import type { StoredScenarioSelection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts"
 import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
+import { bindStoredScenarioBiPort, createScenarioCostBiHost } from "../../../../modules/sucafina/Sucafinav1/product/analytics/scenario.ts"
+import type { PortfolioBiBundle } from "../../../../modules/sucafina/Sucafinav1/product/analytics/portfolio.ts"
 import { resolveBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/analytics/semantics.ts"
 import { createStoredPortfolioProjection } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/projection.ts"
 import { dashboardBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/bi.ts"
@@ -76,6 +78,21 @@ export function createSfBiServices(input: {
   const decisionPresentation = (request: BiViewRequest): BiPresentation => ({ viewId: request.viewId === "BI09" ? "BI09" : request.viewId === "BI10" ? "BI10" : "BI11",
     series: [], limitations: ["The persisted decision result supplies the detailed cost, period and sensitivity tables.",
       ...(request.viewId === "BI09" || request.viewId === "BI10" ? ["A producer-owned waterfall or timeline plan is not available for this selection."] : [])] })
+  const scenarioHost: Parameters<typeof bindStoredScenarioBiPort>[0] = {
+    readProjection: (selection, call) => selection.advantageComparisonRef === undefined
+      ? callScope.read(selection, call, () => scenarioProjection(selection, call)) : scenarioProjection(selection, call),
+    revalidate,
+    resolve: async (request) => {
+      const selected = readSfDecisionBiSelection(request.selectionRef)
+      return selected && "scenarioResultRef" in selected ? { status: "ok", value: { ...selected, present: () => decisionPresentation(request) } }
+        : { status: "needs-input", reason: "scenario-bi-selection-unavailable" }
+    },
+  }
+  const scenarios = business.plannerProduct.scenarios
+  const scenarioCosts = scenarios ? createScenarioCostBiHost({ host, results: business.results, scenarios,
+    scenario: bindStoredScenarioBiPort(scenarioHost) }) : undefined
+  const portfolioCosts = portfolioProjection && scenarios ? createPortfolioCostProjection({ host, results: business.results,
+    scenarios, readProjection: portfolioProjection }) : undefined
   const factory = createSfBiFactory({ authority: authority.authority,
     select: async (request, call, candidates) => {
       if (!await host.revalidate(call)) return { status: "denied", reason: "bi-authority-unavailable" }
@@ -112,19 +129,16 @@ export function createSfBiServices(input: {
       },
     } },
     procurement: { views: ["BI05", "BI06"], host: { list: business.procurement.list, revalidate } },
-    scenario: { views: ["BI09", "BI10", "BI11"], host: { readProjection: (selection, call) => selection.advantageComparisonRef === undefined
-      ? callScope.read(selection, call, () => scenarioProjection(selection, call)) : scenarioProjection(selection, call), revalidate,
-      resolve: async (request) => {
-        const selected = readSfDecisionBiSelection(request.selectionRef)
-        return selected && "scenarioResultRef" in selected ? { status: "ok", value: { ...selected, present: () => decisionPresentation(request) } }
-          : { status: "needs-input", reason: "scenario-bi-selection-unavailable" }
-      },
-    } },
+    scenario: { views: scenarioCosts ? ["BI10", "BI11"] : ["BI09", "BI10", "BI11"], host: scenarioHost },
+    ...(scenarioCosts ? { projectedScenario: { views: ["BI09"] as const, host: scenarioCosts } } : {}),
     ...(portfolioProjection ? { portfolio: { views: ["BI09", "BI10"] as const, host: { readProjection: portfolioProjection,
       revalidate: (request: BiViewRequest, call: TrustedDomainContext, _bundle?: unknown, projection?: DomainProjection) => revalidate(request, call, projection),
       resolve: async (request: BiViewRequest) => {
         const selected = readSfDecisionBiSelection(request.selectionRef)
-        return selected && "portfolioResultRef" in selected ? { status: "ok" as const, value: { portfolioResultRef: selected.portfolioResultRef, present: () => decisionPresentation(request) } }
+        return selected && "portfolioResultRef" in selected ? { status: "ok" as const, value: { portfolioResultRef: selected.portfolioResultRef,
+          present: () => decisionPresentation(request),
+          ...(request.viewId === "BI09" && portfolioCosts ? { project: (projection: DomainProjection, call: TrustedDomainContext) => portfolioCosts(request, projection, call) } : {}),
+        } }
           : { status: "needs-input" as const, reason: "portfolio-bi-selection-unavailable" }
       },
     } } } : {}),
@@ -169,7 +183,62 @@ export function createSfBiServices(input: {
       !await factory.source.revalidate(request, call, projectedCopy) || !await host.revalidate(call)) return { status: "stale", reason: "bi-review-source-changed" }
     return { status: "ok", value: { projection: projectedCopy, presentation: structuredClone(presentation.value) } }
   }
-  return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: ["decision-bi-waterfall-plan-unavailable", "decision-bi-timeline-plan-unavailable"] }
+  return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: [
+    ...(!scenarioCosts || (portfolioProjection && !portfolioCosts) ? ["decision-bi-waterfall-plan-unavailable"] : []),
+    "decision-bi-timeline-plan-unavailable",
+  ] }
+}
+
+/** Reuse the paired Planner producer for one exact persisted portfolio combination.
+ * The portfolio envelope and its unknown external costs remain authoritative. */
+function createPortfolioCostProjection(input: {
+  host: DomainPortHost
+  results: Parameters<typeof createScenarioCostBiHost>[0]["results"]
+  scenarios: Parameters<typeof createScenarioCostBiHost>[0]["scenarios"]
+  readProjection: ReturnType<typeof createStoredPortfolioProjection>
+}) {
+  return async (incoming: BiViewRequest, original: DomainProjection, context: TrustedDomainContext): Promise<PortResult<PortfolioBiBundle>> => {
+    const request = structuredClone(incoming), selected = readSfDecisionBiSelection(request.selectionRef)
+    const expected = structuredClone(original)
+    if (request.viewId !== "BI09" || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
+      expected.decision.portfolioResultRef !== selected.portfolioResultRef) return { status: "denied", reason: "portfolio-waterfall-selection-mismatch" }
+    const portfolioResult = expected.decision.portfolio
+    const matches = portfolioResult.combinations.filter((entry) => entry.analysis?.scenarioResultRef === selected.sourceScenarioRef)
+    if (matches.length !== 1 || !matches[0]?.analysis) return { status: "unavailable", reason: "portfolio-waterfall-combination-ambiguous" }
+    const combination = matches[0], analysis = combination.analysis!
+    if (!analysis.comparisonRef.trim() || analysis.comparison.alternativeResultRef !== selected.sourceScenarioRef ||
+      digestSfValue(combination.components) !== digestSfValue(analysis.scenario.components)) return { status: "stale", reason: "portfolio-waterfall-analysis-mismatch" }
+    const scenario = createScenarioCostBiHost({ host: input.host, results: input.results, scenarios: input.scenarios, scenario: {
+      revalidate: (_request, call) => input.host.revalidate(call),
+      readView: async (forwarded, call) => {
+        if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "portfolio-waterfall-request-changed" }
+        const portfolio = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selected.portfolioResultRef }, call)
+        if (portfolio.status !== "ok") return portfolio
+        if (!sameBiProjection(portfolio.value, expected)) return { status: "stale", reason: "portfolio-waterfall-source-changed" }
+        const resolved = await input.scenarios.resolve(selected.sourceScenarioRef, call)
+        if (resolved.status !== "ok") return resolved
+        if (digestSfValue(resolved.value.result) !== digestSfValue(analysis.scenario)) return { status: "stale", reason: "portfolio-waterfall-scenario-changed" }
+        const source = resolved.value.projection
+        const missing = portfolioResult.combinations.filter((entry) => !entry.analysis)
+          .map((entry) => ({ field: `portfolio:${entry.id}:analysis`, reason: "unavailable" as const }))
+        if (!sameBiProjection(expected, { ...source, missing: [...source.missing, ...missing], decision: expected.decision })) return { status: "stale", reason: "portfolio-waterfall-projection-mismatch" }
+        return { status: "ok", value: {
+          projection: { ...source, decision: { kind: "scenario", scenarioResultRef: selected.sourceScenarioRef, scenario: analysis.scenario,
+            comparisonRef: analysis.comparisonRef, comparison: analysis.comparison } },
+          presentation: { viewId: "BI09", series: [], limitations: [] },
+        } }
+      },
+    } })
+    const planned = await scenario.readView(request, context)
+    if (planned.status !== "ok") return planned
+    if (digestSfValue(incoming) !== digestSfValue(request) || !sameBiProjection(original, expected)) return { status: "stale", reason: "portfolio-waterfall-input-changed" }
+    return { status: "ok", value: {
+      projection: { ...expected, values: planned.value.projection.values, components: planned.value.projection.components },
+      presentation: { ...planned.value.presentation, limitations: [...planned.value.presentation.limitations,
+        `Combinação ${combination.id}; cenário ${selected.sourceScenarioRef}; comparação ${analysis.comparisonRef}.`,
+        "A composição mostra os custos conhecidos da combinação selecionada. Cobertura, total completo e custos externos não quantificados conservam os estados da tabela do portfólio."] },
+    } }
+  }
 }
 
 /** Binds the producer's two persisted observations to one exact selection and Request. */
