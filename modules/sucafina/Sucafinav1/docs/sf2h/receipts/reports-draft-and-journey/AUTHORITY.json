@@ -1,0 +1,53 @@
+{
+  "schema": "orchestra-sf.mission36.authority.v1",
+  "mission": 36,
+  "actor": "S3-A",
+  "lease_epoch": "reports-browser36",
+  "state": "IN_PROGRESS",
+  "session": "ChatGPT task /root",
+  "model": "GPT-6 Astra Pro",
+  "observed_at_utc": "2026-11-14 21:50:42 UTC",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_source": {
+    "commit": "9ffdd8310d54ae82cc011bf699c1fdaf066063eb",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/reports-draft-and-journey.json",
+    "blob": "90dbd087e7d1f339885c06f64b55ad7d86e273c9"
+  },
+  "branch": "astra-wp07",
+  "pr": 27,
+  "expected_parent": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+  "predecessor": {
+    "handoff_blob": "332028625a14f46e7febea188d341d9c9cb1f9f5",
+    "release_blob": "956ab44f80d52f8a7c2aa22711e8db316770ed3b",
+    "conclusion": "Mission25 terminal release is explicit; no presumed dead writer. Current source head unchanged; no later PR conversation authority; current sf2-control mission remains prepared."
+  },
+  "coherent_input": {
+    "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+    "record_commit": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+    "record_blob": "6770803f83d51e3816a13159bd3344cb42353680",
+    "ack": "CONSUMED_IMPLEMENTATION_ONLY_NOT_FUNCTIONALLY_ACCEPTED"
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+    "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+    "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+    "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/",
+    "packages/app-shell/e2e/sucafina/reports.spec.ts",
+    "packages/app-shell/e2e/sucafina/reports-support/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/"
+  ],
+  "local_delegation": {
+    "root": "collaboration view/client and new regression tests; only root publishes GitHub CAS and dispatches existing WP07 CI",
+    "reports_e2e": "reports.spec.ts and reports-support only after local lease acknowledgement; no remote writes or dispatch",
+    "ci_closure": "read-only CI/provenance",
+    "draft_security": "read-only security review; no independent campaign acceptance claimed"
+  },
+  "constraints": {
+    "shared_source": "READ_ONLY; inert complete patches only",
+    "remote": "GitHub MCP CAS; no force",
+    "tests": "Actions only, surgical existing dispatcher, one WP07 run in flight",
+    "global_acceptance": false,
+    "consumer": "session33 exclusive sf2-stack writer; S0 final acceptance"
+  }
+}
