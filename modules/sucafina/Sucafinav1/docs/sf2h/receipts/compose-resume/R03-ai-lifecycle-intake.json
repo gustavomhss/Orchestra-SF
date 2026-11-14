@@ -1,0 +1,156 @@
+{
+  "schema": "sf2h.compose-resume.intake.v1",
+  "increment": "R03",
+  "parent": {
+    "head": "e9d07f0ffe36925b1b0e044738a78cefb2eb2aca",
+    "tree": "1ca2a658f46fd1fedae77b5f88c31b1183676a1d"
+  },
+  "state": "PUBLISHED_INPUTS_PENDING_COMPOSED_VALIDATION",
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "previous_blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+      "previous_blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "previous_blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab321fb2d1562255cf987571477233767c5240e3",
+      "previous_blob": "6d81c4df8d69be1a24581a316ba6e346343d6f67",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+      "previous_blob": "0353e266c6225d0ee0961e8c391bd045f84e92b9",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+      "previous_blob": null,
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    }
+  ],
+  "reason": [
+    "Pin publication, cancellation and read inputs, private snapshots and scope binding/lease identities across awaits.",
+    "Forward the original SfStaleRunObservation through the published analysis host; metadata-only stale transition compares the exact durable run/output and current authority.",
+    "Terminal lifecycle settlement uses optional withLifecycleContext with strict fallback; contribution content retains withRunContext verification.",
+    "Published regressions retain existing assertions, add real C08/SQLite negative and CAS cases. Direct relative imports statically resolve in the composition."
+  ],
+  "preservation": {
+    "manual_functional_edits": 0,
+    "owner_branch_changes": 0,
+    "deletions": 0,
+    "native_mission_drivers_imported": 0
+  },
+  "validation": {
+    "selection": [
+      "test/product/wp12/analysis.test.ts",
+      "test/product/wp12/run-store.test.ts",
+      "test/product/wp12/publication-lifecycle.test.ts"
+    ],
+    "pending": true,
+    "limitations": [
+      "Injected authority/collection boundary tests are not native provider/Session/skill/MCP/Relay proof.",
+      "CLI host wiring remains at the composed version; full live consumer closure is still pending WP10/WP12 owner reconciliation.",
+      "No AM or GLOBAL_RELEASE credit."
+    ]
+  }
+}

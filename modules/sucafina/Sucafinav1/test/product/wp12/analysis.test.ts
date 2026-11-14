@@ -72,6 +72,123 @@ test("tampered contribution digest is rejected before publication", async () => 
   expect(await publishSfContribution(input)).toEqual({ status: "failed", reason: "contribution-digest-mismatch" })
 })
 
+test("publication settles an exact output after a stale post-write check using fresh authority", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const scopes: object[] = []
+  const authority = { allowed: true }
+  const observed: { step: string; context: object; output?: unknown }[] = []
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+      const context = { binding: { accessRevision: "access" } }
+      scopes.push(context)
+      return action(context)
+    },
+    revalidate: async (context: object) => { observed.push({ step: "authorize", context }); return { status: "ok", value: true } },
+    result: { write: async (_request: unknown, context: object) => { observed.push({ step: "write", context }); return { status: "stale", reason: "source-changed-after-commit" } } },
+    preserveStale: async (_runRef: string, _reason: string, output: unknown, context: object) => {
+      observed.push({ step: "preserve", context, output })
+      return authority.allowed ? { status: "ok", value: true } : { status: "denied", reason: "access-revoked" }
+    },
+  }
+  const input = { host, output: original.output, skillReceipt: original.receipt, runRef: original.run.runRef } as unknown as Parameters<typeof publishSfContribution>[0]
+  expect(await publishSfContribution(input)).toEqual({ status: "stale", reason: "source-changed-after-commit" })
+  expect(observed.map((item) => item.step)).toEqual(["authorize", "write", "preserve"])
+  expect(new Set(scopes).size).toBe(3)
+  expect(observed[2]!.output).toBe(original.output)
+  authority.allowed = false
+  expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "access-revoked" })
+})
+
+test("publication pins its envelope across authorization and later write or preservation scopes", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  for (const phase of ["verifier", "after-verifier-scope", "write-scope", "preservation-scope", "post-write-preservation-scope"] as const) {
+    const original = sfRunFixture()
+    const observed = { scopes: 0, writes: 0, preservations: 0 }
+    const change = () => {
+      original.output.createdAt = "2026-11-14T00:00:00Z"
+      original.output.outputDigest = digestSfContribution(original.output)
+    }
+    const host = {
+      withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        observed.scopes++
+        if (observed.scopes === 2 && (phase === "write-scope" || phase === "preservation-scope")) change()
+        if (observed.scopes === 3 && phase === "post-write-preservation-scope") change()
+        const result = await action({ binding: { accessRevision: "access" } })
+        if (observed.scopes === 1 && phase === "after-verifier-scope") change()
+        return result
+      },
+      revalidate: async () => {
+        if (phase === "verifier") change()
+        return phase === "preservation-scope" ? { status: "stale", reason: "case-changed" } : { status: "ok", value: true }
+      },
+      result: { write: async () => {
+        observed.writes++
+        return phase === "post-write-preservation-scope" ? { status: "stale", reason: "source-changed-after-commit" }
+          : { status: "ok", value: { outputRef: original.output.id, caseVersion: 1 } }
+      } },
+      preserveStale: async () => { observed.preservations++; return { status: "ok", value: true } },
+    }
+    const input = { host, output: original.output, skillReceipt: original.receipt, runRef: original.run.runRef } as unknown as Parameters<typeof publishSfContribution>[0]
+    expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+    expect(observed.writes).toBe(phase === "post-write-preservation-scope" ? 1 : 0)
+    expect(observed.preservations).toBe(0)
+  }
+})
+
+test("publication refuses changed load provenance even when a verifier reseals the contribution", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const observed = { writes: 0 }
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => action({ binding: { accessRevision: "access" } }),
+    revalidate: async () => {
+      original.receipt.loadedMessageId = "unobserved-message"
+      original.output.runProvenance.loadedMessageId = "unobserved-message"
+      original.output.outputDigest = digestSfContribution(original.output)
+      return { status: "ok", value: true }
+    },
+    result: { write: async () => { observed.writes++; return { status: "ok", value: { outputRef: original.output.id, caseVersion: 1 } } } },
+  }
+  const input = { host, output: original.output, skillReceipt: original.receipt, runRef: original.run.runRef } as unknown as Parameters<typeof publishSfContribution>[0]
+  expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+  expect(observed.writes).toBe(0)
+})
+
+test("publication pins the independent review target until its write scope", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const receipt = { ...original.receipt, profileId: "sf_reviewer", skillId: "sf-revisar-evidencias" } satisfies Parameters<typeof publishSfContribution>[0]["skillReceipt"]
+  const reviewTarget = { targetRunId: "author-run", targetSessionId: "author-session", targetOutputDigest: "e".repeat(64), caseRef: original.caseRef }
+  const output: Parameters<typeof digestSfContribution>[0] = {
+    ...original.output, kind: "CritiqueReport", state: "ready",
+    payload: { targetRunId: reviewTarget.targetRunId, targetOutputDigest: reviewTarget.targetOutputDigest, reviewerRunId: receipt.runId,
+      reviewerSessionId: receipt.nativeSessionId, claimIssues: [], unresolvedConditions: [], evidenceRefs: [] },
+    runProvenance: { ...receipt, actualModel: "provider/model", contextFingerprint: "context", targetRunId: reviewTarget.targetRunId,
+      targetOutputDigest: reviewTarget.targetOutputDigest, reviewerRunId: receipt.runId },
+  }
+  output.outputDigest = digestSfContribution(output)
+  const observed = { scopes: 0, writes: 0 }
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+      if (++observed.scopes === 2) reviewTarget.targetSessionId = receipt.nativeSessionId
+      return action({ binding: { accessRevision: "access" } })
+    },
+    revalidate: async () => ({ status: "ok", value: true }),
+    result: { write: async () => { observed.writes++; return { status: "ok", value: { outputRef: output.id, caseVersion: 1 } } } },
+  }
+  const input = { host, output, skillReceipt: receipt, runRef: receipt.runId, reviewTarget } as unknown as Parameters<typeof publishSfContribution>[0]
+  expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+  expect(observed).toEqual({ scopes: 2, writes: 0 })
+})
+
 test("a review cannot reuse the author's run or session", async () => {
   const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
   const receipt = {
@@ -140,6 +257,9 @@ test("analysis uses separate host authority scopes before and after the native w
   } as unknown as Parameters<typeof digestSfContribution>[0]
   output.outputDigest = digestSfContribution(output)
   const scopes = new Set<object>()
+  const failures: string[] = []
+  const settlements: { state: string; reason: string }[] = []
+  let publicationOutcome: { status: "unavailable" | "needs-input" | "denied" | "conflict"; reason: string } | undefined
   const host = {
     withRunContext: async (_runRef: string, action: (context: unknown) => Promise<unknown>) => {
       const context = { binding: { accessRevision: "access-1" } }
@@ -148,13 +268,26 @@ test("analysis uses separate host authority scopes before and after the native w
     },
     revalidate: async () => ({ status: "ok", value: true }),
     execution: { admit: async () => ({ status: "ok", value: { runRef: "run-1", sessionID: "session-1", skillReceipt: receipt, executionTicket: {} } }), execute: async () => ({ status: "ok", value: true }), collect: async () => ({ status: "ok", value: output }) },
-    result: { write: async () => ({ status: "ok", value: { outputRef: "output-1", caseVersion: 1 } }) },
+    result: { write: async () => publicationOutcome ?? ({ status: "ok", value: { outputRef: "output-1", caseVersion: 1 } }) },
+    fail: async (_runRef: string, reason: string) => { failures.push(reason); return { status: "ok", value: true } },
+    settle: async (_runRef: string, state: string, reason: string) => { settlements.push({ state, reason }); return { status: "ok", value: true } },
   }
   const request = { caseRef, profileId: "sf_finance", profileVersion: "1.0.0", skillId: receipt.skillId, skillVersion: "1.0.0", manifestDigest: receipt.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [], objective: "Review", contextFingerprint: "context-1" }
   const skillInput = { currentCase: caseRef, recallScope: { cases: [], period: { start: "2027-01-01", end: "2027-12-31" }, includeHistorical: true }, query: "renewal" }
   const input = { host, request, skillInput } as unknown as Parameters<typeof runSfAnalysis>[0]
   expect(await runSfAnalysis(input)).toEqual({ status: "ok", value: { outputRef: "output-1", caseVersion: 1 } })
   expect(scopes.size).toBe(4)
+  output.outputDigest = "0".repeat(64)
+  expect(await runSfAnalysis(input)).toEqual({ status: "failed", reason: "contribution-digest-mismatch" })
+  expect(failures).toEqual(["contribution-digest-mismatch"])
+  expect(scopes.size).toBe(7)
+  output.outputDigest = digestSfContribution(output)
+  for (const status of ["unavailable", "needs-input", "denied", "conflict"] as const) {
+    publicationOutcome = { status, reason: `publication-${status}` }
+    expect(await runSfAnalysis(input)).toEqual(publicationOutcome)
+  }
+  expect(settlements).toEqual([{ state: "unavailable", reason: "publication-unavailable" }, { state: "needs-input", reason: "publication-needs-input" }])
+  expect(failures).toEqual(["contribution-digest-mismatch"])
 })
 
 test("analysis rejects model-supplied identity before host admission", async () => {
@@ -186,6 +319,166 @@ test("admitted runs persist non-executing native outcomes under fresh authority"
     expect(scopes).toHaveLength(2)
     expect(scopes[0]).not.toBe(scopes[1])
     expect(settled).toEqual([{ runRef: "run-1", state: outcome.status, reason: outcome.reason, context: scopes[1] }])
+  }
+})
+
+test("terminal metadata uses current lifecycle authority after the execution source scope closes", async () => {
+  const { runSfAnalysis } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const request = { caseRef: original.caseRef, profileId: original.receipt.profileId, profileVersion: original.receipt.profileVersion,
+    skillId: original.receipt.skillId, skillVersion: original.receipt.skillVersion, manifestDigest: original.receipt.manifestDigest,
+    outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [], objective: "Review", contextFingerprint: "context" }
+  const skillInput = { currentCase: original.caseRef, recallScope: { cases: [], period: { start: "2027-01-01", end: "2027-12-31" }, includeHistorical: true }, query: "renewal" }
+  for (const state of ["failed", "unavailable", "needs-input", "stale"] as const) {
+    const access = { sourceCurrent: true, lifecycleAllowed: true, strictCalls: 0, lifecycleCalls: 0 }
+    const writes: { state: string; context: object }[] = []
+    const lifecycleContext = { binding: { principalRef: "principal", accessRevision: "access", currentCaseVersion: 2 } }
+    const host = {
+      withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        access.strictCalls++
+        return access.sourceCurrent ? action({ binding: { accessRevision: "access" } }) : { status: "denied", reason: "old-case-selection-unavailable" }
+      },
+      withLifecycleContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        access.lifecycleCalls++
+        return access.lifecycleAllowed ? action(lifecycleContext) : { status: "denied", reason: "current-case-access-revoked" }
+      },
+      revalidate: async () => ({ status: "ok", value: true }),
+      fail: async (_runRef: string, _reason: string, context: object) => { writes.push({ state: "failed", context }); return { status: "ok", value: true } },
+      settle: async (_runRef: string, state: string, _reason: string, context: object) => { writes.push({ state, context }); return { status: "ok", value: true } },
+      markStale: async (_runRef: string, _reason: string, context: object) => { writes.push({ state: "stale", context }); return { status: "ok", value: true } },
+      execution: {
+        admit: async () => ({ status: "ok", value: { runRef: original.run.runRef, sessionID: original.receipt.nativeSessionId, skillReceipt: original.receipt, executionTicket: {} } }),
+        execute: async () => { access.sourceCurrent = false; return { status: state, reason: "source-changed-during-execution" } },
+        collect: async () => { throw new Error("terminal execution cannot collect content") },
+      },
+    }
+    const input = { host, request, skillInput } as unknown as Parameters<typeof runSfAnalysis>[0]
+    expect(await runSfAnalysis(input)).toEqual({ status: state, reason: "source-changed-during-execution" })
+    expect(writes).toEqual([{ state, context: lifecycleContext }])
+    expect(access.strictCalls).toBe(1)
+    expect(access.lifecycleCalls).toBe(1)
+    access.sourceCurrent = true
+    access.lifecycleAllowed = false
+    expect(await runSfAnalysis(input)).toEqual({ status: "denied", reason: "current-case-access-revoked" })
+    expect(writes).toHaveLength(1)
+  }
+})
+
+test("lifecycle progress cannot use its current metadata authority to return a ready payload", async () => {
+  const { readSfAnalysisRun } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const observed = { ready: false, strictCalls: 0, lifecycleCalls: 0 }
+  const host = {
+    withRunContext: async () => { observed.strictCalls++; return { status: "denied", reason: "old-case-selection-unavailable" } },
+    withLifecycleContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => { observed.lifecycleCalls++; return action({ binding: { accessRevision: "access" } }) },
+    readRun: async () => ({ status: "ok", value: { ...original.run, state: observed.ready ? "ready" : "stale", outputRef: original.output.id, reason: "case-changed" } }),
+    analysis: { read: async () => { throw new Error("metadata authority cannot return contribution content") } },
+  }
+  const input = { host, runRef: original.run.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0]
+  const progress = await readSfAnalysisRun(input)
+  expect(progress).toEqual({ status: "ok", value: { run: { runRef: original.run.runRef, version: original.run.version, caseRef: original.caseRef, skillId: original.run.skillId,
+    state: "stale", createdAt: original.run.createdAt, updatedAt: original.run.updatedAt, reason: "case-changed", outputRef: original.output.id } } })
+  expect(observed).toEqual({ ready: false, strictCalls: 0, lifecycleCalls: 1 })
+  observed.ready = true
+  expect(await readSfAnalysisRun(input)).toEqual({ status: "denied", reason: "old-case-selection-unavailable" })
+  expect(observed).toEqual({ ready: true, strictCalls: 1, lifecycleCalls: 2 })
+})
+
+test("ready read refuses output or run mutation across final authority callbacks and scope return", async () => {
+  const { readSfAnalysisRun } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  for (const phase of [1, 2, "scope"] as const) for (const target of ["output", "run", "cyclic-output"] as const) {
+    const original = sfRunFixture()
+    const readyRun = { ...original.run, state: "ready", outputRef: original.output.id }
+    const observed = { verifications: 0 }
+    const change = () => {
+      if (target === "run") readyRun.caseRef = { ...readyRun.caseRef, version: 9 }
+      if (target === "cyclic-output") Object.assign(original.output, { evidenceRefs: [original.output] })
+      if (target === "output") {
+        original.output.createdAt = "2026-11-14T00:00:00Z"
+        original.output.outputDigest = digestSfContribution(original.output)
+      }
+    }
+    const host = {
+      withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        const result = await action({ binding: { accessRevision: "access" } })
+        if (phase === "scope" && observed.verifications === 2) change()
+        return result
+      },
+      readRun: async () => ({ status: "ok", value: readyRun }),
+      analysis: { read: async () => ({ status: "ok", value: original.output }) },
+      revalidate: async () => {
+        if (++observed.verifications === phase) change()
+        return { status: "ok", value: true }
+      },
+    }
+    const input = { host, runRef: readyRun.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0]
+    expect(await readSfAnalysisRun(input)).toEqual({ status: "denied", reason: "run-input-changed-during-read" })
+    expect(observed.verifications).toBe(phase === "scope" ? 2 : phase)
+  }
+})
+
+test("ready read returns copies that retained host references cannot rewrite", async () => {
+  const { readSfAnalysisRun } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const readyRun = { ...original.run, state: "ready", outputRef: original.output.id }
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => action({ binding: { accessRevision: "access" } }),
+    readRun: async () => ({ status: "ok", value: readyRun }),
+    analysis: { read: async () => ({ status: "ok", value: original.output }) },
+    revalidate: async () => ({ status: "ok", value: true }),
+  }
+  const result = await readSfAnalysisRun({ host, runRef: readyRun.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0])
+  expect(result.status).toBe("ok")
+  if (result.status !== "ok" || !("output" in result.value) || !result.value.output) return
+  const originalDate = result.value.output.createdAt
+  original.output.createdAt = "2026-11-14T00:00:00Z"
+  readyRun.caseRef.version = 9
+  expect(result.value.output.createdAt).toBe(originalDate)
+  expect(result.value.output.caseRef.version).toBe(1)
+  expect(result.value.run.caseRef.version).toBe(1)
+})
+
+test("ready read pins the scoped result and isolates the final returned copy", async () => {
+  const { readSfAnalysisRun } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  for (const mutation of ["mutate-result", "replace-result", "retain-result"] as const) {
+    const original = sfRunFixture()
+    const readyRun = { ...original.run, state: "ready", outputRef: original.output.id }
+    const observed: { scopes: number; retained?: { value: { output: typeof original.output } } } = { scopes: 0 }
+    const host = {
+      withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        observed.scopes++
+        const result = await action({ binding: { accessRevision: "access" } })
+        if (observed.scopes !== 2) return result
+        const ready = (mutation === "replace-result" ? structuredClone(result) : result) as { value: { output: typeof original.output } }
+        observed.retained = ready
+        if (mutation !== "retain-result") {
+          ready.value.output.createdAt = "2026-11-14T00:00:00Z"
+          ready.value.output.outputDigest = digestSfContribution(ready.value.output)
+        }
+        return ready
+      },
+      readRun: async () => ({ status: "ok", value: readyRun }),
+      analysis: { read: async () => ({ status: "ok", value: original.output }) },
+      revalidate: async () => ({ status: "ok", value: true }),
+    }
+    const result = await readSfAnalysisRun({ host, runRef: readyRun.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0])
+    if (mutation !== "retain-result") {
+      expect(result).toEqual({ status: "denied", reason: "run-input-changed-during-read" })
+      continue
+    }
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok" || !("output" in result.value) || !result.value.output || !observed.retained) throw new Error("Expected a verified ready result")
+    const date = result.value.output.createdAt
+    observed.retained.value.output.createdAt = "2026-11-14T00:00:00Z"
+    expect(result.value.output.createdAt).toBe(date)
+    expect(result).not.toBe(observed.retained)
   }
 })
 
