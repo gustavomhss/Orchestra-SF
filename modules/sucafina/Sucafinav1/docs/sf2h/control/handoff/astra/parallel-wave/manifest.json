@@ -1,0 +1,161 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "user_authorized_new_manual_contexts": true,
+  "state": "PREPARED_NOT_STARTED",
+  "source_observation": "2026-11-14 18:40:48 UTC",
+  "missions": [
+    {
+      "id": "review-operations-delta",
+      "branch": "review-operations",
+      "pr": 49,
+      "expected_head": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+      "actor": "S1-R1",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/recheck-wave/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "review-finance-delta",
+      "branch": "review-finance",
+      "pr": 50,
+      "expected_head": "7155f90a6492597a3dd79cfcfda9330fef8be2a2",
+      "actor": "S2-R2",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/recheck-wave/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "review-contracts-delta",
+      "branch": "review-contracts",
+      "pr": 51,
+      "expected_head": "fa520193f5df9d6585d5f4c40d071215efb42923",
+      "actor": "S3-R3",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/contracts/recheck-wave/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "final-ci-preparation",
+      "branch": "astra-compose",
+      "pr": 32,
+      "expected_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "actor": "S0-C",
+      "write_paths": [
+        ".github/workflows/sf2-epic.yml",
+        "script/sf2h/final-bundle/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-ci-preparation/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "native-proof-preparation",
+      "branch": "astra-wp00",
+      "pr": 20,
+      "expected_head": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "actor": "S0-B",
+      "write_paths": [
+        "script/sf2h/native-acceptance/",
+        "modules/sucafina/Sucafinav1/test/product/native-acceptance/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-acceptance/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "coverage-reconciliation",
+      "branch": "intel-resume",
+      "pr": null,
+      "expected_head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "actor": "S0-A",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/",
+        "script/sf2h/coverage-reconciliation/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "e2e-operations",
+      "branch": "astra-wp04",
+      "pr": 23,
+      "expected_head": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "actor": "S2-A",
+      "write_paths": [
+        "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "packages/app-shell/e2e/sucafina/operations-support/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/operations/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "e2e-decisions",
+      "branch": "astra-wp11",
+      "pr": 40,
+      "expected_head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "actor": "S4-A",
+      "write_paths": [
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/decisions/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    },
+    {
+      "id": "e2e-reports",
+      "branch": "astra-wp07",
+      "pr": 27,
+      "expected_head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "actor": "S3-A",
+      "write_paths": [
+        "packages/app-shell/e2e/sucafina/reports.spec.ts",
+        "packages/app-shell/e2e/sucafina/reports-support/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/reports/"
+      ],
+      "session_id": null,
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1
+    }
+  ],
+  "allocation": {
+    "missions": 9,
+    "exclusive_namespaces": true,
+    "path_overlaps": [],
+    "actual_browser_slots": "UNVERIFIED",
+    "native_workers_started": 0,
+    "manual_browser_sessions_started_by_S0": 0
+  },
+  "continued_existing": [
+    "astra-wp10",
+    "operations-fixes",
+    "finance-resume",
+    "collab-resume",
+    "astra-operations",
+    "import-recovery",
+    "procurement-apply"
+  ],
+  "GLOBAL_RELEASE": false,
+  "final_C": null,
+  "epic_dispatch_authority": "S0 only after integrated candidate and gates",
+  "native_goal": "prior paused; no active/resume claim, no second controller"
+}
