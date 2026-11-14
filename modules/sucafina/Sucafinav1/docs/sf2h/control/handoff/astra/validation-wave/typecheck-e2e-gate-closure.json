@@ -1,0 +1,20 @@
+{
+  "number": 26,
+  "id": "typecheck-e2e-gate-closure",
+  "actor": "S0-C scoped tooling support; not integrator/dispatcher",
+  "actor_pack": "execution/actors/S0-C.json",
+  "branch": "astra-compose",
+  "pr": 32,
+  "expected_head": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+  "write_paths": [
+    ".github/workflows/sf2-epic.yml",
+    "script/sf2h/final-bundle/",
+    "packages/app-shell/e2e/tsconfig.json",
+    "packages/app-shell/package.json (typecheck scripts only; no deps)",
+    "packages/app-shell/tsconfig.sf-e2e.json (new scoped config if needed)",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/"
+  ],
+  "mission": "Implement actual missing typecheck coverage for all3nominal E2E specs and theirtransitivehelpers in canonicalfinalgate. Preserve existingwholeapp/CLI/Core/Atlas/SFchecks, eightrecipes, inheritedmandatorysuite and true execution reports. Current productcandidate has tooling assembled but includes may omit e2e/sucafina. Inspect actualconfigs before choosingextendexisting vsnew scoped config; don't weakenexistingcoverage, useany/tsignore/exclude errors or altertests just tosilence. Repair only owngate/config code; consumerdiagnostics become complete patches to sourceowners, not writes totheirpaths.",
+  "validation": "Run authorized staticgeneration/requestvalidation/graphenumeration. Package bun typecheck permitted byAGENTS where toolsavailable; never ts c directly. Hosted typecheck via existing authorizedcheckinterface/dispatcher; if noneavailable prepareconcrete scopedrequest/patch and reportNOTRUN, not hiddenwrappertest ornewunapprovedworkflow. No epic/fullsuite or existingfixedcheckref mutation withoutcurrentownerhandoff. Only S0 dispatches finalbundle. No tests locally.",
+  "outputs": "Working config/scripts/workflow delta committedsamePR32, actualincludetransitivefilemanifest+nonemptycoverage, requiredfivepackagechecks/E2Egraph mapped tocommands/results, precise typecheckdiagnostics by owner and exactpatches ifoutsidepaths, candidateidentities and complete intake to23. NOTRUN/inheritedFAILremain explicit. Don't spend session justgeneratinganotherpreparationreport."
+}

@@ -1,0 +1,14 @@
+{
+  "number": 28,
+  "id": "review-contract-security",
+  "actor": "S2-R2",
+  "actor_pack": "execution/actors/S2-R2.json",
+  "branch": "review-finance",
+  "pr": 50,
+  "expected_head": "29356ad7a554309e9a905749dd84e3f6bd0900ea",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/composed-wave-28/"
+  ],
+  "scope": "Independent contracts/security/integrity RUN-REVIEW-INTEGRITY across all assignedWPs/C01–C17. Inspect Request/header/binding/lease/access propagation, callbacks before/after observations, CAS/idempotency/sourceidentity/namespaceprivacy, C12originalreceipt recovery/no-redispatch, storedchoice/coverage/fullcalculator proofs and ports. Reconcile old FININD001–005 using exactcurrentproducer/caller, Memory consumedfix and Finance22 published/inflight distinction. Currentfunction/dataidentity isn't temporalcallbackequivalence; missing cost isn't0; humanchoice isn't financialapproval.",
+  "outputs": "Fullpackcontractcoverage and coldcounterexamples, requiredfindingstatus with actualcandidateSHA, sourcepins/consumers and safeownerfix boundaries. No productwrites/newtests/testexecution/CI. Don't restate oldincompatiblecontract afterproducerfix; don't qualifyfuture22source beforeconsumption."
+}

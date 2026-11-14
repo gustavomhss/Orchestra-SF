@@ -1,0 +1,14 @@
+{
+  "number": 27,
+  "id": "review-functional-composition",
+  "actor": "S1-R1",
+  "actor_pack": "execution/actors/S1-R1.json",
+  "branch": "review-operations",
+  "pr": 49,
+  "expected_head": "c7171a4d038cd807dd4ca5510243d3641cf74eef",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/composed-wave-27/"
+  ],
+  "scope": "Independent functional/integration review RUN-REVIEW-UX across full actor-pack scope; inspect current UI entrypoints and actual host consumers for Dashboard/Planner/Procurement/BI/import/documents/meetings/collaboration/Relay/Decisions/portfolio/memory. Prioritize first-use positive journeys and missing mounts, then replay/reload/revocation. Recheck Operations originalfindings against real0ce090d7, C12PR60, ACKPR47, forecastPR45, sourceDecisions20 and their consumption. Don't limit fullpack coverage to Operations just because branch name.",
+  "outputs": "Criteria/route/consumer coverage, exact paths/blobs, actionable findings with severity+trigger+expected/actual+proof+sourceowner, fixed/intaken/unproved separation. No product/test/config edits or CI. Three-way final verdict belongs sameC after mandatoryevidence; currentreview is usefulpreliminary."
+}
