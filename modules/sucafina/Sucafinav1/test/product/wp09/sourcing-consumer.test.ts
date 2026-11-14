@@ -59,7 +59,11 @@ test("dossier keeps the real WP04 ranking, submitted FX, technical exclusion, mi
         expect(result.value.commercialSources.supplierRegister).toEqual({ status: "not-selected" })
         expect(result.value.explanation.sourceDistinction).toBe("Condições negociadas vêm das propostas deste pedido. O cadastro do fornecedor não foi selecionado como evidência dessas condições.")
         expect(result.value.explanation.proposals.map((proposal) => proposal.proposalRef)).toEqual(result.value.comparison?.proposals.map((proposal) => proposal.proposalRef) ?? [])
-        for (const explained of result.value.explanation.proposals) expect(explained.evidenceRefs).toEqual(result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === explained.proposalRef)?.evidenceRefs)
+        for (const explained of result.value.explanation.proposals) {
+          const original = result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === explained.proposalRef)
+          if (!original) throw new Error("Explained proposal has no authenticated domain source")
+          expect(explained.evidenceRefs).toEqual(original.evidenceRefs)
+        }
         expect(result.value.commercialSources.proposalTerms).toMatchObject({ status: "available", sourceRef: { refId: ref }, offers: quotes.map((quote) => expect.objectContaining({ offerRef: quote.id, amount: quote.total, currency: quote.currency })) })
         if (scenario === "three") {
           expect(result.value.comparison?.proposals).toHaveLength(3)
