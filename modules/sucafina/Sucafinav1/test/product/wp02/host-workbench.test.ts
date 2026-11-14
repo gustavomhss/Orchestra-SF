@@ -7,7 +7,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { rows } from "../../../runtime/contract.ts"
+import { object, rows } from "../../../runtime/contract.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
@@ -238,12 +238,33 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
 }, 60000)
 
 test("Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed", async () => {
-  const f = await fixture()
+  const phase = async <T>(name: string, work: () => Promise<T>) => {
+    const started = performance.now()
+    console.info("SF_WP02_DRAFT_CONFLICT_PHASE", JSON.stringify({ phase: name, state: "started" }))
+    let state = "threw"
+    try { const value = await work(); state = "returned"; return value }
+    finally { console.info("SF_WP02_DRAFT_CONFLICT_PHASE", JSON.stringify({ phase: name, state, elapsedMs: Math.round(performance.now() - started) })) }
+  }
+  const f = await phase("fixture.create", fixture)
   const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browser = await phase("browser.launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 }))
+    .catch(async (error) => {
+      const [closed] = await Promise.allSettled([phase("fixture.close-after-launch-failure", () => f.close())])
+      if (closed?.status === "rejected") throw new AggregateError([error, closed.reason], "Browser launch and fixture cleanup failed")
+      throw error
+    })
+  const failures: unknown[] = []
   try {
-    const context = await browser.newContext(), page = await context.newPage(), errors: string[] = []
+    const context = await phase("browser.context", () => browser.newContext())
+    context.setDefaultTimeout(15000)
+    context.setDefaultNavigationTimeout(15000)
+    const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
+    const observe = (tab: typeof page, name: string) => tab.on("response", (response) => {
+      const mode = new URL(response.url()).searchParams.get("sf")
+      if (mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft") console.info("SF_WP02_DRAFT_CONFLICT_HTTP", JSON.stringify({ tab: name, mode, status: response.status() }))
+    })
+    observe(page, "original")
     await page.goto(`${f.origin}/sucafina/auth/local?code=${await f.identity.enroll()}`)
     await page.goto(`${f.origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
     await page.locator("[data-dashboard-workbench-panel] > summary").click()
@@ -254,8 +275,22 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     await panel.getByLabel(/^Rascunho/).selectOption("new")
     await panel.getByLabel(/^Hot Topic de origem/).selectOption({ label: "Original action" })
     await panel.getByLabel("Ação", { exact: true }).fill("Initial shared draft")
-    await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
-    await panel.getByText("Rascunho salvo.", { exact: false }).waitFor()
+    const save = (tab: typeof page, target: typeof panel, name: string) => phase(name, async () => {
+      // A successful write can be followed by a failed discovery. Qualify both
+      // actual responses and the complete success state before selecting again.
+      const [written, discovered] = await Promise.all([
+        tab.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "dashboard-hot-topic-draft"),
+        tab.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "dashboard-workbench"),
+        target.getByRole("button", { name: "Salvar rascunho", exact: true }).click(),
+      ])
+      expect(written.status()).toBe(200)
+      expect(object(await written.json()).status).toBe("ok")
+      expect(discovered.status()).toBe(200)
+      expect(object(await discovered.json()).status).toBe("ok")
+      await target.getByText("Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação.", { exact: true }).waitFor()
+      expect(await target.getByLabel(/^Caso/).isEnabled()).toBe(true)
+    })
+    await save(page, panel, "draft.initial-save-and-discovery")
     const initial = await f.read((trusted) => f.decisions.drafts.list({ caseRef: initialCaseRef }, trusted))
     if (initial.status !== "ok" || initial.value.length !== 1) throw new Error("Initial draft unavailable")
     const first = await f.read((trusted) => f.decisions.drafts.readCurrent({ caseRef: initialCaseRef, draftRef: initial.value[0]!.draftRef }, trusted))
@@ -265,6 +300,7 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
 
     const other = await context.newPage()
     other.on("pageerror", (error) => errors.push(error.message))
+    observe(other, "concurrent")
     await other.goto(`${f.origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
     await other.locator("[data-dashboard-workbench-panel] > summary").click()
     const otherPanel = other.locator("[data-dashboard-workbench]")
@@ -275,25 +311,34 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     await panel.getByLabel("Ação", { exact: true }).fill("My retained action")
     await panel.getByLabel("Notas", { exact: true }).fill("My retained explanation")
     await otherPanel.getByLabel("Ação", { exact: true }).fill("Action saved in another tab")
-    await otherPanel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
-    await otherPanel.getByText("Rascunho salvo.", { exact: false }).waitFor()
+    await save(other, otherPanel, "draft.concurrent-save-and-discovery")
     // A separate draft targets the same case and Hot Topic. Recovery must bind identity, not a matching target or title.
     await otherPanel.getByLabel(/^Caso/).selectOption({ label: "Review the action" })
     await otherPanel.getByLabel(/^Rascunho/).selectOption("new")
     await otherPanel.getByLabel(/^Hot Topic de origem/).selectOption({ label: "Original action" })
     await otherPanel.getByLabel("Ação", { exact: true }).fill("Independent action draft")
-    await otherPanel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
-    await otherPanel.getByText("Rascunho salvo.", { exact: false }).waitFor()
+    await save(other, otherPanel, "draft.independent-save-and-discovery")
 
-    const conflict = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-hot-topic-draft")
-    await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
-    expect((await conflict).status()).toBe(409)
-    await panel.getByText("O rascunho mudou.", { exact: false }).waitFor()
+    await phase("draft.stale-write-refused", async () => {
+      const [conflict] = await Promise.all([
+        page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "dashboard-hot-topic-draft"),
+        panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click(),
+      ])
+      expect(conflict.status()).toBe(409)
+      await panel.getByText("O rascunho mudou.", { exact: false }).waitFor()
+    })
     expect(await panel.getByLabel("Ação", { exact: true }).inputValue()).toBe("My retained action")
     expect(await panel.getByLabel("Notas", { exact: true }).inputValue()).toBe("My retained explanation")
     expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isEnabled()).toBe(false)
-    await panel.getByRole("button", { name: "Carregar versão atual e manter minhas alterações", exact: true }).click()
-    await panel.getByText("Versão atual carregada.", { exact: false }).waitFor()
+    await phase("draft.reload-current-identity", async () => {
+      const [discovered] = await Promise.all([
+        page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "dashboard-workbench"),
+        panel.getByRole("button", { name: "Carregar versão atual e manter minhas alterações", exact: true }).click(),
+      ])
+      expect(discovered.status()).toBe(200)
+      expect(object(await discovered.json()).status).toBe("ok")
+      await panel.getByText("Versão atual carregada. Compare as diferenças e confirme a base antes de salvar seus valores.", { exact: true }).waitFor()
+    })
     const comparison = await panel.locator("[data-dashboard-draft-diff]").textContent()
     expect(comparison).toContain("Initial shared draft")
     expect(comparison).toContain("Action saved in another tab")
@@ -302,8 +347,7 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     expect(await panel.getByLabel("Notas", { exact: true }).inputValue()).toBe("My retained explanation")
     expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isEnabled()).toBe(false)
     await panel.getByLabel("Revisei a versão atual do rascunho e quero manter meus valores.", { exact: true }).check()
-    await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
-    await panel.getByText("Rascunho salvo.", { exact: false }).waitFor()
+    await save(page, panel, "draft.confirmed-save-and-discovery")
     const latest = await f.read((trusted) => f.decisions.drafts.list({ caseRef: initialCaseRef }, trusted))
     if (latest.status !== "ok") throw new Error("Current drafts unavailable")
     expect(latest.value).toHaveLength(2)
@@ -315,7 +359,13 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     expect(latest.value.find((draft) => draft.label === "Independent action draft")?.version).toBe(1)
     expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Original action")
     expect(errors).toEqual([])
-  } finally { await browser.close(); await f.close() }
+  } catch (error) { failures.push(error) }
+  finally {
+    const closed = await Promise.allSettled([phase("browser.close", () => browser.close()), phase("fixture.close", () => f.close())])
+    for (const result of closed) if (result.status === "rejected") failures.push(result.reason)
+  }
+  if (failures.length === 1) throw failures[0]
+  if (failures.length > 1) throw new AggregateError(failures, "Dashboard draft conflict and cleanup failed")
 }, 60000)
 
 test("Dashboard discovery fences participant removal after options were assembled", async () => {

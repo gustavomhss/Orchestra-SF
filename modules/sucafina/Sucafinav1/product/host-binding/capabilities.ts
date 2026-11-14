@@ -79,17 +79,24 @@ export async function recallSfDecisions(value: unknown, call: TrustedDomainConte
   if (!selection || (input.value.selectionRefs.length > 0 && selection.caseRefs.length === 0) || new Set(selection.caseRefs.map((ref) => JSON.stringify([ref.id, ref.incarnation]))).size !== selection.caseRefs.length) return reject("sf_decision_recall", "unavailable")
   const ranked = await rankSfAtlasRecall({ memory: host.memory, caseRefs: selection.caseRefs, features: selection.features, featuresForCase: host.featuresForCase, runtimeVersions: host.runtimeVersions, call, proveContinuity: host.proveContinuity, revalidate: host.revalidate })
   if (ranked.status !== "ok") return reject("sf_decision_recall", "unavailable")
-  const matches = []
-  for (const item of ranked.cases.slice(0, input.value.limit)) {
-    const current = await host.memory.recall(item.candidateCaseRef, call)
-    if (current.status !== "ok") return reject("sf_decision_recall", "unavailable")
-    const record = current.records.find((candidate) => candidate.recordDigest === item.atlasTrace.recordDigest)
-    if (!record) return reject("sf_decision_recall", "unavailable")
-    matches.push({ caseRef: item.candidateCaseRef, memoryRecordRef: record.envelope.eventId, explanation: { candidateCaseRef: item.candidateCaseRef, matchedCriteria: item.matchedCriteria, currentDifferences: item.currentDifferences, sourceStates: item.sourceStates, limitations: item.limitations }, evidenceRefs: record.envelope.evidenceRefs })
+  const buildMatches = (result: Extract<Awaited<ReturnType<typeof rankSfAtlasRecall>>, { status: "ok" }>) => {
+    const matches = []
+    for (const item of result.cases.slice(0, input.value.limit)) {
+      const records = result.records.filter((candidate) => candidate.recordDigest === item.atlasTrace.recordDigest &&
+        candidate.envelope.caseRef?.id === item.candidateCaseRef.id && candidate.envelope.caseRef?.incarnation === item.candidateCaseRef.incarnation)
+      if (records.length !== 1) return undefined
+      const record = records[0]!
+      matches.push({ caseRef: item.candidateCaseRef, memoryRecordRef: record.envelope.eventId, explanation: { candidateCaseRef: item.candidateCaseRef, matchedCriteria: item.matchedCriteria, currentDifferences: item.currentDifferences, sourceStates: item.sourceStates, limitations: item.limitations }, evidenceRefs: record.envelope.evidenceRefs })
+    }
+    return matches
   }
+  const matches = buildMatches(ranked)
+  if (!matches) return reject("sf_decision_recall", "unavailable")
   const checked = await rankSfAtlasRecall({ memory: host.memory, caseRefs: selection.caseRefs, features: selection.features, featuresForCase: host.featuresForCase, runtimeVersions: host.runtimeVersions, call, proveContinuity: host.proveContinuity, revalidate: host.revalidate })
-  if (checked.status !== "ok" || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || !await host.revalidate(call)) return reject("sf_decision_recall", "unavailable")
-  return deliver("sf_decision_recall", input.value, { matches, limitations: ["Semelhança não recomenda uma escolha."], accessRevision: call.binding.accessRevision }, call, host)
+  if (checked.status !== "ok") return reject("sf_decision_recall", "unavailable")
+  const current = buildMatches(checked)
+  if (!current || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || digestSfValue(current) !== digestSfValue(matches) || !await host.revalidate(call)) return reject("sf_decision_recall", "unavailable")
+  return deliver("sf_decision_recall", input.value, { matches: current, limitations: ["Semelhança não recomenda uma escolha."], accessRevision: call.binding.accessRevision }, call, host)
 }
 
 function deliver(operation: "sf_context_get" | "sf_decision_recall" | "sf_source_get" | "sf_evidence_get" | "sf_freshness_check", input: unknown, result: unknown, call: TrustedDomainContext, host: EvidenceCapabilityHost): CapabilityResult {

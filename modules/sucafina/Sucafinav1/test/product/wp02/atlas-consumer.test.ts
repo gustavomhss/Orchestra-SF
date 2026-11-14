@@ -105,9 +105,14 @@ test("C17 Atlas capability validates its schema and denies caller-selected owner
     const owner = deriveSfMemoryOwner(authorizedCase.context, authorizedCase.case)
     if (!owner) throw new Error("Authorized case did not produce a memory owner")
     const request = { selectionRefs: [encodeCaseRef(budget.caseRef)], similarityCriteria: ["decision-type"], period: atlasPeriod, limit: 5 }
+    const beforeWork = { recalls: f.memoryWork.recalls, originals: f.memoryWork.originals }
     const ranked = await f.phase("capability.rank-and-reauthorize", () => f.dispatch("sf_decision_recall", request))
+    const work = { protectedReads: f.memoryWork.recalls - beforeWork.recalls, originalReads: f.memoryWork.originals - beforeWork.originals }
     expect(ranked.status).toBe("ok")
     if (ranked.status !== "ok") throw new Error("Real Atlas capability did not consume the stored record")
+    // Two independent passes, each with a protected observation and a new read at egress.
+    expect(work.protectedReads).toBe(4)
+    expect(work.originalReads).toBeGreaterThan(0)
     const output = decodeSfOperationOutput("sf_decision_recall", ranked.result)
     if (!output.ok) throw new Error("Recall output did not match the closed production schema")
     expect(output.value.matches).toHaveLength(1)
@@ -124,7 +129,7 @@ test("C17 Atlas capability validates its schema and denies caller-selected owner
     console.info("SF_ATLAS_DASHBOARD_PROOF", JSON.stringify({ scenario: "capability-authority", write: budgetReceipt,
       matchedMemoryRecordRef: output.value.matches[0]!.memoryRecordRef, matchedCaseRef: output.value.matches[0]!.caseRef,
       schema: "sf_decision_recall", receiptKind: ranked.receipt.kind, referenceForgery: rejected.status,
-      ownerArguments: "needs-input", otherPrincipal: other.status }))
+      ownerArguments: "needs-input", otherPrincipal: other.status, work }))
   }, "capability-authority")
 }, 180000)
 
@@ -279,4 +284,73 @@ test("C17 the qualified real scanner refuses unsafe memory and fails closed when
     console.info("SF_ATLAS_DASHBOARD_PROOF", JSON.stringify({ scenario: "scanner-failure-paths", observedScannerVersion: f.scanner.version, archiveSha256: f.scannerRelease.sha256,
       scannerAbsent: absent.status, scannerRestored: restored.status, scannerHit: hit.status, scannerTimeout: "unavailable", refusal: hit }))
   }, "scanner-failure-paths")
+}, 180000)
+
+async function rejectConcurrentAtlasMutation(mutation: "source" | "access" | "capture") {
+  await withAtlasConsumer(async (f) => {
+    const sources = await f.sources()
+    const budget = await f.ledger([sources.budget], "Only the unchanged authorized observation may leave the recall boundary.")
+    const receipt = await f.call("sf_case_read", { caseRef: encodeCaseRef(budget.caseRef) }, (context) => f.runtime.current.business.context.emitFromLedger(budget.eventRef, context))
+    expect(receipt.status).toBe("committed")
+    if (!receipt.eventId) throw new Error("Committed Atlas event has no identity")
+    const before = await f.inspect()
+    expect(before.owners).toHaveLength(1)
+    const owner = before.owners[0]!
+    const start = f.memoryWork.recalls
+    const boundary = mutation === "capture" ? 2 : 1
+    const changed = { count: 0, durableDigest: "" }
+    f.memoryWork.afterRecall = async (index) => {
+      if (index - start !== boundary) return
+      f.memoryWork.afterRecall = undefined
+      changed.durableDigest = await f.runtime.current.persistence.transaction("dashboard", async (snapshot) => {
+        if (mutation === "source") rows(snapshot.data.opexEntries)[0]!.budget = 300
+        if (mutation === "access") snapshot.data.roleMap = [{ surface: "dashboard", role: "viewer", entra: "atlas-reviewers", version: 2, by: f.actors[0] }]
+        if (mutation === "capture") {
+          const atlas = object(object(snapshot.data.__sfProductV1).atlas)
+          const originals = object(object(atlas[owner]).originals)
+          const capture = object(originals[sources.budget.refDigest])
+          if (digestSfValue(capture.ref) !== digestSfValue(sources.budget)) throw new Error("Protected original did not match the observed source")
+          originals[sources.budget.refDigest] = { ...capture, ref: { ...object(capture.ref), refId: `${sources.budget.refId}:concurrent-change` } }
+        }
+        changed.count++
+        const state = object(snapshot.data.__sfProductV1)
+        return { commit: true, value: digestSfValue({ atlas: state.atlas, outbox: state.outbox }) }
+      })
+    }
+    const result = await f.phase(`recall.concurrent-${mutation}`, () => f.dispatch("sf_decision_recall", {
+      selectionRefs: [encodeCaseRef(budget.caseRef)], similarityCriteria: ["decision-type"], period: atlasPeriod, limit: 5,
+    }))
+    expect(changed.count).toBe(1)
+    expect(result.status).toBe("unavailable")
+    expect(JSON.stringify(result)).not.toContain(receipt.eventId)
+    expect(JSON.stringify(result)).not.toContain(budget.event.rationale)
+    expect(f.memoryWork.recalls - start).toBe(boundary)
+    const persisted = await f.runtime.current.persistence.transaction("dashboard", async (snapshot) => {
+      const state = object(snapshot.data.__sfProductV1)
+      const capture = object(object(object(object(state.atlas)[owner]).originals)[sources.budget.refDigest])
+      return { commit: false, value: { digest: digestSfValue({ atlas: state.atlas, outbox: state.outbox }),
+        budget: rows(snapshot.data.opexEntries)[0]!.budget, role: rows(snapshot.data.roleMap)[0]!.role, captureRefId: object(capture.ref).refId } }
+    })
+    expect(persisted.digest).toBe(changed.durableDigest)
+    if (mutation === "source") expect(persisted.budget).toBe(300)
+    if (mutation === "access") expect(persisted.role).toBe("viewer")
+    if (mutation === "capture") expect(persisted.captureRefId).toBe(`${sources.budget.refId}:concurrent-change`)
+    console.info("SF_ATLAS_RECALL_REGRESSION", JSON.stringify({ mutation, changedAfterProtectedRead: boundary,
+      protectedReads: f.memoryWork.recalls - start, mutationCount: changed.count, result: result.status, persistedMutationPreserved: true }))
+  }, `recall-concurrent-${mutation}`)
+}
+
+test("C17 bounded recall rejects a persisted source change after its protected observation", async () => {
+  expectSpawn(import.meta.path)
+  await rejectConcurrentAtlasMutation("source")
+}, 180000)
+
+test("C17 bounded recall rejects withdrawn access after its protected observation", async () => {
+  expectSpawn(import.meta.path)
+  await rejectConcurrentAtlasMutation("access")
+}, 180000)
+
+test("C17 bounded recall rejects a corrupted capture after its protected egress read", async () => {
+  expectSpawn(import.meta.path)
+  await rejectConcurrentAtlasMutation("capture")
 }, 180000)

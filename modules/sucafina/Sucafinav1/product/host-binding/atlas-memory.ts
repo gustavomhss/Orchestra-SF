@@ -1,7 +1,7 @@
 import { createMemoryEmit, createMemoryRead, versioned } from "@orchestra/atlas-boundary/business-memory-ports"
 import type { MemoryRecord, NamedScanner } from "@orchestra/atlas-boundary/business-memory-ports"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
-import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessMemoryEnvelope, MemoryWriteReceipt, SfAtlasProjection } from "../contracts/business-context.ts"
+import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope, MemoryWriteReceipt, SfAtlasProjection } from "../contracts/business-context.ts"
 import type { DecisionCasePort, DomainPortHost } from "../contracts/ports.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -201,6 +201,15 @@ function expandEvidence(ref: BusinessEvidenceRef): BusinessEvidenceRef[] {
   return [ref]
 }
 
+type AtlasRecallRecord = Extract<Awaited<ReturnType<ReturnType<typeof createSfAtlasMemory>["recall"]>>, { status: "ok" }>["records"][number]
+
+/** Observation timestamps may advance; every field that determines authority, meaning or output must agree. */
+function recallRecordFingerprint(record: { envelope: BusinessMemoryEnvelope; entry: SfAtlasProjection["entry"]; case: AuthorizedCaseProjection; resolutions: readonly BusinessEvidenceResolution[]; recordDigest: string }) {
+  return digestSfValue({ envelope: record.envelope, entry: record.entry, recordDigest: record.recordDigest,
+    case: Object.fromEntries(Object.entries(record.case).filter(([key]) => key !== "checkedAt")),
+    resolutions: record.resolutions.map((resolution) => Object.fromEntries(Object.entries(resolution).filter(([key]) => key !== "checkedAt"))) })
+}
+
 /** Rank only records obtained from the protected reader, with S4's before/egress proofs. */
 export async function rankSfAtlasRecall(input: {
   memory: ReturnType<typeof createSfAtlasMemory>
@@ -214,11 +223,16 @@ export async function rankSfAtlasRecall(input: {
 }) {
   try {
     const candidates: AuthorizedMemoryProjection[] = []
+    const observations = new Map<string, { records: readonly AtlasRecallRecord[]; fingerprint: string }>()
+    const egress = new Map<AuthorizedMemoryProjection, AtlasRecallRecord>()
     const sourceVersions: Record<string, number> = {}
     const sourceIncarnations: Record<string, string> = {}
     for (const caseRef of input.caseRefs) {
       const read = await input.memory.recall(caseRef, input.call)
       if (read.status !== "ok") return { status: "unavailable" as const }
+      const key = JSON.stringify([caseRef.id, caseRef.incarnation])
+      if (observations.has(key)) return { status: "unavailable" as const }
+      observations.set(key, { records: read.records, fingerprint: digestSfValue(read.records.map(recallRecordFingerprint)) })
       for (const record of read.records) {
         const features = await input.featuresForCase(record.case, input.call)
         if (!features) return { status: "unavailable" as const }
@@ -239,14 +253,26 @@ export async function rankSfAtlasRecall(input: {
       }
     }
     const scope: RecallScope = { installationId: input.call.binding.installationId, projectId: input.call.binding.projectId, principalRef: input.call.binding.principalRef, accessRevision: input.call.binding.accessRevision, policyVersion: input.call.binding.policyVersion, ...input.runtimeVersions, sourceVersions, sourceIncarnations }
-    return rankSfRecalledCasesAuthorized({
+    const ranked = await rankSfRecalledCasesAuthorized({
       scope, features: input.features, candidates, call: input.call, proveContinuity: input.proveContinuity, revalidate: input.revalidate,
-      authorizeAtlas: async (candidate, call) => {
+      authorizeAtlas: async (candidate, call, phase) => {
         const caseRef = candidate.envelope.caseRef
         if (!caseRef) return false
+        const observed = observations.get(JSON.stringify([caseRef.id, caseRef.incarnation]))
+        if (!observed || digestSfValue(observed.records.map(recallRecordFingerprint)) !== observed.fingerprint) return false
+        const fingerprint = recallRecordFingerprint({ ...candidate, recordDigest: candidate.atlasTrace.recordDigest })
+        if (phase === "before") return observed.records.filter((record) => recallRecordFingerprint(record) === fingerprint).length === 1
+        // Keep a fresh protected read for every candidate after its intervening awaits. A later
+        // candidate must detect corruption or removal of an earlier record in the same partition.
         const reread = await input.memory.recall(caseRef, call)
-        return reread.status === "ok" && reread.records.some((record) => digestSfValue(record.envelope) === digestSfValue(candidate.envelope) && record.recordDigest === candidate.atlasTrace.recordDigest)
+        if (reread.status !== "ok" || digestSfValue(reread.records.map(recallRecordFingerprint)) !== observed.fingerprint) return false
+        const records = reread.records.filter((record) => recallRecordFingerprint(record) === fingerprint)
+        if (records.length !== 1) return false
+        egress.set(candidate, records[0]!)
+        return true
       },
     })
+    if (ranked.status !== "ok" || candidates.some((candidate) => !egress.has(candidate))) return { status: "unavailable" as const }
+    return { status: "ok" as const, cases: ranked.cases, records: candidates.map((candidate) => egress.get(candidate)!) }
   } catch { return { status: "unavailable" as const } }
 }

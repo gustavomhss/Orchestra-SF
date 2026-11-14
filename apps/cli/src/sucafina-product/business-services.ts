@@ -227,6 +227,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     evidence.current = atlas.context
     descriptors.splice(baseCount)
     descriptors.push(...atlas.capabilities)
+    return atlas
   }
   const procurementSelections = { create: async (call: TrustedDomainContext, period: Period) => {
     if (!isSfPeriod(period)) return { status: "denied" as const, reason: "selection-authority-unavailable" }

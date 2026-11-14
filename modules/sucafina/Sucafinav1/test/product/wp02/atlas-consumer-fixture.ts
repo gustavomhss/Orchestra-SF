@@ -115,6 +115,7 @@ async function createFixture(directory: string, phase: AtlasPhase) {
   const installationId = randomUUID(), projectId = randomUUID()
   const clock = { at: "2026-11-13T08:00:00Z" }
   const fault: { stage?: "before-commit" | "after-commit"; trips: number } = { trips: 0 }
+  const memoryWork: { recalls: number; originals: number; afterRecall?: (index: number) => Promise<void> } = { recalls: 0, originals: 0 }
   const actors = ["dashboard-reviewer-A", "dashboard-reviewer-B"] as const
   const active = new Set<string>(actors)
   const bundleRoot = path.resolve(import.meta.dir, "../../../product/ai")
@@ -180,7 +181,23 @@ async function createFixture(directory: string, phase: AtlasPhase) {
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
       authorizeDocument: async () => undefined, createId: randomUUID, now: () => Date.parse(clock.at) })
     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet(), dashboardHostWrites: new WeakSet() })
-    const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => business.initializeAtlas(value, versions)
+    const configureScanner = (value: Parameters<typeof createSfAtlasBusiness>[0]["scanner"]) => {
+      const atlas = business.initializeAtlas(value, versions)
+      const recall = atlas.memory.recall
+      const readOriginal = atlas.memory.readOriginal
+      // Observe the real protected readers; a fault may mutate durable state only after a real read completed.
+      atlas.memory.recall = async (caseRef, call) => {
+        const index = ++memoryWork.recalls
+        const result = await recall(caseRef, call)
+        if (result.status === "ok") await memoryWork.afterRecall?.(index)
+        return result
+      }
+      atlas.memory.readOriginal = async (caseRef, digest, call) => {
+        memoryWork.originals++
+        return readOriginal(caseRef, digest, call)
+      }
+      return atlas
+    }
     configureScanner(pinned)
     const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: persistence })
     const records = createDashboardRecordEvidenceHost({ host: authority.host, scopedSources: persistence,
@@ -230,7 +247,7 @@ async function createFixture(directory: string, phase: AtlasPhase) {
     return { caseRef: event.caseRef, event, ...saved }
     })
   }
-  return { runtime, clock, fault, active, actors, request, call, sources, ledger, scanner: pinned, scannerRelease, versions, phase,
+  return { runtime, clock, fault, memoryWork, active, actors, request, call, sources, ledger, scanner: pinned, scannerRelease, versions, phase,
     inspect: async () => atlasValue(await runtime.current.authority.state.read(request(), "atlas", (state) => ({
       atlasVersion: state.versions.atlas, outboxVersion: state.versions.outbox, atlasDigest: digestSfValue(state.atlas), owners: Object.keys(state.atlas),
       entries: Object.values(state.atlas).reduce<number>((count, value) => { const events = object(value).events; return count + (Array.isArray(events) ? events.length : 0) }, 0),
