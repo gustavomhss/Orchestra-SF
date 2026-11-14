@@ -1,0 +1,215 @@
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/apply.ts b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+index 4bdd12ac162d61465557363953e25dfd99fad5e8..ef76c9a0399f936a556a04234415fe20998b9b9f 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+@@ -21,7 +21,7 @@
+   reviewDigestFor: ReviewDigestFor
+   revalidateProducer: (request: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext) => Promise<PortResult<{ reviewDigest: string }>>
+ }) {
+-  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
++  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext, mode: "apply" | "recover" = "apply"): Promise<PortResult<CommandReceipt>> => {
+     const request = structuredClone(incoming)
+     const source = input.host.requestFor(context)
+     const operation = input.operationIdentity(context)
+@@ -32,11 +32,13 @@
+     if (!value || value.incarnation !== request.caseRef.incarnation || !value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
+     const change = value.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
+     if (!change || !value.choices.some((choice) => choice.id === request.choiceId)) return { status: "unavailable", reason: "prepared-change-unavailable" }
+-    if (value.version !== request.caseRef.version && !change.receipt) return { status: "stale", reason: "case-changed" }
++    if (value.version < request.caseRef.version || mode === "apply" && value.version !== request.caseRef.version && !change.receipt) return { status: "stale", reason: "case-changed" }
+     if (change.state !== "planned" && !change.receipt) return { status: "conflict", reason: "change-not-applicable" }
+     if (!await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
+     const lookup = await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context))
+     if (lookup.status !== "ok") return lookup
++    // Receipt recovery must never fall through to producer review or a domain dispatch.
++    if (mode === "recover" && lookup.value.state !== "found") return { status: "unavailable", reason: "original-receipt-unavailable" }
+     const reviewDigest = input.reviewDigestFor(context, request, change)
+     if (!isReviewDigest(reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
+     if (lookup.value.state === "found") {
+diff --git a/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts b/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts
+index 23d9291b3dcedda36edc4aa4f38856024e3c58f4..cd1555dbbc4813cee11202a26d783f6215642432 100644
+--- a/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts
++++ b/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts
+@@ -83,14 +83,14 @@
+       return (saved.status === "ok" || saved.status === "preview") && saved.value && await host.revalidate(context)
+     } finally { input.procurementEvidenceWrites.delete(write) }
+   }
+-  const readChange = async (request: ApplyRequest, context: TrustedDomainContext): Promise<PortResult<{ decision: DecisionCase; change: PreparedChange }>> => {
++  const readChange = async (request: ApplyRequest, context: TrustedDomainContext, receiptOnly = false): Promise<PortResult<{ decision: DecisionCase; change: PreparedChange }>> => {
+     const source = host.requestFor(context)
+     if (!source || !await host.revalidate(context)) return { status: "denied", reason: "prepared-authority-unavailable" }
+     const loaded = await state.read(source, "cases", (stored, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? stored.cases[request.caseRef.id] : undefined)
+     if (loaded.status !== "ok" || !loaded.value || loaded.value.incarnation !== request.caseRef.incarnation || !await authorizeCase(loaded.value, context)) return { status: "unavailable", reason: "prepared-case-unavailable" }
+     const decision = loaded.value
+     const change = decision.preparedChanges.find((value) => value.id === request.changeId && value.choiceId === request.choiceId)
+-    if (!change || !decision.choices.some((value) => value.id === request.choiceId) || decision.version < request.caseRef.version || decision.version !== request.caseRef.version && !change.receipt || change.target.surface !== "procurement") return { status: "stale", reason: "prepared-case-changed" }
++    if (!change || !decision.choices.some((value) => value.id === request.choiceId) || decision.version < request.caseRef.version || decision.version !== request.caseRef.version && !change.receipt && !receiptOnly || change.target.surface !== "procurement") return { status: "stale", reason: "prepared-case-changed" }
+     return { status: "ok", value: { decision, change } }
+   }
+   const prepareDomainCommands: MutationHost["prepareDomainCommands"] = async (caseRef, choiceId, operations, context) => {
+@@ -208,13 +208,13 @@
+     },
+     classifyReceipt,
+   })
+-  const apply = async (incoming: AdmittedApply, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
++  const executeApplication = async (incoming: AdmittedApply, context: TrustedDomainContext, mode: "apply" | "recover"): Promise<PortResult<CommandReceipt>> => {
+     const admitted = structuredClone(incoming)
+     if (!isReviewDigest(admitted.reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
+     const request: ApplyRequest = { caseRef: admitted.caseRef, changeId: admitted.changeId, choiceId: admitted.choiceId }
+     const source = host.requestFor(context)
+     if (!source || context.kind !== "ui" || active.has(source) || !await input.authority.human.authorize(context, "decisions.apply", admitted) || !await host.revalidate(context)) return { status: "denied", reason: "human-application-required" }
+-    const loaded = await readChange(request, context)
++    const loaded = await readChange(request, context, mode === "recover")
+     if (loaded.status !== "ok") return loaded
+     const reviewed = reviews.get(reviewKey(request, context))
+     const checkedAt = Date.parse(input.now())
+@@ -237,12 +237,15 @@
+       if (!loaded.value.change.receipt) {
+         const receipt = await prepared.readReceipt({ surface: held.change.target.surface, targetRef: held.change.target.id, targetIncarnation: held.change.target.incarnation, idempotencyKey: held.change.idempotencyKey, commandDigest: held.change.operation.commandDigest }, context)
+         if (receipt.status !== "ok") return receipt
++        if (mode === "recover" && receipt.value.state !== "found") return { status: "unavailable", reason: "original-receipt-unavailable" }
+         if (receipt.value.state === "not-found" && (!reviewed || reviewed.expiresAt <= checkedAt || reviewed.changeDigest !== digestSfValue(loaded.value.change))) return { status: "denied", reason: "prepared-review-required" }
+         if (receipt.value.state === "not-found" && reviewed?.reviewDigest !== admitted.reviewDigest) return { status: "conflict", reason: "prepared-review-proof-mismatch" }
+       }
+-      return await execute(request, context)
++      return await execute(request, context, mode)
+     } finally { active.delete(source) }
+   }
++  const apply = (incoming: AdmittedApply, context: TrustedDomainContext) => executeApplication(incoming, context, "apply")
++  const recover = (incoming: AdmittedApply, context: TrustedDomainContext) => executeApplication(incoming, context, "recover")
+   const authorizeReceiptTarget = async (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => {
+     const held = active.get(request)
+     const domain = host.persistence.currentSnapshots?.()?.procurement
+@@ -359,7 +362,7 @@
+     // which compares the canonical material digest and revision as well as identity.
+     return await physicalContinuity(archived, currentRef, context) && await host.revalidate(context)
+   }
+-  return { prepareChanges: mutations.prepareChanges, prepareDomainCommands, reviewChange, apply, authorizeReceiptTarget, resolveEvidence, proveContinuity, dispose: () => reviews.clear() }
++  return { prepareChanges: mutations.prepareChanges, prepareDomainCommands, reviewChange, apply, recover, authorizeReceiptTarget, resolveEvidence, proveContinuity, dispose: () => reviews.clear() }
+ }
+ 
+ function stableProjection(value: DomainProjection) {
+diff --git a/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts b/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts
+index e169d335f091c446bb380ee73f450083f917946f..1704aeef4c219137391d8f7417f6099a748cc482 100644
+--- a/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts
++++ b/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts
+@@ -26,7 +26,7 @@
+   return async (request: Request, surface: string): Promise<Response | undefined> => {
+     const url = new URL(request.url)
+     const mode = url.searchParams.get("sf")
+-    if (mode !== "decision-prepare-changes" && mode !== "decision-review" && mode !== "decision-apply") return undefined
++    if (mode !== "decision-prepare-changes" && mode !== "decision-review" && mode !== "decision-apply" && mode !== "decision-recover") return undefined
+     if (surface !== "procurement" || url.origin !== input.origin || url.pathname !== `${input.mount}/procurement` || request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return response({ status: "denied", reason: "decision-origin-unavailable" })
+     if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
+     if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return response({ status: "needs-input", reason: "invalid-decision-query" })
+@@ -47,7 +47,8 @@
+         const selected: Review = { caseRef: parsed.caseRef, choiceId: parsed.choiceId, changeId: parsed.changeId }
+         if (mode === "decision-review") return { status: "ok", value: response(await runtime.decisions.reviewChange(selected, admitted.value)) }
+         if (!("reviewDigest" in parsed)) return { status: "needs-input", reason: "invalid-decision-input" }
+-        const result = await runtime.decisions.apply({ ...selected, reviewDigest: parsed.reviewDigest }, admitted.value)
++        const command = { ...selected, reviewDigest: parsed.reviewDigest }
++        const result = mode === "decision-recover" ? await runtime.decisions.recover(command, admitted.value) : await runtime.decisions.apply(command, admitted.value)
+         return { status: "ok", value: result.status === "ok" ? response({ status: "ok", value: { receiptId: result.value.id, surface: result.value.surface, version: result.value.version, outcome: result.value.result.ok ? "applied" : result.value.result.status === 409 ? "conflict" : "failed" } }) : response(result) }
+       }).then((result) => result.status === "ok" ? result.value : response(result))
+     } catch {
+diff --git a/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts b/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts
+index 2e6c081ad2a5282654707f7fc7278183e7dfb20d..0e875e7b9493c93e527c6b72e25e80b08052d0e4 100644
+--- a/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts
+@@ -6,8 +6,8 @@
+   const item = projection.case
+   if (!item.preparedChanges.length) return ""
+   return `<section><h3>Review prepared changes</h3>${item.preparedChanges.map((change, index) => {
+-    const context = { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, choiceId: change.choiceId, changeId: change.id, surface: change.target.surface, expectedVersion: change.expectedVersion }
+-    return `<article data-decision-apply data-context="${esc(JSON.stringify(context))}"><h4>Prepared change ${index + 1} · ${esc(change.target.surface)}</h4><p>State: ${esc(change.state)}</p><button type="button" data-review-change>Review current changes</button><div data-change-review role="status" aria-live="polite"></div><label><input type="checkbox" data-change-confirm disabled>I reviewed these changes and want to apply them</label><button type="button" data-apply-change disabled>Apply reviewed change</button><p data-change-status role="status" aria-live="polite"></p><form data-change-guard hidden></form></article>`
++    const context = { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, choiceId: change.choiceId, changeId: change.id, surface: change.target.surface, expectedVersion: change.expectedVersion, recoveryScope: { installationId: projection.context.installationId, projectId: projection.context.projectId, principalRef: projection.context.principalRef, target: { surface: change.target.surface, type: change.target.type, id: change.target.id, incarnation: change.target.incarnation }, operationRef: change.operationRef, idempotencyKey: change.idempotencyKey } }
++    return `<article data-decision-apply data-context="${esc(JSON.stringify(context))}"><h4>Prepared change ${index + 1} · ${esc(change.target.surface)}</h4><p>State: ${esc(change.state)}</p><button type="button" data-review-change>Review current changes</button><div data-change-review role="status" aria-live="polite"></div><label><input type="checkbox" data-change-confirm disabled>I reviewed these changes and want to apply them</label><button type="button" data-apply-change disabled>Apply reviewed change</button><button type="button" data-recover-change hidden disabled>Recover recorded receipt</button><p data-change-status role="status" aria-live="polite"></p><form data-change-guard hidden></form></article>`
+   }).join("")}</section>`
+ }
+ 
+@@ -15,23 +15,39 @@
+ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
+   if (entry.dataset.sfApplyReady) return; entry.dataset.sfApplyReady = 'true'
+   let context = JSON.parse(entry.dataset.context)
+-  const review = entry.querySelector('[data-review-change]'); const output = entry.querySelector('[data-change-review]'); const confirm = entry.querySelector('[data-change-confirm]'); const apply = entry.querySelector('[data-apply-change]'); const status = entry.querySelector('[data-change-status]'); const guard = entry.querySelector('[data-change-guard]')
+-  let reviewed = false; let reviewDigest; let intention; let busy = false; let closed = false; let completed = false
++  const recoveryIdentity = 'sf-c12-intention:' + JSON.stringify([context.recoveryScope.installationId, context.recoveryScope.projectId, context.recoveryScope.principalRef, context.recoveryScope.target, context.caseRef.id, context.caseRef.incarnation, context.choiceId, context.changeId, context.recoveryScope.operationRef, context.recoveryScope.idempotencyKey])
++  const review = entry.querySelector('[data-review-change]'); const output = entry.querySelector('[data-change-review]'); const confirm = entry.querySelector('[data-change-confirm]'); const apply = entry.querySelector('[data-apply-change]'); const status = entry.querySelector('[data-change-status]'); const guard = entry.querySelector('[data-change-guard]'); const recover = entry.querySelector('[data-recover-change]')
++  let reviewed = false; let reviewDigest; let intention; let busy = false; let closed = false; let completed = false; let recoveryBlocked = false
++  const remember = () => {
++    try { sessionStorage.setItem(recoveryIdentity, JSON.stringify({ key: intention.key, body: intention.body })); return true } catch { return false }
++  }
++  const forget = () => { try { sessionStorage.removeItem(recoveryIdentity) } catch {} }
++  try {
++    const raw = sessionStorage.getItem(recoveryIdentity)
++    if (raw !== null) {
++      const saved = JSON.parse(raw)
++      if (!saved || typeof saved.key !== 'string' || !saved.key.trim() || saved.key.length > 256 || typeof saved.body !== 'string' || saved.body.length > 4096) throw new Error('invalid-recovery')
++      const body = JSON.parse(saved.body), ref = body.caseRef
++      if (Object.keys(body).length !== 4 || Object.keys(ref).length !== 3 || ref.id !== context.caseRef.id || ref.incarnation !== context.caseRef.incarnation || !Number.isSafeInteger(ref.version) || ref.version < 1 || ref.version > context.caseRef.version || body.changeId !== context.changeId || body.choiceId !== context.choiceId || typeof body.reviewDigest !== 'string' || !/^[a-f0-9]{64}$/.test(body.reviewDigest)) throw new Error('invalid-recovery')
++      intention = { key: saved.key, body: saved.body, uncertain: true }
++    }
++  } catch { recoveryBlocked = true }
+   const active = () => !closed && entry.isConnected
+   const revoke = () => {
+-    closed = true; reviewed = false; reviewDigest = undefined; context = undefined
++    forget(); closed = true; reviewed = false; reviewDigest = undefined; context = undefined
+     if (intention) intention.body = ''; intention = undefined
+-    output.replaceChildren(); confirm.checked = false; confirm.disabled = true; review.disabled = true; apply.disabled = true
++    output.replaceChildren(); confirm.checked = false; confirm.disabled = true; review.disabled = true; apply.disabled = true; recover.disabled = true
+     delete guard.dataset.dirty; delete entry.dataset.context
+     entry.replaceChildren(status); status.textContent = 'Your access changed. Reload before reviewing or applying this change.'
+   }
+   addEventListener('sf-access-revoked', () => { if (entry.isConnected) revoke() })
+   const controls = () => {
+     if (!active()) return
+-    review.disabled = busy || !!intention || completed
+-    confirm.disabled = busy || !!intention || !reviewed || completed
+-    apply.disabled = busy || completed || (!intention && (!reviewed || !confirm.checked))
++    review.disabled = recoveryBlocked || busy || !!intention || completed
++    confirm.disabled = recoveryBlocked || busy || !!intention || !reviewed || completed
++    apply.disabled = recoveryBlocked || busy || completed || (!intention && (!reviewed || !confirm.checked))
+     apply.textContent = intention?.uncertain ? 'Retry same application' : 'Apply reviewed change'
++    recover.hidden = !intention?.uncertain; recover.disabled = recoveryBlocked || busy || completed || !intention?.uncertain
+   }
+   const send = async (action, body, key) => {
+     const url = new URL(location.href); url.search = '?sf=' + action
+@@ -61,21 +77,29 @@
+     finally { busy = false; controls() }
+   })
+   confirm.addEventListener('change', () => { if (!active() || busy || intention || completed) return; controls() })
+-  apply.addEventListener('click', async () => {
+-    if (!active() || busy || completed || apply.disabled || !intention && (!reviewed || !reviewDigest || !confirm.checked)) return
+-    if (!intention) intention = { key: crypto.randomUUID(), body: JSON.stringify({ caseRef: context.caseRef, choiceId: context.choiceId, changeId: context.changeId, reviewDigest }), uncertain: false }
++  const perform = async (receiptOnly) => {
++    if (!active() || busy || completed || (receiptOnly ? recover.disabled || !intention?.uncertain : apply.disabled) || !intention && (!reviewed || !reviewDigest || !confirm.checked)) return
++    if (!intention) {
++      intention = { key: crypto.randomUUID(), body: JSON.stringify({ caseRef: context.caseRef, choiceId: context.choiceId, changeId: context.changeId, reviewDigest }), uncertain: false }
++      if (!remember()) { intention = undefined; status.textContent = 'Could not preserve this application for recovery. Keep this page open and try again.'; controls(); return }
++    }
+     const attempt = intention; const reconciling = attempt.uncertain
+-    busy = true; guard.dataset.dirty = 'true'; controls(); status.textContent = 'Applying reviewed change…'
++    busy = true; guard.dataset.dirty = 'true'; controls(); status.textContent = receiptOnly ? 'Recovering the recorded receipt…' : 'Applying reviewed change…'
+     try {
+-      const receipt = await send('decision-apply', attempt.body, attempt.key)
++      const receipt = await send(receiptOnly ? 'decision-recover' : 'decision-apply', attempt.body, attempt.key)
+       if (!active() || intention !== attempt) return
+       if (!receipt || typeof receipt.receiptId !== 'string' || !receipt.receiptId || receipt.surface !== context.surface || !Number.isSafeInteger(receipt.version) || receipt.version < 0) throw new Error('unconfirmed')
+-      intention = undefined; completed = true; delete guard.dataset.dirty; status.textContent = 'Application receipt recorded. Reloading the decision to show its outcome…'; location.reload()
++      forget(); intention = undefined; completed = true; delete guard.dataset.dirty; status.textContent = 'Application receipt recorded. Reloading the decision to show its outcome…'; location.reload()
+     } catch (error) {
+       if (!active() || intention !== attempt) return
+-      if (error?.rejected && !reconciling) { intention = undefined; reviewed = false; reviewDigest = undefined; confirm.checked = false; delete guard.dataset.dirty; status.textContent = 'Application was rejected. Review the current change again before making a new attempt.' }
+-      else { attempt.uncertain = true; status.textContent = error?.rejected ? 'The retry was rejected, but the earlier application is still unconfirmed. Keep the same request and check the current receipt before another change.' : error?.conflict ? 'The application returned a conflict and its outcome is still unconfirmed. The reviewed request stays locked; check the current receipt or retry the same request.' : 'Could not confirm application. The reviewed request is locked; retry the same request to reconcile its receipt.' }
++      if (error?.rejected && !reconciling && !receiptOnly) { forget(); intention = undefined; reviewed = false; reviewDigest = undefined; confirm.checked = false; delete guard.dataset.dirty; status.textContent = 'Application was rejected. Review the current change again before making a new attempt.' }
++      else { attempt.uncertain = true; status.textContent = receiptOnly ? 'The original receipt could not be recovered. The same reviewed request stays locked; no new application was sent.' : error?.rejected ? 'The retry was rejected, but the earlier application is still unconfirmed. Keep the same request and check the current receipt before another change.' : error?.conflict ? 'The application returned a conflict and its outcome is still unconfirmed. The reviewed request stays locked; check the current receipt or retry the same request.' : 'Could not confirm application. The reviewed request is locked; retry the same request to reconcile its receipt.' }
+     } finally { busy = false; controls() }
+-  })
++  }
++  apply.addEventListener('click', () => perform(false))
++  recover.addEventListener('click', () => perform(true))
++  if (recoveryBlocked) status.textContent = 'The saved application could not be read safely. This change remains locked; restore its original recovery request before applying again.'
++  if (intention) status.textContent = 'An earlier application is unconfirmed. Recover its recorded receipt before considering another change.'
++  controls()
+ })
+ `
