@@ -1,0 +1,214 @@
+{
+  "schema": "wp12-owner-input-consumer-finding-v1",
+  "id": "WP12-PLANNER-ANSWER-SCOPE-MOUNT-AND-MANIFEST",
+  "status": "RUNTIME_UNAVAILABLE_OBSERVED_WITH_TWO_INDEPENDENT_STATIC_BLOCKERS; NO_PATCH_APPLIED",
+  "owners": [
+    "WP10 business/host mounting",
+    "WP08 C06 answer-scope composition",
+    "Planner source/confirmation producer owner",
+    "WP00 only if a shared contract change is required"
+  ],
+  "observedProduct": {
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+  },
+  "documentationHeadAtDiscovery": {
+    "sha": "551ff6c1684ae09704cfce85c12690e8369b2d0c",
+    "tree": "58cf100628778a54d9ea4e74d662bd3e6cb1f78e",
+    "sourceChange": false
+  },
+  "inspectedOwnerHead": {
+    "sha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "businessBlob": "520a71460ba69a9c8a07fd1b7db838ca13108c32",
+    "label": "WP10 W21 published source/doc head"
+  },
+  "affectedOperation": "sf_answer_read",
+  "affectedSkill": "sf-coordenar-perguntas",
+  "criteria": [
+    "WP12.T02.CHK.11",
+    "WP12.T02.CMP.40",
+    "WP12.T02.CMP.60",
+    "WP12.T02.SUC.60"
+  ],
+  "observedRuntime": {
+    "run": 43604476634,
+    "job": 132476041608,
+    "snapshot": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43604476634/job/132476041608",
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-15-questions.json",
+    "log": {
+      "path": "evidence/resume-15-questions.log",
+      "bytes": 87010,
+      "sha256": "9c41d2557d77b625e2cd5dea31794695fbe1034681f299c8e523b48937bc91ef"
+    },
+    "test": "a focused human pending question is consumed once and its unconfirmed answer reopens through the canonical thread",
+    "testSource": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+      "blob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9"
+    },
+    "result": "FAIL",
+    "durationMs": 98977.07,
+    "failingAssertionLine": 142,
+    "logFailureLines": [
+      930,
+      945
+    ],
+    "expectedStatus": "ok",
+    "actualStatus": "unavailable",
+    "innerFailureReasonLogged": false,
+    "priorObservedActions": [
+      "actual UI preparation",
+      "one canonical thread",
+      "same-receipt retry",
+      "changed preparation refused",
+      "actual human reply",
+      "thread read after host reload",
+      "same preparation retry after reload with unchanged threads storageVersion"
+    ],
+    "scope": "The log proves the unavailable public result, not which internal subgate failed first. It does not prove completed answer consumption, confirmation, omitted-category derivation or native inference."
+  },
+  "staticBlockers": [
+    {
+      "id": "MISSING_SCOPE_RESOLVER",
+      "boundary": "createSfBusinessServices → createCollaborationHost.resolveAnswerScope",
+      "facts": [
+        "The consumed97cde4d and latest inspected520a7146 business constructors mount the Planner confirmation observer but do not provide resolveAnswerScope.",
+        "The C06 host7d8396e2 fallback derives a scope only for a Dashboard source with exactly one record evidence ref. A Planner source necessarily reaches answer-scope-unavailable if earlier checks succeed.",
+        "answerReuse.read134ce5cd derives scope before the baseline-missing/unconfirmed branch. dispatch4a1ebe92 forwards unavailable; only needs-input/answer-unconfirmed becomes a successful unconfirmed result."
+      ],
+      "diagnosticLimit": "This is an unavoidable static gate for the real Planner-backed thread, not proof that the runtime reached this exact line first."
+    },
+    {
+      "id": "PLANNER_SOURCE_FIELDS_AND_CONFIRMATION_MANIFEST_DISAGREE",
+      "boundary": "actual Planner EvidenceRef → C06 exact scope validation → Planner manifest",
+      "facts": [
+        "The actual source resolver8a320127 emits target.fields=Object.keys(current.projection); the source requires a valid numeric projection.year.",
+        "Owner6230f22e extracts the construction into sfPlannerEvidenceRef but preserves Object.keys(projection) and the mandatory year. It does not replace this with summary.",
+        "C06 host7d8396e2 requires exact sorted equality between scope.fields and the original source.target.fields before verifyManifest.",
+        "Planner confirmation observer0d217f65 accepts planner-c06-v1 only for fields=[summary], a valid period and zero materialDependencies. It is byte-identical in our W20 and inspected owner head.",
+        "Consequently a callback that fabricates summary fails host equality; a callback that preserves the real field list fails the current Planner manifest. Wiring alone cannot complete the current path."
+      ],
+      "diagnosticLimit": "No source was modified, narrowed or forged to produce this conclusion. These are exact published sources; this incompatible field contract remains a source finding until owner correction and hosted execution."
+    }
+  ],
+  "preservation": {
+    "publicResultAssertionsUnchanged": true,
+    "originalThreadProvenanceUnchanged": true,
+    "originalSourceRefsUnchanged": true,
+    "periodsUnchanged": true,
+    "authorityAndRevocationGatesUnchanged": true,
+    "financialEngineAndPolicyUnchanged": true,
+    "confirmationNotFabricated": true,
+    "unavailableNotRelabeledUnconfirmed": true,
+    "nativeInferenceNotClaimed": true
+  },
+  "relationToOtherFindings": "The separate native-question relation failure selected unreadable milestones arrays and has its own proposed scalar-field driver fix. That fix does not reconcile this Planner answer scope; prepareQuestionSupport later reads a real Planner-backed predecessor through the same sf_answer_read path.",
+  "ownerResolution": "owner-delta.json",
+  "sources": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "blob": "520a71460ba69a9c8a07fd1b7db838ca13108c32",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/apps/cli/src/sucafina-product/business-services.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 67787,
+      "sha256": "c5c2a68d0efe67e2bbb53963ec50fdfc5f00d61de8ad4c25351db639119d697d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "7d8396e2f6b07dbb41fd4a1694da6fab32bb25d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 25666,
+      "sha256": "4afff123a457f0b077fb61d7038d0710b745825680115585ca0fdaa0f5da41b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 18198,
+      "sha256": "b3c0cd0bb9221b980fe30b8dcd3a2a856bed4ec5dd79220d14c4d2fd6803f7d1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 17961,
+      "sha256": "a42bcd8569082bcc4ce9221a1e58171a3d93faf45646abddbc437375094b6b91"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "4a1ebe9298dd62d2846a45f294aa1b6331343040",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 8311,
+      "sha256": "75ac70777d1e386284e6a5c7a9a394ad579884afeea155f63b3eed5152070569"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/source-issuer.ts",
+      "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/planner/source-issuer.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 3159,
+      "sha256": "2456d19f2af1baca72838a1cbcbe6776f6e603c9bba19abd38af02e0dc84653a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "blob": "7d8396e2f6b07dbb41fd4a1694da6fab32bb25d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 25666,
+      "sha256": "4afff123a457f0b077fb61d7038d0710b745825680115585ca0fdaa0f5da41b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "method": "GitHub MCP fetch_file, complete source",
+      "bytes": 17961,
+      "sha256": "a42bcd8569082bcc4ce9221a1e58171a3d93faf45646abddbc437375094b6b91"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "bytes": 5696,
+      "sha256": "1e684c6899ccc4c9eb889a8c07e6ff52fcd1eb56a5d670b6b4c58ef52ac7972f",
+      "blob": "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "method": "GitHub MCP fetch_file, complete source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "bytes": 6245,
+      "sha256": "ca17ee764ef826277213a34992557967d610079c75300f82fc7750bf08a6721b",
+      "blob": "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "method": "GitHub MCP fetch_file, complete source"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "bytes": 62972,
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/business-services.ts",
+      "method": "Existing GitHub MCP source-pin ledger independently hash-checked; full relevant constructor read"
+    }
+  ],
+  "proposalState": "NO_CODE_PATCH: a mounting-only summary callback would be insufficient and misleading. Owner sequence and acceptance discriminators are explicit instead.",
+  "localProductTests": false,
+  "localTypecheck": false,
+  "foreignSourcesEdited": false,
+  "currentRuntimeResolved": false,
+  "gnativeAccepted": false
+}
