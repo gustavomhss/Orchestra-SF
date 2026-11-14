@@ -1,5 +1,6 @@
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import type { ScenarioResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { createDecisionProposalService } from "../../../../modules/sucafina/Sucafinav1/product/decisions/proposals.ts"
@@ -72,7 +73,9 @@ export function createSfAlternativeServices(input: {
     const provisional = evaluated.costCoverage.alternativeVersion !== (previous?.version ?? 0) + 1 || current.value.case.alternatives.some((value) => value.result.id === evaluated.id)
     const identity = provisional ? { alternativeId: `proposal:${digestSfValue({ caseRef: selection.request.caseRef, request: selection.request, scenario: selection.scenario })}`, alternativeVersion: 1 }
       : { alternativeId: evaluated.costCoverage.alternativeId, alternativeVersion: evaluated.costCoverage.alternativeVersion }
-    const result = { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
+    const result: ScenarioResult = evaluated.comparisonStatus === "complete"
+      ? { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
+      : { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
     if (validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)) return undefined
     const again = await business.cases.read({ caseRef: selection.request.caseRef }, call)
     if (again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || !await host.revalidate(call)) return undefined

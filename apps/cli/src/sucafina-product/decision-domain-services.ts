@@ -31,6 +31,7 @@ import { createSfDecisionProposalServices } from "./decision-proposal-services.t
 import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfPortfolioServices } from "./portfolio-services.ts"
 import type { SfAnalysisServiceBindings } from "./analysis-services.ts"
+import type { SfAdmittedAlternativeSelection } from "./decision-alternative-services.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 
@@ -43,6 +44,7 @@ export function createSfDecisionDomainServices(input: {
   signalRegistryWrites: WeakSet<object>
   selectedCase: (call: TrustedDomainContext) => Promise<PortResult<CaseRef>>
   verifiedInputFor?: (call: TrustedDomainContext) => Promise<PortResult<unknown>>
+  verifiedAlternativeSelectionFor?: (call: TrustedDomainContext) => Promise<PortResult<SfAdmittedAlternativeSelection>>
   hasAdmittedInputContext?: (call: TrustedDomainContext) => boolean
   readAlternativeCapture?: NonNullable<SfAnalysisServiceBindings["portfolio"]>["readAlternativeCapture"]
   sharedPortfolio?: ReturnType<typeof createSfPortfolioServices>

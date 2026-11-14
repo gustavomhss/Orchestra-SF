@@ -31,6 +31,7 @@ test("coverage evidence projects exact whole months through Planner without recu
     environment: async () => ({ at, id: randomUUID, directory: [] }),
     authenticate: async (_request, scope) => live.allowed && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "finance" }] } : null }
   try {
+    if (!await ui.validate(call, "sf_forecast_compare", "a".repeat(64))) throw new Error("Real UI read lease could not be consumed")
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data = { versions: [{ id: "v0", name: "Monthly forecast", year: 2027, closed: 1,

@@ -111,7 +111,7 @@ export function createSfChangeProposalServices(input: {
     for (const [index, operation] of request.operations.entries()) changes.push(await prepare({ operation, choice,
       operationId: `change-proposal:${digestSfValue({ operationIdentity, index })}`, idempotencyKey: `change-proposal:${digestSfValue({ operationIdentity, index })}` }, call))
     const failure = changes.find((value) => value.status !== "ok")
-    if (failure && failure.status !== "ok") return failure
+    if (failure) return failure
     return { status: "ok", value: { changes: changes.flatMap((value) => value.status === "ok" ? [value.value] : []), conditions: [] } }
   }
   const resolvePreview = createDecisionChoiceResultLookup({ cases: business.cases, state, results: business.results, host })

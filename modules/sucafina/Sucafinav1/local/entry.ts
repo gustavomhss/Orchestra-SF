@@ -25,6 +25,7 @@ import { createSfSourceScopeProjector } from "../product/integration/source-proj
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
 import { decorateSfProductHtml } from "../product/interface/html.ts"
+import { decorateSfDecisionControlsHtml } from "../product/integration/decision-controls-link.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
 import { getSfProductHtml } from "../product/integration/host-presentation.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
@@ -114,7 +115,7 @@ export async function createLocalInstallation(context: { origin: string; createH
       const productHtml = getSfProductHtml(runtime?.services?.())
       const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page) ?? decorateSfProductHtml(html, surface, page)
       // Keep WP06 document/import navigation while composing WP04's fenced page projection.
-      return document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`)
+      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`), surface)
     },
     maxJsonBytes: 2 * 1024 * 1024,
     assets,

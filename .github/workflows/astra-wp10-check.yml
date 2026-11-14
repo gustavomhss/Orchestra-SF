@@ -35,8 +35,10 @@ jobs:
           import { appendFileSync, readFileSync } from 'node:fs'
           import { execFileSync } from 'node:child_process'
           const input = JSON.parse(readFileSync('.astra-wp10-check.json', 'utf8'))
-          if (Object.keys(input).sort().join(',') !== 'devSha,productSha' ||
-              ![input.productSha, input.devSha].every(value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value)))
+          const keys = Object.keys(input).sort().join(',')
+          const delivery = keys === 'candidateSha,devSha,productSha'
+          if ((!delivery && keys !== 'devSha,productSha') ||
+              ![input.productSha, input.devSha, ...(delivery ? [input.candidateSha] : [])].every(value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value)))
             throw new Error('Invalid WP10 check envelope')
           const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
           if (git('rev-parse', 'HEAD') !== process.env.GITHUB_SHA || git('rev-parse', 'HEAD^') !== input.productSha)
@@ -44,7 +46,17 @@ jobs:
           if (git('diff-tree', '--no-commit-id', '--name-status', '-r', input.productSha, 'HEAD') !== 'A\t.astra-wp10-check.json')
             throw new Error('The check snapshot changed product blobs')
           git('merge-base', '--is-ancestor', 'd41ea01b8d9aa068301c1643c1ec3dc088900533', input.productSha)
-          appendFileSync(process.env.GITHUB_OUTPUT, `sha=${input.productSha}\ndev=${input.devSha}\n`)
+          if (delivery) {
+            git('merge-base', '--is-ancestor', input.candidateSha, input.productSha)
+            const changes = git('diff', '--name-status', input.candidateSha, input.productSha).split('\n').filter(Boolean)
+            if (!changes.length || changes.some(line => !/^A\tmodules\/sucafina\/Sucafinav1\/docs\/sf2h\/receipts\/WP10\/.+\.(json|md|log|txt|patch|png)$/.test(line)))
+              throw new Error('Delivery must add only WP10 evidence; it cannot edit candidate or existing receipts')
+            for (const line of changes) {
+              const path = line.slice(2)
+              if (!git('ls-tree', input.productSha, '--', path).startsWith('100644 blob ')) throw new Error('Invalid evidence mode')
+            }
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, `sha=${input.productSha}\ndev=${input.devSha}\ndelivery=${delivery}\n`)
           NODE
 
       - name: Checkout exact product
@@ -71,21 +83,21 @@ jobs:
         uses: ./.github/actions/setup-bun
 
       - name: Typecheck Sucafina
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
         working-directory: modules/sucafina
         run: |
           set -o pipefail
           bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/sucafina-typecheck.log"
 
       - name: Typecheck CLI consumers
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
         working-directory: apps/cli
         run: |
           set -o pipefail
           bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/cli-typecheck.log"
 
       - name: Verify canonical Atlas generation
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
         working-directory: modules/atlas/boundary
         run: |
           set -o pipefail
@@ -94,7 +106,7 @@ jobs:
           git diff --exit-code -- src/generated 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/atlas-generated-diff.log"
 
       - name: Typecheck Atlas boundary
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
         working-directory: modules/atlas/boundary
         run: |
           set -o pipefail

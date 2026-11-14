@@ -1,5 +1,5 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { SfNativeRunRecord, SfProductStatePort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+import type { SfNativeRunRecord } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { alternativeProvenanceKey } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
@@ -10,7 +10,6 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 export function createSfAlternativeCaptures(input: {
   authority: ReturnType<typeof createSfProductAuthority>
   captures: Map<string, Map<string, AlternativeCapabilityProvenance>>
-  proposalCoverageWrites: WeakSet<object>
   active: (record: AlternativeCapabilityProvenance) => boolean
 }) {
   const host = input.authority.host
@@ -52,17 +51,7 @@ export function createSfAlternativeCaptures(input: {
     return first && second && digestSfValue(first) === digestSfValue(second) && await host.revalidate(call)
       ? { status: "ok", value: structuredClone(second) } : { status: "unavailable", reason: "alternative-capture-unavailable" }
   }
-  // Only the trusted run-store instance receives this facade; its callback is never caller-supplied.
-  const runState: SfProductStatePort = {
-    read: input.authority.state.read,
-    transaction: (request, command, work) => {
-      if (command.namespace !== "contributions" || command.sourceFence !== "all" || command.additionalNamespaces?.some((entry) => entry.namespace !== "preferences"))
-        return Promise.resolve({ status: "denied", reason: "run-store-state-scope-invalid" })
-      input.proposalCoverageWrites.add(work)
-      return input.authority.state.transaction(request, command, work).finally(() => input.proposalCoverageWrites.delete(work))
-    },
-  }
-  return { runState, readByResult: (runRef: string, resultDigest: string, call: TrustedDomainContext) => read(runRef, { resultDigest }, call),
+  return { readByResult: (runRef: string, resultDigest: string, call: TrustedDomainContext) => read(runRef, { resultDigest }, call),
     readByCall: async (runRef: string, callId: string, call: TrustedDomainContext): Promise<PortResult<AlternativeCapabilityProvenance>> => {
       const found = await read(runRef, { callId }, call)
       return found.status === "ok" ? { status: "ok", value: found.value.record } : found

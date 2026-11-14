@@ -2,19 +2,35 @@ import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/cont
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfDecisionDomainServices } from "./decision-domain-services.ts"
+import { htmlPolicy } from "../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import { readSfDecisionControls, sfDecisionControlsHtml } from "./decision-controls.ts"
 
-type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; business: ReturnType<typeof createSfBusinessServices>; domain: ReturnType<typeof createSfDecisionDomainServices> }
+export type SfDecisionHttpRuntime = { authority: ReturnType<typeof createSfProductAuthority>; business: ReturnType<typeof createSfBusinessServices>; domain: ReturnType<typeof createSfDecisionDomainServices> }
 const actions = { "decision-coverage": "decisions.coverage", "decision-criteria": "decisions.criteria",
   "decision-select-portfolio": "decisions.select-portfolio", "decision-condition": "decisions.condition.record" } as const
 
 /** Human registry writes use the complete payload and the installation's current case. */
-export function createSfDecisionDomainHttp(input: { origin: string; mount: string; runtime: () => Runtime | undefined }) {
+export function createSfDecisionDomainHttp(input: { origin: string; mount: string; runtime: () => SfDecisionHttpRuntime | undefined }) {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
-    if (!mode || !Object.hasOwn(actions, mode)) return undefined
+    if (!mode || !Object.hasOwn(actions, mode) && mode !== "decision-controls") return undefined
     const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
-    if (surface !== "planner" || url.origin !== input.origin || url.pathname !== `${input.mount}/planner` || request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+    if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement" || url.origin !== input.origin || url.pathname !== `${input.mount}/${surface}` || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+    if (mode === "decision-controls") {
+      if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+      const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "format"]
+      if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) || url.searchParams.has("format") && url.searchParams.get("format") !== "json") return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
+      const runtime = input.runtime()
+      if (!runtime) return reply({ status: "unavailable" }, 503)
+      try {
+        const result = await readSfDecisionControls(runtime, request)
+        if (result.status !== "ok" || url.searchParams.get("format") === "json") return reply(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
+        const html = sfDecisionControlsHtml(result.value, surface)
+        return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
+      } catch { return reply({ status: "unavailable", reason: "decision-controls-unavailable" }, 503) }
+    }
+    if (request.headers.get("origin") !== input.origin) return reply({ status: "denied" }, 403)
     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1 || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
     const payload = await boundedJson(request)

@@ -8,7 +8,7 @@ export function createSfExtendedAssets() {
     if (existing) return existing
     const result = (async () => {
       const built = await Bun.build({ entrypoints: [path.join(import.meta.dir, kind === "bi" ? "extended-bi-browser.ts" : "extended-browser.ts")],
-        target: "browser", format: "iife", minify: true, write: false })
+        target: "browser", format: "iife", minify: true })
       if (!built.success || built.outputs.length !== 1) throw new Error("SF_EXTENDED_BROWSER_BUILD_UNAVAILABLE")
       return built.outputs[0]!.text()
     })()

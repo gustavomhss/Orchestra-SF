@@ -68,6 +68,7 @@ import type { SfAnalysisInputPort } from "../../../../modules/sucafina/Sucafinav
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
+import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
 import type { SfStoppedRun } from "./native-execution.ts"
 import { createPlannerMonthlyHost } from "../../../../modules/sucafina/Sucafinav1/product/planner/monthly-host.ts"
@@ -253,7 +254,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   questionContributions.read = readContribution
   const baselineServices = createSfBaselineServices({ authority, business, proposalCoverageWrites, origin: input.origin, mount: input.mount })
   business.bindForecastCoverage(baselineServices.baseline.resolveForecastCoverage)
-  const captures = createSfAlternativeCaptures({ authority, captures: alternativeCaptures, proposalCoverageWrites,
+  const captures = createSfAlternativeCaptures({ authority, captures: alternativeCaptures,
     active: (record) => !!identity() && captureCurrent(record) })
   const outcomeReader: { current?: NonNullable<SfReviewReaders["outcome"]> } = {}
   const extended = createSfExtendedBusinessServices({ authority, business, persistence: input.persistence, proposalCoverageWrites, analysisSelectionWrites, origin: input.origin,
@@ -264,6 +265,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const memory = createSfMemoryServices({ authority, business: { ...business, planner: extended.portfolioServices.planner }, signalRegistryWrites })
   const decisionDomain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites,
     sharedPortfolio: extended.portfolioServices, selectedCase: business.selectedCase, verifiedInputFor: nativeInputs.verifiedInputFor,
+    verifiedAlternativeSelectionFor: nativeInputs.verifiedAlternativeSelectionFor,
     hasAdmittedInputContext: nativeInputs.hasAdmittedInputContext, readAlternativeCapture: nativeInputs.readAlternativeCapture })
   business.bindDecisionDomain(decisionDomain)
   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })
@@ -287,7 +289,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const routinePublication = createSfRoutinePublicationContribution({ identity, authorize: authority.authority.revalidateDomainContext })
   const routineInputs = createSfRoutineInputReaders({ cases: business.cases, context: business.context, resolveCase: business.resolveCase, revalidate: authority.host.revalidate })
   const routineServices = createSfRoutineServices({ authority: authority.authority, publication: routinePublication.publication, resolveCase: business.resolveCase, prepareWatch: memory.prepareWatch, ...routineInputs })
-  business.descriptors.push(...routineServices.descriptors)
+  // No public C07 native/publication ports are installed; keep unavailable status readers without advertising callable routines.
   const sourcingInputs = createSfSourcingInputs({ authority, business })
   const dashboardHttp = createSfDashboardHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, dashboard: business.dashboardServices, decisions: business.dashboardDecisions } : undefined })
   const procurementDecisionHttp = createProcurementDecisionHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { human: authority.human, decisions: business.procurementDecisions, withCase: business.withCase } : undefined })
@@ -359,7 +361,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         const run = stored.nativeRuns?.[runRef]
         return run && run.principalRef === actor.principalRef && run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion ? run.intentDigest : undefined
       })
-      if (claim.status !== "ok") return claim.status === "preview" ? { status: "unavailable", reason: "analysis-state-unavailable" } : claim
+      if (claim.status !== "ok") return "reason" in claim ? claim : { status: "unavailable", reason: "analysis-state-unavailable" }
       if (claim.value !== undefined && !/^[a-f0-9]{64}$/.test(claim.value)) return { status: "unavailable", reason: "analysis-legacy-intent-unavailable" }
       if (claim.value !== undefined && claim.value !== intentDigest) return { status: "conflict", reason: "analysis-idempotency-content-changed" }
       const model = Schema.decodeUnknownOption(ModelV2.Ref)(captured.model)
@@ -383,13 +385,13 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const { author, reviewTarget } = review.value
       const chosen = { profile: parent.profile, manifestDigest: parent.manifestDigest, skills: [skill], operationIds: [...captured.request.requestedOperationScope] }
       if (!selectionMatches(chosen)) return { status: "denied", reason: "analysis-selection-unavailable" }
-      const actualModel = model.value
+      const actualModel = sfNativeModelRef(model.value)
       const existing = async (): Promise<PortResult<{ runRef: string }> | undefined> => {
         const found = await authority.state.read(request, "contributions", (stored, actor) => {
           const run = stored.nativeRuns?.[runRef]
           return run && run.principalRef === actor.principalRef && run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion ? run : undefined
         })
-        if (found.status !== "ok") return found.status === "preview" ? { status: "unavailable", reason: "analysis-state-unavailable" } : found
+        if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
         if (!found.value) return undefined
         const run = found.value
         if (!run.intentDigest || !/^[a-f0-9]{64}$/.test(run.intentDigest)) return { status: "unavailable", reason: "analysis-legacy-intent-unavailable" }
@@ -437,6 +439,10 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const fingerprint = digestSfValue(withoutObservationTimes({ case: first.current, skillInput: verifiedInput, selected: selectedRuntime, reviewTarget,
         accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, sources: sourceProjection(first) }))
       const fullRequest = { ...baseRequest, contextFingerprint: fingerprint }
+      // Capture the human's explicit target once. A later selection cannot grant a running model a different draft target.
+      const alternativeSelection = fullRequest.profileId === "sf_finance" && fullRequest.skillId === "sf-comparar-cenarios" && fullRequest.requestedOperationScope.includes("sf_alternative_draft")
+        ? await decisionDomain.captureAlternativeSelection(fullRequest, captured, context) : undefined
+      if (alternativeSelection && alternativeSelection.status !== "ok" && !(alternativeSelection.status === "needs-input" && alternativeSelection.reason === "selection-not-created")) return alternativeSelection
       const fences: { current?: Record<"dashboard" | "planner" | "procurement", string> } = {}
       const readFences = () => input.persistence.transactionAll?.(async (snapshots) => ({ commit: false, value: {
         dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
@@ -450,7 +456,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           return run && current && current.incarnation === run.caseRef.incarnation && current.version >= run.caseRef.version && current.participants.includes(actor.principalRef) &&
             run.principalRef === actor.principalRef && run.policyVersion === actor.policyVersion && run.accessRevision === actor.accessRevision ? run : undefined
         })
-        if (found.status !== "ok") return found.status === "preview" ? { status: "unavailable", reason: "analysis-state-unavailable" } : found
+        if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
         return found.value && await authority.host.revalidate(call) ? { status: "ok", value: found.value } : { status: "denied", reason: "analysis-authority-unavailable" }
       }
       const runState = createSfAlternativeRunState({ state: authority.state, proposalCoverageWrites, nativePublicationGuards, captureCurrent, runRef,
@@ -509,6 +515,11 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           const admission = await withRunContext(runRef, async (call) => {
             const proof = await verify(call)
             if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
+            if (alternativeSelection?.status === "ok") {
+              const again = await decisionDomain.captureAlternativeSelection(fullRequest, captured, call)
+              if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(alternativeSelection.value))
+                return { status: "stale", reason: "alternative-admitted-selection-changed" }
+            }
             const at = new Date().toISOString()
             const record: SfNativeRunRecord = { schema: "sf-native-run-v1", runRef, version: 1, intentDigest, requestDigest: digestSfValue(fullRequest), skillInputDigest: digestSfValue(verifiedInput),
               principalRef: call.binding.principalRef, accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion, caseRef: baseRequest.caseRef,
@@ -516,7 +527,8 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
             const location = identity()?.location
             if (!location) return { status: "unavailable", reason: "analysis-host-unavailable" }
             requests.set(runRef, request)
-            admittedInputs.set(runRef, { request: structuredClone(fullRequest), input: structuredClone(verifiedInput) })
+            admittedInputs.set(runRef, { request: structuredClone(fullRequest), input: structuredClone(verifiedInput),
+              ...(alternativeSelection?.status === "ok" ? { alternativeSelection: structuredClone(alternativeSelection.value) } : {}) })
             return { status: "ok", value: { record, native: { request, selected: selectedRuntime, location, model: actualModel, skillId: skill.id,
               prompt: sfAnalysisPrompt(baseRequest.objective, proof),
               runId: runRef, caseRef: baseRequest.caseRef, entryMode: "interactive" as const, toolCallBudget: Math.max(1, skill.limits.maxSteps), skillLoadBudget: 0 } } }
@@ -599,7 +611,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         .filter((run) => run.principalRef === actor.principalRef && run.policyVersion === actor.policyVersion && run.accessRevision === actor.accessRevision &&
           run.caseRef.id === caseRef.id && run.caseRef.incarnation === caseRef.incarnation && run.caseRef.version <= caseRef.version)
         .map((run) => ({ runRef: run.runRef, state: run.state, version: run.version })))
-      if (found.status !== "ok") return found.status === "preview" ? { status: "unavailable", reason: "analysis-state-unavailable" } : found
+      if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
       const again = await business.cases.read({ caseRef: encodeCaseRef(caseRef) }, context)
       if (again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || !await authority.human.authorize(context, "analysis.read", intent))
         return { status: "denied", reason: "analysis-authority-unavailable" }
@@ -614,7 +626,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         return run && current && current.incarnation === run.caseRef.incarnation && current.participants.includes(actor.principalRef) && run.principalRef === actor.principalRef &&
           run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion ? run : undefined
       })
-      if (found.status !== "ok") return found.status === "preview" ? { status: "unavailable", reason: "analysis-state-unavailable" } : found
+      if (found.status !== "ok") return "reason" in found ? found : { status: "unavailable", reason: "analysis-state-unavailable" }
       if (!found.value || !await authority.human.authorize(context, "analysis.read", { runRef })) return { status: "denied", reason: "analysis-authority-unavailable" }
       const again = await authority.state.read(request, "contributions", (stored, actor) => {
         const run = stored.nativeRuns?.[runRef]
@@ -760,7 +772,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         descriptors.length + business.remainingOperations().length !== contractFreeze.operations.length) throw new Error("SF_OPERATION_REGISTRY_INVALID")
       const project = yield* projects.resolve(directory)
       const identity = Object.freeze({ installationId: input.installationId, hostId: randomUUID(), projectId: project.id,
-        location: Object.freeze({ directory }) })
+        location: Object.freeze(sfNativeLocationRef({ directory })) })
       state.identity = identity
       state.store = store
       state.models = async () => {
@@ -788,7 +800,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     })),
   })
   const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget,
-    operationIdentity: authority.ui.operationIdentity, humanAuthorize: (call, action, payload) => authority.human.authorize(call, action, payload),
+    operationIdentity: (call) => call.kind === "ui" ? authority.ui.operationIdentity(call) : undefined, humanAuthorize: (call, action, payload) => authority.human.authorize(call, action, payload),
     authorizeView: async (view, call) => {
       if (Object.keys(view.filters?.selections ?? {}).some((key) => !["year", "own", "execYear", "opsYear", "secYear", "month", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"].includes(key))) return false
       const request = authority.host.requestFor(call)

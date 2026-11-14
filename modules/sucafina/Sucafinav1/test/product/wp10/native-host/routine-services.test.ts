@@ -9,7 +9,6 @@ import { ProjectID } from "@orchestra/schema/project-id"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { Location } from "@orchestra/core/location"
-import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfRoutineServices } from "../../../../../../../apps/cli/src/sucafina-product/routine-services.ts"
@@ -120,30 +119,75 @@ test("routine host consumes pinned publication and native receipts without promo
   }
 })
 
-test("routine publication uses the existing Location graph and revokes retained ports on disposal", async () => {
+// The installed port uses a real public AuthoringStore. This proves lifecycle/authority, not a native C07 adapter.
+test("routine publication requires an installed public port and revokes retained providers on replacement or disposal", async () => {
   const directory = await mkdtemp(path.join(tmpdir(), "sf-wp10-publication-"))
+  const state: { placement?: { projectId: string; location: Location.Ref }; provider?: RoutinePublicationHost; ui?: Awaited<ReturnType<typeof createRoutineUiFixture>> } = {}
   try {
     const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
-    const state: { placement?: { projectId: string; location: Location.Ref } } = {}
-    const publication = createSfRoutinePublicationContribution({ identity: () => state.placement, authorize: async () => true })
+    const projectID = ProjectID.make("wp10-publication-project")
+    const authorize: RoutinePublicationHost["authorize"] = async (call) => call.kind === "ui" && !!state.ui && await state.ui.authority.revalidate(call)
+    const withoutGetter = createSfRoutinePublicationContribution({ identity: () => state.placement, authorize })
+    expect(withoutGetter.publication()).toBeUndefined()
+    const absentLayer = AppNodeBuilder.build(LayerNode.group([withoutGetter.node]))
+    await Effect.runPromise(Effect.sync(() => {
+      state.placement = { projectId: projectID, location }
+      expect(withoutGetter.publication()).toBeUndefined()
+    }).pipe(Effect.provide(absentLayer), Effect.scoped))
+    const publication = createSfRoutinePublicationContribution({ identity: () => state.placement, authorize, installed: () => state.provider })
     expect(publication.publication()).toBeUndefined()
-    const layer = AppNodeBuilder.build(LayerNode.group([publication.node, LocationServiceMap.node]))
+    const layer = AppNodeBuilder.build(LayerNode.group([publication.node]))
     const retained = await Effect.runPromise(Effect.gen(function* () {
-      const locations = yield* LocationServiceMap.Service
-      const placed = yield* Location.Service.pipe(Effect.provide(locations.get(location)))
-      state.placement = { projectId: placed.project.id, location }
+      expect(publication.publication()).toBeUndefined()
+      const store = yield* AuthoringStore.open(directory, projectID)
+      const graph = yield* AuthoringGraph.project("Explicit public publication", { work_packages: [{ id: "facts", instructions: "Prepare authorized facts", checklist: [{ id: "check", cmd: "true" }] }] })
+      const draft = yield* store.save({ body: graph })
+      yield* store.publish(draft.id, draft.versionId)
+      const ui = yield* Effect.promise(() => createRoutineUiFixture(projectID, "person"))
+      state.ui = ui
+      const port: RelayWorkflowBinding.PublicationPort = { projectID, use: (read) => read(store),
+        skills: () => Effect.fail(new AuthoringGraph.Refusal({ status: 404, code: "unused-skill", message: "Fixture has no authoring skills" })),
+        acceptance: [{ id: "package-verification", host_check: "package-verification" }, { id: "cold-review", host_check: "cold-review" }] }
+      const provider: RoutinePublicationHost = { publication: port, authorize, authorSession: async () => undefined }
+      state.provider = provider
       const host = publication.publication()
-      if (!host) throw new Error("Expected graph-scoped publication")
-      expect(host.publication.projectID).toBe(placed.project.id)
+      if (!host) throw new Error("Expected explicitly installed public publication")
+      expect(host.publication.projectID).toBe(projectID)
       expect(publication.publication()).toBe(host)
-      expect(Array.isArray(yield* RelayWorkflowBinding.catalog(host.publication))).toBe(true)
-      return host
+      expect(yield* Effect.promise(() => host.authorize(ui.context))).toBe(true)
+      expect(yield* RelayWorkflowBinding.catalog(host.publication)).toMatchObject([{ id: draft.id, publishedVersionID: draft.versionId }])
+      state.provider = { ...provider }
+      expect(yield* Effect.promise(() => host.authorize(ui.context))).toBe(false)
+      const oldRead = yield* Effect.result(host.publication.use(() => Effect.succeed("must-not-read")))
+      expect(oldRead._tag).toBe("Failure")
+      if (oldRead._tag === "Failure") expect(oldRead.failure).toMatchObject({ reason: "SF_ROUTINE_PUBLICATION_UNAVAILABLE" })
+      const replacement = publication.publication()
+      if (!replacement) throw new Error("Replacement provider unavailable")
+      expect(replacement).not.toBe(host)
+      expect(yield* Effect.promise(() => replacement.authorize(ui.context))).toBe(true)
+      // Replace the public provider after a real store read; the result must fail at egress.
+      const changed = yield* Effect.result(replacement.publication.use((current) => Effect.gen(function* () {
+        const document = yield* current.get(draft.id)
+        state.provider = { ...provider }
+        return document
+      })))
+      expect(changed._tag).toBe("Failure")
+      if (changed._tag === "Failure") expect(changed.failure).toMatchObject({ reason: "SF_ROUTINE_PUBLICATION_REPLACED" })
+      expect(yield* Effect.promise(() => replacement.authorize(ui.context))).toBe(false)
+      const last = publication.publication()
+      if (!last) throw new Error("Current public provider unavailable")
+      expect(yield* Effect.promise(() => last.authorize(ui.context))).toBe(true)
+      return { host: last, ui }
     }).pipe(Effect.provide(layer), Effect.scoped))
     expect(publication.publication()).toBeUndefined()
-    const read = await Effect.runPromise(Effect.result(retained.publication.use(() => Effect.succeed("must-not-read"))))
+    expect(await retained.host.authorize(retained.ui.context)).toBe(false)
+    const reads = { count: 0 }
+    const read = await Effect.runPromise(Effect.result(retained.host.publication.use(() => Effect.sync(() => { reads.count += 1; return "must-not-read" }))))
     expect(read._tag).toBe("Failure")
-    if (read._tag === "Failure") expect(read.failure).toMatchObject({ reason: "SF_ROUTINE_PUBLICATION_DISPOSED" })
+    if (read._tag === "Failure") expect(read.failure).toMatchObject({ reason: "SF_ROUTINE_PUBLICATION_UNAVAILABLE" })
+    expect(reads.count).toBe(0)
   } finally {
+    if (state.ui) state.ui.authority.finish(state.ui.context)
     await rm(directory, { recursive: true, force: true })
   }
 })

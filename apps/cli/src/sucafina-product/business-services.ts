@@ -349,6 +349,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     atlasState.current = { memory: atlas.memory, proveContinuity: atlas.proveContinuity, featuresForCase, runtimeVersions: structuredClone(versions) }
     clearAtlasDescriptors()
     for (const descriptor of atlas.capabilities) { descriptors.push(descriptor); atlasDescriptors.add(descriptor) }
+    return atlas
   }
   const procurementSelections = { create: async (call: TrustedDomainContext, period: Period) => {
     if (!isSfPeriod(period)) return { status: "denied" as const, reason: "selection-authority-unavailable" }

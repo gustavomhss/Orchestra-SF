@@ -20,6 +20,7 @@ import { SessionStore } from "@orchestra/core/session/store"
 import { SkillV2 } from "@orchestra/core/skill"
 import { Context, Deferred, Effect, Layer } from "effect"
 import { createSfNativeHostContribution, SfNativeHost } from "../../../../../../../apps/cli/src/sucafina-product/native-host.ts"
+import { sfNativeLocationRef } from "../../../../../../../apps/cli/src/sucafina-product/native-identity.ts"
 import type { SfNativeRun } from "../../../../../../../apps/cli/src/sucafina-product/native-host.ts"
 import type { SfTokenGateTicket } from "../../../../../../../apps/cli/src/sucafina-product/token-gate.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
@@ -43,7 +44,10 @@ test.each([false, true])("native host disposal revokes owned runs and isolates i
     const runtime = { ...selected, skills: [{ ...selected.skills[0]!,
       sourceDigest: new Bun.CryptoHasher("sha256").update(skillFile).digest("hex"),
       instructionsDigest: new Bun.CryptoHasher("sha256").update("# Lifecycle instructions").digest("hex") }] }
-    const location = Location.Ref.make({ directory: AbsolutePath.make(root) })
+    // Core persists this optional key explicitly; registration and Session.skill must share the same Location scope.
+    const location = sfNativeLocationRef(Location.Ref.make({ directory: AbsolutePath.make(root) }))
+    const otherDirectory = path.join(root, "other")
+    await mkdir(otherDirectory)
     const model = { providerID: ProviderV2.ID.make("sf-disposal-fixture"), id: ModelV2.ID.make("lifecycle") }
     const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionStore.node, SessionExecution.node, LocationServiceMap.node]),
       [[SessionExecution.node, SessionExecutionLocal.node]])
@@ -57,6 +61,7 @@ test.each([false, true])("native host disposal revokes owned runs and isolates i
       const interrupted: SessionSchema.ID[] = []
       const released: SessionSchema.ID[] = []
       const fail: { sessionID?: SessionSchema.ID } = {}
+      const changed: { create?: Partial<Parameters<SessionV2.Interface["create"]>[0]> } = {}
       const registry = createSfExecutionBindingRegistry({
         authenticateAndResolve: async (admission) => {
           const current = await Effect.runPromise(store.get(admission.sessionID))
@@ -78,7 +83,10 @@ test.each([false, true])("native host disposal revokes owned runs and isolates i
           revokeSession: (id) => { tickets.delete(id) }, valid: () => Effect.succeed(true),
         } },
       })
-      const hostSession: SessionV2.Interface = { ...session, interrupt: (id) => Effect.gen(function* () {
+      const hostSession: SessionV2.Interface = { ...session,
+        // Fault injection persists a different real Core identity; the product must refuse it before any skill grant.
+        create: (args) => session.create({ ...args, ...changed.create }),
+        interrupt: (id) => Effect.gen(function* () {
         interrupted.push(id)
         expect(tickets.size).toBe(0)
         expect(leases.every((lease) => registry.requestFor(lease) === undefined)).toBe(true)
@@ -108,13 +116,33 @@ test.each([false, true])("native host disposal revokes owned runs and isolates i
           const context = yield* Layer.build(implementation).pipe(Effect.provideService(SessionV2.Service, hostSession),
             Effect.provideService(SessionStore.Service, store), Effect.provideService(LocationServiceMap.Service, locations))
           const host = Context.get(context, SfNativeHost)
+          for (const change of [
+            { model: { ...model, providerID: ProviderV2.ID.make("other-provider") } },
+            { model: { ...model, id: ModelV2.ID.make("other-model") } },
+            { model: { ...model, variant: ModelV2.VariantID.make("explicit-other-variant") } },
+            { location: sfNativeLocationRef({ directory: AbsolutePath.make(otherDirectory) }) },
+            { agent: AgentV2.ID.make("ordinary") },
+            { id: SessionSchema.ID.create() },
+          ]) {
+            changed.create = change
+            const rejected = yield* host.prepare({ request: new Request("https://example.test/sf"), selected: runtime, location, model,
+              skillId: "sf-explicar-forecast", prompt: "Identity boundary fixture", runId: "changed-identity",
+              caseRef: { id: "case", incarnation: "incarnation", version: 1 }, entryMode: "interactive", toolCallBudget: 1, skillLoadBudget: 0 })
+            expect(rejected).toEqual({ status: "denied", reason: "native-session-conflict" })
+            expect(tickets.size).toBe(0)
+            expect(released).toHaveLength(0)
+          }
+          delete changed.create
           const runs: SfNativeRun[] = []
           for (const suffix of ["first", "second", "idle"]) {
             const prepared = yield* host.prepare({ request: new Request("https://example.test/sf"), selected: runtime, location, model,
               skillId: "sf-explicar-forecast", prompt: "Lifecycle fixture", runId: suffix, caseRef: { id: suffix, incarnation: suffix, version: 1 },
               entryMode: "interactive", toolCallBudget: 1, skillLoadBudget: 0 })
+            if (prepared.status !== "ok") throw new Error(`Native lifecycle preparation: ${prepared.status}:${prepared.reason}`)
             expect(prepared.status).toBe("ok")
-            if (prepared.status !== "ok") throw new Error(prepared.reason)
+            const persisted = yield* store.get(prepared.value.sessionID)
+            expect(persisted?.model).toEqual({ ...model, variant: ModelV2.VariantID.make("default") })
+            expect(persisted?.location).toEqual(location)
             runs.push(prepared.value)
             const lease = yield* Effect.promise(() => registry.lease({ sessionID: prepared.value.sessionID, agent: AgentV2.ID.make("sf_finance"),
               assistantMessageID: SessionMessage.ID.create(), toolCallID: suffix }, "sf_forecast_compare", digestSfValue({})))

@@ -7,9 +7,10 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import { alternativeProvenanceKey, verifyAlternativePublication } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
 import type { AlternativeCapabilityProvenance } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
 import type { SfAnalysisRequest } from "./analysis-verifier.ts"
+import type { SfAdmittedAlternativeSelection } from "./decision-alternative-services.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
-export type SfAdmittedAnalysisInput = { request: SfAnalysisRequest & { contextFingerprint: string }; input: unknown }
+export type SfAdmittedAnalysisInput = { request: SfAnalysisRequest & { contextFingerprint: string }; input: unknown; alternativeSelection?: SfAdmittedAlternativeSelection }
 
 /** Only the host can supply admitted inputs and bridge captures. No payload selects a fallback. */
 export function createSfNativeAnalysisInputs(input: {
@@ -43,7 +44,7 @@ export function createSfNativeAnalysisInputs(input: {
     })
     return found.status === "ok" && found.value && await host.revalidate(call) ? found.value : undefined
   }
-  const verifiedInputFor = async (call: TrustedDomainContext): Promise<PortResult<unknown>> => {
+  const verifiedAdmissionFor = async (call: TrustedDomainContext): Promise<PortResult<SfAdmittedAnalysisInput>> => {
     const runRef = call.kind === "native" ? call.binding.runId : input.runForContext?.(call)
     if (!runRef) return unavailable()
     const admitted = input.admittedInput(runRef)
@@ -56,7 +57,26 @@ export function createSfNativeAnalysisInputs(input: {
     const again = await readRun(runRef, call)
     return again && same(again, found) && input.admittedInput(runRef) === admitted && same(admitted, captured) &&
       (call.kind === "native" || input.runForContext?.(call) === runRef) && input.requestForRun(runRef) === source && !source.signal.aborted && binding === digestSfValue([call.kind, call.binding]) && await host.revalidate(call)
-      ? { status: "ok", value: structuredClone(captured.input) } : unavailable()
+      ? { status: "ok", value: structuredClone(captured) } : unavailable()
+  }
+  const verifiedInputFor = async (call: TrustedDomainContext): Promise<PortResult<unknown>> => {
+    const admitted = await verifiedAdmissionFor(call)
+    return admitted.status === "ok" ? { status: "ok", value: admitted.value.input } : admitted
+  }
+  const verifiedAlternativeSelectionFor = async (call: TrustedDomainContext): Promise<PortResult<SfAdmittedAlternativeSelection>> => {
+    const admitted = await verifiedAdmissionFor(call)
+    if (admitted.status !== "ok") return admitted
+    const selection = admitted.value.alternativeSelection
+    if (!selection) return { status: "needs-input", reason: "alternative-comparison-selection-required" }
+    const request = admitted.value.request
+    if (request.profileId !== "sf_finance" || request.skillId !== "sf-comparar-cenarios" || !request.requestedOperationScope.includes("sf_alternative_draft") ||
+      selection.schema !== "sf-admitted-alternative-selection-v1" || selection.requestDigest !== digestSfValue(request) || selection.inputDigest !== digestSfValue(admitted.value.input) ||
+      !same(selection.caseRef, request.caseRef) || !same(selection.selection.caseRef, request.caseRef) ||
+      selection.authority.installationId !== call.binding.installationId || selection.authority.projectId !== call.binding.projectId ||
+      selection.authority.principalRef !== call.binding.principalRef || selection.authority.accessRevision !== call.binding.accessRevision || selection.authority.policyVersion !== call.binding.policyVersion ||
+      selection.selection.principalRef !== call.binding.principalRef || selection.selection.accessRevision !== call.binding.accessRevision || selection.selection.policyVersion !== call.binding.policyVersion)
+      return unavailable()
+    return { status: "ok", value: selection }
   }
   const matchingCapture = (record: AlternativeCapabilityProvenance, run: SfNativeRunRecord, call: TrustedDomainContext) => {
     const { recordDigest, ...material } = record
@@ -112,7 +132,7 @@ export function createSfNativeAnalysisInputs(input: {
       input.captures(runRef).filter((record) => same(record, records[0])).length === 1 && await input.revalidateCapture(found.value.record)
       ? { status: "ok", value: found.value.record } : unavailable()
   }
-  return { verifiedInputFor, readAlternativeCapture, readCapturedAlternative,
+  return { verifiedInputFor, verifiedAlternativeSelectionFor, readAlternativeCapture, readCapturedAlternative,
     hasAdmittedInputContext: (call: TrustedDomainContext) => call.kind === "native" || !!input.runForContext?.(call) }
 }
 
