@@ -1,0 +1,152 @@
+{
+  "schema": "mission37-owner-assembly-v1",
+  "consumer": "session42",
+  "originalConsumer": "session33",
+  "baseCommit": "e7e97591edfc15f230856a035e32951f2f700c2f",
+  "sourceBaseCommit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+  "implementationCommit": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "implementationSource": "PR23 Mission37 own-path implementation; exact own dependencies listed in OWN_DEPENDENCIES.json",
+  "entries": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "preimage": "01-stored-scenarios.ts.preimage.txt",
+      "postimage": "01-stored-scenarios.ts.postimage.txt",
+      "preimageGitBlob": "d39d52bc2b04d7b4864539c78a002232628ad2c7",
+      "postimageGitBlob": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "preimageSha256": "7fcc1f6978ff260b17af791bba873d2356799b3d03266f767bd6f7a4892e662c",
+      "postimageSha256": "aac8f77c5b7e78ffdec2ecdcfabf8ebd38e6847a96a931800d924e9462aa458a",
+      "purpose": "C08 exact alternative/result identity, standalone calculator replay and actual Procurement projection, retaining all historical rereads and final case fences."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "preimage": "02-product.ts.preimage.txt",
+      "postimage": "02-product.ts.postimage.txt",
+      "preimageGitBlob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "postimageGitBlob": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8",
+      "preimageSha256": "8b31a503eae2d06fac5b38250c571937e211ea3aed3864e650149e5d589d7162",
+      "postimageSha256": "d761246d11f1efaf23ff1a809e16d188bed457adcc955b3031d83ca3cdd81af6",
+      "purpose": "Existing sf_scenario capability routes Procurement to its own producer; forecast engine/source issuance remains Planner-only; stored host uses the external replay hook."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "preimage": "03-cost-coverage.ts.preimage.txt",
+      "postimage": "03-cost-coverage.ts.postimage.txt",
+      "preimageGitBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "postimageGitBlob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "preimageSha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "postimageSha256": "404383fd380ff5daaaac58c4ef110b989c6c6f2aad8862638be4dbfe2e7b4d5b",
+      "purpose": "Narrow conditioned Procurement C10 lane. All prior Planner checks remain, no new completeness or approval claim."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "preimage": "04-business-services.ts.preimage.txt",
+      "postimage": "04-business-services.ts.postimage.txt",
+      "preimageGitBlob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+      "postimageGitBlob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+      "preimageSha256": "7a0a9adfccb1ecc2caef577e6d7e4cbeb084c71dd633520691cc459dc93c9bb9",
+      "postimageSha256": "c16f0b23685a47a17aa5b07c548784559da443c72f28e81cd29259feca572f0e",
+      "purpose": "Real host composition, existing capability/descriptor with explicit transient Procurement simulation, and C08 persistence only through human promotion; Planner calculation publication is guarded from this producer."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "preimage": "05-portfolio-coverage.ts.preimage.txt",
+      "postimage": "05-portfolio-coverage.ts.postimage.txt",
+      "preimageGitBlob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+      "postimageGitBlob": "fd5e40da9a982d445259606629b7dbdf581b42af",
+      "preimageSha256": "64627a56a2f4b6f15e8c5d790e4e1d945958e02b71e380d0b71355cc123cda92",
+      "postimageSha256": "08a538fcb2a64cef451b443181a083db62e4c08ac6221f96041eb00e1dce8e4f",
+      "purpose": "Canonical C10 reassessment for actual Procurement output, guarded by exact producer replay; retains current C08 CAS, intent, full source fences and idempotency."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "preimage": "06-host-context.ts.preimage.txt",
+      "postimage": "06-host-context.ts.postimage.txt",
+      "preimageGitBlob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+      "postimageGitBlob": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "preimageSha256": "6063552373c63e9a7bd71c3b43ee31f8782aafe294eea1ae194dae8d6a5f72a0",
+      "postimageSha256": "7df401ef6421e39622536876495321374a5eb5b3f24078b863135a36c12ced53",
+      "purpose": "Mount the read-only controls/preview routes on the authenticated existing host; existing promotion and Apply routers remain unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": "07-http.ts.preimage.txt",
+      "postimage": "07-http.ts.postimage.txt",
+      "preimageGitBlob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+      "postimageGitBlob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+      "preimageSha256": "14d878975b4572f003b4eb573a017a0dc6b0b85251a2691beba9bdf4023437e1",
+      "postimageSha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+      "purpose": "Mount typed Procurement controls and their explicit preview/promotion script in the current decision workbench."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "preimage": "08-decision-choice.ts.preimage.txt",
+      "postimage": "08-decision-choice.ts.postimage.txt",
+      "preimageGitBlob": "cf61bf000836c0a7cd257366a30708f9e1000d9e",
+      "postimageGitBlob": "0a330a1377326e3ea919b4714cada83a208efc39",
+      "preimageSha256": "c8fe53ebf464cb4837ef585347f70cc27ffc27a0671ad08a2bf243fd827fdf5e",
+      "postimageSha256": "9c77905882d364bb44bcfeee017d6ea4856ffdcc0e13f9d39b591309e0b0f546",
+      "purpose": "Human chooser displays the exact persisted source/operation/amount/version and financial block; choice mutation still freezes existing C08 result/request refs."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "preimage": "09-decision-controls.ts.preimage.txt",
+      "postimage": "09-decision-controls.ts.postimage.txt",
+      "preimageGitBlob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+      "postimageGitBlob": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+      "preimageSha256": "9a22538f67008b11b55165dfeaf8154c18404b224c9f1ff17daa9b98bbdc62ec",
+      "postimageSha256": "20c213b0260d5dc420fa5afcdfb40e5f6acf23bcc2a80041e40babc7973ea513",
+      "purpose": "Expose exact current Procurement evidence to the existing numeric criterion chooser, preserving the C11 attachment and coverage readers without new rules or grants."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "preimage": "10-capabilities.ts.preimage.txt",
+      "postimage": "10-capabilities.ts.postimage.txt",
+      "preimageGitBlob": "511508ad5c225e48d21cdffacd9f0e1b3139b402",
+      "postimageGitBlob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+      "preimageSha256": "3d220ca96cba5fbed89bd1e503235a137bd844d844bbaae5197e0a3dc6d04827",
+      "postimageSha256": "a51efe7c1a0dddde6e9df9f4fff8afdb7b75dba27e1bfa4c4e1238a73676f995",
+      "purpose": "Same sf_scenario_simulate handlerExport/schema/grants, with a host-owned Procurement-only transient branch that emits a bound result receipt but never persists or invents outputRef. Planner behavior is unchanged."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "preimage": "11-decision-domain-services.ts.preimage.txt",
+      "postimage": "11-decision-domain-services.ts.postimage.txt",
+      "preimageGitBlob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93",
+      "postimageGitBlob": "4f654783f4fa0d3ed1f4495b0c2fece0ae802d9f",
+      "preimageSha256": "3726be1e6a28bb33efe916c161572aa94427df5f5e66021ab1253a66a1a2a509",
+      "postimageSha256": "fd5a08aacd7f9776dd85ddc07bcbca34e6e23af85b6b220a37f8fc200904c610",
+      "purpose": "Preserve the existing human/Planner actor and intent gates, adding current already-issued Procurement source and exact case/source snapshot fences for explicit numeric comparison criteria only."
+    }
+  ],
+  "authoritySuccession": {
+    "observedConsumerHead": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "previousDocsHead": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "productPreimageHead": "e7e97591edfc15f230856a035e32951f2f700c2f",
+    "controlCommit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "integrationOwner": "session42",
+    "closedSession": "session33",
+    "proofExecutor": "S0",
+    "rule": "Session42 integrates and acknowledges; only S0 runs the existing Actions dispatcher, typecheck and guards. The subsequent observed heads changed documentation only, so exact product preimages remain pinned to e7."
+  },
+  "patchSha256": "b40d701e023c07ab15752be023ca40a15f92cf5ea0824f06fe70abe4e168654d",
+  "dependencies": [
+    "Apply complete Mission37 own-path producer, controls, adapter, financial preparation block and tests from PR23 first.",
+    "Apply all owner entries together over the exact pinned preimages; stop on mismatch and reconcile the current integration-owner head.",
+    "Apply ../assembly-legacy-test/capabilities.test.patch over its own exact preimage; preserve nonfinancial review/C12 oracles.",
+    "Create the new test only from ../assembly-tests/MANIFEST.json and its complete postimage; it depends on the assembled capability and must not be imported from receipt artifacts.",
+    "No C12, persistence34 or normative contracts are replaced.",
+    "No new capability, grant, engine, financial approval or Apply. Existing sf_scenario_simulate and C08 promotion/replay carry the new producer."
+  ],
+  "reconciliation": {
+    "priorBaseCommit": "c1bd1c91b0e0d32db3074408e815e36107384073",
+    "changedPreimages": [
+      "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "apps/cli/src/sucafina-product/decision-controls.ts"
+    ],
+    "retained": "Both current files are preserved in full; Mission37 additions are composed over their retention, numeric criterion, preparation, source-attachment and coverage-reader changes.",
+    "legacyPatch": "c9/mission37-assembly.patch",
+    "legacyManifest": "c9/MANIFEST.json"
+  },
+  "functionalQualificationCommit": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "sourceContinuation": "../TYPE-ONLY-FIX.json"
+}

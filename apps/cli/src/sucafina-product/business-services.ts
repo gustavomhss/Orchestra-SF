@@ -1,3 +1,4 @@
+import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
 import { randomUUID } from "node:crypto"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createPlannerConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
@@ -401,8 +402,12 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     if (decisionDomain.current) throw new Error("SF_DECISION_DOMAIN_ALREADY_BOUND")
     decisionDomain.current = value
   }
-  const product = createPlannerProduct({ host, scopedSources: input.persistence, evidence: context,
+  const procurementScenarios = createSfProcurementScenarioServices({ host, state: input.authority.state, sources: individual, port: procurement, withCase: withCalculationCase })
+  const product = createPlannerProduct({ standalone: { supports: procurementScenarios.producer.supports,
+    supportsSource: (reference) => reference.startsWith("sf-procurement:"), simulateScenario: procurementScenarios.producer.simulateScenario,
+    resolveSource: procurementScenarios.resolveSource, resolveStored: procurementScenarios.resolveStored }, host, scopedSources: input.persistence, evidence: context,
     coverageFor: createPlannerCoverageRouter({ forecast: async (ref, call) => {
+      if (ref.startsWith("sf-procurement-coverage:")) return procurementScenarios.producer.resolveForecastCoverage(ref, call)
       if (ref.startsWith("proposal-coverage:")) return decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? { status: "unavailable", reason: "decision-domain-not-initialized" }
       // A forecast can be read without choosing a decision case. An inaccessible
       // selection still reaches its registry and retains the current denial.
@@ -448,12 +453,15 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
     } })
   calculationVerifier.current = calculations.verifyCalculationSources
-  const persist = calculations.persist
+  // A Procurement preview is transient. Only the existing explicit human
+  // promotion may publish its C08 result; it is never a Planner calculation.
+  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && procurementScenarios.producer.supports(incoming.request)
+    ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculations.persist(incoming, callId, call, replay)
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
     ...input.extraDescriptors ?? [],
     ...createDashboardCapabilities(dashboard, async (call, operation, digest, result) => receipt(call, operation, digest, result)),
-    ...createPlannerCapabilities(planner, receipt, persist),
+    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario: procurementScenarios.producer.supports }),
     ...createProcurementCapabilities({ port: procurement, authority: input.authority.authority }),
     ...collaboration.capabilities,
     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),
@@ -695,7 +703,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },
   }) }
-  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations: { ...calculations, persist }, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
     withMemoryObservation,
     bindReviewCollaboration: reviewCollaboration.bind,

@@ -1,0 +1,455 @@
+diff --git a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+@@ -1,4 +1,8 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
++import type { CostCoverageBasis, DecisionCase } from "../contracts/decisions.ts"
++import type { DomainProjection } from "../contracts/context.ts"
++import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
++import type { ScenarioRequest } from "../contracts/operations.ts"
+ import type { DecisionCasePort, PlannerPort, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import { readHistoricalScenarios } from "../decisions/result-store.ts"
+@@ -15,6 +19,7 @@
+   store: ReturnType<typeof createSfDecisionResultStore> & { readHistoricalScenario?: (request: { resultRef: string }, context: TrustedDomainContext) => ReturnType<ReturnType<typeof createSfDecisionResultStore>["read"]> }
+   cases: DecisionCasePort
+   planner: Pick<PlannerPort, "compareForecast">
++  external?: { supports: (request: ScenarioRequest) => boolean; resolve: (alternative: DecisionCase["alternatives"][number], basis: CostCoverageBasis, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }>> }
+   coverageRefFor: (caseRef: { id: string; incarnation: string; version: number }, alternative: { id: string; version: number }) => string
+ }): PlannerScenarioHost {
+   const read = async (references: readonly string[], context: TrustedDomainContext) => {
+@@ -49,12 +54,20 @@
+       if (alternatives.length !== 1) { prepared.push({ status: "unavailable", reason: "scenario-not-current-case-alternative" }); continue }
+       const alternative = alternatives[0]!
+       const bases = current.value.case.costCoverageBases.filter((basis) => basis.id === alternative.result.costCoverage.basisId && basis.version === alternative.result.costCoverage.basisVersion)
++      if (bases.length !== 1) { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
++      const coverageRef = input.coverageRefFor({ ...entry.value.caseRef, version: current.value.case.version }, structuredClone(alternative))
++      if (!coverageRef.trim()) { prepared.push({ status: "unavailable", reason: "scenario-coverage-unavailable" }); continue }
++      if (input.external?.supports(alternative.scenario)) {
++        // The external producer replays its own calculator and current source; no forecast is fabricated.
++        const external = structuredClone(await input.external.resolve(structuredClone(alternative), structuredClone(bases[0]!), context))
++        if (external.status !== "ok") { prepared.push(external); continue }
++        prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, ...external.value }) } })
++        continue
++      }
+       const refs = alternative.result.sourceRefs.filter((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+-      if (bases.length !== 1 || refs.length !== 1 || refs[0].kind !== "record") { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
++      if (refs.length !== 1 || refs[0].kind !== "record") { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
+       const projection = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
+       if (projection.status !== "ok") { prepared.push(projection); continue }
+-      const coverageRef = input.coverageRefFor({ ...entry.value.caseRef, version: current.value.case.version }, structuredClone(alternative))
+-      if (!coverageRef.trim()) { prepared.push({ status: "unavailable", reason: "scenario-coverage-unavailable" }); continue }
+       prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value.baseline, source: refs[0] }) } })
+     }
+     const checked: PortResult<PreparedScenario>[] = []
+diff --git a/modules/sucafina/Sucafinav1/product/planner/product.ts b/modules/sucafina/Sucafinav1/product/planner/product.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/product.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/product.ts
+@@ -1,3 +1,4 @@
++import type { ScenarioRequest } from "../contracts/operations.ts"
+ import type { BusinessContextService } from "../contracts/business-context.ts"
+ import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
+ import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
+@@ -12,14 +13,27 @@
+ import { createPlannerOverviewHost } from "./overview-host.ts"
+ import { plannerScenarioCostPresentation } from "./comparison.ts"
+ 
++export type StandaloneScenarioProducer = {
++  supports: (request: ScenarioRequest) => boolean
++  supportsSource: (reference: string) => boolean
++  simulateScenario: PlannerPort["simulateScenario"]
++  resolveSource: PlannerSourceHost["resolveForecastSource"]
++  resolveStored: NonNullable<Parameters<typeof createStoredPlannerScenarioHost>[0]["external"]>["resolve"]
++}
++
+ /** Bind Planner to the installation's authenticated source lifecycle and domain ports. */
+-export function createPlannerProduct(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort; coverageFor: PlannerSourceHost["resolveForecastCoverage"]; evidence?: BusinessContextService; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; verifyAssumption?: PlannerScenarioInputs["verifyAssumption"]; sensitivity?: PlannerPort["evaluateSensitivity"]; storedScenarios?: Omit<Parameters<typeof createStoredPlannerScenarioHost>[0], "planner">; versionAuthorize?: Parameters<typeof createPlannerVersionsHost>[0]["humanAuthorize"] }) {
+-  const sources = createSfPlannerSourceHost({ host: input.host, scopedSources: input.scopedSources, coverageFor: input.coverageFor })
+-  const base = createPlannerPort({ ...input, sources })
+-  const scenarioInputs = input.scenarioInputs ?? createPlannerScenarioInputs({ planner: base, sources, verifyAssumption: input.verifyAssumption })
+-  const scenarios = input.storedScenarios ? createStoredPlannerScenarioHost({ ...input.storedScenarios, planner: base }) : input.scenarios
+-  const planner = createPlannerPort({ ...input, sources, scenarios, scenarioInputs })
+-  const issueSource = createPlannerSourceIssuer({ host: input.host, scopedSources: input.scopedSources, sources })
++export function createPlannerProduct(input: { standalone?: StandaloneScenarioProducer; host: DomainPortHost; scopedSources: SfScopedSourcePort; coverageFor: PlannerSourceHost["resolveForecastCoverage"]; evidence?: BusinessContextService; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; verifyAssumption?: PlannerScenarioInputs["verifyAssumption"]; sensitivity?: PlannerPort["evaluateSensitivity"]; storedScenarios?: Omit<Parameters<typeof createStoredPlannerScenarioHost>[0], "planner">; versionAuthorize?: Parameters<typeof createPlannerVersionsHost>[0]["humanAuthorize"] }) {
++  const plannerSources = createSfPlannerSourceHost({ host: input.host, scopedSources: input.scopedSources, coverageFor: input.coverageFor })
++  const sources: PlannerSourceHost = input.standalone ? { ...plannerSources,
++    resolveForecastSource: (reference, context) => input.standalone!.supportsSource(reference)
++      ? input.standalone!.resolveSource(reference, context) : plannerSources.resolveForecastSource(reference, context) } : plannerSources
++  const base = createPlannerPort({ ...input, sources: plannerSources })
++  const scenarioInputs = input.scenarioInputs ?? createPlannerScenarioInputs({ planner: base, sources: plannerSources, verifyAssumption: input.verifyAssumption })
++  const scenarios = input.storedScenarios ? createStoredPlannerScenarioHost({ ...input.storedScenarios, planner: base, ...(input.standalone ? { external: { supports: input.standalone.supports, resolve: input.standalone.resolveStored } } : {}) }) : input.scenarios
++  const canonical = createPlannerPort({ ...input, sources, scenarios, scenarioInputs })
++  const planner: PlannerPort = input.standalone ? { ...canonical, compareForecast: base.compareForecast,
++    simulateScenario: (request, context) => input.standalone!.supports(request) ? input.standalone!.simulateScenario(request, context) : canonical.simulateScenario(request, context) } : canonical
++  const issueSource = createPlannerSourceIssuer({ host: input.host, scopedSources: input.scopedSources, sources: plannerSources })
+   const versions = createPlannerVersionsHost({ host: input.host, humanAuthorize: input.versionAuthorize ?? (async () => false) })
+   const overview = createPlannerOverviewHost({ host: input.host, planner, issueSource, versions })
+   return { planner, sources, scenarios, scenarioInputs, issueSource, versions, overview, presentComparison: plannerScenarioCostPresentation }
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts b/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts
+--- a/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts
+@@ -52,7 +52,18 @@
+   if (digestSfValue(scenario.costCoverage) !== digestSfValue(assessment) || scenario.costCoverage.basisId !== basis.id || scenario.costCoverage.basisVersion !== basis.version || scenario.costCoverage.currency !== scenario.currency || scenario.costCoverage.horizon.start !== scenario.horizon.start || scenario.costCoverage.horizon.end !== scenario.horizon.end || !scenario.costCoverage.alternativeId.trim() || !Number.isSafeInteger(scenario.costCoverage.alternativeVersion) || scenario.costCoverage.alternativeVersion < 1) return "alternative-basis-mismatch"
+   const categories = requiredSfCostCategories(basis)
+   if (assessment.coverageState === "complete" && (!categories || !basis.sourceRefs.length || basis.sourceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || assessment.issues.length || assessment.derivedMissingCategoryIds.length || assessment.entries.length !== categories.length || new Set(scenario.components.map((component) => component.id)).size !== scenario.components.length || scenario.components.some((component) => !assessment.entries.some((entry) => entry.status === "included" && entry.componentRefs.includes(component.id))) || categories.some((category) => assessment.entries.filter((entry) => entry.categoryId === category).length !== 1) || assessment.entries.some((entry) => !entry.evidenceRefs.length || entry.evidenceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || (entry.status === "included" ? !entry.componentRefs.length || new Set(entry.componentRefs).size !== entry.componentRefs.length || !entry.scopeNote.trim() || entry.componentRefs.some((ref) => !scenario.components.some((component) => component.id === ref && component.amount !== null && Number.isFinite(component.amount) && component.currency === scenario.currency && component.period.start >= scenario.horizon.start && component.period.end <= scenario.horizon.end && component.evidenceState !== "absent" && component.sourceRefs.length > 0 && component.sourceRefs.every((source) => entry.evidenceRefs.some((evidence) => evidence.kind === "record" && evidence.target.surface === source.surface && evidence.target.recordType === source.type && evidence.target.recordId === source.id && evidence.target.incarnation === source.incarnation && evidence.target.version === source.version && evidence.target.period !== undefined && evidence.target.period.start <= source.period.start && evidence.target.period.end >= source.period.end && source.fields.every((field) => evidence.kind === "record" && evidence.target.fields.includes(field)))))) : !entry.justification.trim())))) return "incomplete-cost-coverage"
+-  if (!scenario.sourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "planner" && scenario.costCoverage.evaluatedSourceRefs.some((evidence) => digestSfValue(evidence) === digestSfValue(ref)))) return "planner-coverage-source-mismatch"
++  const plannerSource = scenario.sourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "planner" && scenario.costCoverage.evaluatedSourceRefs.some((evidence) => digestSfValue(evidence) === digestSfValue(ref)))
++  // A standalone Procurement estimate can only enter this lane as conditioned,
++  // with the same exact source in the result, inventory and canonical assessment.
++  const source = scenario.sourceRefs.length === 1 ? scenario.sourceRefs[0] : undefined
++  const component = scenario.components.length === 1 ? scenario.components[0] : undefined
++  const procurementSource = source?.kind === "record" && source.refId.startsWith("sf-procurement:") && source.target.surface === "procurement" && source.target.recordType === "procurement-request" && source.target.fields.includes("originalAmount") &&
++    scenario.id.startsWith("procurement-scenario:") && scenario.restrictions.includes("producer:procurement-requisition-scenario-v1") && scenario.comparisonStatus === "conditioned" && scenario.total === null &&
++    assessment.coverageState === "pending" && !!categories && sameCategories(assessment.entries.map((entry) => entry.categoryId), categories) && assessment.entries.every((entry) => entry.status === "pending" && entry.reason === "missing-category") &&
++    sameCategories(assessment.derivedMissingCategoryIds, categories) && basis.sourceRefs.length === 1 && digestSfValue(basis.sourceRefs[0]) === digestSfValue(source) && assessment.evaluatedSourceRefs.length === 1 && digestSfValue(assessment.evaluatedSourceRefs[0]) === digestSfValue(source) &&
++    !!component && component.id === `procurement:${encodeURIComponent(source.target.recordId)}:PR.estAmount` && component.amount === scenario.knownSubtotal && (component.amount === null ? component.evidenceState === "absent" : Number.isFinite(component.amount) && component.amount >= 0 && (component.evidenceState === "estimated" || component.evidenceState === "hypothetical")) && component.currency === scenario.currency && digestSfValue(component.period) === digestSfValue(scenario.horizon) &&
++    component.sourceRefs.length === 1 && component.sourceRefs.every((ref) => ref.surface === "procurement" && ref.type === source.target.recordType && ref.id === source.target.recordId && ref.incarnation === source.target.incarnation && ref.version === source.target.version && digestSfValue(ref.period) === digestSfValue(source.target.period) && ref.fields.length === 1 && ref.fields[0] === "originalAmount")
++  if (!plannerSource && !procurementSource) return "planner-coverage-source-mismatch"
+   if (scenario.comparisonStatus !== "complete") return undefined
+   if (scenario.components.reduce((sum, component) => sum + (component.amount ?? 0), 0) !== scenario.knownSubtotal) return "incomplete-cost-coverage"
+   if (!categories || scenario.costCoverage.coverageState !== "complete" || scenario.costCoverage.entries.length !== categories.length || categories.some((category) => scenario.costCoverage.entries.filter((entry) => entry.categoryId === category).length !== 1) || scenario.total !== scenario.knownSubtotal || scenario.components.some((component) => component.amount === null || !Number.isFinite(component.amount) || component.evidenceState !== "confirmed" || component.currency !== scenario.currency || !component.sourceRefs.length)) return "incomplete-cost-coverage"
+@@ -84,3 +95,5 @@
+     return undefined
+   }
+ }
++
++function sameCategories(left: readonly string[], right: readonly string[]) { return left.length === right.length && new Set(left).size === left.length && right.every((category) => left.includes(category)) }
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -1,3 +1,4 @@
++import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
+ import { randomUUID } from "node:crypto"
+ import { AsyncLocalStorage } from "node:async_hooks"
+ import { createPlannerConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
+@@ -401,8 +402,12 @@
+     if (decisionDomain.current) throw new Error("SF_DECISION_DOMAIN_ALREADY_BOUND")
+     decisionDomain.current = value
+   }
+-  const product = createPlannerProduct({ host, scopedSources: input.persistence, evidence: context,
++  const procurementScenarios = createSfProcurementScenarioServices({ host, state: input.authority.state, sources: individual, port: procurement, withCase: withCalculationCase })
++  const product = createPlannerProduct({ standalone: { supports: procurementScenarios.producer.supports,
++    supportsSource: (reference) => reference.startsWith("sf-procurement:"), simulateScenario: procurementScenarios.producer.simulateScenario,
++    resolveSource: procurementScenarios.resolveSource, resolveStored: procurementScenarios.resolveStored }, host, scopedSources: input.persistence, evidence: context,
+     coverageFor: createPlannerCoverageRouter({ forecast: async (ref, call) => {
++      if (ref.startsWith("sf-procurement-coverage:")) return procurementScenarios.producer.resolveForecastCoverage(ref, call)
+       if (ref.startsWith("proposal-coverage:")) return decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? { status: "unavailable", reason: "decision-domain-not-initialized" }
+       // A forecast can be read without choosing a decision case. An inaccessible
+       // selection still reaches its registry and retains the current denial.
+@@ -448,12 +453,15 @@
+         : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
+     } })
+   calculationVerifier.current = calculations.verifyCalculationSources
+-  const persist = calculations.persist
++  // A Procurement preview is transient. Only the existing explicit human
++  // promotion may publish its C08 result; it is never a Planner calculation.
++  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && procurementScenarios.producer.supports(incoming.request)
++    ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculations.persist(incoming, callId, call, replay)
+   const receipt = input.authority.authority.receiptFor
+   const descriptors = [
+     ...input.extraDescriptors ?? [],
+     ...createDashboardCapabilities(dashboard, async (call, operation, digest, result) => receipt(call, operation, digest, result)),
+-    ...createPlannerCapabilities(planner, receipt, persist),
++    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario: procurementScenarios.producer.supports }),
+     ...createProcurementCapabilities({ port: procurement, authority: input.authority.authority }),
+     ...collaboration.capabilities,
+     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),
+@@ -695,7 +703,7 @@
+       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
+     },
+   }) }
+-  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
++  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations: { ...calculations, persist }, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
+     withMemoryObservation,
+     bindReviewCollaboration: reviewCollaboration.bind,
+diff --git a/apps/cli/src/sucafina-product/portfolio-coverage.ts b/apps/cli/src/sucafina-product/portfolio-coverage.ts
+--- a/apps/cli/src/sucafina-product/portfolio-coverage.ts
++++ b/apps/cli/src/sucafina-product/portfolio-coverage.ts
+@@ -1,3 +1,4 @@
++import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
+ import { AsyncLocalStorage } from "node:async_hooks"
+ import { randomUUID } from "node:crypto"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+@@ -78,8 +79,8 @@
+       !same({ id: current.value.id, incarnation: current.value.incarnation, version: current.value.version }, selection.caseRef) || preferences.status !== "ok" || !preferences.value) return undefined
+     return digestSfValue({ case: current.value, preferences: preferences.value })
+   }
+-  const refsFor = (scenario: ScenarioResult, classification: CoverageClassification, entries: readonly CostCoverageEntry[]) =>
+-    [...classification.basis.sourceRefs, ...scenario.sourceRefs, ...entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
++  const refsFor = (scenario: ScenarioResult, basis: CoverageClassification["basis"], entries: readonly CostCoverageEntry[]) =>
++    [...basis.sourceRefs, ...scenario.sourceRefs, ...entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+       .filter((ref, index, refs) => refs.findIndex((other) => same(other, ref)) === index)
+   const fresh = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext) => {
+     const values = await business.context.context({ refs }, call)
+@@ -95,14 +96,26 @@
+     const before = await readState(held.value, call)
+     const sources = await business.readSourceFences(call)
+     const coverage = await business.plannerSources.resolveForecastCoverage(held.value.coverageRef, call)
+-    const classification = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)
+-    if (!before || !sources || coverage.status !== "ok" || classification.status !== "ok" || !same(coverage.value.assessment, baseline) ||
+-      !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||
+-      baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
+-        !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
++    if (!before || !sources || coverage.status !== "ok" || !same(coverage.value.assessment, baseline)) return unavailable()
++    let classification: CoverageClassification | undefined
++    if (business.procurementScenarios.producer.supports(held.value.scenario)) {
++      const current = await business.procurementScenarios.producer.preview(held.value.scenario, call)
++      if (current.status !== "ok" || !same(current.value.basis, coverage.value.basis) || !same(current.value.assessment, baseline) || baseline.entries.some((entry) => entry.status !== "pending")) return unavailable()
++      const result = current.value.scenario
++      const attributed: ScenarioResult = result.comparisonStatus === "complete"
++        ? { ...result, costCoverage: { ...result.costCoverage, alternativeId: scenario.costCoverage.alternativeId, alternativeVersion: scenario.costCoverage.alternativeVersion } }
++        : { ...result, costCoverage: { ...result.costCoverage, alternativeId: scenario.costCoverage.alternativeId, alternativeVersion: scenario.costCoverage.alternativeVersion } }
++      if (plannerScenarioDigest(attributed) !== plannerScenarioDigest(scenario)) return unavailable()
++    } else {
++      const current = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)
++      if (current.status !== "ok" || !same(coverage.value.basis, current.value.basis) || current.value.source.refId !== held.value.scenario.baseRef ||
++        baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
++          !current.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
++      classification = current.value
++    }
+     const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
+-    for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
+-    const refs = refsFor(scenario, classification.value, entries)
++    if (classification) for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification)
++    const refs = refsFor(scenario, coverage.value.basis, entries)
+     // A no-op keeps the baseline producer's exact assessment bytes, including
+     // its source-first evidence order. Prove the complete one-to-one set
+     // before asking the actual readers for those same references in that order.
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -1,3 +1,4 @@
++import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
+ import { randomUUID } from "node:crypto"
+ import { createSfPersonalViews } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
+ import { createSfPersonalViewAuthority } from "./personal-view-authority.ts"
+@@ -267,6 +268,7 @@
+     hasAdmittedInputContext: nativeInputs.hasAdmittedInputContext, readAlternativeCapture: nativeInputs.readAlternativeCapture })
+   business.bindDecisionDomain(decisionDomain)
+   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })
++  const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
+   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
+   residentReviewReaders.bindOutcome(memory.reviewOutcome)
+   const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
+@@ -828,7 +830,7 @@
+   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
+-    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
++    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -1,3 +1,4 @@
++import { procurementAlternativesForm, procurementAlternativesScript } from "../ui/procurement-alternatives.ts"
+ import type { SfHostServices } from "../contracts/host-context.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+@@ -182,9 +183,9 @@
+       const returnTo = caseOutput?.ok && url.searchParams.has("returnTo") ? contextualCaseReturn({ ...input, returnTo: url.searchParams.get("returnTo")!, sourceRefs: caseOutput.value.case.sourceRefs }) : undefined
+       if (caseOutput?.ok && url.searchParams.has("returnTo") && !returnTo) return pageReply("<h2>Source context unavailable</h2><p>The return destination does not match this decision's contract evidence. Open the decision again from Workbench.</p>", 400)
+       const analysis = caseOutput?.ok ? await (caseOutput.value.evidenceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request") ? sourcingAnalysisForm : forecastAnalysisForm)(caseOutput.value, runtime) : ""
+-      const body = caseOutput?.ok ? (returnTo ? `<p><a href="${esc(returnTo)}">Return to contract</a></p>` : "") + decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionAlternativesForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseWorkSelectionForm(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + analysis + await scenarioAnalysisForm(caseOutput.value, runtime) + await intentAnalysisForm(caseOutput.value, runtime) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
++      const body = caseOutput?.ok ? (returnTo ? `<p><a href="${esc(returnTo)}">Return to contract</a></p>` : "") + decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionAlternativesForm(caseOutput.value) + procurementAlternativesForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseWorkSelectionForm(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + analysis + await scenarioAnalysisForm(caseOutput.value, runtime) + await intentAnalysisForm(caseOutput.value, runtime) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
+       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+-      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionAlternativesScript}${decisionChoiceScript}${decisionApplyScript}${caseWorkSelectionScript}${caseQuestionScript}${forecastAnalysisScript}${sourcingAnalysisScript}${personalViewsScript}${documentSearchScript}${recordSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
++      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionAlternativesScript}${procurementAlternativesScript}${decisionChoiceScript}${decisionApplyScript}${caseWorkSelectionScript}${caseQuestionScript}${forecastAnalysisScript}${sourcingAnalysisScript}${personalViewsScript}${documentSearchScript}${recordSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
+       const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "", "", admitted.value.binding.accessRevision).replace("</script>", `${script}</script>`)
+       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
+     } finally { runtime.ui.finish(admitted.value) }
+diff --git a/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts b/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts
+--- a/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts
+@@ -55,7 +55,13 @@
+   const context = { ...decisionFormContext(projection), choices: item.choices, alternatives: item.alternatives.map((alternative) => ({ id: alternative.id, version: alternative.version, title: alternative.title, currency: alternative.result.currency, horizon: alternative.result.horizon })), criteria: item.criteria.map((criterion) => ({ id: criterion.id, description: criterion.description, required: criterion.required })) }
+   const options = item.alternatives.map((alternative) => `<option value="${esc(alternative.id)}">${esc(alternative.title)}</option>`).join("")
+   const numericRule = `<fieldset data-numeric-rule hidden><legend>Numeric comparison rule</legend><p>Define a limit only for a criterion that explicitly concerns the known subtotal difference. Missing costs remain unresolved, and saving a rule does not grant financial approval.</p><label>Criterion for numeric comparison<select data-numeric-criterion><option value="">Choose a criterion</option>${item.criteria.map((criterion) => `<option value="${esc(criterion.id)}">${esc(criterion.description)}</option>`).join("")}</select></label><button type="button" data-numeric-load>Load comparison rule</button><p data-numeric-basis></p><label>Evidence for the numeric rule<select data-numeric-evidence multiple disabled></select></label><label>Numeric comparison condition<select data-numeric-operator disabled><option value="">Choose a condition</option><option value="lte">At most</option><option value="gte">At least</option><option value="eq">Equal to</option></select></label><label>Limit for known subtotal difference in ${esc(item.currency)}<input data-numeric-value type="number" step="any" disabled></label><button type="button" data-numeric-save disabled>Save comparison rule</button><p data-numeric-status role="status" aria-live="polite"></p></fieldset>`
+-  return `<section><h3>Compare and choose</h3><p>A recorded choice preserves its comparison and conditions. Financial approval remains a separate explicit action.</p><form data-decision-choice data-context="${esc(JSON.stringify(context))}"><label>Baseline<select name="baseline">${options}</select></label><label>Alternative<select name="alternative">${options}</select></label><fieldset><legend>Criteria</legend>${item.criteria.map((criterion) => `<label><input type="checkbox" name="criteria" value="${esc(criterion.id)}" checked${criterion.required ? " required" : ""}>${esc(criterion.description)}${criterion.required ? " (required)" : ""}</label>`).join("")}</fieldset><button type="button" data-compare>Compare</button><div data-comparison role="status" aria-live="polite"></div>${numericRule}<button type="button" data-portfolio disabled>Use these alternatives in portfolio</button><details data-sensitivity hidden><summary>Explore sensitivity</summary><label>Criterion<select data-sensitivity-criterion><option value="">Choose a criterion</option>${item.criteria.map((criterion) => `<option value="${esc(criterion.id)}">${esc(criterion.description)}</option>`).join("")}</select></label><button type="button" data-sensitivity-rule>Load criterion and units</button><p data-sensitivity-basis></p><label>Minimum<input data-sensitivity-min type="number" step="any"></label><label>Maximum<input data-sensitivity-max type="number" step="any"></label><label>Sample steps<input data-sensitivity-steps type="number" min="1" max="1024" step="1"></label><button type="button" data-sensitivity-run>Evaluate sensitivity</button><div data-sensitivity-output role="status" aria-live="polite"></div></details><label>Reason for choosing<textarea name="reason" required></textarea></label><button type="submit" disabled>Record choice</button><p data-choice-status role="status" aria-live="polite"></p></form></section>${preparation}`
++  const procurement = item.alternatives.filter((alternative) => alternative.scenario.baseRef.startsWith("sf-procurement:"))
++  const proposals = procurement.length ? `<section aria-label="Procurement proposals in this choice"><h3>Procurement proposals</h3><p>These estimates remain conditioned by pending costs. Choosing one records the exact saved proposal; financial approval remains in Procurement and replacement preparation is blocked by the current approval workflow.</p>${procurement.map((alternative) => {
++    const source = alternative.result.sourceRefs.find((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef && ref.target.surface === "procurement")
++    const operation = alternative.scenario.operations[0]
++    return `<p>${esc(alternative.title)} · alternative revision ${alternative.version} · ${source?.kind === "record" ? `requisition ${esc(source.target.recordId)} · source revision ${source.target.version}` : "source unavailable"} · ${operation ? `proposed estimated amount ${esc(String(operation.amount))} ${esc(operation.currency ?? "")}` : `current estimate ${alternative.result.knownSubtotal === null ? "unavailable" : esc(String(alternative.result.knownSubtotal)) + " " + esc(alternative.result.currency)}`} · ${esc(alternative.result.horizon.start)} to ${esc(alternative.result.horizon.end)} · total cost unavailable</p>`
++  }).join("")}</section>` : ""
++  return `<section><h3>Compare and choose</h3>${proposals}<p>A recorded choice preserves its comparison and conditions. Financial approval remains a separate explicit action.</p><form data-decision-choice data-context="${esc(JSON.stringify(context))}"><label>Baseline<select name="baseline">${options}</select></label><label>Alternative<select name="alternative">${options}</select></label><fieldset><legend>Criteria</legend>${item.criteria.map((criterion) => `<label><input type="checkbox" name="criteria" value="${esc(criterion.id)}" checked${criterion.required ? " required" : ""}>${esc(criterion.description)}${criterion.required ? " (required)" : ""}</label>`).join("")}</fieldset><button type="button" data-compare>Compare</button><div data-comparison role="status" aria-live="polite"></div>${numericRule}<button type="button" data-portfolio disabled>Use these alternatives in portfolio</button><details data-sensitivity hidden><summary>Explore sensitivity</summary><label>Criterion<select data-sensitivity-criterion><option value="">Choose a criterion</option>${item.criteria.map((criterion) => `<option value="${esc(criterion.id)}">${esc(criterion.description)}</option>`).join("")}</select></label><button type="button" data-sensitivity-rule>Load criterion and units</button><p data-sensitivity-basis></p><label>Minimum<input data-sensitivity-min type="number" step="any"></label><label>Maximum<input data-sensitivity-max type="number" step="any"></label><label>Sample steps<input data-sensitivity-steps type="number" min="1" max="1024" step="1"></label><button type="button" data-sensitivity-run>Evaluate sensitivity</button><div data-sensitivity-output role="status" aria-live="polite"></div></details><label>Reason for choosing<textarea name="reason" required></textarea></label><button type="submit" disabled>Record choice</button><p data-choice-status role="status" aria-live="polite"></p></form></section>${preparation}`
+ }
+ 
+ export const decisionChoiceScript = `
+@@ -65,7 +71,7 @@
+ const confirmedChoiceReceipt = ${isDecisionChoiceReceipt.toString()}
+ const confirmedCriterionReceipt = ${isDecisionCriterionReceipt.toString()}
+ const choiceStorageKey = (context) => 'sf:decision-ui:' + context.scope + ':choice'
+-const holdChoicePeers = (form) => document.querySelectorAll('[data-decision-edit], [data-decision-alternatives], [data-decision-choice], [data-decision-prepare], [data-decision-apply]').forEach((other) => {
++const holdChoicePeers = (form) => document.querySelectorAll('[data-decision-edit], [data-decision-alternatives], [data-procurement-alternatives], [data-decision-choice], [data-decision-prepare], [data-decision-apply]').forEach((other) => {
+   if (other !== form) { other.inert = true; other.dataset.choiceHeld = 'true' }
+ })
+ const releaseChoicePeers = () => document.querySelectorAll('[data-choice-held]').forEach((other) => { other.inert = false; delete other.dataset.choiceHeld })
+diff --git a/apps/cli/src/sucafina-product/decision-controls.ts b/apps/cli/src/sucafina-product/decision-controls.ts
+--- a/apps/cli/src/sucafina-product/decision-controls.ts
++++ b/apps/cli/src/sucafina-product/decision-controls.ts
+@@ -74,6 +74,21 @@
+         const label = `${ref.target.recordType === "planner-version" ? "Forecast" : "Registro Planner"} ${source.id} · ${source.period.start} a ${source.period.end} · ${projection.context.currency} · revisão ${source.version}`
+         if (fields.length && source.period.start <= decision.horizon.start && source.period.end >= decision.horizon.end && ref.target.period && ref.target.period.start <= decision.horizon.start && ref.target.period.end >= decision.horizon.end) evidence.push({ evidence: ref, source, fields, label })
+         if (ref.target.recordType === "planner-version") forecasts.push({ source: ref, label })
++      }
++      // Numeric comparison rules may cite only the attached, still-current
++      // Procurement records behind the saved alternatives. These readers cannot issue scopes.
++      const procurementRefs = current.value.evidenceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.refId.startsWith("sf-procurement:"))
++      if (procurementRefs.length > 64) return { status: "needs-input", reason: "decision-controls-evidence-budget-exceeded" }
++      for (const ref of procurementRefs) {
++        const resolved = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
++        if (resolved.status !== "ok" || !same(resolved.value.evidence, ref)) continue
++        const projected = await runtime.business.procurementScenarios.producer.readProjection(ref.refId, call)
++        if (projected.status !== "ok" || projected.value.context.currency !== decision.currency || !same(projected.value.context.period, decision.horizon)) continue
++        const source = decision.alternatives.flatMap((alternative) => alternative.result.components.flatMap((component) => component.sourceRefs)).find((item) => item.surface === "procurement" && item.type === ref.target.recordType && item.id === ref.target.recordId && item.incarnation === ref.target.incarnation && item.version === ref.target.version && same(item.period, ref.target.period) && item.fields.length > 0 && item.fields.every((field) => ref.target.fields.includes(field)))
++        if (!source) continue
++        const again = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
++        if (again.status !== "ok" || !same(again.value.evidence, ref)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
++        evidence.push({ evidence: ref, source, fields: source.fields, label: `Requisition ${ref.target.recordId} · estimated amount · source revision ${ref.target.version}` })
+       }
+       const selectedSource = url.searchParams.get("source")
+       const matching = forecasts.filter((value) => value.source.refDigest === selectedSource)
+diff --git a/modules/sucafina/Sucafinav1/product/planner/capabilities.ts b/modules/sucafina/Sucafinav1/product/planner/capabilities.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/capabilities.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/capabilities.ts
+@@ -1,4 +1,5 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
++import type { ScenarioRequest } from "../contracts/operations.ts"
+ import { sfOperationInputSchemas } from "../contracts/operations.ts"
+ import { sfOperationOutputSchemas } from "../contracts/output-schemas.ts"
+ import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
+@@ -22,17 +23,26 @@
+   return { status: "ok", result: result.value, receipt }
+ }
+ 
+-export async function simulateScenario(payload: unknown, context: TrustedDomainContext, port: PlannerPort, createReceipt: ReceiptFactory, persist?: ReturnType<typeof createPlannerResultPersistence>): Promise<CapabilityResult> {
++export async function simulateScenario(payload: unknown, context: TrustedDomainContext, port: PlannerPort, createReceipt: ReceiptFactory, persist?: ReturnType<typeof createPlannerResultPersistence>, readOnlyScenario?: (request: ScenarioRequest) => boolean): Promise<CapabilityResult> {
+   const operation = "sf_scenario_simulate"
+   const parsed = decodeSfOperationInput(operation, payload)
+   if (!parsed.ok) return { status: "denied", reason: "invalid-input", receipt: { kind: "unbound", operation, code: "invalid-input", at: new Date().toISOString() } }
+-  const inputDigest = digestSfValue(parsed.value)
++  const request = structuredClone(parsed.value)
++  const inputDigest = digestSfValue(request)
+   const admission = await createReceipt(context, operation, inputDigest)
+   if (!admission) return { status: "unavailable", reason: "receipt-unavailable", receipt: { kind: "unbound", operation, code: "unavailable", at: new Date().toISOString() } }
+-  if (!persist) return { status: "unavailable", reason: "result-persistence-unavailable", receipt: admission }
+-  const result = await port.simulateScenario(parsed.value, context)
++  // Capture the host-owned disposition before entering the calculator. A
++  // transient preview never checks or calls a result persistence capability.
++  const readOnly = readOnlyScenario?.(request) === true
++  if (!readOnly && !persist) return { status: "unavailable", reason: "result-persistence-unavailable", receipt: admission }
++  const result = await port.simulateScenario(structuredClone(request), context)
+   if (result.status !== "ok") return { status: result.status === "conflict" ? "failed" : result.status, reason: result.reason, receipt: admission }
+-  const saved = await persist({ kind: "scenario", request: parsed.value, result: result.value }, admission.callId, context, port)
++  if (readOnly) {
++    const receipt = await createReceipt(context, operation, inputDigest, digestSfValue(result.value))
++    if (!receipt) return { status: "unavailable", reason: "receipt-unavailable", receipt: { kind: "unbound", operation, code: "unavailable", at: new Date().toISOString() } }
++    return { status: "ok", result: result.value, receipt }
++  }
++  const saved = await persist!({ kind: "scenario", request, result: result.value }, admission.callId, context, port)
+   if (saved.status !== "ok") return { status: saved.status === "conflict" ? "failed" : saved.status, reason: saved.reason, receipt: admission }
+   const receipt = await createReceipt(context, operation, inputDigest, digestSfValue(result.value))
+   if (!receipt) return { status: "unavailable", reason: "receipt-unavailable", receipt: { kind: "unbound", operation, code: "unavailable", at: new Date().toISOString() } }
+@@ -56,10 +66,10 @@
+   return { status: "ok", result: result.value, receipt, outputRef: saved.value.resultRef }
+ }
+ 
+-export function createPlannerCapabilities(port: PlannerPort, createReceipt: ReceiptFactory, persist?: ReturnType<typeof createPlannerResultPersistence>): readonly CapabilityDescriptor[] {
++export function createPlannerCapabilities(port: PlannerPort, createReceipt: ReceiptFactory, persist?: ReturnType<typeof createPlannerResultPersistence>, options: { readOnlyScenario?: (request: ScenarioRequest) => boolean } = {}): readonly CapabilityDescriptor[] {
+   return [
+     { id: "sf_forecast_compare", pack: "planning", mode: "simulate", inputSchema: sfOperationInputSchemas.sf_forecast_compare, outputSchema: sfOperationOutputSchemas.sf_forecast_compare, handler: (payload, context) => compareForecast(payload, context, port, createReceipt), handlerExport: "compareForecast", producerTask: "WP03.T01", grantProfiles: ["sf_finance"], requiredAuthority: ["planner:read"] },
+-    { id: "sf_scenario_simulate", pack: "planning", mode: "simulate", inputSchema: sfOperationInputSchemas.sf_scenario_simulate, outputSchema: sfOperationOutputSchemas.sf_scenario_simulate, handler: (payload, context) => simulateScenario(payload, context, port, createReceipt, persist), handlerExport: "simulateScenario", producerTask: "WP03.T01", grantProfiles: ["sf_finance", "sf_portfolio", "sf_reviewer"], requiredAuthority: ["planner:read"] },
++    { id: "sf_scenario_simulate", pack: "planning", mode: "simulate", inputSchema: sfOperationInputSchemas.sf_scenario_simulate, outputSchema: sfOperationOutputSchemas.sf_scenario_simulate, handler: (payload, context) => simulateScenario(payload, context, port, createReceipt, persist, options.readOnlyScenario), handlerExport: "simulateScenario", producerTask: "WP03.T01", grantProfiles: ["sf_finance", "sf_portfolio", "sf_reviewer"], requiredAuthority: ["planner:read"] },
+     { id: "sf_scenario_compare", pack: "planning", mode: "simulate", inputSchema: sfOperationInputSchemas.sf_scenario_compare, outputSchema: sfOperationOutputSchemas.sf_scenario_compare, handler: (payload, context) => compareScenarios(payload, context, port, createReceipt, persist), handlerExport: "compareScenarios", producerTask: "WP03.T05", grantProfiles: ["sf_finance", "sf_portfolio", "sf_reviewer"], requiredAuthority: ["planner:read"] },
+   ]
+ }
+diff --git a/apps/cli/src/sucafina-product/decision-domain-services.ts b/apps/cli/src/sucafina-product/decision-domain-services.ts
+--- a/apps/cli/src/sucafina-product/decision-domain-services.ts
++++ b/apps/cli/src/sucafina-product/decision-domain-services.ts
+@@ -1,11 +1,13 @@
++import { createProcurementReadonlySourceResolver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts"
++import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+-import type { AuthorizedCaseProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import { encodeCaseRef, parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+ import { createCriterionRuleRegistry, createCriterionResultBindings } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
+-import type { CriterionMetric } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
++import type { CriterionMetric, CriterionRuleInput } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
+ import { createCriterionComparisonBindings } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts"
+ import { createDecisionComparisonService } from "../../../../modules/sucafina/Sucafinav1/product/decisions/comparison.ts"
+ import { createDecisionPortfolioSelection } from "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts"
+@@ -72,6 +74,42 @@
+     const found = await input.authority.state.read(request, "cases", (state, actor) => actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion ? state.cases[ref.id] : undefined)
+     return found.status === "ok" && found.value && found.value.incarnation === ref.incarnation && found.value.version === ref.version && await business.authorizeCase(found.value, call) ? found.value : undefined
+   }
++  const procurementReadonly = createProcurementReadonlySourceResolver({ host })
++  type ProcurementRuleProof = { request: CriterionRuleInput; transport: Request; binding: string; caseDigest: string;
++    refs: readonly BusinessEvidenceRef[]; fences: NonNullable<Awaited<ReturnType<typeof business.readSourceFences>>> }
++  const procurementRuleProofs = new WeakMap<TrustedDomainContext, ProcurementRuleProof>()
++  const captureProcurementRule = async (request: CriterionRuleInput, call: TrustedDomainContext) => {
++    const captured = structuredClone(request)
++    const refs = [...captured.evidenceRefs, ...(captured.sensitivity?.sourceRefs ?? [])]
++    const procurement = refs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement")
++    if (!procurement.length) return true
++    if (captured.sensitivity || procurement.length > 64 || refs.some((ref) => ref.kind !== "record" || !["planner", "procurement"].includes(ref.target.surface))) return false
++    const transport = host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
++    const current = await rawCase(captured.caseRef, call), fences = await business.readSourceFences(call)
++    if (!transport || transport.signal.aborted || !current || !fences || !input.sharedPortfolio || captured.metricRef !== "planner:known-subtotal-difference" || captured.unit !== current.currency || !same(captured.period, current.horizon)) return false
++    const allowed = current.alternatives.filter((alternative) => business.procurementScenarios.producer.supports(alternative.scenario)).flatMap((alternative) => alternative.result.sourceRefs)
++    for (const ref of procurement) {
++      if (!allowed.some((source) => same(source, ref))) return false
++      const observed = await procurementReadonly.resolveSource(ref.refId, call)
++      if (observed.status !== "ok" || !same(observed.value.evidence, ref) || observed.value.context.currency !== captured.unit || !same(observed.value.context.period, captured.period)) return false
++    }
++    const again = await rawCase(captured.caseRef, call)
++    if (!again || !same(again, current) || !same(await business.readSourceFences(call), fences) || host.requestFor(call) !== transport || transport.signal.aborted || binding !== digestSfValue([call.kind, call.binding]) || !same(captured, request) || !await host.revalidate(call)) return false
++    procurementRuleProofs.set(call, { request: captured, transport, binding, caseDigest: digestSfValue(current), refs: structuredClone(procurement), fences })
++    return true
++  }
++  const verifyRuleSources: Parameters<typeof createCriterionRuleRegistry>[0]["verifySnapshot"] = (snapshot, request, rule, call) => {
++    const actor = actors.locked(snapshot, call)
++    if (!actor || !intent.verify(call, "decisions.criteria", request)) return false
++    const refs = [...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])]
++    const procurement = refs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement")
++    if (!procurement.length) return verifyDecisionPlannerSources(snapshot, refs, actor, call)
++    const planner = refs.filter((ref) => ref.kind === "record" && ref.target.surface === "planner")
++    const proof = procurementRuleProofs.get(call), locked = host.persistence.currentSnapshots?.()
++    if (!proof || !locked || refs.length !== procurement.length + planner.length || !same(proof.request, request) || !same(proof.refs, procurement) || proof.transport !== host.requestFor(call) || proof.transport.signal.aborted || proof.binding !== digestSfValue([call.kind, call.binding]) || !same(business.lockedSourceFences(), proof.fences)) return false
++    const current = object(object(locked.dashboard.data.__sfProductV1).cases)[request.caseRef.id]
++    return digestSfValue(current) === proof.caseDigest && procurement.every((ref) => ref.kind === "record" && ref.installationId === call.binding.installationId && ref.projectId === call.binding.projectId && procurementReadonly.isCurrent(locked.procurement, ref)) && (!planner.length || verifyDecisionPlannerSources(snapshot, planner, actor, call))
++  }
+   const rules: ReturnType<typeof createCriterionRuleRegistry> = createCriterionRuleRegistry({ ...common,
+     authorizeRule: (request, call) => intent.authorize(call, "decisions.criteria", request),
+     verifyEvidence: async (rule, call) => {
+@@ -89,10 +127,7 @@
+         baseline.value.caseRef.id === current.id && baseline.value.caseRef.incarnation === current.incarnation && baseline.value.caseRef.version <= current.version &&
+         baseline.value.result.currency === rule.unit && same(baseline.value.result.horizon, rule.period) && await host.revalidate(call)
+     },
+-    verifySnapshot: (snapshot, request, rule, call) => {
+-      const actor = actors.locked(snapshot, call)
+-      return !!actor && intent.verify(call, "decisions.criteria", request) && verifyDecisionPlannerSources(snapshot, [...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])], actor, call)
+-    },
++    verifySnapshot: verifyRuleSources,
+     readMetric: (request, call) => metric(request, call), verifyMetric: checks.metric })
+   const units = input.sharedPortfolio?.units ?? createPlannerSensitivityUnits({ host, cases: business.cases, scenarios, store: business.results, evidence: business.context, rules })
+   // The standalone domain composition must retain the host's exact-threshold capability.
+@@ -167,7 +202,10 @@
+     dispose: materiality.dispose,
+     criteria: { ...rules, register: async (request: Parameters<typeof rules.register>[0], call: TrustedDomainContext) => {
+       if (call.kind !== "ui" || !await input.authority.human.authorize(call, "decisions.criteria", request) || !await rawCase(request.caseRef, call) || !await actors.capture(call)) return { status: "denied" as const, reason: "criterion-human-authority-unavailable" }
+-      try { return await rules.register(request, call) } finally { actors.release(call) }
++      try {
++        if (!await captureProcurementRule(request, call)) return { status: "denied" as const, reason: "criterion-procurement-source-unavailable" }
++        return await rules.register(request, call)
++      } finally { procurementRuleProofs.delete(call); actors.release(call) }
+     } },
+     selection: { ...selectedPortfolio, register: async (request: Parameters<typeof selectedPortfolio.register>[0], call: TrustedDomainContext) => {
+       if (call.kind !== "ui" || !await input.authority.human.authorize(call, "decisions.select-portfolio", request)) return { status: "denied" as const, reason: "portfolio-human-selection-required" }

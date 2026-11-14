@@ -1,0 +1,32 @@
+{
+  "schema": "mission37-consumer-surgical-actions-request-v1",
+  "state": "NOT_RUN_REQUIRES_ASSEMBLY_AND_S0_ACTIONS",
+  "integrator": "session42",
+  "executor": "S0",
+  "precondition": "Successor42 ACK identifies the assembled commit/tree, all eleven primary postimages, both test patches and six exact own production dependencies.",
+  "interface": "Existing repository test-ci interface/dispatcher only. S0 computes W/S from exact assembled product and selection; deduplicate and reattach an existing equivalent execution before starting a run.",
+  "newTestSelector": "Sucafinav1/test/product/procurement-decision-producer/assembled-capability.test.ts",
+  "legacyTestSelector": "Sucafinav1/test/product/wp04/capabilities.test.ts",
+  "existingSelectors": [
+    "Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+    "Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+    "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+    "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts"
+  ],
+  "selectionRule": "Use these exact files as one deduplicated bounded selection or the existing dispatcher limit-compatible surgical groups. Reuse the existing budgets; no epic/full suite, skips, local tests, servers or budget increase.",
+  "checks": "S0 follows AGENTS package typecheck and repository guards through the existing remote workflow after assembly. Session42 does not run tests, typecheck or CI.",
+  "assertions": [
+    "Canonical Procurement sf_scenario_simulate: exact typed ScenarioResult, truthful conditioned/null C10 total, exact source/proposal identity, valid bound input/result receipt, no outputRef, no persistence calls or writes; original input clone remains fixed across first await.",
+    "Readonly capability succeeds without a persistence facade; changed source is denied with admission receipt only and zero new effects.",
+    "Own producer/control negative tests preserve target/currency/period/authority/incarnation/cost/source fences.",
+    "Financial policy tests reject old or different amount approvals; explicit financial replacement preparation block remains; legacy positive uses nonfinancial title change and preserves one actual receipt/effect, CAS, collateral guards and recovery assertions.",
+    "Complete owner composition still requires a bounded real promotion/replay and numeric-criterion witness: explicit human save persists exact request/result/source once, retry repeats the same receipt, reload uses independent producer; numeric criterion commit accepts current Procurement evidence and rejects case/source/actor drift. Do not infer this witness from the two new capability tests."
+  ],
+  "requiredReceipt": [
+    "Assembled W/product commit and tree",
+    "Canonical S/selection and normalized selectors",
+    "Dedup lookup or reattach evidence, run id/URL and attempt",
+    "Exit results, test counts, typecheck and guards without skipped tests",
+    "Explicit remaining unexecuted integration/native/browser criteria"
+  ]
+}

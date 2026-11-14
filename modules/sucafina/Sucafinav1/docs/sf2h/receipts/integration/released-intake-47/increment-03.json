@@ -1,0 +1,1169 @@
+{
+  "schema": "sf2h.released-intake-47.increment.v1",
+  "mission": 47,
+  "epoch": "S0-C-e9-browser47",
+  "increment": 3,
+  "candidate_symbol": "C15",
+  "candidate_identity": "Containing commit and tree; resolved identity in next checkpoint/PR65.",
+  "expected_parent": "03ce926754d7ac0039fbb38470229f13c1623696",
+  "prior_material": {
+    "symbol": "C14",
+    "sha": "03ce926754d7ac0039fbb38470229f13c1623696",
+    "tree": "33f79e84d434c58210d2e5a55ca0d2f90a355b57",
+    "parent": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+    "increment": 2,
+    "sources": [
+      38
+    ]
+  },
+  "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "input": {
+    "branch": "astra-wp04",
+    "pr": 23,
+    "release": "ab2a967125b3c767067797a27b919466020fbd82",
+    "release_tree": "0f902bdb8a0972108243fa06c735ed937d41f7b2",
+    "product": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+    "product_tree": "7200dc460b64f7ba58265f61352a1074c46a2481",
+    "lease": "procurement-decision-browser37",
+    "authority": "EXPLICIT_RELEASE_ENDED_LEASE",
+    "authority_evidence": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/HANDOFF.md",
+        "blob": "5228750be479b1084c3ea9522d16d6bbb4260050"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/DELIVERY.json",
+        "blob": "d58403f9f9c60958bcb4649a8e48e457bb5fa0cb"
+      }
+    ],
+    "stale_consumers": [
+      33,
+      42
+    ],
+    "reconciled_consumer": 47
+  },
+  "decision": "ACCEPTED_COMPLETE_24_PATH_PROCUREMENT37_UNIT_WITH_FINANCIAL_HOLD",
+  "material_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "source_path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "mode": "100644",
+      "preimage": "bdea5d497b4e8fa7e540cfb44d427cd3696678db",
+      "postimage": "7fce64e7e213693d505f9bc6e08835468b7ead41",
+      "source_path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": "Source initial preimage is stale; explicit full source versus terminal42 comparison confirms prepared.ts/review retain all current code plus monetary guard and scenario-preparation replaces incompatible financial prepare with readonly refusal, no C12 overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "mode": "100644",
+      "preimage": "e613a1bf32fe1ee75574139cf699c34843cf25d1",
+      "postimage": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+      "source_path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": "Source initial preimage is stale; explicit full source versus terminal42 comparison confirms prepared.ts/review retain all current code plus monetary guard and scenario-preparation replaces incompatible financial prepare with readonly refusal, no C12 overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "mode": "100644",
+      "preimage": "c8d476a1be6d2b839a087b2bc248293014599791",
+      "postimage": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+      "source_path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": "Source initial preimage is stale; explicit full source versus terminal42 comparison confirms prepared.ts/review retain all current code plus monetary guard and scenario-preparation replaces incompatible financial prepare with readonly refusal, no C12 overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "6b60d7536aed70f515e9f41311de606ed7915168",
+      "source_path": "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "source_path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "9e1c6fd95c65070efffa02b4f293cc5ffca5f65c",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "6e795a84dbab450a280f4c2043e166743ca5df78",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "3c37f7868a62182658adf2b22d88e66869de8d73",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "9a82987ee616e0999579ee2e7fc6a6bfc7b602ce",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+      "disposition": "CONSUME_EXACT_OWN_SOURCE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "mode": "100644",
+      "preimage": "d39d52bc2b04d7b4864539c78a002232628ad2c7",
+      "postimage": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/01-stored-scenarios.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "mode": "100644",
+      "preimage": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "postimage": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/02-product.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "mode": "100644",
+      "preimage": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "postimage": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/03-cost-coverage.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "mode": "100644",
+      "preimage": "ce3a281bf07819f90af7fad10f98861980f3273b",
+      "postimage": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/04-business-services.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "mode": "100644",
+      "preimage": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+      "postimage": "fd5e40da9a982d445259606629b7dbdf581b42af",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/05-portfolio-coverage.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "mode": "100644",
+      "preimage": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+      "postimage": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/06-host-context.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "mode": "100644",
+      "preimage": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+      "postimage": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/07-http.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "mode": "100644",
+      "preimage": "cf61bf000836c0a7cd257366a30708f9e1000d9e",
+      "postimage": "0a330a1377326e3ea919b4714cada83a208efc39",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/08-decision-choice.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "mode": "100644",
+      "preimage": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+      "postimage": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/09-decision-controls.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "mode": "100644",
+      "preimage": "511508ad5c225e48d21cdffacd9f0e1b3139b402",
+      "postimage": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/10-capabilities.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "mode": "100644",
+      "preimage": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93",
+      "postimage": "4f654783f4fa0d3ed1f4495b0c2fece0ae802d9f",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/11-decision-domain-services.ts.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_PATCH_ON_MATCHED_PREIMAGE",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "mode": "100644",
+      "preimage": "06990c2bcb0ebc68797e275c5c24a6946b7cbb5b",
+      "postimage": "fa981232c9c8defdf1b5c7ecacd70f4c67a0a454",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-legacy-test/capabilities.test.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_TEST_PATCH",
+      "reconciliation": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/assembled-capability.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "316c25613649697aa54131427810465166aa10c6",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-tests/assembled-capability.test.postimage.txt",
+      "disposition": "APPLY_FULL_OWNER_TEST_PATCH",
+      "reconciliation": null
+    }
+  ],
+  "source_receipts": {
+    "source_commit": "ab2a967125b3c767067797a27b919466020fbd82",
+    "source_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer",
+    "source_tree": "7e5b734f594ba978e81409fd04970fe9fd96db5b",
+    "target_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/procurement37",
+    "count": 58,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/AUTHORITY-SUCCESSION.json",
+        "sha": "0b29d645cbb6ecb941bcbc777803bf30669ebb3b",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/CI.json",
+        "sha": "c34cc4ca59258cb7fe3b7d6aea29c2cb4fbc4d3a",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/CODE-MANIFEST.json",
+        "sha": "aeecac67cea3aa9b7f03e4fa31bafa74c805633d",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/CRITERIA.json",
+        "sha": "7a1fe2f284eca9fca6f391c6089d9941ade1386d",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/DELIVERY.json",
+        "sha": "d58403f9f9c60958bcb4649a8e48e457bb5fa0cb",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/DESIGN.md",
+        "sha": "03941ccac50e365e7ae3b7f3082019f59f7b3d98",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/FINANCIAL-COMPATIBILITY.md",
+        "sha": "4d77fd48977058d6033a89592463198b76d87b65",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/HANDOFF.md",
+        "sha": "5228750be479b1084c3ea9522d16d6bbb4260050",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/RECONCILIATION.json",
+        "sha": "87373421d54ee1c9b9253a70d2774c3cb97e2a02",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/SCOPE.json",
+        "sha": "efe7b01d1e471d46edd01bf6a8a0e1290e8f8015",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/START.json",
+        "sha": "ee805409343b374472bd38074ca205a72fb6445e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/TYPE-ONLY-FIX.json",
+        "sha": "b485234eca0f2310b160e75998cfbf8ad0ae2e8b",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/ci-request-a1.json",
+        "sha": "5bdf09baf1a01d6f0eda02b39d1aa347a831850e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/ci-request-a2.json",
+        "sha": "78fc04a4bce13077a29e35437bef3aa7267f34b6",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-legacy-test/MANIFEST.json",
+        "sha": "52feafe7921fcf8eb5ccf3b1643631367631696c",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-legacy-test/capabilities.test.patch",
+        "sha": "43bcba46a41a613ee35af7600b0e84888f76b14e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-legacy-test/capabilities.test.postimage.txt",
+        "sha": "fa981232c9c8defdf1b5c7ecacd70f4c67a0a454",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-legacy-test/capabilities.test.preimage.txt",
+        "sha": "06990c2bcb0ebc68797e275c5c24a6946b7cbb5b",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-tests/MANIFEST.json",
+        "sha": "41d74d096d90c953a02684c72e653813cf7f1e6d",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-tests/assembled-capability.test.patch",
+        "sha": "7c3c7101cce888cd3e693db849512f2d4bc13398",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly-tests/assembled-capability.test.postimage.txt",
+        "sha": "316c25613649697aa54131427810465166aa10c6",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/01-stored-scenarios.ts.postimage.txt",
+        "sha": "529e29806b3faf15f88eec009c198e783f4248a3",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/01-stored-scenarios.ts.preimage.txt",
+        "sha": "d39d52bc2b04d7b4864539c78a002232628ad2c7",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/02-product.ts.postimage.txt",
+        "sha": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/02-product.ts.preimage.txt",
+        "sha": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/03-cost-coverage.ts.postimage.txt",
+        "sha": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/03-cost-coverage.ts.preimage.txt",
+        "sha": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/04-business-services.ts.postimage.txt",
+        "sha": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/04-business-services.ts.preimage.txt",
+        "sha": "ce3a281bf07819f90af7fad10f98861980f3273b",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/05-portfolio-coverage.ts.postimage.txt",
+        "sha": "fd5e40da9a982d445259606629b7dbdf581b42af",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/05-portfolio-coverage.ts.preimage.txt",
+        "sha": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/06-host-context.ts.postimage.txt",
+        "sha": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/06-host-context.ts.preimage.txt",
+        "sha": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/07-http.ts.postimage.txt",
+        "sha": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/07-http.ts.preimage.txt",
+        "sha": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/08-decision-choice.ts.postimage.txt",
+        "sha": "0a330a1377326e3ea919b4714cada83a208efc39",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/08-decision-choice.ts.preimage.txt",
+        "sha": "cf61bf000836c0a7cd257366a30708f9e1000d9e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/09-decision-controls.ts.postimage.txt",
+        "sha": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/09-decision-controls.ts.preimage.txt",
+        "sha": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/10-capabilities.ts.postimage.txt",
+        "sha": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/10-capabilities.ts.preimage.txt",
+        "sha": "511508ad5c225e48d21cdffacd9f0e1b3139b402",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/11-decision-domain-services.ts.postimage.txt",
+        "sha": "4f654783f4fa0d3ed1f4495b0c2fece0ae802d9f",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/11-decision-domain-services.ts.preimage.txt",
+        "sha": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/ACTIONS_REQUEST.json",
+        "sha": "ae6d1932dda0d4ab591d4a409d8a3d66cf504e1c",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/CONSUMER_ACK_REQUEST.json",
+        "sha": "7a3b7cdd337495a94a7f2df3c23a154fe002cb0e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/INDEPENDENT_REVIEW.md",
+        "sha": "1cc7b8db4da411b2333d3063454eeb6956ea75bc",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/INTEGRITY_REVIEW.json",
+        "sha": "18b3442fc5a69a30515cdd7cee3c151b6ddee7c7",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/MANIFEST.json",
+        "sha": "ff10c2333bc7cf691ba071d69ef4104c5d814cd4",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/NATIVE-RECEIPT-REVIEW.md",
+        "sha": "668b269a8e936ebcea67726f49b53626f448a367",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/OWN_DEPENDENCIES.json",
+        "sha": "66080d93641396a1ce46d77bf77ec4e7afacf942",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/README.md",
+        "sha": "37dff18263953e4ffe4bede73364ebd0a6bf1eb5",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/c9/08-decision-choice.ts.postimage.txt",
+        "sha": "1e46474563465c2d0a10543770cf82f5ccea03a3",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/c9/08-decision-choice.ts.preimage.txt",
+        "sha": "78bbcfcf09ee49152745f4142f90c79bd307269d",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/c9/09-decision-controls.ts.postimage.txt",
+        "sha": "49e1af51245e8ec0748e3c81a8fb486ed3e103c6",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/c9/09-decision-controls.ts.preimage.txt",
+        "sha": "77563520dbfa9cab5876c0312eba294cb579e11d",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/c9/MANIFEST.json",
+        "sha": "190ad04fe7e9f9d869bc249ff58dc2a158b36f55",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/c9/mission37-assembly.patch",
+        "sha": "11229cd8e90f4b0804f9dde0c2df027cdafe4337",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/assembly/mission37-assembly.patch",
+        "sha": "b9280e0ba4a8cd6e0f79a81b288a6d5762a17221",
+        "mode": "100644"
+      }
+    ],
+    "original_bytes_preserved": true
+  },
+  "patch_integrity": {
+    "type": "static_text_integrity_only",
+    "target": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+    "source": "ab2a967125b3c767067797a27b919466020fbd82",
+    "entries": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "preimage": "d39d52bc2b04d7b4864539c78a002232628ad2c7",
+        "postimage": "529e29806b3faf15f88eec009c198e783f4248a3",
+        "hunks": 3,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+        "preimage": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+        "postimage": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8",
+        "hunks": 2,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "preimage": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+        "postimage": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+        "hunks": 2,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "preimage": "ce3a281bf07819f90af7fad10f98861980f3273b",
+        "postimage": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+        "hunks": 4,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "preimage": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+        "postimage": "fd5e40da9a982d445259606629b7dbdf581b42af",
+        "hunks": 3,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "preimage": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+        "postimage": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+        "hunks": 3,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "preimage": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+        "postimage": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "hunks": 2,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+        "preimage": "cf61bf000836c0a7cd257366a30708f9e1000d9e",
+        "postimage": "0a330a1377326e3ea919b4714cada83a208efc39",
+        "hunks": 2,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+        "preimage": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+        "postimage": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+        "hunks": 1,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+        "preimage": "511508ad5c225e48d21cdffacd9f0e1b3139b402",
+        "postimage": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+        "hunks": 3,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "preimage": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93",
+        "postimage": "4f654783f4fa0d3ed1f4495b0c2fece0ae802d9f",
+        "hunks": 4,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "preimage": "06990c2bcb0ebc68797e275c5c24a6946b7cbb5b",
+        "postimage": "fa981232c9c8defdf1b5c7ecacd70f4c67a0a454",
+        "hunks": 3,
+        "reconstructed_exact": true,
+        "target_preimage_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/assembled-capability.test.ts",
+        "preimage": null,
+        "postimage": "316c25613649697aa54131427810465166aa10c6",
+        "hunks": 1,
+        "reconstructed_exact": true,
+        "target_absence_observed": true
+      }
+    ],
+    "own_files_hash_verified": 11,
+    "patch_sha256": "b40d701e023c07ab15752be023ca40a15f92cf5ea0824f06fe70abe4e168654d",
+    "tests_executed": false
+  },
+  "behavior": [
+    "Preview uses read-only already-issued Procurement sources, commit:false and canonical procurementMonetaryFacts; no prepare/execute/write-then-restore.",
+    "Baseline or exactly one explicit replace PR.estAmount operation; inventory hypothetical, knownSubtotal truthful, total:null, comparison conditioned; nine categories pending.",
+    "Existing sf_scenario_simulate descriptor returns bound transient result with no outputRef and no implicit persistence; Planner route preserved.",
+    "Explicit human C08 decision-promote persists exact request/result/source identity; original pending payload and key retained for same retry.",
+    "Numeric criterion uses original human/intent gates with attached saved Procurement source, case, Request, binding and locked physical snapshot fences; Planner verification stays unchanged.",
+    "prepared.ts and prepared-review.ts differ from terminal42 only by the two financial guard lines each; preserve all current OPS-REV-02 code. No Apply/C12 source replacement.",
+    "Legacy WP04 test patch replaces impossible unapproved amount positive with exact financial refusal/no writes, retains meaningful positive nonfinancial review and collateral/CAS coverage. No financial positive closure claim."
+  ],
+  "proof_limits": {
+    "schema": "sf2-mission37-ci-v1",
+    "product_head": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+    "product_tree": "7200dc460b64f7ba58265f61352a1074c46a2481",
+    "protocol": "Existing test-ci envelope and validators through GitHub MCP; no local product execution.",
+    "runs": [
+      {
+        "run": 43647866067,
+        "job": 132609550966,
+        "W": "2616cd9c3e97ec0a48d632edbbccf28678a83bba",
+        "S": "d4cc445389a22d3b0ba671d6910ca97f49abd129",
+        "treeW": "30a1cb65c2886346326eeaaff50628aa4cc18a20",
+        "treeS": "ad37f43eb120f988cd6828405768192de16cf9df",
+        "pass": 14,
+        "fail": 3,
+        "skip": 0,
+        "expect": 190,
+        "files": 6,
+        "omni": "not applicable (focused: no declaring test ran)",
+        "tests": [
+          {
+            "status": "PASS",
+            "name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+            "duration_ms": 134.5
+          },
+          {
+            "status": "PASS",
+            "name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+            "duration_ms": 62.55
+          },
+          {
+            "status": "PASS",
+            "name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+            "duration_ms": 57.58
+          },
+          {
+            "status": "PASS",
+            "name": "a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry",
+            "duration_ms": 73.65
+          },
+          {
+            "status": "PASS",
+            "name": "a legacy-shaped financial command cannot bypass the low-level preparation or review boundary",
+            "duration_ms": 40.34
+          },
+          {
+            "status": "FAIL",
+            "name": "typed human controls discover attached requisitions and preview without business or case writes",
+            "duration_ms": 29.19
+          },
+          {
+            "status": "FAIL",
+            "name": "typed preview routes reject free-form targets, source drift and changed authority without writes",
+            "duration_ms": 29.69
+          },
+          {
+            "status": "PASS",
+            "name": "canonical approval reviews the exact proposed amount and ends outside the prepared PR-save stage",
+            "duration_ms": 3.94
+          },
+          {
+            "status": "PASS",
+            "name": "approval rejects stale CAS, another holder and admin override and applies one approval once",
+            "duration_ms": 2.59
+          },
+          {
+            "status": "PASS",
+            "name": "approving a pending old amount with a new amount in the payload does not approve the proposal",
+            "duration_ms": 1.37
+          },
+          {
+            "status": "PASS",
+            "name": "rejected proposal requires a new submission and review version for its changed amount",
+            "duration_ms": 3.07
+          },
+          {
+            "status": "PASS",
+            "name": "read-only producer computes the exact hypothetical amount and derives every missing C10 category",
+            "duration_ms": 74.26
+          },
+          {
+            "status": "PASS",
+            "name": "typed Procurement preview rejects target, amount, currency, period and unsupported-operation drift without writes",
+            "duration_ms": 43.52
+          },
+          {
+            "status": "PASS",
+            "name": "missing source cost remains unavailable and a recorded zero remains distinct",
+            "duration_ms": 70.81
+          },
+          {
+            "status": "PASS",
+            "name": "preview revalidates principal, source version, revocation and replacement incarnation",
+            "duration_ms": 76.39
+          },
+          {
+            "status": "PASS",
+            "name": "a delete, replacement and restoration race invalidates preview without reissuing or writing sources",
+            "duration_ms": 54.27
+          },
+          {
+            "status": "FAIL",
+            "name": "canonical result persistence replays one result after SQLite reopen and refuses changed content or authority",
+            "duration_ms": 35.36
+          }
+        ],
+        "failure": "SF_SOURCE_IDENTITIES_UNAVAILABLE in dashboard fixture initialization and aggregate persistence; all product/refusal/C12 assertions reached before that passed.",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "@orchestra/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+            "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+            "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+            "Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+            "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+            "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "request_sha256": "b94331aa538c1437eaa2ce540d327d8af28f216c2be67a568af567c1d7df9c85",
+        "conclusion": "failure",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647866067"
+      },
+      {
+        "run": 43648286802,
+        "job": 132610869187,
+        "W": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+        "S": "6e476faad74d8acf9ed607614a9d30403cfc06d4",
+        "treeW": "2361ca558a7bc96341ff5b364e33e9753132a934",
+        "treeS": "e86aa87dc5b97b5cabb657d84d5ef0fdcfb58db0",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "@orchestra/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+            "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+            "Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "request_sha256": "57e8a4596b8023a8102e49a782222b95a069dbb4d7ced6f3215988bc2ba36a6f",
+        "pass": 10,
+        "fail": 0,
+        "skip": 0,
+        "expect": 177,
+        "files": 3,
+        "omni": "not applicable (focused: no declaring test ran)",
+        "tests": [
+          {
+            "status": "PASS",
+            "name": "read-only producer computes the exact hypothetical amount and derives every missing C10 category",
+            "duration_ms": 88.48
+          },
+          {
+            "status": "PASS",
+            "name": "typed Procurement preview rejects target, amount, currency, period and unsupported-operation drift without writes",
+            "duration_ms": 34.06
+          },
+          {
+            "status": "PASS",
+            "name": "missing source cost remains unavailable and a recorded zero remains distinct",
+            "duration_ms": 60.68
+          },
+          {
+            "status": "PASS",
+            "name": "preview revalidates principal, source version, revocation and replacement incarnation",
+            "duration_ms": 41.27
+          },
+          {
+            "status": "PASS",
+            "name": "a delete, replacement and restoration race invalidates preview without reissuing or writing sources",
+            "duration_ms": 35.85
+          },
+          {
+            "status": "PASS",
+            "name": "canonical result persistence replays one result after SQLite reopen and refuses changed content or authority",
+            "duration_ms": 143.95
+          },
+          {
+            "status": "PASS",
+            "name": "typed human controls discover attached requisitions and preview without business or case writes",
+            "duration_ms": 51.31
+          },
+          {
+            "status": "PASS",
+            "name": "typed preview routes reject free-form targets, source drift and changed authority without writes",
+            "duration_ms": 55.76
+          },
+          {
+            "status": "PASS",
+            "name": "a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry",
+            "duration_ms": 44.09
+          },
+          {
+            "status": "PASS",
+            "name": "a legacy-shaped financial command cannot bypass the low-level preparation or review boundary",
+            "duration_ms": 28.06
+          }
+        ],
+        "conclusion": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648286802"
+      }
+    ],
+    "checks": [
+      {
+        "run": 43647867608,
+        "job": 132609555905,
+        "W": "2616cd9c3e97ec0a48d632edbbccf28678a83bba",
+        "generation": "PASS",
+        "typecheck": "FAIL_3_OWN_TEST_DIAGNOSTICS",
+        "guards": {
+          "rules": 78,
+          "paths": 731,
+          "gate": 0,
+          "warn": 12,
+          "error": 0,
+          "ownWarning": "js-empty-catch procurement-alternatives.ts:63"
+        },
+        "diagnostics": [
+          "##[error]test/product/procurement-decision-producer/fixture.ts(33,51): error TS2322: Type 'Persistence' is not assignable to type 'AssetPersistence & Pick<Persistence, \"currentSnapshots\" | \"transactionAll\">'.",
+          "##[error]test/product/procurement-decision-producer/preparation.test.ts(33,63): error TS2769: No overload matches this call.",
+          "##[error]test/product/procurement-decision-producer/preparation.test.ts(34,63): error TS2769: No overload matches this call."
+        ],
+        "artifact": {
+          "id": 14134459723,
+          "name": "astra-wp04-checks",
+          "size_in_bytes": 15765,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134459723",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134459723/zip",
+          "expired": false,
+          "created_at": "2026-11-14T22:25:23Z",
+          "expires_at": "2027-02-12T22:23:45Z",
+          "updated_at": "2026-11-14T22:25:23Z",
+          "digest": "sha256:a6455abdc798b4a4a90ede93f8bc9ea431790f7a449ba9ac5ffec1040c863e8a",
+          "workflow_run": {
+            "id": 43647867608,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp04",
+            "head_sha": "2616cd9c3e97ec0a48d632edbbccf28678a83bba"
+          }
+        }
+      },
+      {
+        "run": 43649223124,
+        "job": 132613732622,
+        "W": "c088011cc3bc749eca605d3227888be257d78902",
+        "treeW": "12b95fa35ef0e42a615b6621f6e540fee6e09e9c",
+        "S": null,
+        "mechanism": "Existing exact-product push workflow on astra-check-wp04; no test envelope",
+        "generation": "PASS",
+        "typecheck": "FAIL_2_OWN_FIXTURE_TS7006",
+        "guards": {
+          "rules": 78,
+          "paths": 785,
+          "gate": 0,
+          "warn": 11,
+          "error": 0,
+          "ownWarnings": 0,
+          "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+        },
+        "diagnostics": [
+          "##[error]test/product/procurement-decision-producer/fixture.ts(33,80): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+          "##[error]test/product/procurement-decision-producer/fixture.ts(33,90): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+        ],
+        "artifact": {
+          "id": 14135825737,
+          "name": "astra-wp04-checks",
+          "size_in_bytes": 15120,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135825737",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135825737/zip",
+          "expired": false,
+          "created_at": "2026-11-14T22:40:52Z",
+          "expires_at": "2027-02-12T22:39:23Z",
+          "updated_at": "2026-11-14T22:40:52Z",
+          "digest": "sha256:906f55773390fa434832d26fcf7bd488afd5755f9a24d28e40afe9f31bb3cbfc",
+          "workflow_run": {
+            "id": 43649223124,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp04",
+            "head_sha": "c088011cc3bc749eca605d3227888be257d78902"
+          }
+        },
+        "conclusion": "failure",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649223124"
+      },
+      {
+        "run": 43649465036,
+        "job": 132614476237,
+        "W": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+        "treeW": "7200dc460b64f7ba58265f61352a1074c46a2481",
+        "S": null,
+        "mechanism": "Existing exact-product push workflow on astra-check-wp04; no test envelope",
+        "workflow_blob": "dab8d29f69d78ba304325333e03fb8d729fe026e",
+        "generation": "PASS",
+        "typecheck": "PASS",
+        "typecheck_package": "modules/sucafina (includes the new CLI adapter through own test imports)",
+        "guards": {
+          "rules": 78,
+          "paths": 785,
+          "gate": 0,
+          "warn": 11,
+          "error": 0,
+          "ownWarnings": 0,
+          "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+          "warnings": [
+            "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+            "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+          ],
+          "unchanged_from_previous": true
+        },
+        "artifact": {
+          "id": 14134844642,
+          "name": "astra-wp04-checks",
+          "size_in_bytes": 15011,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134844642",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134844642/zip",
+          "expired": false,
+          "created_at": "2026-11-14T22:44:07Z",
+          "expires_at": "2027-02-12T22:42:11Z",
+          "updated_at": "2026-11-14T22:44:07Z",
+          "digest": "sha256:e63e3f39809da912643a3db32e64d4be0afe262d6d727c9d0badccef4b255107",
+          "workflow_run": {
+            "id": 43649465036,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp04",
+            "head_sha": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc"
+          }
+        },
+        "dedup": {
+          "equivalent_runs_before_dispatch": 0,
+          "prior_run_terminal": true,
+          "reason": "Two concrete TS7006 diagnostics fixed only with explicit type annotations; mandatory compiler/guards requalification, no functional rerun."
+        },
+        "conclusion": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649465036"
+      }
+    ],
+    "qualification": {
+      "unique_tests": 17,
+      "latest_affected_selection": {
+        "run": 43648286802,
+        "tests": 10
+      },
+      "unchanged_tests_from_a1": {
+        "run": 43647866067,
+        "tests": 7,
+        "files": [
+          "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+          "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts"
+        ],
+        "reason": "W2 to W3 changes only the new fixture, its literal expected status and a comment in the new UI script. None changes the inputs of these seven tests."
+      },
+      "does_not_sum_repeat_observations": true,
+      "full_source_gate": "PASS_RUN_43649465036_ON_EXACT_W4",
+      "composed_gate": "NOT_RUN_REQUIRES_SESSION42_ASSEMBLY_AND_S0_ACTIONS",
+      "final_source_continuation": {
+        "W": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+        "runtime_delta": false,
+        "only_code_change": "Two explicit callback parameter annotations and type-only imports in fixture.ts",
+        "proof": "TYPE-ONLY-FIX.json",
+        "functional_tests_repeated": false,
+        "reason": "No runtime expression or assertion changed; repeat only mandatory typecheck and guards for the concrete TS7006 failure."
+      },
+      "checks_scope": "Sucafina package, including imported new CLI adapter; full CLI/E2E package typechecks not claimed."
+    },
+    "equality": {
+      "A1": {
+        "root_entries_identical": 43,
+        "only_extra": ".ci-run.json",
+        "envelope_blob": "69fe169b3f8825ed2b0e9dc6128173e5d44b3076"
+      },
+      "A2": {
+        "root_entries_identical": 43,
+        "only_extra": ".ci-run.json",
+        "envelope_blob": "da2fb0909cd9515e29da822aca09dfd4d8355899"
+      }
+    },
+    "dedup": {
+      "A1": {
+        "branch": "ci-run-linux-astra-wp04-m37-2616cd9-b94331aa-a1",
+        "existing_runs_before_dispatch": 0
+      },
+      "A2": {
+        "branch": "ci-run-linux-astra-wp04-m37-a1b3bd2-57e8a459-a2",
+        "existing_runs_before_dispatch": 0,
+        "previous_run_terminal": true,
+        "reason": "Three real failures and three test type errors fixed; selected exactly the three files affected by the changed shared fixture."
+      }
+    },
+    "limits": {
+      "local_tests": 0,
+      "local_typecheck": 0,
+      "local_servers": 0,
+      "epic_or_full": 0,
+      "skips_added": 0,
+      "budget_changes": 0,
+      "workflow_changes": 0,
+      "omni_proved": false,
+      "native_or_AM_proved": false,
+      "browser_proved": false,
+      "financial_apply_proved": false,
+      "checks_final_commit_runtime_identical_to_A2": true
+    },
+    "functional_test_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+    "terminal_publication": "Receipt-only continuation of checked W4; no new functional or guard execution of terminal documents is claimed."
+  },
+  "findings": [
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "status": "NOT_SATISFIED_BLOCKED_POLICY_CONTRACT",
+      "owner": "S0/WP00 + Procurement/C12",
+      "reason": "Requests/save edits only draft/pr_rejected; submit_pr writes and freezes amount before approve; final approve leaves edit stages. No canonical detached approval of unwritten replacement exists.",
+      "next_action": "Decide canonical edit/submit/approve order, a separately typed post-approval effect, or separately authorize a detached proposal approval contract. Do not treat choice or checkbox as approval."
+    },
+    {
+      "id": "M31-PRECHOICE-PROCUREMENT",
+      "status": "SOURCE_IMPLEMENTED_COMPOSED_PROOF_PENDING",
+      "owner": "S0; compiler45 for checks",
+      "next_action": "Qualify assembled candidate through existing dispatcher incl C08 promotion/replay/reload, real numeric POST/registry, current source/case/actor snapshot drift and Planner preservation. New assembled descriptor test remains NOT_RUN."
+    }
+  ],
+  "verification": {
+    "target_parent_preimages": "All24 matched terminal42 plus complete C13/C14 deltas; new paths absent.11 own full files,11 shared full patches and2 consumer test patches form one coherent unit.",
+    "archive": "58 exact blobs,100644,complete recursive tree",
+    "previous_commit": {
+      "commit": "03ce926754d7ac0039fbb38470229f13c1623696",
+      "files": 40,
+      "exact_paths_and_known_blobs": true,
+      "unexpected": [],
+      "missing": [],
+      "deletions": 0
+    },
+    "source_preimage_reconciliation": "Own source start predates OPS-REV-02; complete files compared with terminal42: prepared/prepared-review preserve all accepted code plus2financial guard lines each. Source historical C9 shared assembly is inert only."
+  },
+  "preserved": {
+    "Apply": "65d2a0518427b1454aa665ef744bce7564ed8049",
+    "contract": "9e9bac976b503409de65868a366f352ca1e65071",
+    "BI38": "C14 ten paths unchanged; business/planner consumers explicitly reconciled",
+    "financial_approval": "MANDATORY_NOT_SATISFIED; choice,checkbox and universal refusal never count as approval",
+    "native_host": "No Native41 owner registry/admission patch activated",
+    "reports36": "All14 targets still HOLD"
+  },
+  "consumer_ack": {
+    "id": "ACK47-03",
+    "source_release": "ab2a967125b3c767067797a27b919466020fbd82",
+    "status": "CONSUMED_IN_CONTAINING_C15_COMPOSED_PROOF_PENDING",
+    "financial_approval": "BLOCKED_POLICY_CONTRACT",
+    "next_owner": "45 checks; S0 final runtime and financial contract decision",
+    "original_source_receipts_unchanged": true
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "final_acceptance": "S0",
+  "GLOBAL_RELEASE": false
+}

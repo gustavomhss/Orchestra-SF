@@ -1,0 +1,45 @@
+{
+  "schema": "mission37-owner-new-test-patch-v1",
+  "consumer": "session42",
+  "originalConsumer": "session33",
+  "proofExecutor": "S0",
+  "implementationCommit": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "baseCommit": "e7e97591edfc15f230856a035e32951f2f700c2f",
+  "observedConsumerHead": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+  "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/assembled-capability.test.ts",
+  "operation": "create-only-if-absent",
+  "preimage": null,
+  "preimageGitBlob": null,
+  "preimageSha256": null,
+  "postimage": "assembled-capability.test.postimage.txt",
+  "postimageGitBlob": "316c25613649697aa54131427810465166aa10c6",
+  "postimageSha256": "5755c4454751c27b11e8b844ed5c310bb2f93e4ffadd49367dd07520f3a07453",
+  "patch": "assembled-capability.test.patch",
+  "patchSha256": "9d1c505a745a7d382f5c161af49eba000054a24222e55a9652bb38400af0d149",
+  "dependencies": [
+    {
+      "manifest": "../assembly/MANIFEST.json",
+      "required": "All 11 primary production postimages, including the canonical capabilities.ts readonly branch."
+    },
+    {
+      "manifest": "../assembly/OWN_DEPENDENCIES.json",
+      "required": "Exact Mission37 own production bytes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "gitBlob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "sha256": "438b6fa051bad9895247b3317abed21cbe60013574bc37d92970bafa2a1ea120"
+    }
+  ],
+  "validationState": "NOT_RUN_REQUIRES_ASSEMBLY_AND_S0_ACTIONS",
+  "claims": [
+    "Real synthetic SQLite/source lifecycle, canonical descriptor, Procurement producer and UI admit/validate/receiptFor.",
+    "No-persist branch emits the exact transient ScenarioResult and bound result digest with no outputRef.",
+    "Input clone survives caller mutation after first await; no implicit persist capability is required.",
+    "Stale source returns denial and admission receipt only, without a result, outputRef or writes."
+  ],
+  "applicationRule": "Successor42 creates the test only with the full owner assembly and exact dependencies, acknowledges commit/tree; S0 schedules the existing surgical Actions dispatcher. No local test, typecheck, suite, skips or budget increase.",
+  "sourceContinuation": "../TYPE-ONLY-FIX.json",
+  "fixtureCommit": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "functionalQualificationCommit": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650"
+}

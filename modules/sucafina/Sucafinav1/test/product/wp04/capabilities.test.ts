@@ -68,24 +68,26 @@ test("authorized capability reads through an issued scoped source and consumes o
     const collateral = await persistence.transaction("procurement", async (snapshot) => {
       const store = snapshot.data.store as { suppliers: unknown[] }
       store.suppliers = [{ id: 1, legalName: "Unrelated" }]
-      return { commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 125 } } }, operationId: "collateral", idempotencyKey: "collateral" }) }
+      return { commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { title: "Reviewed" } } }, operationId: "collateral", idempotencyKey: "collateral" }) }
     })
     expect(collateral).toBeUndefined()
     const unrelatedSettings = await persistence.transaction("procurement", async (snapshot) => {
       const store = snapshot.data.store as { form?: unknown }
       store.form = { currency: "EUR" }
-      return { commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 125 } } }, operationId: "settings", idempotencyKey: "settings" }) }
+      return { commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { title: "Reviewed" } } }, operationId: "settings", idempotencyKey: "settings" }) }
     })
     expect(unrelatedSettings).toBeUndefined()
     const { createProcurementScenarioPreparation } = await import("../../../product/procurement/scenario-preparation.ts")
     const operation = { kind: "replace" as const, targetRef: issued.value, amount: 125, currency: "USD", period: targetRef.period }
     const coverage = { basisId: "basis", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon: targetRef.period, issues: [], evaluatedSourceRefs: [], coverageState: "pending" as const, entries: [], derivedMissingCategoryIds: [] }
     const comparison = { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: [], criterionResults: [], unresolvedConditions: [], comparisonStatus: "conditioned" as const, knownDifference: null, completeDifference: null }
-    const choice = { id: "choice", alternativeId: "a", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [preparationSource.value.evidence], principalRef: "a", reason: "Recorded human choice", at: "2026-01-01T00:00:00Z", scenario: { baseRef: "base", operations: [operation], assumptions: [] }, result: { id: "result", version: 1, components: [], currency: "USD", horizon: targetRef.period, sourceRefs: [preparationSource.value.evidence], unresolvedConditions: [], restrictions: [], comparisonStatus: "conditioned" as const, costCoverage: coverage, knownSubtotal: null, total: null }, comparison, comparisonStatus: "conditioned" as const, costCoverage: coverage }
+    const choice = { id: "choice", alternativeId: "a", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [preparationSource.value.evidence], principalRef: "a", reason: "Recorded human choice", at: "2026-01-01T00:00:00Z", scenario: { baseRef: issued.value, operations: [operation], assumptions: [] }, result: { id: "result", version: 1, components: [], currency: "USD", horizon: targetRef.period, sourceRefs: [preparationSource.value.evidence], unresolvedConditions: [], restrictions: [], comparisonStatus: "conditioned" as const, costCoverage: coverage, knownSubtotal: null, total: null }, comparison, comparisonStatus: "conditioned" as const, costCoverage: coverage }
     const prepareScenario = createProcurementScenarioPreparation({ host, sources: resolver })
     const selection = { operation, choice, operationId: "op-1", idempotencyKey: "key-1" }
+    const beforeFinancialPreview = await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     const proposed = await prepareScenario(selection, admission.value)
-    expect(proposed).toMatchObject({ status: "ok", value: { command: { command: { action: "save", values: { pr: { estAmount: 125 } } } } } })
+    expect(proposed).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
+    expect(await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))).toEqual(beforeFinancialPreview)
     expect((await prepareScenario({ ...selection, operation: { ...operation, amount: 126 } }, admission.value)).status).toBe("denied")
     expect((await prepareScenario({ ...selection, choice: { ...choice, result: { ...choice.result, sourceRefs: [] } } }, admission.value)).status).toBe("denied")
     const input = { requestRef: issued.value }
@@ -108,13 +110,15 @@ test("authorized capability reads through an issued scoped source and consumes o
     expect(fromUi.status === "ok" && fromUi.result).toMatchObject({ values: expect.arrayContaining([expect.objectContaining({ id: "subject", value: "Owned" })]) })
     expect(fromUi.receipt).toMatchObject({ kind: "ui", operation: "sf_request_read", handlerExport: "readRequest", principalRef: "a" })
     expect((await bindings.readRequest(request, { requestRef: "not-issued" })).status).toBe("unavailable")
-    if (proposed.status !== "ok") throw new Error("scenario preparation failed")
+    // Textual edits retain their existing prepared-review behavior. They cannot authorize a monetary replacement.
+    const textual = await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: prepareProcurementMutation({ snapshot, actor: { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, environment: await host.environment(), context: admission.value, target: targetRef, scope: preparationSource.value.scope, evidence: preparationSource.value.evidence, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { title: "Reviewed" } } }, operationId: "textual-review", idempotencyKey: "textual-review" }) }))
+    if (!textual) throw new Error("textual preparation failed")
     const { createProcurementPreparedReview } = await import("../../../product/procurement/prepared-review.ts")
     const review = createProcurementPreparedReview({ port, individual: resolver })
-    const beforeApply = await review(proposed.value.command, admission.value)
-    expect(beforeApply).toMatchObject({ status: "ok", value: { fields: expect.arrayContaining([expect.objectContaining({ field: "originalAmount", before: 100, after: 125, beforeCurrency: "USD", afterCurrency: "USD" })]) } })
+    const beforeApply = await review(textual.command, admission.value)
+    expect(beforeApply).toMatchObject({ status: "ok", value: { fields: expect.arrayContaining([expect.objectContaining({ field: "subject", before: "Owned", after: "Reviewed" })]) } })
     expect(JSON.stringify(beforeApply)).not.toContain("idempotencyKey")
-    const altered = { ...proposed.value.command, preview: { ...proposed.value.command.preview, values: proposed.value.command.preview.values.map((value) => value.id === "status" ? { ...value, value: "po_issued" } : value) } }
+    const altered = { ...textual.command, preview: { ...textual.command.preview, values: textual.command.preview.values.map((value) => value.id === "status" ? { ...value, value: "po_issued" } : value) } }
     expect((await review(altered, admission.value)).status).toBe("unavailable")
     const { createProcurementDecisionPreparation } = await import("../../../product/procurement/decision-preparation.ts")
     const prepare = createProcurementDecisionPreparation(port)
@@ -125,10 +129,10 @@ test("authorized capability reads through an issued scoped source and consumes o
     expect((await port.read(input, admission.value)).status).toBe("ok")
     const { domain } = await import("../../../runtime/procurement.ts")
     await persistence.transaction("procurement", async (snapshot) => {
-      const result = domain.execute(snapshot, { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 100 } } }, { at: "2026-01-01T01:00:00Z", directory: [], id: randomUUID })
+      const result = domain.execute(snapshot, { id: "a", roles: ["requester"], canWrite: true, assigned: [], domains: [] }, { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { title: "Changed after review" } } }, { at: "2026-01-01T01:00:00Z", directory: [], id: randomUUID })
       return { commit: result.ok, value: result }
     })
-    expect((await review(proposed.value.command, admission.value)).status).toBe("stale")
+    expect((await review(textual.command, admission.value)).status).toBe("stale")
     expect((await bindings.readRequest(request, input)).status).toBe("stale")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

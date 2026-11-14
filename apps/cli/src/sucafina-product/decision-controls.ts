@@ -75,6 +75,21 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         if (fields.length && source.period.start <= decision.horizon.start && source.period.end >= decision.horizon.end && ref.target.period && ref.target.period.start <= decision.horizon.start && ref.target.period.end >= decision.horizon.end) evidence.push({ evidence: ref, source, fields, label })
         if (ref.target.recordType === "planner-version") forecasts.push({ source: ref, label })
       }
+      // Numeric comparison rules may cite only the attached, still-current
+      // Procurement records behind the saved alternatives. These readers cannot issue scopes.
+      const procurementRefs = current.value.evidenceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.refId.startsWith("sf-procurement:"))
+      if (procurementRefs.length > 64) return { status: "needs-input", reason: "decision-controls-evidence-budget-exceeded" }
+      for (const ref of procurementRefs) {
+        const resolved = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
+        if (resolved.status !== "ok" || !same(resolved.value.evidence, ref)) continue
+        const projected = await runtime.business.procurementScenarios.producer.readProjection(ref.refId, call)
+        if (projected.status !== "ok" || projected.value.context.currency !== decision.currency || !same(projected.value.context.period, decision.horizon)) continue
+        const source = decision.alternatives.flatMap((alternative) => alternative.result.components.flatMap((component) => component.sourceRefs)).find((item) => item.surface === "procurement" && item.type === ref.target.recordType && item.id === ref.target.recordId && item.incarnation === ref.target.incarnation && item.version === ref.target.version && same(item.period, ref.target.period) && item.fields.length > 0 && item.fields.every((field) => ref.target.fields.includes(field)))
+        if (!source) continue
+        const again = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
+        if (again.status !== "ok" || !same(again.value.evidence, ref)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
+        evidence.push({ evidence: ref, source, fields: source.fields, label: `Requisition ${ref.target.recordId} · estimated amount · source revision ${ref.target.version}` })
+      }
       const selectedSource = url.searchParams.get("source")
       const matching = forecasts.filter((value) => value.source.refDigest === selectedSource)
       if (selectedSource && matching.length !== 1) return { status: "denied", reason: "decision-controls-source-unavailable" }

@@ -1,0 +1,23 @@
+{
+  "schema": "sf2-mission37-type-only-continuation-v1",
+  "parent": "c088011cc3bc749eca605d3227888be257d78902",
+  "source_commit": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "source_tree": "7200dc460b64f7ba58265f61352a1074c46a2481",
+  "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+  "preimage_blob": "9d13396a7eed76a9cc32378e9afcb17fd37c1c89",
+  "postimage_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+  "postimage_sha256": "438b6fa051bad9895247b3317abed21cbe60013574bc37d92970bafa2a1ea120",
+  "change": "Add Snapshot and BlobTransaction type-only imports and annotate the two callback parameters; no executable expressions, assertions, setup or policies changed.",
+  "static_verification": "Reversing only those exact type-token additions reconstructs the complete W3 fixture bytes; GitHub compare contains exactly this path and these two hunks. No transpiler or product executed locally.",
+  "related_failure": {
+    "run": 43649223124,
+    "diagnostics": [
+      "fixture.ts(33,80): TS7006 snapshot implicitly any",
+      "fixture.ts(33,90): TS7006 blobs implicitly any"
+    ]
+  },
+  "dedup": "A2 10/10 plus unchanged A1 7 tests remain the functional evidence; only required compiler/guards gate is repeated.",
+  "assembly_integrity_supplement": "The prior independent integrity report remains the historical W3 report. All patch and postimage bytes are unchanged. assembly-tests/MANIFEST.json now requires this exact typed fixture; only its dependency hash changes.",
+  "check_status": "PASS",
+  "check_run": 43649465036
+}

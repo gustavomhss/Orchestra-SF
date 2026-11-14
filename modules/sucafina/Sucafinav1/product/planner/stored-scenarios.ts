@@ -1,4 +1,8 @@
 import { digestSfValue } from "../contracts/canonical.ts"
+import type { CostCoverageBasis, DecisionCase } from "../contracts/decisions.ts"
+import type { DomainProjection } from "../contracts/context.ts"
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { ScenarioRequest } from "../contracts/operations.ts"
 import type { DecisionCasePort, PlannerPort, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { readHistoricalScenarios } from "../decisions/result-store.ts"
@@ -15,6 +19,7 @@ export function createStoredPlannerScenarioHost(input: {
   store: ReturnType<typeof createSfDecisionResultStore> & { readHistoricalScenario?: (request: { resultRef: string }, context: TrustedDomainContext) => ReturnType<ReturnType<typeof createSfDecisionResultStore>["read"]> }
   cases: DecisionCasePort
   planner: Pick<PlannerPort, "compareForecast">
+  external?: { supports: (request: ScenarioRequest) => boolean; resolve: (alternative: DecisionCase["alternatives"][number], basis: CostCoverageBasis, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }>> }
   coverageRefFor: (caseRef: { id: string; incarnation: string; version: number }, alternative: { id: string; version: number }) => string
 }): PlannerScenarioHost {
   const read = async (references: readonly string[], context: TrustedDomainContext) => {
@@ -49,12 +54,20 @@ export function createStoredPlannerScenarioHost(input: {
       if (alternatives.length !== 1) { prepared.push({ status: "unavailable", reason: "scenario-not-current-case-alternative" }); continue }
       const alternative = alternatives[0]!
       const bases = current.value.case.costCoverageBases.filter((basis) => basis.id === alternative.result.costCoverage.basisId && basis.version === alternative.result.costCoverage.basisVersion)
-      const refs = alternative.result.sourceRefs.filter((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
-      if (bases.length !== 1 || refs.length !== 1 || refs[0].kind !== "record") { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
-      const projection = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
-      if (projection.status !== "ok") { prepared.push(projection); continue }
+      if (bases.length !== 1) { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
       const coverageRef = input.coverageRefFor({ ...entry.value.caseRef, version: current.value.case.version }, structuredClone(alternative))
       if (!coverageRef.trim()) { prepared.push({ status: "unavailable", reason: "scenario-coverage-unavailable" }); continue }
+      if (input.external?.supports(alternative.scenario)) {
+        // The external producer replays its own calculator and current source; no forecast is fabricated.
+        const external = structuredClone(await input.external.resolve(structuredClone(alternative), structuredClone(bases[0]!), context))
+        if (external.status !== "ok") { prepared.push(external); continue }
+        prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, ...external.value }) } })
+        continue
+      }
+      const refs = alternative.result.sourceRefs.filter((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+      if (refs.length !== 1 || refs[0].kind !== "record") { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
+      const projection = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
+      if (projection.status !== "ok") { prepared.push(projection); continue }
       prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value.baseline, source: refs[0] }) } })
     }
     const checked: PortResult<PreparedScenario>[] = []

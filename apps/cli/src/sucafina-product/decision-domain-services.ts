@@ -1,11 +1,13 @@
+import { createProcurementReadonlySourceResolver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts"
+import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { AuthorizedCaseProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { encodeCaseRef, parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { createCriterionRuleRegistry, createCriterionResultBindings } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
-import type { CriterionMetric } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
+import type { CriterionMetric, CriterionRuleInput } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
 import { createCriterionComparisonBindings } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts"
 import { createDecisionComparisonService } from "../../../../modules/sucafina/Sucafinav1/product/decisions/comparison.ts"
 import { createDecisionPortfolioSelection } from "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts"
@@ -72,6 +74,42 @@ export function createSfDecisionDomainServices(input: {
     const found = await input.authority.state.read(request, "cases", (state, actor) => actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion ? state.cases[ref.id] : undefined)
     return found.status === "ok" && found.value && found.value.incarnation === ref.incarnation && found.value.version === ref.version && await business.authorizeCase(found.value, call) ? found.value : undefined
   }
+  const procurementReadonly = createProcurementReadonlySourceResolver({ host })
+  type ProcurementRuleProof = { request: CriterionRuleInput; transport: Request; binding: string; caseDigest: string;
+    refs: readonly BusinessEvidenceRef[]; fences: NonNullable<Awaited<ReturnType<typeof business.readSourceFences>>> }
+  const procurementRuleProofs = new WeakMap<TrustedDomainContext, ProcurementRuleProof>()
+  const captureProcurementRule = async (request: CriterionRuleInput, call: TrustedDomainContext) => {
+    const captured = structuredClone(request)
+    const refs = [...captured.evidenceRefs, ...(captured.sensitivity?.sourceRefs ?? [])]
+    const procurement = refs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement")
+    if (!procurement.length) return true
+    if (captured.sensitivity || procurement.length > 64 || refs.some((ref) => ref.kind !== "record" || !["planner", "procurement"].includes(ref.target.surface))) return false
+    const transport = host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
+    const current = await rawCase(captured.caseRef, call), fences = await business.readSourceFences(call)
+    if (!transport || transport.signal.aborted || !current || !fences || !input.sharedPortfolio || captured.metricRef !== "planner:known-subtotal-difference" || captured.unit !== current.currency || !same(captured.period, current.horizon)) return false
+    const allowed = current.alternatives.filter((alternative) => business.procurementScenarios.producer.supports(alternative.scenario)).flatMap((alternative) => alternative.result.sourceRefs)
+    for (const ref of procurement) {
+      if (!allowed.some((source) => same(source, ref))) return false
+      const observed = await procurementReadonly.resolveSource(ref.refId, call)
+      if (observed.status !== "ok" || !same(observed.value.evidence, ref) || observed.value.context.currency !== captured.unit || !same(observed.value.context.period, captured.period)) return false
+    }
+    const again = await rawCase(captured.caseRef, call)
+    if (!again || !same(again, current) || !same(await business.readSourceFences(call), fences) || host.requestFor(call) !== transport || transport.signal.aborted || binding !== digestSfValue([call.kind, call.binding]) || !same(captured, request) || !await host.revalidate(call)) return false
+    procurementRuleProofs.set(call, { request: captured, transport, binding, caseDigest: digestSfValue(current), refs: structuredClone(procurement), fences })
+    return true
+  }
+  const verifyRuleSources: Parameters<typeof createCriterionRuleRegistry>[0]["verifySnapshot"] = (snapshot, request, rule, call) => {
+    const actor = actors.locked(snapshot, call)
+    if (!actor || !intent.verify(call, "decisions.criteria", request)) return false
+    const refs = [...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])]
+    const procurement = refs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement")
+    if (!procurement.length) return verifyDecisionPlannerSources(snapshot, refs, actor, call)
+    const planner = refs.filter((ref) => ref.kind === "record" && ref.target.surface === "planner")
+    const proof = procurementRuleProofs.get(call), locked = host.persistence.currentSnapshots?.()
+    if (!proof || !locked || refs.length !== procurement.length + planner.length || !same(proof.request, request) || !same(proof.refs, procurement) || proof.transport !== host.requestFor(call) || proof.transport.signal.aborted || proof.binding !== digestSfValue([call.kind, call.binding]) || !same(business.lockedSourceFences(), proof.fences)) return false
+    const current = object(object(locked.dashboard.data.__sfProductV1).cases)[request.caseRef.id]
+    return digestSfValue(current) === proof.caseDigest && procurement.every((ref) => ref.kind === "record" && ref.installationId === call.binding.installationId && ref.projectId === call.binding.projectId && procurementReadonly.isCurrent(locked.procurement, ref)) && (!planner.length || verifyDecisionPlannerSources(snapshot, planner, actor, call))
+  }
   const rules: ReturnType<typeof createCriterionRuleRegistry> = createCriterionRuleRegistry({ ...common,
     authorizeRule: (request, call) => intent.authorize(call, "decisions.criteria", request),
     verifyEvidence: async (rule, call) => {
@@ -89,10 +127,7 @@ export function createSfDecisionDomainServices(input: {
         baseline.value.caseRef.id === current.id && baseline.value.caseRef.incarnation === current.incarnation && baseline.value.caseRef.version <= current.version &&
         baseline.value.result.currency === rule.unit && same(baseline.value.result.horizon, rule.period) && await host.revalidate(call)
     },
-    verifySnapshot: (snapshot, request, rule, call) => {
-      const actor = actors.locked(snapshot, call)
-      return !!actor && intent.verify(call, "decisions.criteria", request) && verifyDecisionPlannerSources(snapshot, [...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])], actor, call)
-    },
+    verifySnapshot: verifyRuleSources,
     readMetric: (request, call) => metric(request, call), verifyMetric: checks.metric })
   const units = input.sharedPortfolio?.units ?? createPlannerSensitivityUnits({ host, cases: business.cases, scenarios, store: business.results, evidence: business.context, rules })
   // The standalone domain composition must retain the host's exact-threshold capability.
@@ -167,7 +202,10 @@ export function createSfDecisionDomainServices(input: {
     dispose: materiality.dispose,
     criteria: { ...rules, register: async (request: Parameters<typeof rules.register>[0], call: TrustedDomainContext) => {
       if (call.kind !== "ui" || !await input.authority.human.authorize(call, "decisions.criteria", request) || !await rawCase(request.caseRef, call) || !await actors.capture(call)) return { status: "denied" as const, reason: "criterion-human-authority-unavailable" }
-      try { return await rules.register(request, call) } finally { actors.release(call) }
+      try {
+        if (!await captureProcurementRule(request, call)) return { status: "denied" as const, reason: "criterion-procurement-source-unavailable" }
+        return await rules.register(request, call)
+      } finally { procurementRuleProofs.delete(call); actors.release(call) }
     } },
     selection: { ...selectedPortfolio, register: async (request: Parameters<typeof selectedPortfolio.register>[0], call: TrustedDomainContext) => {
       if (call.kind !== "ui" || !await input.authority.human.authorize(call, "decisions.select-portfolio", request)) return { status: "denied" as const, reason: "portfolio-human-selection-required" }

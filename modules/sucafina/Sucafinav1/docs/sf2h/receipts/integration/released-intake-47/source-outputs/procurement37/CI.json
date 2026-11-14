@@ -1,0 +1,428 @@
+{
+  "schema": "sf2-mission37-ci-v1",
+  "product_head": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "product_tree": "7200dc460b64f7ba58265f61352a1074c46a2481",
+  "protocol": "Existing test-ci envelope and validators through GitHub MCP; no local product execution.",
+  "runs": [
+    {
+      "run": 43647866067,
+      "job": 132609550966,
+      "W": "2616cd9c3e97ec0a48d632edbbccf28678a83bba",
+      "S": "d4cc445389a22d3b0ba671d6910ca97f49abd129",
+      "treeW": "30a1cb65c2886346326eeaaff50628aa4cc18a20",
+      "treeS": "ad37f43eb120f988cd6828405768192de16cf9df",
+      "pass": 14,
+      "fail": 3,
+      "skip": 0,
+      "expect": 190,
+      "files": 6,
+      "omni": "not applicable (focused: no declaring test ran)",
+      "tests": [
+        {
+          "status": "PASS",
+          "name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+          "duration_ms": 134.5
+        },
+        {
+          "status": "PASS",
+          "name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+          "duration_ms": 62.55
+        },
+        {
+          "status": "PASS",
+          "name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+          "duration_ms": 57.58
+        },
+        {
+          "status": "PASS",
+          "name": "a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry",
+          "duration_ms": 73.65
+        },
+        {
+          "status": "PASS",
+          "name": "a legacy-shaped financial command cannot bypass the low-level preparation or review boundary",
+          "duration_ms": 40.34
+        },
+        {
+          "status": "FAIL",
+          "name": "typed human controls discover attached requisitions and preview without business or case writes",
+          "duration_ms": 29.19
+        },
+        {
+          "status": "FAIL",
+          "name": "typed preview routes reject free-form targets, source drift and changed authority without writes",
+          "duration_ms": 29.69
+        },
+        {
+          "status": "PASS",
+          "name": "canonical approval reviews the exact proposed amount and ends outside the prepared PR-save stage",
+          "duration_ms": 3.94
+        },
+        {
+          "status": "PASS",
+          "name": "approval rejects stale CAS, another holder and admin override and applies one approval once",
+          "duration_ms": 2.59
+        },
+        {
+          "status": "PASS",
+          "name": "approving a pending old amount with a new amount in the payload does not approve the proposal",
+          "duration_ms": 1.37
+        },
+        {
+          "status": "PASS",
+          "name": "rejected proposal requires a new submission and review version for its changed amount",
+          "duration_ms": 3.07
+        },
+        {
+          "status": "PASS",
+          "name": "read-only producer computes the exact hypothetical amount and derives every missing C10 category",
+          "duration_ms": 74.26
+        },
+        {
+          "status": "PASS",
+          "name": "typed Procurement preview rejects target, amount, currency, period and unsupported-operation drift without writes",
+          "duration_ms": 43.52
+        },
+        {
+          "status": "PASS",
+          "name": "missing source cost remains unavailable and a recorded zero remains distinct",
+          "duration_ms": 70.81
+        },
+        {
+          "status": "PASS",
+          "name": "preview revalidates principal, source version, revocation and replacement incarnation",
+          "duration_ms": 76.39
+        },
+        {
+          "status": "PASS",
+          "name": "a delete, replacement and restoration race invalidates preview without reissuing or writing sources",
+          "duration_ms": 54.27
+        },
+        {
+          "status": "FAIL",
+          "name": "canonical result persistence replays one result after SQLite reopen and refuses changed content or authority",
+          "duration_ms": 35.36
+        }
+      ],
+      "failure": "SF_SOURCE_IDENTITIES_UNAVAILABLE in dashboard fixture initialization and aggregate persistence; all product/refusal/C12 assertions reached before that passed.",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "@orchestra/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+          "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_sha256": "b94331aa538c1437eaa2ce540d327d8af28f216c2be67a568af567c1d7df9c85",
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647866067"
+    },
+    {
+      "run": 43648286802,
+      "job": 132610869187,
+      "W": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+      "S": "6e476faad74d8acf9ed607614a9d30403cfc06d4",
+      "treeW": "2361ca558a7bc96341ff5b364e33e9753132a934",
+      "treeS": "e86aa87dc5b97b5cabb657d84d5ef0fdcfb58db0",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "@orchestra/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_sha256": "57e8a4596b8023a8102e49a782222b95a069dbb4d7ced6f3215988bc2ba36a6f",
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "expect": 177,
+      "files": 3,
+      "omni": "not applicable (focused: no declaring test ran)",
+      "tests": [
+        {
+          "status": "PASS",
+          "name": "read-only producer computes the exact hypothetical amount and derives every missing C10 category",
+          "duration_ms": 88.48
+        },
+        {
+          "status": "PASS",
+          "name": "typed Procurement preview rejects target, amount, currency, period and unsupported-operation drift without writes",
+          "duration_ms": 34.06
+        },
+        {
+          "status": "PASS",
+          "name": "missing source cost remains unavailable and a recorded zero remains distinct",
+          "duration_ms": 60.68
+        },
+        {
+          "status": "PASS",
+          "name": "preview revalidates principal, source version, revocation and replacement incarnation",
+          "duration_ms": 41.27
+        },
+        {
+          "status": "PASS",
+          "name": "a delete, replacement and restoration race invalidates preview without reissuing or writing sources",
+          "duration_ms": 35.85
+        },
+        {
+          "status": "PASS",
+          "name": "canonical result persistence replays one result after SQLite reopen and refuses changed content or authority",
+          "duration_ms": 143.95
+        },
+        {
+          "status": "PASS",
+          "name": "typed human controls discover attached requisitions and preview without business or case writes",
+          "duration_ms": 51.31
+        },
+        {
+          "status": "PASS",
+          "name": "typed preview routes reject free-form targets, source drift and changed authority without writes",
+          "duration_ms": 55.76
+        },
+        {
+          "status": "PASS",
+          "name": "a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry",
+          "duration_ms": 44.09
+        },
+        {
+          "status": "PASS",
+          "name": "a legacy-shaped financial command cannot bypass the low-level preparation or review boundary",
+          "duration_ms": 28.06
+        }
+      ],
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648286802"
+    }
+  ],
+  "checks": [
+    {
+      "run": 43647867608,
+      "job": 132609555905,
+      "W": "2616cd9c3e97ec0a48d632edbbccf28678a83bba",
+      "generation": "PASS",
+      "typecheck": "FAIL_3_OWN_TEST_DIAGNOSTICS",
+      "guards": {
+        "rules": 78,
+        "paths": 731,
+        "gate": 0,
+        "warn": 12,
+        "error": 0,
+        "ownWarning": "js-empty-catch procurement-alternatives.ts:63"
+      },
+      "diagnostics": [
+        "##[error]test/product/procurement-decision-producer/fixture.ts(33,51): error TS2322: Type 'Persistence' is not assignable to type 'AssetPersistence & Pick<Persistence, \"currentSnapshots\" | \"transactionAll\">'.",
+        "##[error]test/product/procurement-decision-producer/preparation.test.ts(33,63): error TS2769: No overload matches this call.",
+        "##[error]test/product/procurement-decision-producer/preparation.test.ts(34,63): error TS2769: No overload matches this call."
+      ],
+      "artifact": {
+        "id": 14134459723,
+        "name": "astra-wp04-checks",
+        "size_in_bytes": 15765,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134459723",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134459723/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:25:23Z",
+        "expires_at": "2027-02-12T22:23:45Z",
+        "updated_at": "2026-11-14T22:25:23Z",
+        "digest": "sha256:a6455abdc798b4a4a90ede93f8bc9ea431790f7a449ba9ac5ffec1040c863e8a",
+        "workflow_run": {
+          "id": 43647867608,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp04",
+          "head_sha": "2616cd9c3e97ec0a48d632edbbccf28678a83bba"
+        }
+      }
+    },
+    {
+      "run": 43649223124,
+      "job": 132613732622,
+      "W": "c088011cc3bc749eca605d3227888be257d78902",
+      "treeW": "12b95fa35ef0e42a615b6621f6e540fee6e09e9c",
+      "S": null,
+      "mechanism": "Existing exact-product push workflow on astra-check-wp04; no test envelope",
+      "generation": "PASS",
+      "typecheck": "FAIL_2_OWN_FIXTURE_TS7006",
+      "guards": {
+        "rules": 78,
+        "paths": 785,
+        "gate": 0,
+        "warn": 11,
+        "error": 0,
+        "ownWarnings": 0,
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "diagnostics": [
+        "##[error]test/product/procurement-decision-producer/fixture.ts(33,80): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+        "##[error]test/product/procurement-decision-producer/fixture.ts(33,90): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+      ],
+      "artifact": {
+        "id": 14135825737,
+        "name": "astra-wp04-checks",
+        "size_in_bytes": 15120,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135825737",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135825737/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:40:52Z",
+        "expires_at": "2027-02-12T22:39:23Z",
+        "updated_at": "2026-11-14T22:40:52Z",
+        "digest": "sha256:906f55773390fa434832d26fcf7bd488afd5755f9a24d28e40afe9f31bb3cbfc",
+        "workflow_run": {
+          "id": 43649223124,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp04",
+          "head_sha": "c088011cc3bc749eca605d3227888be257d78902"
+        }
+      },
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649223124"
+    },
+    {
+      "run": 43649465036,
+      "job": 132614476237,
+      "W": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+      "treeW": "7200dc460b64f7ba58265f61352a1074c46a2481",
+      "S": null,
+      "mechanism": "Existing exact-product push workflow on astra-check-wp04; no test envelope",
+      "workflow_blob": "dab8d29f69d78ba304325333e03fb8d729fe026e",
+      "generation": "PASS",
+      "typecheck": "PASS",
+      "typecheck_package": "modules/sucafina (includes the new CLI adapter through own test imports)",
+      "guards": {
+        "rules": 78,
+        "paths": 785,
+        "gate": 0,
+        "warn": 11,
+        "error": 0,
+        "ownWarnings": 0,
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "warnings": [
+          "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+        ],
+        "unchanged_from_previous": true
+      },
+      "artifact": {
+        "id": 14134844642,
+        "name": "astra-wp04-checks",
+        "size_in_bytes": 15011,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134844642",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134844642/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:44:07Z",
+        "expires_at": "2027-02-12T22:42:11Z",
+        "updated_at": "2026-11-14T22:44:07Z",
+        "digest": "sha256:e63e3f39809da912643a3db32e64d4be0afe262d6d727c9d0badccef4b255107",
+        "workflow_run": {
+          "id": 43649465036,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp04",
+          "head_sha": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc"
+        }
+      },
+      "dedup": {
+        "equivalent_runs_before_dispatch": 0,
+        "prior_run_terminal": true,
+        "reason": "Two concrete TS7006 diagnostics fixed only with explicit type annotations; mandatory compiler/guards requalification, no functional rerun."
+      },
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649465036"
+    }
+  ],
+  "qualification": {
+    "unique_tests": 17,
+    "latest_affected_selection": {
+      "run": 43648286802,
+      "tests": 10
+    },
+    "unchanged_tests_from_a1": {
+      "run": 43647866067,
+      "tests": 7,
+      "files": [
+        "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+        "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts"
+      ],
+      "reason": "W2 to W3 changes only the new fixture, its literal expected status and a comment in the new UI script. None changes the inputs of these seven tests."
+    },
+    "does_not_sum_repeat_observations": true,
+    "full_source_gate": "PASS_RUN_43649465036_ON_EXACT_W4",
+    "composed_gate": "NOT_RUN_REQUIRES_SESSION42_ASSEMBLY_AND_S0_ACTIONS",
+    "final_source_continuation": {
+      "W": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+      "runtime_delta": false,
+      "only_code_change": "Two explicit callback parameter annotations and type-only imports in fixture.ts",
+      "proof": "TYPE-ONLY-FIX.json",
+      "functional_tests_repeated": false,
+      "reason": "No runtime expression or assertion changed; repeat only mandatory typecheck and guards for the concrete TS7006 failure."
+    },
+    "checks_scope": "Sucafina package, including imported new CLI adapter; full CLI/E2E package typechecks not claimed."
+  },
+  "equality": {
+    "A1": {
+      "root_entries_identical": 43,
+      "only_extra": ".ci-run.json",
+      "envelope_blob": "69fe169b3f8825ed2b0e9dc6128173e5d44b3076"
+    },
+    "A2": {
+      "root_entries_identical": 43,
+      "only_extra": ".ci-run.json",
+      "envelope_blob": "da2fb0909cd9515e29da822aca09dfd4d8355899"
+    }
+  },
+  "dedup": {
+    "A1": {
+      "branch": "ci-run-linux-astra-wp04-m37-2616cd9-b94331aa-a1",
+      "existing_runs_before_dispatch": 0
+    },
+    "A2": {
+      "branch": "ci-run-linux-astra-wp04-m37-a1b3bd2-57e8a459-a2",
+      "existing_runs_before_dispatch": 0,
+      "previous_run_terminal": true,
+      "reason": "Three real failures and three test type errors fixed; selected exactly the three files affected by the changed shared fixture."
+    }
+  },
+  "limits": {
+    "local_tests": 0,
+    "local_typecheck": 0,
+    "local_servers": 0,
+    "epic_or_full": 0,
+    "skips_added": 0,
+    "budget_changes": 0,
+    "workflow_changes": 0,
+    "omni_proved": false,
+    "native_or_AM_proved": false,
+    "browser_proved": false,
+    "financial_apply_proved": false,
+    "checks_final_commit_runtime_identical_to_A2": true
+  },
+  "functional_test_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "terminal_publication": "Receipt-only continuation of checked W4; no new functional or guard execution of terminal documents is claimed."
+}

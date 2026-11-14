@@ -1,0 +1,45 @@
+{
+  "schema": "sf2-mission37-later-authority-v1",
+  "source_mission": 37,
+  "source_branch": "astra-wp04",
+  "source_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "requested_consumer": 33,
+  "effective_integration_successor": 42,
+  "observed_head": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+  "prior_terminal": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+  "preimage_base": "e7e97591edfc15f230856a035e32951f2f700c2f",
+  "preimages_unaffected_by_successor_ack": true,
+  "evidence": {
+    "terminal33": {
+      "blob": "68531a8e0b819699b29bbb83d4a2244218d3791f",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/HANDOFF.md"
+    },
+    "authority42": {
+      "blob": "3033ac3c98b4bf0bac07a44ff78708a6c071cc6e",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/authority-ack.json"
+    },
+    "control": {
+      "sha": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "common_blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+      "mission42_blob": "1ac932bec6c885b1921257098907116cbbc0327b"
+    }
+  },
+  "interpretation": "The requested terminal handoff to session33 is preserved as the predecessor boundary. Explicit later42 succession is reconciled, not inferred from silence. Mission37 source lease and paths are unchanged; only42 may integrate shared product. S0 remains the dispatcher for assembled checks because42 is forbidden to run tests/typecheck/guards/CI. No source PASS transfers.",
+  "integrator_authority": "User mission42 plus pinned rolling COMMON grant sole sf2-stack integration writer for selective explicitly released outputs. Root alone writes remote. S0 retains final dispatcher and acceptance; source leases are not transferred.",
+  "source_release_to_successor": "Only the exact final released mission37 own paths and supplied complete patches; no whole PR/source snapshot intake.",
+  "later_c12_source": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+  "shared_writes": 0,
+  "external_messages": 0,
+  "later_c12_reconciliation": {
+    "source_commit": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+    "handoff_blob": "5057835c483ac04fbff0d5c85d6c12324c1e7c51",
+    "source_code_commit": "a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1",
+    "source_executor_blob": "605ad1fbd9167b8234aa614a01638724e87f36f5",
+    "C9_composed_candidate": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+    "C9_composed_executor_blob": "65d2a0518427b1454aa665ef744bce7564ed8049",
+    "disposition": "Read terminal in full. Later source is docs-only; C12 material patches must be consumed by the sole integrator preserving composed Finance/C9. Do not copy the source executor, overwrite C12, or transfer its 22/22 proof or source checks to mission37/this future assembly.",
+    "shared_c12_edits_by_mission37": 0
+  },
+  "final_source_head": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "source_authority": "ENDED_WITH_TERMINAL_PUBLICATION"
+}

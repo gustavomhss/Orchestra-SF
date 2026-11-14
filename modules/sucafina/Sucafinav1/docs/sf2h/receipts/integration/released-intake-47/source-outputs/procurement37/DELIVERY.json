@@ -1,0 +1,69 @@
+{
+  "schema": "sf2-mission37-delivery-v1",
+  "mission": 37,
+  "branch": "astra-wp04",
+  "pr": 23,
+  "state": "IMPLEMENTED_SOURCE_CHECKED_ASSEMBLY_AND_FINANCIAL_BLOCK",
+  "implementation_head": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+  "implementation_tree": "7200dc460b64f7ba58265f61352a1074c46a2481",
+  "source_manifest": "CODE-MANIFEST.json",
+  "released_source_paths": [
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+    "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts",
+    "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+    "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/producer.test.ts"
+  ],
+  "assembly": {
+    "state": "PATCHES_RELEASED_NOT_APPLIED",
+    "primary_production_targets": 11,
+    "legacy_test_targets": 1,
+    "new_consumer_test_targets": 1,
+    "base": "e7e97591edfc15f230856a035e32951f2f700c2f",
+    "successor_consumer": 42,
+    "original_consumer": 33,
+    "ack": "REQUESTED_NOT_OBSERVED",
+    "proof_executor": "S0",
+    "manifests": [
+      "assembly/MANIFEST.json",
+      "assembly-legacy-test/MANIFEST.json",
+      "assembly-tests/MANIFEST.json"
+    ],
+    "static_integrity": "assembly/INTEGRITY_REVIEW.json",
+    "boundary_review": "assembly/INDEPENDENT_REVIEW.md"
+  },
+  "findings": {
+    "M31-PRECHOICE-PROCUREMENT": "SOURCE_IMPLEMENTED_QUALIFIED_ASSEMBLY_ACK_AND_PROOF_PENDING",
+    "M31-FINANCIAL-APPROVAL": "BLOCKED_POLICY_CONTRACT_NOT_SATISFIED"
+  },
+  "financial_decision": "S0/WP00 with Procurement/C12 must decide canonical edit-submit-approve order versus an explicitly different approved post-approval effect or a separately authorized detached approval contract. No financial policy change was made.",
+  "verification": "CI.json",
+  "criteria": "CRITERIA.json",
+  "terminal": "HANDOFF.md",
+  "prohibited_actions_performed": {
+    "local_product_execution": 0,
+    "shared_or_C12_source_writes": 0,
+    "normative_contract_or_engine_writes": 0,
+    "financial_policy_role_stage_threshold_writes": 0,
+    "new_Apply": 0,
+    "merge_deploy_Azure_credentials_restart": 0,
+    "force_push": 0,
+    "external_messages": 0
+  },
+  "acceptance": "NOT_GRANTED",
+  "lease_epoch": "procurement-decision-browser37",
+  "functional_test_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "source_production_byte_identical_to_W3": true,
+  "source_authority": "ENDED_WITH_THIS_TERMINAL_PUBLICATION",
+  "final_checks": {
+    "run": 43649465036,
+    "W": "ae653d251c3dc23f4a10b8be7f9432b13787f8bc",
+    "conclusion": "success"
+  }
+}
