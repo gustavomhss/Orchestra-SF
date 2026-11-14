@@ -117,15 +117,19 @@ test("real Planner zero and nonzero contributions expose explicit A/B origins th
         }
       })
       for (const selection of selections) {
+        const reference = selection.reference
+        if (!reference || reference.kind !== "record") throw new Error("Explicit Planner record origin required")
         const result = await readBiDestination({ request, selection, context: await fixture.admit("sf_bi_view", request), source, authority: fixture.authority, business })
         expect(result.status).toBe("ok")
         if (result.status !== "ok") throw new Error(result.reason)
         expect(result.value.selection).toEqual(selection)
-        expect(result.value.source.ref).toEqual(selection.reference)
-        expect(result.value.source.currentRef).toEqual(selection.reference)
+        expect(result.value.source.ref).toEqual(reference)
+        expect(result.value.source.currentRef).toEqual(reference)
         const origin = result.value.source.authorizedProjection
         if (!origin || !("values" in origin) || !("components" in origin)) throw new Error("Exact authorized source projection required")
-        expect(origin.context.sourceRefs[0]?.id).toBe(selection.reference?.kind === "record" ? selection.reference.target.recordId : undefined)
+        const originSource = origin.context.sourceRefs[0]
+        if (!originSource) throw new Error("Authorized Planner source identity required")
+        expect(originSource.id).toBe(reference.target.recordId)
       }
       let resolved = false
       const wrong = await readBiDestination({ request, selection: { ...selections[0]!, reference: refs[2]! }, context: await fixture.admit("sf_bi_view", request), source, authority: fixture.authority, business: { resolve: async (ref, context) => { resolved = true; return business.resolve(ref, context) } } })
