@@ -27,6 +27,9 @@ export async function scenarioBiFixture(options: { training?: number | null; mis
   const initial: Snapshot = { data: { roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }], versions: [version("renewal", [line("renewal", 240000)]), version("transition", [line("bridge", 60000, currency), line("implementation", 45000, currency), line("new-service", 105000, currency), ...(options.training === undefined ? [] : [line("training", options.training, currency)])], currency)] }, versions: {}, sequences: {}, audit: [], notices: [] }
   const fixture = await plannerFixture(initial)
   try {
+    // Planner bootstrap initializes its surface. C08 state and the protected
+    // cross-surface read need the remaining canonical source registries too.
+    for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
     const payload: BiViewRequest = { viewId: "BI09", selectionRef: "scenario-bi-selection", period: plannerPeriod }
     const context = await fixture.admit("sf_bi_view", payload, "finance", true)
     const baselineId = options.defer ? "transition" : "renewal"

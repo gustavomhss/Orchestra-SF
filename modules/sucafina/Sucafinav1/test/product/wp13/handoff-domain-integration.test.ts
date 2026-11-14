@@ -266,7 +266,11 @@ async function canonicalHandoff(failBeforeCommit: boolean) {
       expect(producerCalls).toEqual(["planner", "procurement"])
       expect(await domains.snapshots()).toEqual(partialDomains)
       expect(await amounts()).toEqual([40, 50])
-      expect(await durableReceipts()).toEqual(receiptsBeforeFailure)
+      // The durable pre-dispatch reservation advances the aggregate exactly once
+      // in the cases namespace. The entire receipts envelope otherwise stays the
+      // same: receipt namespace version, incarnation, receipts and proofs included.
+      const receiptsAfterReservation = { ...receiptsBeforeFailure, aggregateRevision: receiptsBeforeFailure.aggregateRevision + 1 }
+      expect(await durableReceipts()).toEqual(receiptsAfterReservation)
       const afterFailure = await cases.read({ caseRef: caseSelector }, binding)
       expect(afterFailure).toEqual(partial)
       expect(await execution(firstRequest, binding)).toEqual(firstExecution)
@@ -288,7 +292,7 @@ async function canonicalHandoff(failBeforeCommit: boolean) {
       expect(domains.fault.failures).toBe(1)
       expect(await domains.snapshots()).toEqual(partialDomains)
       expect(await amounts()).toEqual([40, 50])
-      expect(await durableReceipts()).toEqual(receiptsBeforeFailure)
+      expect(await durableReceipts()).toEqual(receiptsAfterReservation)
       expect(await state.read(new Request("https://example.test"), "cases", (productState) => applicationAttempts(productState, secondRequest))).toEqual(attempts)
       expect(await cases.read({ caseRef: caseSelector }, binding)).toEqual(partial)
       expect(partial.value.case.state).toBe("partially-applied")
