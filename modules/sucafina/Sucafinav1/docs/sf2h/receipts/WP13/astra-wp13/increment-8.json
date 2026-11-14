@@ -1,0 +1,61 @@
+{
+  "schema": "sf-wp13-increment-v1",
+  "label": "W8",
+  "parentProduct": "8145b909310e01c711d43a97e6c1bd35d5dcec3a",
+  "ready": false,
+  "status": "MANDATORY_FAILURE_CONTRAPROOF_IMPLEMENTED_PENDING_ACTIONS",
+  "productRuntimeSourceAndForeignFixturesUnchanged": true,
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+    "blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+    "previousBlob": "e098a74a6476be4bef1f18bde98225d20e83bc25",
+    "criterion": "WP13.T04.CHK.02",
+    "failure": "One-shot Procurement storage failure after canonical staged revision and before actual SQLite COMMIT",
+    "expectedStatus": "unavailable/domain-application-unavailable",
+    "requiredOracles": [
+      "Official domain snapshots, partial case/ledger, durable receipts/proofs and storage versions unchanged after rollback",
+      "Planner receipt replays without new execution",
+      "Same Procurement request retries with one committed effect/revision/history/receipt",
+      "Two Procurement producer invocations are distinguished from one durable effect",
+      "Final replay invokes no producer and preserves original ChoiceRecord/C08/comparison"
+    ],
+    "doesNotEstablish": [
+      "Hosted product PASS",
+      "CAS conflict",
+      "Installed UI/native admission or complete C10 coverage"
+    ]
+  },
+  "observedCheck": {
+    "label": "C7",
+    "product": "8145b909310e01c711d43a97e6c1bd35d5dcec3a",
+    "runId": 43587782679,
+    "jobId": 132425899745,
+    "envelope": "cea047c8a048634e83554313839e6d24a7eab033",
+    "typecheck": "FAIL",
+    "ownedDiagnostics": 0,
+    "foreignDiagnostics": 130,
+    "newFixtureDiagnostics": 0,
+    "guards": "PASS",
+    "guardRules": 78,
+    "changedPaths": 645,
+    "warnings": 10,
+    "errors": 0,
+    "receipt": "check-W7.json"
+  },
+  "scopeAudit": {
+    "receipt": "foreign-pin-audit-W7.json",
+    "scope": "Published W7 diff vs sf2-stack",
+    "files": 148,
+    "ownAndAuthorizedCheck": 87,
+    "foreign": 61,
+    "foreignWithExactPublishedPins": 61,
+    "missingPins": 0,
+    "protectedPathChanges": 0
+  },
+  "productSelection": {
+    "S3-A": "Still active on original W5; no PASS presumed and changed W7 fixture inputs cannot inherit its result",
+    "B13": "Not dispatched; inputs unchanged by W8",
+    "C11": "Not dispatched; same request7fb5cc242da1e78a02aa306cbf63d837ecdcbbe6805d88ce7a123f283dc38a42 selects the strengthened handoff test"
+  },
+  "next": "Check W8, finish S3-A, execute outstanding surgical requests sequentially, and reconcile all evidence into final criteria/consumer/findings maps. No READY without mandatory proofs."
+}

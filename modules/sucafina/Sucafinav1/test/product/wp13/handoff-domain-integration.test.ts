@@ -21,7 +21,8 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { randomUUID } from "node:crypto"
 import { roleMap } from "../../../runtime/admin.ts"
 import { object, rows } from "../../../runtime/contract.ts"
-import type { Actor, Snapshot } from "../../../runtime/contract.ts"
+import type { Actor, Snapshot, TransactionOptions } from "../../../runtime/contract.ts"
+import type { Surface } from "../../../src/identity.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import type { SfSourceScope } from "../../../product/integration/source-lifecycle.ts"
@@ -43,7 +44,7 @@ import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 // Admission, case coverage and selection are explicit host seams. Source incarnation,
 // domain projection, previews, commands, SQLite commits, review bindings and receipts
 // use the published producers. No fixture mutation applies a financial value.
-test("portfolio C08 choice hands off canonical Planner and Procurement financial edits; partial confirmation resumes with durable receipts", async () => {
+test("portfolio C08 choice resumes after an unconfirmed change and a Procurement precommit storage failure with durable receipts", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-domain-handoff-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -243,16 +244,43 @@ test("portfolio C08 choice hands off canonical Planner and Procurement financial
     expect(partial.value.case).toEqual(afterFirst.value.case)
 
     confirmations.apply.add(secondChange.id)
+    const durableReceipts = () => state.read(new Request("https://example.test"), "receipts", (productState) => ({ receipts: Object.values(productState.receipts), proofs: saved.value!.preparedChanges.map((change) => productState.transactions[receiptProofTransactionKey("principal", change.target.id, change.idempotencyKey)]) }))
+    const receiptsBeforeFailure = await durableReceipts()
+    if (receiptsBeforeFailure.status !== "ok") throw new Error(`Receipts before storage failure: ${JSON.stringify(receiptsBeforeFailure)}`)
+    expect(receiptsBeforeFailure.value.receipts).toHaveLength(1)
+    expect(receiptsBeforeFailure.value.proofs[1]).toBeUndefined()
+
+    // WP13.T04.CHK.02: the canonical Procurement command runs on the staged
+    // snapshot, then the driver boundary throws before SQLite commits. This is a
+    // transient storage failure, not a CAS conflict or a revoked authorization.
+    domains.fault.procurementPrecommitArmed = true
+    expect(await execution(secondRequest, binding)).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
+    expect(domains.fault).toEqual({ procurementPrecommitArmed: false, failures: 1, stagedRevision: 1, code: "WP13_TEST_PROCUREMENT_PRECOMMIT_STORAGE_FAILURE" })
+    expect(producerCalls).toEqual(["planner", "procurement"])
+    expect(await domains.snapshots()).toEqual(partialDomains)
+    expect(await amounts()).toEqual([40, 50])
+    expect(await durableReceipts()).toEqual(receiptsBeforeFailure)
+    const afterFailure = await cases.read({ caseRef: caseSelector }, binding)
+    expect(afterFailure).toEqual(partial)
+    expect(await execution(firstRequest, binding)).toEqual(firstExecution)
+    expect(producerCalls).toEqual(["planner", "procurement"])
+    expect(await domains.snapshots()).toEqual(partialDomains)
+
+    // The failed transaction committed neither its domain effect nor its receipt.
+    // Retrying the same WP11 request invokes Procurement again and commits once;
+    // the completed Planner command is recovered from its existing receipt.
     const secondExecution = await execution(secondRequest, binding)
     if (secondExecution.status !== "ok") throw new Error(`Procurement canonical application: ${JSON.stringify(secondExecution)}`)
     expect(secondExecution.value).toMatchObject({ surface: "procurement", result: { ok: true }, version: 1 })
     expect(await amounts()).toEqual([40, 60])
-    expect(producerCalls).toEqual(["planner", "procurement"])
+    expect(producerCalls).toEqual(["planner", "procurement", "procurement"])
+    expect(domains.fault.failures).toBe(1)
     const completed = await cases.read({ caseRef: caseSelector }, binding)
     if (completed.status !== "ok") throw new Error(`Completed case: ${JSON.stringify(completed)}`)
     expect(completed.value.case.state).toBe("applied")
     expect(completed.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "applied"])
     expect(completed.value.case.receipts).toHaveLength(2)
+    expect(completed.value.case.receipts.map((receipt) => receipt.surface)).toEqual(["planner", "procurement"])
     expect(completed.value.case.choices).toEqual([choice])
     expect(completed.value.case.choices[0]?.comparisonStatus).toBe("conditioned")
     expect(completed.value.case.choices[0]?.comparison?.completeDifference).toBeNull()
@@ -266,12 +294,13 @@ test("portfolio C08 choice hands off canonical Planner and Procurement financial
     confirmations.apply.clear()
     expect(await execution(secondRequest, binding)).toEqual(secondExecution)
     expect(await execution(firstRequest, binding)).toEqual(firstExecution)
-    expect(producerCalls).toEqual(["planner", "procurement"])
+    expect(producerCalls).toEqual(["planner", "procurement", "procurement"])
     expect(await domains.snapshots()).toEqual(official)
     expect((await cases.read({ caseRef: caseSelector }, binding))).toEqual(completed)
     const durable = await state.read(new Request("https://example.test"), "receipts", (productState) => ({ receipts: Object.values(productState.receipts), proofs: saved.value!.preparedChanges.map((change) => productState.transactions[receiptProofTransactionKey("principal", change.target.id, change.idempotencyKey)]), comparison: productState.decisionResults?.[comparisonRecord.value.resultRef], scenario: productState.decisionResults?.[scenarioResults[1]!] }))
     if (durable.status !== "ok") throw new Error(`Durable canonical handoff: ${JSON.stringify(durable)}`)
     expect(durable.value.receipts).toHaveLength(2)
+    expect(durable.value.receipts.map((receipt) => receipt.surface)).toEqual(["planner", "procurement"])
     expect(durable.value.proofs.map((proof) => proof?.commandDigest)).toEqual(saved.value.preparedChanges.map((change) => receiptReviewBinding(change, reviews.get(change.id)!)))
     expect(durable.value.comparison?.resultDigest).toBe(digestSfValue(choice.comparison))
     expect(durable.value.scenario?.requestDigest).toBe(digestSfValue(choice.scenario))
@@ -290,7 +319,27 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>
   const binding = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", requestId: "domain-request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
   const plannerActor: Actor = { id: "principal", canWrite: true, roles: ["finance"], assigned: [], domains: [] }
   const procurementActor: Actor = { id: "principal", canWrite: true, roles: ["requester"], assigned: [], domains: [] }
-  const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: randomUUID, projectScope: createSfSourceScopeProjector(() => at) })
+  const fault = { procurementPrecommitArmed: false, failures: 0, stagedRevision: undefined as number | undefined, code: "WP13_TEST_PROCUREMENT_PRECOMMIT_STORAGE_FAILURE" }
+  const transactionAll = store.transactionAll
+  if (!transactionAll) throw new Error("Canonical cross-domain persistence unavailable")
+  const driver = {
+    ...store,
+    transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => transactionAll(async (snapshots) => {
+      const before = snapshots.procurement.versions["requests:PR-1"]?.version
+      const result = await work(snapshots)
+      const after = snapshots.procurement.versions["requests:PR-1"]?.version
+      if (fault.procurementPrecommitArmed && result.commit && after !== before) {
+        fault.procurementPrecommitArmed = false
+        fault.failures += 1
+        fault.stagedRevision = after
+        // The original local-store transaction owns rollback. No fixture code
+        // resets a revision, edits an amount, or creates an alternative ledger.
+        throw new Error(fault.code)
+      }
+      return result
+    }, options),
+  }
+  const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID, projectScope: createSfSourceScopeProjector(() => at) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   await persistence.transaction("planner", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]
@@ -365,7 +414,7 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>
     return [forecast[0], object(estimate).estAmount as number]
   }
   return {
-    at, horizon, environment, binding, host, persistence, planner, plannerActor, procurementActor,
+    at, horizon, environment, binding, host, persistence, planner, plannerActor, procurementActor, fault,
     targets: [plannerTarget, procurementTarget], sourceRefs: [plannerEvidence, procurementEvidence],
     commands: [plannerCommand, preparedProcurement.command], previewAmounts: [forecast[0] as number, procurementAmount.value] as const,
     snapshots, amounts,
