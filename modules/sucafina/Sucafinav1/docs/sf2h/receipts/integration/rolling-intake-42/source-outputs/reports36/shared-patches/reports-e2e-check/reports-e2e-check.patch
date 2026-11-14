@@ -1,0 +1,70 @@
+diff --git a/.github/workflows/astra-wp07-check.yml b/.github/workflows/astra-wp07-check.yml
+--- a/.github/workflows/astra-wp07-check.yml
++++ b/.github/workflows/astra-wp07-check.yml
+@@ -1,59 +1,66 @@
+ name: astra-wp07-check
+ 
+ on:
+   push:
+     branches: [astra-check-wp07]
+ 
+ permissions:
+   contents: read
+ 
+ jobs:
+   check:
+     runs-on: ubuntu-24.04
+     timeout-minutes: 30
+     defaults:
+       run:
+         shell: bash
+     steps:
+       - name: Checkout recorded product SHA
+         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+         with:
+           ref: ${{ github.sha }}
+           fetch-depth: 0
+       - name: Record candidate and guard base
+         run: |
+           set -euo pipefail
+           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+           git rev-parse --verify origin/dev
+           mkdir -p wp07-check-evidence
+           git rev-parse HEAD > wp07-check-evidence/product-sha.txt
+           git rev-parse HEAD^{tree} > wp07-check-evidence/product-tree.txt
+           git rev-parse origin/dev > wp07-check-evidence/guard-base.txt
+       - name: Setup Bun
+         uses: ./.github/actions/setup-bun
+       - name: Typecheck Sucafina
+         id: typecheck
+         working-directory: modules/sucafina
+         run: |
+           set -o pipefail
+           bun typecheck 2>&1 | tee ../../wp07-check-evidence/typecheck.txt
++      - name: Typecheck Reports E2E closure
++        id: typecheck_e2e
++        if: success() || failure()
++        working-directory: packages/app-shell
++        run: |
++          set -o pipefail
++          bun typecheck:e2e 2>&1 | tee ../../wp07-check-evidence/typecheck-e2e.txt
+       - name: Repository guards
+         id: guards
+         if: success() || failure()
+         run: |
+           set -o pipefail
+           bun run check:guards --base origin/dev 2>&1 | tee wp07-check-evidence/guards.txt
+       - name: Generate WP07 export inspection fixtures
+         id: exports
+         if: success() || failure()
+         env:
+           WP07_EXPORT_DIR: ${{ github.workspace }}/wp07-check-evidence/exports
+         run: bun run modules/sucafina/Sucafinav1/test/product/wp07/generate-export-fixtures.ts
+       - name: Upload checks and complete exports
+         if: always()
+         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+         with:
+           name: wp07-check-${{ github.sha }}-${{ github.run_attempt }}
+           path: wp07-check-evidence
+           if-no-files-found: error
+           retention-days: 7

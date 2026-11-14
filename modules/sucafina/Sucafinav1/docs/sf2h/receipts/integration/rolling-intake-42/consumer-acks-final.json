@@ -1,0 +1,209 @@
+{
+  "schema": "sf2h.rolling-intake-42.consumer-acks-final.v1",
+  "mission": 42,
+  "recorded_at": "2026-11-14 22:50:51 UTC",
+  "epoch": "S0-C-e8-browser42",
+  "candidate": {
+    "symbol": "C12",
+    "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+  },
+  "publication": {
+    "expected_parent": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "parent_tree": "d6cc2b9f562ddc390e13a0645aae510bb5bd4e13",
+    "identity": "Exact containing commit and tree are resolved from GitHub; PR65 summary records the actual published SHA/tree after CAS and readback.",
+    "product_candidate": {
+      "symbol": "C12",
+      "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+      "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+    },
+    "material_delta": false,
+    "new_candidate_required": false,
+    "reason": "Only newly received provenance, inert source images and terminal checkpoint records are added. The C12 product/test/fixture/config blob set remains unchanged."
+  },
+  "acknowledgements": [
+    {
+      "id": "ACK42-01-ATLAS35",
+      "source": {
+        "branch": "astra-wp14",
+        "pr": 38,
+        "leaseEpoch": "atlas-restart-browser35",
+        "status": "TERMINAL_DELIVERED_WITH_BLOCKERS",
+        "release": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+        "tree": "4c6fcc7be6a7068794ac6320ba96c2ec523e92c9",
+        "productCommit": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+        "productTree": "62fb11d740756893873babe4cc4d9a313176b601",
+        "handoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/HANDOFF-TERMINAL.json",
+        "handoffBlob": "dd8de4d0453220a0b6cd58ae9d3b2fad778f47a0",
+        "authorityCommit": "aa382fe3fa532006fe0923b58f2aa496a365edc2",
+        "authorityBlob": "421d698d37d65e7fdb4e12c9f229795c7e945d24",
+        "materialDelta": "Two WP14 test/helper postimages; runtime source unchanged.",
+        "compositionBase": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+        "compositionBaseTree": "561700c145767a16d42e8b2103bd0ea81d0b379f"
+      },
+      "state": "CONSUMED_IMPLEMENTATION_AND_ORIGINAL_EVIDENCE",
+      "applied_candidate": {
+        "symbol": "C12",
+        "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+        "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+      },
+      "material_path_count": 2,
+      "complete_pre_post_map": "consumer-acks-01.json",
+      "published_ack_commit": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+      "original_receipts": 24,
+      "acceptance": false
+    },
+    {
+      "id": "ACK42-02-C12-32-SUPPLEMENT",
+      "source": {
+        "branch": "procurement-apply",
+        "pr": 60,
+        "leaseEpoch": "c12-browser32",
+        "status": "EXPLICIT_TERMINAL_DELIVERED",
+        "release": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+        "tree": "8180d5f9750d09c42f83515d8d6e69b698f03e39",
+        "checksProductCommit": "00a4eca86f69fd186094bd7a698328a9a4f5fbc7",
+        "checksProductTree": "798eae81136ec91cce23a178a93a8898feadddac",
+        "implementationHead": "a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1",
+        "implementationTree": "b0b38c1d96bd8a64afc972c0ff3632d6bab7edaf",
+        "handoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/HANDOFF.md",
+        "handoffBlob": "5057835c483ac04fbff0d5c85d6c12324c1e7c51",
+        "ackBlob": "d9d299ef886a1a81cc822845fb8d971b36137ed8",
+        "previousIntegratedTerminal": "8b7497a271c5afbd8604927f75b2a86a4f960bae",
+        "compositionBase": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+        "compositionBaseTree": "2dba7fd244afcd39b837b1e61406de1e43450bb5",
+        "newMaterialDelta": "Only fixture callback identity preservation. Ten other composed postimages already exact in target.",
+        "excludedSourceSnapshotApplyBlob": "605ad1fbd9167b8234aa614a01638724e87f36f5",
+        "retainedComposedApplyBlob": "65d2a0518427b1454aa665ef744bce7564ed8049"
+      },
+      "state": "CONSUMED_RELEASED_FIXTURE_AND_FINAL_SUPPLEMENT",
+      "applied_candidate": {
+        "symbol": "C12",
+        "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+        "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+      },
+      "material_path_count": 1,
+      "complete_pre_post_map": "consumer-acks-01.json",
+      "published_ack_commit": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+      "original_receipts": 21,
+      "acceptance": false
+    },
+    {
+      "id": "ACK42-03-REPORTS36",
+      "source": {
+        "release": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+        "tree": "d832c7b7568b713cee5830b9786d944a6e5b51ea",
+        "epoch": "reports-browser36",
+        "product": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+        "product_tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+        "release_blob": "427cb8a0e258017efae99efe4ebeaf938f981872"
+      },
+      "state": "RECEIVED_ARCHIVED_INERT_HOLD_SEMANTIC_CONTRADICTION",
+      "actual_candidate": {
+        "symbol": "C12",
+        "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+        "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+      },
+      "applied_material_paths": [],
+      "held_atomic_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+          "preimage": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+          "offered_postimage": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+          "actual_retained_blob": "8c5b413e25ed7c8100cf516f8538da1a22602df2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+          "preimage": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+          "offered_postimage": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+          "actual_retained_blob": "4b45a5fe673c5653f0979ba1b1044da4907383e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+          "preimage": null,
+          "offered_postimage": "cf67dc28e24e0dcca00de604739a1eaddf2db3ed",
+          "actual_retained_blob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+          "preimage": null,
+          "offered_postimage": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+          "actual_retained_blob": null
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+          "preimage": null,
+          "offered_postimage": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+          "actual_retained_blob": null
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+          "preimage": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+          "offered_postimage": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+          "actual_retained_blob": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+          "preimage": null,
+          "offered_postimage": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+          "actual_retained_blob": null
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "preimage": "40591b3e4e2f672a80a898ac6d6238fa08f4d565",
+          "offered_postimage": "1465b8a2f2c512705f965ec493cd4c08a80d23f0",
+          "actual_retained_blob": "40591b3e4e2f672a80a898ac6d6238fa08f4d565"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+          "preimage": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+          "offered_postimage": "4af1d169e39f945de01314fef73e3689ff297545",
+          "actual_retained_blob": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "preimage": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+          "offered_postimage": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+          "actual_retained_blob": "afc8b97cdc7425fedf1368275a1436f0227f89e8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+          "preimage": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+          "offered_postimage": "956ff69dbe8941ec50b2b29c9b923327379c269d",
+          "actual_retained_blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+          "preimage": "ce0e5655f19d7d60246024af013c811bf921b042",
+          "offered_postimage": "42ca69647984e4bc1d4afc22f3fa11deeeeea6a5",
+          "actual_retained_blob": "ce0e5655f19d7d60246024af013c811bf921b042"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+          "preimage": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+          "offered_postimage": "7c6d585a6245ad95b0948b8ca3d6b0c8f45f810f",
+          "actual_retained_blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+          "preimage": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+          "offered_postimage": "fcf5a23b44eb4bcbea135858bfa6326eb9e6b10c",
+          "actual_retained_blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0"
+        }
+      ],
+      "source_receipts_archived": 42,
+      "owned_postimages_archived_inert": 10,
+      "preimage_conflicts": 0,
+      "semantic_blocker": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "router": "KEEP_CURRENT_IMPLEMENTATION_EQUIVALENT_e1392759f00d6d42477249823bbb6b3cec51601c",
+      "recipient_and_C05_resources": "BLOCKED; no second real recipient or nonplain source lease supplied",
+      "e2e_typecheck_route": "PROPOSAL_INERT_OWNER45; NOT_RUN",
+      "next": "Owner36 releases coherent producer/consumer correction; future integrator reconciles new source and current candidate before activation.",
+      "acceptance": false
+    }
+  ],
+  "authority": "Source consumer33 references are historical; explicit42 owns this continuation. No writer/dispatcher lease transferred.",
+  "candidate_gates": "NOT_RUN",
+  "communication": "Repository ACK only; no external message.",
+  "global_release": false
+}

@@ -1,0 +1,109 @@
+{
+  "schema": "sf-mission36-independent-static-review-v1",
+  "reviewer": "draft_security",
+  "status": "STATIC_DESIGN_REVIEW_COMPLETE_WITH_SHARED_DEPENDENCIES",
+  "acceptance": false,
+  "campaign_approval": false,
+  "reviewed_owned_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "git_blob": "261fd8b248361c7c3a2dc513d2a9d6ffd7b5a8f0",
+      "sha256": "dae7a5424fa6eaf91a1c7bfba9fe399a2207361560cd0dad701211f333d3c325",
+      "bytes": 10251
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "git_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+      "sha256": "b32c62f3626d21409737ece26327a64904370d26889c28e079b4b07c546eb7c7",
+      "bytes": 26451
+    }
+  ],
+  "source_composition": {
+    "name": "C6",
+    "commit": "52add8433f8ecf9d361ee635cda484142131ef84"
+  },
+  "conclusion": "The reviewed owned design retains reply/edit drafts and immutable attempts across recoverable action failures, separates read-only reconciliation from explicit retry, restricts new-key decisions to known rejected C05 CAS results, and closes the discussion on an observed binding/access change. Complete integration depends on session33 consuming the accompanying boundary/status/probe patch and executing the required real-composition tests.",
+  "resolved_concrete_findings": [
+    {
+      "id": "REJECTED_FLAG_STICKY",
+      "issue": "A previous conflict flag could survive a later lost response and permit a new key after a possible commit.",
+      "resolution": "submitIntent resets rejected before each mutation POST."
+    },
+    {
+      "id": "READ_ERROR_AS_MUTATION_REJECTION",
+      "issue": "The generic run catch could mark an already committed mutation rejected after a follow-up read failed.",
+      "resolution": "Only the mutation POST catch may mark the intent rejected; read-only errors retain the original key."
+    },
+    {
+      "id": "GENERIC_409_NOT_PROOF_OF_NO_COMMIT",
+      "issue": "Idempotency or target conflicts can refer to an earlier durable transaction.",
+      "resolution": "Only product-state-changed/thread-changed from this C05 path are classified rejected; other conflicts remain unknown."
+    },
+    {
+      "id": "LOGIN_REDIRECT_TRAILING_SLASH",
+      "issue": "A redirected /auth/login/ body could be mistaken for a recoverable malformed response.",
+      "resolution": "The client recognizes the optional trailing slash."
+    },
+    {
+      "id": "BODY_AFTER_ABORT",
+      "issue": "A response body resolving after cancellation could be accepted.",
+      "resolution": "The client rechecks abort after response.json and checks the live binding around asynchronous boundaries."
+    },
+    {
+      "id": "MOUNT_DRIFT",
+      "issue": "Reusing location.href could send an old view action to a changed pathname with an unchanged meta revision.",
+      "resolution": "The client pins initial origin/pathname and rejects drift."
+    }
+  ],
+  "positive_invariants": [
+    "An unknown outcome retains the original key and serialized payload; no refresh/reconcile path sends a mutation.",
+    "A retry is a separate human action after an authorized read and reuses the exact retained payload/key.",
+    "Reply/edit text is stored outside rebuilt message DOM; edit rebase keeps text and requires a new explicit save.",
+    "The selected source observation for confirmation remains explicit; no new observation is silently prepared or sent.",
+    "Maps, pending intent and connected textarea values are cleared on disposal; post-await live checks prevent late render after closure.",
+    "The server-owned access revision binds principal, installation/project, roles/scopes/grants and policy; the client value is only an equality guard.",
+    "Missing header support closes the discussion after a mandatory read-only recipients preflight, without falsely revoking the independently authorized meeting."
+  ],
+  "limits": [
+    "This is source review, not runtime proof. No test was executed by this reviewer.",
+    "The shared patch is proposed and inert; its source images use .ts.txt. Shared production paths and remote state were not edited.",
+    "C6 without the boundary echo cannot run the new discussion. That explicit dependency must remain visible in E2E results.",
+    "The real distinct recipient and external C05 source authorities remain pending; no fake principal/provider/ACL/native witness was introduced.",
+    "A review reply uses the legacy thread snapshot path, not RecipientMutationReceipt; equal text is not proof of which attempt committed.",
+    "Edit replay after a subsequent edit can still be unavailable. The original key remains protected and there is no automatic resend.",
+    "A thread reader may conflate inaccessible and unavailable state. The client treats its authoritative thread-access-unavailable result as terminal; a generic action 503 remains uncertain.",
+    "A green unit/browser bundle does not substitute for the four nominal Reports E2Es executed on real composition."
+  ],
+  "validation": {
+    "executed_local_tests": [],
+    "executed_remote_tests_by_this_reviewer": [],
+    "performed": [
+      "Read C6 producer/HTTP/C08/binding/shell code",
+      "Read current owned client/view source",
+      "Verify source-image Git blob identities and inert extensions as artifact processing"
+    ]
+  },
+  "addenda": [
+    {
+      "id": "current-client-callable-fetch-type",
+      "status": "STATIC_TYPE_ONLY_DELTA_REVIEW_COMPLETE",
+      "historical_review_preserved": true,
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "previous_git_blob": "261fd8b248361c7c3a2dc513d2a9d6ffd7b5a8f0",
+      "current_git_blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+      "current_sha256": "c4cbc9a9046891ab4e58aa4299b87a566cfd99e640ab9a8182bd151df003a9b4",
+      "current_bytes": 10306,
+      "delta": {
+        "before": "  fetch: typeof fetch",
+        "after": "  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>"
+      },
+      "identity_check": "Replacing only the new callable signature with the old typeof fetch signature reproduces both the exact historical Git blob and SHA256. The request/response handling and all runtime statements are unchanged.",
+      "reason": "The seam needs the callable fetch operation only. typeof fetch also requires Bun-specific static properties such as preconnect on injected function implementations.",
+      "conclusion": "No new security, draft-preservation or replay behavior was introduced by this type-only delta. The callable accepts the RequestInfo/URL and optional RequestInit used by the existing implementation and returns Promise<Response>. The previous behavioral source review remains applicable.",
+      "limits": [
+        "Read-only source comparison and artifact hashing only; no local test or typecheck was executed.",
+        "This addendum does not claim a green CI run, owner consumption of shared patches, E2E acceptance or campaign approval."
+      ]
+    }
+  ]
+}

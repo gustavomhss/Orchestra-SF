@@ -1,0 +1,36 @@
+{
+  "schema": "orchestra-sf.mission36.ack-request.v1",
+  "consumer": "session33",
+  "authority": "CONSUMER-RELEASE.json; no new dispatcher authority",
+  "source_product": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+  "source_tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+  "input": "INPUT-CLOSURE.json",
+  "shared_inputs": [
+    {
+      "manifest": "shared-patches/installation-router-wildcard/manifest.json",
+      "patch_sha256": "c8a32901dd900eab75afefe20e18cb1991595a8b404c8f6144be7dbc5b4c86dd",
+      "reason": "C6 duplicate base/wildcard registration prevents actual installation readiness."
+    },
+    {
+      "manifest": "shared-patches/review-discussion-binding/manifest.json",
+      "patch_sha256": "23d799f3bbf7df3d293fb41c714edab5ec92d569486dd383c7a0492f2e700ce8",
+      "reason": "Current admitted binding checks, authorized echo, preserved denial semantics and focus probe needed for safe draft preservation across scopes."
+    },
+    {
+      "manifest": "shared-patches/reports-e2e-check/manifest.json",
+      "patch_sha256": "70935d0df9561473236890d3b6441b5aca3ac968fd7a8ca57033e2435a93c199",
+      "reason": "Hosted package typecheck:e2e is absent from existing source check; Reports graph already exists in C6."
+    }
+  ],
+  "requested_ack_fields": [
+    "actual candidate W",
+    "actual tree",
+    "complete applied path/blob/preimage map",
+    "conflicts resolved without force",
+    "genuine recipient/ACL/C05 resource disposition",
+    "app typecheck:e2e route disposition",
+    "remaining blockers; no implied runtime PASS"
+  ],
+  "after_ack": "Existing authorized WP07 dispatcher verifies candidate/request/config/fixtures, deduplicates, and dispatches only four nominal Reports tests through the existing production interface. No new runs until material owner consumption changes the blocked candidate."
+}
+

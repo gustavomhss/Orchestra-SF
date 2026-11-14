@@ -1,0 +1,120 @@
+{
+  "schema": "sf-mission36-shared-patch-v1",
+  "mission": "missao36",
+  "recipient": "session33",
+  "finding": "REPORTS36-C6-INSTALLATION-DUPLICATE-MOUNT",
+  "status": "PROPOSED_NOT_APPLIED",
+  "acceptance": false,
+  "base": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+    "composition": "C6"
+  },
+  "observed_failure": {
+    "source_work_commit": "83d7102664c9983a06fabffcc61334165cba756d",
+    "snapshot_commit": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+    "run_id": 43646916265,
+    "job_id": 132606651286,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/job/132606651286",
+    "executed_nominal_tests": 4,
+    "passed_nominal_tests": 0,
+    "stage": "Each nominal case started and failed while its real CLI installation fixture awaited readiness.",
+    "error": "Method 'ACL' already declared for route '/sucafina'",
+    "installed_dependencies_from_stack": [
+      "effect@4.0.0-beta.83",
+      "find-my-way-ts@0.1.6"
+    ],
+    "same_preimage_blob_on_observed_snapshot": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+    "evidence": "evidence/observed-startup-failure.txt"
+  },
+  "diagnosis": {
+    "cause": "loadSfInstallation registers both the exact mount and its /* wildcard. The installed Effect HttpRouter expands a /* registration to both the wildcard and the exact base, so it registers the mount twice for every method.",
+    "scope": "This is a production route registration failure before HTTP readiness. It is independent of Reports scenario assertions, recipient availability and draft mutation recovery.",
+    "change": "Remove only the redundant exact mount registration and now-unused Layer import. Keep one existing HttpRouter.add('*', mount + '/*', route)."
+  },
+  "upstream": {
+    "repository": "Effect-TS/effect",
+    "version_tag": "effect@4.0.0-beta.83",
+    "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+    "tree": "aa7aa2b0c8b04b58f4028faef313147c148348bb",
+    "path": "packages/effect/src/unstable/http/HttpRouter.ts",
+    "blob": "3a52c4acd7938674bc209059212efd745cff9715",
+    "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/effect/src/unstable/http/HttpRouter.ts",
+    "evidence": "evidence/effect-wildcard-expansion.txt",
+    "mechanism": "For method '*' and path ending in '/*', addAll calls router.all(route.path, route), then router.all(route.path.slice(0, -2), route).",
+    "adapter": {
+      "path": "packages/effect/src/unstable/http/FindMyWay.ts",
+      "blob": "7507cb4fc81ac033991aa52ca4dcc3f7e65c76de",
+      "behavior": "Re-exports find-my-way-ts without changing it."
+    }
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "preimage_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "preimage": "preimage/apps/cli/src/sucafina-product/installation.ts.txt",
+      "postimage": "postimage/apps/cli/src/sucafina-product/installation.ts.txt",
+      "postimage_blob": "edc4d574854a39583fb6847e4e8bb135ede93cc1",
+      "preimage_sha256": "b480f09a5a0269988ac15e5c9cd38a0793caa2d94f00833564bc7b993bc4edd1",
+      "postimage_sha256": "8a13e2514661503449217f7fb75bfb5a0705a076ad08da98cba365207ea0db40",
+      "preimage_bytes": 2463,
+      "postimage_bytes": 2545
+    }
+  ],
+  "preserved_controls": [
+    "Absolute trusted factory path resolved with realpath; no factory selection from an HTTP request.",
+    "Factory and mount-shape validation, handler/dispose validation and optional host contribution shape.",
+    "Exact Host header and web Request origin checks return 403 before installation handler invocation.",
+    "Request cancellation signal forwarded unchanged to the real installation handler.",
+    "Handler responses pass through HttpServerResponse.fromWeb; undefined remains 404 and handler failures remain 503.",
+    "Same wildcard route, same handler, same method set, same installation host contributions and disposal.",
+    "No broad catch-all, no router mock, no alternate startup route, no fabricated authority or second principal."
+  ],
+  "application": {
+    "owner": "session33",
+    "diff": "installation-router-wildcard.patch",
+    "artifact_format": "Complete pre/post source images end in .ts.txt and remain inert. files[].path is the actual .ts target.",
+    "method": "Compare the target Git blob in one coherent integration candidate with preimage_blob before consuming through the owner's GitHub MCP CAS workflow. Reconcile differing preimages; do not force or overwrite concurrent shared changes.",
+    "not_applied_to": [
+      "shared production source",
+      "C6",
+      "Wtest83d7102664c9983a06fabffcc61334165cba756d",
+      "snapshot624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "dev",
+      "any running installation"
+    ],
+    "diff_sha256": "c8a32901dd900eab75afefe20e18cb1991595a8b404c8f6144be7dbc5b4c86dd"
+  },
+  "verification": {
+    "local_tests": "NOT_RUN",
+    "remote_tests_by_patch_author": "NOT_RUN",
+    "performed": "Read failing real Actions job, C6 and observed snapshot source, CLI serve composition, and the exact installed Effect version's primary source. Generate complete artifact diff and verify preimage Git blob identity.",
+    "required_owner_evidence": [
+      "Start the real CLI with the real installation factory under the existing GitHub Actions dispatcher; require actual readiness and absence of duplicate route registration.",
+      "Verify the exact mount and descendants still reach the existing handler; unrelated prefixes do not become installation routes.",
+      "Verify wrong Host/origin remains 403 and handler 404/503/cancellation semantics remain intact.",
+      "Execute all four existing nominal Reports E2Es on the owner's coherent candidate after the router patch; report their actual results, retaining existing assertions.",
+      "Report remaining recipient/external C05 authority and review binding patch dependencies independently."
+    ],
+    "handler_bytes_identical": true,
+    "inert_source_extensions": true
+  },
+  "review": {
+    "author": "draft_security",
+    "state": "STATIC_SOURCE_CAUSE_CONFIRMED_PATCH_REQUIRES_OWNER_REVIEW",
+    "campaign_approval": false,
+    "shared_integration_approval": false
+  },
+  "limitations": [
+    "The proposed fix has not been applied or run. Static causality is not runtime acceptance.",
+    "A successful startup would remove this specific prerequisite failure; it does not prove any nominal journey passed.",
+    "The review-discussion-binding bundle remains a separate required shared input for the new discussion client.",
+    "C6 recipient and external C05 source authority limits remain unchanged."
+  ],
+  "evidence_hashes": {
+    "evidence/effect-wildcard-expansion.txt": "633a5ca3677c1c049b290ed04f8d8b2308cdb9b2e8830f19c0f96609b527c5a9",
+    "evidence/observed-startup-failure.txt": "6733b3e1abf1be03d79d107ec61210097260f78f6867f86a8a5ce499b9acf483"
+  }
+}

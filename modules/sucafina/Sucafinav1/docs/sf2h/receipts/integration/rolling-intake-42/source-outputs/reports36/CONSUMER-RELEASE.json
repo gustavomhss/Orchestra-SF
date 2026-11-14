@@ -1,0 +1,76 @@
+{
+  "schema": "orchestra-sf.mission36.consumer-release.v1",
+  "mission": 36,
+  "actor": "S3-A",
+  "lease_epoch": "reports-browser36",
+  "state": "TERMINAL_BLOCKED_SHARED_ROUTER",
+  "disposition": "READY_FOR_SESSION33_CONSUMPTION_AS_IMPLEMENTATION_ONLY",
+  "acceptance": false,
+  "scope": "Ten owned product/test postimages and three complete inert shared patch bundles, with actual hosted failed nominal execution and scoped client/build results. No global or journey approval.",
+  "source_branch": "astra-wp07",
+  "PR": 27,
+  "sourceCommits": [
+    "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+    "54db6e5d16dd47cb2dfca680f98f1ffae9ed6856",
+    "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+    "73b716b89d84dfba10070cf4a9369ca9c9e75159"
+  ],
+  "sourceW": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+  "sourceTree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+  "receipt_commit": "The commit containing this terminal receipt; it changes only this allowed receipts subtree. Read containing commit SHA/tree via GitHub, then reconcile current head without force.",
+  "sourceFiles": "INPUT-CLOSURE.json#/owned_overlay",
+  "C6": "52add8433f8ecf9d361ee635cda484142131ef84",
+  "Wtest": "83d7102664c9983a06fabffcc61334165cba756d",
+  "nominal": {
+    "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+    "run": 43646916265,
+    "selected": 4,
+    "started": 4,
+    "failed_setup": 4,
+    "passed": 0,
+    "completed_journeys": 0,
+    "status": "FAILED_SETUP_SHARED_ROUTER"
+  },
+  "complete_shared_inputs": [
+    {
+      "manifest": "shared-patches/installation-router-wildcard/manifest.json",
+      "patch_sha256": "c8a32901dd900eab75afefe20e18cb1991595a8b404c8f6144be7dbc5b4c86dd",
+      "reason": "C6 duplicate base/wildcard registration prevents actual installation readiness."
+    },
+    {
+      "manifest": "shared-patches/review-discussion-binding/manifest.json",
+      "patch_sha256": "23d799f3bbf7df3d293fb41c714edab5ec92d569486dd383c7a0492f2e700ce8",
+      "reason": "Current admitted binding checks, authorized echo, preserved denial semantics and focus probe needed for safe draft preservation across scopes."
+    },
+    {
+      "manifest": "shared-patches/reports-e2e-check/manifest.json",
+      "patch_sha256": "70935d0df9561473236890d3b6441b5aca3ac968fd7a8ca57033e2435a93c199",
+      "reason": "Hosted package typecheck:e2e is absent from existing source check; Reports graph already exists in C6."
+    }
+  ],
+  "atomic_intake_notes": [
+    "Treat client/view and the discussion binding shared patch as one compatible boundary change. Without the echo contract the new client intentionally closes the discussion before enabling mutation.",
+    "Router patch is a separate required startup fix; it does not provide recipient or C05 authority.",
+    "The check workflow exists on the source branch but not C6. Reconcile its explicit preimage/import and trigger ancestry; do not copy the source branch shared graph into C6."
+  ],
+  "consumer": "session33 remains the exclusive shared integrator. This release creates no authority, role, provider, grant, new dispatcher or permission to test beyond the existing authorization.",
+  "consumerSequence": [
+    "Reconcile current source and integration heads, exact preimages and terminal handoffs. Preserve all concurrent history with GitHub MCP expected-SHA CAS and no force.",
+    "Consume the ten owned postimages and required shared proposals as one coherent candidate, preserving unrelated C6 work. Do not recreate the nineteen Reports material paths already consumed by C6.",
+    "Obtain genuine distinct recipient authority and external source leases from their actual owners. Directory membership or self-reply does not satisfy distinct-recipient C05 authorization.",
+    "Publish a new explicit product W/tree/applied path->blob map and consumer ACK. C6 remains immutable and globally unapproved.",
+    "The already authorized WP07 dispatcher, after ACK and deduplication, creates a request-only S and executes exactly requests/reports-nominal.json: four real production Reports cases, one worker, zero retries, no skip. Session33 receives no new dispatcher authority from this receipt.",
+    "Use the authorized scoped hosted check route for package typecheck:e2e and source guards. Preserve unsuppressed failures and retain run/job/artifact evidence. Only actual scenario evidence can change acceptance."
+  ],
+  "stillOpen": [
+    "Real UI/client draft loss reproduction and retention/revocation pair have not reached their assertions due to shared startup failure.",
+    "Four nominal Reports journeys are failed at setup, not passed; all86canonical criteria remain without runtime approval.",
+    "Distinct legitimate recipient and nonplain C05 authority leases remain missing exactly as recorded in C6.",
+    "Source typecheck remains FAIL137 inherited diagnostics; app typecheck:e2e NOT_RUN.",
+    "Selective Talent, visual/native/UI/MCP parity and human timing criteria remain open as mapped in CRITERIA.json."
+  ],
+  "consumerACK": null,
+  "producer_lease": "TERMINAL_RELEASED_FOR_BOUNDED_CONSUMPTION; no claim that session33 has accepted or integrated this delivery.",
+  "evidence": "RUNS.json; CRITERIA.json; FINDINGS.json; PRECONDITIONS.json; READINGS.json"
+}
+

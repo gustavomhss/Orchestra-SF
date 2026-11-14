@@ -1,0 +1,104 @@
+diff --git a/modules/sucafina/Sucafinav1/product/collaboration/http.ts b/modules/sucafina/Sucafinav1/product/collaboration/http.ts
+index 91091bf444bc23221d1f427138ebb9e5ca4c51bb..956ff69dbe8941ec50b2b29c9b923327379c269d 100644
+--- a/modules/sucafina/Sucafinav1/product/collaboration/http.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/http.ts
+@@ -35,9 +35,13 @@
+     const admitted = await (route.action ? input.human.admit(request, route.action, payload) : input.admitRead(request, route.read!, payload)).catch(() => ({ status: "denied" as const, reason: "collaboration-authority-unavailable" }))
+     if (admitted.status !== "ok") return reply(admitted)
+     try {
++      // An expected revision is an identity fence, never an access grant. The
++      // host digest already binds installation, project, principal and scope.
++      const expectedBinding = request.headers.get("X-SF-Review-Binding")
++      if (expectedBinding !== null && (!/^[a-f0-9]{64}$/.test(expectedBinding) || expectedBinding !== admitted.value.binding.accessRevision)) return reply({ status: "denied", reason: "review-discussion-binding-changed" })
+       const result = await Promise.resolve().then(() => route.invoke(payload, admitted.value)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-operation-unavailable" }))
+       if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
+-      return reply(result)
++      return reply(result, undefined, expectedBinding === null ? undefined : admitted.value.binding.accessRevision)
+     } finally {
+       if (route.action) input.human.finish(admitted.value)
+       if (!route.action) input.finishRead(admitted.value)
+@@ -45,8 +49,8 @@
+   }
+ }
+ 
+-function reply(result: PortResult<unknown>, status = result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : ["stale", "conflict", "provider-conflict"].includes(result.status) ? 409 : 503) {
+-  return Response.json(result, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
++function reply(result: PortResult<unknown>, status = result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : ["stale", "conflict", "provider-conflict"].includes(result.status) ? 409 : 503, reviewBinding?: string) {
++  return Response.json(result, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", ...(reviewBinding === undefined ? {} : { "X-SF-Review-Binding": reviewBinding }) } })
+ }
+ 
+ async function bounded(request: Request, limit: number) {
+diff --git a/modules/sucafina/Sucafinav1/product/reviews/http.ts b/modules/sucafina/Sucafinav1/product/reviews/http.ts
+index ce0e5655f19d7d60246024af013c811bf921b042..42ca69647984e4bc1d4afc22f3fa11deeeeea6a5 100644
+--- a/modules/sucafina/Sucafinav1/product/reviews/http.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/http.ts
+@@ -82,6 +82,8 @@
+         const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+         if (admitted.status !== "ok") return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+         try {
++          const expectedBinding = request.headers.get("X-SF-Review-Binding")
++          if (expectedBinding !== null && (!/^[a-f0-9]{64}$/.test(expectedBinding) || expectedBinding !== admitted.value.binding.accessRevision)) return json({ status: "denied", reason: "review-discussion-binding-changed" }, 403)
+           if (!current() || !await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+           const result = await prepare.call(producer, { reviewRef: selected.reviewRef, sectionId: selected.sectionId }, structuredClone(selected.basis), admitted.value).catch(() => undefined)
+           if (!current() || !result) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+@@ -89,7 +91,9 @@
+           if (!isReviewThreadContext(result.value) || result.value.reviewRef !== selected.reviewRef || result.value.sectionId !== selected.sectionId) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+           const pin = structuredClone(result.value)
+           if (!await authorize.call(producer, structuredClone(pin), structuredClone(selected.basis), admitted.value).catch(() => false) || !current() || !await input.ui.revalidate(admitted.value) || !current() || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+-          return json({ status: "ok", value: { reviewRef: pin.reviewRef, reviewVersion: pin.reviewVersion, reviewDigest: pin.reviewDigest, sectionId: pin.sectionId } }, 200)
++          const response = json({ status: "ok", value: { reviewRef: pin.reviewRef, reviewVersion: pin.reviewVersion, reviewDigest: pin.reviewDigest, sectionId: pin.sectionId } }, 200)
++          if (expectedBinding !== null) response.headers.set("X-SF-Review-Binding", admitted.value.binding.accessRevision)
++          return response
+         } finally { input.ui.finish(admitted.value) }
+       }
+       if (mode === "review-contribution") {
+diff --git a/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts b/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts
+index 4bf7f79347f94255d3805fe6c1114893fedfbaa9..7c6d585a6245ad95b0948b8ca3d6b0c8f45f810f 100644
+--- a/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts
+@@ -36,6 +36,7 @@
+     const visible = await (historical && input.readHistorical ? input.readHistorical : input.read)(id, context)
+     if (visible.status !== "ok") return visible
+     const raw = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
++    if ("reason" in raw) return raw
+     if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== id || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+     const thread = raw.value as RevisionThread
+     if (thread.messageRevisions !== undefined && (!Array.isArray(thread.messageRevisions) || thread.messageRevisions.some((message) => !message || typeof message.id !== "string" || typeof message.incarnation !== "string" || !Number.isSafeInteger(message.version) || message.version < 1 || typeof message.body !== "string" || typeof message.authorRef !== "string" || typeof message.createdAt !== "string"))) return { status: "unavailable", reason: "thread-history-unavailable" }
+@@ -73,9 +74,11 @@
+       input.threadHistoryWrites.add(work)
+       const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
+       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
+-      if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
++      if ("reason" in saved) return saved
++      if (!saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
+       const current = await load(id, context)
+-      if (current.status !== "ok" || !current.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === saved.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
++      if (current.status !== "ok") return current
++      if (!current.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === saved.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+       return { status: "ok", value: { id, messageId, version: saved.value } }
+     },
+     readVersion: async (id: string, messageId: string, incarnation: string, version: number, context: TrustedDomainContext): Promise<PortResult<{ message: Message } & ThreadSourceContext>> => {
+diff --git a/apps/cli/src/sucafina-product/extended-browser.ts b/apps/cli/src/sucafina-product/extended-browser.ts
+index 83ecd80669c759dc65cc621543af2b5ebd9f9ac0..fcf5a23b44eb4bcbea135858bfa6326eb9e6b10c 100644
+--- a/apps/cli/src/sucafina-product/extended-browser.ts
++++ b/apps/cli/src/sucafina-product/extended-browser.ts
+@@ -29,6 +29,7 @@
+ }
+ if (root && bootstrap) {
+   const value = JSON.parse(bootstrap.textContent ?? "null")
++  const accessRevision = document.querySelector<HTMLMetaElement>('meta[name="sf-access-revision"]')?.content
+   bootstrap.remove()
+   let closed = false, generation = 0
+   let dispose = () => {}
+@@ -67,7 +68,10 @@
+     const timer = setTimeout(() => controller.abort(), 30_000)
+     try {
+       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
+-      if (accessDenied(response)) clearPrivate()
++      if (accessDenied(response) || response.ok && (!accessRevision || response.headers.get("X-SF-Access-Revision") !== accessRevision)) {
++        clearPrivate()
++        window.dispatchEvent(new Event("sf-access-revoked"))
++      }
+       await response.body?.cancel()
+     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
+     finally { clearTimeout(timer); pending.delete(controller); probing = false }

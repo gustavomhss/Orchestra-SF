@@ -1,0 +1,698 @@
+{
+  "schema": "orchestra-sf.reports-draft-and-journey.readings.v1",
+  "mission": 36,
+  "actor": "S3-A",
+  "lease_epoch": "reports-browser36",
+  "transport": "Remote GitHub MCP only; local processing limited to source/evidence inspection and inert receipt serialization.",
+  "note": "This receipt fixes repository and official-reference identities used by mission36 and distinguishes actual readers. Full repository reading acknowledgements are supplied by /root; the mission25 criterion matrix was delegated to /root/ci_closure, and the six full Playwright guides were read by the E2E author /root/reports_e2e. Reading/retrieval does not establish execution or acceptance. W1 remains historical; current source/candidate/snapshot identities below do not overwrite its provenance.",
+  "parent_read_ack": {
+    "status": "ROOT_ACKNOWLEDGED_REQUIRED_REPOSITORY_READINGS",
+    "acknowledged_by": "/root",
+    "acknowledgement_basis": "Explicit root message to /root/ci_closure during mission36; no inferred rereading.",
+    "full_mission_read": true,
+    "continuation_common_json_read": true,
+    "applicable_agents_read": true,
+    "fixed_start_workflow_read": true,
+    "fixed_execution_common_read": true,
+    "full_s3_a_pack_read": true,
+    "required_appendices_read": true,
+    "mission25_terminal_handoff_and_consumer_release_read": true,
+    "c6_candidate_record_read": true,
+    "canonical_ci_protocol_read": true,
+    "official_playwright_references_read": {
+      "root_consulted_online_pages_and_fixed_sources": true,
+      "root_full_six_guides_read_claimed": false,
+      "full_guides_read_by": "/root/reports_e2e",
+      "author_full_read_acknowledged_by": "/root",
+      "repository": "microsoft/playwright",
+      "ref": "v1.59.1",
+      "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730"
+    },
+    "mission25_full_matrix": {
+      "delegated_to": "/root/ci_closure",
+      "full_read_and_86_ids_preserved": true,
+      "root_full_matrix_reread_claimed": false
+    }
+  },
+  "instructions": [
+    {
+      "path": "AGENTS.md",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/AGENTS.md",
+      "purpose": "Applicable repository/app/E2E instructions.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/packages/app-shell/AGENTS.md",
+      "purpose": "Applicable repository/app/E2E instructions.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/packages/app-shell/e2e/AGENTS.md",
+      "purpose": "Applicable repository/app/E2E instructions.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/reports-draft-and-journey.json",
+      "ref": "9ffdd8310d54ae82cc011bf699c1fdaf066063eb",
+      "blob": "90dbd087e7d1f339885c06f64b55ad7d86e273c9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9ffdd8310d54ae82cc011bf699c1fdaf066063eb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/reports-draft-and-journey.json",
+      "purpose": "Mission36 continuation and bounded ownership/testing authority.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/COMMON.json",
+      "ref": "9ffdd8310d54ae82cc011bf699c1fdaf066063eb",
+      "blob": "7839082081554eb288758460bdd8ce52529ba7da",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9ffdd8310d54ae82cc011bf699c1fdaf066063eb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/COMMON.json",
+      "purpose": "Mission36 continuation and bounded ownership/testing authority.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "purpose": "Fixed campaign entry.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "purpose": "Fixed campaign workflow, CI dispatch ownership and candidate/evidence distinction.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "purpose": "Common acceptance, integrity and authority obligations.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3-A.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "bb0e591a199e1d0b30285bef88da5e96e2b33bc6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3-A.json",
+      "purpose": "Full S3-A pack with86 Reports criterion IDs; no scope reduction.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "purpose": "Mandatory appendix for applicable outputs/dependencies.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "purpose": "Mandatory appendix for applicable resident/native boundaries.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    }
+  ],
+  "predecessor": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure/HANDOFF.md",
+      "ref": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+      "blob": "332028625a14f46e7febea188d341d9c9cb1f9f5",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2b418a754e90d9f52f69e570e6c8e36adda3f4a8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure/HANDOFF.md",
+      "purpose": "Mission25 terminal source, historical evidence and acceptance limits.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure/CONSUMER-RELEASE.json",
+      "ref": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+      "blob": "956ab44f80d52f8a7c2aa22711e8db316770ed3b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2b418a754e90d9f52f69e570e6c8e36adda3f4a8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure/CONSUMER-RELEASE.json",
+      "purpose": "Explicit implementation release; not runtime acceptance.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure/CRITERIA.json",
+      "ref": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+      "blob": "885a57a4e8924ef39f8c11c13f0ae8ed7e515884",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2b418a754e90d9f52f69e570e6c8e36adda3f4a8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure/CRITERIA.json",
+      "purpose": "86 canonical IDs/text/pointers/proof bindings preserved.",
+      "disposition": "FULL_READ_AND_86_CANONICAL_IDS_PRESERVED_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "root_full_reread_claimed": false,
+        "basis": "Delegated mission25 matrix reconciliation and canonical ID/text/pointer/proof-binding preservation"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/candidate-C6.json",
+      "ref": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+      "blob": "6770803f83d51e3816a13159bd3344cb42353680",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/b19606b73f1ffc5a9e58702e939f1aa788dabfa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/candidate-C6.json",
+      "purpose": "Reports25 consumed19 material paths/54 receipts; current pending authority resources and draft-loss finding.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    }
+  ],
+  "ci_protocol": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "ref": "9ffdd8310d54ae82cc011bf699c1fdaf066063eb",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9ffdd8310d54ae82cc011bf699c1fdaf066063eb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "purpose": "Authorized W/S MCP snapshot protocol; dedup; one in-flight WP07 run.",
+      "disposition": "FULL_READ_ACKNOWLEDGED_BY_ROOT",
+      "read_ack": {
+        "reader": "/root",
+        "extent": "full",
+        "basis": "Explicit root reading acknowledgement"
+      }
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/.github/workflows/test-ci.yml",
+      "purpose": "Actual C6 workflow, validator, package resolution or production config.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": "script/test-ci.ts",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/script/test-ci.ts",
+      "purpose": "Actual C6 workflow, validator, package resolution or production config.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/script/test-ci-request.ts",
+      "purpose": "Actual C6 workflow, validator, package resolution or production config.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/script/test-ci-location.ts",
+      "purpose": "Actual C6 workflow, validator, package resolution or production config.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/script/test-ci-package.ts",
+      "purpose": "Actual C6 workflow, validator, package resolution or production config.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": "script/module-registry.json",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/script/module-registry.json",
+      "purpose": "Actual C6 workflow, validator, package resolution or production config.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/packages/app-shell/e2e/playwright.production.config.ts",
+      "purpose": "Actual C6 workflow, validator, package resolution or production config.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "blob": "141da754e380d7410da97f9ca44505880cca55c9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/52add8433f8ecf9d361ee635cda484142131ef84/packages/app-shell/e2e/tsconfig.json",
+      "purpose": "Reports graph inclusion already consumed; absence of hosted typecheck:e2e job is a separate limit.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    },
+    {
+      "path": ".github/workflows/astra-wp07-check.yml",
+      "ref": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+      "blob": "28c453f4b7735f944e1237715e399e955d86546c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2b418a754e90d9f52f69e570e6c8e36adda3f4a8/.github/workflows/astra-wp07-check.yml",
+      "purpose": "Existing source-only WP07 checks; absent from C6. Does not execute app typecheck:e2e.",
+      "disposition": "FULL_READ_BY_DELEGATED_CI_CLOSURE",
+      "read_ack": {
+        "reader": "/root/ci_closure",
+        "extent": "full",
+        "basis": "Delegated actual workflow/validator/config discovery; source artifact or MCP content inspected"
+      }
+    }
+  ],
+  "official_playwright_references": [
+    {
+      "name": "Best practices",
+      "url": "https://playwright.dev/docs/best-practices",
+      "status": "FULL_READ_BY_E2E_AUTHOR; ROOT_CONSULTED_ONLINE_AND_FIXED_SOURCE",
+      "applies": "Nominal Reports E2E selectors, request/response fault handling and isolated contexts.",
+      "reader": "/root/reports_e2e",
+      "full_read_acknowledged_by": "/root",
+      "root_full_guide_read_claimed": false,
+      "root_consultation": "Online page and fixed upstream source consulted; no claim of root rereading the full guide.",
+      "source": {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+        "path": "docs/src/best-practices-js.md",
+        "blob": "67930b095301117fd204434a34553ef94622b586",
+        "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/docs/src/best-practices-js.md"
+      },
+      "provenance": "Full-guide author pins recorded in reports-e2e-provenance.json; tag-to-commit identity independently retrieved through GitHub MCP."
+    },
+    {
+      "name": "Auto-waiting",
+      "url": "https://playwright.dev/docs/actionability",
+      "status": "FULL_READ_BY_E2E_AUTHOR; ROOT_CONSULTED_ONLINE_AND_FIXED_SOURCE",
+      "applies": "Nominal Reports E2E selectors, request/response fault handling and isolated contexts.",
+      "reader": "/root/reports_e2e",
+      "full_read_acknowledged_by": "/root",
+      "root_full_guide_read_claimed": false,
+      "root_consultation": "Online page and fixed upstream source consulted; no claim of root rereading the full guide.",
+      "source": {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+        "path": "docs/src/actionability.md",
+        "blob": "3510171e5c328c19fe1c249e991a68b7b60ef4cf",
+        "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/docs/src/actionability.md"
+      },
+      "provenance": "Full-guide author pins recorded in reports-e2e-provenance.json; tag-to-commit identity independently retrieved through GitHub MCP."
+    },
+    {
+      "name": "Assertions",
+      "url": "https://playwright.dev/docs/test-assertions",
+      "status": "FULL_READ_BY_E2E_AUTHOR; ROOT_CONSULTED_ONLINE_AND_FIXED_SOURCE",
+      "applies": "Nominal Reports E2E selectors, request/response fault handling and isolated contexts.",
+      "reader": "/root/reports_e2e",
+      "full_read_acknowledged_by": "/root",
+      "root_full_guide_read_claimed": false,
+      "root_consultation": "Online page and fixed upstream source consulted; no claim of root rereading the full guide.",
+      "source": {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+        "path": "docs/src/test-assertions-js.md",
+        "blob": "c809dce782764abb0e52d46f8a7652331268fa47",
+        "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/docs/src/test-assertions-js.md"
+      },
+      "provenance": "Full-guide author pins recorded in reports-e2e-provenance.json; tag-to-commit identity independently retrieved through GitHub MCP."
+    },
+    {
+      "name": "Locators",
+      "url": "https://playwright.dev/docs/locators",
+      "status": "FULL_READ_BY_E2E_AUTHOR; ROOT_CONSULTED_ONLINE_AND_FIXED_SOURCE",
+      "applies": "Nominal Reports E2E selectors, request/response fault handling and isolated contexts.",
+      "reader": "/root/reports_e2e",
+      "full_read_acknowledged_by": "/root",
+      "root_full_guide_read_claimed": false,
+      "root_consultation": "Online page and fixed upstream source consulted; no claim of root rereading the full guide.",
+      "source": {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+        "path": "docs/src/locators.md",
+        "blob": "3a6a5de389fd6ec3bdf630bbebc0e669c1c77209",
+        "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/docs/src/locators.md"
+      },
+      "provenance": "Full-guide author pins recorded in reports-e2e-provenance.json; tag-to-commit identity independently retrieved through GitHub MCP."
+    },
+    {
+      "name": "Network",
+      "url": "https://playwright.dev/docs/network",
+      "status": "FULL_READ_BY_E2E_AUTHOR; ROOT_CONSULTED_ONLINE_AND_FIXED_SOURCE",
+      "applies": "Nominal Reports E2E selectors, request/response fault handling and isolated contexts.",
+      "reader": "/root/reports_e2e",
+      "full_read_acknowledged_by": "/root",
+      "root_full_guide_read_claimed": false,
+      "root_consultation": "Online page and fixed upstream source consulted; no claim of root rereading the full guide.",
+      "source": {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+        "path": "docs/src/network.md",
+        "blob": "7ee76e8c71f7fce04e32cba4a12434119dfa0970",
+        "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/docs/src/network.md"
+      },
+      "provenance": "Full-guide author pins recorded in reports-e2e-provenance.json; tag-to-commit identity independently retrieved through GitHub MCP."
+    },
+    {
+      "name": "Test isolation",
+      "url": "https://playwright.dev/docs/browser-contexts",
+      "status": "FULL_READ_BY_E2E_AUTHOR; ROOT_CONSULTED_ONLINE_AND_FIXED_SOURCE",
+      "applies": "Nominal Reports E2E selectors, request/response fault handling and isolated contexts.",
+      "reader": "/root/reports_e2e",
+      "full_read_acknowledged_by": "/root",
+      "root_full_guide_read_claimed": false,
+      "root_consultation": "Online page and fixed upstream source consulted; no claim of root rereading the full guide.",
+      "source": {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+        "path": "docs/src/browser-contexts.md",
+        "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+        "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/docs/src/browser-contexts.md"
+      },
+      "provenance": "Full-guide author pins recorded in reports-e2e-provenance.json; tag-to-commit identity independently retrieved through GitHub MCP."
+    }
+  ],
+  "ownership": {
+    "shared_host_router_authority_config_workflows": "READ_ONLY",
+    "owned_source_overlay": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+        "post_blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+        "status": "modified",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "post_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+        "status": "modified",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+        "post_blob": "cf67dc28e24e0dcca00de604739a1eaddf2db3ed",
+        "status": "added",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+        "post_blob": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+        "status": "added",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+        "post_blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+        "status": "added",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+        "post_blob": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+        "status": "modified",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+        "post_blob": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+        "status": "added",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "post_blob": "1465b8a2f2c512705f965ec493cd4c08a80d23f0",
+        "status": "modified",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "post_blob": "4af1d169e39f945de01314fef73e3689ff297545",
+        "status": "modified",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+        "post_blob": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+        "status": "modified",
+        "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+      }
+    ],
+    "shared_patches": "Stored as inert .txt images and complete .patch under owned receipts; only session33 may consume.",
+    "owned_source_overlay_disposition": "Historical W1 overlay retained in identity_receipts.history[0]; current composed candidate overlay is listed below from its C6-parent commit diff.",
+    "current_source_attribution": {
+      "commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "basis": "Source identity acknowledged by root; composed overlay paths/blobs verified in the C6-parent candidate commit."
+    }
+  },
+  "identity_receipts": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "astra-wp07",
+    "pr": 27,
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "C6": {
+      "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d"
+    },
+    "history": [
+      {
+        "id": "mission36_initial_source_and_nominal_attempt_01",
+        "disposition": "HISTORICAL_IDENTITIES_RETAINED_WITHOUT_RUNTIME_CREDIT",
+        "Wsource": {
+          "commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+          "tree": "1c947764252d16753ce151950783c620a6606c0d",
+          "parent": "1a7bbe4258c155f48854e9f67471f12924457bd7"
+        },
+        "Wtest": {
+          "commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+          "tree": "eefc0e053eb7241b9404b8d60d649eba13d33968",
+          "parent": "52add8433f8ecf9d361ee635cda484142131ef84",
+          "definition": "C6 plus eight exact owned source/test blobs from Wsource; no shared patch application or sf2-stack ref update."
+        },
+        "S_nominal_attempt_01": {
+          "commit": "2d487a886657fe79af1b7d718785f555f3a6a0e9",
+          "tree": "79fa3b5ce55264576501a4c9584ce642008a6807",
+          "parent": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+          "branch": "ci-run-linux-astra-wp07-2a518ef4-37251a43-m36-01",
+          "request_blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+          "request_sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+          "request_compact_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f"
+        },
+        "owned_source_overlay": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+            "post_blob": "261fd8b248361c7c3a2dc513d2a9d6ffd7b5a8f0",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+            "post_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+            "post_blob": "e0ba79d4fb1ab45ad9ed468a0926659382ca7b31",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+            "post_blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+            "post_blob": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+            "post_blob": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "post_blob": "4af1d169e39f945de01314fef73e3689ff297545",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+            "post_blob": "3cdd7848eaf85e12a010d8352cca471d380d6138",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          }
+        ]
+      }
+    ],
+    "current_source_and_nominal_dispatch": {
+      "disposition": "CURRENT_AT_ROOT_READ_ACK_UPDATE; HOSTED_RESULTS_OWNED_BY_ROOT",
+      "Wsource": {
+        "commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+        "tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+        "parent": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+        "sequence_label": "Wsource4"
+      },
+      "Wtest": {
+        "commit": "83d7102664c9983a06fabffcc61334165cba756d",
+        "tree": "5cf09ca749d89b6705ee0ded2182ef672303407f",
+        "parent": "52add8433f8ecf9d361ee635cda484142131ef84",
+        "definition": "C6 plus ten owned source/test paths from the PR27 source lineage; no shared patch application or sf2-stack ref update.",
+        "sequence_label": "Wtest4"
+      },
+      "S_nominal_attempt_05": {
+        "commit": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+        "tree": "8d3731cab27de62da6844b0ba76cf42cc95e2d9a",
+        "parent": "83d7102664c9983a06fabffcc61334165cba756d",
+        "branch": "ci-run-linux-astra-wp07-83d71026-37251a43-m36-05",
+        "request_blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+        "request_sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+        "request_compact_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+        "dispatch_state": "COMPLETED_FAILURE",
+        "run_result": {
+          "run_id": 43646916265,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265",
+          "status": "completed",
+          "conclusion": "failure",
+          "workflow_id": 416464764,
+          "nominal_case_results": "Root is reading terminal jobs/logs; no scenario outcome is inferred here."
+        },
+        "nominal_sequence_label": "S3",
+        "dispatch_sequence_label": "m36-05"
+      },
+      "provenance": {
+        "reader": "/root/ci_closure",
+        "transport": "GitHub MCP",
+        "commit_endpoints": [
+          "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/83d7102664c9983a06fabffcc61334165cba756d",
+          "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/624bfe326a7a11f8509541eb254501c28e6ee3f9"
+        ],
+        "snapshot_only_request_verified": true,
+        "runtime_result_claimed": "Workflow terminal failure only; no nominal test outcome or acceptance claimed.",
+        "run_endpoint": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646916265"
+      }
+    }
+  }
+}

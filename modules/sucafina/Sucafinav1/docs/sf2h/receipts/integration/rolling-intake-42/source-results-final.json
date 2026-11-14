@@ -1,0 +1,440 @@
+{
+  "schema": "sf2h.rolling-intake-42.source-results.v1",
+  "recorded_at": "2026-11-14 22:50:51 UTC",
+  "rule": "All results below belong to their exact source W/S. They are not executions of candidate C12.",
+  "atlas35": {
+    "release": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+    "epoch": "atlas-restart-browser35",
+    "W": "32bcb308059283a0f2d80f70b5b06f75fba1f427",
+    "W_tree": "4943a243d28c15e41b5b47ce1828e91898e0dc7d",
+    "S": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+    "S_tree": "f38ae2f98e4c29434f078c13ce96c98ade0af987",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestSha256": "3f35ec9118fcbebf663c87f9024c8dfcca1bad489eb7c029cb9ca1347a7dbfd9",
+    "run": 43645747336,
+    "job": 132602998463,
+    "aggregate": "FAIL",
+    "passed": 1,
+    "failed": 1,
+    "assertions": 89,
+    "restartComponent": "PASS",
+    "process": {
+      "parentPid": 4089,
+      "childPid": 4140,
+      "exitCode": 0
+    },
+    "C17": "FAIL_PUBLIC_ORIGINAL_RETURNED_STALE_DOCUMENT_REF",
+    "laterAssertions": "NOT_REACHED",
+    "processProofBlob": "503cdb1e39c4d6186a69c790b67fca76342222d9",
+    "nativeSessionWitness": false,
+    "AM05": "OPEN",
+    "sourceChecks": {
+      "run": 43645751452,
+      "S": "31b49d7bc9ee59feb4407d4229a155f81fd330d1",
+      "productSha": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+      "typecheck": "FAIL",
+      "diagnostics": 152,
+      "guards": "FAIL",
+      "gates": 2,
+      "composedChecks": "NOT_RUN"
+    }
+  },
+  "c12_32": {
+    "release": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+    "epoch": "c12-browser32",
+    "compositionBase": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+    "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+    "W_tree": "c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04",
+    "S": "114b1c3ff83a038b515f4afcf5db0fc795d59b6d",
+    "S_tree": "3978a370af7a9da7ffee4db1eaf8ba137162df60",
+    "request": {
+      "package": "sucafina",
+      "packageSelector": "packages/sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+        "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+        "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+        "./Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+        "./Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+        "./Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+        "./Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "run": 43646007759,
+    "job": 132603819490,
+    "result": "PASS",
+    "summary": {
+      "pass": 22,
+      "fail": 0,
+      "expectCalls": 570,
+      "tests": 22,
+      "files": 9,
+      "seconds": 402.01
+    },
+    "scope": "15 C12 + 7 OPS-REV-02 on pinned C9 composition. WP04 alias is separate historical evidence.",
+    "earlierEvidence": {
+      "W2": {
+        "W": "9cf37f42eefb080940c7c71e4c2b1c5539459295",
+        "S": "26cb97baa6ff8be3a4f020cad9ccfccbb1a6d860",
+        "run": 43643559235,
+        "result": "FAIL",
+        "passed": 22,
+        "failed": 1
+      },
+      "W3": {
+        "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+        "S": "0a316164ce059b113e966810dc0c09cf47e0f76b",
+        "run": 43644467464,
+        "result": "PASS",
+        "passed": 1,
+        "failed": 0,
+        "filtered": 4
+      }
+    },
+    "oneGreenRunOf23": false,
+    "sourceChecks": {
+      "W": "00a4eca86f69fd186094bd7a698328a9a4f5fbc7",
+      "W_tree": "798eae81136ec91cce23a178a93a8898feadddac",
+      "S": "ee217e8a7e4b5c5fe99f0ed693c0cf712bfbb56c",
+      "S_tree": "42d3b76db4c847fba7be4d212eee9cc51b5ad6c5",
+      "run": 43646929233,
+      "job": 132606688777,
+      "aggregate": "FAIL",
+      "Sucafina": "FAIL_INHERITED_WP14_TS2741",
+      "CLI": "PASS",
+      "guards": "PASS",
+      "bundleChecksRun": false
+    }
+  },
+  "candidateC12": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "C_G7": "NOT_ACCEPTED",
+    "D_G8": "NOT_RUN_NOT_CLAIMED",
+    "globalRelease": false,
+    "finalDispatcher": "S0",
+    "finalAcceptance": "S0"
+  },
+  "reports36": {
+    "release": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+    "tree": "d832c7b7568b713cee5830b9786d944a6e5b51ea",
+    "epoch": "reports-browser36",
+    "RUNS_blob": "843e1b56bad5a15426421c4489dfb8ad4bf5ab07",
+    "source_product": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+    "source_product_tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+    "base": {
+      "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+      "assembly": "ALREADY_CONSUMED_C6"
+    },
+    "nominal": {
+      "id": 43646916265,
+      "run_attempt": 1,
+      "workflow": "test-ci",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_branch": "ci-run-linux-astra-wp07-83d71026-37251a43-m36-05",
+      "head_sha": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "created_at": "2026-11-14T22:13:04Z",
+      "run_started_at": "2026-11-14T22:13:04Z",
+      "updated_at": "2026-11-14T22:15:35Z",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265",
+      "job_id": 132606651286,
+      "Wsource": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "W_tree": "5cf09ca749d89b6705ee0ded2182ef672303407f",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "S_tree": "8d3731cab27de62da6844b0ba76cf42cc95e2d9a",
+      "S_parent": "83d7102664c9983a06fabffcc61334165cba756d",
+      "request_ref": "nominal",
+      "request_only_delta": true,
+      "purpose": "Four nominal Reports cases after moving identical worker options to file scope; no assertion/retry/timeout changes.",
+      "result": {
+        "selected": 4,
+        "started": 4,
+        "pass": 0,
+        "fail": 4,
+        "skip": 0,
+        "completed_journeys": 0,
+        "business_steps_reached": 0,
+        "phase": "FAILED_SETUP_SHARED_ROUTER",
+        "reason": "The real CLI exits 1 before readiness. C6 registers both /sucafina and /sucafina/*; pinned Effect also registers the base for the wildcard: Method 'ACL' already declared for route '/sucafina'.",
+        "selection": "PASS: existing dispatcher validated exact file and selected all four; this proves correction of collection, not completed journeys.",
+        "dom_draft_reproduction": "BLOCKED_BEFORE_UI",
+        "cases": [
+          {
+            "id": "RPT-01",
+            "title": "preserves authorized sources, exports 25 real projects and reopens before following the current source",
+            "status": "FAILED_SETUP",
+            "preserved_oracle": "1320->1400 immutable capture, 25 projects, long notes, complete DOCX/PPTX, authorized source navigation"
+          },
+          {
+            "id": "RPT-02",
+            "title": "confirms and reuses the exact human answer under C05, then rejects its edited version",
+            "status": "FAILED_SETUP",
+            "preserved_oracle": "C05 question/reply/confirmation/reuse/history; reply response lost and edit request fault with exact draft/key/payload and explicit recovery"
+          },
+          {
+            "id": "RPT-03",
+            "title": "removes one authorized record without editing its source and creates only an explicit new revision",
+            "status": "FAILED_SETUP",
+            "preserved_oracle": "25->24 by explicit selection, original source unchanged, explicit new revision"
+          },
+          {
+            "id": "RPT-04",
+            "title": "revokes the real session and clears cached meeting data, export and answer access",
+            "status": "FAILED_SETUP",
+            "preserved_oracle": "Logout, old credential denied, new legitimate admission and identical original artifact hash"
+          }
+        ]
+      },
+      "omni": {
+        "status": "NOT_ESTABLISHED",
+        "nonce": "4fa54ead1a3fc134bdebafce168f937c",
+        "observation": "Fixture CLI launch appears in the real Omni spawner stack; no positive-control PASS report or native business witness was emitted. Do not infer one from binary setup or process stack."
+      },
+      "artifact": {
+        "id": 14134114103,
+        "name": "playwright-ubuntu-24.04-1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/artifacts/14134114103",
+        "sha256": "bec6567f190060f719a203b584e870fc6ab6f697276d2bc1928e2e983ddaeb30",
+        "size_bytes": 241618,
+        "uploaded_files": 13,
+        "inspection": "Metadata, job upload receipt and failure/selection logs read through GitHub MCP. Archive obtained through the MCP download tool; ZIP contents were not unpacked in this session. No visual or trace proof claimed."
+      }
+    },
+    "isolated_client_and_collection": {
+      "id": 43646667683,
+      "run_attempt": 1,
+      "workflow": "test-ci",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_branch": "ci-run-linux-astra-wp07-5cc6ec11-collection-m36-04",
+      "head_sha": "b4cdbe602c9501f68b15b0d8ed5bafa94084e9c8",
+      "created_at": "2026-11-14T22:10:23Z",
+      "run_started_at": "2026-11-14T22:10:23Z",
+      "updated_at": "2026-11-14T22:12:19Z",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646667683",
+      "job_id": 132605902167,
+      "Wsource": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+      "W": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+      "W_tree": "11a0cca0b20eea60876c9860ad0bedaea0acc5a1",
+      "S": "b4cdbe602c9501f68b15b0d8ed5bafa94084e9c8",
+      "S_tree": "c46f86ce3162896fe50e31d94f0e25f8002d1e83",
+      "S_parent": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+      "request_ref": "collection_and_client",
+      "request_only_delta": true,
+      "purpose": "Expose canonical Playwright collection stdout/stderr through the existing Bun dispatcher and validate corrected transport test.",
+      "result": {
+        "selected": 24,
+        "started": 24,
+        "pass": 23,
+        "fail": 1,
+        "skip": 0,
+        "expect_calls": 178,
+        "client": {
+          "pass": 19,
+          "fail": 0,
+          "status": "PASS_ISOLATED_TRANSPORT"
+        },
+        "browser_build": {
+          "pass": 4,
+          "fail": 0,
+          "status": "PASS_BUNDLE_ONLY"
+        },
+        "collection": {
+          "pass": 0,
+          "fail": 1,
+          "errors": 12,
+          "reason": "Cannot use trace/video/screenshot in a describe group: each option forces a new worker. Twelve errors across four cases; zero selected journeys."
+        },
+        "overall": "FAIL",
+        "journey_credit": false,
+        "dom_draft_retention_credit": false
+      },
+      "omni": {
+        "status": "PASS",
+        "scope": "One declared reports-selection.test.ts process using actual Playwright --list",
+        "nonce": "be2d06488e8e9c359b3c10b45ac50425",
+        "declaring_tests": 1,
+        "spawns": 1,
+        "delegated": 0,
+        "native_business_witness": false
+      },
+      "artifact": {
+        "status": "No separate test artifact upload in this Bun path; job log retains collection diagnostic and 24 case outcomes."
+      }
+    },
+    "source_checks": {
+      "id": 43647268470,
+      "run_attempt": 1,
+      "workflow": "astra-wp07-check",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_branch": "astra-check-wp07",
+      "head_sha": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "created_at": "2026-11-14T22:17:06Z",
+      "run_started_at": "2026-11-14T22:17:06Z",
+      "updated_at": "2026-11-14T22:18:37Z",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647268470",
+      "job_id": 132607741091,
+      "W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+      "request_envelope": null,
+      "dispatcher": ".github/workflows/astra-wp07-check.yml",
+      "workflow_blob": "28c453f4b7735f944e1237715e399e955d86546c",
+      "ref_CAS": {
+        "branch": "astra-check-wp07",
+        "before": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+        "after": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+        "force": false
+      },
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "status": "FAIL",
+        "diagnostics": 137,
+        "paths": 46,
+        "owned_changed_path_diagnostics": 0,
+        "predecessor_comparison": {
+          "run": 43640600856,
+          "job": 132587110097,
+          "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+          "diagnostics": 137,
+          "identical_in_order": true,
+          "new": 0,
+          "removed": 0,
+          "method": "Compare complete normalized TypeScript diagnostic header lines from both actual job logs; no baseline rerun."
+        },
+        "scope_limit": "This workflow checks the source branch graph, not Wtest C6 or app-shell typecheck:e2e."
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "status": "PASS_WITH_WARNINGS",
+        "rules": 78,
+        "changed_paths": 735,
+        "gate": 0,
+        "warn": 12,
+        "errors": 0,
+        "mission36_added_dependencies": 0
+      },
+      "export_fixtures": {
+        "status": "GENERATED",
+        "files": 4,
+        "scope": "Existing deterministic inspection fixtures only; no nominal export or visual acceptance."
+      },
+      "e2e_typecheck": {
+        "status": "NOT_RUN",
+        "owner_patch": "shared-patches/reports-e2e-check/manifest.json"
+      },
+      "artifact": {
+        "id": 14134232699,
+        "size_bytes": 87254,
+        "uploaded_files": 14,
+        "sha256": "6dcdb871d5cef7d02ebc84c435a20a998b781efaad6090f55bd7bd0539b2d499",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647268470/artifacts/14134232699"
+      },
+      "omni": {
+        "status": "NOT_APPLICABLE",
+        "reason": "Existing typecheck/guards/fixture-generation workflow; no native business witness."
+      }
+    },
+    "prior_failed_runs_preserved": [
+      {
+        "id": 43645734030,
+        "W": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+        "S": "2d487a886657fe79af1b7d718785f555f3a6a0e9",
+        "result": {
+          "selected": 0,
+          "started": 0,
+          "completed_journeys": 0,
+          "pass": 0,
+          "fail": 0,
+          "skip": 0,
+          "phase": "FAILED_COLLECTION",
+          "reason": "Playwright --list exited 1. Existing dispatcher throws before retaining stdout JSON; no cases ran. The nested worker options were subsequently diagnosed in run 43646667683."
+        }
+      },
+      {
+        "id": 43646097458,
+        "W": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+        "S": "44cbdf70e628e8b15fe224d00423249096f247f9",
+        "result": {
+          "selected": 23,
+          "started": 23,
+          "pass": 22,
+          "fail": 1,
+          "skip": 0,
+          "expect_calls": 166,
+          "client": {
+            "pass": 18,
+            "fail": 1
+          },
+          "browser_build": {
+            "pass": 4,
+            "fail": 0
+          },
+          "reason": "The test inspected Bun's cloned Request.credentials (include) instead of the actual fetch RequestInit (same-origin). Corrected the observation to inspect unchanged actual init; retained the credentials/cache assertions."
+        }
+      },
+      {
+        "id": 43646326014,
+        "W": "c41bafd263b1839fc6bce05d65e17258698f1b81",
+        "S": "3fd6d21d482cbddeb7f9098c5955662c2814c5d9",
+        "result": {
+          "selected": 0,
+          "started": 0,
+          "completed_journeys": 0,
+          "pass": 0,
+          "fail": 0,
+          "skip": 0,
+          "phase": "FAILED_COLLECTION",
+          "reason": "Same --list failure. Lazy imports did not resolve collection. Do not claim them as the cause-specific fix."
+        }
+      }
+    ],
+    "shared_patch_executions": 0,
+    "activation": "HELD",
+    "all86criteria_accepted": false,
+    "archive_inspected_by42": false,
+    "artifact_metadata_scope": "Source receipts archived; no trace, ZIP content or visual inspection asserted by42."
+  },
+  "mission42": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "epic_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_updates": 0,
+    "source_ref_updates": 0,
+    "native_restart": 0,
+    "source_proofs_transferred_to_C12": false
+  },
+  "global_release": false
+}

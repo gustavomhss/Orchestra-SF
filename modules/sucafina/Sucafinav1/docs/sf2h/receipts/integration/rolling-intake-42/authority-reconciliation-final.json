@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h.rolling-intake-42.authority-reconciliation-final.v1",
+  "mission": 42,
+  "actor": "S0-C",
+  "epoch": "S0-C-e8-browser42",
+  "state": "TERMINAL_BOUNDED_CHECKPOINT_TO_S0",
+  "recorded_at": "2026-11-14 22:50:51 UTC",
+  "publication": {
+    "expected_parent": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "parent_tree": "d6cc2b9f562ddc390e13a0645aae510bb5bd4e13",
+    "identity": "Exact containing commit and tree are resolved from GitHub; PR65 summary records the actual published SHA/tree after CAS and readback.",
+    "product_candidate": {
+      "symbol": "C12",
+      "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+      "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+    },
+    "material_delta": false,
+    "new_candidate_required": false,
+    "reason": "Only newly received provenance, inert source images and terminal checkpoint records are added. The C12 product/test/fixture/config blob set remains unchanged."
+  },
+  "authority_ack": {
+    "commit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "tree": "8da2223f2809a08b2c7169981c1d815ad0d7453a",
+    "blob": "3033ac3c98b4bf0bac07a44ff78708a6c071cc6e",
+    "before_material_write": true
+  },
+  "predecessor": {
+    "mission": 33,
+    "terminal": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "explicitly_closed": true,
+    "all50_pending_retained": true
+  },
+  "control_reconciliation": {
+    "head": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+    "tree": "ad735ee6eec4f1e9ff6b187600850d10fb5f8ae8",
+    "intermediate": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+    "additions": [
+      {
+        "mission": 44,
+        "blob": "2b57f9dc70c8325fb8685ee9bd9c0f47a1931fe4"
+      },
+      {
+        "mission": 45,
+        "blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de"
+      },
+      {
+        "mission": 46,
+        "blob": "d0a3527574cfd1b8e5ea1aba889a09eb0b4228cc"
+      }
+    ],
+    "sole_integrator42_preserved": true,
+    "final_dispatcher": "S0",
+    "final_acceptance": "S0",
+    "control_merged": false,
+    "previous_head": "80b0f5d163477b6f5c4281fc0ea1abb55350ea41",
+    "final_prepublication_read": "Exact integration head36521 unchanged; control advanced one commit adding only current-choice-cohort.json. COMMON/42/44/45 unchanged; full46 file read before publication."
+  },
+  "additional_read_pins": [
+    {
+      "mission": 44,
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-composed-qualification.json",
+      "commit": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+      "blob": "2b57f9dc70c8325fb8685ee9bd9c0f47a1931fe4",
+      "read": "complete"
+    },
+    {
+      "mission": 44,
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/START.json",
+      "commit": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+      "blob": "48de0567262d437957a85f3f3a340c580b02a995",
+      "read": "complete"
+    },
+    {
+      "mission": 45,
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/composed-compiler-gates.json",
+      "commit": "80b0f5d163477b6f5c4281fc0ea1abb55350ea41",
+      "blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de",
+      "read": "complete"
+    },
+    {
+      "mission": 46,
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/current-choice-cohort.json",
+      "commit": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+      "blob": "d0a3527574cfd1b8e5ea1aba889a09eb0b4228cc",
+      "read": "complete"
+    }
+  ],
+  "source_release_interpretation": "35 and final32 explicitly released and consumed.36 explicitly terminal release recognized, but14targets fail semantic qualification and are archived inert with owner correction.34/37/38/39/40/41/43/44 not terminal at recorded heads.45/46 are prepared in read control; live start not inferred.",
+  "sole_remote_writer": "Root42 only; helpers remote-read-only",
+  "source_authority_taken": false,
+  "new_dispatcher_created": false,
+  "lease_ending": "This bounded integration turn ends after final checkpoint publication/readback. No waiting on live writers and no replacement writer assigned; S0 retains ownership of next coordination and final acceptance. Future integration must reconcile this exact checkpoint and later explicit authority/releases.",
+  "reason": "All independently qualified available material was integrated; the remaining explicit36 release has a concrete owner semantic blocker; other observed writers are active or prepared.",
+  "fixed_scope": {
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "canonical_scope_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "scope": {
+      "WPs": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610,
+      "resident_profiles": 5,
+      "skills": 18,
+      "packs": 8,
+      "operations": 39,
+      "AM": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ]
+    }
+  },
+  "publication_protocol": {
+    "remote": "GitHub MCP only",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "CAS_expected_head": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "force": false,
+    "whole_tree_source_merge": false,
+    "control_merge": false,
+    "workflow_ref_update": false
+  },
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "epic_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_updates": 0,
+    "source_ref_updates": 0,
+    "native_restart": 0,
+    "source_proofs_transferred_to_C12": false
+  },
+  "gates": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "C_G7": "NOT_ACCEPTED",
+    "D_G8": "NOT_RUN_NOT_CLAIMED",
+    "globalRelease": false,
+    "finalDispatcher": "S0",
+    "finalAcceptance": "S0"
+  },
+  "prior_recipes_and_reviews": "All eight final recipes, required gates, AM01–06 and three FINAL independent campaign reviews remain mandatory; helper static reviews are not those FINAL reviews.",
+  "global_release": false
+}

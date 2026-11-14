@@ -1,0 +1,245 @@
+{
+  "schema": "sf2h.rolling-intake-42.source-census.v1",
+  "recorded_at": "2026-11-14 22:50:51 UTC",
+  "candidate": {
+    "symbol": "C12",
+    "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+  },
+  "source_observation_window": {
+    "finance_reports_procurement_bi": "2026-11-14 22:38:53 UTC",
+    "agenda_memory_native_portfolio": "2026-11-14 22:39:03 UTC",
+    "semantics": "This is an exact bounded census, not a claim of perpetual currentness. No silent writer closure or branch takeover. Reconcile subsequent explicit releases before future writes."
+  },
+  "sources": [
+    {
+      "mission": 34,
+      "pr": 42,
+      "branch": "finance-resume",
+      "head": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+      "epoch": "finance-persistence-browser34",
+      "authority_state": "IN_PROGRESS",
+      "authority_blob": "e7d80137cbabe9075cfc4c3abaa34c3b7bea03b4",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ebbc90dd3a325e2e8367f4e915ddd193a78b9220/modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/authority-01.json",
+      "observed_at": "2026-11-14 22:38:53 UTC",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_NO_EXPLICIT_RELEASE_AT_OBSERVED_HEAD",
+      "release_blob": null,
+      "release_url": null,
+      "evidence": "Head unchanged; prior complete census and authority retained, no file rereads."
+    },
+    {
+      "mission": 36,
+      "pr": 27,
+      "branch": "astra-wp07",
+      "head": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "tree": "d832c7b7568b713cee5830b9786d944a6e5b51ea",
+      "epoch": "reports-browser36",
+      "authority_state": "TERMINAL_BLOCKED_SHARED_ROUTER",
+      "authority_blob": "7d6dde501daae83b622d440daed877c98754fe4e",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/AUTHORITY.json",
+      "observed_at": "2026-11-14 22:38:53 UTC",
+      "release_observed": true,
+      "disposition": "EXPLICIT_RELEASE_RECEIVED_INERT_SEMANTIC_HOLD",
+      "release_blob": "427cb8a0e258017efae99efe4ebeaf938f981872",
+      "release_url": "https://github.com/gustavomhss/Orchestra-SF/blob/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/CONSUMER-RELEASE.json",
+      "evidence": "Pinned source head/receipt delta inspected; active code progress does not release a writer."
+    },
+    {
+      "mission": 37,
+      "pr": 23,
+      "branch": "astra-wp04",
+      "head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+      "tree": "2361ca558a7bc96341ff5b364e33e9753132a934",
+      "epoch": "procurement-decision-browser37",
+      "authority_state": "IN_PROGRESS",
+      "authority_blob": "ee805409343b374472bd38074ca205a72fb6445e",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/2616cd9c3e97ec0a48d632edbbccf28678a83bba/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/START.json",
+      "observed_at": "2026-11-14 22:38:53 UTC",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_NO_EXPLICIT_RELEASE_AT_OBSERVED_HEAD",
+      "release_blob": null,
+      "release_url": null,
+      "evidence": "Only 3 code/test paths changed; full diff has no new release or authority change; previous START IN_PROGRESS is byte-preserved."
+    },
+    {
+      "mission": 38,
+      "pr": 24,
+      "branch": "astra-wp05",
+      "head": "d37494ad4015525c39062c9679f69b7e1f731ed8",
+      "tree": "70000c9b40857cc5d5a8873f1e3a38cb51118af9",
+      "epoch": "bi-waterfall-browser38",
+      "authority_state": "IN_PROGRESS",
+      "authority_blob": "6d922b8c80bb5836fedd8c80ee48328c1ecadcea",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d37494ad4015525c39062c9679f69b7e1f731ed8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/ACK-38.json",
+      "observed_at": "2026-11-14 22:38:53 UTC",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_NO_EXPLICIT_RELEASE_AT_OBSERVED_HEAD",
+      "release_blob": null,
+      "release_url": null,
+      "evidence": "Head unchanged; prior complete census and authority retained, no file rereads."
+    },
+    {
+      "mission": 39,
+      "pr": null,
+      "branch": "review-agenda",
+      "head": "7e524dd27d45fecf3f94c2548ba3e94d6f02469f",
+      "tree": "e64cdb3d0c973d76a6daea76654ea3d8cbe7d0f4",
+      "epoch": "review-agenda-browser39",
+      "authority_state": "IN_PROGRESS",
+      "authority_blob": "bec15551ab2572389477c61fd7f671f3eca0b02b",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e524dd27d45fecf3f94c2548ba3e94d6f02469f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/AUTHORITY.json",
+      "observed_at": "2026-11-14 22:39:03 UTC",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_EXPLICIT_RELEASE_FALSE",
+      "evidence": "Single final ref read returned exact previous commit. Prior authority states IN_PROGRESS and release:false; no redundant file reads."
+    },
+    {
+      "mission": 40,
+      "pr": 29,
+      "branch": "astra-wp10",
+      "head": "ecbc9b8b5902e3d43891631cd90d70faa340e6c4",
+      "tree": "714d43c0a9e7153c26d8c4aefa55a8a479e8e628",
+      "epoch": "memory-original-browser40",
+      "authority_state": "ACTIVE_BOUNDED_CONTINUATION",
+      "authority_blob": "335a0f1f8bf8844db0969ace630c1610d74ba2ec",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/ecbc9b8b5902e3d43891631cd90d70faa340e6c4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/memory-original-reauthorization/AUTHORITY.json",
+      "observed_at": "2026-11-14 22:39:03 UTC",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_NO_EXPLICIT_RELEASE",
+      "evidence": "Pinned mission-specific receipt directory contains only authority file; changed paths show no terminal/handoff/release receipt. Active source commits are not a release."
+    },
+    {
+      "mission": 41,
+      "pr": 30,
+      "branch": "astra-wp09",
+      "head": "e4ccf93df3e5d3ad0e8c2de0d0b07111902b62ef",
+      "tree": "7995794eaab42bc73d533c7c1bfc1d3baab34784",
+      "epoch": "routine-owner-browser41",
+      "authority_state": "IN_PROGRESS",
+      "authority_blob": "69e926b973655f2b56f2dcbd95b77df39d7b50fa",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e4ccf93df3e5d3ad0e8c2de0d0b07111902b62ef/modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/authority.json",
+      "observed_at": "2026-11-14 22:39:03 UTC",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_NO_EXPLICIT_RELEASE",
+      "evidence": "Pinned mission-specific receipt directory contains only authority file; changed paths show no terminal/handoff/release receipt. Active source commits are not a release."
+    },
+    {
+      "mission": 43,
+      "pr": 37,
+      "branch": "astra-wp13",
+      "head": "3b59ee54ca1374208cd9adca63c49e47f7a7bb79",
+      "tree": "b6c372c011340aafa0fa06b6c1a5cf4738a4db36",
+      "epoch": "portfolio-held-browser43",
+      "authority_state": "IN_PROGRESS",
+      "authority_blob": "617cec1bf5e772e472ddce0019bc84c2d107356d",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b59ee54ca1374208cd9adca63c49e47f7a7bb79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-held-closure/AUTHORITY-43.json",
+      "observed_at": "2026-11-14 22:39:03 UTC",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_NO_EXPLICIT_RELEASE",
+      "evidence": "Pinned mission-specific receipt directory contains only authority file; changed paths show no terminal/handoff/release receipt. Active source commits are not a release."
+    },
+    {
+      "mission": 44,
+      "pr": 40,
+      "branch": "astra-wp11",
+      "head": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+      "tree": "922c412d219a605c0f771dcdb7b0225c2e383b79",
+      "epoch": "decisions-composed-browser44",
+      "authority_state": "IN_PROGRESS",
+      "authority_blob": "48de0567262d437957a85f3f3a340c580b02a995",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/eadab8c975376b67ec01a8ce0342ae0b27e58b1f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/START.json",
+      "observed_at": "Final bounded control/source census; START recorded 2026-11-14T22:36:18Z",
+      "release_observed": false,
+      "disposition": "HOLD_ACTIVE_NO_EXPLICIT_RELEASE_AT_OBSERVED_HEAD",
+      "evidence": "START plus source spec change; no terminal release. START observes c5ab authority-only head; future proof must reconcile actual C12."
+    },
+    {
+      "mission": 45,
+      "pr": 32,
+      "branch": "astra-compose",
+      "head": null,
+      "tree": null,
+      "expected_head_in_control": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "epoch": "composed-checks-browser45",
+      "authority_state": "PREPARED_NOT_STARTED_IN_CONTROL",
+      "authority_blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/80b0f5d163477b6f5c4281fc0ea1abb55350ea41/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/composed-compiler-gates.json",
+      "observed_at": "Control80b0 census; live source head not reread",
+      "release_observed": false,
+      "disposition": "AWAIT_EXPLICIT_SCOPED_COMPILER_DELIVERY_NO42_EXECUTION",
+      "evidence": "Authority is prepared in control. No claim that source45 started or dispatched; source-only workflow36 remains inert."
+    },
+    {
+      "mission": 46,
+      "pr": 35,
+      "branch": "astra-finance",
+      "head": null,
+      "tree": null,
+      "expected_head_in_control": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "epoch": "current-choice-browser46",
+      "authority_state": "PREPARED_NOT_STARTED_IN_CONTROL",
+      "authority_blob": "d0a3527574cfd1b8e5ea1aba889a09eb0b4228cc",
+      "authority_url": "https://github.com/gustavomhss/Orchestra-SF/blob/18f8d33a0a288155e605fa4246ad8f5f6b4039fc/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/current-choice-cohort.json",
+      "observed_at": "Prepublication control check:18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+      "release_observed": false,
+      "disposition": "CURRENT_CHOICE_HELD_AWAIT_EXPLICIT46_RELEASE",
+      "evidence": "New prepared source continuation owns CurrentChoice cohort; excludes shared runtime/40/34/37/43/44/42 paths. No claim of started session or source delivery."
+    }
+  ],
+  "initial_census_preserved_in": "increment-01.json",
+  "control": {
+    "head": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+    "tree": "ad735ee6eec4f1e9ff6b187600850d10fb5f8ae8",
+    "intermediate": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+    "additions": [
+      {
+        "mission": 44,
+        "blob": "2b57f9dc70c8325fb8685ee9bd9c0f47a1931fe4"
+      },
+      {
+        "mission": 45,
+        "blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de"
+      },
+      {
+        "mission": 46,
+        "blob": "d0a3527574cfd1b8e5ea1aba889a09eb0b4228cc"
+      }
+    ],
+    "sole_integrator42_preserved": true,
+    "final_dispatcher": "S0",
+    "final_acceptance": "S0",
+    "control_merged": false,
+    "previous_head": "80b0f5d163477b6f5c4281fc0ea1abb55350ea41",
+    "final_prepublication_read": "Exact integration head36521 unchanged; control advanced one commit adding only current-choice-cohort.json. COMMON/42/44/45 unchanged; full46 file read before publication."
+  },
+  "source_observations": [
+    {
+      "owner": 40,
+      "source_ref": "be2766b119d213e83781884c130dc3dae6867462",
+      "authority_blob": "335a0f1f8bf8844db0969ace630c1610d74ba2ec",
+      "same_authority_blob_at": "ecbc9b8b5902e3d43891631cd90d70faa340e6c4",
+      "exact_excerpt": "Proposal would recurse through installed caseForEvidence -> public readOriginal",
+      "relationship": "Source40 published review of source35 proposal; no new qualified release observed. Keep35 runtime proposal inert until40 explicitly releases a coherent runtime fix.",
+      "status": "OWNER_STATIC_FINDING_NOT_NEW_INTEGRATOR_RUNTIME_PROOF"
+    },
+    {
+      "owner": 41,
+      "authority_blob": "69e926b973655f2b56f2dcbd95b77df39d7b50fa",
+      "exact_excerpt": "Authenticated SF Request-to-native Maestro admission/continuation origin; native hooks exist but contain no SF Request, while resident SF admission does not own Maestro.",
+      "status": "PUBLISHED_MISSING_CAPABILITY_OBSERVATION; SOURCE41_IN_PROGRESS"
+    },
+    {
+      "owner": 43,
+      "authority_blob": "617cec1bf5e772e472ddce0019bc84c2d107356d",
+      "exact_excerpt": "Separate HELD owner requirement; not closed by P01-P04.",
+      "relationship": "CurrentChoice remains separate and held regardless of future P02-P04 intake."
+    }
+  ],
+  "all_ready_independent_material_disposition": "Atlas35 and finalC12/32 consumed into C12; explicitly terminalReports36 received and held with concrete semantic owner finding; other observed sources have no released eligible output.",
+  "tests": "NOT_RUN",
+  "CI": "NOT_RUN",
+  "AM": "NOT_RUN",
+  "global_release": false
+}

@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h.rolling-intake-42.finding-routing-final.v1",
+  "mission": 42,
+  "recorded_at": "2026-11-14 22:50:51 UTC",
+  "candidate": {
+    "symbol": "C12",
+    "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+  },
+  "prior_route_preserved": {
+    "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/finding-routing.json",
+    "blob": "3b80df7170d3a3c983f99e4bf2ff81085ad56682",
+    "meaning": "Initial source census/proposal status is historical. This final record adds actual terminal36 disposition and later control44/45/46 owners; it does not rewrite source findings."
+  },
+  "routes": [
+    {
+      "id": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "owner": "Reports36 + actual Collaboration/WP08 producer owner",
+      "status": "HOLD_ALL14_ATOMIC_ACTIVE_TARGETS",
+      "record": "reports36-semantic-review.json",
+      "excerpt": "if (mode === \"collaboration-thread-read\" && result?.reason === \"thread-access-unavailable\") throw lost()",
+      "contradiction": "Actual C12 threads.read returns the same result when a second authorized read has a different digest or becomes unavailable; new consumer purges draft and intent without evidence of revocation.",
+      "required": "Separate producer/consumer discriminants for recoverable read drift/unavailability versus actual access loss. Preserve pending exact payload/key and genuine privacy purge; release full coherent atomic correction.",
+      "test_status": "STATIC_INFERENCE_ONLY_NO_RUNTIME_REPRODUCTION"
+    },
+    {
+      "id": "M35-C17-ORIGINAL-REVALIDATION",
+      "owner": "Memory40 / PR29",
+      "status": "SOURCE_RUNTIME_FAIL_OPEN_PROPOSAL35_INERT",
+      "record": "source-results-final.json#/atlas35",
+      "required": "Reauthorize public original egress against current real source integrity and independent observations; qualify recall/replay without additional effects; provide explicitly released full pre/post closure.",
+      "source_results": "RestartPASS and C17FAIL both retained; later replay assertionsNOT_REACHED."
+    },
+    {
+      "id": "M40-PROPOSAL35-RECURSION",
+      "owner": "Memory40 / PR29",
+      "status": "OWNER_STATIC_FINDING_OPEN",
+      "excerpt": "Proposal would recurse through installed caseForEvidence -> public readOriginal",
+      "required": "Reconcile actual installed dependency before any runtime proposal activation; qualified release40 required.",
+      "evidence_blob": "335a0f1f8bf8844db0969ace630c1610d74ba2ec"
+    },
+    {
+      "id": "REPORTS36-SHARED-ROUTER-DUPLICATE-MOUNT",
+      "owner": "Reports36 / existing authorized qualification owner",
+      "status": "CURRENT_IMPLEMENTATION_EQUIVALENT_KEEP_CURRENT",
+      "current_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "offered_blob": "edc4d574854a39583fb6847e4e8bb135ede93cc1",
+      "required": "Rebase source qualification on actual coherent candidate. Do not overwrite newer comment/evidence; do not convert static router equivalence into a nominal PASS."
+    },
+    {
+      "id": "REPORTS36-APP-E2E-TYPECHECK",
+      "owner": "Compiler45 / PR32 with Reports36",
+      "status": "NOT_RUN_WORKFLOW_PROPOSAL_INERT",
+      "required": "Use actual45 scoped route authority and candidate identity; complete new tooling inputs require qualified source release and integration. No42 typecheck/CI/workflow ref action."
+    },
+    {
+      "id": "CURRENT-CHOICE-COHORT",
+      "owner": "CurrentChoice46 / PR35",
+      "status": "HELD_PREPARED_SOURCE_AUTHORITY",
+      "control_blob": "d0a3527574cfd1b8e5ea1aba889a09eb0b4228cc",
+      "required": "Complete explicit source cohort release againstC12 with real Request/lease/snapshot fencing and retained immutable history. Portfolio43 has separate scope."
+    },
+    {
+      "id": "M44-CANDIDATE-REBIND",
+      "owner": "Decisions44 / PR40",
+      "status": "OPEN_REFERENCE_RECONCILIATION",
+      "required": "START observes c5ab authority-only C11. Future work/proof must reconcile exactC12 6470 and final32 fixture. Preserve source37 ownership and prior five nominal cases."
+    }
+  ],
+  "remaining_routes": "pending-owners-final.json preserves all50 prior records plus6 new obligations; no mandatory finding waived.",
+  "communication": "Published handoff files only. No email, Slack, issue comment or external message.",
+  "functional_acceptance": false,
+  "global_release": false
+}

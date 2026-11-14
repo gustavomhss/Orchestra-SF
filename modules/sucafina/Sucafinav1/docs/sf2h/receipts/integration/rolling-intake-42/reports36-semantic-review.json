@@ -1,0 +1,140 @@
+{
+  "schema": "sf2h.rolling-intake-42.semantic-finding.v1",
+  "finding": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+  "status": "HOLD_SEMANTIC_CONTRADICTION",
+  "decision": "Root integrator42 explicitly holds all14 atomic active targets; preserve42receipt originals and10own postimages inert. C12material6470bebdc9bb5044df7959e697cb7d8629157e23 remains candidate.",
+  "source_terminal": {
+    "commit": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+    "tree": "d832c7b7568b713cee5830b9786d944a6e5b51ea",
+    "epoch": "reports-browser36",
+    "product": "73b716b89d84dfba10070cf4a9369ca9c9e75159"
+  },
+  "target": {
+    "product_commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "product_tree": "18217d590d6c009f6a9a4381c18124a359799d88",
+    "documentary_head": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "documentary_tree": "d6cc2b9f562ddc390e13a0645aae510bb5bd4e13",
+    "root_verified_documentary_delta": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1 adds only four C12 ACK/checkpoint documents; no target product path changes."
+  },
+  "assurance": "Static source/contract contradiction, not runtime reproduction. No product code was executed.",
+  "evidence": [
+    {
+      "role": "new_consumer",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+      "lines": "75-77",
+      "snippet": "      // C6's reader can mask denial as unavailable. Only this read is terminal;\n      // an action returning the same legacy 503 still has an unknown outcome.\n      if (mode === \"collaboration-thread-read\" && result?.reason === \"thread-access-unavailable\") throw lost()"
+    },
+    {
+      "role": "consumer_access_loss",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+      "lines": "36-40",
+      "snippet": "  const dispose = () => { disposed = true; pending.forEach((controller) => controller.abort()); pending.clear() }\n  const lost = () => {\n    if (!disposed) { dispose(); accessLost() }\n    return new ReviewDiscussionError(\"Review discussion access changed. Reopen an authorized review.\", \"access\", \"rejected\")\n  }"
+    },
+    {
+      "role": "view_global_signal",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+      "lines": "36-39",
+      "snippet": "  const client = createReviewDiscussionClient(() => {\n    dispose()\n    window.dispatchEvent(new Event(\"sf-access-revoked\"))\n  })"
+    },
+    {
+      "role": "view_destructive_disposal",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+      "lines": "410-421",
+      "snippet": "  function accessRevoked() { dispose() }\n  function dispose(message?: string) {\n    if (closed) return\n    closed = true; thread = undefined; prepared = undefined; intent = undefined\n    replies.clear(); edits.clear()\n    question.value = \"\"\n    root.querySelectorAll(\"textarea\").forEach((element) => { element.value = \"\" })\n    window.removeEventListener(\"sf-access-revoked\", accessRevoked)\n    window.removeEventListener(\"pagehide\", accessRevoked)\n    client.dispose(); root.replaceChildren(); root.inert = false\n    if (message) root.append(heading(\"Review discussion unavailable\"), paragraph(message))\n    else root.remove()"
+    },
+    {
+      "role": "current_producer_ambiguous_result",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "ref": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+      "blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+      "lines": "84-94",
+      "snippet": "    read: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {\n      if (typeof id !== \"string\" || !id.trim()) return { status: \"needs-input\", reason: \"invalid-thread-reference\" }\n      const request = input.host.requestFor(context)\n      if (!request || !await input.host.revalidate(context)) return { status: \"denied\", reason: \"thread-access-unavailable\" }\n      const read = await input.state.read(request, \"threads\", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)\n      if (read.status === \"preview\") return { status: \"unavailable\", reason: \"unexpected-state-preview\" }\n      if (\"reason\" in read) return read\n      if (!isThread(read.value) || read.value.id !== id || !await input.authorize(read.value, context, \"read\") || !await input.host.revalidate(context)) return { status: \"unavailable\", reason: \"thread-access-unavailable\" }\n      const again = await input.state.read(request, \"threads\", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)\n      if (again.status !== \"ok\" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(read.value) || !await input.authorize(again.value, context, \"read\") || !await input.host.revalidate(context)) return { status: \"unavailable\", reason: \"thread-access-unavailable\" }\n      return { status: \"ok\", value: publicThreadProjection(read.value) }"
+    }
+  ],
+  "static_counterexample": [
+    "Maintain the same admitted principal/accessRevision and a legitimate authorized thread.",
+    "A thread-read observes one thread value. Another legitimate reply/edit changes the thread before the second state read.",
+    "The second read remains authorized but its digest differs; threads.read returns unavailable/thread-access-unavailable.",
+    "The published new client interprets that ambiguous result as lost(), disposes, invokes the callback and emits sf-access-revoked.",
+    "The published view clears intent, replies, edits, question and all textareas despite no evidence of revoked authorization. A second-read storage failure takes the same branch."
+  ],
+  "required_owner_correction": [
+    "Separate real denial/binding/scope changes from transient read unavailability and content drift in the producer/client contract. An ambiguous503 cannot itself establish revocation.",
+    "For recoverable unavailability/drift retain private dirty drafts and the serialized pending intent/key while suspending actions until authorized reconciliation; never invent authorization or automatically retry a write.",
+    "Preserve purge on genuine401/403/denied, changed access binding/scope/target, logout and stale asynchronous generations.",
+    "Return a complete explicitly released coherent correction with exact source/pre/post/epoch; reconcile new producer path dependencies because existing4boundarypatches do not modify threads.ts."
+  ],
+  "atomicity": {
+    "hold_all14": true,
+    "no_partial_active_intake": true,
+    "inert_archive_allowed": true
+  },
+  "routing_line": "Reports36 / coordinate Agenda39 and the actual Collaboration producer owner: client144aa0f9137403735ffdfd85c9b5ea7963613cb2 at collaboration-client.ts:75-77 treats thread-read/thread-access-unavailable as lost(); C12 threads.ts a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f:92-93 returns it for authorized digest drift or storage failure. Correct the distinction and retain draft+intent under recoverable failure; release the client/view and all required producer boundaries atomically. Existing proposed shared images remain inert and unaccepted.",
+  "integrity_disposition": "All14 pre/post identities and42receipt source bytes/hashes are coherent. Integrity does not remove this semantic HOLD.",
+  "reported_at": "2026-11-14 22:50:51 UTC",
+  "integrator": "S0-C-e8-browser42",
+  "owner": "Reports36 / S3-A / PR27, with actual Collaboration/WP08 producer owner; coordinate Agenda39 if touching its disjoint scope",
+  "ack": "consumer-acks-final.json#ACK42-03-REPORTS36",
+  "publication": {
+    "expected_parent": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "parent_tree": "d6cc2b9f562ddc390e13a0645aae510bb5bd4e13",
+    "identity": "Exact containing commit and tree are resolved from GitHub; PR65 summary records the actual published SHA/tree after CAS and readback.",
+    "product_candidate": {
+      "symbol": "C12",
+      "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+      "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+    },
+    "material_delta": false,
+    "new_candidate_required": false,
+    "reason": "Only newly received provenance, inert source images and terminal checkpoint records are added. The C12 product/test/fixture/config blob set remains unchanged."
+  },
+  "root_independently_read": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+      "scope": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+      "scope": "callback and full dispose plus relevant caller sections"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+      "scope": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+      "blob": "2d5cc3832da8d26ad1e30978f6f49c80191620c3",
+      "scope": "full"
+    }
+  ],
+  "independent_reviewers": [
+    "finance_reports_sources",
+    "memory_native_portfolio"
+  ],
+  "related_producer": {
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+    "blob": "2d5cc3832da8d26ad1e30978f6f49c80191620c3",
+    "ref": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "excerpt": "    if (again.status !== \"ok\" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued) || !await authorizeCurrent() || preserved && !await input.authorizeHistorical!(historyRefs, context) || reviewBasis && !await input.authorizeContext!(reviewBasis, context) || !await input.host.revalidate(context)) return { status: \"unavailable\", reason: \"thread-access-unavailable\" }",
+    "effect": "The recipient reader also groups content/issued-reference drift and real authority loss under the same unavailable reason; the corrected contract must cover the actual recipient/fallback path."
+  },
+  "source_limit_already_recorded": {
+    "path": "source-outputs/reports36/shared-patches/review-discussion-binding/manifest.json",
+    "blob": "953a2f3b5813c41dc5e5967896547be04fd05924",
+    "excerpt": "Existing thread readers may report source/recipient unavailability as HTTP503; callers must not infer current authorization from a generic unavailable result."
+  },
+  "required_qualification": "Owner must return a complete released producer/consumer correction and evidence distinguishing authorized concurrent drift/storage unavailability/unknown mutation outcome from genuine authority loss. Preserve the original serialized payload/key; no automatic write retry or fabricated authorization. Execution remains with the existing authorized source/qualification owner, not mission42.",
+  "runtime_reproduced": false,
+  "communication": "Committed repository handoff only; no external messages."
+}

@@ -1,0 +1,15 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+    "Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+    "Sucafinav1/test/product/wp07/browser-build.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

@@ -1,0 +1,14 @@
+Repository: Effect-TS/effect
+Commit: cd7ab658994104bd6fe8f841f1440bea32c387f5
+Tag resolved at read: effect@4.0.0-beta.83
+Path: packages/effect/src/unstable/http/HttpRouter.ts
+Full source Git blob: 3a52c4acd7938674bc209059212efd745cff9715
+Excerpt: lines 143-149
+
+        if (route.method === "*") {
+          if (route.path.endsWith("/*")) {
+            router.all(route.path, route as any)
+            router.all(route.path.slice(0, -2) as any, route as any)
+          } else {
+            router.all(route.path, route as any)
+          }
