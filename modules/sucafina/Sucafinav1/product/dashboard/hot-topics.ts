@@ -20,7 +20,7 @@ export function createHotTopicPort(host: HotTopicHost) {
     create: (input: HotTopicIntent, binding: TrustedDomainContext) => {
       const intent = (() => { try { return structuredClone(input) } catch { return undefined } })()
       if (!intent || !Array.isArray(intent.sourceRefs) || [intent.correlationKey, intent.action, intent.owner, intent.due, intent.priority, intent.notes].some((value) => typeof value !== "string")) return Promise.resolve({ status: "needs-input" as const, reason: "invalid-intent" })
-      return host.transact<{ state: "created" | "existing"; topic: HotTopic }>(binding, intent.sourceRefs, (snapshot, actor, environment, correlations) => {
+      return host.transact<{ state: "created" | "existing"; topic: HotTopic }>(binding, intent.sourceRefs, (snapshot, actor, _environment, correlations) => {
         if (!intent.correlationKey.trim() || !intent.action.trim() || !intent.sourceRefs.length) return { commit: false, value: { status: "needs-input", reason: "intent-and-source-required" } }
         if (!actor.canWrite || !actor.roles.some((role) => role === "admin" || role === "domain leader")) return { commit: false, value: { status: "denied", reason: "hot-topic-write-denied" } }
         const key = digestSfValue({ correlationKey: intent.correlationKey })
@@ -29,15 +29,17 @@ export function createHotTopicPort(host: HotTopicHost) {
         if (existing) {
           if (existing.digest !== digest) return { commit: false, value: { status: "conflict", reason: "correlation-reused" } }
           const topic = read(snapshot, actor, existing.id)
-          return topic ? { commit: false, value: { status: "ok", value: { state: "existing" as const, topic } } } : { commit: false, value: { status: "unavailable", reason: "action-unavailable" } }
+          if (!topic) return { commit: false, value: { status: "unavailable", reason: "action-unavailable" } }
+          if (!existing.targetIncarnation) return { commit: false, value: { status: "unavailable", reason: "action-identity-unbound" } }
+          const currentIncarnation = actionIncarnation(snapshot, existing.id)
+          if (!currentIncarnation) return { commit: false, value: { status: "unavailable", reason: "action-identity-unavailable" } }
+          if (currentIncarnation !== existing.targetIncarnation) return { commit: false, value: { status: "unavailable", reason: "action-replaced" } }
+          return { commit: false, value: { status: "ok", value: { state: "existing" as const, topic } } }
         }
-        const result = DashboardPeople.domain.execute(snapshot, actor, { page: "Hot Topics & Actions", action: "save", version: 0, values: { action: intent.action, owner: intent.owner, due: intent.due, priority: intent.priority, notes: intent.notes } }, environment)
-        if (!result.ok) return { commit: false, value: { status: result.status === 403 ? "denied" : result.status === 409 ? "conflict" : "needs-input", reason: result.errors?.join("; ") || "action-rejected" } }
-        const id = typeof result.value === "object" && result.value !== null && "id" in result.value ? String(result.value.id) : ""
-        const topic = read(snapshot, actor, id)
-        if (!topic) return { commit: false, value: { status: "unavailable", reason: "action-unavailable" } }
-        correlations[key] = { digest, id }
-        return { commit: true, value: { status: "ok", value: { state: "created" as const, topic } } }
+        // The published host finalizes source identities after this callback. Until it
+        // exposes atomic creation/binding, neither a textual ID nor a later write can
+        // establish which physical action this correlation created.
+        return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
       })
     },
     read: (id: string, sourceRefs: readonly BusinessEvidenceRef[], binding: TrustedDomainContext) => {
