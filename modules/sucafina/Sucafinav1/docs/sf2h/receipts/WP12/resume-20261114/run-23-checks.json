@@ -1,0 +1,149 @@
+{
+  "schema": "sf-wp12-exact-hosted-check-result-v1",
+  "phase": "resume-23",
+  "status": "VERIFIED_EXACT_HOSTED_CHECK_SUCCESS",
+  "product": {
+    "sha": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+    "tree": "60950d5e873a4f5a05a2284ffbd56d5f041f013b"
+  },
+  "check": {
+    "snapshot": "6479e6e746388948b48698761899c9f0aa135575",
+    "tree": "4e6cc81d39521eba22dfc9863f421856c61c9961",
+    "directParent": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+    "onlyEnvelopePath": ".astra-wp12-check.json",
+    "branch": "astra-check-wp12",
+    "runId": 43619106397,
+    "jobId": 132520532225,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619106397",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-11-14T17:04:46Z",
+    "completedAt": "2026-11-14T17:06:22Z",
+    "runUpdatedAt": "2026-11-14T17:06:23Z",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "envelope": {
+      "bytes": 119,
+      "sha256": "fe6d354bd3ea269771d68c8b7f85347f44b5e57765d71b0f8756adeff6cea8f3",
+      "blob": "e7e0159fbb326e5ea4e51bc9936d79998217aa35",
+      "candidateShaOmitted": true
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "packageCommand": "bun --cwd Sucafinav1 typecheck",
+      "compilerCommand": "tsgo --noEmit",
+      "status": "success",
+      "diagnostics": 0,
+      "logLines": [
+        580,
+        586
+      ],
+      "scope": "Full Sucafina package, not a delivery-only check."
+    },
+    "spawnImports": {
+      "command": "bun run check:spawn-imports",
+      "status": "success",
+      "filesChecked": 4618,
+      "allowListedSites": 66,
+      "logLines": [
+        589,
+        593
+      ]
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "success",
+      "rules": 78,
+      "changedPaths": 1147,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0,
+      "logLines": [
+        596,
+        615
+      ]
+    }
+  },
+  "log": {
+    "path": "evidence/resume-23-check.log",
+    "bytes": 64996,
+    "sha256": "6ada5a2ec22f8902ff4d40f3a78f2464e63da2e336d4fe111ba5eccaca8124fd",
+    "blob": "06dc7ca86a64da540308814c497a6a347cf15846",
+    "lineCount": 689,
+    "fetchCount": 1,
+    "fetchCountBasis": "Root reports one GitHub MCP log fetch; this review reuses the exact saved transport and compares its UTF-8 bytes without another request.",
+    "transportExact": true,
+    "bundled": false,
+    "source": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132520532225/logs"
+  },
+  "artifact": {
+    "id": 14123247583,
+    "name": "astra-wp12-check-1",
+    "bytes": 1423,
+    "digest": "sha256:02d9d9d0d137313e62aec37de0eff0ba34e53e7f61a084fb1926027e9fccbc95",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619106397/artifacts/14123247583",
+    "qualification": "Digest and size agree between GitHub artifact metadata and the job upload log; ZIP contents were not downloaded or inspected here."
+  },
+  "validatedOwnSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+      "blob": "749063953007e4e0d216dcaf278337de45ef6e3d",
+      "sha256": "fe0c909f2c53da5147ca59cab68cc80f24dbfafa292c904042720e15dfb7da5a",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+      "blob": "a3fa276e8824affe75842cec6a8a11c224366f71",
+      "sha256": "36fea4c59715b3e45aaa435fd5321a8623dc9180dad668f5cc2b243da5c4b123",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "blob": "c146fe374294f07f38c5beae9d34147d97c94968",
+      "sha256": "a71fba2c0ebcb2e1f73cf2b9abe9ef83434e86a54701d63f619ce69510f80b15",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    }
+  ],
+  "resolvedPreviousDiagnostic": {
+    "runId": 43618678972,
+    "jobId": 132519258483,
+    "productSha": "5e768df0473a75b2436e3208350155c96708b1c6",
+    "file": "test/product/wp12/native-execution-forecast-kpi.test.ts",
+    "line": 106,
+    "column": 37,
+    "code": "TS2769",
+    "correctionBlob": "749063953007e4e0d216dcaf278337de45ef6e3d",
+    "change": "Nine-byte as const annotation preserves the refusal tuple literal types. The independently checked emitted JavaScript is byte-identical.",
+    "correctionReview": "preparation-23-typefix-review.json",
+    "statusAtExactW28": "ABSENT_ZERO_PACKAGE_DIAGNOSTICS"
+  },
+  "provenance": {
+    "runJobsArtifacts": {
+      "path": "resume-input/check-23-terminal-mcp.json",
+      "bytes": 37705,
+      "sha256": "949635abeefceb1f885af343f131e91492aa770899bf3367501d31fba72fad78",
+      "blob": "f0890c20d2dadc7bec03108944e0c4c98b9f1d50"
+    },
+    "logTransport": {
+      "path": "resume-input/check-23-log-transport.json",
+      "bytes": 66690,
+      "sha256": "cbd724b105bef4b032f52ab97c9f9083d4b591a216e1c73b379a1bab0fd0c76c",
+      "blob": "9108f008020a25234bdd148fb33a2ff649de713d"
+    },
+    "productAndEnvelope": {
+      "path": "resume-input/w28-ci/published-mcp-proof.json",
+      "bytes": 36943,
+      "sha256": "bbd4b79813ae95f132a0b35232102fa43eecea3c1cdec6e871ca12e457ab3536",
+      "blob": "7afa9a1ff9c798579856e4f62bc280d9fb03b1e5"
+    },
+    "verification": "Exact saved GitHub MCP capsules plus local byte/hash and bounded log inspection only; no new remote request."
+  },
+  "productExecution": "Separate W28 product flight. Check success alone does not prove any mission, model inference, output, consumer or canonical WP12 acceptance.",
+  "localProductTests": false,
+  "localTypecheck": false,
+  "newRemoteRequests": 0,
+  "remoteMutationsByReviewer": 0,
+  "ciDispatchesByReviewer": 0,
+  "foreignSourceChanges": 0,
+  "fullWp12": false
+}
