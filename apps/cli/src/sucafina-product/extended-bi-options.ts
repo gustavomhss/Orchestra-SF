@@ -21,8 +21,10 @@ export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof 
   const issueDashboard = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
   const read = async (viewId: string, period: Period, call: TrustedDomainContext): Promise<PortResult<SfBiOptions>> => {
     if (!biViews.some((view) => view.id === viewId)) return { status: "needs-input", reason: "unknown-bi-view" }
-    const request = authority.host.requestFor(call)
-    if (!request || !await authority.host.revalidate(call)) return { status: "denied", reason: "bi-options-authority-unavailable" }
+    const request = authority.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), filters = digestSfValue({ viewId, period })
+    const current = () => request !== undefined && authority.host.requestFor(call) === request && !request.signal.aborted &&
+      binding === digestSfValue([call.kind, call.binding]) && filters === digestSfValue({ viewId, period })
+    if (!request || !current() || !await authority.host.revalidate(call) || !current()) return { status: "denied", reason: "bi-options-authority-unavailable" }
     const value: SfBiOptions = { choices: [], versions: [], links: [], limitations: [] }
     const dashboard = resolveDashboardBiSelection(viewId, period)
     if (dashboard) {
@@ -69,29 +71,11 @@ export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof 
       const authorized: SfStoredDecisionResult[] = []
       for (const entry of found.value) {
         const result = await business.withCase(call, entry.caseRef, {}, () => business.results.read({ kind: entry.result.kind, resultRef: entry.result.resultRef }, call))
-        if (result.status === "ok") authorized.push(result.value)
+        if (result.status === "ok") authorized.push(structuredClone(result.value))
       }
-      const choices = new Map<string, SfBiChoice>()
-      for (const result of authorized) {
-        if (result.kind === "comparison") {
-          const scenario = authorized.find((entry) => entry.kind === "scenario" && entry.resultRef === result.result.alternativeResultRef && digestSfValue(entry.caseRef) === digestSfValue(result.caseRef))
-          if (!scenario || scenario.kind !== "scenario" || scenario.result.horizon.start !== period.start || scenario.result.horizon.end !== period.end) continue
-          const sensitivities = authorized.filter((entry) => entry.kind === "sensitivity" && entry.result.scenarioRef === scenario.resultRef && digestSfValue(entry.caseRef) === digestSfValue(scenario.caseRef))
-          const selected = viewId === "BI11" ? sensitivities : [undefined, ...sensitivities]
-          for (const sensitivity of selected) {
-            const selectionRef = sfDecisionBiSelection({ scenarioResultRef: scenario.resultRef, comparisonRef: result.resultRef, ...(sensitivity ? { sensitivityResultRef: sensitivity.resultRef } : {}) })
-            choices.set(selectionRef, { label: `Case ${result.caseRef.id} · cenário ${scenario.resultRef} · comparação ${result.resultRef}${sensitivity ? ` · sensibilidade ${sensitivity.resultRef}` : ""}`, selectionRef, caseRef: result.caseRef })
-          }
-        }
-        if (viewId !== "BI11" && result.kind === "portfolio") for (const combination of result.result.combinations) {
-          const reference = combination.analysis?.scenarioResultRef
-          const scenario = reference && authorized.find((entry) => entry.kind === "scenario" && entry.resultRef === reference && digestSfValue(entry.caseRef) === digestSfValue(result.caseRef))
-          if (!scenario || scenario.kind !== "scenario" || scenario.result.horizon.start !== period.start || scenario.result.horizon.end !== period.end) continue
-          const selectionRef = sfDecisionBiSelection({ portfolioResultRef: result.resultRef, sourceScenarioRef: scenario.resultRef })
-          choices.set(selectionRef, { label: `Case ${result.caseRef.id} · portfolio ${result.resultRef} · cenário ${scenario.resultRef}`, selectionRef, caseRef: result.caseRef })
-        }
-      }
-      for (const choice of choices.values()) {
+      const choices = sfDecisionBiChoices(viewId, period, authorized)
+      if (choices.status !== "ok") return choices
+      for (const choice of choices.value) {
         const selected = { viewId, selectionRef: choice.selectionRef, period }
         const digest = digestSfValue(selected)
         const admitted = await authority.ui.admit(request, "sf_bi_view", digest)
@@ -105,7 +89,56 @@ export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof 
       }
       if (!value.choices.length) value.limitations.push("Nenhum conjunto de resultados preservados, vinculados e autorizado cobre este período. Selecione ou produza os resultados no case.")
     }
-    return await authority.host.revalidate(call) ? { status: "ok", value } : { status: "denied", reason: "bi-options-authority-changed" }
+    return current() && await authority.host.revalidate(call) && current() ? { status: "ok", value } : { status: "denied", reason: "bi-options-authority-changed" }
   }
   return { read, caseFor: input.bi.caseFor }
+}
+
+/** Enumerate identifiers from already authorized records; each choice still gets a fresh producer read. */
+export function sfDecisionBiChoices(viewId: string, period: Period, authorized: readonly SfStoredDecisionResult[]): PortResult<SfBiChoice[]> {
+  // Match the existing record-enumeration budget. Check the entire planned
+  // cardinality before constructing a Cartesian selection or invoking C16.
+  const maximum = 300, budget = { count: 0 }
+  const overflow = (): PortResult<never> => ({ status: "needs-input", reason: "too-many-bi-choices-refine-period-or-select-case-in-workbench" })
+  if (authorized.length > maximum) return overflow()
+  const reserve = (count: number) => {
+    if (count > maximum - budget.count) return false
+    budget.count += count
+    return true
+  }
+  const choices = new Map<string, SfBiChoice>()
+  const plans: (() => void)[] = []
+  for (const result of authorized) {
+    if (result.kind === "comparison") {
+      const scenario = authorized.find((entry) => entry.kind === "scenario" && entry.resultRef === result.result.alternativeResultRef && digestSfValue(entry.caseRef) === digestSfValue(result.caseRef))
+      if (!scenario || scenario.kind !== "scenario" || scenario.result.horizon.start !== period.start || scenario.result.horizon.end !== period.end) continue
+      const sensitivities = authorized.filter((entry) => entry.kind === "sensitivity" && entry.result.scenarioRef === scenario.resultRef && digestSfValue(entry.caseRef) === digestSfValue(scenario.caseRef))
+      const selected = viewId === "BI11" ? sensitivities : [undefined, ...sensitivities]
+      const inverse = authorized.filter((entry) => entry.kind === "comparison" && entry.resultRef !== result.resultRef &&
+        digestSfValue(entry.caseRef) === digestSfValue(result.caseRef) && entry.result.baselineResultRef === result.result.alternativeResultRef &&
+        entry.result.alternativeResultRef === result.result.baselineResultRef)
+      // Keep the original option and expose every exact persisted inverse as
+      // a separate human choice. Never pick the first/latest or create a result.
+      if (!reserve(selected.length * (inverse.length + 1))) return overflow()
+      plans.push(() => {
+        for (const sensitivity of selected) for (const advantage of [undefined, ...inverse]) {
+          const selectionRef = sfDecisionBiSelection({ scenarioResultRef: scenario.resultRef, comparisonRef: result.resultRef,
+            ...(sensitivity ? { sensitivityResultRef: sensitivity.resultRef } : {}), ...(advantage ? { advantageComparisonRef: advantage.resultRef } : {}) })
+          choices.set(selectionRef, { label: `Case ${result.caseRef.id} · cenário ${scenario.resultRef} · comparação ${result.resultRef}${sensitivity ? ` · sensibilidade ${sensitivity.resultRef}` : ""}${advantage ? ` · vantagem ${advantage.resultRef}` : ""}`, selectionRef, caseRef: result.caseRef })
+        }
+      })
+    }
+    if (viewId !== "BI11" && result.kind === "portfolio") for (const combination of result.result.combinations) {
+      const reference = combination.analysis?.scenarioResultRef
+      const scenario = reference && authorized.find((entry) => entry.kind === "scenario" && entry.resultRef === reference && digestSfValue(entry.caseRef) === digestSfValue(result.caseRef))
+      if (!scenario || scenario.kind !== "scenario" || scenario.result.horizon.start !== period.start || scenario.result.horizon.end !== period.end) continue
+      if (!reserve(1)) return overflow()
+      plans.push(() => {
+        const selectionRef = sfDecisionBiSelection({ portfolioResultRef: result.resultRef, sourceScenarioRef: scenario.resultRef })
+        choices.set(selectionRef, { label: `Case ${result.caseRef.id} · portfolio ${result.resultRef} · cenário ${scenario.resultRef}`, selectionRef, caseRef: result.caseRef })
+      })
+    }
+  }
+  for (const plan of plans) plan()
+  return { status: "ok", value: [...choices.values()] }
 }

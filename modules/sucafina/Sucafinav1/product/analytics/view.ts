@@ -11,6 +11,7 @@ import { renderWaterfall, resolveWaterfall } from "./waterfall.ts"
 import { renderTimeline } from "./milestones.ts"
 import { hasBiDecision } from "./projection.ts"
 import { renderDecisionView } from "./decision-view.ts"
+import { renderScenarioAdvantage } from "./advantage-view.ts"
 import { renderPortfolioView } from "./portfolio-view.ts"
 import { renderBiFilters } from "./filter-controls.ts"
 import type { BiFilterControls } from "./filter-controls.ts"
@@ -56,6 +57,8 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       }
     }
     section.append(renderDecisionView(decision.scenario, decision.comparison, decision.sensitivity, navigation?.openSource, navigation?.openEvidence, navigation?.openCoverage, navigation?.openQuestion, navigation?.openResult))
+    const advantage = renderScenarioAdvantage(projection, navigation?.openResult, navigation?.openEvidence)
+    if (advantage) section.append(advantage)
   }
   if (decision?.kind === "portfolio") {
     const ref = document.createElement("p")

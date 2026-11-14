@@ -53,6 +53,8 @@ import { createSfAnalysisHostServices } from "./analysis-host-services.ts"
 import { createSfAnalysisHttp } from "./analysis-http.ts"
 import { createSfForecastInputAdapter } from "./forecast-input-adapter.ts"
 import { sfAnalysisSourceNamespaces } from "./analysis-namespaces.ts"
+import { createSfStaleAnalysisAccess } from "./analysis-stale-commit.ts"
+import { createSfAnalysisRunContext } from "./analysis-run-context.ts"
 import type { SfAnalysisStartInput } from "./analysis-http.ts"
 import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/product/integration/host-presentation.ts"
 import { createSfRoutinePublicationContribution } from "./routine-publication.ts"
@@ -415,13 +417,8 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const baseRequest = captured.request
       const verifiedInput = structuredClone(skillInput)
       const selectedRuntime = structuredClone(chosen)
-      const withRunContext = async <T>(id: string, action: (call: TrustedDomainContext) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
-        if (id !== runRef || request.signal.aborted || !identity()) return { status: "denied", reason: "analysis-authority-unavailable" }
-        const admitted = await authority.human.admit(request, "analysis.start", captured)
-        if (admitted.status !== "ok") return admitted
-        replayContexts.set(admitted.value, runRef)
-        try { return await business.withCase(admitted.value, baseRequest.caseRef, {}, () => action(admitted.value)) } finally { replayContexts.delete(admitted.value); authority.human.finish(admitted.value) }
-      }
+      const withRunContext = createSfAnalysisRunContext({ authority, business, request, runRef, caseRef: baseRequest.caseRef,
+        start: captured, active: () => !!identity(), replayContexts })
       const verify = async (call: TrustedDomainContext) => {
         const result = await withMaterialSelection(call, "analysis.start", captured, () => verifier.verify(verifiedInput, baseRequest, call))
         if (result.status !== "ok" || digestSfValue(result.value.input) !== digestSfValue(verifiedInput) ||
@@ -462,15 +459,17 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       }
       const runState = createSfAlternativeRunState({ state: authority.state, proposalCoverageWrites, nativePublicationGuards, captureCurrent, runRef,
         captures: () => [...alternativeCaptures.get(runRef)?.values() ?? []] })
-      const store = createSfRunStore({ state: runState, readCapturedAlternative: nativeInputs.readCapturedAlternative, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
+      const staleAccess = createSfStaleAnalysisAccess({ authority, persistence: input.persistence, context: business.context, request, start: captured,
+        proof: { runRef, caseRef: baseRequest.caseRef, contextFingerprint: fingerprint, evidenceRefs: first.sources.map((source) => source.ref) } })
+      const store = staleAccess.wrapStore(createSfRunStore({ state: runState, readCapturedAlternative: nativeInputs.readCapturedAlternative, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
         requiredNamespaces: sfAnalysisSourceNamespaces(fullRequest.skillId),
         preflight: async (record, call, output) => {
+          if (record.state === "stale") return staleAccess.preflight(record, call, output)
           if (record.state === "cancelled") {
             const current = await readForCancellation(record.runRef, call)
             if (current.status !== "ok" || current.value.native?.sessionID !== record.native?.sessionID)
               return { status: "denied", reason: "analysis-cancellation-unavailable" }
             const dashboard = await input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) }))
-            fences.current = { dashboard, planner: "", procurement: "" }
             return { status: "ok", value: { sourceFence: dashboard } }
           }
           const before = await readFences()
@@ -489,8 +488,9 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           return { status: "ok", value: { sourceFence: after.dashboard } }
         },
         revalidateForCommit: async (record, call, snapshot, output, alternative) => {
-          if (record.state === "cancelled") return fences.current && sfRunSourceFence(snapshot) === fences.current.dashboard && await authority.host.revalidate(call)
-            ? { status: "ok", value: true } : { status: "denied", reason: "analysis-cancellation-unavailable" }
+          if (record.state === "stale") return alternative ? { status: "denied", reason: "alternative-capture-unavailable" }
+            : staleAccess.commit(record, call, snapshot, output)
+          if (record.state === "cancelled") return staleAccess.commitCancellation(record, call, snapshot)
           if (alternative && (!captures.matchesLive(alternative) || !output || alternative.receipt.resultDigest !== digestSfValue(output.payload)))
             return { status: "denied", reason: "alternative-capture-changed" }
           const current = input.persistence.currentSnapshots?.()
@@ -506,7 +506,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           if (digestSfValue(actual) !== digestSfValue(fences.current) || record.contextFingerprint !== fingerprint) return { status: "stale", reason: "analysis-source-changed" }
           if (alternative && (!output || !await revalidateCapture(alternative))) return { status: "denied", reason: "alternative-capture-authority-changed" }
           return { status: "ok", value: true }
-        }, now: () => new Date().toISOString() })
+        }, now: () => new Date().toISOString() }))
       const announcement = Promise.withResolvers<PortResult<{ runRef: string }>>()
       const host = state.api
       if (!host || !identity()) return { status: "unavailable", reason: "analysis-host-unavailable" }

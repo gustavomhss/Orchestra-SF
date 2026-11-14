@@ -147,6 +147,14 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
       snapshot.data.capexProjects = []; snapshot.data.capexEntries = []
       return { commit: true, value: undefined }
     })
+    await persistence.transaction("planner", async (snapshot) => {
+      snapshot.data.versions = [100, 80].map((amount, index) => ({ id: `navigation-${index}`, name: `Navigation version ${index}`, year: 2026, closed: 0,
+        lines: [{ id: "navigation-line", name: "Navigation license", sec: "opex", el: "licenses", cur: "USD",
+          b: Array(12).fill(amount), a: Array(12).fill(null), f: Array(12).fill(amount) }],
+        fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
+      return { commit: true, value: undefined }
+    })
+    await persistence.initializeSources("planner")
     signal.throwIfAborted()
     route.handle = async (request) => {
       const url = new URL(request.url)
@@ -265,6 +273,7 @@ test("BI keeps the canonical shell, refreshes on manual focus and timer, and sig
     await page.waitForFunction(() => document.querySelector("[data-sf-bi] > [role=status]")?.textContent === "O acesso mudou. Abra novamente os dados autorizados.")
     expect(await page.locator("[data-sf-bi] table, [data-sf-bi] nav a").count()).toBe(0)
     expect(await page.getByLabel("Dados para visualizar", { exact: true }).inputValue()).toBe("")
+    expect(await page.evaluate(() => history.state?.sfExtendedBi)).toBeUndefined()
     expect(world.count("logout") - beforeLogout).toBe(1)
     success.release.resolve(); await success.finished.promise
     expect(await page.locator("[data-sf-bi] table").count()).toBe(0)
@@ -332,7 +341,53 @@ test("clearing the BI selection while genuine authorized options are delayed pre
     expect(await page.locator("[data-sf-bi] table, [data-sf-bi] nav a").count()).toBe(0)
     expect(await page.locator("[data-sf-bi] > [role=status]").textContent()).toBe("Atualize a visualização para a seleção atual.")
     expect(world.count("bi-data")).toBe(beforeData)
+    expect(await page.evaluate(() => history.state?.sfExtendedBi)).toMatchObject({ selection: "", ready: false })
     expect(await world.workspace.evaluate((node) => node.isConnected)).toBe(true)
+    expect(world.failures).toEqual([])
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization", async () => {
+  const deadline = compositionTestDeadline("bi-return-context")
+  try {
+    const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
+    const { page } = world
+    await page.getByLabel("Visualização", { exact: true }).selectOption("BI02")
+    await page.waitForFunction(() => [...(document.querySelector('select[aria-label="Versão base"]') as HTMLSelectElement).options].filter((item) => item.value).length === 2)
+    await page.getByLabel("Fim", { exact: true }).fill("2026-03-31")
+    await page.getByLabel("Fim", { exact: true }).dispatchEvent("change")
+    await page.waitForFunction(() => [...(document.querySelector('select[aria-label="Versão base"]') as HTMLSelectElement).options].filter((item) => item.value).length === 2)
+    await page.getByLabel("Dados para visualizar", { exact: true }).selectOption("planner")
+    const versions = await page.getByLabel("Versão base", { exact: true }).locator("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value).filter(Boolean))
+    await page.getByLabel("Versão base", { exact: true }).selectOption(versions[0]!)
+    await page.getByLabel("Versão candidata", { exact: true }).selectOption(versions[1]!)
+    await page.getByLabel("Moeda da comparação", { exact: true }).fill("USD")
+    const data = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
+    await page.getByRole("button", { name: "Atualizar visualização", exact: true }).click()
+    expect((await data).status()).toBe(200)
+    await page.getByText("Dados atualizados.", { exact: true }).waitFor()
+    const marker = page.locator("[data-sf-bi] table button[data-bi-origin]").first()
+    const valueId = await marker.getAttribute("data-bi-focus")
+    expect(valueId).toBeTruthy()
+    const source = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source")
+    await marker.click()
+    expect((await source).status()).toBe(200)
+    const saved = await page.evaluate(() => history.state.sfExtendedBi)
+    expect(saved).toMatchObject({ viewId: "BI02", start: "2026-01-01", end: "2026-03-31", selection: "planner", baseline: versions[0], candidate: versions[1], currency: "USD", focus: valueId, ready: true })
+    await page.getByRole("navigation", { name: "Origens autorizadas do valor", exact: true }).locator("a").first().click()
+    await page.waitForURL((url) => url.pathname === `${world.mount}/planner`)
+    expect(await page.locator("[data-sf-bi]").count()).toBe(0)
+    const beforeReturn = world.count("bi-data")
+    await page.goBack({ waitUntil: "domcontentloaded" })
+    await page.getByText("Dados atualizados.", { exact: true }).waitFor()
+    expect(world.count("bi-data")).toBeGreaterThan(beforeReturn)
+    expect(await page.getByLabel("Visualização", { exact: true }).inputValue()).toBe("BI02")
+    expect(await page.getByLabel("Fim", { exact: true }).inputValue()).toBe("2026-03-31")
+    expect(await page.getByLabel("Dados para visualizar", { exact: true }).inputValue()).toBe("planner")
+    expect(await page.getByLabel("Versão base", { exact: true }).inputValue()).toBe(versions[0]!)
+    expect(await page.getByLabel("Versão candidata", { exact: true }).inputValue()).toBe(versions[1]!)
+    expect(await page.getByLabel("Moeda da comparação", { exact: true }).inputValue()).toBe("USD")
+    expect(await page.evaluate(() => document.activeElement?.getAttribute("data-bi-focus"))).toBe(valueId)
     expect(world.failures).toEqual([])
   } finally { await deadline.close() }
 }, 120_000)

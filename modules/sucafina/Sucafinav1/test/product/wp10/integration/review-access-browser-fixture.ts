@@ -154,6 +154,8 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
     const sourcePage = await context.newPage()
     pages.push(focusPage, sourcePage)
     for (const page of pages) {
+      await page.clock.install({ time: new Date("2026-11-14T12:00:00Z") })
+      await page.clock.pauseAt(new Date("2026-11-14T12:00:01Z"))
       page.on("pageerror", (error) => {
         errors.push(error.message)
         pageErrors.push({ page: pageName(page), message: error.message, stack: error.stack?.slice(0, 1200) })
@@ -182,6 +184,30 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       await page.locator("[data-sf-review-selected-section] table").waitFor({ state: "visible" })
       expect(await page.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
       expect(await page.locator("script[data-sf-review-bootstrap]").count()).toBe(0)
+    }
+    // Exercise the real shell refresh path with focus outside a form. The
+    // reader must claim the refresh instead of leaving the new loading stub.
+    const mounted = await focusPage.locator("[data-sf-review-workspace]").elementHandle()
+    if (!mounted) throw new Error("Review workspace missing before refresh")
+    await focusPage.evaluate(() => {
+      document.documentElement.dataset.observedReviewRefreshes = "0"
+      document.querySelector("main")?.addEventListener("sucafina:main-refresh", () => {
+        document.documentElement.dataset.observedReviewRefreshes = String(Number(document.documentElement.dataset.observedReviewRefreshes) + 1)
+      })
+    })
+    let refreshedCount = 0
+    for (const mode of ["manual", "periodic"] as const) {
+      stage = `focus.${mode}-authorized-refresh`
+      const refreshed = observe(focusPage, "review")
+      if (mode === "manual") await focusPage.getByRole("button", { name: "Refresh data", exact: true }).click()
+      else await focusPage.clock.runFor(30_000)
+      expect((await refreshed.response()).status()).toBe(200)
+      await focusPage.waitForFunction((count) => Number(document.documentElement.dataset.observedReviewRefreshes) >= count, ++refreshedCount)
+      expect(await focusPage.locator("[data-sf-review-workspace]").textContent()).not.toContain("Loading review…")
+      expect(await mounted.evaluate((node) => node.isConnected)).toBe(true)
+      expect(await focusPage.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
+      expect(await focusPage.locator("[data-sf-review-selected-section] table").count()).toBe(1)
+      expect(await focusPage.locator("script[data-sf-review-bootstrap]").count()).toBe(0)
     }
     // Hold a genuinely authorized source response across the later case-only
     // revocation; no response payload or access decision is substituted.
@@ -220,7 +246,7 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
           // Observe another browser task after transport settlement, including a
           // source request already aborted by clearPrivate. Background tabs do
           // not reliably receive animation frames, so no paint is awaited here.
-          await bounded(Promise.all(pages.map((page) => page.evaluate(() => new Promise<void>((resolve) => setTimeout(resolve, 0))))))
+          await bounded(Promise.all(pages.map((page) => page.clock.runFor(1))))
           await Promise.all(pages.map(checkEmpty))
           expect(errors).toEqual([])
           console.info("WP10 Review case-only revocation", { probeStatus, sourceStatus, pagesCleared: pages.length,

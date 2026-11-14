@@ -57,6 +57,80 @@ test("replace and include qualify an absent forecast from the real post-command 
   } finally { await fixture.close() }
 }, 60000)
 
+test("a row save preserves an untouched missing December while an explicit December zero is hypothetical", async () => {
+  const horizon = { start: "2027-11-01", end: "2027-12-31" }
+  const december = { start: "2027-12-01", end: "2027-12-31" }
+  const fixture = await scenarioEngineFixture(snapshot(), horizon)
+  try {
+    const before = await fixture.readSnapshot()
+    const baseline = await fixture.planner.simulateScenario({ baseRef: fixture.source.refId, operations: [], assumptions: [] }, fixture.context)
+    if (baseline.status !== "ok") throw new Error(baseline.reason)
+    expect(baseline.value.components.find((component) => component.id === "missing:12")).toMatchObject({ amount: null, evidenceState: "absent" })
+    expect(baseline.value.unresolvedConditions).toContain("missing:12:budget:missing")
+    const environment = await fixture.host.environment(fixture.host.requestFor(fixture.context)!)
+    for (const kind of ["replace", "include"] as const) for (const explicitDecemberZero of [false, true]) {
+      const request: ScenarioRequest = { baseRef: fixture.source.refId, operations: [
+        { kind, targetRef: "missing:11", amount: 1000, currency: "USD", period: scenarioMonth },
+        ...(explicitDecemberZero ? [{ kind, targetRef: "missing:12", amount: 0, currency: "USD", period: december }] : []),
+      ], assumptions: [] }
+      const original = structuredClone(request)
+      const isolated = structuredClone(before)
+      const save = (values: Record<string, number>) => domain.execute(isolated, actor, { page: "OPEX", action: "save", id: "missing", version: isolated.versions["v0:lines:missing"]?.version ?? 0, values: { versionId: "v0", ...values } }, environment)
+      expect(save({ f10: 1000 }).ok).toBe(true)
+      if (explicitDecemberZero) expect(save({ f11: 0 }).ok).toBe(true)
+      const projection = projectPlannerSource(isolated, actor, "v0")!
+      const canonical = buildPlannerFinancialProjection({ projection, ref: fixture.source, period: horizon, binding: fixture.context, at: environment.at })
+      // The legacy command normalizes the other month's null budget to zero.
+      // That numeric side effect cannot supply evidence for an untouched cell.
+      expect(canonical.components.find((component) => component.id === "missing:12")).toMatchObject({ amount: 0, evidenceState: explicitDecemberZero ? "confirmed" : "estimated" })
+      const result = await fixture.planner.simulateScenario(request, fixture.context)
+      expect(result).toMatchObject({ status: "ok", value: { knownSubtotal: 3000, total: null, comparisonStatus: "conditioned", horizon, restrictions: ["preview-not-applied"] } })
+      if (result.status !== "ok") throw new Error(result.reason)
+      expect(result.value.components.find((component) => component.id === "missing:11")).toMatchObject({ amount: 1000, evidenceState: "hypothetical" })
+      expect(result.value.components.find((component) => component.id === "missing:12")).toMatchObject({ amount: explicitDecemberZero ? 0 : null, evidenceState: explicitDecemberZero ? "hypothetical" : "absent" })
+      expect(result.value.components.find((component) => component.id === "untouched:12")).toMatchObject({ amount: null, evidenceState: "absent" })
+      expect(result.value.unresolvedConditions).not.toContain("missing:11:budget:missing")
+      if (explicitDecemberZero) expect(result.value.unresolvedConditions).not.toContain("missing:12:budget:missing")
+      else expect(result.value.unresolvedConditions).toContain("missing:12:budget:missing")
+      expect(result.value.unresolvedConditions).toContain("untouched:12:budget:missing")
+      expect(result.value.unresolvedConditions).toContain("scenario-is-hypothetical")
+      expect(await fixture.planner.simulateScenario(request, fixture.context)).toEqual(result)
+      expect(request).toEqual(original)
+      expect(await fixture.readSnapshot()).toEqual(before)
+    }
+  } finally { await fixture.close() }
+}, 60000)
+
+test("deferral quantifies its origin and destination while preserving a third missing month on the same row", async () => {
+  const horizon = { start: "2027-10-01", end: "2027-12-31" }
+  const initial = snapshot()
+  const version = rows(initial.data.versions)[0]!
+  version.lines = [{ id: "missing", sec: "opex", el: "licenses", cur: "USD", b: [...Array(9).fill(null), 1000, 0, null], a: [], f: [] }]
+  const fixture = await scenarioEngineFixture(initial, horizon)
+  try {
+    const before = await fixture.readSnapshot()
+    const request: ScenarioRequest = { baseRef: fixture.source.refId, operations: [{ kind: "defer", targetRef: "missing:10", period: scenarioMonth }], assumptions: [] }
+    const original = structuredClone(request)
+    const environment = await fixture.host.environment(fixture.host.requestFor(fixture.context)!)
+    const isolated = structuredClone(before)
+    expect(domain.execute(isolated, actor, { page: "OPEX", action: "save", id: "missing", version: isolated.versions["v0:lines:missing"]?.version ?? 0, values: { versionId: "v0", f9: 0, f10: 1000 } }, environment).ok).toBe(true)
+    const canonical = buildPlannerFinancialProjection({ projection: projectPlannerSource(isolated, actor, "v0")!, ref: fixture.source, period: horizon, binding: fixture.context, at: environment.at })
+    expect(canonical.components.find((component) => component.id === "missing:12")).toMatchObject({ amount: 0, evidenceState: "estimated" })
+    const result = await fixture.planner.simulateScenario(request, fixture.context)
+    expect(result).toMatchObject({ status: "ok", value: { knownSubtotal: 1000, total: null, comparisonStatus: "conditioned", restrictions: ["preview-not-applied"] } })
+    if (result.status !== "ok") throw new Error(result.reason)
+    expect(result.value.components.map(({ id, amount, evidenceState }) => ({ id, amount, evidenceState }))).toEqual([
+      { id: "missing:10", amount: 0, evidenceState: "hypothetical" },
+      { id: "missing:11", amount: 1000, evidenceState: "hypothetical" },
+      { id: "missing:12", amount: null, evidenceState: "absent" },
+    ])
+    expect(result.value.unresolvedConditions).toContain("missing:12:budget:missing")
+    expect(await fixture.planner.simulateScenario(request, fixture.context)).toEqual(result)
+    expect(request).toEqual(original)
+    expect(await fixture.readSnapshot()).toEqual(before)
+  } finally { await fixture.close() }
+}, 60000)
+
 test("an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero", async () => {
   const initial = snapshot()
   const version = rows(initial.data.versions)[0]!

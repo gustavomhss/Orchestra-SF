@@ -23,6 +23,7 @@ if (root && bootstrap) {
   let closed = false, generation = 0
   let dispose = () => {}
   const pending = new Set<AbortController>()
+  let probing = false
   const clearPrivate = () => {
     if (closed) return
     closed = true; generation += 1
@@ -34,25 +35,37 @@ if (root && bootstrap) {
   const privateRead = async (url: URL) => {
     if (closed) return undefined
     const turn = generation, controller = new AbortController(); pending.add(controller)
+    const timer = setTimeout(() => controller.abort(), 30_000)
     try {
       const response = await fetch(url, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
       if (response.status === 401 || response.status === 403) { clearPrivate(); return undefined }
       const body = await response.json().catch(() => undefined)
       return !closed && turn === generation && !controller.signal.aborted ? { response, body } : undefined
-    } catch { return undefined } finally { pending.delete(controller) }
+    } catch { return undefined } finally { clearTimeout(timer); pending.delete(controller) }
   }
   const probe = async () => {
-    if (closed) return
+    if (closed || probing) return
+    probing = true
     const controller = new AbortController(); pending.add(controller)
+    const timer = setTimeout(() => controller.abort(), 30_000)
     try {
       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
       if (response.status === 401 || response.status === 403) clearPrivate()
       await response.body?.cancel()
     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
-    finally { pending.delete(controller) }
+    finally { clearTimeout(timer); pending.delete(controller); probing = false }
   }
   window.addEventListener("focus", () => { void probe() })
+  // The shell has just reopened this exact review/preparation under current
+  // authority. Keep the mounted reader and human choices; updates remain an
+  // explicit successor operation, not a replacement of preserved history.
+  root.closest("main")?.addEventListener("sucafina:main-refresh", (event) => {
+    if (!closed && root.isConnected) event.preventDefault()
+  })
+  window.addEventListener("sf-access-revoked", clearPrivate, { once: true })
+  for (const logout of document.querySelectorAll<HTMLButtonElement>("[data-logout]")) logout.addEventListener("click", clearPrivate)
   window.addEventListener("pagehide", clearPrivate, { once: true })
+  window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
   if (value && typeof value === "object" && typeof value.reviewRef === "string") {
     const status = document.createElement("p"), sources = document.createElement("nav")
     status.setAttribute("role", "status"); sources.setAttribute("aria-label", "Origens autorizadas da revisão")

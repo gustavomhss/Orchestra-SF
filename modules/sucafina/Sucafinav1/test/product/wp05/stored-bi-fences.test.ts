@@ -103,6 +103,69 @@ test("persisted BI detects a sensitivity object mutated by its reader on replay"
   } finally { await value.cleanup() }
 })
 
+test("optional persisted advantage is copied only for the exact inverse pair and survives both complete source fences", async () => {
+  const value = await fixture()
+  try {
+    const inverse: ScenarioComparison = { ...value.comparison, baselineResultRef: value.comparison.alternativeResultRef, alternativeResultRef: value.comparison.baselineResultRef, knownDifference: -30000 }
+    const saved = await value.results.write({ kind: "comparison", result: inverse, caseRef: value.caseRef, requestDigest: digestSfValue(inverse), sourceRefs: [], idempotencyKey: "inverse-comparison" }, value.context)
+    if (saved.status !== "ok" || saved.value.kind !== "comparison") throw new Error("Inverse boundary fixture unavailable")
+    const record = saved.value
+    const selection = { ...value.selection, advantageComparisonRef: record.resultRef }
+    const create = () => createStoredScenarioBiProjection({ results: value.results, readProjection: async () => ({ status: "ok", value: value.projection }), revalidateProjection: async () => true })
+    const absent = await create()(value.selection, value.context)
+    expect(absent.status).toBe("ok")
+    if (absent.status !== "ok") throw new Error("Original projection unavailable")
+    expect(absent.value).not.toHaveProperty("comparison")
+    expect(await create()({ ...selection, advantageComparisonRef: " " }, value.context)).toEqual({ status: "needs-input", reason: "scenario-selection-required" })
+    expect(await create()({ ...selection, advantageComparisonRef: value.selection.comparisonRef }, value.context)).toEqual({ status: "stale", reason: "advantage-reference-mismatch" })
+    const projected = await create()(selection, value.context)
+    if (projected.status !== "ok" || !projected.value.comparison) throw new Error(`Inverse projection unavailable: ${JSON.stringify(projected)}`)
+    expect(projected.value.comparison).toMatchObject({ comparisonRef: record.resultRef, context: value.projection.context, version: value.projection.version, engineVersion: value.projection.engineVersion })
+    expect(projected.value.comparison?.values).toEqual([
+      { id: "scenario:advantage-known-difference", value: record.result.knownDifference, unit: "money", currency: "USD", period, granularity: "aggregate", sourceRefs: record.sourceRefs, drilldown: null, evidenceState: "estimated" },
+      { id: "scenario:advantage-comparison-status", value: "conditioned", period, granularity: "aggregate", sourceRefs: record.sourceRefs, drilldown: null, evidenceState: "confirmed" },
+    ])
+    for (const fault of ["case", "reference", "pair", "replay", "revoked", "final-selection"] as const) {
+      const retained = structuredClone(record)
+      if (fault === "case") retained.caseRef.version += 1
+      if (fault === "reference") retained.resultRef = "unselected-comparison"
+      if (fault === "pair") retained.result.alternativeResultRef = "unselected-baseline"
+      const calls = { reads: 0, fences: 0 }
+      const read = createStoredScenarioBiProjection({
+        results: { read: async (request, context) => {
+          if (request.resultRef !== record.resultRef) return value.results.read(request, context)
+          calls.reads += 1
+          if (calls.reads === 2 && fault === "replay") retained.result.knownDifference = 999999
+          if (calls.reads === 2 && fault === "revoked") return { status: "denied", reason: "source-revoked" }
+          return { status: "ok", value: retained }
+        } },
+        readProjection: async () => ({ status: "ok", value: value.projection }),
+        revalidateProjection: async (selected) => { if (++calls.fences === 2 && fault === "final-selection") selected.advantageComparisonRef = "substituted"; return true },
+      })
+      const refused = await read(selection, value.context)
+      expect(refused).toEqual(fault === "revoked" ? { status: "denied", reason: "source-revoked" } : { status: "stale", reason: fault === "replay" || fault === "final-selection" ? "scenario-or-projection-changed" : "advantage-reference-mismatch" })
+      expect(refused).not.toHaveProperty("value")
+      expect(selection.advantageComparisonRef).toBe(record.resultRef)
+    }
+    for (const fault of ["currency", "period", "conflict"] as const) {
+      const source = structuredClone(value.projection)
+      if (fault === "currency") source.context.currency = "EUR"
+      if (fault === "period") source.context.period.end = "2027-11-30"
+      if (fault === "conflict") source.comparison = projected.value.comparison
+      const read = createStoredScenarioBiProjection({ results: value.results, readProjection: async () => ({ status: "ok", value: source }), revalidateProjection: async () => true })
+      const refused = await read(selection, value.context)
+      expect(refused.status).toBe("stale")
+      expect(refused).not.toHaveProperty("value")
+    }
+    const forwarded: string[] = []
+    const host = bindStoredScenarioBiPort({ resolve: async () => ({ status: "ok", value: { ...selection, present: () => ({ viewId: "BI09", series: [], limitations: [] }) } }), readProjection: async (selected, context) => { forwarded.push(selected.advantageComparisonRef ?? ""); return create()(selected, context) }, revalidate: async () => true })
+    expect((await host.readView(request, value.context)).status).toBe("ok")
+    expect(forwarded).toEqual([record.resultRef])
+    const mismatched = bindStoredScenarioBiPort({ resolve: async () => ({ status: "ok", value: { ...selection, present: () => ({ viewId: "BI09", series: [], limitations: [] }) } }), readProjection: async () => ({ status: "ok", value: absent.value }), revalidate: async () => true })
+    expect(await mismatched.readView(request, value.context)).toEqual({ status: "stale", reason: "advantage-reference-mismatch" })
+  } finally { await value.cleanup() }
+})
+
 test("BI presentation cannot mutate the stored scenario or portfolio projection it describes", async () => {
   const value = await fixture()
   try {

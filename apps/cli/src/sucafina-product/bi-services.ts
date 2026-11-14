@@ -2,12 +2,13 @@ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/c
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BiPresentation, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BiViewRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
-import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { createSfBiFactory } from "../../../../modules/sucafina/Sucafinav1/product/analytics/factory.ts"
 import { dispatchBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/analytics/consumer.ts"
 import type { BiPresentationPort } from "../../../../modules/sucafina/Sucafinav1/product/analytics/capabilities.ts"
 import { createStoredScenarioBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts"
+import type { StoredScenarioSelection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts"
 import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
 import { resolveBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/analytics/semantics.ts"
 import { createStoredPortfolioProjection } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/projection.ts"
@@ -58,17 +59,8 @@ export function createSfBiServices(input: {
     return result.status === "ok" ? { status: "ok", value: result.value.projection } : result
   }
   const sensitivity = portfolio.product?.contribution.persistentSensitivity
-  const scenarioProjection = createStoredScenarioBiProjection({ results: business.results,
-    ...(sensitivity ? { readSensitivity: sensitivity.read } : {}), readProjection,
-    revalidateProjection: async (selection, projection, caseRef, call) => {
-      const parsed = readSfDecisionBiSelection(selection.selectionRef)
-      if (!parsed || !("scenarioResultRef" in parsed) || parsed.scenarioResultRef !== selection.scenarioResultRef || parsed.comparisonRef !== selection.comparisonRef || parsed.sensitivityResultRef !== selection.sensitivityResultRef) return false
-      const current = await readProjection(selection.selectionRef, call)
-      const stored = await business.results.read({ kind: "scenario", resultRef: parsed.scenarioResultRef }, call)
-      return current.status === "ok" && sameBiProjection(current.value, projection) && stored.status === "ok" &&
-        digestSfValue(stored.value.caseRef) === digestSfValue(caseRef) && await host.revalidate(call)
-    },
-  })
+  const scenarioProjection = createSfAuthorizedScenarioBiProjection({ host, results: business.results,
+    ...(sensitivity ? { readSensitivity: sensitivity.read } : {}), readProjection })
   const persistedPortfolio = portfolio.product?.contribution.persistent
   const portfolioProjection = persistedPortfolio ? createStoredPortfolioProjection({ readPortfolio: persistedPortfolio.read, readProjection,
     revalidateProjection: async (selectionRef, projection, result, call) => {
@@ -120,7 +112,8 @@ export function createSfBiServices(input: {
       },
     } },
     procurement: { views: ["BI05", "BI06"], host: { list: business.procurement.list, revalidate } },
-    scenario: { views: ["BI09", "BI10", "BI11"], host: { readProjection: (selection, call) => callScope.read(selection, call, () => scenarioProjection(selection, call)), revalidate,
+    scenario: { views: ["BI09", "BI10", "BI11"], host: { readProjection: (selection, call) => selection.advantageComparisonRef === undefined
+      ? callScope.read(selection, call, () => scenarioProjection(selection, call)) : scenarioProjection(selection, call), revalidate,
       resolve: async (request) => {
         const selected = readSfDecisionBiSelection(request.selectionRef)
         return selected && "scenarioResultRef" in selected ? { status: "ok", value: { ...selected, present: () => decisionPresentation(request) } }
@@ -152,8 +145,14 @@ export function createSfBiServices(input: {
       return result.status === "ok" && result.value === true
     },
   }
-  const dispatchPresentation = (request: BiViewRequest, call: TrustedDomainContext) =>
-    callScope.run(request, call, () => dispatchBiPresentation(request, call, presentationSource, authority.authority))
+  const dispatchPresentation = (request: BiViewRequest, call: TrustedDomainContext) => {
+    const selected = readSfDecisionBiSelection(request.selectionRef)
+    const dispatch = () => dispatchBiPresentation(request, call, presentationSource, authority.authority)
+    // The completed-proof scope covers the original pair. An inverse result can
+    // have additional evidence; keep all canonical reads for this new selection.
+    return selected && "scenarioResultRef" in selected && selected.advantageComparisonRef !== undefined
+      ? dispatch() : callScope.run(request, call, dispatch)
+  }
   // Review is an authenticated consumer of domain producers, not a second C16 BI invocation.
   const readForReview = async (request: BiViewRequest, call: TrustedDomainContext): Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>> => {
     if (!decodeSfOperationInput("sf_bi_view", request).ok || !host.requestFor(call) || !await host.revalidate(call)) return { status: "denied", reason: "bi-review-authority-unavailable" }
@@ -171,4 +170,40 @@ export function createSfBiServices(input: {
     return { status: "ok", value: { projection: projectedCopy, presentation: structuredClone(presentation.value) } }
   }
   return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: ["decision-bi-waterfall-plan-unavailable", "decision-bi-timeline-plan-unavailable"] }
+}
+
+/** Binds the producer's two persisted observations to one exact selection and Request. */
+export function createSfAuthorizedScenarioBiProjection(input: {
+  host: Pick<DomainPortHost, "requestFor" | "revalidate">
+  results: Parameters<typeof createStoredScenarioBiProjection>[0]["results"]
+  readProjection: Parameters<typeof createStoredScenarioBiProjection>[0]["readProjection"]
+  readSensitivity?: Parameters<typeof createStoredScenarioBiProjection>[0]["readSensitivity"]
+}) {
+  return async (incoming: StoredScenarioSelection, call: TrustedDomainContext): Promise<PortResult<DomainProjection>> => {
+    const selection = structuredClone(incoming), selected = readSfDecisionBiSelection(selection.selectionRef)
+    if (!selected || !("scenarioResultRef" in selected) || selected.scenarioResultRef !== selection.scenarioResultRef ||
+      selected.comparisonRef !== selection.comparisonRef || selected.sensitivityResultRef !== selection.sensitivityResultRef ||
+      selected.advantageComparisonRef !== selection.advantageComparisonRef) return { status: "denied", reason: "bi-scenario-selection-mismatch" }
+    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), expected = digestSfValue(selection)
+    const current = () => request !== undefined && input.host.requestFor(call) === request && !request.signal.aborted &&
+      binding === digestSfValue([call.kind, call.binding]) && expected === digestSfValue(incoming) && expected === digestSfValue(selection)
+    const denied = (): PortResult<never> => ({ status: "denied", reason: "bi-scenario-authority-changed" })
+    if (!current() || !await input.host.revalidate(call) || !current()) return denied()
+    // C08 owns the exact direct/inverse pair, current case and source authority.
+    // The host adds selection equality and checks its Request after every await.
+    const read = createStoredScenarioBiProjection({ results: input.results, readProjection: input.readProjection,
+      ...(input.readSensitivity ? { readSensitivity: input.readSensitivity } : {}),
+      revalidateProjection: async (observed, projection, caseRef, context) => {
+        if (context !== call || !current() || digestSfValue(observed) !== expected) return false
+        const source = await input.readProjection(selection.selectionRef, call)
+        if (!current() || source.status !== "ok" || !sameBiProjection(source.value, projection)) return false
+        const stored = await input.results.read({ kind: "scenario", resultRef: selected.scenarioResultRef }, call)
+        if (!current() || stored.status !== "ok" || digestSfValue(stored.value.caseRef) !== digestSfValue(caseRef)) return false
+        return await input.host.revalidate(call) && current()
+      },
+    })
+    const projected = await read(selection, call)
+    if (!current() || !await input.host.revalidate(call) || !current()) return denied()
+    return projected
+  }
 }

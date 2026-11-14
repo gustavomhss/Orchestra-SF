@@ -1,0 +1,128 @@
+{
+  "schema": "sf-wp10-bi-decision-navigation-round9-v1",
+  "status": "IMPLEMENTED_NOT_REVALIDATED",
+  "published_head": null,
+  "published_tree": null,
+  "base": {
+    "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+    "pr": 32
+  },
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "blob": "debf7353155b88cd98c2ab2a2156b23f5a0e4fb0",
+      "current_blob": "e3edc3ed317be3399855edee3b4ffd4eaa5e5b5e",
+      "bytes": 24194,
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "stage": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "root_staged_before_blob": "c23cceea8b56984d09db47022ae1c0f8f2515892"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "blob": "5b3de578ce8204e8985076fe72240fdbc4d47286",
+      "current_blob": "43f73f337fa570d87f7a2f5f7aad19a038767fea",
+      "bytes": 18602,
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "stage": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/apps/cli/src/sucafina-product/extended-http.ts",
+      "root_staged_before_blob": "e1f252a9ca10392749cf396eb04a61cdf5f79ea6"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-navigation.ts",
+      "blob": "667a17266280c46b73b9b78d6e65fc0fdf924811",
+      "current_blob": null,
+      "bytes": 23913,
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "stage": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/apps/cli/src/sucafina-product/extended-bi-navigation.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-navigation-view.ts",
+      "blob": "66ed9f24390da0994bfad812706d9639a536f8a6",
+      "current_blob": null,
+      "bytes": 3129,
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "stage": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/apps/cli/src/sucafina-product/extended-bi-navigation-view.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+      "blob": "9f63fb36f4f390b3acad937e388435b6a648b2b0",
+      "current_blob": null,
+      "bytes": 10461,
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "stage": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts"
+    }
+  ],
+  "finding": {
+    "id": "UX-WP10-BI-DECISION-NAV-02",
+    "implementation": "Implemented; final disposition requires exact-W Actions evidence and independent review",
+    "criteria": [
+      "WP10.T01.DOD.01",
+      "WP10.T01.CMP.01",
+      "WP10.T02.CMP.01",
+      "WP10.SUC.10",
+      "CAMP.SUC.90"
+    ]
+  },
+  "implementation": [
+    "The fifth BiDecisionNavigation argument now connects all six canonical callbacks. Values retain the existing explicit A/B origin path.",
+    "bi-data includes navigation membership tokens tied to the exact request, projection, context, physical refs and result bodies. Tokens are descriptors, never authority.",
+    "Readonly bi-decision consumes a new C16 admission, validates current projection membership, scopes the current selected case, reopens the canonical detail twice, rereads BI projection and current case, and fences exact Request/binding/abort/authority before returning.",
+    "Results use the C08 result reader; coverage uses Planner coverage; questions use collaboration.resolveQuestion; component/evidence details use fresh BCS with exact currentRef and unique full physical source match. Case URLs use encodeCaseRef and the real workbench-case GET.",
+    "C17 historical data never authorizes issue/write and is not presented as a current source in this lane.",
+    "Detail rendering uses text nodes, actual null/conditioned states, producer values without financial recomputation, and existing safe destination restrictions. Browser callbacks cancel each other and discard stale selection, late data, logout and revocation responses.",
+    "Inline Back restores the original renderer focus. Browser Back from Workbench uses root history.state.sfExtendedBi restoration with fresh options and data. Workbench returnTo is deliberately omitted because its real contract permits contract evidence only.",
+    "Root Review/bootstrap and options/refresh/filter/lifecycle handler blocks remain byte-identical to root staging. Restored selection/base/candidate no longer fall back to stale URL references if history exists but stored selectors are missing/invalid.",
+    "Compatibility with finance 6016a70d7ab0c3d50f1ec2827a534a80e48a5c56: persisted inverse comparisonRef and evidence in projection.comparison are enumerated, normalizing observation time only. No reciprocal arithmetic or inferred advantage selection."
+  ],
+  "tests": {
+    "status": "NOT_RUN",
+    "new_file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+    "cases": [
+      "Actual published WP05 Planner/C08 fixture -> stored-scenario producer -> recorded scenario, comparison, sensitivity sample and canonical coverage detail; SourceRef/evidence catalog membership and unchanged observation identity.",
+      "Foreign result association, physical-incarnation tampering and changed access snapshot denied; authentic result store denies revoked source and revoked fixture UI authorization.",
+      "Actual composition HTTP/UI admission rejects unassociated results, duplicate target query and revoked authority."
+    ],
+    "suggested_actions_scope": [
+      "test/product/wp10/integration/bi-decision-navigation.test.ts",
+      "test/product/wp10/integration/bi-lifecycle.test.ts"
+    ],
+    "limits": [
+      "Financial declarations/grants in the published domain fixture remain explicit fixture boundaries, not native execution proof.",
+      "Positive full-host/browser BI09-BI11 navigation remains unverified while the existing no-op decision-promote fixture returns 409. Its assertion and fixture were not weakened.",
+      "New tests positively cover result/coverage readers; physical source/evidence, question/case browser opening and the new callback lifecycle still require Actions/independent UX evidence."
+    ]
+  },
+  "static_review": {
+    "reviewer": "composition_wp10",
+    "qualification": "Peer author review only; does not count toward three independent final reviews",
+    "result": "No concrete blocker found in membership/token identity, C16 and case/Request/binding fences, fresh source scope or browser callback cancellation; positive physical navigation and browser lifecycle evidence remain pending."
+  },
+  "dependencies": [
+    {
+      "owner": "WP05/WP11 finance",
+      "pin": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "status": "Root intake decides source composition. The native advantage selection producer/host gap remains explicit; helper can consume actual published comparison when offered."
+    },
+    {
+      "owner": "WP10",
+      "status": "Exact-W Actions run and package bun typecheck/guards to be attached by root. No local product test/typecheck/guard/browser run occurred."
+    },
+    {
+      "owner": "S0 / independent reviewers",
+      "status": "No GLOBAL_RELEASE, native proof, global gate or independent-review approval is asserted."
+    }
+  ],
+  "mutations": {
+    "worktree": false,
+    "remote": false,
+    "foreign_sources": false,
+    "freeze_or_plan": false,
+    "staging_only": true
+  },
+  "payload": {
+    "path": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-navigation-round9-payloads.json",
+    "bytes": 84173,
+    "sha256": "6853163236dbd33dd2289be128f8237f44284e3577e34513e6ae0e7871fe3c56"
+  },
+  "diffs": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-navigation-round9-diffs"
+}
