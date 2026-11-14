@@ -1,0 +1,178 @@
+{
+  "schema": "finance-journey-closure-ci-ledger-v1",
+  "finding": "FIN-IND-005",
+  "disposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "productCheckpoint": {
+    "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "tree": "a736cd370da6081c6010ffb26d66130fea94736f"
+  },
+  "runs": [
+    {
+      "selection": "S1",
+      "W": "9a2ab893be9f2af2078f67ca867c13892452752e",
+      "Wtree": "442369716e1a20587b3d0875698041b66186e3f2",
+      "S": "e47c611a7f03dfbb501487d09f1567c6802077fc",
+      "Stree": "17a21faadcd3d6a227c032a6bbf10e2ad9f6ef32",
+      "branch": "ci-run-linux-finance-closure-9a2ab893-fa0f1677-s1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+          "Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^(Finance units pairs keep every authority|coverage refuses its original predicate)"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fa0f1677079dff8b9cae8b9c12a29b82e4ab344d122b89a9bd89b974eb373a08",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43634808031,
+      "jobId": 132569165100,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634808031",
+      "conclusion": "failure",
+      "pass": 1,
+      "fail": 1,
+      "assertions": 10,
+      "log": {
+        "bytes": 70386,
+        "sha256": "059a8e84d2a00b236d84726aca53ba5d9c3344b0e2c3c1f14fd51a9323b513fb"
+      },
+      "receipt": "S1-result.json"
+    },
+    {
+      "selection": "S2",
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "Wtree": "a736cd370da6081c6010ffb26d66130fea94736f",
+      "S": "8bf015c999750c26a721749cfca9372891d3cec3",
+      "Stree": "3a39ba90cc639ac950a6e874f686bc167e72c8eb",
+      "branch": "ci-run-linux-finance-closure-5a029e77-0cf38dfb-s2",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+          "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "Sucafinav1/test/product/wp11/result-store.test.ts",
+          "Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+          "Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+          "Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^(Finance sensitivity|units resolution|persisted Finance candidates|historical scenario batch|historical batch|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR|one sibling batch|units emit the identical binding|comparison starts independent batches|different cases and historical|ledger, alternative|authority revoked after result rereads|a real Planner source change|retained store and case|batch refusals|decision result persistence|Finance units|FIN-IND-005 result receipt|coverage refuses its original predicate)"
+        ],
+        "env": {}
+      },
+      "requestSha256": "0cf38dfb81bbe8de79924b91743641c536d4ac30bb7a67bf3ffd102ceaee7b10",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43635340065,
+      "jobId": 132570795422,
+      "cleanupJobId": 132572958059,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43635340065",
+      "conclusion": "success",
+      "pass": 43,
+      "fail": 0,
+      "assertions": 350,
+      "log": {
+        "bytes": 94476,
+        "sha256": "ebda50a97a439a30adbe105330b7727c6cd945ef2904695d6e6f25baf247f39d"
+      },
+      "receipt": "S2-result.json"
+    },
+    {
+      "selection": "S3",
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "Wtree": "a736cd370da6081c6010ffb26d66130fea94736f",
+      "S": "5b82d9de8e329bdf2656ab8785c8d7ed2d7841a8",
+      "Stree": "bae23ebfe8e0304117ff0320a8c47ead30f549c5",
+      "branch": "ci-run-linux-finance-closure-5a029e77-40edbce1-s3",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^FIN-IND-005 Finance performance"
+        ],
+        "env": {}
+      },
+      "requestSha256": "40edbce1b941db354f5c11012dde995239dba070a4e9481b88e2246534a9acf9",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43636137688,
+      "jobId": 132573236668,
+      "cleanupJobId": 132574504341,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43636137688",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "assertions": 18,
+      "log": {
+        "bytes": 120370,
+        "sha256": "ee7142658de609dccdfe01d015245086d19ac896f39b69ccee1460f50454d598"
+      },
+      "receipt": "S3-result.json"
+    }
+  ],
+  "checks": {
+    "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "tree": "a736cd370da6081c6010ffb26d66130fea94736f",
+    "runId": 43635795619,
+    "jobId": 132572187686,
+    "conclusion": "failure",
+    "receipt": "CHECK-W2-result.json"
+  },
+  "previous": {
+    "handoff": "454b97daf614176507711df889bd45743467f7af",
+    "S5": {
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "runId": 43630462257,
+      "pass": 36,
+      "assertions": 297
+    },
+    "S6": {
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "runId": 43631582858,
+      "conclusion": "failure",
+      "assertions": 18,
+      "fixtureGuardMs": 180000
+    }
+  },
+  "deduplication": {
+    "revalidatedChangedInputs": "All36 previous tests plus7 new in S2.",
+    "longRunPrerequisite": "W2 changed producer work; S1 discriminant then S2 PASS before S3.",
+    "noFurtherLongRun": "S3 still failed; no additional material equivalent delta was established. No duplicate dispatch.",
+    "receiptsOnlyFinalCommit": "No product CI rerun for final documentation-only commit; exact source scope compared."
+  },
+  "bounds": {
+    "fixtureGuardMs": 180000,
+    "bunTestBudgetMs": 300000,
+    "increased": false,
+    "assertionsRemoved": false,
+    "enginesChanged": false
+  },
+  "globalAcceptance": false
+}

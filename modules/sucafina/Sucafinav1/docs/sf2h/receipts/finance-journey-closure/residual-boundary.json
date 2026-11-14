@@ -1,0 +1,170 @@
+{
+  "schema": "finance-journey-closure-residual-v1",
+  "finding": "FIN-IND-005",
+  "disposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+  "S": "5b82d9de8e329bdf2656ab8785c8d7ed2d7841a8",
+  "runId": 43636137688,
+  "sourceReceipt": "S3-result.json",
+  "observed": {
+    "coverageIssueMs": 28504,
+    "coverageQualifyMs": [
+      18914,
+      19446
+    ],
+    "confirmedAuthorityResolveCalls": 6,
+    "confirmedAuthorityResolveInclusiveMs": 22984,
+    "confirmedOriginalPredicateCalls": 6,
+    "confirmedOriginalPredicateInclusiveMs": 22745,
+    "confirmedUnitsResolveCalls": 7,
+    "confirmedUnitsResolveInclusiveMs": 25981,
+    "confirmedUnitsRevalidateCalls": 7,
+    "confirmedUnitsRevalidateInclusiveMs": 25925,
+    "terminalCounts": {
+      "c08.read.cases": {
+        "calls": 3095,
+        "elapsedMs": 71840,
+        "maximumMs": 50
+      },
+      "host.revalidate": {
+        "calls": 25786,
+        "elapsedMs": 1596,
+        "maximumMs": 19
+      },
+      "operation-source": {
+        "calls": 5310,
+        "elapsedMs": 4466,
+        "maximumMs": 33
+      },
+      "operation-coverage": {
+        "calls": 2173,
+        "elapsedMs": 64,
+        "maximumMs": 8
+      },
+      "c08.read.preferences": {
+        "calls": 586,
+        "elapsedMs": 13163,
+        "maximumMs": 45
+      },
+      "c08.transaction.preferences": {
+        "calls": 6,
+        "elapsedMs": 319,
+        "maximumMs": 105
+      },
+      "classified-source": {
+        "calls": 296,
+        "elapsedMs": 1432,
+        "maximumMs": 34
+      },
+      "classified-coverage": {
+        "calls": 277,
+        "elapsedMs": 27825,
+        "maximumMs": 261
+      },
+      "c08.transaction.cases": {
+        "calls": 15,
+        "elapsedMs": 1190,
+        "maximumMs": 124
+      },
+      "planner.verifySourceOnly": {
+        "calls": 1156,
+        "elapsedMs": 4252,
+        "maximumMs": 10
+      },
+      "planner.verifyOperation": {
+        "calls": 412,
+        "elapsedMs": 6563,
+        "maximumMs": 24
+      },
+      "planner.verifySourceProjection": {
+        "calls": 2312,
+        "elapsedMs": 2126,
+        "maximumMs": 6
+      },
+      "c08.read.outbox": {
+        "calls": 1,
+        "elapsedMs": 17,
+        "maximumMs": 17
+      }
+    }
+  },
+  "matchedCheckpoint": {
+    "phase": "prepare:transition-confirmed:complete",
+    "priorW": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "priorRun": 43631582858,
+    "currentW": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "currentRun": 43636137688,
+    "prior": {
+      "stateBytes": 1504375,
+      "transactionsBytes": 636765,
+      "casesBytes": 115934,
+      "resultBytes": 319129,
+      "transactions": 20,
+      "cases": 1,
+      "results": 12
+    },
+    "current": {
+      "stateBytes": 1311209,
+      "transactionsBytes": 443599,
+      "casesBytes": 115934,
+      "resultBytes": 319129,
+      "transactions": 20,
+      "cases": 1,
+      "results": 12
+    },
+    "reductionBytes": 193166,
+    "interpretation": "193166 fewer bytes are observed entirely in transaction receipt payload at the matching checkpoint. Canonical results/case counts and byte sizes are preserved. This is not end-to-end timing proof."
+  },
+  "staticCostModel": {
+    "basis": "Unmodified coverage-preview.ts at blob9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+    "forNQualifiedSamples": {
+      "currentCalls": "4+6N",
+      "structuralProofs": "2+N",
+      "extraPreviews": "3N"
+    },
+    "forTwoSamples": {
+      "authorityResolutions": 16,
+      "originalPredicates": 16,
+      "structuralProofs": 4,
+      "extraPreviews": 6
+    },
+    "limit": "Callgraph projection only. Not all calls were reached in S3; do not represent this count as executed or multiply partial timings into a measured total."
+  },
+  "rejectedAlternatives": [
+    {
+      "candidate": "PR56 success shortcut of original isStillValid",
+      "reason": "Equal data/digest does not imply equivalent opaque callbacks; Afalse/Btrue counterexample and S1/S2 discriminator."
+    },
+    {
+      "candidate": "Share complete case observations between units and stored-scenarios",
+      "reason": "Would omit fresh opaque case/source callbacks and can miss mutation after final case/evidence; exact function identity does not prove temporal equivalence. Rule resolution also requires selected case before baseline."
+    },
+    {
+      "candidate": "Reuse structural coverage proof between qualifications",
+      "reason": "No equivalence proof preserving all requested recertifications and callbacks; not applied."
+    },
+    {
+      "candidate": "Remove redundant clones or memoize pure private digests",
+      "reason": "Potential small pure-work savings have no measured material share of the residual; no speculative patch or new long run."
+    }
+  ],
+  "nextBoundary": {
+    "owner": "Provider/persistence and canonical case/source replay owner, coordinated by session14/S0",
+    "pathExamples": [
+      "product/host-binding/state-provider.ts",
+      "product/decisions/case-port.ts"
+    ],
+    "suggestedWork": "Reduce repeated full-state materialization/serialization under fresh read fences and existing callbacks, or prove an explicit equivalent observation contract. These paths remain unedited and no proposed solution is claimed sufficient.",
+    "mustPreserve": [
+      "two observation moments",
+      "original predicates",
+      "source fences",
+      "Request/headers/binding/lease",
+      "CAS",
+      "full arithmetic/history/replay/reopen assertions",
+      "180000/300000 budgets"
+    ]
+  },
+  "noAdditionalLongDispatch": true,
+  "globalRelease": false
+}

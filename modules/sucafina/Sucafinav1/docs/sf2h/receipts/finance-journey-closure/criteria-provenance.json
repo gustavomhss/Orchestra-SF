@@ -1,0 +1,2329 @@
+{
+  "schema": "sf-finance-journey-closure-criteria-map-v1",
+  "artifact_role": "Final mission18 evidence map, reconciled against actual GitHub Actions logs by the branch owner.",
+  "created_at_utc": "2026-11-14 20:09:05 UTC",
+  "status": "FINAL_OPEN_IMPLEMENTED_NOT_CLOSED",
+  "finding": "FIN-IND-005",
+  "finding_disposition": "OPEN",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-resume",
+  "pr": 42,
+  "planned_receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/",
+  "normative_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "scope_preservation": {
+    "full_finance": {
+      "work_packages": 4,
+      "criteria": 371,
+      "criteria_by_wp": {
+        "WP03": 112,
+        "WP05": 108,
+        "WP11": 83,
+        "WP13": 68
+      },
+      "tasks": 18,
+      "tasks_by_wp": {
+        "WP03": 5,
+        "WP05": 5,
+        "WP11": 4,
+        "WP13": 4
+      },
+      "checks": 87,
+      "checks_by_wp": {
+        "WP03": 26,
+        "WP05": 26,
+        "WP11": 19,
+        "WP13": 16
+      },
+      "canonical_criterion_statuses": {
+        "NOT_RUN": 371
+      },
+      "canonical_task_statuses": {
+        "PLANNED": 18
+      },
+      "excluded_criteria": [],
+      "waived_criteria": []
+    },
+    "campaign": {
+      "work_packages": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "rule": "This eight-obligation mission map supplements and does not replace or reduce the complete 371-criterion/18-task/87-check Finance inventory, the 68 S4-C criteria, or wider campaign/consumer requirements.",
+    "criterion_statuses_are_literal_plan_metadata": true,
+    "waived": [],
+    "excluded": [],
+    "global_acceptance": false
+  },
+  "sources": {
+    "full_inventory_index": {
+      "commit": "454b97daf614176507711df889bd45743467f7af",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/criteria-index-final.json",
+      "blob": "380013db924473678353f56a7852de2f0133733e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/454b97daf614176507711df889bd45743467f7af/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/criteria-index-final.json"
+    },
+    "full_inventory_validation": {
+      "commit": "454b97daf614176507711df889bd45743467f7af",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/criteria-index-validation-final.json",
+      "blob": "e22f88b34a9c100737fb896df921e67f5a2807ff",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/454b97daf614176507711df889bd45743467f7af/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/criteria-index-validation-final.json"
+    },
+    "prior_criteria": {
+      "commit": "454b97daf614176507711df889bd45743467f7af",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/criteria-provenance.json",
+      "blob": "58a6b2a55c820aeb9cc2f0d5597b93526028a5b8",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/454b97daf614176507711df889bd45743467f7af/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/criteria-provenance.json"
+    },
+    "prior_handoff": {
+      "commit": "454b97daf614176507711df889bd45743467f7af",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/HANDOFF-FINAL.md",
+      "blob": "976b71bc150fa5810a60ff5917e17bfd18701bc9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/454b97daf614176507711df889bd45743467f7af/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/HANDOFF-FINAL.md"
+    },
+    "prior_scope_manifest": {
+      "commit": "454b97daf614176507711df889bd45743467f7af",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/scope-manifest.json",
+      "blob": "2f5f6a263295cf991d9d38320a911a125534c561",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/454b97daf614176507711df889bd45743467f7af/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/scope-manifest.json"
+    },
+    "mission": {
+      "commit": "a32285b2683b5000dafe93df99289547c7f410fb",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/finance-journey-closure.json",
+      "blob": "c8129f55def8293a43595e9ab7beda44d66654b1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a32285b2683b5000dafe93df99289547c7f410fb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/finance-journey-closure.json"
+    },
+    "pack": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-C.json",
+      "blob": "c59d7593fe94808048a0377d365d0681482d7252",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-C.json"
+    },
+    "product_acceptance": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md"
+    },
+    "resident_runtime": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md"
+    },
+    "independent_authority_review": {
+      "commit": "29356ad7a554309e9a905749dd84e3f6bd0900ea",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/recheck-wave/20261114-7a9a43b3/coverage-preview.md",
+      "blob": "71dbf3cec182e7f9295d9f36c01b7cac7dba582a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/29356ad7a554309e9a905749dd84e3f6bd0900ea/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/recheck-wave/20261114-7a9a43b3/coverage-preview.md"
+    }
+  },
+  "canonical_source_manifest_inherited": [
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP11.pack.json",
+      "blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "source_characters": 413421,
+      "source_name": "WP11.pack.json"
+    },
+    {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+      "blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "source_characters": 26831,
+      "source_name": "WP13.json"
+    },
+    {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+      "blob": "875baa9afdc9006039b8b343fae88cc5bd7f9a9e",
+      "source_characters": 49259,
+      "source_name": "WP03.json"
+    },
+    {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "source_characters": 43736,
+      "source_name": "execution-COMMON.md"
+    },
+    {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "source_characters": 13825,
+      "source_name": "product-acceptance.md"
+    },
+    {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "source_characters": 41053,
+      "source_name": "resident-runtime.md"
+    },
+    {
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ea9dc2efe0de8d283f9625774697e431f55a0d7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/HANDOFF-FINAL.md",
+      "blob": "2623594eb8124b45e45ec6665764be61c34be70c",
+      "source_characters": 15961,
+      "source_name": "finance-resume-HANDOFF-FINAL.md"
+    },
+    {
+      "commit": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/finance-journey/attempt-01/HANDOFF.md",
+      "blob": "e388bd96f96a8a5880cbf83abe68f76cf3baeb6a",
+      "source_characters": 13591,
+      "source_name": "finance-journey-HANDOFF.md"
+    },
+    {
+      "commit": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/finance-journey/attempt-01/result.json",
+      "blob": "e1aec46a5d899bb96522e114b3a61e1935661909",
+      "source_characters": 27986,
+      "source_name": "finance-journey-result.json"
+    },
+    {
+      "commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/30e2215749d5295f81fdeafccb9e69ba21d0cdb8/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/review-fixes/finance-journey.json",
+      "blob": "cb294478092c641e0256b3742add2f2c393c08d6",
+      "source_characters": 5432,
+      "source_name": "finance-journey-mission.json"
+    },
+    {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+      "source_characters": 4537,
+      "source_name": "CI.md"
+    }
+  ],
+  "literal_supporting_criteria": [
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/1/checks/3",
+      "clause_sha256": "adca08ad50c4f211e3278d9fde39ded6d5e299ce53ca28e4433909ef3f7e3b3e",
+      "normative_clause": {
+        "id": "WP11.T02.CHK.20",
+        "text": "AI-RENEWAL-OMITTED-CATEGORY remove training da entrada, sem linha, sem pending pré-cadastrado e com implementação explicitamente sem treinamento: validador deriva missing-category e knownSubtotal 210000; completeDifference/total coberto ficam indisponíveis e a comparação é conditioned em todos os consumidores.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/1/checks/4",
+      "clause_sha256": "aa30610a3b50fc7e58054193e331a40eafce0ad5b292bea2f6365fd356a7c4d8",
+      "normative_clause": {
+        "id": "WP11.T02.CHK.21",
+        "text": "Na mesma variante, confirmar novo componente training=40000 com fonte torna cobertura completa, total 250000, diferença -10000 e teto de implantação15000. A comparação de custo se inverte, condição mínima 20000 falha e a escolha original mantém subtotal 210000/ressalva pending/versões.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/2/checks/3",
+      "clause_sha256": "d7a002daa569a4146ce49402ca7111254262209e3b20efad532e022df391fd81",
+      "normative_clause": {
+        "id": "WP11.T03.CHK.20",
+        "text": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP13.json",
+      "source_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "json_pointer": "/tasks/1/checks/3",
+      "clause_sha256": "f6a58f2a13ac4e18a242526aa8cd0fb343abd0b19b2981de9260e1bad2a25135",
+      "normative_clause": {
+        "id": "WP13.T02.CHK.20",
+        "text": "Combinação contendo a alternativa training omitida tem subtotal 210000 e não passa como eligible-complete; após training = 40000, total 250000 rompe teto240000 e vantagem mínima 20000. UI/BI/critique usam a mesma versão, sem ranking com categoria oculta.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP13.json",
+      "source_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "json_pointer": "/tasks/2/checks/3",
+      "clause_sha256": "3bb7e3b1d53c587b1225b7a03fec684a799923f4e1bd78fb90e91de3e37326e5",
+      "normative_clause": {
+        "id": "WP13.T03.CHK.20",
+        "text": "Com training omitido, teto 55000 vale apenas para componentes conhecidos e permanece condicionado. Após training = 40000 confirmado, outros custos205000 produzem teto 15000;15000 atende mínimo 20000 e15001 falha, com a mesma base confirmada.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/axioms/dod/0",
+      "clause_sha256": "c8609521e5b01a54493a19c242cb326a6ce423df3b9b6da6d32719cd4aa43e2a",
+      "normative_clause": {
+        "id": "WP11.DOD.01",
+        "text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/0/checks/0",
+      "clause_sha256": "cd8fba506b6e726610b665a4920cf9d550d9142d567d15675274f3fa6082ecfc",
+      "normative_clause": {
+        "id": "WP11.T01.CHK.01",
+        "text": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/0/axioms/completeness_criteria/0",
+      "clause_sha256": "d88f6ed69d77bd2c9d0db7328eaef2a6b001cc4b383ec84a5f43c84f8c0639cb",
+      "normative_clause": {
+        "id": "WP11.T01.CMP.01",
+        "text": "Cobrir rascunho, objetivo corrigido, referência revogada/substituída, concorrência e reinício.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/0/axioms/invariants/0",
+      "clause_sha256": "6ba8d7c7ce23bb3f275f11ffaeaa6d80ca36e0bec1626d1b7605afc45cc94350",
+      "normative_clause": {
+        "id": "WP11.T01.INV.01",
+        "text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/0/axioms/success_criteria/0",
+      "clause_sha256": "2e6c7ed1ab09981c3ae47aaff60c58bf596f534fd697769f641af3fdb60c5a7d",
+      "normative_clause": {
+        "id": "WP11.T01.SUC.01",
+        "text": "André e um colaborador autorizado retomam a mesma pergunta e seus dados sem reconstruir contexto.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/axioms/dod/2",
+      "clause_sha256": "3b35cfc00ebe5b821b52343ae62e6db8ee08d8dd2574f13fe37543bfb8f0d3ca",
+      "normative_clause": {
+        "id": "WP11.DOD.20",
+        "text": "Alternativas persistem inventário, avaliação de categorias e comparação C10 consumidos por UI, BI, crítica e portfólio.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/1/axioms/dod/1",
+      "clause_sha256": "b8bb3b57153d1e1db41496ad51bbf17cf0cd119a41d4b6ee7134645bebad8ca0",
+      "normative_clause": {
+        "id": "WP11.T02.DOD.20",
+        "text": "Alternativa persistida entrega cálculo WP03 e cobertura C10 reais a todos os consumidores nomeados.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/canonical_work_package/tasks/1/axioms/completeness_criteria/1",
+      "clause_sha256": "561e8e78f19f805306781266bf55f48842dfdb34d2b02e5d9b0d141d68010d02",
+      "normative_clause": {
+        "id": "WP11.T02.CMP.20",
+        "text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP13.json",
+      "source_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "json_pointer": "/tasks/2/checks/4",
+      "clause_sha256": "05d6d3f3907c34591b3fa8a291701276be633f68c217e25756ca6a0e361b38e9",
+      "normative_clause": {
+        "id": "WP13.T03.CHK.18",
+        "text": "Executar sf_sensitivity_evaluate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP13.json",
+      "source_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "json_pointer": "/tasks/2/axioms/invariants/1",
+      "clause_sha256": "4dd17c03adb23b2890dd13421314ad68f50f5ea8b4841fe344f35005ba0519ae",
+      "normative_clause": {
+        "id": "WP13.T03.INV.18",
+        "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP13.json",
+      "source_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "source_blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "json_pointer": "/tasks/2/axioms/quality_standards/0",
+      "clause_sha256": "0432549be542f4a73d85ef600faeb9dc1bcdf5a94c7f94f764b602f491b13dd4",
+      "normative_clause": {
+        "id": "WP13.T03.QLT.01",
+        "text": "Unidades, precisão, intervalo e fonte são explícitos; interação determinística não depende de latência de IA.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/quality_standards/5",
+      "clause_sha256": "27f26030844e472e774e178560c5567c7f50df084ee9129780b70b216f94542c",
+      "normative_clause": {
+        "id": "CAMP.QLT.06",
+        "text": "Critérios e evidências são discriminantes: descrevem qual erro real seria detectado. Testar novamente apenas o que mudou ou o que um gate obrigatório exige.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/completeness_criteria/3",
+      "clause_sha256": "b868dd72f382c7a357dc55b298c749aa0130b28b7b475aedc25aee44f86b2440",
+      "normative_clause": {
+        "id": "CAMP.CMP.04",
+        "text": "As contribuições novas são acessíveis pelos entrypoints reais, com estado compatível e assets/receitas incluídos na entrega do módulo; documentos ou receitas que só existem no repositório não contam como funcionalidade.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/completeness_criteria/1",
+      "clause_sha256": "4507c67d630266c34671f560b7d1b30e21ebece2a714b1723eed5747f831ce1e",
+      "normative_clause": {
+        "id": "CAMP.CMP.02",
+        "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/invariants/0",
+      "clause_sha256": "9f41d9d94b3d3f5f52ee543f843cb0b5084bfea345f65aa787de17525ebbcc86",
+      "normative_clause": {
+        "id": "CAMP.INV.01",
+        "text": "Domínios continuam como fontes de verdade. UI, BI, relatórios, importação e IA consomem os mesmos contratos; não mantêm cálculos financeiros ou estados de compra paralelos.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/invariants/1",
+      "clause_sha256": "8ce8617d52bb7a0830b22d6159697453c322f59c9b20ca4de69667d7d70626bd",
+      "normative_clause": {
+        "id": "CAMP.INV.02",
+        "text": "Papéis, escopo de dados, holders, locks, versões esperadas e transições legais são preservados. Tornar uma ação fácil de encontrar não amplia autoridade.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/invariants/2",
+      "clause_sha256": "add1bb3780ffec43367e75e11ea3a039ee37ffdd87eb89ccf8000ee640268dad",
+      "normative_clause": {
+        "id": "CAMP.INV.03",
+        "text": "Ausência, zero observado, valor herdado, estimativa, valor aprovado e emissão interna mantêm significados distintos; período, versão e moeda não mudam silenciosamente.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/invariants/3",
+      "clause_sha256": "cfbcc5fa972e9a491fa56e32f630624c1c4c271da3e065786ea9d2813d46944d",
+      "normative_clause": {
+        "id": "CAMP.INV.04",
+        "text": "Nenhum conteúdo restrito reaparece em busca, contagem, comparação, gráfico, comentário, snapshot, exportação, prompt ou resultado de rotina. Ler ou aplicar revalida acesso atual.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/invariants/5",
+      "clause_sha256": "64f9dd2b357b2b56d6405c49fa67c1a0f24f812ae4ab696f02187c68025bcd2b",
+      "normative_clause": {
+        "id": "CAMP.INV.06",
+        "text": "Revisão preservada permanece estável. Atualizar a origem não reescreve a reunião passada; acesso revogado não permite recuperar conteúdo privado por histórico.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/invariants/11",
+      "clause_sha256": "7e7f6d766893bc295758f35c4c06d878509157e1716096e2e7578a467ad060a9",
+      "normative_clause": {
+        "id": "CAMP.INV.20",
+        "text": "Versão observada não equivale a validade global; soma correta não equivale a custo completo. Nova categoria relevante, revogação e substituição preservam auditoria e exigem estado correto.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/dod/1",
+      "clause_sha256": "3b740ba9014476689d3ff37cc53a4916347fd7468ce7963554d3a69d8c16fa97",
+      "normative_clause": {
+        "id": "CAMP.DOD.02",
+        "text": "As jornadas J01–J13 funcionam nos entrypoints reais, com persistência, autorização, produtores e consumidores reais, incluindo IA, Relay, documentos, portfólio e memória.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/dod/6",
+      "clause_sha256": "6971e2df5c879d14d87dccb80967b0ddb770f314bc108a52ba43b5390cd9c010",
+      "normative_clause": {
+        "id": "CAMP.DOD.20",
+        "text": "C06 resolve confirmação por escopo e C10 resolve cobertura de custos; produtores e consumidores reais demonstram as contraprovas CONFIRM-SCOPE e AI-RENEWAL-OMITTED-CATEGORY.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/completeness_criteria/6",
+      "clause_sha256": "0c51217c99dd68af14dd973f9505d6532a80cb80a5f9cbbddb51c7091d544f4f",
+      "normative_clause": {
+        "id": "CAMP.CMP.20",
+        "text": "Cobrir material/irrelevante/revogado/substituído, categoria incluída/inaplicável/pendente/omitida/zero e consumo WP06→WP09 da extração obrigatória.",
+        "status": "NOT_RUN"
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/global_campaign_axioms/success_criteria/9",
+      "clause_sha256": "70e94b1a7dc58bdde547301567b6799a2dfc73c8bdd2122552aae9811543a115",
+      "normative_clause": {
+        "id": "CAMP.SUC.20",
+        "text": "A pessoa evita cobrança irrelevante, identifica a informação que condiciona a comparação e reavalia custo posterior sem perder a escolha original.",
+        "status": "NOT_RUN"
+      }
+    }
+  ],
+  "literal_supporting_contracts": [
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/contracts/4",
+      "clause_sha256": "746fbe9205305a1b797ed32308a3e2a90c7b09259e602df3eed19e6d1e89e854",
+      "normative_clause": {
+        "id": "C08",
+        "name": "BusinessPorts e composição nativa",
+        "definition_owner": "WP00",
+        "producers": [
+          "WP10",
+          "WP04",
+          "WP05",
+          "WP07"
+        ],
+        "consumers": [
+          "WP00",
+          "WP01",
+          "WP02",
+          "WP03",
+          "WP04",
+          "WP05",
+          "WP06",
+          "WP07",
+          "WP08",
+          "WP09",
+          "WP10",
+          "WP11",
+          "WP12",
+          "WP13",
+          "WP14"
+        ],
+        "content": [
+          "bindingIdentity: installationID, hostID, projectID, locationID e policyVersion validados pelo host; nenhum endpoint ou credencial escolhido por texto do modelo",
+          "actorAuthority: principal empresarial autenticado + capabilities verificadas por requisição; selecionar destinatário não concede acesso às fontes",
+          "analysis.create/read/cancel: job com caseID, caseVersion, contextFingerprint, recipeVersion, nativeSessionID e outputSchemaVersion",
+          "routines.catalog/prepareAdmission/readAdmission/readRun: documentID + publishedVersion + parâmetros + write scope + planRevisionID/authorizationID/armRef/childSessionID quando disponíveis",
+          "schedules.create/update/pause/list/readRun: binding de dono/projeto + política existente, sem tratar Schedule como aprovação automática de workflow",
+          "result.write: retorno autenticado, escopado ao job/caso/versão; sem comando genérico de alteração de negócio",
+          "directory.lookup: somente IDs autorizados do diretório existente; sem inferência de identidade por nome",
+          "unavailable e stale são resultados explícitos, jamais dados sintéticos de sucesso",
+          "O integrador monta a contribuição de produto no host já autenticado, sem abrir listener, trocar store ou alterar deployment Azure.",
+          "Adaptador recebe as Services já compostas; não cria um runtime paralelo com credenciais globais nem passa tokens para Sucafina/browser.",
+          "IA de análise pode usar uma sessão dedicada e escopada via SessionV2.Service.create + generate (tool-less) ou prompt com ferramentas estritamente delimitadas; a saída é validada no schema do caso. Isso é análise, não execução de workflow.",
+          "Fluxos Relay usam a sessão Maestro nativa: catálogo publicado, preparação da revisão, review e aprovação, arm/dispatch e leitura do resultado. LLM.generateObject é reutilizável para conteúdo tipado, mas não substitui admissão de workflow.",
+          "Se for usada SessionV2.generate, não reutilizar histórico de outro usuário/caso; cada sessão tem proveniência e escopo verificados. O retorno textual é schema-decoded antes de aceitar operações.",
+          "Routines C08 registra referencia ao workflow interno (arm/binding/session); não inventa external runID nem usa ledger de outra espécie.",
+          "A factory recebe BusinessPorts como dependência explícita; Application/ModuleServices preservam capacidade ausente como erro de feature. Browser nunca recebe credenciais do host.",
+          "Um único adaptador product-handler coordena leitura multi-surface, serviço de casos e propostas de comandos. Comandos finais voltam aos execute/handlers próprios, com actor e CAS revalidados.",
+          "A frente cloud e o integrador têm handoff de patch sobre SHA combinado para host/factory compartilhados: um escreve, o outro consome. Não sobrescrever a frente cloud com um arquivo inteiro baseado em outra revisão.",
+          "Usar Host.Contribution de forma aditiva, respeitando serviços reservados, e Tools.Service no Location correto para ferramentas de produto. Não chamar o registro interno nem criar engine paralelo.",
+          "As capacidades de ferramentas são restringidas efetivamente por Permission/Agent e pelas portas de domínio. advertisedNames é metadata, não autorização. SessionV2.generate é tool-less; a prova de ferramentas restritas usa SessionV2.prompt com a configuração autorizada.",
+          "Persistir namespace protegido para C09–C14, escolhas, confirmações, proveniência, vínculos e recibos locais. Import JSON só substitui os dados de negócio permitidos: preserva metadados canônicos, rejeita os fornecidos no arquivo e invalida referências a encarnações substituídas.",
+          "C15 é a fonte única dos cinco perfis/dezoito skills e C16 define o único binding de execução SF. AgentV2 e SkillV2 são registrados por contribuição de Location, sem substituir serviços reservados, reutilizar IDs de engenharia ou alterar alçadas.",
+          "Tools.Service registra aliases sf_* que recebem Tool.Context nativo e invocam sucafina-workbench em par InMemoryTransport privado, fixado por objeto/generation. McpProvided não transporta identidade SF e NÃO é o caminho deste servidor. UI, agente e MCP convergem em dispatchSfCapability e na mesma porta final.",
+          "Application.authenticate(request,{surface, roleMap(snapshot, surface)}) é reexecutado no destino por request lease só no host; IDs C16 não substituem autenticação. Lease vencida, restart ou principal divergente exige nova ligação autenticada. Rotinas usam somente autoridade revalidável já admitida em C07.",
+          "Estado C09–C17 usa Snapshot.data.__sfProductV1 no surface dashboard existente, protegido por WP10.T01; não é um quarto Surface nem papel dashboard que concede acesso transversal. Domínios continuam pelas portas próprias fora da transação central; cada seção conserva revisão.",
+          "Provider remove __sfProductV1 de projeções genéricas, exports JSON, previews e auditoria visível. Import rejeita metadados SF fornecidos e preserva namespace confiável; substituição atualiza encarnações. Backup operacional conserva política existente e não vira export de negócio.",
+          "C17 compõe DurableMemory síncrono sobre snapshot isolado de Persistence.transaction async. append prepara evento; nenhum sucesso precede commit durável. Documentos/ACLs de outros domínios são coletados antes e revalidados no egress; sem transações aninhadas.",
+          "Empacotamento Atlas usa @orchestra/atlas-boundary/business-memory-ports gerado pelo build canônico com entry de reexports. Sem import runtime @atlas/* não resolvida, cópia manual de engines ou store git para dados SF."
+        ],
+        "proof": "GNATIVE T+20: sf_finance registrado, sf-explicar-forecast carregada por SessionV2.skill com digest observado, caso C09 real, sf_forecast_compare pelo MCP privado ao adapter WP03 real e resultado/proveniência no produto. Todos os 8 packs e C17 completos no G4/aceite. Implementação NOT_RUN."
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/contracts/5",
+      "clause_sha256": "7e4be0ebb853c83a0b73369a3449dd843783b2726bf151d0ae8e0af12c258463",
+      "normative_clause": {
+        "id": "C09",
+        "name": "Caso de decisão e referências",
+        "definition_owner": "WP00",
+        "producers": [
+          "WP11"
+        ],
+        "consumers": [
+          "WP01",
+          "WP06",
+          "WP07",
+          "WP08",
+          "WP09",
+          "WP12",
+          "WP13",
+          "WP14",
+          "WP05",
+          "WP10"
+        ],
+        "content": [
+          "caseId, version, state, objective, horizon, currency, criteria, participants autorizados",
+          "sourceRefs com surface/type/id/incarnation/fields/period/version/observedAt e nível de evidência",
+          "alternatives, assumptions, questions, choices append-only, preparedChanges e receipts",
+          "escopo de política reavaliado na leitura; conteúdo privado filtrado inclusive em agregados",
+          "Cada alternativa referencia CostCoverageBasis/Assessment C10; ChoiceRecord captura também basisVersion, cobertura, comparisonStatus e condições não resolvidas da base escolhida. Resolver uma omissão cria nova revisão; a escolha humana histórica e sua ressalva continuam recuperáveis.",
+          "BusinessEvidenceRef C17 substitui referências livres nas contribuições novas; sourceRefs legados são normalizados sem fabricar origem/hash. Ledger C09 continua fonte oficial; Atlas contém projeções derivadas com outputRef/eventId, nunca outra escolha oficial."
+        ],
+        "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento."
+      }
+    },
+    {
+      "source_name": "WP11.pack.json",
+      "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "json_pointer": "/contracts/6",
+      "clause_sha256": "64089edd817f827257b13348fc302c99a185f824e832af16b992d191073dc22d",
+      "normative_clause": {
+        "id": "C10",
+        "name": "Simulação e operações de cenário",
+        "definition_owner": "WP00",
+        "producers": [
+          "WP03",
+          "WP11",
+          "WP13"
+        ],
+        "consumers": [
+          "WP01",
+          "WP05",
+          "WP06",
+          "WP09",
+          "WP12",
+          "WP14",
+          "WP10",
+          "WP11",
+          "WP13"
+        ],
+        "content": [
+          "Operações tipadas substituem contribuição vinculada uma vez, em cenário copiado sem alteração oficial. Preview, comparação, sensibilidade e aplicação validada usam a mesma regra de domínio.",
+          "CostCoverageBasis = {id, version, decisionType, categoryIds, sourceRefs, additionalCategoryIds}. Para renewal-transition-v1, avaliar service, service_overlap, implementation, contract_exit, migration, taxes, training, internal_costs e other_relevant_costs. São categorias de investigação do custo pertinente ao caso; não estabelecem alíquotas, obrigações fiscais, custos presumidos ou recomendação financeira. Outros tipos de decisão declaram seu inventário em WP00.T02; tipo ainda sem inventário mantém cobertura pendente.",
+          "O inventário é versionado e vem da configuração do tipo de decisão/caso autorizada, nunca é inferido somente das linhas existentes. O conjunto obrigatório não pode ser reduzido para fazer a cobertura passar; categoria adicional pertinente é incorporada com versão/base rastreáveis. Completo significa cobertura do inventário declarado naquele escopo, não garantia de que nenhum custo desconhecido existe no mundo.",
+          "CostCoverageAssessment = {basisId, basisVersion, alternativeId, alternativeVersion, currency, horizon, entries, derivedMissingCategoryIds, coverageState, issues, evaluatedSourceRefs}. Para cada categoryId esperado existe exatamente uma CostCoverageEntry, ou o validador deriva pending(reason=missing-category) sem fabricar uma linha de custo.",
+          "CostCoverageEntry é união discriminada: included {categoryId, componentRefs, evidenceRefs, scopeNote}; not-applicable {categoryId, justification, evidenceRefs}; pending {categoryId, reason, questionRef?}. included exige ao menos um componente existente e indicação do que está coberto; not-applicable exige razão verificável no escopo e fonte acessível, não uma frase sem suporte. Sem justificativa/evidência ou fonte atual, a condição é pending. pending não contém valor presumido.",
+          "Componentes mantêm amount: number|null, currency, period, sourceRefs e evidenceState: confirmed|estimated|hypothetical|absent. Zero confirmado é amount=0 com fonte e included; omissão, null, falta de FX e ausência de fonte não são zero. Categoria incluída por componente sem valor/fonte utilizável mantém questão pendente. A mesma parcela pode cobrir mais de uma categoria quando a fonte o declara; a soma usa component identity uma vez, sem somar linhas de cobertura.",
+          "coverageState = complete somente quando todas as categorias do inventário estão resolvidas como included válido ou not-applicable suportado; pending quando qualquer categoria está ausente/não resolvida; unavailable quando a projeção autorizada não pode expor a avaliação necessária. Revogação ou substituição de fonte exige nova projeção, nunca conserva um selo completo por cache.",
+          "ScenarioResult = {components, knownSubtotal, total: number|null, currency, horizon, sourceRefs, costCoverage, comparisonStatus, unresolvedConditions, restrictions}. knownSubtotal soma os componentes quantificados pelo motor; total plenamente coberto só é publicável como tal quando a cobertura e a quantificação permitem. Um subtotal pode ser apresentado, sempre com a lista de categorias/condições pendentes e sem rótulo de custo total completo.",
+          "ScenarioComparison = {baselineResultRef, alternativeResultRef, costCoverageRefs, comparisonStatus: complete|conditioned|incompatible|unavailable, knownDifference, completeDifference: number|null, criterionResults, unresolvedConditions}. complete exige ambas as alternativas no mesmo horizonte/moeda/base compatível, inventários resolvidos, componentes/evidências atuais confirmados e nenhum custo/FX pertinente desconhecido. estimated/hypothetical/pending permite análise condicionada; bases incompatíveis ou acesso insuficiente permanecem explícitos. A viabilidade de prazo e outros critérios é independente da completude financeira.",
+          "Quando comparisonStatus=conditioned, knownDifference e um limiar calculado com os componentes disponíveis são rotulados como condicionados às lacunas declaradas; não são benefício confirmado, economia realizada, preferência plenamente validada nem recomendação de compra. Nenhum algoritmo de ranking, crítico, export, UI ou portfólio pode promover conditioned a complete por ter a soma correta.",
+          "WP11 produz e persiste a avaliação C10 junto à versão da alternativa; WP03 fornece valores/calculadora; WP13 agrega a cobertura dos candidatos e das interações declaradas sem esconder categoria pendente. Uma combinação com custo pertinente desconhecido é incomplete/conditioned e não eligible-complete, mesmo se o subtotal atender ao teto.",
+          "UI WP01, BI WP05, crítica WP12, portfólio WP13 e rotinas WP09 consomem o mesmo ScenarioResult/ScenarioComparison e costCoverageRefs; mostram a mesma condição, categorias e razões. BI usa tabela equivalente e não desenha uma barra zero para custo desconhecido. Falta/falha da avaliação impede o selo completo, mas preserva o trabalho autorizado e as parcelas conhecidas.",
+          "ChoiceRecord preserva alternativeVersion, basisVersion, costCoverage, comparisonStatus, critério, valores e fontes usados na escolha. Resolução posterior de categoria recalcula via WP03 e reavalia via WP14; produz antes/depois, condição afetada e opção de reconsiderar. Não reescreve a base escolhida nem muda automaticamente a escolha ou as aprovações.",
+          "Sensibilidade usa limites explícitos e informa o conjunto de custos em que o limiar é válido; categoria pendente condiciona o limiar. Não inventar probabilidades, causalidade, regras fiscais, capacidade por FTE ou custos para completar o inventário."
+        ],
+        "proof": "AI-RENEWAL completo reconcilia 240000 vs 210000, vantagem 30000 e teto 55000. AI-RENEWAL-OMITTED-CATEGORY remove inteiramente training e produz missing-category/conditioned, sem zero fictício. Confirmar training=40000 muda total para 250000, diferença para -10000 e teto para 15000; UI/BI/crítica/portfólio consomem a mesma revisão, e ChoiceRecord original fica preservado."
+      }
+    }
+  ],
+  "literal_numeric_oracle": {
+    "source_name": "WP11.pack.json",
+    "source_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "source_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+    "json_pointer": "/related_actor_context/numeric_oracles/5",
+    "normative_oracle": {
+      "id": "AI-RENEWAL-OMITTED-CATEGORY",
+      "variant_of": "AI-RENEWAL",
+      "branch_rule": "Variante sintética independente. Começa com o mesmo preço 45000, mas outra cotação que inclui migração e EXCLUI treinamento. Não retirar treinamento de uma fonte que o declarava incluído sem registrar essa alteração. Nenhuma entrada training nem componente training existe na entrada inicial.",
+      "inputs": {
+        "currency": "USD",
+        "horizon": "2027-01..2027-12",
+        "basis": {
+          "id": "renewal-transition",
+          "version": 1,
+          "decisionType": "renewal-transition-v1",
+          "categoryIds": [
+            "service",
+            "service_overlap",
+            "implementation",
+            "contract_exit",
+            "migration",
+            "taxes",
+            "training",
+            "internal_costs",
+            "other_relevant_costs"
+          ],
+          "additionalCategoryIds": [],
+          "sourceRefs": [
+            "SYN-COST-SCOPE-V1"
+          ]
+        },
+        "renewal": {
+          "alternativeId": "renew",
+          "version": 1,
+          "components": [
+            {
+              "id": "cmp-renewal",
+              "amount": 240000,
+              "currency": "USD",
+              "period": "2027-01..2027-12",
+              "sourceRefs": [
+                "SYN-RENEWAL-QUOTE-V1"
+              ],
+              "evidenceState": "confirmed"
+            }
+          ],
+          "entries": [
+            {
+              "categoryId": "service",
+              "state": "included",
+              "componentRefs": [
+                "cmp-renewal"
+              ],
+              "evidenceRefs": [
+                "SYN-RENEWAL-QUOTE-V1"
+              ],
+              "scopeNote": "Preço do serviço renovado no mesmo horizonte."
+            },
+            {
+              "categoryId": "service_overlap",
+              "state": "not-applicable",
+              "justification": "Renovar não inicia serviço paralelo neste corpus.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "implementation",
+              "state": "not-applicable",
+              "justification": "Renovar mantém a implantação atual sem trabalho incremental neste corpus.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "contract_exit",
+              "state": "not-applicable",
+              "justification": "Renovar não encerra o contrato nesta alternativa.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "migration",
+              "state": "not-applicable",
+              "justification": "Renovar não migra dados/serviço neste corpus.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "taxes",
+              "state": "included",
+              "componentRefs": [
+                "cmp-renewal"
+              ],
+              "evidenceRefs": [
+                "SYN-RENEWAL-QUOTE-V1"
+              ],
+              "scopeNote": "Impostos/encargos declarados incluídos no preço final; não aplicar uma taxa nova."
+            },
+            {
+              "categoryId": "training",
+              "state": "not-applicable",
+              "justification": "Renovar não requer treinamento adicional no corpus.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "internal_costs",
+              "state": "not-applicable",
+              "justification": "Levantamento explícito fornecido não exige custo interno incremental para renovar no horizonte.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "other_relevant_costs",
+              "state": "not-applicable",
+              "justification": "Inventário deste escopo revisado não identifica outra categoria pertinente; esta não é garantia universal.",
+              "evidenceRefs": [
+                "SYN-COST-SCOPE-V1",
+                "SYN-APPLICABILITY-V1"
+              ]
+            }
+          ]
+        },
+        "transition": {
+          "alternativeId": "replace-training-gap",
+          "version": 1,
+          "components": [
+            {
+              "id": "cmp-bridge",
+              "amount": 60000,
+              "currency": "USD",
+              "period": "2027-01..2027-12",
+              "sourceRefs": [
+                "SYN-BRIDGE-QUOTE-V1"
+              ],
+              "evidenceState": "confirmed"
+            },
+            {
+              "id": "cmp-implementation",
+              "amount": 45000,
+              "currency": "USD",
+              "period": "2027-01..2027-12",
+              "sourceRefs": [
+                "SYN-IMPLEMENTATION-NO-TRAINING-V1"
+              ],
+              "evidenceState": "confirmed"
+            },
+            {
+              "id": "cmp-new-service",
+              "amount": 105000,
+              "currency": "USD",
+              "period": "2027-01..2027-12",
+              "sourceRefs": [
+                "SYN-NEW-SERVICE-QUOTE-V1"
+              ],
+              "evidenceState": "confirmed"
+            }
+          ],
+          "entries": [
+            {
+              "categoryId": "service",
+              "state": "included",
+              "componentRefs": [
+                "cmp-new-service"
+              ],
+              "evidenceRefs": [
+                "SYN-NEW-SERVICE-QUOTE-V1"
+              ],
+              "scopeNote": "Nova recorrência do serviço no horizonte declarado."
+            },
+            {
+              "categoryId": "service_overlap",
+              "state": "included",
+              "componentRefs": [
+                "cmp-bridge"
+              ],
+              "evidenceRefs": [
+                "SYN-BRIDGE-QUOTE-V1"
+              ],
+              "scopeNote": "Serviço de transição/sobreposição previsto, sem duplicar nova recorrência."
+            },
+            {
+              "categoryId": "implementation",
+              "state": "included",
+              "componentRefs": [
+                "cmp-implementation"
+              ],
+              "evidenceRefs": [
+                "SYN-IMPLEMENTATION-NO-TRAINING-V1"
+              ],
+              "scopeNote": "Implantação inclui migração; treinamento está explicitamente fora do preço no documento desta variante."
+            },
+            {
+              "categoryId": "contract_exit",
+              "state": "not-applicable",
+              "justification": "Condição de término fornecida no corpus não exige penalidade adicional de saída.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "migration",
+              "state": "included",
+              "componentRefs": [
+                "cmp-implementation"
+              ],
+              "evidenceRefs": [
+                "SYN-IMPLEMENTATION-NO-TRAINING-V1"
+              ],
+              "scopeNote": "Migração incluída na implantação; não somar novamente."
+            },
+            {
+              "categoryId": "taxes",
+              "state": "included",
+              "componentRefs": [
+                "cmp-bridge",
+                "cmp-implementation",
+                "cmp-new-service"
+              ],
+              "evidenceRefs": [
+                "SYN-BRIDGE-QUOTE-V1",
+                "SYN-IMPLEMENTATION-NO-TRAINING-V1",
+                "SYN-NEW-SERVICE-QUOTE-V1"
+              ],
+              "scopeNote": "Preços finais das três parcelas incluem os impostos/encargos declarados; não inventar alíquota."
+            },
+            {
+              "categoryId": "internal_costs",
+              "state": "not-applicable",
+              "justification": "Levantamento explícito fornecido não exige custo interno incremental para transição neste horizonte.",
+              "evidenceRefs": [
+                "SYN-APPLICABILITY-V1"
+              ]
+            },
+            {
+              "categoryId": "other_relevant_costs",
+              "state": "not-applicable",
+              "justification": "Inventário deste escopo revisado não identifica outra categoria pertinente; qualquer nova categoria reabre a cobertura.",
+              "evidenceRefs": [
+                "SYN-COST-SCOPE-V1",
+                "SYN-APPLICABILITY-V1"
+              ]
+            }
+          ]
+        },
+        "minimum_advantage": 20000,
+        "portfolio_cost_ceiling": 240000
+      },
+      "sourceEvidence": {
+        "inherited": [
+          "SYN-COST-SCOPE-V1",
+          "SYN-RENEWAL-QUOTE-V1",
+          "SYN-BRIDGE-QUOTE-V1",
+          "SYN-IMPLEMENTATION-QUOTE-V1",
+          "SYN-NEW-SERVICE-QUOTE-V1",
+          "SYN-APPLICABILITY-V1"
+        ],
+        "excluded": [
+          "SYN-IMPLEMENTATION-QUOTE-V1"
+        ],
+        "SYN-IMPLEMENTATION-NO-TRAINING-V1": {
+          "kind": "synthetic-quote",
+          "version": 1,
+          "status": "confirmed",
+          "text": "Implantação USD 45000 inclui migração e impostos/encargos declarados; treinamento não está incluído e precisa de levantamento separado. Nenhum preço de treinamento foi informado."
+        }
+      },
+      "expected": {
+        "derivedMissingCategoryIds": [
+          "training"
+        ],
+        "derivedEntry": {
+          "categoryId": "training",
+          "state": "pending",
+          "reason": "missing-category"
+        },
+        "knownSubtotal": 210000,
+        "total": null,
+        "knownDifference": 30000,
+        "completeDifference": null,
+        "comparisonStatus": "conditioned",
+        "costCoverageState": "pending",
+        "financial_condition": "unknown",
+        "implementation_ceiling": {
+          "value": 55000,
+          "status": "conditioned",
+          "assumption": "Somente os componentes atualmente quantificados; custo de treinamento ainda desconhecido."
+        },
+        "portfolioFeasibility": "incomplete",
+        "display": "Subtotal conhecido USD 210000; diferença dos componentes conhecidos USD 30000. Comparação e limiar condicionados ao treinamento ainda não avaliado."
+      },
+      "choice_before_resolution": {
+        "id": "synthetic-choice-v1",
+        "alternativeVersion": 1,
+        "basisVersion": 1,
+        "knownSubtotal": 210000,
+        "knownDifference": 30000,
+        "comparisonStatus": "conditioned",
+        "unresolvedConditions": [
+          "training:missing-category"
+        ],
+        "justification": "Escolha humana fictícia registrada com a ressalva de custo de treinamento não confirmado; não implica aprovação nem aplicação."
+      },
+      "resolution": {
+        "newAlternativeVersion": 2,
+        "component": {
+          "id": "cmp-training",
+          "amount": 40000,
+          "currency": "USD",
+          "period": "2027-01..2027-12",
+          "sourceRefs": [
+            "SYN-TRAINING-QUOTE-V1"
+          ],
+          "evidenceState": "confirmed"
+        },
+        "entry": {
+          "categoryId": "training",
+          "state": "included",
+          "componentRefs": [
+            "cmp-training"
+          ],
+          "evidenceRefs": [
+            "SYN-TRAINING-QUOTE-V1"
+          ],
+          "scopeNote": "Treinamento separado confirmado no mesmo horizonte; a implantação desta variante não o incluía."
+        },
+        "taxes_entry_append": {
+          "componentRefs": [
+            "cmp-training"
+          ],
+          "evidenceRefs": [
+            "SYN-TRAINING-QUOTE-V1"
+          ]
+        },
+        "sourceEvidence": {
+          "SYN-TRAINING-QUOTE-V1": {
+            "kind": "synthetic-quote",
+            "version": 1,
+            "status": "confirmed",
+            "text": "Treinamento separado USD 40000, preço final incluindo impostos/encargos declarados. É adicional à implantação 45000 desta variante e usa o mesmo horizonte."
+          }
+        }
+      },
+      "resolved_expected": {
+        "knownSubtotal": 250000,
+        "total": 250000,
+        "knownDifference": -10000,
+        "completeDifference": -10000,
+        "comparisonStatus": "complete",
+        "costCoverageState": "complete",
+        "financial_condition": "broken",
+        "implementation_ceiling": 15000,
+        "cost_only_comparison": "Renovar240000 tem custo10000 menor; isso não escolhe automaticamente a alternativa de gestão.",
+        "portfolioFeasibility": "ineligible",
+        "reconsiderationReason": "training-resolved-minimum-advantage-broken",
+        "choice_original_unchanged": true
+      },
+      "zero_control": {
+        "branch_from": "Entrada inicial omitida; branch independente da resolução 40000.",
+        "component": {
+          "id": "cmp-training",
+          "amount": 0,
+          "currency": "USD",
+          "period": "2027-01..2027-12",
+          "sourceRefs": [
+            "SYN-TRAINING-ZERO"
+          ],
+          "evidenceState": "confirmed"
+        },
+        "entry": {
+          "categoryId": "training",
+          "state": "included",
+          "componentRefs": [
+            "cmp-training"
+          ],
+          "evidenceRefs": [
+            "SYN-TRAINING-ZERO"
+          ],
+          "scopeNote": "Treinamento explicitamente gratuito no corpus."
+        },
+        "taxes_entry_append": {
+          "componentRefs": [
+            "cmp-training"
+          ],
+          "evidenceRefs": [
+            "SYN-TRAINING-ZERO"
+          ]
+        },
+        "sourceEvidence": {
+          "SYN-TRAINING-ZERO": {
+            "kind": "synthetic-quote",
+            "version": 1,
+            "status": "confirmed",
+            "text": "Treinamento adicional está explicitamente incluído sem cobrança: preço final USD 0 no mesmo horizonte, sem encargo adicional declarado."
+          }
+        },
+        "expected_total": 210000,
+        "expected_difference": 30000,
+        "expected_coverage": "complete",
+        "expected_comparisonStatus": "complete",
+        "assertion": "Zero informado com evidenceRef é included e difere da ausência inicial; este controle não permite inferir zero sem fonte."
+      },
+      "null_control": {
+        "component": {
+          "id": "cmp-training",
+          "amount": null,
+          "evidenceState": "absent"
+        },
+        "expected_coverage": "pending",
+        "expected_comparisonStatus": "conditioned",
+        "expected_total": null,
+        "assertion": "Adicionar uma linha sem valor não resolve a categoria.",
+        "branch_from": "Entrada inicial omitida; branch independente da resolução 40000 e do controle zero.",
+        "entry": {
+          "categoryId": "training",
+          "state": "included",
+          "componentRefs": [
+            "cmp-training"
+          ],
+          "evidenceRefs": [],
+          "scopeNote": "Linha cadastrada sem preço ou fonte; não é cobertura resolvida."
+        },
+        "expected_reason": "missing-value-and-evidence"
+      },
+      "invariant": "Todos os fatos são entradas sintéticas, não valores reais, regras fiscais ou recomendação. Fonte sem acesso/stale reabre cobertura; tabela/BI/crítica/portfólio recebem a mesma revisão. ChoiceRecord original e ressalva permanecem imutáveis."
+    }
+  },
+  "original_finding_as_published": {
+    "source_name": "finance-journey-mission.json",
+    "source_commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+    "source_blob": "cb294478092c641e0256b3742add2f2c393c08d6",
+    "json_pointer": "/finding/0",
+    "normative_review_finding": {
+      "reviewed_sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "status": "OPEN",
+      "implementation_by_reviewer": false,
+      "id": "FIN-IND-005",
+      "classification": "NEEDS_EVIDENCE",
+      "severity": "P1",
+      "title": "Jornada do mesmo caso/escolha até a fronteira 15000/15001 não concluiu a prova",
+      "owner": "WP13 + WP11; WP03 fornece prova canônica; WP10/S0 compõem e qualificam",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "start_line": 124,
+          "end_line": 188,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts#L124-L188"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "start_line": 169,
+          "end_line": 186,
+          "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts#L169-L186"
+        }
+      ],
+      "input_scenario": "AI-RENEWAL-OMITTED-CATEGORY: renovação USD240000, custo conhecido USD210000 e mínimo USD20000; escolher com treinamento omitido, confirmar training=40000 no mesmo caso e preservar a escolha histórica enquanto a análise atual passa a total250000, diferença−10000 e teto 15000.",
+      "observation": {
+        "basis": "OBSERVED_FAILED_SELECTED_RUN_WITH_RELEVANT_CODE_UNCHANGED",
+        "observed": "Run 43620619049, snapshot c7a0956f850525a03ccd28b26cb8d90808f4d83f, parent R4: 0 pass / 1 fail / 10 expects. A execução não conclui createRenewalChoiceHistory; o último checkpoint observado é transition-confirmed:complete. O erro WP11_FIXTURE_DEADLINE_EXCEEDED registra 180000 ms antes das assertions de teto15000 e preservação da escolha. R4→pin altera somente dois outros arquivos de teste e dois recibos.",
+        "inferred": "A seleção não fornece a evidência requerida para essa jornada no pin. A invariância dos arquivos relevantes conserva a lacuna, sem afirmar nova execução no pin.",
+        "not_claimed": "Timeout não demonstra fórmula errada, nem permite concluir que a jornada sempre falhará. Greens de handoff/BI e solver isolado não fecham o critério integrado."
+      },
+      "expected": "Evidência concluída liga o mesmo caso, encarnação e escolha às versões antigas/novas: omissão permanece pending; confirmação gera250000/−10000;15000 atende mínimo20000 e15001 falha, com histórico e reavaliação atuais preservados.",
+      "criteria": [
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20",
+        "WP13.T02.CHK.20",
+        "WP13.T03.CHK.20",
+        "C10",
+        "CAMP.QLT.06",
+        "CAMP.CMP.04"
+      ],
+      "consequence": "Não é possível qualificar a decisão financeira integrada ou sua retomada apenas com os verdes parciais disponíveis.",
+      "evidence_run_ids": [
+        43620619049,
+        43619812123,
+        43615428441
+      ],
+      "known_issue_relation": {
+        "prior": "Timeouts e limitações de jornada já existiam; não são recontados como novos BUGs.",
+        "added_information": "Seleção exata pós-reconciliação R4, fase precisa do deadline, parent/tree e diferença até o pin conferidos independentemente; as assertions finais não foram alcançadas."
+      },
+      "required_recheck": "Recheck dirigido em novo SHA declarado deve demonstrar a jornada completa e, separadamente, persistência/reabertura real e replay autorizado. Não qualificar aumento de timeout, skip ou reconstrução de serviços no mesmo store como equivalentes."
+    }
+  },
+  "actor_pack_preservation": {
+    "actor": "S4-C",
+    "criterion_ids": [
+      "WP13.CMP.01",
+      "WP13.CMP.10",
+      "WP13.CMP.20",
+      "WP13.DOD.01",
+      "WP13.DOD.10",
+      "WP13.DOD.20",
+      "WP13.INV.01",
+      "WP13.INV.02",
+      "WP13.INV.10",
+      "WP13.INV.20",
+      "WP13.QLT.01",
+      "WP13.QLT.02",
+      "WP13.QLT.10",
+      "WP13.QLT.20",
+      "WP13.SUC.01",
+      "WP13.SUC.10",
+      "WP13.SUC.20",
+      "WP13.T01.CHK.01",
+      "WP13.T01.CHK.02",
+      "WP13.T01.CHK.03",
+      "WP13.T01.CMP.01",
+      "WP13.T01.DOD.01",
+      "WP13.T01.INV.01",
+      "WP13.T01.QLT.01",
+      "WP13.T01.SUC.01",
+      "WP13.T02.CHK.01",
+      "WP13.T02.CHK.02",
+      "WP13.T02.CHK.03",
+      "WP13.T02.CHK.18",
+      "WP13.T02.CHK.20",
+      "WP13.T02.CMP.01",
+      "WP13.T02.CMP.18",
+      "WP13.T02.CMP.20",
+      "WP13.T02.DOD.01",
+      "WP13.T02.DOD.18",
+      "WP13.T02.DOD.20",
+      "WP13.T02.INV.01",
+      "WP13.T02.INV.18",
+      "WP13.T02.INV.20",
+      "WP13.T02.QLT.01",
+      "WP13.T02.QLT.18",
+      "WP13.T02.QLT.20",
+      "WP13.T02.SUC.01",
+      "WP13.T02.SUC.18",
+      "WP13.T02.SUC.20",
+      "WP13.T03.CHK.01",
+      "WP13.T03.CHK.02",
+      "WP13.T03.CHK.03",
+      "WP13.T03.CHK.18",
+      "WP13.T03.CHK.20",
+      "WP13.T03.CMP.01",
+      "WP13.T03.CMP.18",
+      "WP13.T03.DOD.01",
+      "WP13.T03.DOD.18",
+      "WP13.T03.INV.01",
+      "WP13.T03.INV.18",
+      "WP13.T03.QLT.01",
+      "WP13.T03.QLT.18",
+      "WP13.T03.SUC.01",
+      "WP13.T03.SUC.18",
+      "WP13.T04.CHK.01",
+      "WP13.T04.CHK.02",
+      "WP13.T04.CHK.03",
+      "WP13.T04.CMP.01",
+      "WP13.T04.DOD.01",
+      "WP13.T04.INV.01",
+      "WP13.T04.QLT.01",
+      "WP13.T04.SUC.01"
+    ],
+    "proof_bindings": [
+      {
+        "criterion_id": "WP13.DOD.01",
+        "entity_id": "WP13",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.DOD.20",
+        "entity_id": "WP13",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.DOD.10",
+        "entity_id": "WP13",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.INV.01",
+        "entity_id": "WP13",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.INV.02",
+        "entity_id": "WP13",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.INV.20",
+        "entity_id": "WP13",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.INV.10",
+        "entity_id": "WP13",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.QLT.01",
+        "entity_id": "WP13",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.QLT.02",
+        "entity_id": "WP13",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.QLT.20",
+        "entity_id": "WP13",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.QLT.10",
+        "entity_id": "WP13",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.CMP.01",
+        "entity_id": "WP13",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.CMP.20",
+        "entity_id": "WP13",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.CMP.10",
+        "entity_id": "WP13",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.SUC.01",
+        "entity_id": "WP13",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.SUC.20",
+        "entity_id": "WP13",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.SUC.10",
+        "entity_id": "WP13",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.DOD.01",
+        "entity_id": "WP13.T01",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.INV.01",
+        "entity_id": "WP13.T01",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.QLT.01",
+        "entity_id": "WP13.T01",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.CMP.01",
+        "entity_id": "WP13.T01",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.SUC.01",
+        "entity_id": "WP13.T01",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.CHK.01",
+        "entity_id": "WP13.T01",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.CHK.02",
+        "entity_id": "WP13.T01",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T01.CHK.03",
+        "entity_id": "WP13.T01",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.DOD.01",
+        "entity_id": "WP13.T02",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.DOD.20",
+        "entity_id": "WP13.T02",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.DOD.18",
+        "entity_id": "WP13.T02",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.INV.01",
+        "entity_id": "WP13.T02",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.INV.20",
+        "entity_id": "WP13.T02",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.INV.18",
+        "entity_id": "WP13.T02",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.QLT.01",
+        "entity_id": "WP13.T02",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.QLT.20",
+        "entity_id": "WP13.T02",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.QLT.18",
+        "entity_id": "WP13.T02",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CMP.01",
+        "entity_id": "WP13.T02",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CMP.20",
+        "entity_id": "WP13.T02",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CMP.18",
+        "entity_id": "WP13.T02",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.SUC.01",
+        "entity_id": "WP13.T02",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.SUC.20",
+        "entity_id": "WP13.T02",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.SUC.18",
+        "entity_id": "WP13.T02",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CHK.01",
+        "entity_id": "WP13.T02",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CHK.02",
+        "entity_id": "WP13.T02",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CHK.03",
+        "entity_id": "WP13.T02",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CHK.20",
+        "entity_id": "WP13.T02",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T02.CHK.18",
+        "entity_id": "WP13.T02",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.DOD.01",
+        "entity_id": "WP13.T03",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.DOD.18",
+        "entity_id": "WP13.T03",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.INV.01",
+        "entity_id": "WP13.T03",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.INV.18",
+        "entity_id": "WP13.T03",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.QLT.01",
+        "entity_id": "WP13.T03",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.QLT.18",
+        "entity_id": "WP13.T03",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.CMP.01",
+        "entity_id": "WP13.T03",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.CMP.18",
+        "entity_id": "WP13.T03",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.SUC.01",
+        "entity_id": "WP13.T03",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.SUC.18",
+        "entity_id": "WP13.T03",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.01",
+        "entity_id": "WP13.T03",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.02",
+        "entity_id": "WP13.T03",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.03",
+        "entity_id": "WP13.T03",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.20",
+        "entity_id": "WP13.T03",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.18",
+        "entity_id": "WP13.T03",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.DOD.01",
+        "entity_id": "WP13.T04",
+        "family": "dod",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.INV.01",
+        "entity_id": "WP13.T04",
+        "family": "invariants",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.QLT.01",
+        "entity_id": "WP13.T04",
+        "family": "quality_standards",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.CMP.01",
+        "entity_id": "WP13.T04",
+        "family": "completeness_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.SUC.01",
+        "entity_id": "WP13.T04",
+        "family": "success_criteria",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.CHK.01",
+        "entity_id": "WP13.T04",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.CHK.02",
+        "entity_id": "WP13.T04",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      },
+      {
+        "criterion_id": "WP13.T04.CHK.03",
+        "entity_id": "WP13.T04",
+        "family": "check",
+        "proof_packages": [
+          "E11"
+        ],
+        "status": "NOT_RUN"
+      }
+    ],
+    "resident_contracts_read": [
+      "C15",
+      "C16",
+      "C17"
+    ],
+    "read_sections": [
+      "resident",
+      "resident_ui",
+      "resident_gate_requirements",
+      "execution_proofs",
+      "evidence",
+      "proof_bindings",
+      "coverage",
+      "dependency_context"
+    ],
+    "appendices_read_completely": [
+      "specs/resident-runtime.md",
+      "specs/product-acceptance.md"
+    ],
+    "resident_universe": {
+      "profiles": 5,
+      "skills": 18,
+      "packs": 8,
+      "operations": 39,
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ]
+    },
+    "reference_context_rule": "Contract, route, skill and proof definitions are read dependencies. They do not transfer task ownership, write permission or proof execution. Execute only assigned primary/support/correction parts and current leases; the canonical execution_actor retains each integrated proof.",
+    "completion": "All assigned primary outcomes, explicit support/correction parts, consumers and proofs must be delivered. No early DONE on a commit or a green unrelated check. Full task acceptance belongs to the owner plus all required contributors. Product proof status remains NOT_RUN until observed."
+  },
+  "mission_obligations": [
+    {
+      "id": "FJC-01",
+      "name": "BASELINE_AND_CASE_IDENTITY",
+      "criteria": [
+        "WP11.T02.CHK.21",
+        "WP13.T03.CHK.20",
+        "C10"
+      ],
+      "expected": {
+        "baseline_cost": 240000,
+        "currency": "USD",
+        "same_case_id": true,
+        "same_incarnation": true,
+        "same_human_choice_through_sequence": true
+      },
+      "required": "Use baselineResult.knownSubtotal as the fixture renewal cost. Keep case/encarnation/choice identity and authorized sources; this does not prove a separate revenue field.",
+      "discriminator": "A separately reconstructed case, changed incarnation or price labeled as revenue does not satisfy the journey.",
+      "consumer": "Original journey case, Planner comparison and sensitivity",
+      "current_W2_evidence_status": "PARTIAL_JOURNEY",
+      "current_W2_evidence_note": "S3: baseline cost240000, case/case-incarnation versions3→4→6 and initial choice digest observed. Complete sequence did not finish.",
+      "global_acceptance": false
+    },
+    {
+      "id": "FJC-02",
+      "name": "OMITTED_TRAINING_REMAINS_PENDING",
+      "criteria": [
+        "WP11.T02.CHK.20",
+        "WP13.T02.CHK.20",
+        "WP13.T03.CHK.20",
+        "C10"
+      ],
+      "expected": {
+        "knownSubtotal": 210000,
+        "training_input_entry": false,
+        "training_input_component": false,
+        "derivedMissingCategoryIds": [
+          "training"
+        ],
+        "coverage": "pending",
+        "reason": "missing-category",
+        "total": null,
+        "completeDifference": null,
+        "comparison": "conditioned",
+        "known_advantage": 30000,
+        "known_components_threshold": 55000
+      },
+      "required": "Derive the omitted category from the complete versioned inventory. The synthetic quote excludes training; do not fabricate zero or a pending input row.",
+      "discriminator": "Mathematically reconciled subtotal cannot become eligible-complete; missing/null/zero remain distinct.",
+      "consumer": "Original journey omission assertions; wider UI/BI/critique/portfolio obligations remain",
+      "current_W2_evidence_status": "OBSERVED_PASS_BEFORE_TIMEOUT",
+      "current_W2_evidence_note": "S3: knownSubtotal210000, totalnull, omitted training/pending/derivedMissingCategoryIds, conditioned threshold55000; original assertions passed.",
+      "global_acceptance": false
+    },
+    {
+      "id": "FJC-03",
+      "name": "CONFIRM_40000_REEVALUATES_CURRENT_VERSION",
+      "criteria": [
+        "WP11.T02.CHK.21",
+        "WP13.T02.CHK.20",
+        "C10"
+      ],
+      "expected": {
+        "training_amount": 40000,
+        "training_state": "confirmed",
+        "knownSubtotal": 250000,
+        "total": 250000,
+        "advantage": -10000,
+        "minimum_advantage": 20000,
+        "coverage": "complete",
+        "criterion": "failed"
+      },
+      "required": "Confirm training with its declared source in the same case/incarnation, obtain a later version, and compute the inversion using the canonical producer. Do not autochange the human choice.",
+      "discriminator": "A new independent fixture or conservative refusal is not confirmation plus recalculation.",
+      "consumer": "Current canonical alternative and comparison",
+      "current_W2_evidence_status": "OBSERVED_PASS_BEFORE_TIMEOUT",
+      "current_W2_evidence_note": "S3: confirmed training40000, total250000, comparison difference−10000, required criterion failed, same case/incarnation version6; original assertions passed.",
+      "global_acceptance": false
+    },
+    {
+      "id": "FJC-04",
+      "name": "EXACT_THRESHOLD_15000_15001",
+      "criteria": [
+        "WP13.T03.CHK.20",
+        "WP11.T02.CHK.21",
+        "C10"
+      ],
+      "expected": {
+        "other_confirmed_costs": 205000,
+        "nominal_implementation_ceiling": 15000,
+        "at_15000_advantage": 20000,
+        "at_15000_meets": true,
+        "at_15001_advantage": 19999,
+        "at_15001_meets": false
+      },
+      "required": "Complete the canonical exact search/candidate recertification and fresh boundary witnesses on the same confirmed basis, retaining IEEE adjacent witnesses, unit, horizon and evidence identity.",
+      "discriminator": "The conditioned 55000 or fewer calls without completed 15000/15001 assertions do not prove this obligation.",
+      "consumer": "Confirmed journey sensitivity, witnesses and persisted result",
+      "current_W2_evidence_status": "NOT_REACHED",
+      "current_W2_evidence_note": "S3 completed two coverage qualifications, then guard180000 expired in confirmed.exact→units.issue; threshold15000/15001 assertions did not run.",
+      "global_acceptance": false
+    },
+    {
+      "id": "FJC-05",
+      "name": "HISTORICAL_CHOICE_AND_CURRENT_REASSESSMENT",
+      "criteria": [
+        "WP11.T03.CHK.20",
+        "WP11.T02.CHK.21",
+        "C09",
+        "C10",
+        "CAMP.INV.06"
+      ],
+      "expected": {
+        "original_choice_digest_unchanged": true,
+        "original_alternative_version_unchanged": true,
+        "original_basis_version_unchanged": true,
+        "original_knownSubtotal": 210000,
+        "original_training": "pending",
+        "current_total": 250000,
+        "current_advantage": -10000
+      },
+      "required": "Reread the durable choice after confirmation and current reevaluation. Preserve original rationale, versions, sources, subtotal and qualification while presenting the new current analysis.",
+      "discriminator": "Reprinting a digest already held in memory is not a durable post-confirmation historical read.",
+      "consumer": "Same durable ChoiceRecord and current case",
+      "current_W2_evidence_status": "NOT_REACHED",
+      "current_W2_evidence_note": "Initial choice persisted and its digest was retained; post-confirmation historical reread did not run. No credit for an in-memory digest.",
+      "global_acceptance": false
+    },
+    {
+      "id": "FJC-06",
+      "name": "AUTHORIZED_REPLAY_WITHOUT_DUPLICATE_EFFECT",
+      "criteria": [
+        "C08",
+        "C09",
+        "CAMP.INV.04",
+        "CAMP.CMP.02",
+        "CAMP.QLT.06"
+      ],
+      "expected": {
+        "same_key_payload_replays": true,
+        "changed_payload_conflicts": true,
+        "fresh_authority_per_operation": true,
+        "stored_candidate_is_not_authorization": true,
+        "source_fences_and_ancestry_preserved": true
+      },
+      "required": "Complete the authorized replay defined by the journey. Result-receipt controls additionally check legacy/new receipts, full-envelope integrity and repeated read/write after real SQLite reopening. Keep the scopes distinct.",
+      "discriminator": "Digest equality cannot replace current case/source authorization or calculation recertification; repeated keys must not create another result/effect.",
+      "consumer": "Journey choice replay; separate result-store receipt controls",
+      "limit": "The inherited journey replays the choice before reopening and then tests authorized reads after reopening. It does not by itself prove post-reopen persisted sensitivity replay or native/installed execution.",
+      "current_W2_evidence_status": "NOT_REACHED",
+      "current_W2_evidence_note": "Authorized choice retry and duplicate-event assertions did not run in S3. S2 result-receipt retry controls are separate and do not close this obligation.",
+      "global_acceptance": false
+    },
+    {
+      "id": "FJC-07",
+      "name": "SQLITE_CLOSE_REOPEN_AND_NEW_AUTHORITY",
+      "criteria": [
+        "WP11.DOD.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.CMP.01",
+        "C08",
+        "C09",
+        "CAMP.CMP.02",
+        "C16"
+      ],
+      "expected": {
+        "dispose_then_openLocalStore": true,
+        "new_Request": true,
+        "new_authority": true,
+        "old_authority_invalid": true,
+        "authorized_collaborator_read": true,
+        "outsider_denied": true,
+        "revocation_denied": true
+      },
+      "required": "Actually close the SQLite provider before opening it again, reconstruct services and bind fresh authority. Reread the same case/choice/versions without recovering old credentials.",
+      "discriminator": "Reconstructing services over an open store, or using the old Request/lease, does not count as restart.",
+      "consumer": "Journey post-reopen collaborator/outsider/revocation reads; receipt test has its separate producer scope",
+      "limit": "This is explicitly fixture/provider persistence, not Orchestra restart, Atlas AM05 or enterprise identity.",
+      "current_W2_evidence_status": "NOT_REACHED",
+      "current_W2_evidence_note": "Financial case SQLite close/reopen/new authority sequence did not run in S3. S2 storage-receipt reopen controls are separate.",
+      "global_acceptance": false
+    },
+    {
+      "id": "FJC-08",
+      "name": "ORIGINAL_AUTHORITY_MUTABILITY_AND_FENCES",
+      "criteria": [
+        "WP11.T01.INV.01",
+        "WP13.T03.INV.18",
+        "CAMP.INV.02",
+        "CAMP.INV.04",
+        "C08",
+        "C16"
+      ],
+      "expected": {
+        "original_predicate_retained": true,
+        "opaque_callbacks_not_equated_by_data_digest": true,
+        "mutable_original_checked": true,
+        "invalid_authority_no_conditioned_fallback": true,
+        "provisional_interval_cleanup_preserved": true,
+        "Request_headers_binding_lease_preserved": true,
+        "cross_operation_authorization_cache": false
+      },
+      "required": "Preserve the original authority callback and current revalidation, early-return semantics, mutable object checks, cleanup, identity and revocation. Same data/digest with predicate A false and B true is not proof of authority equivalence.",
+      "discriminator": "PR56 success short-circuit must not bypass A; changed Request/headers/binding/lease/source/case must not release stale content.",
+      "consumer": "Coverage issue/current/qualify/revalidate/verify and Finance units/result store",
+      "implementation_note": "W2 changes result-store and sensitivity-units. coverage-preview remains blob9f7e12113b38e73befb64f99a94fb8ca28d05eee; the original predicate is retained.",
+      "current_W2_evidence_status": "PRESERVED_AND_SELECTED_CONTROLS_PASS",
+      "current_W2_evidence_note": "coverage-preview unchanged; S1/S2 original predicate false is rejected before preview. All36 previous affected tests plus7 new controls passed S2. No claim that all PR50 adversarial cases received new independent runtime coverage.",
+      "global_acceptance": false
+    }
+  ],
+  "preserved_prior_obligation_reference": {
+    "source": "sources.prior_criteria",
+    "json_pointer": "/proof_obligation_map",
+    "ids": [
+      "OMITTED_TRAINING",
+      "CONFIRM_40000",
+      "EXACT_THRESHOLD_15000_15001",
+      "HISTORICAL_CHOICE",
+      "REAL_PROVIDER_REOPEN",
+      "AUTHORIZED_PERSISTED_REPLAY",
+      "DISCRIMINATING_PERFORMANCE_PROOF",
+      "REAL_CONSUMERS_AND_GLOBAL_ACCEPTANCE"
+    ],
+    "status_policy": "Original evidence remains attributed to original W/S. DISCRIMINATING_PERFORMANCE_PROOF and REAL_CONSUMERS_AND_GLOBAL_ACCEPTANCE remain required limits, not waived by the new eight mission obligations."
+  },
+  "historical_results": {
+    "attribution": "Copied from prior pinned handoff, not new observations on W2.",
+    "S5": {
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "run_id": 43630462257,
+      "result": "PASS",
+      "tests": 36,
+      "assertions": 297,
+      "limit": "Earlier six-producer delta only; affected tests require revalidation after input changes."
+    },
+    "S6": {
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "run_id": 43631582858,
+      "result": "FAIL",
+      "assertions": 18,
+      "fixture_guard_ms": 180000,
+      "not_reached": [
+        "confirmed 15000/15001",
+        "post-confirmation historical choice reread",
+        "journey replay",
+        "SQLite close/reopen"
+      ]
+    }
+  },
+  "current_run_cutoff": {
+    "provenance": "Final results reconciled by /root from the actual decoded GitHub Actions logs. Supporting static review remains distinct from runtime evidence.",
+    "S1": {
+      "W": "9a2ab893be9f2af2078f67ca867c13892452752e",
+      "S": "e47c611a7f03dfbb501487d09f1567c6802077fc",
+      "run_id": 43634808031,
+      "job_id": 132569165100,
+      "reported_outcome": "EXPECTED_DISCRIMINATING_FAILURE",
+      "original_predicate": "PASS_ACTUAL_LOG",
+      "units": "12 envelopes observed;6 expected; expected failure in actual S1 log.",
+      "global_acceptance": false
+    },
+    "S2": {
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "W_tree": "a736cd370da6081c6010ffb26d66130fea94736f",
+      "S": "8bf015c999750c26a721749cfca9372891d3cec3",
+      "S_tree": "3a39ba90cc639ac950a6e874f686bc167e72c8eb",
+      "run_id": 43635340065,
+      "job_id": 132570795422,
+      "status": "PASS_ACTUAL_LOG",
+      "product_verdict": "SELECTED_CONTROLS_PASS; NOT_LONG_JOURNEY_PROOF",
+      "global_acceptance": false,
+      "reported_results": {
+        "pass": 43,
+        "fail": 0,
+        "assertions": 350,
+        "filtered": 4,
+        "files": 13,
+        "duration_seconds": 359.81
+      },
+      "log": {
+        "sha256": "ebda50a97a439a30adbe105330b7727c6cd945ef2904695d6e6f25baf247f39d",
+        "bytes": 94476,
+        "provenance": "HASH_OF_ACTUAL_MCP_LOG_UTF8"
+      }
+    },
+    "guard_check": {
+      "run_id": 43635795619,
+      "job_id": 132572187686,
+      "status": "FAIL_ACTUAL_LOG",
+      "diagnostics": 115,
+      "diagnostic_comparison": "Same path/line/column/code as W4; one expanded message differs; actual logs compared.",
+      "own_diagnostics": 0,
+      "failed_gates": 43,
+      "warnings": 15,
+      "rules": 78,
+      "paths": 1534,
+      "engine_errors": 0,
+      "global_acceptance": false
+    },
+    "final": {
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "Wtree": "a736cd370da6081c6010ffb26d66130fea94736f",
+      "S2": {
+        "receipt": "S2-result.json",
+        "status": "PASS",
+        "runId": 43635340065,
+        "jobId": 132570795422,
+        "pass": 43,
+        "fail": 0,
+        "assertions": 350
+      },
+      "S3": {
+        "receipt": "S3-result.json",
+        "status": "FAIL",
+        "runId": 43636137688,
+        "jobId": 132573236668,
+        "pass": 0,
+        "fail": 1,
+        "assertions": 18,
+        "fixtureGuardMs": 180000,
+        "testDurationMs": 180016.75
+      },
+      "check": {
+        "receipt": "CHECK-W2-result.json",
+        "status": "FAIL",
+        "runId": 43635795619,
+        "jobId": 132572187686
+      },
+      "rootReadActualLogs": true
+    }
+  },
+  "cold_static_review": {
+    "reviewer": "supporting read-only agent /root/authority_review; not an independent product acceptance reviewer",
+    "status": "NO_STATIC_BLOCKER_IDENTIFIED; NOT_RUNTIME_PASS",
+    "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "files": [
+      {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5a029e77bfd9d8ba19494966a95c908e3f05043d/modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "review": "Compact receipt binds the complete StoredDecisionResult envelope, supports the legacy full receipt without migration, and requires current authorized read before comparing. CAS/idempotency command and all source/callback fences stay unchanged."
+      },
+      {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5a029e77bfd9d8ba19494966a95c908e3f05043d/modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "review": "Canonical historical pairs use batch provenance; scalar facades preserve previous parallel scheduling; stored-scenarios default remains serial. Two units phases and rule chronology remain; store identity checked after await."
+      },
+      {
+        "commit": "454b97daf614176507711df889bd45743467f7af",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+        "blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/454b97daf614176507711df889bd45743467f7af/modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+        "review": "No PR56 success short-circuit. Original early predicate and subsequent current() checks retained; remote branch read confirmed same blob during W2 review."
+      }
+    ],
+    "local_product_tests": false,
+    "ci_dispatched_by_reviewer": false,
+    "remote_product_writes": false,
+    "receipt_invariants": [
+      "storedDigest covers full envelope, not only result/resultDigest",
+      "legacy receipt derives digest from original full body",
+      "new and legacy paths require authorized read",
+      "missing record does not regenerate from receipt",
+      "same key/different command digest conflicts through existing provider",
+      "result and receipt stage in same C08 transaction",
+      "no cross-operation cached authorization"
+    ],
+    "limits": [
+      "Static review is not runtime evidence or final independent approval.",
+      "Compact-receipt tests use real C08/SQLite with explicit synthetic grants and a valid comparison; no numeric financial completeness claim.",
+      "Existing source-revocation/callback-mutation checks require affected-selection revalidation.",
+      "Batching C08 snapshots does not provide atomicity across all domain sources.",
+      "The available local reader search found no other direct decision-result receipt consumer; a full repository-wide consumer search was not performed by this agent.",
+      "Full-envelope digest detects divergence from the retained receipt; it is not protection against simultaneous hostile rewriting of both data and receipt in the database.",
+      "Receipt byte reduction or fewer envelopes is not end-to-end speedup; completion of the original long journey remains required."
+    ],
+    "test_review_note": "The current single-ref mutation fixture passed, including reached=true and two evidence phases. A future multi-ref extension should capture the first-call ordinal before await; this optional robustness observation did not change the tested input."
+  },
+  "validation_rules": {
+    "tests_only": "GitHub Actions via canonical request/snapshot protocol; no local product tests, full suite or epic.",
+    "fixture_budget_ms": 180000,
+    "bun_journey_budget_ms": 300000,
+    "budgets_increased": false,
+    "assertions_removed": false,
+    "recertifications_omitted": false,
+    "authority_digest_substituted_for_callback": false,
+    "no_long_rerun_without_material_delta_and_short_discriminant": true,
+    "affected_previous_selection_must_revalidate": true
+  },
+  "proof_boundaries": {
+    "fixture_sources_and_grants_explicit": true,
+    "native_AM_proof": false,
+    "installed_UI_BI_MCP_proof": false,
+    "post_restart_persisted_sensitivity_replay": "NOT_ESTABLISHED_BY_INHERITED_JOURNEY",
+    "C12_apply": "OUT_OF_WRITE_SCOPE_SESSION19",
+    "foreign_scope": "CLI/host-binding/integration WP10, Memory13, ACK10, forecast12, exports11 and active native/CI/spec ownership remain outside this mission."
+  },
+  "required_final_reconciliation": [
+    "Actual S2, S3 and CHECK-W2 logs reconciled. W2 remains product/test checkpoint; containing delivery commit adds only own receipts.",
+    "FIN-IND-005 remains OPEN. No additional long dispatch without a new material safe delta and discriminating short proof.",
+    "Session14 must inspect pinned preimages and the unresolved provider/case-source replay dependency before intake. No merge or global release."
+  ],
+  "global_acceptance": false,
+  "consumer_scan": {
+    "source": "read-only supporting agent /root/cost_path",
+    "commit": "454b97daf614176507711df889bd45743467f7af",
+    "productTsFiles": 334,
+    "cliTsFiles": 26,
+    "readFailures": 0,
+    "finding": "Only result-store consumes decision-result:${idempotencyKey}; portfolio/proof transaction scan requires case-shaped values and ignores both receipt formats.",
+    "limit": "Scoped TypeScript consumer audit, not proof of all future consumers or old-version rollback compatibility."
+  },
+  "reconciled_at_utc": "2026-11-14T20:18:22Z"
+}
