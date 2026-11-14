@@ -1,0 +1,181 @@
+{
+  "schema": "finance-resume-performance-ci-v1",
+  "selection": "S1",
+  "purpose": "Counterproof before product change; fails only at redundant searches=2 versus expected=1",
+  "W": "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+  "Wtree": "c0a952e7aaaa02a66b48ee004ebaa8d38096d985",
+  "S": "4afc641b8f9e71be3e13ea7f3bdcff69ae29bb67",
+  "Stree": "6ca68127f3b9d63f22e9a0db080beef6d25b389f",
+  "branch": "ci-run-linux-finance-performance-ab38a14c-149f8ba9-s1",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+      "--timeout",
+      "120000",
+      "-t",
+      "searches once"
+    ],
+    "env": {}
+  },
+  "requestSha256": "149f8ba9ad30415db044c5c556fb1429b709ab96b0731b5fd5e0acc25f0426cc",
+  "requestOnlyComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+    "head": "4afc641b8f9e71be3e13ea7f3bdcff69ae29bb67",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ab38a14c09d2292553670033b8c1eaea1d26f31f",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ab38a14c09d2292553670033b8c1eaea1d26f31f"
+    },
+    "merge_base_commit": {
+      "sha": "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ab38a14c09d2292553670033b8c1eaea1d26f31f",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ab38a14c09d2292553670033b8c1eaea1d26f31f"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ]
+  },
+  "runId": 43627723188,
+  "jobId": 132547252223,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627723188",
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 1,
+  "filtered": 1,
+  "assertions": 27,
+  "testDurationMs": 53317.8,
+  "bunDurationSeconds": 53.47,
+  "phase": {
+    "phase": "search-work",
+    "elapsedMs": 42534,
+    "counts": {
+      "searches": 2,
+      "searchPreviews": 18,
+      "searchUnitIssues": 4,
+      "resolutions": 3,
+      "revalidations": 4,
+      "consumerPreviews": 8,
+      "sampleWrites": 2
+    },
+    "previews": [
+      {
+        "resolution": 1,
+        "ordinal": 1,
+        "amount": 10000,
+        "metric": -65000,
+        "status": "ok",
+        "durationMs": 924
+      },
+      {
+        "resolution": 1,
+        "ordinal": 2,
+        "amount": 70000,
+        "metric": -5000,
+        "status": "ok",
+        "durationMs": 1021
+      },
+      {
+        "resolution": 1,
+        "ordinal": 3,
+        "amount": 55000.000000000015,
+        "metric": -20000,
+        "status": "ok",
+        "durationMs": 1132
+      },
+      {
+        "resolution": 1,
+        "ordinal": 4,
+        "amount": 55000.00000000002,
+        "metric": -19999.99999999997,
+        "status": "ok",
+        "durationMs": 1149
+      },
+      {
+        "resolution": 2,
+        "ordinal": 1,
+        "amount": 10000,
+        "metric": -65000,
+        "status": "ok",
+        "durationMs": 2281
+      },
+      {
+        "resolution": 2,
+        "ordinal": 2,
+        "amount": 70000,
+        "metric": -5000,
+        "status": "ok",
+        "durationMs": 2291
+      },
+      {
+        "resolution": 2,
+        "ordinal": 3,
+        "amount": 55000.000000000015,
+        "metric": -20000,
+        "status": "ok",
+        "durationMs": 1100
+      },
+      {
+        "resolution": 2,
+        "ordinal": 4,
+        "amount": 55000.00000000002,
+        "metric": -19999.99999999997,
+        "status": "ok",
+        "durationMs": 1088
+      }
+    ],
+    "result": "ok",
+    "threshold": 55000.000000000015,
+    "comparisonStatus": "conditioned",
+    "nextOperation": "denied",
+    "completed": {
+      "searches": 2,
+      "searchPreviews": 18,
+      "searchUnitIssues": 4,
+      "resolutions": 2,
+      "revalidations": 4,
+      "consumerPreviews": 8,
+      "sampleWrites": 2
+    }
+  },
+  "log": {
+    "sha256": "0eb1f4e4f67cf7d08bd2c233d9094250c82fe54d19b12a11f5c852faf4169134",
+    "bytes": 73932
+  },
+  "omni": {
+    "nonce": "8fd983409eca80ce6404151addb7bf78",
+    "result": "not applicable"
+  },
+  "excerpts": [
+    "2026-11-14T18:40:19.2369158Z Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts:",
+    "2026-11-14T18:41:12.5840164Z [finance-resume-performance] {\"phase\":\"search-work\",\"elapsedMs\":42534,\"counts\":{\"searches\":2,\"searchPreviews\":18,\"searchUnitIssues\":4,\"resolutions\":3,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2},\"previews\":[{\"resolution\":1,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":924},{\"resolution\":1,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":1021},{\"resolution\":1,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1132},{\"resolution\":1,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1149},{\"resolution\":2,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":2281},{\"resolution\":2,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":2291},{\"resolution\":2,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1100},{\"resolution\":2,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1088}],\"result\":\"ok\",\"threshold\":55000.000000000015,\"comparisonStatus\":\"conditioned\",\"nextOperation\":\"denied\",\"completed\":{\"searches\":2,\"searchPreviews\":18,\"searchUnitIssues\":4,\"resolutions\":2,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2}}",
+    "2026-11-14T18:41:12.5848358Z [finance-resume-performance] {\"phase\":\"terminal\",\"elapsedMs\":42534,\"counts\":{\"searches\":2,\"searchPreviews\":18,\"searchUnitIssues\":4,\"resolutions\":3,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2},\"previews\":[{\"resolution\":1,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":924},{\"resolution\":1,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":1021},{\"resolution\":1,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1132},{\"resolution\":1,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1149},{\"resolution\":2,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":2281},{\"resolution\":2,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":2291},{\"resolution\":2,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1100},{\"resolution\":2,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1088}]}",
+    "2026-11-14T18:41:12.5856753Z Expected: 1",
+    "2026-11-14T18:41:12.5856959Z Received: 2",
+    "2026-11-14T18:41:12.5857801Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts:62:32)",
+    "2026-11-14T18:41:12.6943693Z  27 expect() calls",
+    "2026-11-14T18:41:12.6943907Z Ran 1 test across 1 file. [53.47s]",
+    "2026-11-14T18:41:12.6944780Z omni positive control [8fd983409eca80ce6404151addb7bf78]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  ],
+  "limitations": [
+    "Expected red regression baseline is not product PASS.",
+    "Timing is one hosted execution, not an isolated CPU benchmark.",
+    "No FIN-IND-005 end-to-end acceptance from this selection."
+  ]
+}

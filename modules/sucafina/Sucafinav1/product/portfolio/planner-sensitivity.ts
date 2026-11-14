@@ -115,10 +115,10 @@ export function createPlannerSensitivity(input: {
         if (!checked.every(Boolean) || !await input.revalidate(structuredClone(binding), trusted)) return false
         if (interval?.status === "ok" && (!input.coveragePreview || !await input.coveragePreview.revalidate(interval.value.intervalRef, trusted))) return false
         if (!exactEvidence.value) return true
-        if (!input.exactThreshold) return false
-        const exact = structuredClone(await input.exactThreshold(structuredClone(request), structuredClone(binding), trusted))
-        if (exact.status !== "ok") return false
-        const certificate = await certify(exact.value, trusted)
+        // The domain search already established the admitted monotone interval.
+        // Reproduce its boundary and adjacent rejected input with fresh previews;
+        // searching for the same boundary again adds work, not a new observation.
+        const certificate = await certify(structuredClone(exactEvidence.value), trusted)
         return certificate.status === "ok" && digestSfValue(certificate.value) === digestSfValue(exactEvidence.value) && await input.revalidate(structuredClone(binding), trusted)
       },
       verifyCoverageQualification: input.coveragePreview?.verify,
