@@ -1,0 +1,38 @@
+{
+  "schema": "wp11-source-observation-H6-application-v1",
+  "baseProductSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+  "proposalManifestSha256": "f0d6e89d9da03b735e0e65d3a82ebce0c35d7d29732e90979f25a344c4c5f4e7",
+  "reviewSha256": "8f031cf83dd9945978968500705f2f463112d6dc18b075ce0964e5044b94ceb8",
+  "appliedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "baseBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "candidateBlob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0",
+      "candidateSha256": "aeb01fde16f61497f952f25c9eaf5c5c4cdbc00967e2f3932806ad0894e72b11",
+      "bytes": 6425
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "baseBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "candidateBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "candidateSha256": "667104e7adbf32bcaca7989c1134bbc23de8d9c040740a2dfd86816577166c79",
+      "bytes": 25596
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "baseBlob": null,
+      "candidateBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "candidateSha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "bytes": 11611
+    }
+  ],
+  "localProductExecution": false,
+  "hostedQualification": "PENDING: admission seven controls and unchanged complete financial history within180000ms",
+  "affectedExistingOwnTests": [
+    "renewal-choice-history.test.ts",
+    "implementation-quote-history.test.ts",
+    "renewal-choice-revision.test.ts"
+  ],
+  "affectedForeignConsumer": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+  "scope": "Own fixture admission only. All financial producers, assertions, three initial replaces, human confirmation and180000ms remain unchanged. Historical proposal/review status describes the pre-application stage."
+}

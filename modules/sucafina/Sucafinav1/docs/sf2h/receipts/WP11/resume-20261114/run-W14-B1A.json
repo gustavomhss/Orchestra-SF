@@ -1,0 +1,489 @@
+{
+  "source": {
+    "productSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+    "productTree": "297243de2cffcdbcf4592e1449783ef3ea43c362",
+    "snapshotSha": "a84344f010c8b62af7a0d67a87aae88f0fc734a1",
+    "snapshotTree": "7f4048b9b0e64632cf2d019c47eeda3f9322a282",
+    "branch": "ci-run-linux-astra-wp11-dd9363d-985cd741-b1a",
+    "requestSha256": "985cd741e578a92adca0bdc0e7690de5ffb59cd02bbccad8f1f426e885b6a115",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "40b56249ec7ce7ac4f092eedfefa124c87983dd6"
+  },
+  "run": {
+    "id": 43594957479,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-14T12:27:59Z",
+    "updatedAt": "2026-11-14T12:34:31Z",
+    "headSha": "a84344f010c8b62af7a0d67a87aae88f0fc734a1",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43594957479",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132447384785,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43594957479,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132448949131,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43594957479,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 5,
+      "fail": 1,
+      "tests": 6,
+      "files": 5,
+      "durationSeconds": 274.36
+    },
+    "expectCalls": 187,
+    "ownObservedCounts": {
+      "pass": 5,
+      "fail": 1,
+      "skip": 0,
+      "todo": 0
+    },
+    "failures": [
+      {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "status": "fail",
+        "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+        "line": 830,
+        "timestamp": "2026-11-14T12:33:26.5014868Z",
+        "durationMs": 49664.04
+      }
+    ],
+    "hasCompletedBunSummary": true,
+    "requestedButNotObserved": [],
+    "fileResults": [
+      {
+        "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+        "reportedTests": 2,
+        "counts": {
+          "pass": 2,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 95401.52,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "line": 810,
+          "timestamp": "2026-11-14T12:29:43.3887083Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "pass",
+          "name": "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote",
+          "line": 812,
+          "timestamp": "2026-11-14T12:31:18.8257051Z",
+          "durationMs": 73665.5
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 27164.02,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+          "line": 814,
+          "timestamp": "2026-11-14T12:31:18.8257718Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+          "status": "pass",
+          "name": "AI-RENEWAL observes a confirmed 70000 implementation quote as 235000 total and 5000 savings with complete shared coverage",
+          "line": 815,
+          "timestamp": "2026-11-14T12:31:45.9913657Z",
+          "durationMs": 27164.02
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 50835.54,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "line": 817,
+          "timestamp": "2026-11-14T12:31:45.9914788Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "status": "pass",
+          "name": "explicit human choice persists the producer result, survives reopen, and never applies the simulated Planner operations",
+          "line": 818,
+          "timestamp": "2026-11-14T12:32:36.8314536Z",
+          "durationMs": 50835.54
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 49664.04,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "line": 820,
+          "timestamp": "2026-11-14T12:32:36.8316001Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "status": "fail",
+          "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+          "line": 830,
+          "timestamp": "2026-11-14T12:33:26.5014868Z",
+          "durationMs": 49664.04
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 51104.65,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "line": 832,
+          "timestamp": "2026-11-14T12:33:26.5015778Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "status": "pass",
+          "name": "real JSON import preserves the private C08 choice and cannot revive a deleted source under a reused record ID",
+          "line": 833,
+          "timestamp": "2026-11-14T12:34:17.6246124Z",
+          "durationMs": 51104.65
+        }
+      }
+    ],
+    "individualResults": [
+      {
+        "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+        "status": "pass",
+        "name": "shared categories and supported N/A consume one real Planner contribution and retain the complete composed interval",
+        "line": 811,
+        "timestamp": "2026-11-14T12:30:05.1602158Z",
+        "durationMs": 21736.02
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+        "status": "pass",
+        "name": "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote",
+        "line": 812,
+        "timestamp": "2026-11-14T12:31:18.8257051Z",
+        "durationMs": 73665.5
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+        "status": "pass",
+        "name": "AI-RENEWAL observes a confirmed 70000 implementation quote as 235000 total and 5000 savings with complete shared coverage",
+        "line": 815,
+        "timestamp": "2026-11-14T12:31:45.9913657Z",
+        "durationMs": 27164.02
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+        "status": "pass",
+        "name": "explicit human choice persists the producer result, survives reopen, and never applies the simulated Planner operations",
+        "line": 818,
+        "timestamp": "2026-11-14T12:32:36.8314536Z",
+        "durationMs": 50835.54
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "status": "fail",
+        "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+        "line": 830,
+        "timestamp": "2026-11-14T12:33:26.5014868Z",
+        "durationMs": 49664.04
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+        "status": "pass",
+        "name": "real JSON import preserves the private C08 choice and cannot revive a deleted source under a reused record ID",
+        "line": 833,
+        "timestamp": "2026-11-14T12:34:17.6246124Z",
+        "durationMs": 51104.65
+      }
+    ]
+  },
+  "protocol": {
+    "nonces": [
+      "06ae6a7ec7900f132d79286022e565aa"
+    ],
+    "observedVerdicts": [
+      "omni positive control [06ae6a7ec7900f132d79286022e565aa]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [06ae6a7ec7900f132d79286022e565aa]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "failureClassification": {
+    "type": "FUNCTIONAL_REFUSAL_NOT_TIMEOUT",
+    "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "line": 182,
+    "operation": "preview.prepare(previewRequest,fixture.context)",
+    "actual": {
+      "status": "unavailable",
+      "reason": "choice-preview-coverage-unavailable"
+    },
+    "expected": "ok",
+    "durationMs": 49664.04,
+    "stack": "at <anonymous> current-choice-lifecycle.test.ts:182:50",
+    "diagnosis": "Cause not yet qualified by this evidence; implementation/fixture static review is separate."
+  },
+  "reached": [
+    "The current-choice lifecycle denied the unconfirmed preview and rejected an invalid alternative version as stale before its first valid preparation.",
+    "Both composite coverage tests completed, including shared N/A/composed interval and omitted/null/zero/40000 quote distinctions.",
+    "The real70000 implementation quote completed the235000 total/5000 savings test.",
+    "Explicit human choice persistence/reopen and JSON import/source reincarnation tests completed."
+  ],
+  "notReachedInFailedTest": [
+    "A valid current-choice preview binding after firstPrepared.",
+    "Human promotion, retry, post-promotion current-choice state and reopen assertions later in the same lifecycle test."
+  ],
+  "claimBoundary": [
+    "All5 passes and1failure retain literal W14 product dd9363dab38a769dd0c34fcf2068dfb610693779/snapshota84344f010c8b62af7a0d67a87aae88f0fc734a1; the overall run remains failed.",
+    "No timeout or memory-exhaustion evidence occurred. Reported durations are hosted wall timings, not CPU or heap measurements.",
+    "H6 own helper changes are outside the5 B1A relative import closures; this metadata is not a W15 execution.",
+    "Real fixture UI authority and domain operations do not independently prove an installed human/native session.",
+    "Canonical omni not-applicable verdict establishes no omni execution.",
+    "No local product tests/typecheck/build/install executed."
+  ],
+  "files": {
+    "wp11-W14-B1A-tests.log": {
+      "sha256": "ac177bc7c1a4a693f0f1e75bfac4ac35dd1093ccb98feda7673a02084346c9c8",
+      "bytes": 70880
+    },
+    "wp11-W14-B1A-tests-observed.json": {
+      "sha256": "a1638cfbb8832400065399de2bd2d1a24c16476b368613ec11fa577ffa14ec2e",
+      "bytes": 10681
+    },
+    "wp11-W14-B1A-remote-final.json": {
+      "sha256": "adc613cdb2dfab38d9534745d4f5aa8c5f4574fe9a2fc2b219bd77a8cd810f7f",
+      "bytes": 5732
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "e8055e8bbcf9b994052e0f4d2af69542c17ee5aca12d27ce4dcddef499061726",
+      "bytes": 7583
+    }
+  }
+}

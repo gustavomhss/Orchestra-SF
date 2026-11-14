@@ -175,7 +175,9 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
       if (compared.status !== "ok" || advantage.status !== "ok") throw new Error(`Current comparison unavailable: ${JSON.stringify({ compared, advantage })}`)
       const comparisonStored = await results.write({ kind: "comparison", result: compared.value, caseRef, requestDigest: digestSfValue(comparisonRequest), sourceRefs: basis.sourceRefs, idempotencyKey: `current-comparison-${caseRef.version}` }, fixture.context)
       if (comparisonStored.status !== "ok") throw new Error(comparisonStored.reason)
-      const projection = await planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
+      // This phase member exposes only the canonical source DomainProjection;
+      // the persisted results, comparisons, criterion and previews above retain C10.
+      const projection = await sourcePlanner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
       if (projection.status !== "ok") throw new Error(projection.reason)
       const classification = await baseline.readClassification(source.refId, fixture.context)
       const rule = await rules.resolve({ caseRef, criterionId: "renewal-difference" }, fixture.context)

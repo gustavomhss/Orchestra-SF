@@ -1,0 +1,354 @@
+{
+  "source": {
+    "productSha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "productTree": "e6831add3e891e020d34540234bd685a7dd05e01",
+    "snapshotSha": "da8b39a82a45f5846da20923023e2e588578167d",
+    "snapshotTree": "4d80c5f15846c40a4c9586eb8c92d19188567661",
+    "branch": "ci-run-linux-astra-wp11-d7775d6-e991d7a5-c2",
+    "requestSha256": "e991d7a53d722d00e8caf409186e848d5197ebaf7851d04526d536a0598b7f1b",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "19e3e8686a3ce27073f5085dbe8ac5d30e56374e"
+  },
+  "run": {
+    "id": 43593961201,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-14T12:16:03Z",
+    "updatedAt": "2026-11-14T12:22:42Z",
+    "headSha": "da8b39a82a45f5846da20923023e2e588578167d",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43593961201",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132444404181,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132446042771,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 2,
+      "fail": 0,
+      "tests": 2,
+      "files": 2,
+      "durationSeconds": 301.98
+    },
+    "filteredOut": 6,
+    "expectCalls": 53,
+    "ownObservedCounts": {
+      "pass": 0,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "failures": [],
+    "hasCompletedBunSummary": true,
+    "requestedButNotObserved": [],
+    "fileResults": [
+      {
+        "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 153684.79,
+        "header": {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "line": 810,
+          "timestamp": "2026-11-14T12:17:30.9933238Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "status": "pass",
+          "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+          "line": 811,
+          "timestamp": "2026-11-14T12:20:04.7126842Z",
+          "durationMs": 153684.79
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 148136.54,
+        "header": {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "line": 813,
+          "timestamp": "2026-11-14T12:20:04.7127694Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "status": "pass",
+          "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+          "line": 814,
+          "timestamp": "2026-11-14T12:22:32.8514460Z",
+          "durationMs": 148136.54
+        }
+      }
+    ],
+    "individualResults": [
+      {
+        "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "status": "pass",
+        "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+        "line": 811,
+        "timestamp": "2026-11-14T12:20:04.7126842Z",
+        "durationMs": 153684.79
+      },
+      {
+        "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "status": "pass",
+        "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+        "line": 814,
+        "timestamp": "2026-11-14T12:22:32.8514460Z",
+        "durationMs": 148136.54
+      }
+    ]
+  },
+  "protocol": {
+    "nonces": [
+      "aadcbf31f89b7c90fb7fcf379aa0ca3f"
+    ],
+    "observedVerdicts": [
+      "omni positive control [aadcbf31f89b7c90fb7fcf379aa0ca3f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [aadcbf31f89b7c90fb7fcf379aa0ca3f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run.",
+    "requestControlScope": "declared",
+    "observedRuntimeOutcome": "Focused name filter ran no declaring test; canonical not-applicable verdict is accepted and proves nothing about omni."
+  },
+  "proof": [
+    "The exact previously timing-out WP03 composed threshold training test completed at153684.79ms under the unchanged180000ms per-test limit.",
+    "The exact previously timing-out WP05 real Planner omitted-versus40000 training test completed at148136.54ms under the same limit."
+  ],
+  "claimBoundary": [
+    "Only2 exact anchored names executed on W13 product d7775d6f1eb17af1590ccfb98547259eb017cd1b/snapshotda8b39a82a45f5846da20923023e2e588578167d;6 other tests were filtered out, not re-executed or granted new passing evidence.",
+    "Prior C1 timeout outcomes remain historical failures on W6; this run does not rewrite them.",
+    "The run is a consumer proof of canonical WP03/WP05 producers, not a replacement for the still-failing own full renewal choice history or installed native UI proof.",
+    "Canonical omni control scope is declared by the source selection, but the name filter did not run declaring tests; the exact nonce-tagged not-applicable verdict is valid without an omni execution claim.",
+    "No local product tests/typecheck/build/install were performed."
+  ],
+  "files": {
+    "wp11-W13-C2-tests.log": {
+      "sha256": "7a5f3319c7df181f5a71381ce0996d0ca50a8aa58de53e8b675e3c539aaad936",
+      "bytes": 69211
+    },
+    "wp11-W13-C2-tests-observed.json": {
+      "sha256": "840abade1abfc837368b5fc7319bd588d0f1d5a1ab8b96367479e87086d7149a",
+      "bytes": 5986
+    },
+    "wp11-W13-C2-remote-final.json": {
+      "sha256": "a2b0a5dcaf7dc103eb704ec08eec3d42235d3998d8aca16bc2cd971985636f42",
+      "bytes": 19512
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "e8055e8bbcf9b994052e0f4d2af69542c17ee5aca12d27ce4dcddef499061726",
+      "bytes": 7583
+    }
+  }
+}

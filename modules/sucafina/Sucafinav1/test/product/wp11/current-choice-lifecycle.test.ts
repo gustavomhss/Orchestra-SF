@@ -78,6 +78,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     // source entry list share objects; classification keeps its own cloned entries.
     const trainingObservation = structuredClone(coverage.assessment.entries.find((entry) => entry.categoryId === "training"))
     const coverageBeforeMatcher = digestSfValue(coverage.assessment)
+    const coverageBeforeObservation = digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })
     const trainingBeforeMatcher = digestSfValue(trainingObservation)
     expect(trainingObservation).toMatchObject({ status: "included", componentRefs: expect.arrayContaining(["training:11"]) })
     const matcherObservation = (() => {
@@ -87,6 +88,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     console.debug("WP11_CURRENT_CHOICE_MATCHER", JSON.stringify({ beforeDigest: trainingBeforeMatcher, ...matcherObservation,
       componentRefsAreArray: trainingObservation?.status === "included" && Array.isArray(trainingObservation.componentRefs) }))
     expect(digestSfValue(coverage.assessment)).toBe(coverageBeforeMatcher)
+    expect(digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })).toBe(coverageBeforeObservation)
     const plannerAfterQuote = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
     const writes = new WeakSet<object>()
     const makeState = (store: typeof fixture.store) => createSfProductState({

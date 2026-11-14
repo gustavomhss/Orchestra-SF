@@ -49,6 +49,14 @@ export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId
   return { ...safe, restrictedHr: false, fteInputsKnown, hrMonthStates, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
 }
 
+/** Map the authenticated principal to the same actor used by Planner source projections. */
+export function plannerSourceActor(snapshot: Snapshot, principal: Awaited<ReturnType<DomainPortHost["authenticate"]>>, principalRef: string): Actor | undefined {
+  if (!principal || principal.id !== principalRef || principal.id.startsWith("local:")) return undefined
+  const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
+  const access = object(object(snapshot.data.access)[principal.id])
+  return { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
+}
+
 export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
@@ -92,10 +100,8 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   if (coverageFailure && coverageFailure.status !== "ok") return coverageFailure
   const read = async () => input.host.persistence.transaction("planner", async (snapshot) => {
     const principal = await input.host.authenticate(http, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
-    if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: undefined }
-    const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
-    const access = object(object(snapshot.data.access)[principal.id])
-    const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
+    const actor = plannerSourceActor(snapshot, principal, binding.binding.principalRef)
+    if (!actor) return { commit: false, value: undefined }
     if (sameSource) { const projection = projectPlannerSource(snapshot, actor, selected[0]!.versionId); return { commit: false, value: [projection, structuredClone(projection)] } }
     return { commit: false, value: selected.map((item) => projectPlannerSource(snapshot, actor, item.versionId)) }
   })

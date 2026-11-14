@@ -1,0 +1,316 @@
+{
+  "source": {
+    "productSha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "productTree": "e6831add3e891e020d34540234bd685a7dd05e01",
+    "snapshotSha": "5d386ed8b4b44db080342995dec263772481538b",
+    "snapshotTree": "dc80dd9e548419e1bc0353d467fccecc75517175",
+    "branch": "ci-run-linux-astra-wp11-d7775d6-18f4fe6c-f3",
+    "requestSha256": "18f4fe6c8fe126711efa35337d9a03437ab2e13bf8f851d62a47bb9385b315c6",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "862022f0c03ffda0c99b1a6fbd21f12c2c483ddf"
+  },
+  "run": {
+    "id": 43593540746,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-14T12:11:02Z",
+    "updatedAt": "2026-11-14T12:12:41Z",
+    "headSha": "5d386ed8b4b44db080342995dec263772481538b",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43593540746",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132443141064,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132443518302,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 6,
+      "fail": 0,
+      "tests": 6,
+      "files": 1,
+      "durationSeconds": 0.765
+    },
+    "ownObservedCounts": {
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "failures": [],
+    "hasCompletedBunSummary": true,
+    "requestedButNotObserved": [],
+    "fileResults": [
+      {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "reportedTests": 6,
+        "counts": {
+          "pass": 6,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 540.08,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "line": 829,
+          "timestamp": "2026-11-14T12:12:29.3956757Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "status": "pass",
+          "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+          "line": 835,
+          "timestamp": "2026-11-14T12:12:30.1460110Z",
+          "durationMs": 118.49
+        }
+      }
+    ]
+  },
+  "protocol": {
+    "nonces": [
+      "97290ea6f0b235169e477ca85a65dd2b"
+    ],
+    "observedVerdicts": [
+      "omni positive control [97290ea6f0b235169e477ca85a65dd2b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [97290ea6f0b235169e477ca85a65dd2b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "proof": [
+    "Actual Dashboard snapshot registration creates private draft without modifying official records and supports exact retry.",
+    "Real Dashboard concurrent source edit commits and is independently asserted before the draft is refused; no private C08 change or receipt.",
+    "Concurrent case and authority changes refuse draft registration.",
+    "Current draft read rejects a replacement during its last source callback.",
+    "List rejects a replacement during its last case authorization callback."
+  ],
+  "claimBoundary": [
+    "All6 selected HotTopic scenarios passed on literal W13 product d7775d6f1eb17af1590ccfb98547259eb017cd1b and snapshot5d386ed8b4b44db080342995dec263772481538b.",
+    "This run does not rerun promotion coverage. Its6PASS remain W12 F2 evidence.",
+    "Private test admissions use real authority/C08 machinery; this is not installed human/native UI evidence.",
+    "Canonical omni verdict is not applicable and proves nothing about omni.",
+    "No local product tests/typecheck executed."
+  ],
+  "metadataParserChange": {
+    "receipt": "metadata-parser-ms-change.json",
+    "sha256": "574436e8e1848daf92b16e88478d63ae8a2d72b065e1298ef9b013250b0151b4",
+    "reason": "Bun emitted765.00ms; parser now normalizes ms and s without modifying logs. Previous parser preserved."
+  },
+  "files": {
+    "wp11-W13-F3-tests.log": {
+      "sha256": "b135db3ac46b7031b977b539fbac3fc17f6c3d66563203ccd3ca9f2bdde5ffb3",
+      "bytes": 70738
+    },
+    "wp11-W13-F3-tests-observed.json": {
+      "sha256": "1ff0d358461c49d91a108a155412b741bfd621b0dd3c270ba0fb859ffdaba24e",
+      "bytes": 5844
+    },
+    "wp11-W13-F3-remote-final.json": {
+      "sha256": "77d7b1f829942998f7e75125fef7e809085403909d3307f6710b1354e6118f5c",
+      "bytes": 5156
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "e8055e8bbcf9b994052e0f4d2af69542c17ee5aca12d27ce4dcddef499061726",
+      "bytes": 7583
+    }
+  }
+}
