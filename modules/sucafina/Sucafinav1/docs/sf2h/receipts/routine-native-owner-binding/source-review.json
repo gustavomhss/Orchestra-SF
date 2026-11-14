@@ -1,0 +1,140 @@
+{
+  "schema": "sf-routine-native-owner-source-review-v1",
+  "mission": 41,
+  "branch": "astra-wp09",
+  "pr": 30,
+  "reviewer": "native_api_audit",
+  "review_boundary": "Source review of peer-authored registry/runtime/governance/adapter and focused fixtures; the same reviewer authored routine-native-owner.ts, so that file's review is not an independent acceptance review.",
+  "status": "SOURCE_REVIEW_COMPLETE_W1_CHECK_FAILED_OWNED_TEST_DIAGNOSTICS",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_source_sha": "e4c1bb7c914a29cb3d4fcddc9e196823289ccc80",
+  "reconciled_source_sha": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+  "dependency_source_sha": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+  "published_product_sha": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+  "reviewed_files": [
+    "apps/cli/src/sucafina-product/routine-native-owner.ts",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts",
+    "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+    "apps/cli/src/sucafina-product/routine-native-governance.ts",
+    "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+    "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts"
+  ],
+  "native_api_evidence": [
+    {
+      "path": "packages/core/src/session/runner/llm.ts",
+      "blob_sha": "256f5e21b8305131c36474b4c69ea747a8fdfc73",
+      "finding": "The real runner wraps materialization.settle in CapabilityInvocation.withContext with issuer core, captured native project/Location/session/agent, assistant message, call and effective rules. This encloses ToolSafety.run; it does not carry an authenticated SF Request."
+    },
+    {
+      "path": "packages/core/src/capability/invocation.ts",
+      "blob_sha": "e2ddcb3e3f0da61b8d9d5fe8c7c74436b844e890",
+      "finding": "CapabilityInvocation.require checks the privately issued current frame and exact invocation/placement. Canonical rereads and hook lifecycle remain separate obligations; retaining a frame does not make it a durable admission."
+    },
+    {
+      "path": "packages/core/src/tool/registry.ts",
+      "blob_sha": "27c06bb2060a792ca1a2237673f2627b8d04f3fc",
+      "finding": "safety.run surrounds acquire and the original settlement. Ownership capture must wrap run before the original SF plan guard; acquire alone runs too late. projectDirectory is derived with Project.isRoot(location.project.directory) ? location.directory : location.project.directory."
+    },
+    {
+      "path": "packages/core/src/permission.ts",
+      "blob_sha": "2e3d29d3f1ec1fe805d21af091029721c9fa738e",
+      "finding": "PermissionV2.Interface.evaluate is read-only. Deny blocks capture; ask is not approval and remains subject to the original Task permission path. The registry never calls reply or stores an allow."
+    },
+    {
+      "path": "packages/core/src/tool/task.ts",
+      "blob_sha": "0e82455ca428e5b498551496bc65bdc0f6551df3",
+      "finding": "Task retains native governance, permissions, placement, target/model, child creation and settlement. Its approval wait is native work; private Request cancellation must target the owned Effect and cannot imply rollback of native effects already committed."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-records.ts",
+      "blob_sha": "d918fa52cdf301ed90ed243329caa799dcfc8ebd",
+      "finding": "The existing canonical reader verifies the real plan/authorization/validation/context/review/approval/presentation/reservation/Task chain. Missing approval or presentation can be projected as needs-review, so owner capture adds explicit approved-receipt requirements and snapshots immutable receipt projections."
+    }
+  ],
+  "resolved_review_findings": [
+    {
+      "id": "M41.SR01",
+      "area": "Grant lease preservation",
+      "change": "Removed registry ownership observation as a source of governance.bind. A current owner is not a case/source/publication admission. The original guard continues to deny SF plans without the independent stronger lease.",
+      "assessment": "SOURCE_RESOLVED"
+    },
+    {
+      "id": "M41.SR02",
+      "area": "Resource acquisition and finalization",
+      "change": "Request and Task ownership use acquireUseRelease with idempotent cleanup. Successful observation returns the original value once; original typed failure and interruption are preserved. Completion revokes only the issued ephemeral binding and creates no durable ledger or run identity.",
+      "assessment": "SOURCE_RESOLVED"
+    },
+    {
+      "id": "M41.SR03",
+      "area": "Canonical placement and immutable receipts",
+      "change": "Added exact native projectDirectory comparison. Capture now requires APPROVE review, APPROVED human decision and presentation. Revalidation snapshots authorization, validation, context, review, approval and presentation. It does not freeze reservation, bound, child or admission state, which legitimately evolve.",
+      "assessment": "SOURCE_RESOLVED"
+    },
+    {
+      "id": "M41.SR04",
+      "area": "Expiry and clock rollback",
+      "change": "The monotonic deadline uses the smaller of the remaining context lifetime and five minutes. An owned timer closes the scope at that deadline and is cleared by cleanup, so a wall-clock rollback cannot extend a shorter captured lease to five minutes.",
+      "assessment": "SOURCE_RESOLVED"
+    },
+    {
+      "id": "M41.SR05",
+      "area": "Owned cancellation",
+      "change": "The registry reuses withSfRoutineNativeAbort with a scope-owned AbortController. Request abort, explicit revocation, generation invalidation, expiry and detected canonical drift cancel only that effect. Normal Entry.close does not abort valid completion. The registry-to-dispatch import introduces no value cycle.",
+      "assessment": "SOURCE_RESOLVED"
+    },
+    {
+      "id": "M41.SR06",
+      "area": "Real services and explicit fixtures",
+      "change": "Focused fixtures reuse real Database/EventV2/SessionStore and instantiate real AgentV2/PermissionSaved/PermissionV2/ToolRegistry plus publication storage/compiler/readers. Native history, approvals, Request issuance and core frame are explicitly synthetic; the Task registration is deliberately nonexecuting.",
+      "assessment": "SOURCE_REVIEWED_EXECUTION_PENDING"
+    }
+  ],
+  "remaining_integration_boundaries": [
+    "No inspected host path originates an authenticated SF Request in a real Maestro governed admission/continuation. Neither HTTP sessionID, model text, SF_ROUTINE_INPUT, resident sf_maestro nor an independently constructed Tool.Context supplies that missing authority.",
+    "Session33/current composition successor must consume the complete mounting patch and provide the exact trusted admission origin described in assembly/missing-capability.json. Observer installation alone leaves owners unavailable.",
+    "The live native hook cannot reenter adapter dispatch through the same active SessionExecution.exclusive owner. A later continuation needs a fresh legitimate admission and cannot revive an expired frame.",
+    "Readiness requires actual live ownership and native resources. The mounting patch without the missing producer advertises no routine operations. sf_watch_prepare separately requires real Schedule admission.",
+    "Owned cancellation prevents successful stale egress and cancels ongoing owned effects; it does not roll back native records or effects already committed. No transactional rollback claim is made."
+  ],
+  "check_observation": {
+    "status": "W1_FAILED",
+    "run_id": 43649765609,
+    "job_id": 132615390010,
+    "snapshot_sha": "69ad7930e5ae676463f8bd25faeffbd2f2bc71f6",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649765609",
+    "baseline_run_id": 43644025753,
+    "baseline_job_id": 132597678493,
+    "baseline_typescript_diagnostic_count": 78,
+    "baseline_file_count": 27,
+    "job_conclusion": "failure",
+    "typecheck_conclusion": "failure",
+    "guard_conclusion": "success",
+    "typescript_diagnostic_count": 84,
+    "preserved_baseline_diagnostics": 78,
+    "removed_baseline_diagnostics": 0,
+    "new_owned_diagnostic_count": 6,
+    "new_private_production_source_diagnostic_count": 0,
+    "new_owned_diagnostics": [
+      { "path": "test/product/routine-native-owner-binding/binding.test.ts", "line": 3, "column": 20, "code": "TS2307", "message": "Cannot find module 'drizzle-orm' or its corresponding type declarations." },
+      { "path": "test/product/routine-native-owner-binding/binding.test.ts", "line": 169, "column": 30, "code": "TS2322", "message": "Effect<Registration, never, Scope> is not assignable to Effect<unknown, never, never>; Scope is not assignable to never." },
+      { "path": "test/product/routine-native-owner-binding/binding.test.ts", "line": 205, "column": 27, "code": "TS2322", "message": "Effect<void, never, Scope> is not assignable to Effect<void, never, never>; Scope is not assignable to never." },
+      { "path": "test/product/routine-native-owner-binding/fences.test.ts", "line": 3, "column": 20, "code": "TS2307", "message": "Cannot find module 'drizzle-orm' or its corresponding type declarations." },
+      { "path": "test/product/routine-native-owner-binding/fences.test.ts", "line": 102, "column": 27, "code": "TS2322", "message": "Effect<void, never, Scope> is not assignable to Effect<void, never, never>; Scope is not assignable to never." },
+      { "path": "test/product/routine-native-owner-binding/fixture.ts", "line": 2, "column": 20, "code": "TS2307", "message": "Cannot find module 'drizzle-orm' or its corresponding type declarations." }
+    ],
+    "baseline_comparison": "Both complete decoded job logs were read through GitHub MCP. Strip only the timestamp and GitHub error annotation prefix from each TypeScript diagnostic header: all 78 prior mission30 headers recur exactly, with zero removed and six new headers confined to the three owned test files. Product checkout in the W1 log is 99d225ba024b4de910753d0fce34bf1b9a43281f. Root assigned correction and a deduplicated focused rerun; this reviewer did not change tests, execute locally or trigger a run."
+  },
+  "acceptance": {
+    "local_tests": "NOT_RUN_BY_INSTRUCTION",
+    "local_typecheck": "NOT_RUN_BY_INSTRUCTION",
+    "remote_mutation_by_this_reviewer": false,
+    "runtime_model_reviewer_consumer_chain": "NOT_PROVEN",
+    "AM02": "NOT_PROVEN",
+    "AM06": "NOT_PROVEN",
+    "independent_acceptance": false,
+    "global_release": false,
+    "rule": "Source review and component fixtures cannot establish the complete native mission or campaign acceptance. Hosted evidence must identify its exact product W and workflow snapshot S; a later receipt-only commit is not the tested product."
+  }
+}

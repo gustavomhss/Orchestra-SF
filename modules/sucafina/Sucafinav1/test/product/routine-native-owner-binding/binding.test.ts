@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test"
-import { Context, Effect, Exit } from "effect"
-import { eq } from "drizzle-orm"
+import { Context, Effect, Exit, type Scope } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
 import { CapabilityInvocation } from "@orchestra/core/capability/invocation"
 import { EventV2 } from "@orchestra/core/event"
@@ -10,7 +9,7 @@ import { ProjectTable } from "@orchestra/core/project/sql"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionSchema } from "@orchestra/core/session/schema"
-import { SessionMessageTable, SessionTable } from "@orchestra/core/session/sql"
+import { SessionMessageTable } from "@orchestra/core/session/sql"
 import { ToolSafety } from "@orchestra/core/tool-safety"
 import { ids, withOwnerFixture, type OwnerFixture } from "./fixture.ts"
 
@@ -142,30 +141,24 @@ test("internally consistent invented session and message claims still fail again
     expect(calls).toBe(0)
   })))
 
-const canonicalChanges: ReadonlyArray<[string, (f: OwnerFixture) => Effect.Effect<unknown>]> = [
-  ["session actor", (f) => f.database.db.update(SessionTable).set({ agent: "sf_maestro" })
-    .where(eq(SessionTable.id, ids.parent)).run().pipe(Effect.orDie)],
-  ["archived session", (f) => f.database.db.update(SessionTable).set({ time_archived: Date.now() })
-    .where(eq(SessionTable.id, ids.parent)).run().pipe(Effect.orDie)],
-  ["session Location", (f) => f.database.db.update(SessionTable).set({ directory: "/other-fixture-location" })
-    .where(eq(SessionTable.id, ids.parent)).run().pipe(Effect.orDie)],
+const canonicalChanges: ReadonlyArray<[string, (f: OwnerFixture) => Effect.Effect<unknown, never, Scope.Scope>]> = [
+  ["session actor", (f) => f.database.db.$client`UPDATE session SET agent = ${"sf_maestro"} WHERE id = ${ids.parent}`.pipe(Effect.orDie)],
+  ["archived session", (f) => f.database.db.$client`UPDATE session SET time_archived = ${Date.now()} WHERE id = ${ids.parent}`.pipe(Effect.orDie)],
+  ["session Location", (f) => f.database.db.$client`UPDATE session SET directory = ${"/other-fixture-location"} WHERE id = ${ids.parent}`.pipe(Effect.orDie)],
   ["session project", (f) => Effect.gen(function* () {
     const other = Project.ID.make("m41-other-fixture-project")
     yield* f.database.db.insert(ProjectTable).values({ id: other, worktree: AbsolutePath.make(f.directory), sandboxes: [] }).run().pipe(Effect.orDie)
-    yield* f.database.db.update(SessionTable).set({ project_id: other }).where(eq(SessionTable.id, ids.parent)).run().pipe(Effect.orDie)
+    yield* f.database.db.$client`UPDATE session SET project_id = ${other} WHERE id = ${ids.parent}`.pipe(Effect.orDie)
   })],
   ["assistant actor", (f) => f.writeTask(SessionMessage.Assistant.make({ ...f.taskMessage, agent: "backend" }))],
   ["assistant model", (f) => f.writeTask(SessionMessage.Assistant.make({ ...f.taskMessage,
     model: { ...f.taskMessage.model!, id: ModelV2.ID.make("other-fixture-model") } }))],
-  ["human approval", (f) => f.database.db.delete(SessionMessageTable).where(eq(SessionMessageTable.id, ids.human)).run().pipe(Effect.orDie)],
-  ["native arm provenance", (f) => f.database.db.delete(EventV2.EventTable).where(eq(EventV2.EventTable.id, ids.armRow)).run().pipe(Effect.orDie)],
-  ["authorization", (f) => f.database.db.delete(EventV2.EventTable).where(eq(EventV2.EventTable.id, ids.authorization)).run().pipe(Effect.orDie)],
-  ["review receipt", (f) => f.database.db.delete(EventV2.EventTable)
-    .where(eq(EventV2.EventTable.id, EventV2.ID.make("evt_sf_m41_review_fixture"))).run().pipe(Effect.orDie)],
-  ["approval receipt", (f) => f.database.db.delete(EventV2.EventTable)
-    .where(eq(EventV2.EventTable.id, EventV2.ID.make("evt_sf_m41_approval_fixture"))).run().pipe(Effect.orDie)],
-  ["presentation receipt", (f) => f.database.db.delete(EventV2.EventTable)
-    .where(eq(EventV2.EventTable.id, ids.presentationRow)).run().pipe(Effect.orDie)],
+  ["human approval", (f) => f.database.db.$client`DELETE FROM session_message WHERE id = ${ids.human}`.pipe(Effect.orDie)],
+  ["native arm provenance", (f) => f.database.db.$client`DELETE FROM event WHERE id = ${ids.armRow}`.pipe(Effect.orDie)],
+  ["authorization", (f) => f.database.db.$client`DELETE FROM event WHERE id = ${ids.authorization}`.pipe(Effect.orDie)],
+  ["review receipt", (f) => f.database.db.$client`DELETE FROM event WHERE id = ${"evt_sf_m41_review_fixture"}`.pipe(Effect.orDie)],
+  ["approval receipt", (f) => f.database.db.$client`DELETE FROM event WHERE id = ${"evt_sf_m41_approval_fixture"}`.pipe(Effect.orDie)],
+  ["presentation receipt", (f) => f.database.db.$client`DELETE FROM event WHERE id = ${ids.presentationRow}`.pipe(Effect.orDie)],
   ["visible Maestro", (f) => f.agents.transform((editor) => editor.update(AgentV2.defaultID, (agent) => { agent.hidden = true }))],
   ["provider-executed Task", (f) => f.writeTask(SessionMessage.Assistant.make({ ...f.taskMessage,
     content: [{ ...taskPart(f), provider: { executed: true } }] }))],

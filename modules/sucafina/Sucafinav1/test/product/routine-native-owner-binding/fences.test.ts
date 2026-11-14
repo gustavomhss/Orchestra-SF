@@ -1,9 +1,7 @@
 import { expect, test } from "bun:test"
 import { Deferred, Effect, Exit, Fiber } from "effect"
-import { eq } from "drizzle-orm"
 import { AgentV2 } from "@orchestra/core/agent"
 import { EventV2 } from "@orchestra/core/event"
-import { SessionMessageTable } from "@orchestra/core/session/sql"
 import { ids, nonExecutingTask, withOwnerFixture, type OwnerFixture } from "./fixture.ts"
 
 const resolve = (f: OwnerFixture) => Effect.promise(() => f.registry.owners.resolve(f.state.context, f.state.request))
@@ -74,7 +72,7 @@ test("canonical human approval revocation invalidates a previously captured owne
   withOwnerFixture((f) => Effect.gen(function* () {
     const result = yield* f.enter(Effect.gen(function* () {
       expect(yield* resolve(f)).toBeDefined()
-      yield* f.database.db.delete(SessionMessageTable).where(eq(SessionMessageTable.id, ids.human)).run().pipe(Effect.orDie)
+      yield* f.database.db.$client`DELETE FROM session_message WHERE id = ${ids.human}`.pipe(Effect.orDie)
       expect(yield* resolve(f)).toBeUndefined()
     })).pipe(Effect.exit)
     expect(Exit.isFailure(result)).toBe(true)
@@ -91,7 +89,7 @@ for (const [name, eventID] of [
   withOwnerFixture((f) => Effect.gen(function* () {
     const result = yield* f.enter(Effect.gen(function* () {
       expect(yield* resolve(f)).toBeDefined()
-      yield* f.database.db.delete(EventV2.EventTable).where(eq(EventV2.EventTable.id, eventID)).run().pipe(Effect.orDie)
+      yield* f.database.db.$client`DELETE FROM event WHERE id = ${eventID}`.pipe(Effect.orDie)
       expect(yield* resolve(f)).toBeUndefined()
     })).pipe(Effect.exit)
     expect(Exit.isFailure(result)).toBe(true)

@@ -1,5 +1,4 @@
-import { DateTime, Effect, Layer, Schema } from "effect"
-import { eq } from "drizzle-orm"
+import { DateTime, Effect, Layer, Schema, type Scope } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
 import { CapabilityInvocation } from "@orchestra/core/capability/invocation"
 import { Database } from "@orchestra/core/database/database"
@@ -16,7 +15,7 @@ import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionSchema } from "@orchestra/core/session/schema"
-import { SessionMessageTable, SessionTable } from "@orchestra/core/session/sql"
+import { SessionMessageTable } from "@orchestra/core/session/sql"
 import { SessionStore } from "@orchestra/core/session/store"
 import { ToolOutputStore } from "@orchestra/core/tool-output-store"
 import { ToolSafety } from "@orchestra/core/tool-safety"
@@ -86,7 +85,7 @@ const completeAdmission = Effect.fn("SfOwnerFixture.completeAdmission")(function
   const events = yield* EventV2.Service
   const store = yield* SessionStore.Service
   yield* seedSession({ id: ids.parent, directory, agent: "maestro" })
-  yield* database.db.update(SessionTable).set({ model }).where(eq(SessionTable.id, ids.parent)).run().pipe(Effect.orDie)
+  yield* database.db.$client`UPDATE session SET model = ${JSON.stringify(model)} WHERE id = ${ids.parent}`.pipe(Effect.orDie)
   const parent = yield* store.get(ids.parent)
   if (!parent) return yield* Effect.die("Synthetic Maestro session missing")
   const authoring = yield* AuthoringStore.open(directory, Project.ID.global)
@@ -288,9 +287,9 @@ const build = Effect.fn("SfOwnerFixture.build")(function* (directory: string, ba
     return registry.withRequest(options.context ?? state.context, options.request ?? state.request,
       options.frame === null ? settled : CapabilityInvocation.withContext(options.frame ?? frame, settled))
   }
-  const writeTask = (message: SessionMessage.Assistant) => base.database.db.update(SessionMessageTable)
-    .set({ data: Schema.encodeSync(SessionMessage.Message)(message) }).where(eq(SessionMessageTable.id, ids.task))
-    .run().pipe(Effect.orDie)
+  const writeTask = (message: SessionMessage.Assistant) => base.database.db.$client`
+    UPDATE session_message SET data = ${JSON.stringify(Schema.encodeSync(SessionMessage.Message)(message))} WHERE id = ${ids.task}
+  `.pipe(Effect.orDie)
   const ui = () => ({ kind: "ui", binding: { installationId: binding.installationId, projectId: binding.projectId,
     principalRef: binding.principalRef, policyVersion: binding.policyVersion, accessRevision: binding.accessRevision,
     expiresAt: binding.expiresAt, requestId: "synthetic-ui-request" }, lease: {} }) as unknown as TrustedUiContext
@@ -300,7 +299,7 @@ const build = Effect.fn("SfOwnerFixture.build")(function* (directory: string, ba
 
 export type OwnerFixture = Effect.Success<ReturnType<typeof build>>
 
-export const withOwnerFixture = <A, E>(body: (fixture: OwnerFixture) => Effect.Effect<A, E>) =>
+export const withOwnerFixture = <A, E>(body: (fixture: OwnerFixture) => Effect.Effect<A, E, Scope.Scope>) =>
   withNativeRecords((directory) => Effect.scoped(Effect.gen(function* () {
     const base = yield* setup(directory)
     return yield* Effect.gen(function* () {

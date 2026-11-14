@@ -1,0 +1,95 @@
+{
+  "schema": "sf-routine-native-owner-inputs-v1",
+  "mission": {
+    "sha": "e4c1bb7c914a29cb3d4fcddc9e196823289ccc80",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/routine-native-owner-binding.json",
+    "lease_epoch": "routine-owner-browser41",
+    "read": "complete"
+  },
+  "planning": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "root": "modules/sucafina/Sucafinav1/docs/sf2h-plan/",
+    "actor_pack": "execution/actors/S0-B.json",
+    "read": "complete, including all 98 canonical criteria; partitioned complete readings recorded in authority.json"
+  },
+  "source": {
+    "head": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+    "tree": "91dba0dfd731d8501abf0d3ef3f3265d751e107b",
+    "runtime_product": "7676fd9173015e2c7d7c91745cc486f50018fc85",
+    "terminal": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/terminal.json",
+    "terminal_read": "complete; source implementation delivered, composition and native acceptance hold",
+    "preimages": {
+      "apps/cli/src/sucafina-product/routine-native-adapter.ts": "aa0b9758acee9338f8422002d718f05c71f00a09",
+      "apps/cli/src/sucafina-product/routine-native-runtime.ts": "377ceb99d45b6142c8e9f077f69f23673f470f92",
+      "apps/cli/src/sucafina-product/routine-native-governance.ts": "59c76df420f9532fbe4d278a9c1dccf86e33cbe0"
+    }
+  },
+  "integration": {
+    "original_consumer": 33,
+    "observed_successor": 42,
+    "head": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "previous": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "C11": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "C10": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+    "C9": "c1bd1c91b0e0d32db3074408e815e36107384073",
+    "host_preimage_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+    "control_successor": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "source_lease_not_transferred": true,
+    "authority_is_not_consumption_ack": true
+  },
+  "dependency_contracts": {
+    "read": "C01-C17 complete at fixed planning; predecessor dependency-provenance consumed",
+    "focus": [
+      "C06 cases/context/sources and confirmed facts",
+      "C07 governed native execution/admission",
+      "C08 factual results/artifacts",
+      "C16 published routines operations",
+      "C17 native resident provenance and Schedule constraints"
+    ],
+    "no_foreign_source_composition": "Mission41 does not copy a dependency tree into PR30 or modify other owners' modules"
+  },
+  "native_api_inspection": {
+    "source": "d9e1aca275bd04b2066ca84a605c7c315ea14c77 and actual integrated host at stated pins",
+    "paths": [
+      "packages/core/src/session.ts",
+      "packages/core/src/session/store.ts",
+      "packages/core/src/session/schema.ts",
+      "packages/core/src/session/runner/llm.ts",
+      "packages/core/src/capability/invocation.ts",
+      "packages/core/src/tool/task.ts",
+      "packages/core/src/tool/registry.ts",
+      "packages/core/src/tool/tool.ts",
+      "packages/core/src/tool/task-governance.ts",
+      "packages/core/src/tool-safety.ts",
+      "packages/core/src/permission.ts",
+      "apps/cli/src/sucafina-product/native-host.ts",
+      "apps/cli/src/sucafina-product/host-context.ts",
+      "apps/cli/src/sucafina-product/installation.ts",
+      "apps/cli/src/sucafina-product/contribution.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    ],
+    "private_supported_hook": "Core CapabilityInvocation wraps actual materialization.settle; existing private governance ToolSafety.run replacement observes that frame",
+    "missing_join": "No inspected callsite owns both authenticated SF Request and native Maestro admission/Task ownership. Resident sf_maestro is a different session identity."
+  },
+  "ci_interfaces": {
+    ".github/workflows/test-ci.yml": {
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "sha256": "10c4bb7b3b4fc6c9201736dfa1d4d211dccf0e75de74efa38ae5299473008d26"
+    },
+    ".github/workflows/astra-wp09-check.yml": {
+      "blob": "883e87de0196c580ac8160d74d8e5211a967e286",
+      "sha256": "fe1bebe8b39e57745396f91ea19acdd70cf2b06b49333fcae1349f89bc13d864"
+    },
+    "script/test-ci-request.ts": {
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    }
+  },
+  "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "testing_policy": "Existing hosted surgical interfaces only; no local product tests/typecheck/servers/install/provider calls/full suite/restart",
+  "no_runtime_claim_from_model_id": true,
+  "AM02": "NOT_PROVEN",
+  "AM06": "NOT_PROVEN",
+  "GLOBAL_RELEASE": false
+}
