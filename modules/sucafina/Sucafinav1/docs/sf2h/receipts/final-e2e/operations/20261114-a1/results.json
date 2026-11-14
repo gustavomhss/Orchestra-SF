@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h.operations-results.v1",
+  "status": "BLOCKED_DEPENDENCY",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "W": "70255998e3310652c4b7fce33f498e592be0bda9",
+  "tree": "642e3662e01526823fe29652d05cd2e6d5a1f7e0",
+  "nominal_selection": "CI-UI-OPERATIONS",
+  "selection_validation": {
+    "status": "PASS_SCOPED",
+    "run_id": 43633572790,
+    "S": "3e931409a87e88f73e6a631edfc45466d76b6656",
+    "receipt": "selection-a2.json",
+    "counts": {
+      "auxiliary_tests_passed": 1,
+      "auxiliary_tests_failed": 0,
+      "nominal_cases_listed": 5,
+      "nominal_cases_executed": 0
+    }
+  },
+  "functional_results": [
+    {
+      "id": "OP-PROC-01",
+      "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "status": "NOT_RUN",
+      "reason": "Real production host selection and product/composition prerequisites are not integrated; dependencies.json OPS-E2E-DEP-001/002/003."
+    },
+    {
+      "id": "OP-PROC-02",
+      "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "status": "NOT_RUN",
+      "reason": "Real production host selection and product/composition prerequisites are not integrated; dependencies.json OPS-E2E-DEP-001/002/003."
+    },
+    {
+      "id": "OP-PROC-03",
+      "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "status": "NOT_RUN",
+      "reason": "Real production host selection and product/composition prerequisites are not integrated; dependencies.json OPS-E2E-DEP-001/002/003."
+    },
+    {
+      "id": "OP-IMPORT-01",
+      "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "status": "NOT_RUN",
+      "reason": "Real production host selection and product/composition prerequisites are not integrated; dependencies.json OPS-E2E-DEP-001/002/003."
+    },
+    {
+      "id": "OP-DOC-01",
+      "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "status": "NOT_RUN",
+      "reason": "Real production host selection and product/composition prerequisites are not integrated; dependencies.json OPS-E2E-DEP-001/002/003."
+    }
+  ],
+  "C06": {
+    "status": "BLOCKED_DEPENDENCY",
+    "positive_test_implemented": false,
+    "receipt": "c06-dependency.json"
+  },
+  "checks": {
+    "run_id": 43633785874,
+    "receipt": "checks.json",
+    "sucafina_package_typecheck": "PASS",
+    "generated_contracts": "PASS",
+    "guards": "PASS",
+    "guard_gate_findings": 0,
+    "guard_warn_findings": 11,
+    "guard_errors": 0,
+    "operations_typescript_graph": "NOT_RUN"
+  },
+  "previous_attempts": [
+    "selection-a1.json"
+  ],
+  "native": "NOT_RUN",
+  "human_timing": "NOT_RUN",
+  "accepted_C": null,
+  "global_release": false,
+  "missing_runs_are_pass": false
+}
