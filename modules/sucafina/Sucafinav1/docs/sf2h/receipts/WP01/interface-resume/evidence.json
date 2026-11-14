@@ -1,0 +1,1711 @@
+{
+  "schema": "astra.interface-resume.evidence.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pr": 43,
+  "branch": "interface-resume",
+  "base": "sf2-stack",
+  "originPr": 31,
+  "inputHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+  "immutablePlan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "productCandidate": {
+    "W": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+    "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f"
+  },
+  "criteria": {
+    "WP01": {
+      "criteria": 75,
+      "newScopedContribution": 16,
+      "done": 0
+    },
+    "WP02": {
+      "criteria": 78,
+      "newScopedContribution": 25,
+      "done": 0
+    }
+  },
+  "legacyCatalog": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/evidence-catalog.json",
+    "bytes": 1227202,
+    "gitBlob": "4d8c0956619de59c622abcf27c23d12cd316bcd2",
+    "sha256": "bd9cc6a28f0e1aaf8f1da40147ff70e1cbf2c8075b3f35a295ede65ccd1970ee",
+    "commit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+    "immutable": true
+  },
+  "historicalObservationPolicy": "Old source/test/observation/run IDs remain in the unchanged published catalog and original parcels. Scoped evidence never grants whole-head or global PASS.",
+  "runs": [
+    {
+      "schema": "astra.interface-resume.publication.v1",
+      "repository": "gustavomhss/Orchestra-SF",
+      "branch": "interface-resume",
+      "base": "sf2-stack",
+      "pr": 43,
+      "input": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "W": "b1a477cd2346be755e10caec2941b1ba11171430",
+      "Wtree": "0d2010e9f5fe5dff4d902f8b305a4b082bce245d",
+      "S": "60bdbe5b1d9978d1880c48319064ab889335ee0c",
+      "Stree": "496e56b432a247ba63ed5310a2e8cf6fc22bd879",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "./Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "requestBody": "{\"package\":\"sucafina\",\"packageSelector\":\"packages/sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"./Sucafinav1/test/product/wp01/browser-startup.test.ts\",\"./Sucafinav1/test/product/wp01/shell-state.test.ts\",\"./Sucafinav1/test/product/wp01/shell-refresh.test.ts\",\"./Sucafinav1/test/product/wp01/work-destination-recovery.test.ts\",\"./Sucafinav1/test/product/wp02/workbench-ack.test.ts\",\"./Sucafinav1/test/product/wp02/workbench-recovery.test.ts\",\"./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts\",\"--timeout\",\"120000\"],\"env\":{\"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\":\"1\"}}",
+      "requestSha256": "8dee1fc4ba04461b4420239da72c04c2a2bd8fac8d238c4d21d1857f16ed5a7d",
+      "requestBlob": "4823434363194a9b6b38e0ae8e52cbefbc14d08b",
+      "ciBranch": "ci-run-linux-astra-interface-resume-b1a477c-8dee1fc4-1",
+      "browserRun": 43615877759,
+      "browserJob": 132510708217,
+      "staticRun": 43615878780,
+      "staticJob": 132510711501,
+      "files": [
+        {
+          "path": ".github/workflows/astra-interface-resume-check.yml",
+          "sha": "8a0036a3c24a81ec75e77d1835e5977c78471486",
+          "sha256": "18aa0d98e18f171e1abedf52a2319a316b39906508daed693ba2e8cabc910cc8"
+        },
+        {
+          "path": "docs/guides/sucafina-workbench.md",
+          "sha": "bf1a152781f38845f1b22384072ae0b36987984a",
+          "sha256": "209a9ba5c4e77d3140c96a008cee56d37a2dbe6d0f115f9de404dcfdcddff77e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+          "sha": "c92748938661f561a7f99d16049c35d0b4ce345c",
+          "sha256": "0bc4fba9e1495235325e271e8d8fce2d17e6f4d891ec60da983c94a87ee01e2d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+          "sha": "74ccb3c50dcadd85878987870f0e388926898d53",
+          "sha256": "da6c93e9dc47729f11357af0ed13ee344bbe1736e3b6225ffc217f61bee89373"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "sha": "f90a6f1a4663e90a9ab8fe354be781baf4e94d78",
+          "sha256": "c193e1e0ae26b7bcb1c08c4bf2691921e55627fd7c8bf58c415f2b278fe8fe45"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "sha": "f96b7353b3fb595c133b8af87edea11c56f1c028",
+          "sha256": "54b11487465b9de5b42627ccf471284efd4bd69900c50b9ec58637ac34cfb8c8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "sha": "858607c114b367ca63cf572961b8c8730e7407e6",
+          "sha256": "f96a6e4f8b5a6b8e18a1a424db11f1cf71900bb136a60d4d1d2e152e8abdca6b"
+        }
+      ],
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615877759",
+      "cleanupJob": 132511784304,
+      "cleanupConclusion": "success",
+      "conclusion": "failure",
+      "counts": {
+        "PASS": 28,
+        "FAIL": 3,
+        "tests": 31,
+        "files": 7,
+        "expects": 498,
+        "seconds": 123.16
+      },
+      "logSha256": "1d3abaa25c6b12e986a6db3fde820c17c752a54bcb94f84cf31d7191b5e73579",
+      "selectedFilesObserved": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "observations": [
+        {
+          "id": "IR-R43615877759-23a5768d52da",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "title": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+          "outcome": "PASS",
+          "milliseconds": 12866.18
+        },
+        {
+          "id": "IR-R43615877759-d03586593a60",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "refresh 401 removes the old authorized view even with unsaved edits",
+          "outcome": "PASS",
+          "milliseconds": 2010.34
+        },
+        {
+          "id": "IR-R43615877759-623df82d9cb1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "refresh 403 removes the old authorized view even with unsaved edits",
+          "outcome": "PASS",
+          "milliseconds": 233.6
+        },
+        {
+          "id": "IR-R43615877759-f747eb33cf9f",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "access revision change fails closed even when refresh returns HTTP 200",
+          "outcome": "PASS",
+          "milliseconds": 178.42
+        },
+        {
+          "id": "IR-R43615877759-495db839543f",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "an expired session rendered as a sign-in document cannot retain the dirty authorized view",
+          "outcome": "PASS",
+          "milliseconds": 174.61
+        },
+        {
+          "id": "IR-R43615877759-11322eaa1a7e",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "transient refresh failure and fresh data preserve a dirty form and its expected version",
+          "outcome": "PASS",
+          "milliseconds": 262.8
+        },
+        {
+          "id": "IR-R43615877759-46d130155a6b",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "edits typed during an ordinary save remain pending after its receipt",
+          "outcome": "PASS",
+          "milliseconds": 229.24
+        },
+        {
+          "id": "IR-R43615877759-0b5fe665257c",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "HTTP conflict preserves the attempt and shows the server value without a duplicated body status",
+          "outcome": "PASS",
+          "milliseconds": 250.06
+        },
+        {
+          "id": "IR-R43615877759-03c20cc5c272",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "navigation keeps scoped Dashboard periods and Planner version without sharing filters",
+          "outcome": "PASS",
+          "milliseconds": 205.01
+        },
+        {
+          "id": "IR-R43615877759-f6dedc47e9b1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "back from a detail restores the same query and scroll position after server revalidation",
+          "outcome": "PASS",
+          "milliseconds": 333.81
+        },
+        {
+          "id": "IR-R43615877759-7c1b410b4884",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "real shell detail supports keyboard, focus return and confined overflow at 320 px",
+          "outcome": "PASS",
+          "milliseconds": 229.51
+        },
+        {
+          "id": "IR-R43615877759-1aca3f116378",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "real shell detail supports keyboard, focus return and confined overflow at 768 px",
+          "outcome": "FAIL",
+          "milliseconds": 275.63
+        },
+        {
+          "id": "IR-R43615877759-a955f9d6322e",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "real shell detail supports keyboard, focus return and confined overflow at 1440 px",
+          "outcome": "FAIL",
+          "milliseconds": 222.25
+        },
+        {
+          "id": "IR-R43615877759-79d57aee172a",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "canonical destinations retain identifiers and invalid years cannot enter navigation state",
+          "outcome": "PASS",
+          "milliseconds": 0.72
+        },
+        {
+          "id": "IR-R43615877759-972b8295e62d",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "title": "the real 30-second refresh authorizes the page, offers the lifecycle event and replaces unclaimed content",
+          "outcome": "PASS",
+          "milliseconds": 30316.64
+        },
+        {
+          "id": "IR-R43615877759-88a16263e40c",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "title": "dirty forms block the lifecycle handoff while real logout still purges the authorized page",
+          "outcome": "PASS",
+          "milliseconds": 361.95
+        },
+        {
+          "id": "IR-R43615877759-2f70165ea2a8",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "title": "a committed save with lost delivery cannot hand its uncertain form to a page refresh or replay it",
+          "outcome": "PASS",
+          "milliseconds": 413.48
+        },
+        {
+          "id": "IR-R43615877759-6b85cc6456fb",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "title": "real destination unavailability preserves My work, while real logout denial purges every protected work item",
+          "outcome": "PASS",
+          "milliseconds": 1342.76
+        },
+        {
+          "id": "IR-R43615877759-35b80aa49aca",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "title": "an earlier real destination response cannot reactivate My work after a later authenticated denial",
+          "outcome": "PASS",
+          "milliseconds": 1222.9
+        },
+        {
+          "id": "IR-R43615877759-5097f08d9eb9",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard does not acknowledge empty or malformed capture replies and recovers the one real capture",
+          "outcome": "PASS",
+          "milliseconds": 1906.13
+        },
+        {
+          "id": "IR-R43615877759-5dab61dc96e1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard requires the requested review sections before acknowledging its real preserved meeting",
+          "outcome": "PASS",
+          "milliseconds": 2369.96
+        },
+        {
+          "id": "IR-R43615877759-354f1bf14512",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard keeps the draft values and frozen request until its exact next-version receipt arrives",
+          "outcome": "PASS",
+          "milliseconds": 1784.3
+        },
+        {
+          "id": "IR-R43615877759-57052910a174",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard does not acknowledge a preparation for another case choice or revision and replays one real preparation",
+          "outcome": "PASS",
+          "milliseconds": 3539.22
+        },
+        {
+          "id": "IR-R43615877759-7f352ef91dc5",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard rejects an incomplete C12 ACK after the real commit and preserves its unresolved application correlation",
+          "outcome": "PASS",
+          "milliseconds": 4568.38
+        },
+        {
+          "id": "IR-R43615877759-9c67adb4a4a5",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard acknowledges the complete receipt of one real reviewed application",
+          "outcome": "PASS",
+          "milliseconds": 4721.58
+        },
+        {
+          "id": "IR-R43615877759-090f0951ee59",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+          "outcome": "PASS",
+          "milliseconds": 4745.76
+        },
+        {
+          "id": "IR-R43615877759-cd621cef6e8d",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard retains the exact draft attempt when its first response is denied after the real host commits",
+          "outcome": "PASS",
+          "milliseconds": 3002.84
+        },
+        {
+          "id": "IR-R43615877759-8048ad368489",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable",
+          "outcome": "PASS",
+          "milliseconds": 3531.21
+        },
+        {
+          "id": "IR-R43615877759-f829e9fd956e",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+          "outcome": "PASS",
+          "milliseconds": 5646.68
+        },
+        {
+          "id": "IR-R43615877759-308258a1e8d5",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+          "outcome": "FAIL",
+          "milliseconds": 35658.1
+        },
+        {
+          "id": "IR-R43615877759-2157153009e1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "title": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+          "outcome": "PASS",
+          "milliseconds": 49.54
+        }
+      ],
+      "omni": {
+        "status": "pass",
+        "declared": 6,
+        "spawns": 6,
+        "delegated": 0
+      },
+      "physicalReports": [
+        {
+          "consumer": "host-draft-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5053
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5069,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 82,
+            "framesFromBrowser": 229,
+            "peakQueuedBytes": 3941,
+            "peakBufferedBytes": 3608,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-egress-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5188
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5203,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 33,
+            "framesFromBrowser": 125,
+            "peakQueuedBytes": 3965,
+            "peakBufferedBytes": 3633,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-source-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5323
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5338,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 97,
+            "framesFromBrowser": 305,
+            "peakQueuedBytes": 2460,
+            "peakBufferedBytes": 936,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-access-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5563
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5578,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 53,
+            "framesFromBrowser": 148,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4115
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4130,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 612,
+            "framesFromBrowser": 1894,
+            "peakQueuedBytes": 17079,
+            "peakBufferedBytes": 13337,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      ],
+      "physicalEvidenceLimit": "C12 failed before report() after try/finally; its close ran and Node exit 0 was logged, but no serialized complete C12 lifecycle report is claimed.",
+      "failedC12Consumer": [
+        "IR-R43615877759-308258a1e8d5"
+      ]
+    },
+    {
+      "schema": "astra.interface-resume.publication.v1",
+      "repository": "gustavomhss/Orchestra-SF",
+      "branch": "interface-resume",
+      "base": "sf2-stack",
+      "pr": 43,
+      "input": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "W": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+      "Wtree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+      "S": "519571ec1c90454b8a1eacf94f156dcc9c296f9f",
+      "Stree": "bddad5d5a9ce9c99b2834c62d593c015681c488d",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "./Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "requestBody": "{\"package\":\"sucafina\",\"packageSelector\":\"packages/sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"./Sucafinav1/test/product/wp01/browser-startup.test.ts\",\"./Sucafinav1/test/product/wp01/shell-state.test.ts\",\"./Sucafinav1/test/product/wp01/shell-refresh.test.ts\",\"./Sucafinav1/test/product/wp01/work-destination-recovery.test.ts\",\"./Sucafinav1/test/product/wp02/workbench-ack.test.ts\",\"./Sucafinav1/test/product/wp02/workbench-recovery.test.ts\",\"./Sucafinav1/test/product/wp02/dashboard-browser.test.ts\",\"./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts\",\"--timeout\",\"120000\"],\"env\":{\"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\":\"1\"}}",
+      "requestSha256": "0e5a6ed717643836a6100376db735f69ee09780837b5355a9a3fb2afd5086cd8",
+      "requestBlob": "deeae47d57267d07b06ac6e1d1dd52a05ea18eca",
+      "ciBranch": "ci-run-linux-astra-interface-resume-ad94fd2-0e5a6ed7-1",
+      "browserRun": 43616465145,
+      "browserJob": 132512490370,
+      "staticRun": null,
+      "staticJob": null,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "sha": "2aeacf2c05e86fef28947c5332284f3089e00049",
+          "sha256": "efa040a93ea293242fc0cc283bc172f123d29972a403ea41873ec05cf9813d64"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "sha": "10fe1c087aae8b4f9d19124634676cd3840f69d8",
+          "sha256": "7b1a5bcea28bd11583f4a7c64516b480a8c553537155911657a242986979309d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "sha": "4d7823be0abff16b4505910d080b47cf7cb96522",
+          "sha256": "2a7c1cdd956989c7f8a9ddde7ca36fd60b6aeb5136bd34872b0fecabdcc4789e"
+        }
+      ],
+      "increment": "W2",
+      "parentW": "b1a477cd2346be755e10caec2941b1ba11171430",
+      "cleanupJob": 132513497267,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616465145",
+      "cleanupConclusion": "success",
+      "conclusion": "failure",
+      "counts": {
+        "PASS": 31,
+        "FAIL": 1,
+        "tests": 32,
+        "files": 8,
+        "expects": 548,
+        "seconds": 129.48
+      },
+      "logSha256": "2f181bf9e2b92e501363b8689f4d0ef16e799256a20aa802b975eff8e44e4869",
+      "selectedFilesObserved": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "observations": [
+        {
+          "id": "IR-R43616465145-23a5768d52da",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "title": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+          "outcome": "PASS",
+          "milliseconds": 1470.0
+        },
+        {
+          "id": "IR-R43616465145-d03586593a60",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "refresh 401 removes the old authorized view even with unsaved edits",
+          "outcome": "PASS",
+          "milliseconds": 753.66
+        },
+        {
+          "id": "IR-R43616465145-623df82d9cb1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "refresh 403 removes the old authorized view even with unsaved edits",
+          "outcome": "PASS",
+          "milliseconds": 312.2
+        },
+        {
+          "id": "IR-R43616465145-f747eb33cf9f",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "access revision change fails closed even when refresh returns HTTP 200",
+          "outcome": "PASS",
+          "milliseconds": 250.91
+        },
+        {
+          "id": "IR-R43616465145-495db839543f",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "an expired session rendered as a sign-in document cannot retain the dirty authorized view",
+          "outcome": "PASS",
+          "milliseconds": 262.66
+        },
+        {
+          "id": "IR-R43616465145-11322eaa1a7e",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "transient refresh failure and fresh data preserve a dirty form and its expected version",
+          "outcome": "PASS",
+          "milliseconds": 322.89
+        },
+        {
+          "id": "IR-R43616465145-46d130155a6b",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "edits typed during an ordinary save remain pending after its receipt",
+          "outcome": "PASS",
+          "milliseconds": 313.44
+        },
+        {
+          "id": "IR-R43616465145-0b5fe665257c",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "HTTP conflict preserves the attempt and shows the server value without a duplicated body status",
+          "outcome": "PASS",
+          "milliseconds": 299.04
+        },
+        {
+          "id": "IR-R43616465145-03c20cc5c272",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "navigation keeps scoped Dashboard periods and Planner version without sharing filters",
+          "outcome": "PASS",
+          "milliseconds": 294.58
+        },
+        {
+          "id": "IR-R43616465145-f6dedc47e9b1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "back from a detail restores the same query and scroll position after server revalidation",
+          "outcome": "PASS",
+          "milliseconds": 384.38
+        },
+        {
+          "id": "IR-R43616465145-7c1b410b4884",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "real shell detail supports keyboard, focus return and confined overflow at 320 px",
+          "outcome": "PASS",
+          "milliseconds": 339.54
+        },
+        {
+          "id": "IR-R43616465145-1aca3f116378",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "real shell detail supports keyboard, focus return and confined overflow at 768 px",
+          "outcome": "PASS",
+          "milliseconds": 323.06
+        },
+        {
+          "id": "IR-R43616465145-a955f9d6322e",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "real shell detail supports keyboard, focus return and confined overflow at 1440 px",
+          "outcome": "PASS",
+          "milliseconds": 326.45
+        },
+        {
+          "id": "IR-R43616465145-79d57aee172a",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "title": "canonical destinations retain identifiers and invalid years cannot enter navigation state",
+          "outcome": "PASS",
+          "milliseconds": 0.88
+        },
+        {
+          "id": "IR-R43616465145-972b8295e62d",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "title": "the real 30-second refresh authorizes the page, offers the lifecycle event and replaces unclaimed content",
+          "outcome": "PASS",
+          "milliseconds": 30447.02
+        },
+        {
+          "id": "IR-R43616465145-88a16263e40c",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "title": "dirty forms block the lifecycle handoff while real logout still purges the authorized page",
+          "outcome": "PASS",
+          "milliseconds": 525.61
+        },
+        {
+          "id": "IR-R43616465145-2f70165ea2a8",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "title": "a committed save with lost delivery cannot hand its uncertain form to a page refresh or replay it",
+          "outcome": "PASS",
+          "milliseconds": 565.93
+        },
+        {
+          "id": "IR-R43616465145-6b85cc6456fb",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "title": "real destination unavailability preserves My work, while real logout denial purges every protected work item",
+          "outcome": "PASS",
+          "milliseconds": 1824.35
+        },
+        {
+          "id": "IR-R43616465145-35b80aa49aca",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "title": "an earlier real destination response cannot reactivate My work after a later authenticated denial",
+          "outcome": "PASS",
+          "milliseconds": 1695.41
+        },
+        {
+          "id": "IR-R43616465145-5097f08d9eb9",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard does not acknowledge empty or malformed capture replies and recovers the one real capture",
+          "outcome": "PASS",
+          "milliseconds": 2413.99
+        },
+        {
+          "id": "IR-R43616465145-5dab61dc96e1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard requires the requested review sections before acknowledging its real preserved meeting",
+          "outcome": "PASS",
+          "milliseconds": 3502.8
+        },
+        {
+          "id": "IR-R43616465145-354f1bf14512",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard keeps the draft values and frozen request until its exact next-version receipt arrives",
+          "outcome": "PASS",
+          "milliseconds": 2270.55
+        },
+        {
+          "id": "IR-R43616465145-57052910a174",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard does not acknowledge a preparation for another case choice or revision and replays one real preparation",
+          "outcome": "PASS",
+          "milliseconds": 4225.63
+        },
+        {
+          "id": "IR-R43616465145-7f352ef91dc5",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard rejects an incomplete C12 ACK after the real commit and preserves its unresolved application correlation",
+          "outcome": "PASS",
+          "milliseconds": 6125.26
+        },
+        {
+          "id": "IR-R43616465145-9c67adb4a4a5",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "title": "Dashboard acknowledges the complete receipt of one real reviewed application",
+          "outcome": "PASS",
+          "milliseconds": 6625.98
+        },
+        {
+          "id": "IR-R43616465145-090f0951ee59",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+          "outcome": "PASS",
+          "milliseconds": 6383.55
+        },
+        {
+          "id": "IR-R43616465145-cd621cef6e8d",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard retains the exact draft attempt when its first response is denied after the real host commits",
+          "outcome": "PASS",
+          "milliseconds": 3505.52
+        },
+        {
+          "id": "IR-R43616465145-8048ad368489",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable",
+          "outcome": "PASS",
+          "milliseconds": 4957.29
+        },
+        {
+          "id": "IR-R43616465145-f829e9fd956e",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+          "outcome": "PASS",
+          "milliseconds": 7397.01
+        },
+        {
+          "id": "IR-R43616465145-308258a1e8d5",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "title": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+          "outcome": "FAIL",
+          "milliseconds": 37722.25
+        },
+        {
+          "id": "IR-R43616465145-636a7be422ce",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+          "title": "Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation",
+          "outcome": "PASS",
+          "milliseconds": 2845.65
+        },
+        {
+          "id": "IR-R43616465145-2157153009e1",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "title": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+          "outcome": "PASS",
+          "milliseconds": 66.58
+        }
+      ],
+      "omni": {
+        "status": "pass",
+        "declared": 7,
+        "spawns": 7,
+        "delegated": 0
+      },
+      "physicalReports": [
+        {
+          "consumer": "host-draft-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4276
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5237
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5252,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 82,
+            "framesFromBrowser": 225,
+            "peakQueuedBytes": 3941,
+            "peakBufferedBytes": 3608,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-egress-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4276
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5372
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5388,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 33,
+            "framesFromBrowser": 124,
+            "peakQueuedBytes": 3965,
+            "peakBufferedBytes": 4078,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-source-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4276
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5510
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5525,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 97,
+            "framesFromBrowser": 305,
+            "peakQueuedBytes": 2460,
+            "peakBufferedBytes": 783,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-access-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4276
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5754
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5769,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 53,
+            "framesFromBrowser": 148,
+            "peakQueuedBytes": 2457,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "dashboard-monthly",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4276
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 6096
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 6111,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 74,
+            "framesFromBrowser": 228,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 661,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4276
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4297
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4312,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 617,
+            "framesFromBrowser": 1894,
+            "peakQueuedBytes": 17079,
+            "peakBufferedBytes": 13337,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      ],
+      "physicalEvidenceLimit": "C12 failed before report() after try/finally; its close ran and Node exit 0 was logged, but no serialized complete C12 lifecycle report is claimed.",
+      "failedC12Consumer": [
+        "IR-R43616465145-308258a1e8d5"
+      ]
+    }
+  ],
+  "staticChecks": [
+    {
+      "run": 43615878780,
+      "job": 132510711501,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615878780",
+      "productCommit": "b1a477cd2346be755e10caec2941b1ba11171430",
+      "tree": "0d2010e9f5fe5dff4d902f8b305a4b082bce245d",
+      "conclusion": "failure",
+      "commands": [
+        "(cd modules/sucafina && bun typecheck)",
+        "(cd apps/cli && bun typecheck)",
+        "bun run check:guards --base origin/dev"
+      ],
+      "diagnostics": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 193,
+          "column": 136,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 225,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 281,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 404,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 420,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "line": 121,
+          "column": 61,
+          "code": "TS2769",
+          "message": "No overload matches this call.",
+          "owner": "Interface"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "line": 175,
+          "column": 68,
+          "code": "TS2769",
+          "message": "No overload matches this call.",
+          "owner": "Interface"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "line": 203,
+          "column": 68,
+          "code": "TS2769",
+          "message": "No overload matches this call.",
+          "owner": "Interface"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 40,
+          "column": 35,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 45,
+          "column": 41,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 56,
+          "column": 37,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 221,
+          "column": 36,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 193,
+          "column": 136,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 225,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 281,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 404,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 420,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+          "owner": "WP10/Composition"
+        }
+      ],
+      "counts": {
+        "total": 17,
+        "own": 3,
+        "foreign": 14,
+        "uniqueLocations": 12
+      },
+      "guards": {
+        "rules": 78,
+        "changedPaths": 869,
+        "gateFindings": 0,
+        "warnings": 42,
+        "errors": 0
+      },
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "logSha256": "e33ae7285f8965053433e8df2d442665b13d791ca09649305a3ba25eedc0075e"
+    }
+  ],
+  "proofs": {
+    "RESUME-BROWSER": {
+      "kind": "PARTIAL_SCOPED_BROWSER_OBSERVATIONS",
+      "run": 43616465145,
+      "productHead": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+      "productTree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+      "conclusion": "failure",
+      "counts": {
+        "PASS": 31,
+        "FAIL": 1,
+        "tests": 32,
+        "files": 8,
+        "expects": 548,
+        "seconds": 129.48
+      },
+      "wholeCriterionClosed": false
+    },
+    "RESUME-STATIC": {
+      "kind": "STATIC_GATE",
+      "record": "#/staticChecks/0",
+      "result": "failure",
+      "counts": {
+        "total": 17,
+        "own": 3,
+        "foreign": 14,
+        "uniqueLocations": 12
+      },
+      "pendingFinalStatic": true
+    },
+    "EXTERNAL-BI-W17": {
+      "kind": "EXTERNAL_SCOPED_PASS",
+      "record": "reconciliation.json#/initialPinnedRead/BI",
+      "run": 43605201442,
+      "newHeadTransfer": false
+    },
+    "EXTERNAL-C05-W22": {
+      "kind": "EXTERNAL_TWO_NAMED_PASS_WITH_AGGREGATE_FAILURE",
+      "record": "reconciliation.json#/initialPinnedRead/C05",
+      "run": 43595658990,
+      "newHeadTransfer": false
+    },
+    "RESUME-EDITOR-ESCAPE": {
+      "kind": "REAL_SHELL_ACCESSIBILITY",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "observations": [
+        "IR-R43616465145-7c1b410b4884",
+        "IR-R43616465145-1aca3f116378",
+        "IR-R43616465145-a955f9d6322e"
+      ],
+      "run": 43616465145,
+      "scope": "Native Escape, focused opener, expanded state, keyboard loop and confined overflow at 320/768/1440. Dirty refusal/outstanding guards preserved statically; no additional runtime credit for those unmodified branches."
+    },
+    "RESUME-DASHBOARD-EDIT": {
+      "kind": "REAL_DASHBOARD_SQLITE_BROWSER",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "observations": [
+        "IR-R43616465145-636a7be422ce"
+      ],
+      "run": 43616465145
+    },
+    "IR-WP02-ACK-CAPTURE": {
+      "kind": "OWN_REAL_BROWSER_CONSUMER_PENDING_ACTIONS",
+      "title": "Dashboard does not acknowledge empty or malformed capture replies and recovers the one real capture",
+      "observations": [
+        "IR-R43616465145-5097f08d9eb9"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Rejeita ACK vazio ou captureId malformado depois de capture real; retry com o mesmo corpo/chave devolve a captura única e seu histórico autorizado.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-ACK-REVIEW": {
+      "kind": "OWN_REAL_BROWSER_CONSUMER_PENDING_ACTIONS",
+      "title": "Dashboard requires the requested review sections before acknowledging its real preserved meeting",
+      "observations": [
+        "IR-R43616465145-5dab61dc96e1"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Rejeita ACK vazio ou seções ausentes/divergentes; só confirma a reunião real com as sectionRefs na ordem solicitada. Não fecha WholeReview depois de mudança da fonte.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-ACK-DRAFT": {
+      "kind": "OWN_REAL_BROWSER_CONSUMER_PENDING_ACTIONS",
+      "title": "Dashboard keeps the draft values and frozen request until its exact next-version receipt arrives",
+      "observations": [
+        "IR-R43616465145-354f1bf14512"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Mantém campos privados e tentativa congelada até o draftRef emitido e expectedVersion+1; retry recupera o rascunho real sem alterar Hot Topic ou guardar texto privado no history.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-ACK-PREPARE": {
+      "kind": "OWN_REAL_BROWSER_CONSUMER_PENDING_ACTIONS",
+      "title": "Dashboard does not acknowledge a preparation for another case choice or revision and replays one real preparation",
+      "observations": [
+        "IR-R43616465145-57052910a174"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Rejeita ACK de outra incarnation, choice ou próxima versão; retry conserva corpo/chave e recupera uma preparação real. Não aplica domínio durante prepare.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-ACK-APPLY-INCOMPLETE": {
+      "kind": "OWN_REAL_BROWSER_CONSUMER_PENDING_ACTIONS",
+      "title": "Dashboard rejects an incomplete C12 ACK after the real commit and preserves its unresolved application correlation",
+      "observations": [
+        "IR-R43616465145-7f352ef91dc5"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Após commit C12 real, recibo incompleto não limpa revisão/guard/correlação nem anuncia aplicado. Não prova o replay após reload.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-ACK-APPLY-COMPLETE": {
+      "kind": "OWN_REAL_BROWSER_CONSUMER_PENDING_ACTIONS",
+      "title": "Dashboard acknowledges the complete receipt of one real reviewed application",
+      "observations": [
+        "IR-R43616465145-9c67adb4a4a5"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Um ACK integral do produtor real pode concluir a aplicação revisada: sucesso observável, recibo único no caso e efeito real. Contraprova do ramo que sempre recusaria Apply.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-RECOVERY-DRAFT-REVOKED": {
+      "kind": "EXISTING_REAL_BROWSER_CONSUMER_CURRENT_DELTA_PENDING_ACTIONS",
+      "title": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+      "observations": [
+        "IR-R43616465145-090f0951ee59"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Conservar a jornada real e as assertions de autorização, identidade e estado privado. Onde o shell remove o main após revogação, observar também o nó retido/destacado e o main indisponível; exigir controles removidos, history limpo e ausência de re-render tardio.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-RECOVERY-POSTCOMMIT-DENIED": {
+      "kind": "EXISTING_REAL_BROWSER_CONSUMER_CURRENT_DELTA_PENDING_ACTIONS",
+      "title": "Dashboard retains the exact draft attempt when its first response is denied after the real host commits",
+      "observations": [
+        "IR-R43616465145-cd621cef6e8d"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Conservar a jornada real e as assertions de autorização, identidade e estado privado. Onde o shell remove o main após revogação, observar também o nó retido/destacado e o main indisponível; exigir controles removidos, history limpo e ausência de re-render tardio.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-RECOVERY-SOURCE-REPLACED": {
+      "kind": "EXISTING_REAL_BROWSER_CONSUMER_CURRENT_DELTA_PENDING_ACTIONS",
+      "title": "Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable",
+      "observations": [
+        "IR-R43616465145-8048ad368489"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Conservar a jornada real e as assertions de autorização, identidade e estado privado. Onde o shell remove o main após revogação, observar também o nó retido/destacado e o main indisponível; exigir controles removidos, history limpo e ausência de re-render tardio.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-RECOVERY-CASE-REVOKED": {
+      "kind": "EXISTING_REAL_BROWSER_CONSUMER_CURRENT_DELTA_PENDING_ACTIONS",
+      "title": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+      "observations": [
+        "IR-R43616465145-f829e9fd956e"
+      ],
+      "status": "PASS",
+      "run": 43616465145,
+      "scope": "Conservar a jornada real e as assertions de autorização, identidade e estado privado. Onde o shell remove o main após revogação, observar também o nó retido/destacado e o main indisponível; exigir controles removidos, history limpo e ausência de re-render tardio.",
+      "wholeCriterionClosed": false
+    },
+    "IR-WP02-BI-COMPOSED-43605201442": {
+      "alias": "EXTERNAL-BI-W17"
+    },
+    "IR-WP02-C05-PUBLISHED-43595658990": {
+      "alias": "EXTERNAL-C05-W22"
+    }
+  },
+  "changes": {
+    "IR-WP01-SHELL-REVOCATION": {
+      "paths": [
+        "product/ui/shell-state.ts",
+        "test/product/wp01/work-destination-recovery.test.ts"
+      ],
+      "behavior": "Close shell admission on component revocation, scrub connected listeners, then remove DOM/history."
+    },
+    "IR-WP01-EDITOR-ESCAPE": {
+      "paths": [
+        "src/screen-shell.ts",
+        "test/product/wp01/shell-state.test.ts"
+      ],
+      "behavior": "Synchronize aria-expanded at permitted native cancel; preserve outstanding and dirty-discard guards."
+    },
+    "IR-WP02-ACK-VALIDATION": {
+      "paths": [
+        "product/interface/dashboard-workbench.ts",
+        "test/product/wp02/workbench-ack.test.ts"
+      ],
+      "behavior": "Validate capture/review/draft/prepare/apply ACK shape and explicit identity/version bindings before clearing frozen attempt."
+    },
+    "IR-WP02-REVOCATION-CONSUMER-ASSERTIONS": {
+      "paths": [
+        "test/product/wp02/workbench-recovery.test.ts"
+      ],
+      "behavior": "Preserve local purge assertions on retained nodes and require global absence/history purge."
+    }
+  },
+  "protectedArtifacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "inputBlob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "currentBlob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "inputBlob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "currentBlob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "inputBlob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "currentBlob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "inputBlob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "currentBlob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "inputBlob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "currentBlob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "inputBlob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+      "currentBlob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "inputBlob": "bbfad3882e0ab38ebab9b943eadad8b4c478ac07",
+      "currentBlob": "bbfad3882e0ab38ebab9b943eadad8b4c478ac07",
+      "unchanged": true
+    }
+  ],
+  "noLocalProductTests": true,
+  "remoteTransport": "GitHub MCP only",
+  "foreignProductIntake": false,
+  "physicalScope": "No timeout, lease, context, exit, EOF, WS, socket or directory assertion was removed or relaxed. A failed consumer is never promoted by cleanup success.",
+  "envelopeVerification": [
+    {
+      "W": "b1a477cd2346be755e10caec2941b1ba11171430",
+      "S": "60bdbe5b1d9978d1880c48319064ab889335ee0c",
+      "Wtree": "0d2010e9f5fe5dff4d902f8b305a4b082bce245d",
+      "Stree": "496e56b432a247ba63ed5310a2e8cf6fc22bd879",
+      "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/b1a477cd2346be755e10caec2941b1ba11171430...60bdbe5b1d9978d1880c48319064ab889335ee0c",
+      "onlyChangedPath": ".ci-run.json",
+      "requestBlob": "4823434363194a9b6b38e0ae8e52cbefbc14d08b",
+      "requestSha256": "8dee1fc4ba04461b4420239da72c04c2a2bd8fac8d238c4d21d1857f16ed5a7d",
+      "parentVerifiedByRemoteCompare": true
+    },
+    {
+      "W": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+      "S": "519571ec1c90454b8a1eacf94f156dcc9c296f9f",
+      "Wtree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+      "Stree": "bddad5d5a9ce9c99b2834c62d593c015681c488d",
+      "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/ad94fd2d78be47cecfb91f801ce7764127667b60...519571ec1c90454b8a1eacf94f156dcc9c296f9f",
+      "onlyChangedPath": ".ci-run.json",
+      "requestBlob": "deeae47d57267d07b06ac6e1d1dd52a05ea18eca",
+      "requestSha256": "0e5a6ed717643836a6100376db735f69ee09780837b5355a9a3fb2afd5086cd8",
+      "parentVerifiedByRemoteCompare": true
+    }
+  ],
+  "completion": "NOT_DECLARED_DONE",
+  "documentaryBinding": "Final head is the containing documentary commit. Product/source equality to W2 and the static documentary parent are recorded in verification.json and the PR."
+}

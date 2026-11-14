@@ -1,0 +1,469 @@
+{
+  "schema": "sf-c05-owner-mount-proposal-v1",
+  "status": "PROPOSAL_NOT_APPLIED",
+  "owner": "WP10 / host composition; S0 review",
+  "generatedBy": "Interface read-only reconciliation; no product write authorization used",
+  "target": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "inputCommit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+    "path": "apps/cli/src/sucafina-product/business-services.ts",
+    "expectedPreimageGitBlob": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+    "preimageGitBlob": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+    "preimageSha256": "854e20c0a4d48ffebc8fcfc1f85a9f6525fd0aca9116ca3a00e266d819fbeeb4",
+    "preimageBytes": 27238,
+    "postimageGitBlob": "95d4cec147d4ee8969884797905805348991bab5",
+    "postimageSha256": "c65e7231ece2dcffb749c348f4c0741b1e6d9af867d8e85e9dd8d16f23cce759",
+    "postimageBytes": 27257,
+    "unchangedOnDisk": true
+  },
+  "prerequisiteProducerIntake": [
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+      "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/dashboard-services.ts",
+      "imports": [
+        "node:crypto",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "./review-history.ts",
+        "./review-read-integrity.ts"
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "blob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+      "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-history.ts",
+      "imports": [
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts",
+        "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "./review-calculation-history.ts"
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+      "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "imports": [
+        "node:async_hooks",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+      "blob": "012c83ed8b6382bebc0046526985f2f900f04035",
+      "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-calculation-history.ts",
+      "imports": [
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+      ]
+    }
+  ],
+  "reason": "The input BCS constructs Dashboard services before its real deferred BusinessContextService and omits evidence. The new Dashboard services only mount historical readers when evidence is supplied. Four helper files alone leave the old fallback active.",
+  "initializationReview": [
+    "Move only createSfDashboardServices immediately after the completed context object; all its previous inputs remain byte-for-byte identical and evidence: context is appended.",
+    "The context object contains only deferred function values. Creating it neither resolves evidence nor invokes context.context; its self-reference is inside a later async callback.",
+    "createSfDashboardServices constructs agenda/issuers/observers/ports and registers closures. createReviewPort returns async method definitions without invoking host callbacks.",
+    "createSfReviewHistory calls createSfReviewCalculationHistory, which returns an async function without execution; spreading input.evidence copies plain function properties and does not call them.",
+    "protectSfReviewReads binds the existing reader, creates AsyncLocalStorage, and installs a reader wrapper. It does not run the reader or C08 callbacks at build time.",
+    "review-history.resolve calls input.evidence.resolve only when a caller reads. This reaches the existing context.resolve closure, which observes evidence.current at call time.",
+    "initializeAtlas remains unchanged and still assigns evidence.current = atlas.context after createSfAtlasBusiness returns. The Atlas record router uses dashboard/records, not dashboardServices, so this adds no resolver backedge through the historical reader.",
+    "createSfDashboardDecisions remains after Dashboard services; its issue input stays the same. Cases, Planner, Work-related closures, permissions, source fences, receipt fields, dispose, and return shape are untouched.",
+    "Review calculation authorization remains unset for this Dashboard record-only mounting. The imported helper explicitly refuses calculations without authorizeCase; this proposal does not authorize Finance or change its held deltas."
+  ],
+  "staticCompatibility": {
+    "scope": "Construction order and direct import/API availability only; not a product PASS or package typecheck.",
+    "noEarlyCallbackInvocationFound": true,
+    "noNewRuntimeImportCycleFound": true,
+    "noPublicContractChanges": true,
+    "allOtherTargetBytesMustBePreserved": true,
+    "checksExecuted": [
+      "Exact preimage Git blob guard",
+      "Byte identity after removing the one old and one new mounting line",
+      "Initialization order and lazy constructors reviewed as source, not executed",
+      "Direct helper import files or exact producer prerequisites enumerated",
+      "git apply --check (no write)",
+      "Target bytes reread unchanged"
+    ],
+    "productTestsExecuted": false,
+    "packageTypecheckExecuted": false,
+    "remoteMutations": false,
+    "newCI": false
+  },
+  "ownerVerification": {
+    "preserveConsumerPath": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+    "preserveTestName": "C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content",
+    "fixturePath": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+    "actualConsumer": "createRecoveryFixture -> real encrypted operator + SQLite/source lifecycle + createSfProductAuthority + createSfBusinessServices -> initializeAtlas -> dashboardServices -> createSfDashboardHttp -> canonical OPEX command and read/discovery.",
+    "assertionsToPreserve": [
+      "Initial whole review has the 1300 Budget Overview total, period, context, and original immutable body.",
+      "Canonical OPEX Detail save changes the real source budget to 2400 and advances source version while preserving incarnation.",
+      "Fresh Dashboard agenda reads 2400; the same review URL still returns HTTP 200, status ok, and the entire original value.",
+      "Current discovery still includes the original review reference.",
+      "Existing fixture cleanup and browser physical-closure assertions must remain unchanged."
+    ],
+    "proposedSelectionOnly": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "./Sucafinav1/test/product/wp01/meeting-number.test.ts",
+        "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "selectionStatus": "PROPOSED_COMPLETE_FILES_WITH_STARTUP_AND_FINALIZER_NO_FILTER. Not dispatched. Owner must validate candidate, check equivalent runs and apply the W/S protocol via MCP.",
+    "CI": {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+    },
+    "otherGates": "Owner runs bun typecheck in apps/cli and relevant guards per AGENTS; no local product tests.",
+    "existingProducerEvidence": {
+      "runId": 43595658990,
+      "jobId": 132449464415,
+      "productCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "envelopeCommit": "12988ada266de298d0ec0ba9d8968845ae4c7782",
+      "testPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+      "testBlob": "65830f907e4f0605ef4d746da436adebd73d91fb",
+      "scope": "Two Dashboard C05 producer tests PASS individually; aggregated run FAIL (105 pass, 17 fail, 1 error). Same four producer blobs. This does not prove the proposal or replace the own C05 test."
+    },
+    "preserveConsumerBlob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+    "fixtureBlob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+    "AGENTSBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "withdrawnSelection": {
+      "status": "WITHDRAWN_NOT_EXECUTABLE",
+      "reason": "Original proposal used -t and omitted pool startup/finalizer; current harness forbids global filters. Never dispatched."
+    }
+  },
+  "blockersAndLimits": [
+    "The target source is owned by WP10/host composition; Interface only supplies this patch and must not apply it.",
+    "The patch is conditional on exact intake of all four named producer files. Without intake, evidence is not an admitted input to the old createSfDashboardServices signature.",
+    "If the target BCS has advanced or is dirty, compare its deltas and port this two-line move/add semantically; do not overwrite from the pinned file.",
+    "No typecheck, Actions run, product execution, or runtime compatibility claim has been made for this proposed closure.",
+    "Do not consume the full W24 BCS or unrelated Finance/Work/analysis deltas; their compatibility and held findings are unchanged."
+  ],
+  "generatedAt": "2026-11-14T16:26:55.246108+00:00",
+  "patch": {
+    "path": "c05-owner-mount.patch",
+    "sha256": "39a3f18267702582bd6af3bc673d7950990f029c89fb69b3e10c49c28ea6a33c",
+    "bytes": 2719,
+    "hunks": 1,
+    "removedLines": 1,
+    "addedLines": 1,
+    "originalDerivationPath": "/workspace/scratch/48348af13150/context/c05-owner-mount.patch"
+  },
+  "directHelperImportManifest": [
+    {
+      "kind": "node_builtin",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "apps/cli/src/sucafina-product/review-calculation-history.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-calculation-history.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "61099006a0312f2cabc1e42fb5b625c859d0eb15",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "apps/cli/src/sucafina-product/review-calculation-history.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "blob": "2493b4d16cdec9a0798fc6627a02b07f9859ad4d",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+      "blob": "01ab380bd9a2b0b4c8db0d62984492e12598c034",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "apps/cli/src/sucafina-product/review-calculation-history.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "blob": "ec265772aa3100f6f69648cbd444fcdfde01b754",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "blob": "62db836fd93e349f19d007e1933396420a3540ff",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-calculation-history.ts"
+      ]
+    },
+    {
+      "kind": "required_exact_producer_intake",
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "requiredBlob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "required_exact_producer_intake",
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "requiredBlob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/dashboard-services.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "blob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts"
+      ]
+    },
+    {
+      "kind": "required_exact_producer_intake",
+      "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+      "requiredBlob": "012c83ed8b6382bebc0046526985f2f900f04035",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/review-history.ts"
+      ]
+    },
+    {
+      "kind": "node_builtin",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/review-read-integrity.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/review-calculation-history.ts"
+      ]
+    },
+    {
+      "kind": "existing_input_file",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "importedBy": [
+        "apps/cli/src/sucafina-product/review-calculation-history.ts"
+      ]
+    }
+  ],
+  "reviewedConstructionDependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "blob": "62db836fd93e349f19d007e1933396420a3540ff"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "6e586c570369e2a8d0d25babf2f22a1483ea184f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "blob": "2493b4d16cdec9a0798fc6627a02b07f9859ad4d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+      "blob": "01ab380bd9a2b0b4c8db0d62984492e12598c034"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "blob": "2b8aef91bb7f88db3ee467b32f76d4d3911e73c1"
+    }
+  ]
+}

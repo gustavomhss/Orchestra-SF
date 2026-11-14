@@ -1,0 +1,24 @@
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index b289a4a376f937c2cf4b56a00a6c1247152c5798..95d4cec147d4ee8969884797905805348991bab5 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -92,18 +92,18 @@
+   const sourcingEvidence = createProcurementSourcingEvidence(procurementHost)
+   const dashboardSources = createDashboardSourceHost({ host, scopedSources: input.persistence })
+   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+     issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
+-  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites: input.dashboardHostWrites })
+   const evidence: { current?: BusinessContextService } = {}
+   const context: BusinessContextService = {
+     resolve: (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }),
+     context: async (request, call) => Promise.all(request.refs.map((ref) => context.resolve(ref, call))),
+     recall: (request, call) => evidence.current ? evidence.current.recall(request, call) : Promise.reject(new Error("SF_ATLAS_UNAVAILABLE")),
+     emitFromLedger: (ref, call) => evidence.current ? evidence.current.emitFromLedger(ref, call) : Promise.resolve({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "atlas-unavailable" }),
+   }
++  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites: input.dashboardHostWrites, evidence: context })
+   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
+   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
+   const cases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
+     operationIdentity,
+     authorizeCase,

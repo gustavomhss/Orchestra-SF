@@ -1,0 +1,54 @@
+{
+  "schema": "astra.interface-resume.independent-review.v1",
+  "reviewType": "Independent agent code and evidence review; not S0 acceptance",
+  "reviews": [
+    {
+      "scope": "ACK validator against actual producer shapes; real fixture and complete Apply positive",
+      "result": "NO_REMAINING_STATIC_BLOCKER_IDENTIFIED",
+      "fixesBeforePublication": [
+        "fixture cleanup if context acquisition fails",
+        "complete real Apply ACK positive"
+      ]
+    },
+    {
+      "scope": "Revocation listener order and preserved original assertions",
+      "sourceAuditSha256": "e627605c71f2cfc20edb3f56d13430708a58ad3cf7f40625fc1e432e7a92ffb6",
+      "result": "NO_NEW_STATIC_BLOCKER",
+      "namedAssertions": {
+        "workDestinationBefore": 25,
+        "workDestinationAfter": 34,
+        "workbenchRecoveryBefore": 108,
+        "workbenchRecoveryAfter": 123
+      }
+    },
+    {
+      "scope": "W2 Escape admission and type-only assertion correction",
+      "sourceAuditSha256": "3c0c37a1115eac0bf0ce6c73d97b630c67d22d8ca4a487ba6c13a1011b8269b8",
+      "result": "OUTSTANDING_AND_DIRTY_CANCEL_GUARDS_PRESERVED",
+      "runtimeOutcome": "All three viewport bodies PASS at W2"
+    },
+    {
+      "scope": "W1 logs and static diagnostics",
+      "sourceAuditSha256": "1991237a6598472fc554d4ccae0663e2e2ff52dfc3a23272065c9391eccf506b",
+      "result": "28_PASS_3_FAIL_NO_GLOBAL_SUCCESS"
+    },
+    {
+      "scope": "W2 logs, assertions and physical reports",
+      "sourceAuditSha256": "0c7b26835cde18de6f0137cc79e2b2da16a530ef8e3a4299c511fb045aa0ca68",
+      "result": "31_PASS_1_C12_FAIL_NO_GLOBAL_SUCCESS"
+    },
+    {
+      "scope": "All153 canonical IDs/texts, record hashes and references",
+      "result": "PRESERVED_WITH_PUBLICATION_FIXES",
+      "publicationFixes": [
+        "source aliases resolve to published reconciliation/patch metadata",
+        "owner catalogs use unambiguous namespaces",
+        "static proof uses concrete JSON pointer",
+        "Escape criteria describe partial new contribution",
+        "invalid -t proposal withdrawn and replaced by complete files"
+      ]
+    }
+  ],
+  "localProductExecutionByReviewers": false,
+  "globalAcceptance": "NOT_DECLARED_DONE"
+}
