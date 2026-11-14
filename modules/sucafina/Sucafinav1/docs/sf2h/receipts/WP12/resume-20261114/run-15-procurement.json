@@ -1,0 +1,732 @@
+{
+  "schema": "sf-wp12-surgical-product-result-v1",
+  "phase": "resume-15",
+  "scope": "procurement-retest",
+  "product": {
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+  },
+  "snapshot": {
+    "sha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+    "tree": "3f59c774e6161ff6eb0b4ecf485d2994c0144f8f",
+    "directParent": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "onlyEnvelopePath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-71cbf64f-85f02859-1"
+  },
+  "request": {
+    "sha256": "85f0285957ca7c333bb1f101d69da7b93df7aef24f2793d832a2a5af5687dccf",
+    "gitBlob": "47322701f6b772a9ea0006101a06d16b16704b50",
+    "validation": "PASS_METADATA_PUBLISHED_PINS",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "blob": "a38c64dfbf2d27143c756677e49171c4d0cadbfd",
+        "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "sha256": "64309a96c54c1a2f7892bbe287fda02f50c3898484d7e8fb8c5beaeef9bc9f0c",
+        "tests": [
+          {
+            "name": "native Procurement reuses submitted FX and domain ranking without choosing the cheapest quote or changing sourcing",
+            "timeoutMs": 600000
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+        "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+        "tests": [
+          {
+            "name": "native document extraction uses real private bytes and schema; contract review retains the actual issued source surface",
+            "timeoutMs": 600000
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742",
+        "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+        "tests": [
+          {
+            "name": "native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation",
+            "timeoutMs": 360000
+          },
+          {
+            "name": "native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation",
+            "timeoutMs": 360000
+          }
+        ]
+      }
+    ],
+    "selectedNames": [
+      {
+        "file": "native-execution-sourcing.test.ts",
+        "name": "native Procurement reuses submitted FX and domain ranking without choosing the cheapest quote or changing sourcing",
+        "timeoutMs": 600000
+      },
+      {
+        "file": "native-execution-documents-contract.test.ts",
+        "name": "native document extraction uses real private bytes and schema; contract review retains the actual issued source surface",
+        "timeoutMs": 600000
+      },
+      {
+        "file": "native-execution-purchase.test.ts",
+        "name": "native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation",
+        "timeoutMs": 360000
+      },
+      {
+        "file": "native-execution-purchase.test.ts",
+        "name": "native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation",
+        "timeoutMs": 360000
+      }
+    ],
+    "excludedNames": [],
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(native Procurement reuses submitted FX and domain ranking without choosing the cheapest quote or changing sourcing|native document extraction uses real private bytes and schema; contract review retains the actual issued source surface|native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation|native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation)$"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43605021421,
+    "job": 132477707865,
+    "cleanupJob": 132482479850,
+    "status": "completed",
+    "conclusion": "failure",
+    "cleanup": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43605021421",
+    "artifacts": []
+  },
+  "summary": {
+    "pass": 1,
+    "fail": 3,
+    "filteredOut": 0,
+    "assertions": 205,
+    "files": 3,
+    "tests": 4,
+    "durationSeconds": 991.67
+  },
+  "cases": [
+    {
+      "line": 859,
+      "status": "pass",
+      "name": "native Procurement reuses submitted FX and domain ranking without choosing the cheapest quote or changing sourcing",
+      "elapsedMs": 34832.96
+    },
+    {
+      "line": 892,
+      "status": "fail",
+      "name": "native document extraction uses real private bytes and schema; contract review retains the actual issued source surface",
+      "elapsedMs": 305385.01
+    },
+    {
+      "line": 937,
+      "status": "fail",
+      "name": "native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation",
+      "elapsedMs": 320201.97
+    },
+    {
+      "line": 976,
+      "status": "fail",
+      "name": "native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation",
+      "elapsedMs": 329449.24
+    }
+  ],
+  "omni": {
+    "status": "pass",
+    "kind": "focused-no-declaring-test-ran",
+    "nonce": "46ad412a67da9b5d528f36ef1225f933",
+    "spawns": 117,
+    "delegated": 0,
+    "line": 977
+  },
+  "log": {
+    "bytes": 91289,
+    "sha256": "091fef5dad0d33440b1f70d7aed21943c81bcaf3f74092f3b1e249a50c4eccb3",
+    "source": "GitHub Actions job log132477707865",
+    "verifiedFrom": "evidence/resume-15-procurement.log"
+  },
+  "markers": [
+    {
+      "line": 853,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "sourcing",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 854,
+      "name": "SF_WP12_CONTRACT_SOURCE",
+      "value": {
+        "scope": "actual-current-dashboard-contract-snapshot",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "observedAt": "2026-11-14T14:29:55.414Z",
+        "observationPeriod": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "financialHorizon": {
+          "start": "2027-01-01",
+          "end": "2027-12-31"
+        },
+        "sourceRef": "sf-source:f0c51f9d-736a-483b-a075-2cfec14cfc01:1",
+        "sourceSurface": "dashboard",
+        "sourceType": "contracts",
+        "sourceVersion": 1,
+        "projectionDigest": "eb6ae022b8918854b1c9ff84ec7571eb673746f50cdd8d8055426df3bcc7071b",
+        "missingFields": [
+          {
+            "field": "notice",
+            "reason": "missing"
+          }
+        ],
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 855,
+      "name": "SF_WP12_NATIVE_SOURCING_INPUT",
+      "value": {
+        "scope": "real-sourcing-producer-and-submitted-domain-comparison",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "caseRef": {
+          "id": "a110f69f-0517-4ff6-b4ec-6d5e5c4a1124",
+          "incarnation": "2661fd62-a654-4c0e-adca-945f43ce3233",
+          "version": 1
+        },
+        "inputDigest": "fbcf599dd28aa79ae0921321fb9262c442cd4ea08ef717651d1a89440b2bb3af",
+        "requestRef": "sf-procurement:4cdd79ee-e09a-4aee-8597-10885203df9d:1",
+        "requestVersion": 1,
+        "comparisonDigest": "c58b5f9b6dcd9cd89730a50a8bb406f5dd885debfa80328f546c9c586eec355d",
+        "ranking": [
+          "offer-b",
+          "offer-a"
+        ],
+        "submittedEurRate": 1,
+        "humanSelectedContractRef": "sf-source:f0c51f9d-736a-483b-a075-2cfec14cfc01:1",
+        "contractProjectionDigest": "6375d1161f875ad8ce5c7d0980eb1d64e906e9ed413cd417009b1f1f4391be27",
+        "contractEvidenceState": "fresh",
+        "outsideContractFieldStatus": "denied",
+        "contractDoesNotReplaceOffers": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 856,
+      "name": "SF_WP12_NATIVE_SOURCING_INPUT",
+      "value": {
+        "scope": "real-sourcing-producer-and-submitted-domain-comparison",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "caseRef": {
+          "id": "414cb18b-3655-440e-8e05-d93ec7ba9eb9",
+          "incarnation": "19f360d3-5b34-4023-81cf-3e82c675283c",
+          "version": 1
+        },
+        "inputDigest": "7fb4a57ee68b2f18369ebdb365489be6590b237ac9f84f67c009ab960a030486",
+        "requestRef": "sf-procurement:e5761529-5708-401d-9e01-6c9e71f14d35:1",
+        "requestVersion": 1,
+        "comparisonDigest": "f87842a9c36b406f71d0691a0aa7bd5224bbe44fb123f452557f3fa23f520db7",
+        "ranking": [
+          "offer-a",
+          "offer-b"
+        ],
+        "submittedEurRate": 1,
+        "humanSelectedContractRef": "sf-source:f0c51f9d-736a-483b-a075-2cfec14cfc01:1",
+        "contractProjectionDigest": "6375d1161f875ad8ce5c7d0980eb1d64e906e9ed413cd417009b1f1f4391be27",
+        "contractEvidenceState": "fresh",
+        "outsideContractFieldStatus": "denied",
+        "contractDoesNotReplaceOffers": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 857,
+      "name": "SF_WP12_NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "profileId": "sf_procurement",
+        "skillId": "sf-comparar-sourcing",
+        "caseRef": {
+          "id": "a110f69f-0517-4ff6-b4ec-6d5e5c4a1124",
+          "incarnation": "2661fd62-a654-4c0e-adca-945f43ce3233",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "fbcf599dd28aa79ae0921321fb9262c442cd4ea08ef717651d1a89440b2bb3af",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 858,
+      "name": "SF_WP12_NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "profileId": "sf_procurement",
+        "skillId": "sf-comparar-sourcing",
+        "caseRef": {
+          "id": "414cb18b-3655-440e-8e05-d93ec7ba9eb9",
+          "incarnation": "19f360d3-5b34-4023-81cf-3e82c675283c",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "7fb4a57ee68b2f18369ebdb365489be6590b237ac9f84f67c009ab960a030486",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 881,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "document-contract",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 882,
+      "name": "SF_WP12_CONTRACT_SOURCE",
+      "value": {
+        "scope": "actual-current-dashboard-contract-snapshot",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "observedAt": "2026-11-14T14:30:30.252Z",
+        "observationPeriod": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "financialHorizon": {
+          "start": "2027-01-01",
+          "end": "2027-12-31"
+        },
+        "sourceRef": "sf-source:ebc40d51-4cd2-4727-9b8b-dc07fcbe4629:1",
+        "sourceSurface": "dashboard",
+        "sourceType": "contracts",
+        "sourceVersion": 1,
+        "projectionDigest": "6d16a8684f9dedf9e9868770a6222c72499fbecf5fe5223fd8524f78ca0c9bba",
+        "missingFields": [
+          {
+            "field": "notice",
+            "reason": "missing"
+          }
+        ],
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 914,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "purchase-pending",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 915,
+      "name": "SF_WP12_PURCHASE_PHASE",
+      "value": {
+        "variant": "pending",
+        "phase": "prepare-case",
+        "state": "begin",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5"
+      }
+    },
+    {
+      "line": 916,
+      "name": "SF_WP12_PURCHASE_PHASE",
+      "value": {
+        "variant": "pending",
+        "phase": "prepare-case",
+        "state": "complete",
+        "durationMs": 153787,
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5"
+      }
+    },
+    {
+      "line": 917,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "pending",
+        "phase": "read-current-case",
+        "state": "public-selection-begin",
+        "elapsedMs": 9,
+        "phaseElapsedMs": 0,
+        "selectionAgeSinceCallStartMs": 0,
+        "selectionAgeSinceReturnMs": null
+      }
+    },
+    {
+      "line": 918,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "pending",
+        "phase": "read-current-case",
+        "state": "begin",
+        "elapsedMs": 1212,
+        "phaseElapsedMs": 1203,
+        "selectionAgeSinceCallStartMs": 1203,
+        "selectionAgeSinceReturnMs": 0
+      }
+    },
+    {
+      "line": 919,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "pending",
+        "phase": "read-current-case",
+        "state": "complete",
+        "elapsedMs": 11050,
+        "phaseElapsedMs": 11041,
+        "selectionAgeSinceCallStartMs": 11041,
+        "selectionAgeSinceReturnMs": 9838
+      }
+    },
+    {
+      "line": 920,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "pending",
+        "phase": "decision-sensitivity-units",
+        "state": "public-selection-begin",
+        "elapsedMs": 11050,
+        "phaseElapsedMs": 0,
+        "selectionAgeSinceCallStartMs": 0,
+        "selectionAgeSinceReturnMs": null
+      }
+    },
+    {
+      "line": 921,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "pending",
+        "phase": "decision-sensitivity-units",
+        "state": "begin",
+        "elapsedMs": 12274,
+        "phaseElapsedMs": 1224,
+        "selectionAgeSinceCallStartMs": 1224,
+        "selectionAgeSinceReturnMs": 0
+      }
+    },
+    {
+      "line": 922,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "pending",
+        "phase": "decision-sensitivity-units",
+        "state": "failed",
+        "elapsedMs": 159833,
+        "phaseElapsedMs": 148783,
+        "selectionAgeSinceCallStartMs": 148783,
+        "selectionAgeSinceReturnMs": 147559,
+        "originalError": "Real decision-sensitivity-units failed: unsupported-sensitivity-parameter"
+      }
+    },
+    {
+      "line": 923,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "pending",
+        "phase": "decision-sensitivity-units",
+        "state": "failure-source-probe",
+        "elapsedMs": 162798,
+        "phaseElapsedMs": 151748,
+        "selectionAgeSinceCallStartMs": 151748,
+        "selectionAgeSinceReturnMs": 150524,
+        "scope": "real-companion-business-without-selection-renewal",
+        "selectionRenewed": false,
+        "requestProbe": {
+          "status": "ok",
+          "reason": null
+        },
+        "contextProbe": [
+          {
+            "state": "fresh",
+            "refId": "sf-procurement:7d92d630-7237-4358-9084-fc04cdf85e60:1",
+            "currentRefMatches": true
+          }
+        ]
+      }
+    },
+    {
+      "line": 957,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "purchase-complete",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 958,
+      "name": "SF_WP12_PURCHASE_PHASE",
+      "value": {
+        "variant": "complete",
+        "phase": "prepare-case",
+        "state": "begin",
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5"
+      }
+    },
+    {
+      "line": 959,
+      "name": "SF_WP12_PURCHASE_PHASE",
+      "value": {
+        "variant": "complete",
+        "phase": "prepare-case",
+        "state": "complete",
+        "durationMs": 156771,
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5"
+      }
+    },
+    {
+      "line": 960,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "complete",
+        "phase": "read-current-case",
+        "state": "public-selection-begin",
+        "elapsedMs": 0,
+        "phaseElapsedMs": 0,
+        "selectionAgeSinceCallStartMs": 0,
+        "selectionAgeSinceReturnMs": null
+      }
+    },
+    {
+      "line": 961,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "complete",
+        "phase": "read-current-case",
+        "state": "begin",
+        "elapsedMs": 1200,
+        "phaseElapsedMs": 1200,
+        "selectionAgeSinceCallStartMs": 1200,
+        "selectionAgeSinceReturnMs": 0
+      }
+    },
+    {
+      "line": 962,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "complete",
+        "phase": "read-current-case",
+        "state": "complete",
+        "elapsedMs": 11168,
+        "phaseElapsedMs": 11168,
+        "selectionAgeSinceCallStartMs": 11168,
+        "selectionAgeSinceReturnMs": 9968
+      }
+    },
+    {
+      "line": 963,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "complete",
+        "phase": "decision-sensitivity-units",
+        "state": "public-selection-begin",
+        "elapsedMs": 11168,
+        "phaseElapsedMs": 0,
+        "selectionAgeSinceCallStartMs": 0,
+        "selectionAgeSinceReturnMs": null
+      }
+    },
+    {
+      "line": 964,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "complete",
+        "phase": "decision-sensitivity-units",
+        "state": "begin",
+        "elapsedMs": 12356,
+        "phaseElapsedMs": 1188,
+        "selectionAgeSinceCallStartMs": 1188,
+        "selectionAgeSinceReturnMs": 0
+      }
+    },
+    {
+      "line": 965,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "complete",
+        "phase": "decision-sensitivity-units",
+        "state": "failed",
+        "elapsedMs": 160615,
+        "phaseElapsedMs": 149447,
+        "selectionAgeSinceCallStartMs": 149447,
+        "selectionAgeSinceReturnMs": 148259,
+        "originalError": "Real decision-sensitivity-units failed: unsupported-sensitivity-parameter"
+      }
+    },
+    {
+      "line": 966,
+      "name": "SF_WP12_PURCHASE_CHOICE_PHASE",
+      "value": {
+        "githubSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+        "variant": "complete",
+        "phase": "decision-sensitivity-units",
+        "state": "failure-source-probe",
+        "elapsedMs": 163567,
+        "phaseElapsedMs": 152399,
+        "selectionAgeSinceCallStartMs": 152399,
+        "selectionAgeSinceReturnMs": 151211,
+        "scope": "real-companion-business-without-selection-renewal",
+        "selectionRenewed": false,
+        "requestProbe": {
+          "status": "ok",
+          "reason": null
+        },
+        "contextProbe": [
+          {
+            "state": "fresh",
+            "refId": "sf-procurement:2d0cd0db-7b2d-43be-8c2b-fc124a6e125d:1",
+            "currentRefMatches": true
+          }
+        ]
+      }
+    }
+  ],
+  "findings": [
+    {
+      "scope": "sourcing",
+      "status": "PASS_DOMAIN_INPUT_AND_COMPARISON",
+      "observed": "Two real inputs, submitted FX, discriminating offer ranking, current Dashboard contract issuance/read, fresh contract evidence and denial for an unselected contract field. Native missions record installed-host-catalog-empty.",
+      "lines": [
+        854,
+        855,
+        856,
+        857,
+        858,
+        859
+      ],
+      "inferenceExecuted": false
+    },
+    {
+      "scope": "C10 coverage origin",
+      "status": "PASS_SCOPED_PREPARATION_NOT_FULL_PURCHASE",
+      "observed": "Both prepare-case calls completed after the strict helper assertions. Pending retains derived training, no training component and missing-category entry; complete retains all categories and actual training40000 plus11zeros. Known subtotals240000/210000/250000, hypothetical result boundaries and confirmed source components remain checked.",
+      "helper": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "sourceBlob": "f1433397246117886e109d32b171345ec1992066",
+      "ownerFixBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "completionLines": [
+        916,
+        959
+      ],
+      "limit": "Both whole purchase tests failed later; this does not prove human choice, purchase input, native execution or purchase consumer."
+    },
+    {
+      "scope": "document-contract",
+      "status": "FAIL",
+      "reason": "analysis-source-or-authority-changed",
+      "location": "native-execution-documents-contract.test.ts:38",
+      "elapsedMs": 305385.01,
+      "observed": "Actual contract source was issued at the2026observation period. The first extraction input preparation failed before any extraction/contract-review native output or document consumer.",
+      "diagnosis": "The elapsed time is near the selection TTL, but the aggregate reason does not isolate the failing authority/source subgate. Root/compose are inspecting the exact read path.",
+      "lines": [
+        882,
+        890,
+        892
+      ]
+    },
+    {
+      "scope": "purchase-pending and purchase-complete",
+      "status": "FAIL",
+      "reason": "unsupported-sensitivity-parameter",
+      "location": "native-choice-preparation.ts:36",
+      "phases": "decision-sensitivity-units",
+      "observed": "The public selection was renewed before each step. Both failures happened about148seconds after renewal, not after300seconds. The failure probe reports the actual request readable and context source fresh with matching reference.",
+      "lines": [
+        923,
+        924,
+        931,
+        937,
+        966,
+        967,
+        974,
+        976
+      ],
+      "diagnosis": "This terminal result supersedes the prior TTL hypothesis for these two failures. The actual parameter contract and own scenario preparation are under review; no source fix is claimed."
+    }
+  ],
+  "acceptance": {
+    "catalogObservations": 4,
+    "allObservedCatalogsEmpty": true,
+    "realNativeInferenceExecutions": 0,
+    "nativeOutputs": 0,
+    "nativeOutputConsumers": 0,
+    "fullWp12": false
+  },
+  "followup": {
+    "unchangedGreenExcluded": [
+      "sourcing"
+    ],
+    "failedScopes": "Retest only after relevant published own/owner corrections and a green exact-product check.",
+    "nextDistinctScope": "Scenarios W20 is a separate prepared mission; its results will be attributed to its own snapshot."
+  },
+  "localProductTests": false,
+  "localTypecheck": false
+}

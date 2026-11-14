@@ -1,0 +1,101 @@
+{
+  "schema": "sf-wp12-exact-hosted-check-result-v1",
+  "phase": "resume-16",
+  "product": {
+    "sha": "efa940962023523848661d795856002d29510b19",
+    "tree": "f496ffa371c8b0ba2cce7191bb012e0af412c7d4"
+  },
+  "check": {
+    "snapshot": "421fc3ac379e4e7d914e3328479d577974feb298",
+    "tree": "701858c206d2b0e57d6786af850f5ace3fef5830",
+    "directParent": "efa940962023523848661d795856002d29510b19",
+    "onlyEnvelopePath": ".astra-wp12-check.json",
+    "branch": "astra-check-wp12",
+    "runId": 43606932515,
+    "jobId": 132483476745,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43606932515",
+    "status": "completed",
+    "conclusion": "success",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "envelope": {
+      "sha256": "6612383f1a0787f0542b3f137f862acc6ee34de74c0938dae3d52cb26d45970d",
+      "blob": "139ecb32fe667fdb131630584712541adb088ac0",
+      "candidateShaOmitted": true
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "status": "success",
+      "diagnostics": 0
+    },
+    "spawnImports": {
+      "command": "bun run check:spawn-imports",
+      "status": "success",
+      "filesChecked": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "success",
+      "rules": 78,
+      "changedPaths": 1008,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "bytes": 64006,
+    "sha256": "1548fe5c311f363d071e38474e1abb71ac8b187c3d77fb6f26d565332b94956c",
+    "source": "GitHub Actions job log132483476745",
+    "verifiedFrom": "evidence/resume-16-check.log"
+  },
+  "artifact": {
+    "id": 14119280280,
+    "name": "astra-wp12-check-1",
+    "bytes": 1423,
+    "digest": "sha256:0ed2062225f034ee887231601f2cefb3950fe61bfcb505a81cf09617973943ea",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43606932515/artifacts/14119280280",
+    "qualification": "Digest and byte size agree between GitHub artifact metadata and the job upload log; no ZIP member inspection is asserted."
+  },
+  "validatedOwnSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "beforeBlob": "50303355860a26718686f5daf7dddad8978434c3",
+      "bytes": 31379,
+      "sha256": "957231db289d9d1610c146e13153282008a20e035539a1d9dc031c497cbfde1e",
+      "blob": "b334b77248ab887647a7b4a15d2362fb769f5c4c",
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "beforeBlob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+      "bytes": 33393,
+      "sha256": "f131290842537426ad0ab24d9b13a80bf24c5224db57dbc38381fd238d04dce6",
+      "blob": "fbac0c8e04cdab45ecf3be21810b48e57b102b83",
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+      "beforeBlob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9",
+      "bytes": 17827,
+      "sha256": "6f48df4d168413eb75cab5786e26239d25d2f93ac2358fbea42c2f213076aaa3",
+      "blob": "01021c133717c73a58b7940b9179b62ac89cc7fe",
+      "kind": "own-test"
+    }
+  ],
+  "foreignSourceChanges": 0,
+  "sourceReceipt": "preparation-16.json",
+  "provenance": {
+    "runAndTreeMetadata": "GitHub MCP terminal run/jobs/artifacts; C directly parents the exact product and changes only the check envelope.",
+    "log": "Exact decoded job log, transported without newline change; checkout pins, commands and summaries checked."
+  },
+  "limits": [
+    "This check is typecheck and guards, not product execution.",
+    "Questions remain behind the published Planner source/scope/manifest blocker. Executive product execution remains necessary.",
+    "No native inference or integrated WP12 acceptance is inferred."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12": false
+}
