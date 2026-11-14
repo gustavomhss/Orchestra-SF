@@ -88,11 +88,13 @@ export function createSfWorkDestinations(input: {
           { label: "Status", value: found.value.status }], links } } : unavailable()
       })
       if (destination.kind === "procurement-request") {
-        if (!Number.isSafeInteger(item.sourceVersion) || !item.sourceVersion || !item.period) return unavailable()
+        if (!Number.isSafeInteger(item.sourceVersion) || !item.sourceVersion || !item.period ||
+          digestSfValue(item.period) !== digestSfValue(payload.selection.period)) return unavailable()
+        const period = item.period
         const requestRef = `sf-procurement:${encodeURIComponent(destination.incarnation)}:${item.sourceVersion}`
         const query = { requestRef }
-        return admitted("sf_request_read", query, async (context) => {
-          const source = await business.individual.resolveRequestSource(requestRef, context)
+        return admitted("sf_request_read", query, async (context) => business.withProcurementWorkPeriod(context, payload, async () => {
+          const source = await business.individual.resolve(requestRef, context)
           if (source.status !== "ok") return source
           const target = source.value.evidence.target
           if (target.recordId !== destination.recordId || target.incarnation !== destination.incarnation || target.version !== item.sourceVersion ||
@@ -101,7 +103,7 @@ export function createSfWorkDestinations(input: {
           if (found.status !== "ok") return found
           const links = await sourceLinks({ ...item, sourceRefs: [source.value.evidence] }, context)
           return links.length ? { status: "ok", value: { details: found.value.values.map((value) => ({ label: value.id, value: String(value.value ?? "Unavailable") })), links } } : unavailable()
-        })
+        }, { parent: call, requestRef, period }))
       }
       if (destination.kind === "signal") {
         const selected = await business.collaboration.caseSelection?.resolveCase(payload.selection.selectionRef, payload.selection.period, call)
@@ -117,7 +119,7 @@ export function createSfWorkDestinations(input: {
       }
       return unavailable()
     }
-    const collect = async (): Promise<PortResult<SfWorkItemView>> => {
+    const collect = async (): Promise<PortResult<SfWorkItemView>> => business.withProcurementWorkPeriod(call, payload, async () => {
       if (!await authorized()) return denied()
       const listed = await business.collaboration.work.listPresentation(payload.selection, call)
       if (listed.status !== "ok") return listed
@@ -128,7 +130,7 @@ export function createSfWorkDestinations(input: {
       if (resolved.status !== "ok") return resolved
       if (!await authorized()) return denied()
       return { status: "ok", value: { item: structuredClone(item), ...structuredClone(resolved.value) } }
-    }
+    })
     // Canonical readers can materialize captures or reconcile signals. Complete
     // that work before the C08 witness; no producer runs under the read lock.
     const witness = async () => {
@@ -179,7 +181,7 @@ export function createSfWorkDestinations(input: {
         return { status: "ok", value: { href: `${url.pathname}${url.search}` } }
       },
     })
-    const result = await resolver(selection, actionRef, call)
+    const result = await business.withProcurementWorkPeriod(call, { selection, actionRef }, () => resolver(selection, actionRef, call))
     return result.status === "ok" && await opened.value.verify() ? result : denied()
   }
   return { read, resolve }

@@ -1,0 +1,3 @@
+$ tsgo --noEmit
+src/sucafina-product/portfolio-reconciliation-services.ts(93,22): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+src/sucafina-product/work-destinations.ts(95,52): error TS2339: Property 'resolveRequestSource' does not exist on type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.

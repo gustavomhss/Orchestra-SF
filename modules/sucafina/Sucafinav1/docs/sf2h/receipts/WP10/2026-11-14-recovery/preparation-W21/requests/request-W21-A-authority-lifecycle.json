@@ -1,0 +1,41 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+    "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+    "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+    "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+    "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+    "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+    "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Sucafinav1/test/product/wp12/analysis.test.ts",
+    "Sucafinav1/test/product/wp12/continuation.test.ts",
+    "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+    "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+    "Sucafinav1/test/product/wp12/historical-reader.test.ts",
+    "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp12/run-store.test.ts",
+    "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+    "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

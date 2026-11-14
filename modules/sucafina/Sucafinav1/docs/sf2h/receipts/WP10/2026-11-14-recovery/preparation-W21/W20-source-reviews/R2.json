@@ -1,0 +1,220 @@
+{
+  "schema": "wp10-independent-review-v1",
+  "reviewer": "R2",
+  "agent": "/root/independent_r2_w16",
+  "candidateSha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "candidateTree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+  "parentSha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+  "pr": 29,
+  "base": "sf2-stack",
+  "verdict": "HOLD",
+  "phase": "source-review-with-exact-hosted-check-terminal",
+  "finalForCandidate": false,
+  "observedAtUtc": "2026-11-14 13:54:42 UTC",
+  "independence": {
+    "productAuthorship": false,
+    "testAuthorship": false,
+    "productEdits": false,
+    "localProductExecution": false,
+    "remoteMutation": false,
+    "method": "Independent frozen-source reads, static diffs, source/receipt/tree hashing, read-only GitHub MCP for exact commit, sampled candidate and upstream blobs, and hosted run/job terminal.",
+    "builderReportsUsedAsAcceptance": false,
+    "reportWritesOnly": "reviews/R2/*W20-source*",
+    "limits": "No local test, build, typecheck, product import, browser, native run or deployment. Findings and correction requests do not author the fix. Other reviewers remain independently responsible for their sections."
+  },
+  "summary": "HOLD. Static financial composition is materially present and 171 criteria/7 tasks remain literal. Exact W20 hosted check fails with 9 own and 13 foreign unique diagnostics, including production and fixture Portfolio errors. Six functional selections were not dispatched for W20 before this report; no functional, native or global acceptance is claimed.",
+  "findings": [
+    {
+      "id": "R2-W20-PORTFOLIO-TYPECHECK-01",
+      "severity": "mandatory",
+      "status": "open",
+      "ownership": "WP10",
+      "origin": "Root reported terminal diagnostic; R2 independently verified exact published source and hosted artifact.",
+      "title": "Portfolio reconciliation production does not pass the hosted consumer typecheck",
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+          "line": 93,
+          "blobSha": "c3866ce59cfe6211facad9f249c81caf55d54aba"
+        }
+      ],
+      "evidence": "resolved.find(result => result.status !== \"ok\") already narrows failure to the non-ok union; the additional failure.status !== \"ok\" comparison produces TS2367 in CLI, WP10 consumer and package checks.",
+      "impact": "The own Portfolio composition is not a check-clean delivery on W20. The diagnostic itself is not evidence of a runtime financial miscalculation.",
+      "requiredAction": "Correct the redundant narrowed guard in a successor without changing the existing failure propagation or weakening authority/provenance checks; rerun exact hosted checks.",
+      "criteria": [
+        "WP10.DOD.02",
+        "WP10.SUC.10",
+        "WP10.T03.CHK.03"
+      ]
+    },
+    {
+      "id": "R2-W20-PORTFOLIO-TYPECHECK-02",
+      "severity": "mandatory",
+      "status": "open",
+      "ownership": "WP10",
+      "origin": "Root reported terminal diagnostic; R2 independently verified source and hosted artifact.",
+      "title": "Real reconciliation fixture is not admitted by the hosted test-consumer typecheck",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+          "line": 166,
+          "blobSha": "95e1afbe1026f5c5762d8c9764f61e846e0c175f"
+        }
+      ],
+      "evidence": "expect(value.originalCombination).toEqual(combination) raises TS2769: combination still has the unavailable branch of PortfolioCombination, while originalCombination is the eligible/conditioned narrowed union. A prior toMatchObject assertion does not narrow the TypeScript variable.",
+      "impact": "The proposed real HTTP/C08 reconciliation proof has not passed the test-consumer gate, and no W20 functional run establishes its assertions.",
+      "requiredAction": "Narrow using the actual eligibility/status discriminants and preserve all original full-body equality assertions; obtain exact hosted functional evidence after the source correction.",
+      "criteria": [
+        "WP10.DOD.02",
+        "WP10.SUC.10",
+        "WP10.T03.CHK.03"
+      ]
+    }
+  ],
+  "closedFindings": [
+    {
+      "id": "R2-W18-COMPOSITION-01",
+      "status": "closed-for-source-and-typecheck-diagnostic-only",
+      "evidence": "W20 planner-sources.ts exports sfPlannerEvidenceRef; evidence-reader imports that exact export. The corresponding missing-export diagnostic is absent from exact W20 hosted artifacts. This does not confer complete Planner functional acceptance."
+    },
+    {
+      "id": "R2-W16-BI-QUERY-01",
+      "status": "remains-source-closed",
+      "evidence": "Explicit referenceDigest remains in browser requests, HTTP allowlist and admitted bootstrap intent. Every source read still resolves actual current membership; W20 browser execution is pending."
+    }
+  ],
+  "observations": [
+    {
+      "id": "R2-W20-COVERAGE-01",
+      "status": "static-positive-functional-pending",
+      "detail": "portfolio-coverage-authority reopens the actual human selection, exact numeric rule, current full C08 case, historical scenario results, current alternative membership, actual Planner batch and both basis classifications. Fresh evidence closure and source fences are compared across two independent observations. isStillValid reopens them under the identical Request/context/binding. The added real-composition tests preserve pending categories and assert refusal of an unresolved coverage certificate; they do not prove a complete certificate/native success."
+    },
+    {
+      "id": "R2-W20-RECONCILIATION-01",
+      "status": "static-positive-functional-pending",
+      "detail": "The real service reconstructs preserved Portfolio origin from C08 result, binding, ordered candidate proofs and the bounded original exploration; it uses current readers for N/N and historical provenance for N/N+k. HTTP uses exact closed selectors, current UI/human admission, original Request and final case checks. The new test constructs actual promotions, selection, rule, Portfolio evaluation and human choice through real producers and HTTP, then checks immutable choice/composition, source and access refusals and no C08 effects."
+    },
+    {
+      "id": "R2-W20-MATERIALITY-01",
+      "status": "explicit-unimplemented-producer-boundary",
+      "detail": "portfolio-services composes reconciliation.readPortfolio but no readMaterialChange. Component materiality consequently remains unknown with materiality-producer-unavailable, including when a condition exists. The UI, test and README disclose this. This review does not credit numeric materiality or complete re-evaluation integration; a future claim requires a real scoped before/after producer and its own evidence."
+    },
+    {
+      "id": "R2-W20-BI-01",
+      "status": "static-positive-functional-pending",
+      "detail": "Advantage is a separately persisted exact inverse comparison selected explicitly among authorized same-case records. The canonical producer owns the numerical value; BI carries knownDifference and comparisonStatus without negation/subtraction. Current pair/result/projection/source/binding/Request are revalidated. Optional selectors reject nonstrings and extra fields. Enumeration is bounded before Cartesian choices/admission."
+    },
+    {
+      "id": "R2-W20-BI-NAVIGATION-01",
+      "status": "static-positive-limited-test-coverage",
+      "detail": "Decision targets are membership tokens over the current authorized projection, not grants. Dispatch consumes a fresh UI admission, rereads actual domain destinations, projection, case and authority. Browser clearing aborts pending reads; refreshed details reopen and reauthorize. Positive destination tests use real domain producers with fixture declarations; real HTTP tests here are negative cases. These are not a completed positive installed-host browser journey."
+    },
+    {
+      "id": "R2-W18-REVIEW-HOST-OBS-01",
+      "status": "open-functional-gate",
+      "detail": "W19 A independently recorded Nested local write attempted in the actual resident Review/Memory case. W20 changes may affect this path; R2 has no W20 functional terminal closing it and makes no claim that the earlier failure is reproduced or solved on W20."
+    },
+    {
+      "id": "R2-W20-FREEZE-01",
+      "status": "owner-reconciliation-required",
+      "detail": "Foreign freeze-v1 revision10 is byte-exact to its admitted pin, but 37/38 artifact hashes match the W20 composition. host-context expected6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772, actual42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893. Preserve the strict foreign manifest; owner/S0 disposition remains necessary. No freeze test PASS is claimed."
+    },
+    {
+      "id": "R2-W20-GUIDE-01",
+      "status": "resolved-before-publication",
+      "detail": "Proposed docs/guides/sucafina-portfolio-reconciliation.md is absent from the full tree. Its original bytes are archived under preparation-W20/root (SHA2560c5a7ac33939ef1db9a4d10fef5b7ef2bdb5efa493b67d09387b4fd9ac1b81ae). The normative README conveys all substantive original guidance in edited prose. Exact substring equality to README is not claimed."
+    }
+  ],
+  "verifiedStatic": {
+    "hydratedFiles": 1301,
+    "matchedHydratedFiles": 1301,
+    "fullTreeBlobs": 16274,
+    "deltaPaths": 200,
+    "ownPaths": 128,
+    "publishedForeignPaths": 72,
+    "sourceTestPaths": 117,
+    "receiptPaths": 83,
+    "deletions": 0,
+    "effectiveForeignPins": 438,
+    "matchingForeignPins": 438,
+    "remoteCandidateBlobChecks": 10,
+    "remoteUpstreamBlobChecks": 4,
+    "priorWp10ReceiptsUnchanged": 145,
+    "criteriaCount": 171,
+    "literalCriteriaPreserved": true,
+    "tasks": 7,
+    "foreignArchiveIndexEntries": 128,
+    "readonlyInputIndexEntries": 131,
+    "individualOriginalForeignArtifactsRefetched": false,
+    "ownershipViolations": [],
+    "nativeGlobalAcceptance": false
+  },
+  "ci": {
+    "check": {
+      "runId": 43601767154,
+      "jobId": 132467830629,
+      "snapshotSha": "746652850ccfc46c6ae5c9987c129daedcf12799",
+      "productSha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "productTree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+      "status": "completed",
+      "conclusion": "failure",
+      "artifactId": 14116487645,
+      "artifactZipSha256": "0d3f1b1948607536c6d88478d4a5268b413244af40130f9d10b1dd192caf3a5c",
+      "artifactFiles": 11,
+      "allArtifactHashesMatch": true,
+      "uniqueDiagnostics": 22,
+      "ownDiagnostics": 9,
+      "foreignDiagnostics": 13,
+      "failedSteps": [
+        "Typecheck Sucafina",
+        "Typecheck CLI consumers",
+        "Typecheck WP10 test consumers"
+      ],
+      "successfulRelevantSteps": [
+        "Validate exact product and envelope",
+        "Verify canonical Atlas generation",
+        "Typecheck Atlas boundary",
+        "Guard subprocess imports",
+        "Guard product against origin/dev"
+      ]
+    },
+    "functional": {
+      "status": "not-dispatched-before-successor",
+      "rootDecision": "Correct own errors in W21 before six sequential test-ci selections. No W20 functional PASS or runtime failure asserted."
+    },
+    "historicalW19": {
+      "checkRunId": 43595657356,
+      "functionalRunId": 43595658990,
+      "functionalPassed": 105,
+      "functionalFailed": 17,
+      "unhandledErrors": 1,
+      "tests": 122,
+      "files": 22,
+      "creditToW20": false
+    }
+  },
+  "unresolvedGates": [
+    "All own hosted check diagnostics need correction and exact successor checks; work-destinations API error is a separately assigned R1 finding.",
+    "13 foreign diagnostics remain routed to owners; foreign exclusion is not a green package check.",
+    "Exact successor functional terminal evidence for Portfolio, BI, Review and other affected composition lanes.",
+    "Independent R1/R2/R3 assessment on the final immutable candidate after fixes.",
+    "Freeze manifest host hash owner/S0 disposition without relaxing the strict contract.",
+    "Materiality producer integration is not established by the read-only reconciliation.",
+    "Native C07 and complete global/epic acceptance remain unexecuted."
+  ],
+  "artifacts": [
+    "reviews/R2/review-W20-source.json",
+    "reviews/R2/review-W20-source.md",
+    "reviews/R2/source-inventory-W20-source.json",
+    "reviews/R2/intake-audit-W20-source.json",
+    "reviews/R2/remote-observation-W20-source.json",
+    "reviews/R2/artifact-hashes-W20-source.json"
+  ],
+  "limitations": [
+    "This is an independent source/check preliminary review, not final acceptance.",
+    "No product code or tests authored or modified by R2.",
+    "Snapshot hydration is partial; absence is not deletion.",
+    "Historical W16–W19 reports and logs are preserved and never attributed to W20.",
+    "No local product execution, native acceptance, merge, deployment or remote mutation."
+  ]
+}

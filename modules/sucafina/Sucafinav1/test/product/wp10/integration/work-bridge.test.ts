@@ -6,6 +6,10 @@ import { join } from "node:path"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { Location } from "@orchestra/core/location"
 import { DashboardPortfolio } from "../../../../runtime/dashboard-portfolio.ts"
+import { domain } from "../../../../runtime/procurement.ts"
+import { object } from "../../../../runtime/contract.ts"
+import { initialProcurementSettings } from "../../../../src/initial-settings.ts"
+import { readProcurementQueueView } from "../../../../product/procurement/queue-view.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import type { SfHumanAction } from "../../../../product/integration/human-authority.ts"
@@ -38,11 +42,12 @@ function ok<T>(value: PortResult<T>, name: string): T {
 // memory registry reads. No condition or accepted native receipt is fabricated.
 // The separate memory fixture below declares its upstream scenario/criterion
 // inputs; those are not evidence of native execution or global acceptance.
-async function fixture(options: { threadRead?: boolean; key?: Uint8Array } = {}) {
+async function fixture(options: { threadRead?: boolean; key?: Uint8Array; procurement?: boolean } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-work-bridge-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(join(directory, "store"))
   const active = { value: true }, signingKey = options.key ?? randomBytes(32)
+  const access = { procurement: true }
   const keyPath = join(directory, "asset-signing-key")
   await writeFile(keyPath, signingKey, { mode: 0o600 })
   const at = "2026-11-14T00:00:00Z"
@@ -70,7 +75,7 @@ async function fixture(options: { threadRead?: boolean; key?: Uint8Array } = {})
         operations: ["sf_case_draft", "sf_case_read", "sf_work_list", "sf_dashboard_read", "sf_request_read"], humanActions: grants })),
       createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(),
       authenticate: async (request, context) => active.value && context && ["person", "other"].includes(request.headers.get("authorization") ?? "")
-        ? { id: request.headers.get("authorization")!, canWrite: true, roles: [{ surface: context.surface, role: "admin" }] } : null,
+        ? { id: request.headers.get("authorization")!, canWrite: true, roles: context.surface === "procurement" && !access.procurement ? [] : [{ surface: context.surface, role: "admin" }] } : null,
       environment: async () => ({ at, id: randomUUID, directory: [{ id: "person", name: "Person" }, { id: "other", name: "Other" }] }),
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
       providerGeneration: async () => 1, authorizeDocument: async () => undefined })
@@ -106,16 +111,222 @@ async function fixture(options: { threadRead?: boolean; key?: Uint8Array } = {})
   const selection = await runtime.human("collaboration.selection.create", { draft: selected, mutation }, (context) => runtime.business.collaboration.caseSelection!.create(selected, mutation, context))
   const query = { selectionRef: selection.selectionRef, period }
   const threadDraft = { kind: "clarification" as const, sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version,
-    period, recipientRef: "person", body: "Read this actual contextual question", evidenceRefs: [source] }
+    period, recipientRef: options.procurement ? "other" : "person", body: "Read this actual contextual question", evidenceRefs: [source] }
   const threadMutation = { expectedStorageVersion: 0, idempotencyKey: randomUUID() }
   const thread = await runtime.human("collaboration.thread.create", { draft: threadDraft, mutation: threadMutation }, (context) => runtime.business.collaboration.threads.create(threadDraft, threadMutation, context))
   const payload = { selection: query, actionRef: thread.id }
   const route = new URL(`${mount}/dashboard`, origin)
   for (const [key, value] of Object.entries({ sf: "work-item", selectionRef: query.selectionRef, start: period.start, end: period.end, actionRef: thread.id })) route.searchParams.set(key, value)
-  return { ...runtime, directory, store, persistence, active, signingKey, decision, source, selection: query, thread, payload, route,
+  return { ...runtime, directory, store, persistence, active, access, signingKey, decision, source, selection: query, thread, payload, route,
     reopen: async () => open(new Uint8Array(await readFile(keyPath))),
     dispose: async () => { runtime.business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
+
+async function procurementFixture() {
+  const f = await fixture({ procurement: true })
+  try {
+    const actor = { id: "person", canWrite: true, roles: ["admin"], assigned: [], domains: [] }
+    const environment = await f.authority.host.environment(f.request())
+    const created = await f.persistence.transaction("procurement", async (snapshot) => {
+      snapshot.data.roleMap = [{ surface: "procurement", role: "admin", entra: "admins", version: 1, by: "person" }]
+      snapshot.data.store = { settings: { ...initialProcurementSettings(), levels: [{ id: "L1", name: "Current approver", threshold: 0, holderId: "person" }] },
+        requests: {}, suppliers: [], sup: [], issued: { pr: [], po: [] } }
+      const result = domain.execute(snapshot, actor, { page: "Requests", action: "create", version: 0, values: { pr: {
+        title: "Canonical Procurement destination", type: "service", description: "Current support renewal", estAmount: 100,
+        costCenter: "IT", needBy: "2026-12-01", justification: "Continue support", recurring: false, expenseType: "OPEX",
+      } } }, environment)
+      return { commit: result.ok, value: result }
+    })
+    if (!created.ok) throw new Error(`Actual Procurement create refused: ${created.status}`)
+    const recordId = object(created.value).number
+    if (typeof recordId !== "string" || !recordId) throw new Error("Actual Procurement request identity absent")
+    const mutate = async (action: "submit_pr" | "cancel") => {
+      const result = await f.persistence.transaction("procurement", async (snapshot) => {
+        const outcome = domain.execute(snapshot, actor, { page: "Requests", action, id: recordId,
+          version: snapshot.versions[`requests:${recordId}`]?.version ?? 0, values: action === "cancel" ? { reason: "Actual source counterproof" } : {} }, environment)
+        return { commit: outcome.ok, value: outcome }
+      })
+      if (!result.ok) throw new Error(`Actual Procurement ${action} refused: ${result.status}`)
+    }
+    await mutate("submit_pr")
+    return { ...f, recordId, cancel: () => mutate("cancel") }
+  } catch (error) { await f.dispose(); throw error }
+}
+
+// The C02 collection is ephemeral. After rebuilding the host this real queue
+// producer issues a NEW selection; no old collection reference is restored.
+// Its retained page period belongs only to its own UI call, never periods(key).
+async function procurementQueue(runtime: Pick<Awaited<ReturnType<typeof fixture>>, "business" | "request">) {
+  const issued: { selectionRef?: string; call?: TrustedUiContext } = {}
+  const create = runtime.business.registry.createSelection
+  runtime.business.registry.createSelection = async (call) => {
+    const result = await create(call)
+    if (result.status === "ok") {
+      if (call.kind !== "ui") throw new Error("Queue did not admit an actual UI call")
+      issued.selectionRef = result.value; issued.call = call
+    }
+    return result
+  }
+  try {
+    const prepared = await runtime.business.procurementQueueView(runtime.request(`${origin}${mount}/procurement?page=Requests`, "person", "GET"), "procurement", "Requests")
+    if (!prepared || prepared instanceof Response) throw new Error(`Actual queue unavailable: ${prepared?.status}`)
+    const view = readProcurementQueueView(prepared.data.procurementQueueView)
+    const row = view?.rows.find((entry) => entry.holder === "person")
+    if (!issued.selectionRef || !issued.call || !row || row.status !== "pr_pending") { prepared.finish(); throw new Error("Actual approval work absent") }
+    return { selection: { selectionRef: issued.selectionRef, period: structuredClone(row.projection.context.period) },
+      actionRef: row.evidence.refId, recordId: row.id, queueCall: issued.call, finish: prepared.finish }
+  } finally { runtime.business.registry.createSelection = create }
+}
+
+async function procurementSession() {
+  const f = await procurementFixture()
+  try {
+    const reopened = await f.reopen()
+    try {
+      const queue = await procurementQueue(reopened)
+      return { f, reopened, queue, dispose: async () => { queue.finish(); reopened.business.dispose(); await f.dispose() } }
+    } catch (error) { reopened.business.dispose(); throw error }
+  } catch (error) { await f.dispose(); throw error }
+}
+
+test("Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period", async () => {
+  const { f, reopened, queue, dispose } = await procurementSession()
+  try {
+    const payload = { selection: queue.selection, actionRef: queue.actionRef }
+    const call = await reopened.admit("sf-human:collaboration.work.destination", payload)
+    expect(call).not.toBe(queue.queueCall)
+    // The queue's own retained context cannot supply a period to this new call.
+    expect(await reopened.business.registry.resolveRequestCollection(queue.selection.selectionRef, call))
+      .toMatchObject({ status: "unavailable", reason: "procurement-context-unavailable" })
+    expect((await reopened.business.collaboration.work.listPresentation(queue.selection, call)).status).not.toBe("ok")
+    const sourceReads: { ref: string; call: TrustedUiContext }[] = []
+    const resolve = reopened.business.individual.resolve
+    reopened.business.individual.resolve = async (ref, context) => {
+      const result = await resolve(ref, context)
+      if (context.kind === "ui" && reopened.authority.ui.matchesIntent(context, "sf_request_read", digestSfValue({ requestRef: ref }))) {
+        expect(result.status).toBe("ok"); sourceReads.push({ ref, call: context })
+      }
+      return result
+    }
+    const located = ok(await reopened.business.collaboration.resolveWorkDestination(queue.selection, queue.actionRef, call), "canonical Procurement destination")
+    expect(sourceReads.length).toBeGreaterThan(0)
+    expect(sourceReads.every((entry) => entry.call !== call && !reopened.authority.ui.requestFor(entry.call))).toBe(true)
+    expect(await reopened.authority.ui.revalidate(call)).toBe(true)
+    expect(await reopened.business.registry.resolveRequestCollection(queue.selection.selectionRef, call))
+      .toMatchObject({ status: "unavailable", reason: "procurement-context-unavailable" })
+    reopened.authority.ui.finish(call)
+    reopened.business.individual.resolve = resolve
+    const direct = await reopened.admit("sf_request_read", { requestRef: sourceReads[0]!.ref })
+    expect(await reopened.business.individual.resolve(sourceReads[0]!.ref, direct))
+      .toMatchObject({ status: "unavailable", reason: "procurement-context-unavailable" })
+    reopened.authority.ui.finish(direct)
+    const response = await reopened.http(reopened.request(new URL(located.href, origin).href, "person", "GET"), "dashboard")
+    expect(response?.status).toBe(200)
+    const html = await response!.text()
+    expect(html).toContain("Canonical Procurement destination")
+    expect(html).toContain("2026-01-01")
+    expect(html).toContain(`request=${encodeURIComponent(f.recordId)}`)
+    expect(html).not.toContain("sf-human:")
+  } finally { await dispose() }
+}, 120_000)
+
+test("Procurement destination refuses a different period, actor and actually changed source after its canonical positive", async () => {
+  const { f, reopened, queue, dispose } = await procurementSession()
+  try {
+    const payload = { selection: queue.selection, actionRef: queue.actionRef }
+    const call = await reopened.admit("sf-human:collaboration.work.destination", payload)
+    const opened = ok(await reopened.destinations.read(queue.selection, queue.actionRef, call), "current Procurement item")
+    expect(opened.view.item).toMatchObject({ kind: "procurement", actionRef: queue.actionRef, period,
+      destination: { kind: "procurement-request", recordId: f.recordId } })
+    expect(await opened.verify()).toBe(true)
+    const different = { ...queue.selection, period: { ...period, start: "2026-02-01" } }
+    const otherPeriod = await reopened.admit("sf-human:collaboration.work.destination", { selection: different, actionRef: queue.actionRef })
+    expect((await reopened.destinations.read(different, queue.actionRef, otherPeriod)).status).not.toBe("ok")
+    expect(await reopened.authority.ui.revalidate(otherPeriod)).toBe(true)
+    reopened.authority.ui.finish(otherPeriod)
+    const other = await reopened.admit("sf-human:collaboration.work.destination", payload, reopened.request(undefined, "other"))
+    expect((await reopened.destinations.read(queue.selection, queue.actionRef, other)).status).not.toBe("ok")
+    reopened.authority.ui.finish(other)
+    await f.cancel()
+    expect(f.active.value).toBe(true)
+    expect(await reopened.authority.ui.revalidate(call)).toBe(true)
+    expect(await opened.verify()).toBe(false)
+    expect((await reopened.destinations.read(queue.selection, queue.actionRef, call)).status).not.toBe("ok")
+    reopened.authority.ui.finish(call)
+  } finally { await dispose() }
+}, 120_000)
+
+test("Procurement period scope rejects overlap and header replacement and cleans up after throw or lease finish", async () => {
+  const { reopened, queue, dispose } = await procurementSession()
+  try {
+    const payload = { selection: queue.selection, actionRef: queue.actionRef }, request = reopened.request()
+    const call = await reopened.admit("sf-human:collaboration.work.destination", payload, request)
+    const read = () => reopened.business.registry.resolveRequestCollection(queue.selection.selectionRef, call)
+    const scope = () => reopened.business.withProcurementWorkPeriod(call, payload, read)
+    expect((await scope()).status).toBe("ok")
+    expect((await read()).status).not.toBe("ok")
+    let enter: () => void = () => {}, release: () => void = () => {}
+    const entered = new Promise<void>((resolve) => { enter = resolve }), retained = new Promise<void>((resolve) => { release = resolve })
+    const first = reopened.business.withProcurementWorkPeriod(call, payload, async () => {
+      const result = await read(); enter(); await retained; return result
+    })
+    void first.then(enter, enter)
+    await entered
+    try {
+      expect((await scope()).status).toBe("denied")
+      const sibling = await reopened.admit("sf-human:collaboration.work.destination", payload, request)
+      expect((await reopened.business.registry.resolveRequestCollection(queue.selection.selectionRef, sibling)).status).not.toBe("ok")
+      reopened.authority.ui.finish(sibling)
+    } finally { release() }
+    expect((await first).status).toBe("ok")
+    await expect(reopened.business.withProcurementWorkPeriod(call, payload, async () => {
+      expect((await read()).status).toBe("ok"); throw new Error("after-real-collection-read")
+    })).rejects.toThrow("after-real-collection-read")
+    expect((await read()).status).not.toBe("ok")
+    expect((await reopened.business.withProcurementWorkPeriod(call, payload, async () => {
+      const result = await read(); expect(result.status).toBe("ok"); request.headers.set("x-work-counterproof", "changed"); return result
+    })).status).toBe("denied")
+    expect(await reopened.authority.ui.revalidate(call)).toBe(true) // unrelated header; the scope pin caused the refusal
+    expect((await read()).status).not.toBe("ok")
+    expect((await reopened.business.withProcurementWorkPeriod(call, payload, async () => {
+      const result = await read(); expect(result.status).toBe("ok"); reopened.authority.ui.finish(call); return result
+    })).status).toBe("denied")
+    expect(reopened.authority.ui.requestFor(call)).toBeUndefined()
+  } finally { await dispose() }
+}, 120_000)
+
+test("Procurement secondary read cleans both scopes on exception and refuses real access revocation before display", async () => {
+  const { f, reopened, queue, dispose } = await procurementSession()
+  try {
+    const payload = { selection: queue.selection, actionRef: queue.actionRef }, request = reopened.request()
+    const call = await reopened.admit("sf-human:collaboration.work.destination", payload, request)
+    expect((await reopened.destinations.read(queue.selection, queue.actionRef, call)).status).toBe("ok")
+    const resolve = reopened.business.individual.resolve
+    const observed: { mode: "throw" | "revoke"; calls: TrustedUiContext[] } = { mode: "throw", calls: [] }
+    reopened.business.individual.resolve = async (ref, context) => {
+      const result = await resolve(ref, context)
+      if (result.status === "ok" && context.kind === "ui" && reopened.authority.ui.matchesIntent(context, "sf_request_read", digestSfValue({ requestRef: ref }))) {
+        observed.calls.push(context)
+        if (observed.mode === "throw") throw new Error("after-actual-individual-read")
+        f.access.procurement = false
+      }
+      return result
+    }
+    expect((await reopened.destinations.read(queue.selection, queue.actionRef, call)).status).toBe("unavailable")
+    expect(observed.calls).toHaveLength(1)
+    expect(reopened.authority.ui.requestFor(observed.calls[0]!)).toBeUndefined()
+    expect(await reopened.authority.ui.revalidate(call)).toBe(true)
+    expect(await reopened.business.registry.resolveRequestCollection(queue.selection.selectionRef, call))
+      .toMatchObject({ status: "unavailable", reason: "procurement-context-unavailable" })
+    observed.mode = "revoke"
+    expect((await reopened.destinations.read(queue.selection, queue.actionRef, call)).status).toBe("denied")
+    expect(observed.calls).toHaveLength(2)
+    expect(observed.calls.every((context) => !reopened.authority.ui.requestFor(context))).toBe(true)
+    expect(reopened.authority.ui.requestFor(call)).toBeUndefined()
+    expect(request.headers.get("authorization")).toBe("person")
+    expect(f.active.value).toBe(true)
+  } finally { await dispose() }
+}, 120_000)
 
 test("actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key", async () => {
   const f = await fixture()

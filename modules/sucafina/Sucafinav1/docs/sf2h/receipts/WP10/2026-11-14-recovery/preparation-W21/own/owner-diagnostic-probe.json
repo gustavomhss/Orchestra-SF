@@ -1,0 +1,20 @@
+{
+  "schema": "wp10-w21-owner-diagnostic-probe-v1",
+  "observedAtUtc": "2026-11-14T14:08:00Z",
+  "purpose": "Check whether the published WP04 analysisHistory import dependency has changed at its owner; no new foreign output admitted.",
+  "pr31Head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+  "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+  "bytes": 30754,
+  "sha256": "d2627d3356e7ada3bef9971a8697af485bc3a36632b6a6e4bbcaff7f3c2aef75",
+  "blobSha": "973a2f09b394426364c514b923ecdc8e10ffb184",
+  "byteIdenticalToW20": true,
+  "exports": [
+    "scenarioAnalysisForm",
+    "intentAnalysisForm",
+    "forecastAnalysisForm",
+    "forecastAnalysisScript"
+  ],
+  "analysisHistoryExportPresent": false,
+  "newForeignInputs": [],
+  "conclusion": "The missing export remains an owner dependency. PR33 and PR34 published heads were also unchanged; no foreign edits or branches were changed."
+}

@@ -1,0 +1,305 @@
+{
+  "schema": "wp10.independent-review.v1",
+  "reportKind": "PRELIMINARY_SOURCE_REVIEW_WITH_CURRENT_HOSTED_CHECK",
+  "reviewer": {
+    "id": "R3",
+    "agent": "/root/independent_r3_w16",
+    "independence": "Não participei da autoria, composição, correção, publicação ou dispatch deste candidato. Minhas únicas escritas são novos artefatos em reviews/R3. Builders não contam como revisores.",
+    "productCodeAuthored": false,
+    "productCodeExecutedLocally": false,
+    "remoteMutations": false
+  },
+  "issuedAt": "2026-11-14T13:59:42.792839+00:00",
+  "candidateSha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "candidateTree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+  "parentSha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+  "target": "PR29 -> sf2-stack (target informado pelo root; nenhuma mutação de PR realizada por R3)",
+  "verdict": "HOLD",
+  "approved": false,
+  "isFinalAcceptanceReview": false,
+  "summary": "W20 preserva os inputs/pins e os 171 critérios. Fonte dos novos controles foi auditada independentemente, mas o check hospedado atual falha; há ligação Procurement ausente e divergência freeze10. Provas de comportamento residente/nativo e jornadas completas permanecem pendentes. Não transferir PASS histórico.",
+  "basis": {
+    "pack": "context/WP10.pack.json",
+    "agents": "context/AGENTS.md",
+    "intake": "context/integration-intake.json; manifest-W20.json effective pins",
+    "frozen": "publication/frozen-W20/repo",
+    "inventory": "reviews/R3/inventory-W20-source.json",
+    "metadata": "reviews/R3/metadata-W20-source.json",
+    "remote": "reviews/R3/remote-W20-source.json",
+    "rawRemote": "reviews/R3/remote-W20-source-raw.json",
+    "jobLog": "reviews/R3/check-job-W20.txt"
+  },
+  "verification": {
+    "tree": {
+      "entries": 18843,
+      "blobs": 16274,
+      "subtrees": 2569,
+      "recomputedRoot": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+      "mismatches": []
+    },
+    "delta": {
+      "paths": 200,
+      "counts": {
+        "modified": 75,
+        "added": 125
+      },
+      "manifestMatches": true,
+      "remoteCompareMatches": true,
+      "manifestByteMismatches": [],
+      "owned": 128,
+      "foreign": 72,
+      "ownershipViolations": [],
+      "foreignPinMismatches": []
+    },
+    "pins": {
+      "effective": 438,
+      "uniquePaths": 438,
+      "mismatches": [],
+      "remotePublishedSpotcheckCount": 3
+    },
+    "preservation": {
+      "archivePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+      "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+      "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+      "foreignCopies": 128,
+      "recordedReadonlyInputs": 131,
+      "originalArchiveBlobUnchanged": true,
+      "priorReceiptFiles": 145,
+      "changedPriorReceipts": []
+    },
+    "criteria": {
+      "count": 171,
+      "unique": 171,
+      "tasks": 7,
+      "literalMismatch": [],
+      "families": {
+        "dod": 22,
+        "invariants": 24,
+        "quality_standards": 22,
+        "completeness_criteria": 24,
+        "success_criteria": 22,
+        "checks": 57
+      },
+      "taskCounts": {
+        "WP10": 25,
+        "WP10.T01": 21,
+        "WP10.T02": 17,
+        "WP10.T03": 15,
+        "WP10.T04": 22,
+        "WP10.T05": 14,
+        "WP10.T06": 27,
+        "WP10.T07": 30
+      },
+      "candidateBound": true,
+      "acceptance": {
+        "criteria_accepted": 0,
+        "tasks_accepted": 0,
+        "native": false,
+        "global": false,
+        "builder_auto_acceptance": false
+      },
+      "statusCounts": {
+        "NATIVE_OR_REAL_RUNTIME_PROOF_PENDING": 58,
+        "SOURCE_BOUND_HOSTED_BEHAVIORAL_PROOF_PENDING": 47,
+        "BLOCKED_OWNER_DEPENDENCY": 13,
+        "GLOBAL_PROOF_DEFERRED_UNTIL_TOTAL_BUNDLE": 8,
+        "MANDATORY_OWN_REVIEW_FINDING_RECHECK_PENDING": 23,
+        "CURRENT_INDEPENDENT_REVIEW_AND_FINDING_RECHECK_PENDING": 14,
+        "ACCEPTED_C_AND_DELIVERY_ENVELOPE_PENDING": 8
+      }
+    },
+    "freeze": {
+      "revision": 10,
+      "matched": 37,
+      "total": 38,
+      "mismatches": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "expectedSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+          "actualSha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+          "matched": false
+        }
+      ]
+    },
+    "remoteByteObservations": 11,
+    "remoteAllMatch": true
+  },
+  "hostedCheck": {
+    "W": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "S": "746652850ccfc46c6ae5c9987c129daedcf12799",
+    "runId": 43601767154,
+    "jobId": 132467830629,
+    "conclusion": "failure",
+    "envelopeOnlyChanges": [
+      ".astra-wp10-check.json"
+    ],
+    "successfulSteps": [
+      "Verify canonical Atlas generation",
+      "Typecheck Atlas boundary",
+      "Guard subprocess imports",
+      "Guard product against origin/dev"
+    ],
+    "guards": {
+      "rules": 78,
+      "changedPaths": 1482,
+      "gateFindings": 0,
+      "warnings": 52,
+      "errors": 0
+    },
+    "typecheckUniqueOwn": 9,
+    "typecheckUniqueForeign": 13,
+    "typecheckOccurrences": 33,
+    "artifactId": 14116487645,
+    "artifactSha256": "0d3f1b1948607536c6d88478d4a5268b413244af40130f9d10b1dd192caf3a5c",
+    "artifactBytes": 6174,
+    "artifactFilesVerified": 11,
+    "testCi": "Nenhum test-ci W20 disparado segundo o root; nenhum terminal funcional W20 admitido."
+  },
+  "sourceObservations": [
+    {
+      "area": "C07 installed readonly publication",
+      "observation": "A publicação usa LocationServiceMap, Relay, SkillV2 e SessionStore da instalação; confere placement/projeto/Request/lease antes e depois, invalida provider substituído/disposto, preserva skills byte-exatas e expõe somente get/version/documents. authorSession é nativo, real e revalidado; UI não fornece session id. knowledge recusa explicitamente.",
+      "qualification": "Leitura de fonte; teste de publicação instalada não compilou. Não há aceite nativo ou Task governada."
+    },
+    {
+      "area": "Private analysis lifecycle / stale / cancel / C08",
+      "observation": "Contexto lifecycle é privado e preso ao Request humano start, run original, case id/incarnation e authority/lease. Reabre somente metadados terminais com version+1, run identity e case membership sob C08. Não admite output, Alternative, ready ou novo conteúdo. Publication segura observação original e output digest, output existente só se conserva por CAS. Cancelamento conserva intenção humana separada.",
+      "qualification": "Não identifiquei nova abertura de autoridade nos trechos inspecionados; isso não é prova de execução. Fontes/fresh context continuam exigidos para conteúdo, coleta e execução."
+    },
+    {
+      "area": "Resident Review source fences",
+      "observation": "Quando C08 já está ativo, readSourceFences usa currentSnapshots completos, autoriza antes/depois e compara digests. Fora do contexto mantém transactionAll; mudança de escopo durante autorização recusa. Evita chamar writer aninhado para uma leitura já agrupada. A factory de readers do host e a contraprova residente são a mesma.",
+      "qualification": "Causa estática do nested writer tratada; reexecução hospedada ainda necessária. Nenhum cache novo de ACL/readers externos aceito."
+    },
+    {
+      "area": "G03 installed work bridge",
+      "observation": "Lista canônica, grants por conteúdo, Request original, seleção/ator/período/caso, witness de snapshots/ambiente e egress são reaplicados. HMAC deriva de chave durável; falta de chave recusa. Links são mesmo origin e allowlist; página readonly escapa conteúdo.",
+      "qualification": "Ligação Procurement contém método ausente, registrada como bloqueio próprio. O caminho positivo C17 completo no host instalado não foi observado nesta rodada."
+    },
+    {
+      "area": "Invocation-local Procurement/Atlas proof scope",
+      "observation": "Reuso somente para grupos duplicados Procurement elegíveis na mesma invocação, após duas leituras canônicas, fences completos C08/fonte/principal/ambiente e checagem final. Outras espécies de operação ficam no caminho canônico; close/finally elimina o escopo. Atlas separa selector semântico de digest integral original.",
+      "qualification": "Leitura de deltas/escopo; os testes novos não foram executados. Nenhuma validação de desempenho ou contraprova runtime é presumida."
+    },
+    {
+      "area": "Ownership, archive and literal criteria",
+      "observation": "Árvore inteira recomposta; delta remoto exato, pins, recibos anteriores e arquivo estrangeiro conferidos. 171 critérios literais/7 tasks permanecem id/text/family/task/title iguais ao pack. README assume o conteúdo de guia fora do ownership, com proposta original arquivada.",
+      "qualification": "Preservação mecânica e identidade, não aceite semântico dos 171 critérios. O pacote declara 0 critérios/0 tasks aceitos e native/global false, de forma coerente."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R3-W20-TYPECHECK-01",
+      "priority": "P1",
+      "mandatory": true,
+      "status": "OPEN_CONFIRMED_HOSTED",
+      "owner": "WP10",
+      "externalOwner": null,
+      "cause": "Nove diagnósticos próprios únicos bloqueiam os typechecks. Além do resolver Procurement ausente, há comparação de status já estreitado em portfolio-reconciliation-services:93 e tipos de fixtures lifecycle/portfolio/installed publication incompatíveis com os serviços reais.",
+      "evidence": [
+        "run 43601767154 / job 132467830629: três typechecks failure",
+        "check artifact 14116487645; metadata-W20-source.json#ci.typecheck",
+        "portfolio-reconciliation-services.ts:93 TS2367; work-destinations.ts:95 TS2339",
+        "analysis-lifecycle-context.test.ts:90 TS2345; portfolio-reconciliation.test.ts:166 TS2769; routine-installed-publication.test.ts:160,161,163 TS2339 e :293 TS2345"
+      ],
+      "requiredClosure": "Corrigir causas em sucessor publicado sem casts que eliminem os fences ou fixtures que substituam autoridade; rodar novamente check hospedado exato. As correções ainda mutáveis informadas pelo root não são evidência de W20."
+    },
+    {
+      "id": "R3-W20-WORK-PROCUREMENT-02",
+      "priority": "P1",
+      "mandatory": true,
+      "status": "OPEN_STATIC_CAUSE_WITH_HOSTED_DIAGNOSTIC",
+      "owner": "WP10",
+      "externalOwner": null,
+      "cause": "work-destinations.ts chama business.individual.resolveRequestSource na jornada procurement-request; o objeto individual composto não fornece esse método. A ligação de destino Procurement não está completa.",
+      "evidence": [
+        "work-destinations.ts:95; business-services.ts:110-117 e retorno:644",
+        "TS2339 corroborado nos três gates; blob remoto work-destinations d05c992da009c31cc9c2f9827ad9d58c3807db77"
+      ],
+      "runtimeClaim": "Nenhuma chamada HTTP, exceção runtime ou teste de produto foi executado por R3. A conclusão é de ligação estática ausente, corroborada pelo compilador hospedado.",
+      "requiredClosure": "Compor o resolver canônico correto preservando Request original, grant secundário, incarnation/version/period e egress. Acrescentar contraprova real da rota Procurement no bridge montado; não limitar a correção a remoção da verificação de fonte.",
+      "overlap": "É a mesma ocorrência TS2339 contada em R3-W20-TYPECHECK-01, não um décimo diagnóstico próprio. Root já havia identificado a causa; R3 a corrobora independentemente."
+    },
+    {
+      "id": "R3-W20-PUBLISHED-DEPENDENCIES-03",
+      "priority": "P1",
+      "mandatory": true,
+      "status": "OPEN_CONFIRMED_HOSTED",
+      "owner": "Integration follow-up WP10; fixes by published source owners",
+      "externalOwner": [
+        "WP04/procurement sourcing",
+        "WP06/import/native fixtures",
+        "WP08/collaboration fixtures",
+        "WP09/decision-answer fixture"
+      ],
+      "cause": "Treze diagnósticos estrangeiros únicos permanecem: analysisHistory não exportado; forma do resolver Procurement/verifyScenarioOperations em fixtures; narrowing importPreview e chamada nativa de assinatura incompatível.",
+      "evidence": [
+        "metadata-W20-source.json#ci.typecheck.diagnostics",
+        "evidence/W20/check-artifact/sucafina-typecheck.log"
+      ],
+      "requiredClosure": "Obter outputs publicados dos owners, registrar pins/recibos, compor sem editar branches alheias e reexecutar gates. A preservação byte-exata dos pins não transforma falhas em aceite."
+    },
+    {
+      "id": "R3-W20-FREEZE10-04",
+      "priority": "P1",
+      "mandatory": true,
+      "status": "OPEN_DECLARED_BINDING_MISMATCH",
+      "owner": "WP10/S0 composition",
+      "externalOwner": "WP00/contracts publication owner",
+      "cause": "Freeze10 vincula 38 artefatos; 37 hashes conferem. O host-context.ts do W20 possui SHA256 42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893, enquanto o freeze exige 6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772.",
+      "evidence": [
+        "metadata-W20-source.json#freeze",
+        "freeze-v1.json: blob b20cf5cecf22885dd8858f3659056a50ab88f485 confirmado no candidato e fonte f9990ecc7ade0d64122633d51258ddafe2c93802"
+      ],
+      "requiredClosure": "S0/owner devem publicar vínculo correto e qualificá-lo contra o candidato final. Manter o teste/freeze estrangeiro estritos e arquivar a divergência; não aceitar 37/38 como verde."
+    },
+    {
+      "id": "R3-W18-REVIEW-MOUNT-01",
+      "priority": "P1",
+      "mandatory": true,
+      "status": "SOURCE_RECHECK_ADDRESSED_HOSTED_PROOF_PENDING",
+      "owner": "WP10",
+      "externalOwner": null,
+      "cause": "O gap anterior de prova residente recebeu factory real e teste por mesma montagem no W19; o W19 teve falha de writer aninhado. W20 corrige o ramo readSourceFences dentro do C08 e oferece contraprovas usando o provider real. Não houve test-ci W20 para demonstrar o comportamento corrigido.",
+      "evidence": [
+        "review-resident-readers.ts + host-context.ts resident wiring",
+        "source-fence-read.ts; source-fence-read.test.ts; ramo readSourceFences em business-services.ts",
+        "teste de grupo residente conta transactionAll e exige nested writers zero; fonte lida sem executar"
+      ],
+      "requiredClosure": "No sucessor exato, executar a montagem residente real e as contraprovas de mutação/version/body/C08/Request/lease sem habilitar cache de readers externos. Não substituir por cache local ou falso authorize.",
+      "historyQualification": "Não se afirma novo HTTP 409 ou falha runtime no W20. A falha W19 foi informada pelo root; relatório W18 somente apontava gap de prova."
+    },
+    {
+      "id": "R3-W20-NATIVE-AND-JOURNEYS-05",
+      "priority": "P1",
+      "mandatory": true,
+      "status": "PROOF_AND_OWNER_DEPENDENCIES_PENDING",
+      "owner": "WP10; S0 integration",
+      "externalOwner": [
+        "C07 governed native Task/knowledge provider owners",
+        "Native/MCP/Atlas providers for live acceptance"
+      ],
+      "cause": "A nova publicação instalada C07 é readonly e recusa knowledge explicitamente; não fornece Task governada nem provas nativas/globais. G03 usa bridge instalado e fences reais na fonte, mas falta contraprova observada da jornada não vazia C17 pelo host completo. Lifecycle de falha/stale está ligado na produção, porém fixtures/tipos bloqueiam a execução atual.",
+      "evidence": [
+        "routine-installed-publication.ts; routine-publication.ts; host-context.ts; README.md",
+        "analysis-run-context.ts; analysis-lifecycle-context.test.ts",
+        "work-signals.ts; work-destinations.ts; work-http.ts; work-bridge.test.ts inspected scope"
+      ],
+      "requiredClosure": "Recheck do sucessor com CI cirúrgico hospedado atual e três pareceres independentes. Provas de runtime/Task/MCP e critérios nativos continuam pendentes dos owners; epic global somente depois do bundle total. Nenhuma prova estática ou fixture substitui aceite real."
+    }
+  ],
+  "limits": [
+    "Revisão direcionada: inventário distingue leitura completa, delta, trechos e inspeção mecânica. Não se afirma auditoria semântica integral de 16274 blobs.",
+    "Não executei produto, imports, testes, typecheck, build ou browser local; hashes/JSON/ZIP são processamento de dados.",
+    "Pacote source review bound tem campos CI/revisões vazios deliberadamente; este relatório acrescenta somente observações reais e não muda o pacote nem os critérios.",
+    "Não concede aceite nativo/global, aprovação dos três revisores ou integração por S0.",
+    "Mudanças do sucessor mencionadas pelo root ainda não pertencem ao SHA W20 e não encerram findings deste relatório.",
+    "Não se reutiliza PASS de W16/W17/W18/W19 nem é inferida falha HTTP W20 sem execução."
+  ],
+  "requiredNext": [
+    "Corrigir causas próprias e revisar novo SHA/tree imutável.",
+    "Compor correções estrangeiras publicadas e revalidar pins/freeze com owners.",
+    "Executar check e seleções test-ci cirúrgicas do sucessor com W/S/run/job/artifact e contraprovas de authority/persistence.",
+    "Obter três pareceres independentes atuais; S0 revisa e integra, sem merge/deploy por R3."
+  ]
+}

@@ -90,7 +90,7 @@ export function createSfPortfolioReconciliationServices(input: {
           ? { status: "ok", value: structuredClone(value) } : { status: "unavailable", reason: "portfolio-reconciliation-candidate-changed" }
       }))
       const failure = resolved.find((result) => result.status !== "ok")
-      if (failure && failure.status !== "ok") return failure
+      if (failure) return failure
       const all = resolved.flatMap((result) => result.status === "ok" ? [result.value] : [])
       const candidates = selectedCandidates(bindingValue, stored, all, request.combinationId)
       if (!candidates) return { status: "unavailable", reason: "portfolio-reconciliation-combination-unbound" }

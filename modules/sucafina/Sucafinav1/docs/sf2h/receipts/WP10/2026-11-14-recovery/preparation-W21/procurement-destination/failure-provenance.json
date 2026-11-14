@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "sourceTree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+  "runId": 43601767154,
+  "jobId": 132467830629,
+  "snapshotCommit": "746652850ccfc46c6ae5c9987c129daedcf12799",
+  "snapshotTree": "3e7d96ac62aea9b428eb268b9ed056ea6ef5be35",
+  "conclusion": "failure",
+  "terminalPath": "evidence/W20/normalized/check/terminal.json",
+  "log": {
+    "path": "evidence/W20/check-job-132467830629.raw.txt",
+    "bytes": 95279,
+    "sha256": "775bd4bbc4c858a65b02a74bf8cc9ddc54df41f88830408e3d3111f5a6d7d64a",
+    "git_blob_sha1": "18a864f0dc6997493c98ea8e749570273c4261fe",
+    "characters": 95277,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "finding": {
+    "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+    "line": 95,
+    "code": "TS2339",
+    "message": "Property resolveRequestSource does not exist on createProcurementSourceResolver result."
+  },
+  "reusePolicy": "Evidence is W20 failure provenance only; not a W21 validation result."
+}

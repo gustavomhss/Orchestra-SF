@@ -566,6 +566,35 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return () => { if (pagePeriods.get(call) === selected) pagePeriods.delete(call) }
     },
   })
+  // A destination supplies context only for this exact UI invocation. The real
+  // collection/source readers still prove the selection, period and record.
+  const withProcurementWorkPeriod = async <T>(call: TrustedDomainContext, payload: { selection: WorkListRequest; actionRef: string },
+    work: () => Promise<PortResult<T>>, source?: { parent: TrustedDomainContext; requestRef: string; period: Period }): Promise<PortResult<T>> => {
+    const denied = (): PortResult<never> => ({ status: "denied", reason: "work-destination-authority-changed" })
+    const parent = source?.parent ?? call, period = source?.period ?? payload.selection.period
+    if (call.kind !== "ui" || parent.kind !== "ui" || !isSfPeriod(period) || !isSfPeriod(payload.selection.period) ||
+      digestSfValue(period) !== digestSfValue(payload.selection.period) || pagePeriods.has(call) || source && parent === call) return denied()
+    const request = host.requestFor(call)
+    const parentPeriod = source ? pagePeriods.get(parent) : undefined
+    const payloadDigest = digestSfValue(payload), binding = digestSfValue([call.binding, parent.binding])
+    const sourceDigest = source && digestSfValue({ requestRef: source.requestRef, period: source.period })
+    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+    const current = () => !!request && !request.signal.aborted && host.requestFor(call) === request && host.requestFor(parent) === request &&
+      digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest &&
+      digestSfValue([call.binding, parent.binding]) === binding && key(call) === key(parent) && digestSfValue(payload) === payloadDigest &&
+      (!source || !!parentPeriod && parentPeriod.expiresAt > Date.now() && pagePeriods.get(parent) === parentPeriod &&
+        digestSfValue(parentPeriod.period) === digestSfValue(period) && sourceDigest === digestSfValue({ requestRef: source.requestRef, period: source.period }) &&
+        input.authority.ui.matchesIntent(call, "sf_request_read", digestSfValue({ requestRef: source.requestRef })))
+    const authorized = async () => current() && await input.authority.human.authorize(parent, "collaboration.work.destination", payload) &&
+      await host.revalidate(call) && current()
+    if (!await authorized() || pagePeriods.has(call)) return denied()
+    const selected = { period: Object.freeze(structuredClone(period)), expiresAt: Date.now() + 5 * 60_000 }
+    pagePeriods.set(call, selected)
+    try {
+      const result = await work()
+      return await authorized() && pagePeriods.get(call) === selected && selected.expiresAt > Date.now() ? result : denied()
+    } finally { if (pagePeriods.get(call) === selected) pagePeriods.delete(call) }
+  }
   const forecastInputs = { prepare: async (call: TrustedDomainContext, request: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => {
     const wanted = structuredClone(request)
     if (call.kind !== "ui" || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", digestSfValue(wanted)) || !await host.revalidate(call))
@@ -642,7 +671,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     },
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
-    projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain,
+    projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
     bindWorkBridge: (bridge: WorkBridge) => {
       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")
       workBridge.current = Object.freeze({ ...bridge })

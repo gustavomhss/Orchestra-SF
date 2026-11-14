@@ -1,0 +1,24 @@
+$ tsgo --noEmit --project "test/product/wp10/tsconfig.json"
+../../../apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts(93,22): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+../../../apps/cli/src/sucafina-product/work-destinations.ts(95,52): error TS2339: Property 'resolveRequestSource' does not exist on type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.
+test/product/wp10/integration/analysis-lifecycle-context.test.ts(90,121): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.
+  Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.
+    Types of property 'kind' are incompatible.
+      Type '"native"' is not assignable to type '"ui"'.
+test/product/wp10/integration/portfolio-reconciliation.test.ts(166,47): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'PortfolioCombination' is not assignable to parameter of type '(PortfolioCombinationBase & { eligibility: "eligible-complete"; comparisonStatus: "complete"; }) | (PortfolioCombinationBase & { ...; })'.
+      Type 'PortfolioCombinationBase & { eligibility: "unavailable"; comparisonStatus: "conditioned" | "incompatible" | "unavailable"; }' is not assignable to type '(PortfolioCombinationBase & { eligibility: "eligible-complete"; comparisonStatus: "complete"; }) | (PortfolioCombinationBase & { ...; })'.
+        Type 'PortfolioCombinationBase & { eligibility: "unavailable"; comparisonStatus: "conditioned" | "incompatible" | "unavailable"; }' is not assignable to type 'PortfolioCombinationBase & { eligibility: "conditioned"; comparisonStatus: "complete" | "conditioned" | "incompatible" | "unavailable"; }'.
+          Type 'PortfolioCombinationBase & { eligibility: "unavailable"; comparisonStatus: "conditioned" | "incompatible" | "unavailable"; }' is not assignable to type '{ eligibility: "conditioned"; comparisonStatus: "complete" | "conditioned" | "incompatible" | "unavailable"; }'.
+            Types of property 'eligibility' are incompatible.
+              Type '"unavailable"' is not assignable to type '"conditioned"'.
+test/product/wp10/native-host/routine-installed-publication.test.ts(160,19): error TS2339: Property 'installed' does not exist on type 'never'.
+test/product/wp10/native-host/routine-installed-publication.test.ts(161,25): error TS2339: Property 'host' does not exist on type 'never'.
+test/product/wp10/native-host/routine-installed-publication.test.ts(161,49): error TS2339: Property 'ui' does not exist on type 'never'.
+test/product/wp10/native-host/routine-installed-publication.test.ts(163,66): error TS2339: Property 'host' does not exist on type 'never'.
+test/product/wp10/native-host/routine-installed-publication.test.ts(293,51): error TS2345: Argument of type '<A, E>(effect: Effect<A, E, never>, options?: RunOptions | undefined) => Promise<A>' is not assignable to parameter of type '(_: Effect<A, unknown, Service | Service>) => Promise<A>'.
+  Types of parameters 'effect' and '_' are incompatible.
+    Type 'Effect<A, unknown, Service | Service>' is not assignable to type 'Effect<A, unknown, never>'.
+      Type 'Service | Service' is not assignable to type 'never'.
+        Type 'Service' is not assignable to type 'never'.

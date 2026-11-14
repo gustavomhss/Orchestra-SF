@@ -1,0 +1,214 @@
+{
+  "schema": "wp10.normalized-hosted-ci.v4",
+  "kind": "check",
+  "label": "W20-check",
+  "productSha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "productTree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+  "snapshotSha": "746652850ccfc46c6ae5c9987c129daedcf12799",
+  "snapshotTree": "3e7d96ac62aea9b428eb268b9ed056ea6ef5be35",
+  "runId": 43601767154,
+  "jobId": 132467830629,
+  "runAttempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobConclusion": "failure",
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601767154",
+  "runStartedAt": "2026-11-14T13:50:23Z",
+  "runUpdatedAt": "2026-11-14T13:52:48Z",
+  "envelopeOnlyDiff": [
+    {
+      "path": ".astra-wp10-check.json",
+      "status": "added",
+      "blob": "fa406c75974a0649af294116efe032ebf312dd1d"
+    }
+  ],
+  "request": {
+    "path": "evidence/W20/check-envelope.json",
+    "bytes": 119,
+    "sha256": "e0096ff37f8e238207ef2428cb134af7f4e11c8791f79be27b273bcc1efe0524",
+    "git_blob_sha1": "fa406c75974a0649af294116efe032ebf312dd1d"
+  },
+  "log": {
+    "path": "evidence/W20/check-job-132467830629.raw.txt",
+    "bytes": 95279,
+    "sha256": "775bd4bbc4c858a65b02a74bf8cc9ddc54df41f88830408e3d3111f5a6d7d64a",
+    "git_blob_sha1": "18a864f0dc6997493c98ea8e749570273c4261fe",
+    "characters": 95277,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout check envelope",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Validate exact product and envelope",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Checkout exact product",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Record product and guard base",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Typecheck Sucafina",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 7
+    },
+    {
+      "name": "Typecheck CLI consumers",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 8
+    },
+    {
+      "name": "Typecheck WP10 test consumers",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 9
+    },
+    {
+      "name": "Verify canonical Atlas generation",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 10
+    },
+    {
+      "name": "Typecheck Atlas boundary",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 11
+    },
+    {
+      "name": "Guard subprocess imports",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 12
+    },
+    {
+      "name": "Guard product against origin/dev",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 13
+    },
+    {
+      "name": "Upload exact-check evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 14
+    },
+    {
+      "name": "Post Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 26
+    },
+    {
+      "name": "Post Checkout exact product",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 27
+    },
+    {
+      "name": "Post Checkout check envelope",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 28
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 29
+    }
+  ],
+  "cleanupJobs": [],
+  "returnedArtifacts": [
+    {
+      "id": 14116487645,
+      "name": "astra-wp10-check-1",
+      "size_in_bytes": 6174,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14116487645",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14116487645/zip",
+      "expired": false,
+      "created_at": "2026-11-14T13:52:45Z",
+      "expires_at": "2026-11-28T13:52:44Z",
+      "updated_at": "2026-11-14T13:52:45Z",
+      "digest": "sha256:0d3f1b1948607536c6d88478d4a5268b413244af40130f9d10b1dd192caf3a5c",
+      "workflow_run": {
+        "id": 43601767154,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp10",
+        "head_sha": "746652850ccfc46c6ae5c9987c129daedcf12799"
+      }
+    }
+  ],
+  "terminalResultObserved": true,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "builderIndependentAcceptance": false,
+  "artifact": {
+    "id": 14116487645,
+    "path": "evidence/W20/check-artifact-14116487645.zip",
+    "bytes": 6174,
+    "sha256": "0d3f1b1948607536c6d88478d4a5268b413244af40130f9d10b1dd192caf3a5c",
+    "git_blob_sha1": "364b6a916729d7d19a3cebf17d65e420205b00eb",
+    "membersVerified": 11,
+    "duplicatedZipInPackage": false
+  },
+  "counts": {
+    "diagnosticOccurrences": 33,
+    "uniqueDiagnostics": 22,
+    "ownUniqueDiagnostics": 9,
+    "foreignUniqueDiagnostics": 13
+  },
+  "diagnosticsByLog": {
+    "sucafina-typecheck.log": {
+      "occurrences": 22,
+      "own": 9,
+      "foreign": 13
+    },
+    "cli-typecheck.log": {
+      "occurrences": 2,
+      "own": 2,
+      "foreign": 0
+    },
+    "wp10-test-typecheck.log": {
+      "occurrences": 9,
+      "own": 9,
+      "foreign": 0
+    },
+    "atlas-typecheck.log": {
+      "occurrences": 0,
+      "own": 0,
+      "foreign": 0
+    }
+  },
+  "scopeQualification": "Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred."
+}

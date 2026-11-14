@@ -87,7 +87,10 @@ test("lifecycle rejects current authority loss, released leases, changed case id
   const f = await analysisLifecycleFixture({ signal: abort.signal })
   try {
     await f.changeSource()
-    for (const revoke of [() => { f.active.access = false }, (call: TrustedDomainContext) => { f.authority.human.finish(call) }]) {
+    for (const revoke of [() => { f.active.access = false }, (call: TrustedDomainContext) => {
+      if (call.kind !== "ui") throw new Error("Lifecycle fixture must use its authentic UI admission")
+      f.authority.human.finish(call)
+    }]) {
       f.hooks.commit = async (call) => revoke(call)
       expect((await f.lifecycle.withContext(f.run.runRef, (call) => f.store.markStale(f.run.runRef, "late", call))).status).not.toBe("ok")
       f.active.access = true

@@ -139,6 +139,7 @@ test("real Portfolio HTTP reconciliation preserves the original C08 choice and r
     const analysis = combination.analysis
     if (!analysis) throw new Error("Portfolio did not preserve its real comparison")
     expect(combination).toMatchObject({ comparisonStatus: "conditioned", eligibility: "conditioned" })
+    if (combination.eligibility !== "conditioned") throw new Error("Actual incomplete-cost Portfolio must remain conditioned")
     expect(analysis.scenario.total).toBeNull()
     // Exercise the fresh N/N reader before choice advances the case. This uses
     // the canonical current binding and human selection, not the historical gate.
