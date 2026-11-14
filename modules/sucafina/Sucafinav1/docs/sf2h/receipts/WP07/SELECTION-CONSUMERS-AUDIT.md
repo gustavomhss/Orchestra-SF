@@ -1,5 +1,9 @@
 # WP07 selection and contribution consumers
 
+## Historical audit and current reconciliation
+
+This is the initial consumer audit. Its producer-availability table below is historical and is superseded by [PRODUCER-RECHECK.md](PRODUCER-RECHECK.md) and [C11-PRODUCER-RECHECK.md](C11-PRODUCER-RECHECK.md), which pin the current owner branches and exact blobs. In particular, WP02 now supplies Executive, IT Performance and partial IT Operations selections, and WP08 supplies the historical message reader; composition into the common host remains pending. Positive C06/C17 tests with real SQLite/source/collaboration implementations and positive C11-reader consumer tests with explicitly controlled envelopes were added after this initial audit. Their hosted runs and precise boundaries are recorded in those rechecks and [checks.json](checks.json). They do not provide native execution, historical editing or page-to-record continuity proof.
+
 ## Scope and proof boundary
 
 This audit uses `astra-wp07` seed `5be7b75f5540190deace73b620679db5a509bc4f` and the pinned WP07 pack. Changes are confined to the WP07 ownership. No local product test, merge or deployment was performed. The published candidate and hosted execution receipts are recorded in this directory. Authored coverage, hosted assertions, browser interaction and native integration are distinct evidence scopes; the criterion matrix and run ledgers identify the result of each check.

@@ -1,0 +1,75 @@
+{
+  "schema": "sf-wp07-hosted-test-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "historical_attempt": 10,
+  "is_final_candidate": false,
+  "product_sha": "46781943bf93bad698233b995354d15c90c4821c",
+  "product_tree": "3e3fd58e32f9c7c4b34a8a1ebab07bf94ebbdb75",
+  "ci_snapshot_sha": "69a18bb37a3b9158f42a841eb64fd8f3d5536346",
+  "ci_snapshot_tree": "b2aabacdd7c8624880b7bc4ccec21fe77fed8b4c",
+  "run_id": "43534944664",
+  "job_id": "132261552168",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534944664",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534944664/job/132261552168",
+  "overall_status": "FAIL",
+  "process_exit_code": 1,
+  "counts": {
+    "passed": 1,
+    "failed": 1,
+    "tests": 2,
+    "files": 2,
+    "assertions": null
+  },
+  "log": {
+    "source": "wp07-context/test-10.log",
+    "sha256": "53389a5026a01769252e618625714b499e3e6b38ddc22505c484d111e8a8ebc0",
+    "lines": 986,
+    "bytes": 79554,
+    "characters": 79552,
+    "materialization_correction": {
+      "reason": "Removed only the extra LF introduced when copying the MCP raw text to disk; exact raw character count verified by root.",
+      "superseded_extra_lf_sha256": "b8f864fa292e88fcf6eb6546a02d62a3569faa420a4779a57a36f44eec2d7786"
+    }
+  },
+  "omni_control": {
+    "status": "NOT_APPLICABLE_VALIDATED",
+    "nonce": "ead4ab2beebcd151eb3709da076adbdd",
+    "canonical_validation": {
+      "attempt": 10,
+      "valid": true,
+      "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "nonce": "ead4ab2beebcd151eb3709da076adbdd"
+    },
+    "scope": "Focused run made no omni spawn/delegation; not native execution evidence."
+  },
+  "identity_scope": "W/S/tree mapping supplied by root publisher; S independently appears in the retained hosted log. Immutable request/snapshot proof is maintained by root in checks.json, not derived from mutable local ci-request files.",
+  "native_receipts": [],
+  "proof_policy": "Historical result only. This does not qualify a later candidate or change the 86 acceptance statuses. Persisted C11 records and semantic verifier remain explicit fixtures; C06/C17 producer tests do not supply edited message history or positive deleted-source continuity.",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "name": "Chromium preserves the annual agenda, recovers a lost response and removes revoked content",
+      "status": "FAIL",
+      "log_line": 922,
+      "duration_ms": 12839.55
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-contribution.test.ts",
+      "name": "Chromium reauthorizes contribution navigation and discards revoked or superseded results",
+      "status": "PASS",
+      "log_line": 953,
+      "duration_ms": 2328.31
+    }
+  ],
+  "annual_browser_performance_status": "BLOCKED_EXTERNAL",
+  "annual_failure": "Second annual preserve responded in approximately 5475 ms, exceeding the unchanged 5000 ms assertion/click boundary.",
+  "test_scopes": {
+    "Chromium reauthorizes contribution navigation and discards revoked or superseded results": "Real browser/view over an HTTP display/navigation fixture without runProvenance; not C11/native production."
+  },
+  "canonical_omni_validation": {
+    "attempt": 10,
+    "valid": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "nonce": "ead4ab2beebcd151eb3709da076adbdd"
+  }
+}
