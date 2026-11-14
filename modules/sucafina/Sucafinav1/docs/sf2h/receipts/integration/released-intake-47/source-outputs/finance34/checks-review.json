@@ -1,0 +1,297 @@
+{
+  "schema": "sf2h.finance-persistence-performance.checks-review.v1",
+  "mission": 34,
+  "reviewer": "ci_and_pack",
+  "reviewedAtUtc": "2026-11-14 21:54:22 UTC",
+  "selection": "K1",
+  "classification": "FAIL_INHERITED_BASELINE_NO_NEW_DIAGNOSTIC_IDENTITIES_OR_GUARD_FINDINGS",
+  "checkConclusion": "FAIL",
+  "auditConclusion": "PARENT_REPORTED_K1_COUNTS_AND_DIFFERENCES_INDEPENDENTLY_CONFIRMED",
+  "proofScope": "SOURCE_W1_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "W": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+  "tree": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4",
+  "run": {
+    "id": 43644855386,
+    "name": "Finance resume scoped checks",
+    "status": "completed",
+    "conclusion": "failure",
+    "head_branch": "astra-check-fresume",
+    "head_sha": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+    "head_commit": {
+      "id": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+      "tree_id": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4",
+      "message": "fix(sucafina): materialize unchanged SQLite snapshots from immutable plans",
+      "timestamp": "2026-11-14T21:44:43Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "path": ".github/workflows/astra-finance-resume-check.yml",
+    "event": "push",
+    "attempt": 1,
+    "created_at": "2026-11-14T21:49:43Z",
+    "updated_at": "2026-11-14T21:51:10Z",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644855386"
+  },
+  "job": {
+    "id": 132600234407,
+    "head_sha": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+    "run_id": 43644855386,
+    "status": "completed",
+    "conclusion": "failure",
+    "started_at": "2026-11-14T21:49:45Z",
+    "completed_at": "2026-11-14T21:51:09Z",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-11-14T21:49:45Z",
+        "completed_at": "2026-11-14T21:49:46Z"
+      },
+      {
+        "name": "Checkout exact product commit",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-11-14T21:49:46Z",
+        "completed_at": "2026-11-14T21:50:05Z"
+      },
+      {
+        "name": "Record product and guard base",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-11-14T21:50:05Z",
+        "completed_at": "2026-11-14T21:50:05Z"
+      },
+      {
+        "name": "Setup Bun",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-11-14T21:50:05Z",
+        "completed_at": "2026-11-14T21:50:36Z"
+      },
+      {
+        "name": "Typecheck Sucafina package",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 5,
+        "started_at": "2026-11-14T21:50:36Z",
+        "completed_at": "2026-11-14T21:50:55Z"
+      },
+      {
+        "name": "Guardrails against origin/dev",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 6,
+        "started_at": "2026-11-14T21:50:55Z",
+        "completed_at": "2026-11-14T21:51:06Z"
+      },
+      {
+        "name": "Upload exact check evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7,
+        "started_at": "2026-11-14T21:51:06Z",
+        "completed_at": "2026-11-14T21:51:07Z"
+      },
+      {
+        "name": "Post Setup Bun",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 13,
+        "started_at": "2026-11-14T21:51:07Z",
+        "completed_at": "2026-11-14T21:51:07Z"
+      },
+      {
+        "name": "Post Checkout exact product commit",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14,
+        "started_at": "2026-11-14T21:51:07Z",
+        "completed_at": "2026-11-14T21:51:08Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15,
+        "started_at": "2026-11-14T21:51:08Z",
+        "completed_at": "2026-11-14T21:51:08Z"
+      }
+    ]
+  },
+  "source": {
+    "productSha": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+    "productTree": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "recovery": "ec052c2c3bef96f492512f3d5f663919580f25c8"
+  },
+  "identityChecks": {
+    "run_head_matches_W1": true,
+    "job_head_matches_W1": true,
+    "logged_product_sha_matches_W1": true,
+    "logged_product_tree_matches_W1": true,
+    "all_jobs_terminal": true,
+    "workflow_blob_unchanged_from_baseline": true,
+    "guard_base_equal_to_baseline": true,
+    "merge_base_equal_to_baseline": true,
+    "recovery_equal_to_baseline": true,
+    "baseline_local_bytes_match_MCP_blob": true,
+    "normalized_diagnostic_multiset_equal_to_baseline": true,
+    "guards_findings_sequence_equal_to_baseline": true,
+    "wp06_text_variation_file_blob_unchanged": true
+  },
+  "baseline": {
+    "selection": "K2",
+    "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "tree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+    "runId": 43639846168,
+    "jobId": 132584756877,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639846168",
+    "conclusion": "failure",
+    "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/K2-result.json",
+    "localReceiptPath": "mission34/inputs/baseline-K2-result.json",
+    "gitBlob": "68494c4bccbf31ac57eed6493353c63fcdc71c57",
+    "sha256": "c7259b57bf868d54e5c15adcf3ee7dc5a930a57948d2ec444312befd8337a0d8",
+    "bytes": 67256,
+    "verifiedByMCPAt": "0b4c633809166ff7165ad8440c3c08b5d25c727d"
+  },
+  "typecheck": {
+    "conclusion": "FAIL",
+    "stepExitCode": 2,
+    "invocation": "bun typecheck",
+    "workingDirectory": "modules/sucafina",
+    "packageScript": "bun --cwd Sucafinav1 typecheck",
+    "innerScript": "tsgo --noEmit",
+    "packageBlob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+    "tsconfigBlob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+    "tsconfigInclude": [
+      "installation.ts",
+      "src/**/*.ts",
+      "test/**/*.ts",
+      "../porta/act.ts",
+      "runtime/**/*.ts",
+      "index.ts",
+      "local/**/*.ts"
+    ],
+    "runtimeAndMissionTestNamespaceIncluded": true,
+    "diagnosticCount": 115,
+    "baselineDiagnosticCount": 115,
+    "ownedDiagnosticCount": 0,
+    "inheritedDiagnosticIdentities": 115,
+    "newDiagnosticKeys": [],
+    "removedDiagnosticKeys": [],
+    "normalization": "Strip GitHub timestamps, ANSI color and ##[error] heading prefix; compare exact path, 1-based line, column and TS code as a multiset. No path, line or code adjustment was applied.",
+    "normalizedKeyMultisetSha256": "069540217d3633ed10472d5b28b7acd168353e2760230c665aa28ff5f985adda",
+    "messageDifferenceCount": 1,
+    "messageDifferences": [
+      {
+        "key": [
+          "test/product/wp06/imports/end-to-end.test.ts",
+          56,
+          72,
+          "TS2345"
+        ],
+        "before": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+        "after": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'."
+      }
+    ],
+    "messageDifferenceFileBlob": "a52f968be176a250436e89eb19f61ec7728cba5c",
+    "messageDifferenceDisposition": "The existing TS2345 diagnostic retains its location/code and file blob. Preserve the wording difference; this review does not assign its cause or claim byte-identical compiler output."
+  },
+  "guards": {
+    "conclusion": "FAIL",
+    "stepExitCode": 1,
+    "invocation": "bun run check:guards --base origin/dev",
+    "workingDirectory": "repository root",
+    "rules": 78,
+    "changedPaths": 1586,
+    "baselineChangedPaths": 1547,
+    "changedPathDelta": 39,
+    "gateCount": 43,
+    "warnCount": 15,
+    "engineErrors": 0,
+    "findingCount": 58,
+    "ownedFindingCount": 0,
+    "findingsEqualToBaselineInSameOrder": true,
+    "findingsCanonicalJsonSha256": "9fd04235fd92b15ba6dbc7a70dd3d47d082ecab2fd9a8416bd36fbb0773c6eea",
+    "newFindings": [],
+    "removedFindings": [],
+    "disposition": "All 43 gates and 15 warnings remain. No ignore, label, suppression, waiver, rule or workflow alteration was used by this review."
+  },
+  "ownedScope": {
+    "product": [
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "modules/sucafina/Sucafinav1/runtime/contract.ts"
+    ],
+    "tests": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/",
+    "receipts": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/"
+  },
+  "workflow": {
+    "path": ".github/workflows/astra-finance-resume-check.yml",
+    "blob": "e2dfcc92f92030f3d7849aa262e2f9d29cb4e4fb",
+    "branch": "astra-check-fresume",
+    "unchangedFromBaseline": true
+  },
+  "artifacts": [
+    {
+      "id": 14133940096,
+      "name": "finance-resume-checks-0b4c633809166ff7165ad8440c3c08b5d25c727d-1",
+      "size_in_bytes": 8190,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14133940096",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14133940096/zip",
+      "expired": false,
+      "created_at": "2026-11-14T21:51:07Z",
+      "expires_at": "2026-11-28T21:51:07Z",
+      "updated_at": "2026-11-14T21:51:07Z",
+      "digest": "sha256:074c98a1ad6e0cf95c7b4055668bcb6df3a1b80efddb5a4b47b871f4a302fda8",
+      "workflow_run": {
+        "id": 43644855386,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-fresume",
+        "head_sha": "0b4c633809166ff7165ad8440c3c08b5d25c727d"
+      }
+    }
+  ],
+  "log": {
+    "retrieval": "GitHub MCP github_fetch_workflow_job_logs",
+    "jobId": 132600234407,
+    "bytes": 142946,
+    "sha256": "a6a5a3a12274e2702f5b88e1c4f3d2d566528dc632a7b5e6b53311e373a95484",
+    "localScratchPath": "mission34/review/k1-job-log.txt"
+  },
+  "evidence": {
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644855386",
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644855386/job/132600234407",
+    "jobMetadataSource": "GitHub MCP GET /repos/gustavomhss/Orchestra-SF/actions/runs/43644855386/jobs",
+    "artifactPayloadDownloaded": false
+  },
+  "limits": [
+    "Global package typecheck and repository guards remain FAIL. Zero new diagnostics/findings is not a PASS and does not waive inherited errors.",
+    "This review concerns source W1 only. It does not qualify PR65/sf2-stack or the proposed composed patch.",
+    "Typecheck comparison covers diagnostic heading keys and their first-line messages against the baseline receipt; multiline explanatory expansions are not claimed byte-identical.",
+    "Absence of new diagnostic identities is evidence about this executed compiler run, not a proof that all runtime behavior is correct.",
+    "The artifact metadata/digest were retrieved, but the ZIP payload was not downloaded; comparison used the complete decoded MCP job log.",
+    "No godfile gate was executed here; file-size observations from static inspection remain separate.",
+    "No short-test or long-journey result is assessed in this review. FIN-IND-005 remains dependent on the original full journey.",
+    "The reviewer performed MCP reads and local parsing/hashing of existing evidence only: no test/typecheck/guard execution, product edit or remote write."
+  ],
+  "newTestsDispatched": false,
+  "localTestsExecuted": false,
+  "productEdits": false,
+  "remoteMutations": false,
+  "waiversOrSuppressions": false,
+  "globalRelease": false
+}

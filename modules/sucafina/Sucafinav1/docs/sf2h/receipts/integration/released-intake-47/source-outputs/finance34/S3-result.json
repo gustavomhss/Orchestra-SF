@@ -1,0 +1,1428 @@
+{
+  "schema": "sf2h.finance-persistence-performance.result.v1",
+  "mission": 34,
+  "stage": "S3_CAUSAL_SCOPE_PROBE",
+  "status": "PASS_NOT_CLOSURE",
+  "purpose": "Classify real root/nested persistence work before any second product change; no repeat of original failed long journey.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "branch": "finance-resume",
+    "commit": "17bab9f471a818be1631652d3ec0adcec00d52bf",
+    "tree": "42fd3ef9e92b3f6f8928810856684c060a8932d7",
+    "productBlob": "1eaf5b42230829466d29a82ac0d5361e98b1a64d",
+    "unchangedFromW1": true
+  },
+  "snapshot": {
+    "branch": "ci-run-linux-finance-persistence-17bab9f4-scope",
+    "commit": "c602dba542a6d4d862df53960930bb1ed4699b3d",
+    "tree": "d1eaaf9c4a56ec9d723be09c3cae41607b5871b5",
+    "onlyAdditionalPath": ".ci-run.json",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43646928826,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKKY9Hug",
+    "head_branch": "ci-run-linux-finance-persistence-17bab9f4-scope",
+    "head_sha": "c602dba542a6d4d862df53960930bb1ed4699b3d",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "test(sucafina): measure real root and nested SQLite observations",
+    "run_number": 659,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "workflow_id": 416464764,
+    "check_suite_id": 118176882445,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbg-QfDQ",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646928826",
+    "pull_requests": [],
+    "created_at": "2026-11-14T22:13:11Z",
+    "updated_at": "2026-11-14T22:15:52Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T22:13:11Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118176882445",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "c602dba542a6d4d862df53960930bb1ed4699b3d",
+      "tree_id": "d1eaaf9c4a56ec9d723be09c3cae41607b5871b5",
+      "message": "test(sucafina): measure real root and nested SQLite observations",
+      "timestamp": "2026-11-14T22:13:06Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "jobs": {
+    "total_count": 2,
+    "jobs": [
+      {
+        "id": 132606687358,
+        "run_id": 43646928826,
+        "workflow_name": "test-ci",
+        "head_branch": "ci-run-linux-finance-persistence-17bab9f4-scope",
+        "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVsSYps8AAAAe3_l4fg",
+        "head_sha": "c602dba542a6d4d862df53960930bb1ed4699b3d",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132606687358",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646928826/job/132606687358",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-14T22:13:12Z",
+        "started_at": "2026-11-14T22:13:14Z",
+        "completed_at": "2026-11-14T22:15:46Z",
+        "name": "test (ubuntu-24.04)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-14T22:13:15Z",
+            "completed_at": "2026-11-14T22:13:15Z"
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-14T22:13:15Z",
+            "completed_at": "2026-11-14T22:13:21Z"
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3,
+            "started_at": "2026-11-14T22:13:21Z",
+            "completed_at": "2026-11-14T22:13:21Z"
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4,
+            "started_at": "2026-11-14T22:13:21Z",
+            "completed_at": "2026-11-14T22:13:21Z"
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-14T22:13:21Z",
+            "completed_at": "2026-11-14T22:13:26Z"
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-14T22:13:26Z",
+            "completed_at": "2026-11-14T22:13:26Z"
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7,
+            "started_at": "2026-11-14T22:13:26Z",
+            "completed_at": "2026-11-14T22:13:26Z"
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-14T22:13:26Z",
+            "completed_at": "2026-11-14T22:14:10Z"
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-14T22:14:10Z",
+            "completed_at": "2026-11-14T22:14:11Z"
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10,
+            "started_at": "2026-11-14T22:14:11Z",
+            "completed_at": "2026-11-14T22:14:11Z"
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11,
+            "started_at": "2026-11-14T22:14:11Z",
+            "completed_at": "2026-11-14T22:14:11Z"
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-11-14T22:14:11Z",
+            "completed_at": "2026-11-14T22:14:21Z"
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13,
+            "started_at": "2026-11-14T22:14:21Z",
+            "completed_at": "2026-11-14T22:14:21Z"
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14,
+            "started_at": "2026-11-14T22:14:21Z",
+            "completed_at": "2026-11-14T22:14:21Z"
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-11-14T22:14:21Z",
+            "completed_at": "2026-11-14T22:14:21Z"
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-11-14T22:14:21Z",
+            "completed_at": "2026-11-14T22:14:21Z"
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17,
+            "started_at": "2026-11-14T22:14:21Z",
+            "completed_at": "2026-11-14T22:14:53Z"
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18,
+            "started_at": "2026-11-14T22:14:53Z",
+            "completed_at": "2026-11-14T22:14:53Z"
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19,
+            "started_at": "2026-11-14T22:14:53Z",
+            "completed_at": "2026-11-14T22:14:53Z"
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20,
+            "started_at": "2026-11-14T22:14:53Z",
+            "completed_at": "2026-11-14T22:15:43Z"
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 21,
+            "started_at": "2026-11-14T22:15:43Z",
+            "completed_at": "2026-11-14T22:15:43Z"
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22,
+            "started_at": "2026-11-14T22:15:43Z",
+            "completed_at": "2026-11-14T22:15:43Z"
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 42,
+            "started_at": "2026-11-14T22:15:43Z",
+            "completed_at": "2026-11-14T22:15:43Z"
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 43,
+            "started_at": "2026-11-14T22:15:43Z",
+            "completed_at": "2026-11-14T22:15:43Z"
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 44,
+            "started_at": "2026-11-14T22:15:43Z",
+            "completed_at": "2026-11-14T22:15:43Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 45,
+            "started_at": "2026-11-14T22:15:43Z",
+            "completed_at": "2026-11-14T22:15:43Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132606687358",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "runner_id": 1000058983,
+        "runner_name": "GitHub Actions 1000058983",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 132607382586,
+        "run_id": 43646928826,
+        "workflow_name": "test-ci",
+        "head_branch": "ci-run-linux-finance-persistence-17bab9f4-scope",
+        "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43646928826",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVsSYps8AAAAe4AQUOg",
+        "head_sha": "c602dba542a6d4d862df53960930bb1ed4699b3d",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132607382586",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646928826/job/132607382586",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-14T22:15:46Z",
+        "started_at": "2026-11-14T22:15:48Z",
+        "completed_at": "2026-11-14T22:15:51Z",
+        "name": "cleanup",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-14T22:15:49Z",
+            "completed_at": "2026-11-14T22:15:49Z"
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-14T22:15:49Z",
+            "completed_at": "2026-11-14T22:15:50Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-14T22:15:50Z",
+            "completed_at": "2026-11-14T22:15:50Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132607382586",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "runner_id": 1000058986,
+        "runner_name": "GitHub Actions 1000058986",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      }
+    ]
+  },
+  "artifacts": {
+    "artifacts": []
+  },
+  "environment": {
+    "runner": "ubuntu-24.04",
+    "bun": "1.3.14 (0d9b296a)",
+    "envOverrides": {},
+    "omniControlNonce": "9f8108a550d8c1432cf4dbf0636214d2",
+    "nativeOmniProof": false
+  },
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "expectCalls": 38,
+    "testMilliseconds": 49079.14,
+    "totalSeconds": 49.29
+  },
+  "representativeState": {
+    "stateBytes": 1311209,
+    "payloadCharacters": 2213251,
+    "caseBytes": 115925,
+    "cases": 1,
+    "results": 12,
+    "transactions": 20,
+    "surfaces": [
+      {
+        "surface": "dashboard",
+        "payloadCharacters": 2213251
+      },
+      {
+        "surface": "planner",
+        "payloadCharacters": 10375
+      },
+      {
+        "surface": "procurement",
+        "payloadCharacters": 162
+      }
+    ]
+  },
+  "observations": {
+    "fixtureCreateMs": 6999.588559,
+    "observations": [
+      {
+        "label": "omitted.evaluate",
+        "elapsedMs": 16347.905147,
+        "outcome": "resolved",
+        "maximumDepth": 3,
+        "root": {
+          "dashboard": {
+            "calls": 1256,
+            "callbacks": 1256,
+            "completed": 1256,
+            "rejected": 0,
+            "inclusiveElapsedMs": 8266.224863000018
+          },
+          "planner": {
+            "calls": 449,
+            "callbacks": 449,
+            "completed": 449,
+            "rejected": 0,
+            "inclusiveElapsedMs": 5265.857881000005
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 1856,
+            "callbacks": 1856,
+            "completed": 1856,
+            "rejected": 0,
+            "inclusiveElapsedMs": 4582.658667
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 5117,
+            "characters": 932987132,
+            "taggedCalls": 4,
+            "taggedCharacters": 3628640
+          },
+          "nested": {
+            "calls": 1856,
+            "characters": 6238016,
+            "taggedCalls": 1856,
+            "taggedCharacters": 6238016
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "choice.record",
+        "elapsedMs": 5279.696997999999,
+        "outcome": "resolved",
+        "maximumDepth": 3,
+        "root": {
+          "dashboard": {
+            "calls": 342,
+            "callbacks": 342,
+            "completed": 342,
+            "rejected": 0,
+            "inclusiveElapsedMs": 2064.9917849999692
+          },
+          "planner": {
+            "calls": 154,
+            "callbacks": 154,
+            "completed": 154,
+            "rejected": 0,
+            "inclusiveElapsedMs": 1790.3773600000095
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 51.28566200000205
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 672,
+            "callbacks": 672,
+            "completed": 672,
+            "rejected": 0,
+            "inclusiveElapsedMs": 1627.8678659999605
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 1494,
+            "characters": 277986974,
+            "taggedCalls": 4,
+            "taggedCharacters": 2392713
+          },
+          "nested": {
+            "calls": 672,
+            "characters": 2258592,
+            "taggedCalls": 672,
+            "taggedCharacters": 2258592
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "training.confirm",
+        "elapsedMs": 17619.570847000003,
+        "outcome": "resolved",
+        "maximumDepth": 2,
+        "root": {
+          "dashboard": {
+            "calls": 557,
+            "callbacks": 557,
+            "completed": 557,
+            "rejected": 0,
+            "inclusiveElapsedMs": 7549.283612999949
+          },
+          "planner": {
+            "calls": 821,
+            "callbacks": 821,
+            "completed": 821,
+            "rejected": 0,
+            "inclusiveElapsedMs": 5988.293198999949
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 5,
+            "callbacks": 5,
+            "completed": 5,
+            "rejected": 0,
+            "inclusiveElapsedMs": 368.85718799999813
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 768,
+            "callbacks": 768,
+            "completed": 768,
+            "rejected": 0,
+            "inclusiveElapsedMs": 579.4432419999393
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 5549,
+            "characters": 1759085671,
+            "taggedCalls": 28,
+            "taggedCharacters": 31526831
+          },
+          "nested": {
+            "calls": 768,
+            "characters": 7968000,
+            "taggedCalls": 768,
+            "taggedCharacters": 7968000
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "confirmed.issuer.resolve",
+        "elapsedMs": 1353.8751269999993,
+        "outcome": "resolved",
+        "maximumDepth": 2,
+        "root": {
+          "dashboard": {
+            "calls": 41,
+            "callbacks": 41,
+            "completed": 41,
+            "rejected": 0,
+            "inclusiveElapsedMs": 520.8411140000317
+          },
+          "planner": {
+            "calls": 68,
+            "callbacks": 68,
+            "completed": 68,
+            "rejected": 0,
+            "inclusiveElapsedMs": 520.9687370000102
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 72,
+            "callbacks": 72,
+            "completed": 72,
+            "rejected": 0,
+            "inclusiveElapsedMs": 57.19815600002039
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 436,
+            "characters": 143365084,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 72,
+            "characters": 747000,
+            "taggedCalls": 72,
+            "taggedCharacters": 747000
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "confirmed.witness.15000",
+        "elapsedMs": 1340.1648350000032,
+        "outcome": "resolved",
+        "maximumDepth": 2,
+        "root": {
+          "dashboard": {
+            "calls": 54,
+            "callbacks": 54,
+            "completed": 54,
+            "rejected": 0,
+            "inclusiveElapsedMs": 760.7864750000226
+          },
+          "planner": {
+            "calls": 56,
+            "callbacks": 56,
+            "completed": 56,
+            "rejected": 0,
+            "inclusiveElapsedMs": 402.0795849999704
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 48,
+            "callbacks": 48,
+            "completed": 48,
+            "rejected": 0,
+            "inclusiveElapsedMs": 38.66622100000677
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 440,
+            "characters": 144680360,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 48,
+            "characters": 498000,
+            "taggedCalls": 48,
+            "taggedCharacters": 498000
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "history.read",
+        "elapsedMs": 15.343325999994704,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 14.516231000001426
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 4,
+            "characters": 1315276,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "isolation.history.read",
+        "elapsedMs": 17.429299000003084,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 16.610241000002134
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 4,
+            "characters": 1315276,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "isolation.snapshot.first",
+        "elapsedMs": 6.116068000002997,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 6.026340999997046
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 4,
+            "characters": 1315276,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "isolation.snapshot.fresh",
+        "elapsedMs": 6.048482000005606,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 6.03981599999679
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 4,
+            "characters": 1315276,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      }
+    ],
+    "interpretation": "Ancestry follows real store calls across awaits. Surface labels name requested transaction surfaces; all means transactionAll. Timings are inclusive and may overlap. JSON sizes count UTF-16 code units; payloads are never retained by the observer. Counts classify observed work, not expected product behavior.",
+    "disclosure": "Unchanged real Finance/C08/SQLite fixture and original omitted.evaluate preparation, with synthetic grants. The confirmed operation is issuer.resolve plus witness 15000 only. This does not rerun confirmed sensitivity, witness 15001, replay, restart or access and cannot close FIN-IND-005."
+  },
+  "causalFinding": {
+    "confirmedOperations": [
+      "confirmed.issuer.resolve",
+      "confirmed.witness.15000"
+    ],
+    "rootPlannerCalls": 124,
+    "rootDashboardCalls": 95,
+    "nestedDashboardCalls": 0,
+    "currentSnapshotsCalls": 0,
+    "rootTaggedParses": 0,
+    "rootNativeParsedCharacters": 288045444,
+    "interpretation": "Warm Planner roots materialized the unrequested large Dashboard from already validated immutable payloads. Admission still read every SQL row. This motivates deferring graph materialization per root/surface, while retaining immediate decoding and validation for changed payloads.",
+    "shortCannotClose": "Confirmed sensitivity, witness15001, replay, restart and access are not exercised by this probe. Original long journey remains required."
+  },
+  "executionPolicy": {
+    "localTests": false,
+    "localServer": false,
+    "dispatcher": "existing Linux .ci-run.json snapshot protocol",
+    "deduplicated": true,
+    "oneActiveMissionRunAtATime": true,
+    "fixturesOrOraclesModified": false
+  }
+}

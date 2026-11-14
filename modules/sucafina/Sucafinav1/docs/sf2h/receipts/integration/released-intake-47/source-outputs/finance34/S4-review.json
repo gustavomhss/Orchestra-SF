@@ -1,0 +1,1020 @@
+{
+  "reviewer_role": "author-of-tests",
+  "review_title": "S4 evidence review and original-journey recommendation",
+  "independence": "The reviewer authored the short proof tests and did not implement the product delta. This is not an independent cold-author/E17/G4 acceptance claim.",
+  "verdict": "RECOMMEND_ONE_ORIGINAL_JOURNEY",
+  "verdict_explanation": "The unchanged real causal probe preserves its workload, financial assertions, callbacks, isolation and SQL bytes while deterministic parse work falls materially. All 25 mission34 proof tests pass, including seven demand-materialization counterproofs. No new failure is observed. The complete S4 selection remains FAIL because its sole failure exactly matches B1 on the preimage.",
+  "FIN_IND_005_status": "OPEN_PENDING_ORIGINAL_JOURNEY",
+  "authority_limits": "This recommends the already requested original journey through the existing dispatcher. It is not merge, deploy, publication or closure approval, and does not replace the separate AGENTS typecheck/guard evidence.",
+  "sources": {
+    "s4_complete_log": "/workspace/scratch/3648787f3772/mission34/inputs/S4-job.txt",
+    "s4_log_read_in_full": true,
+    "s3_comparison_log": "/workspace/scratch/3648787f3772/mission34/inputs/S3-job.txt",
+    "b1_failure_control_log": "/workspace/scratch/3648787f3772/mission34/inputs/B1-job.txt",
+    "s4_run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006",
+    "s4_job": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006/job/132609151438",
+    "s4_cleanup_job": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006/job/132609955236",
+    "s3_job": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646928826/job/132606687358",
+    "b1_job": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644706454/job/132599773810",
+    "immutable_repository_reads": "GitHub MCP GET reads verified the run, jobs, snapshot parent, scope-profile blob and W2/W3/S4 diffs."
+  },
+  "source_identity": {
+    "w2_head": "17bab9f471a818be1631652d3ec0adcec00d52bf",
+    "w3_head": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "w3_tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "w3_local_store_blob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+    "s4_snapshot": "ab67e9059f194199fdd10652bb054d50d883914e",
+    "s4_snapshot_tree": "1cc4e371accada47a9ae4f319d487d57c71aedd9",
+    "s4_snapshot_parent": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "snapshot_diff": {
+      "label": "snapshot",
+      "status": "ahead",
+      "total_commits": 1,
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "sha": "66fd046d046705d6a7338d27922595057d3c7584",
+          "changes": 1
+        }
+      ]
+    },
+    "w2_to_w3_diff": {
+      "label": "delta",
+      "status": "ahead",
+      "total_commits": 1,
+      "files": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S3-result.json",
+          "status": "added",
+          "sha": "5e9feffbabc0f26ed44f22495268cc10320eb469",
+          "changes": 1428
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/implementation-02.json",
+          "status": "added",
+          "sha": "ddf7f88447f9fa30be5638c6a289be32b423476d",
+          "changes": 53
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "status": "modified",
+          "sha": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+          "changes": 33
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+          "status": "modified",
+          "sha": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+          "changes": 58
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+          "status": "added",
+          "sha": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+          "changes": 326
+        }
+      ]
+    },
+    "scope_profile_w2_w3_blob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+    "scope_profile_unchanged": true,
+    "product_write_boundary": "Only runtime/local-store.ts changes between W2 and W3; other changes are owned proof/receipt files. Snapshot adds only .ci-run.json."
+  },
+  "ci_outcome": {
+    "run_id": 43647736006,
+    "job_id": 132609151438,
+    "cleanup_job_id": 132609955236,
+    "workflow_conclusion": "failure",
+    "test_job_conclusion": "failure",
+    "cleanup_conclusion": "success",
+    "selected_result": "FAIL",
+    "test_exit_code": 1,
+    "total_tests": 124,
+    "files": 12,
+    "pass": 120,
+    "fail": 1,
+    "skip": 3,
+    "expect_calls": 1221,
+    "elapsed_seconds": 65.09,
+    "mission34_proofs": {
+      "pass": 25,
+      "fail": 0,
+      "skip": 0
+    },
+    "omni_control": "not applicable (focused: no declaring test ran); no omni spawn or delegated spawn was proved",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/local-store.test.ts",
+        "Sucafinav1/test/local-backups.test.ts",
+        "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+        "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "groups": [
+      {
+        "file": "Sucafinav1/test/local-store.test.ts",
+        "pass": 33,
+        "fail": 1,
+        "skip": 2
+      },
+      {
+        "file": "Sucafinav1/test/local-backups.test.ts",
+        "pass": 22,
+        "fail": 0,
+        "skip": 1
+      },
+      {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "pass": 18,
+        "fail": 0,
+        "skip": 0
+      }
+    ],
+    "skips": [
+      {
+        "file": "Sucafinav1/test/local-store.test.ts",
+        "status": "skip",
+        "test": "rejects foreign UID directory (requires root fixture privileges)"
+      },
+      {
+        "file": "Sucafinav1/test/local-store.test.ts",
+        "status": "skip",
+        "test": "rejects foreign UID database (requires root fixture privileges)"
+      },
+      {
+        "file": "Sucafinav1/test/local-backups.test.ts",
+        "status": "skip",
+        "test": "foreign-owned existing root rejects (requires root fixture privileges)"
+      }
+    ],
+    "skip_limit": "Foreign UID ownership checks remain unproved on this runner because their fixtures require root privileges.",
+    "inherited_failure": {
+      "test": "surface namespaces isolate identical blob keys and snapshots",
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "line": 276,
+      "disposition": "INHERITED_REPRODUCED_ON_PREIMAGE",
+      "mismatch": "Received snapshot includes sfBlobGenerations.document=1; expected object omits sfBlobGenerations. Blob bytes and other displayed state match.",
+      "control_run": 43644706454,
+      "control_job": 132599773810,
+      "control_snapshot": "36f5f7f5f44b848990d247f846bde4e49e496111",
+      "control_tree": "c47a7137f4c20bc282121bfc496fbc0a160ddf85",
+      "control_product_blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "unchanged_test_blob": "e1dbb391c53a56c3261554383356eb1c64ea77af",
+      "exact_mismatch_rechecked_from_B1_and_S4_logs": true,
+      "conclusion": "Retain the global FAIL label. This identical preimage failure is not evidence of a new lazy-materialization regression."
+    }
+  },
+  "causal_probe": {
+    "result": "PASS",
+    "test": "FIN-IND-005 real confirmed witness classifies SQLite root and nested materialization work",
+    "s3_state": {
+      "stateBytes": 1311209,
+      "payloadCharacters": 2213251,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 12,
+      "transactions": 20,
+      "surfaces": [
+        {
+          "surface": "dashboard",
+          "payloadCharacters": 2213251
+        },
+        {
+          "surface": "planner",
+          "payloadCharacters": 10375
+        },
+        {
+          "surface": "procurement",
+          "payloadCharacters": 162
+        }
+      ]
+    },
+    "s4_state": {
+      "stateBytes": 1311209,
+      "payloadCharacters": 2213251,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 12,
+      "transactions": 20,
+      "surfaces": [
+        {
+          "surface": "dashboard",
+          "payloadCharacters": 2213251
+        },
+        {
+          "surface": "planner",
+          "payloadCharacters": 10375
+        },
+        {
+          "surface": "procurement",
+          "payloadCharacters": 162
+        }
+      ]
+    },
+    "exact_state_shape_match": true,
+    "same_operation_identity_in_every_measured_phase": [
+      {
+        "label": "omitted.evaluate",
+        "same": true
+      },
+      {
+        "label": "choice.record",
+        "same": true
+      },
+      {
+        "label": "training.confirm",
+        "same": true
+      },
+      {
+        "label": "confirmed.issuer.resolve",
+        "same": true
+      },
+      {
+        "label": "confirmed.witness.15000",
+        "same": true
+      },
+      {
+        "label": "history.read",
+        "same": true
+      },
+      {
+        "label": "isolation.history.read",
+        "same": true
+      },
+      {
+        "label": "isolation.snapshot.first",
+        "same": true
+      },
+      {
+        "label": "isolation.snapshot.fresh",
+        "same": true
+      }
+    ],
+    "operation_identity_fields": [
+      "calls",
+      "callbacks",
+      "completed",
+      "rejected",
+      "outcome",
+      "maximumDepth",
+      "currentSnapshots"
+    ],
+    "preserved_assertions": [
+      "Omitted baseline subtotal 240000; selected subtotal 210000, total null and pending training coverage.",
+      "Original omitted sensitivity returns exact threshold 55000 and the original conditioned/missing-training conditions.",
+      "Original choice is persisted and its digest is unchanged when read again.",
+      "Confirmed selected result has subtotal/total 250000, complete coverage and training:11 amount 40000 USD with confirmed evidence.",
+      "Confirmed advantage is -10000, renewal-difference criterion is failed, and case identity/version assertions remain satisfied.",
+      "confirmed.issuer.resolve returns implementation:11 at 45000 USD.",
+      "confirmed.witness.15000 returns metric -20000, sample.total null and satisfies the original <= -20000 criterion.",
+      "Case remains reconsidering with one original choice, no prepared changes and no receipts.",
+      "Mutating returned history/snapshot objects does not affect a fresh read; actual SQLite snapshot rows remain byte-identical."
+    ],
+    "comparisons": [
+      {
+        "label": "confirmed.issuer.resolve",
+        "operationIdentityEqual": true,
+        "operations": {
+          "root": {
+            "dashboard": {
+              "calls": 41,
+              "callbacks": 41,
+              "completed": 41,
+              "rejected": 0
+            },
+            "planner": {
+              "calls": 68,
+              "callbacks": 68,
+              "completed": 68,
+              "rejected": 0
+            },
+            "procurement": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            },
+            "all": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            }
+          },
+          "nested": {
+            "dashboard": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            },
+            "planner": {
+              "calls": 72,
+              "callbacks": 72,
+              "completed": 72,
+              "rejected": 0
+            },
+            "procurement": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            },
+            "all": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            }
+          },
+          "outcome": "resolved",
+          "maximumDepth": 2,
+          "currentSnapshots": {
+            "insideTransaction": 0,
+            "outsideTransaction": 0
+          }
+        },
+        "rootCalls": {
+          "before": 436,
+          "after": 177,
+          "removed": 259,
+          "reductionPercent": 59.403669724770644
+        },
+        "rootCharacters": {
+          "before": 143365084,
+          "after": 54029613,
+          "removed": 89335471,
+          "reductionPercent": 62.31326938712637
+        },
+        "rootPlusNestedCalls": {
+          "before": 508,
+          "after": 249,
+          "removed": 259,
+          "reductionPercent": 50.98425196850393
+        },
+        "rootPlusNestedCharacters": {
+          "before": 144112084,
+          "after": 54776613,
+          "removed": 89335471,
+          "reductionPercent": 61.99027071178847
+        },
+        "nestedBefore": {
+          "calls": 72,
+          "characters": 747000,
+          "taggedCalls": 72,
+          "taggedCharacters": 747000
+        },
+        "nestedAfter": {
+          "calls": 72,
+          "characters": 747000,
+          "taggedCalls": 72,
+          "taggedCharacters": 747000
+        },
+        "outsideBefore": {
+          "calls": 0,
+          "characters": 0,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "outsideAfter": {
+          "calls": 0,
+          "characters": 0,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "elapsedMs": {
+          "before": 1353.8751269999993,
+          "after": 838.2360429999972,
+          "removed": 515.6390840000022,
+          "reductionPercent": 38.0861627277685
+        }
+      },
+      {
+        "label": "confirmed.witness.15000",
+        "operationIdentityEqual": true,
+        "operations": {
+          "root": {
+            "dashboard": {
+              "calls": 54,
+              "callbacks": 54,
+              "completed": 54,
+              "rejected": 0
+            },
+            "planner": {
+              "calls": 56,
+              "callbacks": 56,
+              "completed": 56,
+              "rejected": 0
+            },
+            "procurement": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            },
+            "all": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            }
+          },
+          "nested": {
+            "dashboard": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            },
+            "planner": {
+              "calls": 48,
+              "callbacks": 48,
+              "completed": 48,
+              "rejected": 0
+            },
+            "procurement": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            },
+            "all": {
+              "calls": 0,
+              "callbacks": 0,
+              "completed": 0,
+              "rejected": 0
+            }
+          },
+          "outcome": "resolved",
+          "maximumDepth": 2,
+          "currentSnapshots": {
+            "insideTransaction": 0,
+            "outsideTransaction": 0
+          }
+        },
+        "rootCalls": {
+          "before": 440,
+          "after": 166,
+          "removed": 274,
+          "reductionPercent": 62.27272727272727
+        },
+        "rootCharacters": {
+          "before": 144680360,
+          "after": 71029294,
+          "removed": 73651066,
+          "reductionPercent": 50.90605663408634
+        },
+        "rootPlusNestedCalls": {
+          "before": 488,
+          "after": 214,
+          "removed": 274,
+          "reductionPercent": 56.14754098360656
+        },
+        "rootPlusNestedCharacters": {
+          "before": 145178360,
+          "after": 71527294,
+          "removed": 73651066,
+          "reductionPercent": 50.731435456358646
+        },
+        "nestedBefore": {
+          "calls": 48,
+          "characters": 498000,
+          "taggedCalls": 48,
+          "taggedCharacters": 498000
+        },
+        "nestedAfter": {
+          "calls": 48,
+          "characters": 498000,
+          "taggedCalls": 48,
+          "taggedCharacters": 498000
+        },
+        "outsideBefore": {
+          "calls": 0,
+          "characters": 0,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "outsideAfter": {
+          "calls": 0,
+          "characters": 0,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "elapsedMs": {
+          "before": 1340.1648350000032,
+          "after": 908.6077269999951,
+          "removed": 431.55710800000816,
+          "reductionPercent": 32.20179314733378
+        }
+      }
+    ],
+    "two_confirmed_labels_totals": {
+      "rootCalls": {
+        "before": 876,
+        "after": 343,
+        "removed": 533,
+        "reductionPercent": 60.84474885844749
+      },
+      "rootCharacters": {
+        "before": 288045444,
+        "after": 125058907,
+        "removed": 162986537,
+        "reductionPercent": 56.583619145873385
+      },
+      "rootPlusNestedCalls": {
+        "before": 996,
+        "after": 463,
+        "removed": 533,
+        "reductionPercent": 53.5140562248996
+      },
+      "rootPlusNestedCharacters": {
+        "before": 289290444,
+        "after": 126303907,
+        "removed": 162986537,
+        "reductionPercent": 56.34010399596884
+      },
+      "elapsedMs": {
+        "before": 2694.0399620000026,
+        "after": 1746.8437699999922,
+        "removed": 947.1961920000103,
+        "reductionPercent": 35.15895106829932
+      }
+    },
+    "native_work_explanation": {
+      "dashboard": {
+        "native_parse_calls": 1,
+        "characters": 1311289,
+        "evidence": "Measured directly by each S4 history/snapshot isolation root and reproduced by both confirmed-phase equations."
+      },
+      "planner": {
+        "native_parse_calls": 2,
+        "characters": 3923,
+        "evidence": "Measured by the same persisted Planner payload in the profile control and reproduced by both confirmed-phase equations; includes the small undefined-fixup parse."
+      },
+      "procurement": {
+        "native_parse_calls": 1,
+        "characters": 64,
+        "evidence": "Residual from the unchanged eager three-surface total: 1315276 - 1311289 - 3923 = 64."
+      },
+      "old_eager_per_root": {
+        "calls": 4,
+        "characters": 1315276
+      },
+      "issuer": "41*1311289 + 68*3923 = 54029613; 41*1 + 68*2 = 177.",
+      "witness": "54*1311289 + 56*3923 = 71029294; 54*1 + 56*2 = 166.",
+      "unused_surface_work_removed": "124 Planner roots no longer build Dashboard graphs; 95 Dashboard roots omit Planner and all 219 roots omit unused Procurement.",
+      "nested_classification": "First demand can legitimately move a native parse into the nested instrumented region. In this actual run it did not: total nested calls, total characters, tagged calls and tagged characters all exactly match S3 (issuer 72/747000, witness 48/498000). Root+nested comparison is also reported.",
+      "previous_conditional_hypothesis": "The pre-log D=2/P=1 parse hypothesis was conditional, not an oracle. Actual measured decomposition is D=1/P=2, which explains 177/166 exactly.",
+      "result": "Reduction is not explained by fewer Finance operations, fewer callbacks, skipped authorization, changed persisted data or relocation of work outside the observed scopes.",
+      "units": "All parsed-character measures are UTF-16 code units, not UTF-8 bytes, heap usage or CPU cycles."
+    },
+    "timing_limit": "Elapsed times are one observation per causal operation on different CI runs, not a statistical speed guarantee. Work counts and exact result preservation are the causal evidence.",
+    "short_probe_limit": "This passes omitted sensitivity and a confirmed issuer/witness 15000 operation. It does not prove confirmed sensitivity completion, witness 15001, replay, real restart or the original access sequence.",
+    "sql_equality_scope": "Each run asserts exact SQLite snapshot bytes before and after the confirmed probe. Raw payloads are not emitted; cross-run raw byte equality is not asserted. The unchanged fixture, exact shape, operation counts and preserved financial assertions establish the comparable workload."
+  },
+  "representative_profile": {
+    "result": "PASS",
+    "test": "FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work",
+    "sizes": {
+      "stateBytes": 1241296,
+      "payloadBytes": 2094712,
+      "payloadCharacters": 2094712,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 10,
+      "transactions": 18,
+      "surfaces": [
+        {
+          "surface": "dashboard",
+          "payloadBytes": 2094712
+        },
+        {
+          "surface": "planner",
+          "payloadBytes": 10375
+        },
+        {
+          "surface": "procurement",
+          "payloadBytes": 162
+        }
+      ]
+    },
+    "original_four_modes": [
+      {
+        "mode": "decode",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "transaction",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 1241376,
+          "taggedParseCalls": 0,
+          "taggedCharacters": 0,
+          "objectAssemblies": 1,
+          "entryTuples": 0,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "currentSnapshots",
+        "counts": {
+          "parseCalls": 6,
+          "parsedCharacters": 2109236,
+          "taggedParseCalls": 3,
+          "taggedCharacters": 2105249,
+          "objectAssemblies": 7499,
+          "entryTuples": 36506,
+          "encodedObjectDescriptorReads": 7499
+        }
+      },
+      {
+        "mode": "nestedRead",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 7457
+        }
+      }
+    ],
+    "original_four_mode_timing_summary": [
+      {
+        "mode": "decode",
+        "samples": 6,
+        "medianMs": 14.831659999999829,
+        "minimumMs": 13.116539000002376,
+        "maximumMs": 15.982224999999744
+      },
+      {
+        "mode": "transaction",
+        "samples": 6,
+        "medianMs": 4.826873999998497,
+        "minimumMs": 4.604374000002281,
+        "maximumMs": 4.98337100000208
+      },
+      {
+        "mode": "currentSnapshots",
+        "samples": 6,
+        "medianMs": 32.99901950000276,
+        "minimumMs": 28.470015999999305,
+        "maximumMs": 35.4044619999986
+      },
+      {
+        "mode": "nestedRead",
+        "samples": 6,
+        "medianMs": 34.03603500000099,
+        "minimumMs": 28.285406000002695,
+        "maximumMs": 38.40870700000232
+      }
+    ],
+    "cold_warm": {
+      "cold": {
+        "parseCalls": 3,
+        "parsedCharacters": 2105249,
+        "taggedParseCalls": 3,
+        "taggedCharacters": 2105249,
+        "objectAssemblies": 7500,
+        "entryTuples": 36506,
+        "encodedObjectDescriptorReads": 0
+      },
+      "warm": {
+        "parseCalls": 1,
+        "parsedCharacters": 1241376,
+        "taggedParseCalls": 0,
+        "taggedCharacters": 0,
+        "objectAssemblies": 1,
+        "entryTuples": 0,
+        "encodedObjectDescriptorReads": 0
+      }
+    },
+    "surface_demand": {
+      "coldPlanner": {
+        "parseCalls": 3,
+        "parsedCharacters": 2105249,
+        "taggedParseCalls": 3,
+        "taggedCharacters": 2105249,
+        "objectAssemblies": 7500,
+        "entryTuples": 36506,
+        "encodedObjectDescriptorReads": 0
+      },
+      "warmPlanner": {
+        "parseCalls": 2,
+        "parsedCharacters": 3923,
+        "taggedParseCalls": 0,
+        "taggedCharacters": 0,
+        "objectAssemblies": 1,
+        "entryTuples": 0,
+        "encodedObjectDescriptorReads": 0
+      },
+      "eagerAll": {
+        "parseCalls": 4,
+        "parsedCharacters": 1245363,
+        "taggedParseCalls": 0,
+        "taggedCharacters": 0,
+        "objectAssemblies": 1,
+        "entryTuples": 3,
+        "encodedObjectDescriptorReads": 0
+      },
+      "timings": [
+        {
+          "mode": "planner",
+          "elapsedMs": 1.1848119999995106
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.366651999996975
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 10.105447000001732
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.120020000002114
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.924564000000828
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.744407999998657
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.812669999999343
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.5695080000004964
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.7172569999966072
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.811419999998179
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 5.964673000002222
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 0.9934889999931329
+        }
+      ]
+    },
+    "surface_demand_timing_medians_ms": {
+      "planner": 1.3771600000000035,
+      "all": 4.812044999998761
+    },
+    "surface_demand_characters_removed": 1241440,
+    "surface_demand_characters_reduction_percent": 99.68499144426163,
+    "interpretation": "Cold Planner still validates all three new payloads: 3 tagged parses / 2105249 characters. Warm Planner reads 3923 native characters versus eagerAll 1245363, a reduction of 1241440. No tagged parses or descriptor traversal remain on either warm control. Warm Dashboard still allocates a fresh graph and parses 1241376 characters. Public decode and staged roundtrip paths remain controls; no claim of zero graph allocation is made.",
+    "scope_limit": "This separate profile intentionally retains the W1 fixture preparation (1241296 state bytes, 10 results, 18 transactions). Its arms share one identical state; do not conflate its Dashboard size with the S3/S4 causal probe (1311209 bytes, 12 results, 20 transactions).",
+    "current_snapshots_limit": "The scoped currentSnapshots measurement can include first-demand sibling materialization and is not a pure staged-clone-only cost after W3."
+  },
+  "new_counterproofs": [
+    {
+      "test": "warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation",
+      "required_evidence": "Cold parses all three tagged payloads with their full character sum; warm Planner has zero tagged parses and zero native Dashboard parse; eager transactionAll parses Dashboard once; character difference exceeds 2 MiB; outputs and persisted bytes remain equal.",
+      "observed_test": {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "pass",
+        "test": "warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation",
+        "elapsed_ms": 18.35
+      },
+      "verdict": "PASS"
+    },
+    {
+      "test": "new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores",
+      "required_evidence": "Both unrequested surfaces and all four invalid payload classes reject with the public decoder's message; callback list remains empty for cold and warm stores; restoring valid bytes restores reads.",
+      "observed_test": {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "pass",
+        "test": "new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores",
+        "elapsed_ms": 27.12
+      },
+      "verdict": "PASS"
+    },
+    {
+      "test": "one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies",
+      "required_evidence": "Exactly one native Dashboard materialization despite repeated demands; nested/current outputs are distinct; parent staged values, owned undefined and negative zero survive; output mutation does not change SQL bytes.",
+      "observed_test": {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "pass",
+        "test": "one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies",
+        "elapsed_ms": 4.4
+      },
+      "verdict": "PASS"
+    },
+    {
+      "test": "ended root scopes reject deferred sibling access before any lazy materialization",
+      "required_evidence": "Parent Planner makes zero native Dashboard parses; inherited deferred current/nested calls reject with scope-ended errors; late materialization parse count is zero, nested callback is never invoked and fresh Planner is unchanged.",
+      "observed_test": {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "pass",
+        "test": "ended root scopes reject deferred sibling access before any lazy materialization",
+        "elapsed_ms": 4.5
+      },
+      "verdict": "PASS"
+    },
+    {
+      "test": "a captured Dashboard plan survives eviction while other surfaces are observed during the same admission",
+      "required_evidence": "Dashboard bytes remain exact after two new 2 MiB sibling plans force aggregate eviction; only the two new siblings have tagged parses; Dashboard has zero tagged and one native parse; special values remain intact.",
+      "observed_test": {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "pass",
+        "test": "a captured Dashboard plan survives eviction while other surfaces are observed during the same admission",
+        "elapsed_ms": 31.94
+      },
+      "verdict": "PASS"
+    },
+    {
+      "test": "missing sibling rows invalidate old plans and restore only after a fresh SQL observation",
+      "required_evidence": "Deleted Dashboard yields independent empty snapshots for nested/current access, is not recreated by a read, and is restored only after the actual SQL row is reinserted.",
+      "observed_test": {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "pass",
+        "test": "missing sibling rows invalidate old plans and restore only after a fresh SQL observation",
+        "elapsed_ms": 8.23
+      },
+      "verdict": "PASS"
+    },
+    {
+      "test": "independent writers cannot replace an admitted sibling observation and the next root sees their commit",
+      "required_evidence": "Other-store writer remains blocked while the first root is admitted; first root sees the old Dashboard; each callback runs once; the following root sees the new Dashboard and version.",
+      "observed_test": {
+        "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "pass",
+        "test": "independent writers cannot replace an admitted sibling observation and the next root sees their commit",
+        "elapsed_ms": 26.34
+      },
+      "verdict": "PASS"
+    }
+  ],
+  "new_counterproof_measurements": {
+    "surface_demand": {
+      "cold": {
+        "calls": 3,
+        "characters": 2098360,
+        "taggedCalls": 3,
+        "taggedCharacters": 2098360,
+        "nativeDashboard": 0,
+        "taggedDashboard": 1
+      },
+      "warmPlanner": {
+        "calls": 2,
+        "characters": 215,
+        "taggedCalls": 0,
+        "taggedCharacters": 0,
+        "nativeDashboard": 0,
+        "taggedDashboard": 0
+      },
+      "eagerAll": {
+        "calls": 6,
+        "characters": 2097831,
+        "taggedCalls": 0,
+        "taggedCharacters": 0,
+        "nativeDashboard": 1,
+        "taggedDashboard": 0
+      }
+    },
+    "captured_plan": {
+      "calls": 4,
+      "characters": 6292527,
+      "taggedCalls": 2,
+      "taggedCharacters": 4195130,
+      "nativeDashboard": 1,
+      "taggedDashboard": 0
+    },
+    "captured_plan_interpretation": "Two new sibling payloads are decoded while the observed Dashboard plan survives aggregate eviction. Zero tagged Dashboard parse and one native Dashboard graph parse preserve its exact bytes, owned undefined and negative zero."
+  },
+  "existing_regression_proofs": {
+    "summary": "All selected existing tests pass except the exact B1 mismatch; all W1 bounds and isolation proofs pass again.",
+    "verified_areas": [
+      "Real SQLite state/blobs/undefined and reopen",
+      "False/throw/abort rollback and invalid state rejection",
+      "Cross-instance different-record writes and same-version CAS without callback replay",
+      "Nested write poison, active child rejection and scope expiry",
+      "Lock cancellation/timeout and writer ordering",
+      "Private blob generations, secret expiry/removal and fresh secret byte arrays",
+      "Corrupt or changed SQL payload validation before callback",
+      "Capture/restore with exact tagged state and rejected corrupt/missing blobs",
+      "C08 output isolation, mutable authority, cross-principal/request identity and revocation",
+      "Case read/lease/egress fences",
+      "Aggregate memo bound and accepted legacy fallback for oversized/deep/fixup/node limits"
+    ],
+    "state_provider_caveat": "The wp10 state-provider acceptance file uses its existing Map fixture and is supplementary; real SQLite proofs are separately present.",
+    "memory_caveat": "The memo limit bounds retained immutable strings in the per-store Map, not heap/RSS. A live admitted root can temporarily retain a captured immutable plan after Map eviction. No shared mutable graph or authority is admitted by this optimization."
+  },
+  "recommendation": {
+    "action": "Run the unchanged original Finance journey once on W3 after reconciling the head, through the existing surgical GitHub Actions dispatcher.",
+    "reason": "All requested short correctness counterproofs pass and the comparable real confirmed workload shows 162986537 fewer parsed characters across the two confirmed labels (56.34010399596884% root+nested reduction), with every measured operation/callback count and every asserted financial result preserved.",
+    "preserve": [
+      "180000ms fixture guard",
+      "300000ms journey timeout",
+      "all 15000/15001 assertions",
+      "history actually reread",
+      "authorized replay",
+      "real store/UI close and reopen",
+      "collaborator, outsider and revoked access assertions"
+    ],
+    "separate_required_gates": "bun typecheck and AGENTS guards are not certified by this S4 review. Preserve and report their actual separate evidence; do not treat the S4 test job as those gates.",
+    "stop_conditions": "Any new original-journey failure must be reported and investigated without changing fixtures, oracles or timeouts.",
+    "closure": "FIN-IND-005 remains open until the original journey outcome is known. This review does not predict or assert its PASS."
+  },
+  "reviewer_activity": {
+    "file_reads": true,
+    "completed_run_metadata_gets": true,
+    "source_identity_gets": true,
+    "log_arithmetic_and_json_processing": true,
+    "polling": false,
+    "local_product_or_test_execution": false,
+    "ci_dispatch": false,
+    "remote_writes": false,
+    "output": "/workspace/scratch/3648787f3772/mission34/review/S4-review.json"
+  }
+}

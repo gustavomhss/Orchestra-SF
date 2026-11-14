@@ -1,0 +1,440 @@
+{
+  "schema": "sf2h.finance-persistence-performance.S5-review.v1",
+  "selection": "S5",
+  "reviewer": "ci_and_pack",
+  "reviewedAtUtc": "2026-11-14 22:39:15 UTC",
+  "classification": "SOURCE_LONG_JOURNEY_PASS_PENDING_BUNDLE_INTEGRATION",
+  "conclusion": "SOURCE_PASS",
+  "W": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+  "Wtree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+  "S": "858caef12e133425d036867b6333496691856e9a",
+  "Stree": "c3163564314315c35a64cf91ef9b3ea35636de32",
+  "runId": 43648344709,
+  "jobId": 132611055130,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648344709",
+  "receipt": {
+    "path": "mission34/artifacts/S5-result.json",
+    "bytes": 270826,
+    "sha256": "40728217a79e3e7d7b475fc2f71dc72fdcc2b29f6d31bd3ad1a3df404cbf2eeb",
+    "gitBlob": "179520a79dd6686be5205f1d2996ba8f486363fb"
+  },
+  "independentChecks": {
+    "independent_MCP_log_equals_supplied_bytes": true,
+    "run_success_on_exact_S": true,
+    "job_success_on_exact_S": true,
+    "all_jobs_completed_success": true,
+    "snapshot_parent_is_W3": true,
+    "snapshot_tree_exact": true,
+    "snapshot_diff_only_request": true,
+    "request_blob_exact_prior": true,
+    "request_matches_local_metadata": true,
+    "journey_blob_unchanged": true,
+    "fixture_blob_unchanged": true,
+    "all_nine_checkpoints_exact_order": true,
+    "witness_15000_boundary": true,
+    "witness_15001_boundary": true,
+    "all_43_regression_names_same_order": true,
+    "all_43_regression_names_same_multiset": true,
+    "journey_pass": true,
+    "journey_duration_inside_fixture_budget": true,
+    "original_300000_test_budget": true,
+    "fixture_180000_budget": true,
+    "expected_46_journey_expect_calls": true,
+    "aggregate_assertion_delta_matches_completion": true,
+    "history_read_complete": true,
+    "authorized_replay_ok": true,
+    "real_restart_complete": true,
+    "collaborator_ok": true,
+    "outsider_denied": true,
+    "revoked_denied": true,
+    "trace_empty_active_and_no_failed_phases": true,
+    "no_runtime_error_records": true
+  },
+  "actualJourneyTest": {
+    "outcome": "pass",
+    "name": "FIN-IND-005 Finance performance preserves confirmed sensitivity and preserves the 15000/15001 journey through replay and real restart",
+    "durationMs": 137976.36,
+    "file": "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+    "timestamp": "2026-11-14T22:37:03.3020807Z",
+    "logLine": 1507
+  },
+  "checkpoints": [
+    {
+      "timestamp": "2026-11-14T22:35:07.7000450Z",
+      "logLine": 1042,
+      "data": {
+        "elapsedMs": 22376,
+        "event": "checkpoint",
+        "label": "omitted.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 3
+        },
+        "knownSubtotal": 210000,
+        "threshold": 55000.000000000015,
+        "comparisonStatus": "conditioned"
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:35:12.8701340Z",
+      "logLine": 1045,
+      "data": {
+        "elapsedMs": 27545,
+        "event": "checkpoint",
+        "label": "choice.persisted",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 4
+        },
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:35:26.8562857Z",
+      "logLine": 1050,
+      "data": {
+        "elapsedMs": 41531,
+        "event": "checkpoint",
+        "label": "confirmed.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "total": 250000,
+        "advantage": -10000,
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:36:59.6609497Z",
+      "logLine": 1477,
+      "data": {
+        "elapsedMs": 134337,
+        "event": "checkpoint",
+        "label": "confirmed.threshold-assertions-complete",
+        "threshold": 15000.00000000002,
+        "comparisonStatus": "complete"
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:37:01.9037815Z",
+      "logLine": 1484,
+      "data": {
+        "elapsedMs": 136580,
+        "event": "checkpoint",
+        "label": "witness.15000.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "baselineRef": "decision-result:wp11-history-result-9",
+        "metric": -20000,
+        "meetsMinimum": true
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:37:03.0615266Z",
+      "logLine": 1489,
+      "data": {
+        "elapsedMs": 137737,
+        "event": "checkpoint",
+        "label": "witness.15001.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "baselineRef": "decision-result:wp11-history-result-9",
+        "metric": -19999,
+        "meetsMinimum": false
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:37:03.0796191Z",
+      "logLine": 1492,
+      "data": {
+        "elapsedMs": 137756,
+        "event": "checkpoint",
+        "label": "history.assertions-complete",
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:37:03.1146594Z",
+      "logLine": 1495,
+      "data": {
+        "elapsedMs": 137791,
+        "event": "checkpoint",
+        "label": "choice.replay-assertions-complete"
+      }
+    },
+    {
+      "timestamp": "2026-11-14T22:37:03.2953849Z",
+      "logLine": 1505,
+      "data": {
+        "elapsedMs": 137971,
+        "event": "checkpoint",
+        "label": "persistence.restart-and-revocation-assertions-complete",
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        }
+      }
+    }
+  ],
+  "expected46Calls": {
+    "staticExpectCallSites": 43,
+    "witnessLoopCallSites": 3,
+    "witnessValues": [
+      15000,
+      15001
+    ],
+    "witnessIterations": 2,
+    "expectedCallsOnSuccessfulJourney": 46,
+    "formula": "43 static sites + 3 repeated witness sites = 46 calls",
+    "priorS2ReachedJourneyCallsFromPinnedSource": 18,
+    "priorS2TotalAssertions": 368,
+    "S5TotalAssertions": 396,
+    "regressionAssertionsInferredBothRuns": 350,
+    "additionalAssertions": 28,
+    "limit": "The runner reports 396 expectations for the full selection, not a separate per-test counter. The 46 journey calls follow the pinned successful source path (43 sites, with 3 sites executed twice) and are corroborated by the 28-call increase over S2 with identical 43 regression test names."
+  },
+  "coldPersistenceAudit": {
+    "historyFixtureBlob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+    "sourceFixtureBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+    "restartReaderBlob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+    "fixtureTraceBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+    "restartSequence": "Pinned history.restart awaits fixture.closeStore(), then invokes createRenewalRestartReader with the same fixture.directory and caseRef. The new reader calls openLocalStore(directory), creates fresh UI authority and C08 state, and reads persisted case membership through state.read before admitting case reads.",
+    "scopeBoundary": "Fixture membership and synthetic scope declarations are explicit host boundaries; this is not native installed UI or external human-evidence qualification.",
+    "events": [
+      {
+        "timestamp": "2026-11-14T22:37:03.0617584Z",
+        "logLine": 1490,
+        "data": {
+          "elapsedMs": 137737,
+          "event": "start",
+          "id": 259,
+          "label": "history.read",
+          "active": []
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.0779792Z",
+        "logLine": 1491,
+        "data": {
+          "elapsedMs": 137754,
+          "event": "complete",
+          "id": 259,
+          "label": "history.read",
+          "durationMs": 17
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.0798298Z",
+        "logLine": 1493,
+        "data": {
+          "elapsedMs": 137756,
+          "event": "start",
+          "id": 260,
+          "label": "choice.authorized-replay",
+          "active": []
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.0976454Z",
+        "logLine": 1494,
+        "data": {
+          "elapsedMs": 137774,
+          "event": "complete",
+          "id": 260,
+          "label": "choice.authorized-replay",
+          "durationMs": 18,
+          "status": "ok"
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.1148216Z",
+        "logLine": 1496,
+        "data": {
+          "elapsedMs": 137791,
+          "event": "start",
+          "id": 261,
+          "label": "persistence.real-restart",
+          "active": []
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.2090502Z",
+        "logLine": 1498,
+        "data": {
+          "elapsedMs": 137885,
+          "event": "complete",
+          "id": 261,
+          "label": "persistence.real-restart",
+          "durationMs": 94
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.2092318Z",
+        "logLine": 1499,
+        "data": {
+          "elapsedMs": 137885,
+          "event": "start",
+          "id": 262,
+          "label": "persistence.collaborator-read",
+          "active": []
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.2839337Z",
+        "logLine": 1500,
+        "data": {
+          "elapsedMs": 137960,
+          "event": "complete",
+          "id": 262,
+          "label": "persistence.collaborator-read",
+          "durationMs": 75,
+          "status": "ok"
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.2845041Z",
+        "logLine": 1501,
+        "data": {
+          "elapsedMs": 137961,
+          "event": "start",
+          "id": 263,
+          "label": "persistence.outsider-read",
+          "active": []
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.2946441Z",
+        "logLine": 1502,
+        "data": {
+          "elapsedMs": 137971,
+          "event": "complete",
+          "id": 263,
+          "label": "persistence.outsider-read",
+          "durationMs": 10,
+          "status": "denied"
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.2948362Z",
+        "logLine": 1503,
+        "data": {
+          "elapsedMs": 137971,
+          "event": "start",
+          "id": 264,
+          "label": "persistence.revoked-read",
+          "active": []
+        }
+      },
+      {
+        "timestamp": "2026-11-14T22:37:03.2950584Z",
+        "logLine": 1504,
+        "data": {
+          "elapsedMs": 137971,
+          "event": "complete",
+          "id": 264,
+          "label": "persistence.revoked-read",
+          "durationMs": 0,
+          "status": "denied"
+        }
+      }
+    ],
+    "originalAuthorityRevokedAssertion": "Pinned journey asserts the original fixture.host.revalidate(context) is false after restart. The successful test and final checkpoint cover that assertion.",
+    "replayReread": "Pinned journey performs a second history.readCase() after authorized replay and asserts a single choice-recorded ledger event plus the same choice digest; the first history.read is separately traced."
+  },
+  "regressionComparison": {
+    "baseline": "S2 run43645018624",
+    "baselinePreserved": true,
+    "count": 43,
+    "sameNamesInSameOrder": true,
+    "names": [
+      "one sibling batch shares only its two canonical case observations and retains every result reread",
+      "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+      "comparison starts independent batches for its initial and final observations",
+      "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+      "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+      "authority revoked after result rereads is rejected by the fresh final case observation",
+      "a real Planner source change during projection invalidates both stored siblings",
+      "retained store and case callback objects cannot rewrite an earlier observation",
+      "batch refusals and malformed cardinality never fall back to individual resolution",
+      "decision result persistence binds retries, current case and source authority",
+      "sensitivity retains the admitted request when a provider mutates its borrowed input",
+      "sensitivity detects a provider reusing and changing the original source record",
+      "each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope",
+      "a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input",
+      "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08",
+      "FIN-IND-005 result receipt avoids duplicating the durable body while preserving authorized retries",
+      "FIN-IND-005 result receipt retains legacy replay and rejects corrupt or revoked reads after SQLite reopen",
+      "coverage refuses its original predicate even when the next resolution has equal data",
+      "Finance units pairs keep every authority callback and use six fresh C08 envelopes",
+      "Finance units resolution preserves rule chronology and batches only its final pair",
+      "Finance units pairs retain concurrent entry and every hook of a scalar facade",
+      "Finance units pair grouping detects a real Planner source change between observations",
+      "historical scenario batches coalesce only C08 envelopes for real siblings",
+      "historical scenario batches coalesce only C08 envelopes for real siblings including duplicate occurrences",
+      "historical scenario batch keeps an overriding scalar facade and its per-result hooks",
+      "Finance sensitivity searches once and recertifies fresh adjacent witnesses without retaining authority for the next operation",
+      "Finance sensitivity refuses authority revoked after the final awaited adjacent witness",
+      "persisted Finance candidates recertify without another search and retain witness, evidence, root and lease fences",
+      "units resolution reuses only its first observation and rereads both sides in every operation",
+      "units resolution rejects case-version during the rule callback after its first observation",
+      "units resolution rejects planner-source during the rule callback after its first observation",
+      "units resolution rejects revocation during the rule callback after its first observation",
+      "units resolution rejects request-headers during the rule callback after its first observation",
+      "units resolution rejects lease during the rule callback after its first observation",
+      "units resolution rejects incoming-request during the rule callback after its first observation",
+      "historical batch keeps each real callback and ordered failures across duplicate occurrences",
+      "historical batch refuses planner-source after the later sibling's final source callback",
+      "historical batch refuses case-version after the later sibling's final source callback",
+      "historical batch refuses stored-result after the later sibling's final source callback",
+      "historical batch refuses request-headers after the later sibling's final source callback",
+      "historical batch refuses lease after the later sibling's final source callback",
+      "historical batch refuses scalar-facade after the later sibling's final source callback",
+      "historical batch refuses store-facade after the later sibling's final source callback"
+    ]
+  },
+  "evidence": {
+    "MCPLog": {
+      "bytes": 193255,
+      "sha256": "23b0ee99cab5308bafc368e07df9795991782000f1060ccc440603fba46faad2",
+      "gitBlob": "fb195ea6e8af0e71e4fcfa5d90375b7f1587e463"
+    },
+    "sourceJourneyBlob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+    "sourceFixtureBlob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+    "restartReaderBlob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+    "sourceFixtureRuntimeBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+    "requestBlob": "8dffaaa4f504376c952f9d927ee0cbde76c9fc6e",
+    "snapshotOnlyRequestAddition": true,
+    "allJobsSuccess": true
+  },
+  "scope": {
+    "sourceLongJourney": "PASS",
+    "bundleIntegration": "PENDING",
+    "bundleQualification": "NOT_APPLIED_NOT_TESTED",
+    "globalRelease": false
+  },
+  "limits": [
+    "This PASS closes the long-journey proof only for exact source W3; bundle integration and target qualification remain pending.",
+    "PR65 and the proposed composed patch remain NOT_APPLIED_NOT_TESTED by this work; no source green is transferred.",
+    "Inherited typecheck/guards failures and the pre-existing blob failure in other scoped selections are independent and are not waived by S5.",
+    "The 46 journey expectations are source-path accounting corroborated by aggregate counts, not a separate runner per-test count.",
+    "Real SQLite reopen is exercised through the fixture; fixture membership/synthetic scope declarations are not native installed UI or external human-evidence proof.",
+    "Inclusive phase timings overlap and must not be summed as exclusive work.",
+    "No local tests, new CI dispatch, product edits, remote mutations, merge, deploy or terminal global release was performed by this review."
+  ],
+  "localTestsExecuted": false,
+  "newCIDispatched": false,
+  "productEdits": false,
+  "remoteMutations": false
+}

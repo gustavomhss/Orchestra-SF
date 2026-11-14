@@ -1,0 +1,649 @@
+{
+  "schema": "sf2h.released-intake-47.increment.v1",
+  "mission": 47,
+  "epoch": "S0-C-e9-browser47",
+  "increment": 1,
+  "candidate_symbol": "C13",
+  "candidate_identity": "The commit containing this manifest and its Git tree are the material candidate; exact resolved identity is published in subsequent checkpoint/PR65.",
+  "expected_parent": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "prior_material": {
+    "symbol": "C12",
+    "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
+  },
+  "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "input": {
+    "branch": "finance-resume",
+    "pr": 42,
+    "release": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+    "release_tree": "e59f6e24f49a9856d970789b984c33ef83711c0a",
+    "product": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "product_tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "lease": "finance-persistence-browser34",
+    "authority": "ENDED_BY_EXPLICIT_HANDOFF",
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/HANDOFF-FINAL.md",
+    "handoff_blob": "5296e6d757fc6313412660dfa0bce49d0093cadf",
+    "stale_consumer": 33,
+    "reconciled_consumer": 47
+  },
+  "decision": "ACCEPTED_COMPLETE_SIX_PATH_FINANCE34_PATCH",
+  "source_consumer_correction": {
+    "original": 33,
+    "current": 47,
+    "original_receipt_unchanged": true
+  },
+  "material_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "source_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/postimages/composed-local-store.ts.txt",
+      "source_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "preimage": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "postimage": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "disposition": "APPLY_FULL_RECONSTRUCTED_COMPATIBLE_POSTIMAGE",
+      "hunks": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "mode": "100644",
+      "source_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "source_blob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+      "preimage": null,
+      "postimage": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+      "disposition": "ADD_EXACT_SOURCE_TEST",
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "mode": "100644",
+      "source_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "source_blob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+      "preimage": null,
+      "postimage": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+      "disposition": "ADD_EXACT_SOURCE_TEST",
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "mode": "100644",
+      "source_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "source_blob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+      "preimage": null,
+      "postimage": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+      "disposition": "ADD_EXACT_SOURCE_TEST",
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "mode": "100644",
+      "source_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "source_blob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+      "preimage": null,
+      "postimage": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+      "disposition": "ADD_EXACT_SOURCE_TEST",
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "mode": "100644",
+      "source_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "source_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "preimage": null,
+      "postimage": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "disposition": "ADD_EXACT_SOURCE_TEST",
+      "hunks": 1
+    }
+  ],
+  "source_receipts": {
+    "source_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+    "source_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance",
+    "source_tree": "6e49cadb09ed22a7a651c7d414baa656a12cb2d7",
+    "target_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34",
+    "count": 64,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/B1-request.json",
+        "sha": "13af0896ba7dc25de5ab7c4123c5aa276673b08f",
+        "mode": "100644",
+        "size": 254,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/B1-request.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/B1-result.json",
+        "sha": "e5ea6630f043ef78c005c11ad6b578be48abf099",
+        "mode": "100644",
+        "size": 1584,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/B1-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/CI-LEDGER.json",
+        "sha": "cd25ef09276fd82296c8ab061082c698c0eb3d36",
+        "mode": "100644",
+        "size": 27621,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/CI-LEDGER.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/HANDOFF-FINAL.md",
+        "sha": "5296e6d757fc6313412660dfa0bce49d0093cadf",
+        "mode": "100644",
+        "size": 22190,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/HANDOFF-FINAL.md"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/K1-result.json",
+        "sha": "a3d6a09b7fdb369f59ed52c38303f6944e0aa7f9",
+        "mode": "100644",
+        "size": 63890,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/K1-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/K2-result.json",
+        "sha": "c7d2e289a47176e5af1d34a38bce76f142f6d196",
+        "mode": "100644",
+        "size": 79853,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/K2-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/K2-review.json",
+        "sha": "03cfec0d93a0badf1492d1a85e9a729d5b7dc571",
+        "mode": "100644",
+        "size": 21739,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/K2-review.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/P0-request.json",
+        "sha": "4d9068f3fa954ae040fdc2a4afea2b063599087f",
+        "mode": "100644",
+        "size": 219,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/P0-request.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/P0-result.json",
+        "sha": "f7aeeac94079fe4117f20082d181cd28edbf48b7",
+        "mode": "100644",
+        "size": 5787,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/P0-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S1-request.json",
+        "sha": "a40ba69f3a588c093b57078abd8da1a48b31156f",
+        "mode": "100644",
+        "size": 755,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S1-request.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S1-result.json",
+        "sha": "e64605e0c04e8c5442b30b122d2450a4a021b71a",
+        "mode": "100644",
+        "size": 10347,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S1-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S2-request.json",
+        "sha": "8dffaaa4f504376c952f9d927ee0cbde76c9fc6e",
+        "mode": "100644",
+        "size": 1931,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S2-request.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S2-result.json",
+        "sha": "3c381af5078181d181ec068e5157b9f3214c8176",
+        "mode": "100644",
+        "size": 268645,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S2-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S2-summary.json",
+        "sha": "a42673287ad2a58eed48d728df31c6629f901daf",
+        "mode": "100644",
+        "size": 2571,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S2-summary.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S3-request.json",
+        "sha": "16be43bed410e3a1858be9eca60cb3b4e457f6f5",
+        "mode": "100644",
+        "size": 226,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S3-request.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S3-result.json",
+        "sha": "5e9feffbabc0f26ed44f22495268cc10320eb469",
+        "mode": "100644",
+        "size": 49501,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S3-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S4-request.json",
+        "sha": "66fd046d046705d6a7338d27922595057d3c7584",
+        "mode": "100644",
+        "size": 917,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S4-request.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S4-result.json",
+        "sha": "3bbbe6ca285f39220e0e6452f7d24dee14048392",
+        "mode": "100644",
+        "size": 90345,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S4-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S4-review.json",
+        "sha": "817f195d110ea5c8278ee776cb77fc8b8ce60482",
+        "mode": "100644",
+        "size": 38253,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S4-review.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S5-request.json",
+        "sha": "8dffaaa4f504376c952f9d927ee0cbde76c9fc6e",
+        "mode": "100644",
+        "size": 1931,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S5-request.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S5-result.json",
+        "sha": "179520a79dd6686be5205f1d2996ba8f486363fb",
+        "mode": "100644",
+        "size": 270826,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S5-result.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S5-review.json",
+        "sha": "95dbe36fd4dd8758d52db8ba841a4e89a49ce8ba",
+        "mode": "100644",
+        "size": 17907,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/S5-review.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/artifact-index.json",
+        "sha": "05bedcb321d5d640539a0ea4b04a875406f0ddf4",
+        "mode": "100644",
+        "size": 17190,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/artifact-index.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/authority-01.json",
+        "sha": "e7d80137cbabe9075cfc4c3abaa34c3b7bea03b4",
+        "mode": "100644",
+        "size": 3794,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/authority-01.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/README.md",
+        "sha": "39f7b35114885a27989a68947c597b0413104dba",
+        "mode": "100644",
+        "size": 6167,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/README.md"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/composed-with-tests.NOT_APPLIED.patch.txt",
+        "sha": "4a90b0e422bc628e654111bbc8612cfd796e1a34",
+        "mode": "100644",
+        "size": 76415,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/composed-with-tests.NOT_APPLIED.patch.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/final-target-observation.json",
+        "sha": "406e395871fc5a49ef4535de92f84225d6c634e3",
+        "mode": "100644",
+        "size": 1299,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/final-target-observation.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/manifest.json",
+        "sha": "b17c689990e433a2703f60ec3ebf26971ac0a0b7",
+        "mode": "100644",
+        "size": 33902,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/manifest.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/product.NOT_APPLIED.patch.txt",
+        "sha": "12f4774b0dec057bfb0a56a95c51360abfbba478",
+        "mode": "100644",
+        "size": 8961,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/product.NOT_APPLIED.patch.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/source-W1-to-W3.patch.txt",
+        "sha": "4cfd6566ff46960e18543634fa2b691c38d1094a",
+        "mode": "100644",
+        "size": 4154,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/source-W1-to-W3.patch.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/target-observation.json",
+        "sha": "a61b6d539f57ec48235c6b38562ea5b44b4e25b2",
+        "mode": "100644",
+        "size": 1388,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/target-observation.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/textual-audit.json",
+        "sha": "58f3710ea06ac63dbe7388bee45f02285b2abe07",
+        "mode": "100644",
+        "size": 2274,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/bundle/textual-audit.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/checks-review.json",
+        "sha": "9999240943ec765a79bde5a38b4e215465808668",
+        "mode": "100644",
+        "size": 12604,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/checks-review.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/ci-config-identity.json",
+        "sha": "a779ebe2d8df96360581ddadb8e5c2ecffafbd3e",
+        "mode": "100644",
+        "size": 2425,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/ci-config-identity.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/ci-log-archive.json",
+        "sha": "3568d0a308951f91f41cf8813981aa1a72800781",
+        "mode": "100644",
+        "size": 3361,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/ci-log-archive.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/ci-metadata.json",
+        "sha": "5ae2ba6514933e6cb1babd3e468bc3b0f490d3e5",
+        "mode": "100644",
+        "size": 229067,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/ci-metadata.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/criteria-provenance.json",
+        "sha": "70f7515e38efd0c8376f2a733f949babcce45c71",
+        "mode": "100644",
+        "size": 8951,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/criteria-provenance.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/B1-log.json",
+        "sha": "3a68591b3fb16bc87b3c3c29940d0193361ca92d",
+        "mode": "100644",
+        "size": 76492,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/B1-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/K1-log.json",
+        "sha": "77cff0ed7b1eef10acf1c5e7da9ff0327c9e3bcd",
+        "mode": "100644",
+        "size": 145808,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/K1-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/K2-log.json",
+        "sha": "001f08e70252142e24a14f17ceefa85ce9e95748",
+        "mode": "100644",
+        "size": 145642,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/K2-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/P0-log.json",
+        "sha": "f9bc2d14bfbda8b06ecc0aa588365a80b17f7789",
+        "mode": "100644",
+        "size": 83309,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/P0-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/S1-log.json",
+        "sha": "81192b2fd9a603e82853a3c4db0131f093864b2e",
+        "mode": "100644",
+        "size": 102934,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/S1-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/S2-log.json",
+        "sha": "87bcb9daeec7776ab0978dffd38c34398f5ad4e2",
+        "mode": "100644",
+        "size": 190528,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/S2-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/S3-log.json",
+        "sha": "1781b69d0cc0589868a58a6bc75b184bedb7fa0c",
+        "mode": "100644",
+        "size": 92782,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/S3-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/S4-log.json",
+        "sha": "56fd2c43b21269b9e395638ed437ba81d5d0f97d",
+        "mode": "100644",
+        "size": 122468,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/S4-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/evidence/S5-log.json",
+        "sha": "27c7c49daf1b906b975a4d5e4863a18d315ceaf5",
+        "mode": "100644",
+        "size": 209060,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/evidence/S5-log.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/implementation-01.json",
+        "sha": "11720b83e1c5a19a0ba11b782b575c496a793d35",
+        "mode": "100644",
+        "size": 2915,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/implementation-01.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/implementation-02.json",
+        "sha": "ddf7f88447f9fa30be5638c6a289be32b423476d",
+        "mode": "100644",
+        "size": 2955,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/implementation-02.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/lazy-review-S4.json",
+        "sha": "2977c7c5b702c71a741a93d1fe031f0054970f10",
+        "mode": "100644",
+        "size": 32133,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/lazy-review-S4.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/lazy-review.json",
+        "sha": "8c07ec4a5dd04345a49fa3ae1e084d96c1606a51",
+        "mode": "100644",
+        "size": 30161,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/lazy-review.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/migration-rollback.json",
+        "sha": "c9f8b91fca0dd67845e79fe1badfa9c293b99817",
+        "mode": "100644",
+        "size": 3683,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/migration-rollback.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/persistence-source.patch.txt",
+        "sha": "1b4ae5ce3b5491aae69c1d6b231244681ff00b01",
+        "mode": "100644",
+        "size": 8765,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/persistence-source.patch.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/postimages/composed-local-store.ts.txt",
+        "sha": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+        "mode": "100644",
+        "size": 31405,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/postimages/composed-local-store.ts.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/postimages/source-local-store.ts.txt",
+        "sha": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+        "mode": "100644",
+        "size": 29961,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/postimages/source-local-store.ts.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/preimages/composed-contract.ts.txt",
+        "sha": "9e9bac976b503409de65868a366f352ca1e65071",
+        "mode": "100644",
+        "size": 4774,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/preimages/composed-contract.ts.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/preimages/composed-local-store.ts.txt",
+        "sha": "b753e3ffbfcdc06de373388845c686afac26dec8",
+        "mode": "100644",
+        "size": 25981,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/preimages/composed-local-store.ts.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/preimages/source-contract.ts.txt",
+        "sha": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+        "mode": "100644",
+        "size": 4642,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/preimages/source-contract.ts.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/preimages/source-local-store.ts.txt",
+        "sha": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+        "mode": "100644",
+        "size": 24537,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/preimages/source-local-store.ts.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/residual-boundary.json",
+        "sha": "efe3dec143eab1944c5cd0bf9555a395b5f8e036",
+        "mode": "100644",
+        "size": 6152,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/residual-boundary.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/semantics-matrix-W3.json",
+        "sha": "6234e77c6b04603cc19d03fbda52c1f2524a823a",
+        "mode": "100644",
+        "size": 70049,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/semantics-matrix-W3.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/semantics-matrix.json",
+        "sha": "284bd608c73dd24c6f83bfea1810ae59f9fc2087",
+        "mode": "100644",
+        "size": 63959,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/semantics-matrix.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/source-identities.json",
+        "sha": "d42fad65770fd87caacdb9e3e52fd16b755003a5",
+        "mode": "100644",
+        "size": 8534,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/source-identities.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/source-product-and-tests.patch.txt",
+        "sha": "63993be77880217a95e8937a9ef7a16ebdf13991",
+        "mode": "100644",
+        "size": 74676,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/source-product-and-tests.patch.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/terminal-review.json",
+        "sha": "c86c48aac27c1bf0c8a9232442b609e6e6410723",
+        "mode": "100644",
+        "size": 8617,
+        "target": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/finance34/terminal-review.json"
+      }
+    ],
+    "all_modes": "100644",
+    "original_bytes_preserved": true
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/composed-with-tests.NOT_APPLIED.patch.txt",
+    "blob": "4a90b0e422bc628e654111bbc8612cfd796e1a34",
+    "bytes": 76415,
+    "sha256": "f483c07f69b56beb93a600c1ed84fd3100d0f40bb7897de5c05f7b3f4885c1e1",
+    "complete_patch_read": true,
+    "reconstruction": "11 hunks across6paths independently reconstructed in-memory against exact target preimage/empty additions; every complete postimage equals a fetched GitHub blob byte-for-byte",
+    "manifest_blob": "b17c689990e433a2703f60ec3ebf26971ac0a0b7"
+  },
+  "keep_current": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "reason": "Target fieldErrors/currentVersionCAS/conflict remain; no contract change required."
+    }
+  ],
+  "semantics": {
+    "preserved_clone_copy_validate_exact": true,
+    "cache": "Private bounded immutable transformation plans only; full SQL-payload equality selects hit, SQL reads/locks retained. No grants/results/authority/mutable graphs cached.",
+    "fresh_validation": "New/different payloads validated synchronously before callback, including unrequested surfaces. Cache hit is previous validated bytes; every demanded surface produces fresh JSON graph.",
+    "lazy_scope": "Only private single-root snapshots container is lazy. Captured materializer cannot reread mutable memo or SQL. Scope checks occur before current/nested accesses; callback receives ordinary snapshot.",
+    "retained_boundaries": [
+      "three SQL SELECT order",
+      "transactionAll eager",
+      "BEGIN IMMEDIATE",
+      "WAL/FULL",
+      "CAS",
+      "commit/rollback",
+      "abort/signal",
+      "nested write poison",
+      "blobs/generations",
+      "credential reads",
+      "codec v1",
+      "cloneSnapshot/copyValue/validateSnapshot",
+      "currentSnapshots cloning"
+    ],
+    "cost_limits": "Memo<=8388608 UTF16 units; max3entries; depth/nodes/fixups fallback preserves valid legacy inputs. Captured evicted plans can extend live-root storage; not RSS cap.",
+    "c12_apply": "No Apply/C12/provider/case-port/Finance algorithms changed. All prior source and target tests retained."
+  },
+  "proof_limits": {
+    "S5": {
+      "runId": 43648344709,
+      "jobId": 132611055130,
+      "cleanupJobId": 132613136744,
+      "snapshot": "858caef12e133425d036867b6333496691856e9a",
+      "snapshotTree": "c3163564314315c35a64cf91ef9b3ea35636de32",
+      "result": "44 PASS, 0 FAIL, 4 filtered, 396 assertions",
+      "journeyMilliseconds": 137976.36,
+      "fixtureBudgetMilliseconds": 180000,
+      "bunTestBudgetMilliseconds": 300000,
+      "allNineCheckpointsReached": true,
+      "originalRequestUnchanged": true
+    },
+    "S4": {
+      "runId": 43647736006,
+      "jobId": 132609151438,
+      "result": "120 PASS, 1 inherited FAIL, 3 SKIP; 25 owned PASS; 1221 assertions"
+    },
+    "K2": {
+      "runId": 43648098991,
+      "jobId": 132610276531,
+      "result": "FAIL inherited; 115 TypeScript diagnostics, 43 guard gates, 15 warnings, zero new owned diagnostic/finding"
+    },
+    "originalFail": "S2/W1 43PASS1FAIL deadline preserved; B1 inherited sfBlobGenerations expectation failure remains; existing UID skips unqualified.",
+    "truth": "Source_FIN_IND_005_CLOSED_ONLY; integrated qualification NOT_RUN; no AM/native/global acceptance.",
+    "s5_review_blob": "95dbe36fd4dd8758d52db8ba841a4e89a49ce8ba"
+  },
+  "verification": "All11 hunks reconstructed against explicit target preimages and empty additions; six complete outputs equal remote postimage blobs. Root rechecked runtime+contract at authority47 head and all64 original receipt blobs/modes; five new tests absent in unchanged baseline tree. Static integrity only.",
+  "consumer_ack": {
+    "id": "ACK47-01",
+    "source_release": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+    "status": "CONSUMED_IN_CONTAINING_C13_NOT_RUNTIME_QUALIFIED",
+    "behavior": "Private bounded decoder memo and per-root demand materialization; SQL/lock/validation/CAS/rollback and all original product/tests retained.",
+    "source_FIN_IND_005": "SOURCE_LONG_JOURNEY_PASS",
+    "target_FIN_IND_005": "IMPLEMENTED_PENDING_COMPOSED_QUALIFICATION",
+    "next_owner": "45 checks; S0 final functional qualification"
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "final_acceptance": "S0",
+  "GLOBAL_RELEASE": false
+}

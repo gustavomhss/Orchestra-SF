@@ -1,0 +1,790 @@
+{
+  "schema": "sf2h.finance-persistence-performance.bundle-w3.v1",
+  "mission": 34,
+  "consumerSession": 33,
+  "status": "NOT_APPLIED_NOT_TESTED",
+  "proofScope": "TEXTUAL_COMPOSITION_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "pr": 42,
+    "branch": "finance-resume",
+    "W3": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "actualCommitParent": "17bab9f471a818be1631652d3ec0adcec00d52bf",
+    "derivationBaseW1": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+    "sourceProduct": {
+      "gitBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+      "sha256": "385541d3c293ce1b7dff4e8e4a9ceb1eddcbb25e0437bd4846d247eb3a951431",
+      "bytes": 29961,
+      "nonemptyLines": 550
+    },
+    "sourceTestNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714",
+    "qualification": "Source CI results are assessed in the mission34 terminal handoff, not by this composition receipt."
+  },
+  "target": {
+    "pr": 65,
+    "branch": "sf2-stack",
+    "head": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "tree": "f2027afd2be824ad1bb1a4116044fd1be0760039",
+    "observedAt": "2026-11-14T22:21:40Z",
+    "namespace": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/",
+    "namespaceState": "ABSENT",
+    "parentDirectoryEntryCount": 32,
+    "parentDirectoryEntries": [
+      {
+        "name": "c12-composed-compatibility",
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility",
+        "sha": "63de391b31d6ebdcc863394c398915b7ced60334",
+        "type": "dir"
+      },
+      {
+        "name": "c12-receipt-recovery",
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery",
+        "sha": "44b78a9896e3494edff9307c40bfd3373474063c",
+        "type": "dir"
+      },
+      {
+        "name": "decisions-functional-closure",
+        "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure",
+        "sha": "f57edca1186b317ac513199509c226bac06bac0f",
+        "type": "dir"
+      },
+      {
+        "name": "decisions-initial-alternatives",
+        "path": "modules/sucafina/Sucafinav1/test/product/decisions-initial-alternatives",
+        "sha": "57cbe2cb9a4ba0f51fa84b46a9db760f6075e156",
+        "type": "dir"
+      },
+      {
+        "name": "diagnostics",
+        "path": "modules/sucafina/Sucafinav1/test/product/diagnostics",
+        "sha": "e8c49de08c753d6be37ae0c4fbf4fa9cf6ae52af",
+        "type": "dir"
+      },
+      {
+        "name": "finance-journey-closure",
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure",
+        "sha": "69add40b8f21648bbc38c5f2472008dd29346e6b",
+        "type": "dir"
+      },
+      {
+        "name": "finance-state-read-performance",
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance",
+        "sha": "ab4744eb03c1b456e12fd5d1d320c73ce8494ab7",
+        "type": "dir"
+      },
+      {
+        "name": "forecast-cancel-visibility",
+        "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility",
+        "sha": "bcd4bb4906e45dd283c5fef098ec265de486a8e6",
+        "type": "dir"
+      },
+      {
+        "name": "operations-consumers",
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers",
+        "sha": "f04ed4c7a8501520a496213278a9667ca6a8eb88",
+        "type": "dir"
+      },
+      {
+        "name": "operations-fixes",
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes",
+        "sha": "bf2e95ca018808ae11080c43e130a16ee531ebd2",
+        "type": "dir"
+      },
+      {
+        "name": "operations-functional-closure",
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure",
+        "sha": "3d6d6cc34431313a8a91a08537528278a87547c7",
+        "type": "dir"
+      },
+      {
+        "name": "procurement-exports",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports",
+        "sha": "7414fca47dbba1be71b618d8acf67e7764719d28",
+        "type": "dir"
+      },
+      {
+        "name": "review-fixes",
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes",
+        "sha": "f2dc8363a43a7b332a08dbb591b42100bba5c482",
+        "type": "dir"
+      },
+      {
+        "name": "routine-native-admission",
+        "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission",
+        "sha": "68f8ba04ca880b49e18d03b014944a122ae6961f",
+        "type": "dir"
+      },
+      {
+        "name": "ui-ack-completion",
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion",
+        "sha": "fd67b699119755619a527846c278d6178776b8a1",
+        "type": "dir"
+      },
+      {
+        "name": "ui-split",
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split",
+        "sha": "726d1e5e93b67f3ec5aa8e017d4161e6390e392d",
+        "type": "dir"
+      },
+      {
+        "name": "work-split",
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split",
+        "sha": "7587754c81219d3526e26d0a5e359e3c6d226cd0",
+        "type": "dir"
+      },
+      {
+        "name": "wp00",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00",
+        "sha": "b304d0f2e22a710e68fe783c36438527deae636f",
+        "type": "dir"
+      },
+      {
+        "name": "wp01",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01",
+        "sha": "4b5e9a5144d71fe6be0db970fba238966977d46d",
+        "type": "dir"
+      },
+      {
+        "name": "wp02",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02",
+        "sha": "25f2f97e835f91b1ec3c0d37b1ae149aa08e0751",
+        "type": "dir"
+      },
+      {
+        "name": "wp03",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03",
+        "sha": "1607bf8f3e1023af203e9ca45ae8e019b5c91a45",
+        "type": "dir"
+      },
+      {
+        "name": "wp04",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04",
+        "sha": "29efdc5fe1631efeeaa3bc06393b69f081a7e03e",
+        "type": "dir"
+      },
+      {
+        "name": "wp05",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05",
+        "sha": "1f37699a7a0128ddee8b3e4eece68888c821f78b",
+        "type": "dir"
+      },
+      {
+        "name": "wp06",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06",
+        "sha": "134095f38b49eaee4cdad48ac589e19bc8551d58",
+        "type": "dir"
+      },
+      {
+        "name": "wp07",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07",
+        "sha": "49c673e59dcf4e85d09d4813710acf2b274e7f8d",
+        "type": "dir"
+      },
+      {
+        "name": "wp08",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08",
+        "sha": "94aa2f1a63c85460939f6415f15591555a1872f1",
+        "type": "dir"
+      },
+      {
+        "name": "wp09",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp09",
+        "sha": "fb8ea90b9d5034dc668d25cf15e0dc808366dd96",
+        "type": "dir"
+      },
+      {
+        "name": "wp10",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10",
+        "sha": "9704a76e604347c444b5b3931aa45a694fbd37d4",
+        "type": "dir"
+      },
+      {
+        "name": "wp11",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11",
+        "sha": "3f80d337e1c23d988158eb48ac6eabc04f9ad2a8",
+        "type": "dir"
+      },
+      {
+        "name": "wp12",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12",
+        "sha": "b6e38bfcfc4ae0a9a9449f88cc7a8e0412ed5402",
+        "type": "dir"
+      },
+      {
+        "name": "wp13",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13",
+        "sha": "4f960bfe37b4d2001850d49afffb83d83c713050",
+        "type": "dir"
+      },
+      {
+        "name": "wp14",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14",
+        "sha": "4416dbc335ff20a3c68441f34f4072f144c2f284",
+        "type": "dir"
+      }
+    ],
+    "runtimeTree": "46c24e8b1e54af03501b1b401a251285fa008d82",
+    "expectedHeadCASRequired": true,
+    "force": false,
+    "refReconfirmedAt": "2026-11-14T22:25:22Z"
+  },
+  "product": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "mode": "100644",
+    "disposition": "APPLY_INCREMENTAL_PATCH",
+    "targetPreimage": {
+      "gitBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460",
+      "bytes": 25981,
+      "nonemptyLines": 469
+    },
+    "proposedTargetPostimage": {
+      "gitBlob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "sha256": "4f16fe7291f763ffba129ba024e6ee0b001d05b6769d0445f049c8869fc54311",
+      "bytes": 31405,
+      "nonemptyLines": 576
+    }
+  },
+  "keepCurrent": {
+    "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+    "mode": "100644",
+    "disposition": "KEEP_CURRENT_EXACT",
+    "sourcePostimage": {
+      "gitBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0",
+      "bytes": 4642,
+      "nonemptyLines": 111
+    },
+    "targetPreimage": {
+      "gitBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "sha256": "809bdbfe8b1efd05e4c0a3d8b78eea726c729d1767e8c4569fa6a31e78bb1c7a",
+      "bytes": 4774,
+      "nonemptyLines": 113
+    },
+    "proposedTargetPostimage": {
+      "gitBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "sha256": "809bdbfe8b1efd05e4c0a3d8b78eea726c729d1767e8c4569fa6a31e78bb1c7a",
+      "bytes": 4774,
+      "nonemptyLines": 113
+    }
+  },
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+        "sha256": "dd12d55260321f83692dc2cc2d1cdba2ce9761ad82f5abb84f131293b155f943",
+        "bytes": 12803,
+        "nonemptyLines": 195
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+        "sha256": "dd12d55260321f83692dc2cc2d1cdba2ce9761ad82f5abb84f131293b155f943",
+        "bytes": 12803,
+        "nonemptyLines": 195
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+        "sha256": "0cdb9692fc5f2352e5db44840a6924cf12ed72a9327cf4772fd1d49f90122488",
+        "bytes": 15103,
+        "nonemptyLines": 299
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+        "sha256": "0cdb9692fc5f2352e5db44840a6924cf12ed72a9327cf4772fd1d49f90122488",
+        "bytes": 15103,
+        "nonemptyLines": 299
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+        "sha256": "d6d33018ae4618848a549e013f1c26a7db09d06908dc9691c26bf6fedbf964da",
+        "bytes": 6842,
+        "nonemptyLines": 133
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+        "sha256": "d6d33018ae4618848a549e013f1c26a7db09d06908dc9691c26bf6fedbf964da",
+        "bytes": 6842,
+        "nonemptyLines": 133
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+        "sha256": "22218690257220bf7a48e59d31494c5a32ea8feab12cc1957fb066153b16645d",
+        "bytes": 13480,
+        "nonemptyLines": 215
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+        "sha256": "22218690257220bf7a48e59d31494c5a32ea8feab12cc1957fb066153b16645d",
+        "bytes": 13480,
+        "nonemptyLines": 215
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+        "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+        "bytes": 15837,
+        "nonemptyLines": 311
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+        "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+        "bytes": 15837,
+        "nonemptyLines": 311
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    }
+  ],
+  "composition": {
+    "method": "Two exact text transplants: sourceW0→W1 on exact bundle preimage, then sourceW1→W3 on that intermediate. Equal-line mappings reject overlapping edits. Each transplant preserves both source edit segments and pre-existing target edit segments.",
+    "stage1": {
+      "sourceBefore": {
+        "gitBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+        "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+        "bytes": 24537,
+        "nonemptyLines": 443
+      },
+      "sourceAfter": {
+        "gitBlob": "1eaf5b42230829466d29a82ac0d5361e98b1a64d",
+        "sha256": "484f5e47121166dbc6c083968ee33e641e9af8662c56f076c62c53fce43f097f",
+        "bytes": 28833,
+        "nonemptyLines": 533
+      },
+      "targetIntermediate": {
+        "gitBlob": "46b9116cc272f8f6760dd1766f9451c7903005b7",
+        "sha256": "7394e9950198a073b82a90801b06d38ab1f3fec097123038fea9e605ef179d51",
+        "bytes": 30277,
+        "nonemptyLines": 559
+      },
+      "operations": [
+        {
+          "kind": "insert",
+          "sourcePreimageLines": [
+            79,
+            78
+          ],
+          "sourcePostimageLines": [
+            79,
+            101
+          ],
+          "targetPreimageLines": [
+            79,
+            78
+          ],
+          "oldText": "",
+          "newText": "  }\n\n  // This is a memo of the pure v1 decoder, not of a transaction or authority.\n  // Every caller still observes SQL under the existing lock. Only immutable\n  // strings survive a call; each hit parses a new, fully detached object graph.\n  const materializations = new Map<Surface, SnapshotMaterialization>()\n  const loadSnapshot = (surface: Surface, payload?: string): Snapshot => {\n    const prior = materializations.get(surface)\n    if (payload !== undefined && prior?.payload === payload) return materializeSnapshot(prior)\n    materializations.delete(surface)\n    if (payload === undefined) return { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }\n    const snapshot = decodeSnapshot(payload)\n    const plan = planSnapshotMaterialization(snapshot, payload)\n    if (plan) {\n      const retained = { units: [...materializations.values()].reduce((sum, entry) => sum + entry.units, 0) }\n      for (const [name, entry] of materializations) {\n        if (retained.units + plan.units <= SNAPSHOT_MATERIALIZATION_UNITS && materializations.size < 3) break\n        materializations.delete(name)\n        retained.units -= entry.units\n      }\n      materializations.set(surface, plan)\n    }\n    return snapshot\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            173,
+            173
+          ],
+          "sourcePostimageLines": [
+            196,
+            196
+          ],
+          "targetPreimageLines": [
+            173,
+            173
+          ],
+          "oldText": "          row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }\n",
+          "newText": "          loadSnapshot(surface, row?.payload)\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            202,
+            202
+          ],
+          "sourcePostimageLines": [
+            225,
+            225
+          ],
+          "targetPreimageLines": [
+            202,
+            202
+          ],
+          "oldText": "          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }\n",
+          "newText": "          return loadSnapshot(name, row?.payload)\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            282,
+            282
+          ],
+          "sourcePostimageLines": [
+            305,
+            305
+          ],
+          "targetPreimageLines": [
+            282,
+            282
+          ],
+          "oldText": "          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }\n",
+          "newText": "          return loadSnapshot(surface, row?.payload)\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            333,
+            333
+          ],
+          "sourcePostimageLines": [
+            356,
+            356
+          ],
+          "targetPreimageLines": [
+            333,
+            333
+          ],
+          "oldText": "      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => undefined)\n",
+          "newText": "      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => { materializations.clear() })\n"
+        },
+        {
+          "kind": "insert",
+          "sourcePreimageLines": [
+            456,
+            455
+          ],
+          "sourcePostimageLines": [
+            479,
+            549
+          ],
+          "targetPreimageLines": [
+            485,
+            484
+          ],
+          "oldText": "",
+          "newText": "\n// At most three entries and 16 MiB of UTF-16 string content per open store.\n// These are optimization limits only: larger/deeper valid v1 snapshots keep\n// using the original decoder. No new persisted format or acceptance limit.\nconst SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024\ntype SnapshotMaterialization = Readonly<{ payload: string; json: string; missing: string; units: number }>\n\nfunction planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {\n  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return\n  const parts: string[] = []\n  const missing: string[] = []\n  const path: string[] = []\n  const budget = { units: payload.length + 2, nodes: 0 }\n  const append = (text: string) => {\n    budget.units += text.length\n    if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false\n    parts.push(text)\n    return true\n  }\n  // The input has just passed decodeSnapshot: all nodes are normalized own\n  // data, with no getters, custom prototypes, functions, aliases or cycles.\n  // Emit JSON directly so a data property called toJSON is never invoked.\n  const visit = (value: unknown): boolean => {\n    if (++budget.nodes > 200000 || path.length > 128) return false\n    if (value === undefined) {\n      if (missing.length >= 4096) return false\n      const location = JSON.stringify(path)\n      budget.units += location.length + (missing.length ? 1 : 0)\n      if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false\n      missing.push(location)\n      return append(\"null\")\n    }\n    if (Object.is(value, -0)) return append(\"-0\")\n    if (value === null || typeof value !== \"object\") {\n      const encoded = JSON.stringify(value)\n      return typeof encoded === \"string\" && append(encoded)\n    }\n    const array = Array.isArray(value)\n    if (!append(array ? \"[\" : \"{\")) return false\n    const keys = Object.keys(value)\n    for (let index = 0; index < keys.length; index++) {\n      const key = keys[index]!\n      if (index && !append(\",\")) return false\n      if (!array && (!append(JSON.stringify(key)) || !append(\":\"))) return false\n      path.push(key)\n      const accepted = visit((value as Record<string, unknown>)[key])\n      path.pop()\n      if (!accepted) return false\n    }\n    return append(array ? \"]\" : \"}\")\n  }\n  if (!visit(snapshot)) return\n  const json = parts.join(\"\")\n  const absent = \"[\" + missing.join(\",\") + \"]\"\n  return Object.freeze({ payload, json, missing: absent, units: payload.length + json.length + absent.length })\n}\n\nfunction materializeSnapshot(plan: SnapshotMaterialization): Snapshot {\n  const snapshot = JSON.parse(plan.json) as Snapshot\n  // Null placeholders preserve property order and array density. Only these\n  // known own paths need repair; -0 is preserved by its native JSON literal.\n  if (plan.missing !== \"[]\") {\n    const paths = JSON.parse(plan.missing) as string[][]\n    for (const path of paths) {\n      let parent: Record<string, unknown> = snapshot\n      for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>\n      Object.defineProperty(parent, path[path.length - 1]!, { value: undefined, enumerable: true, writable: true, configurable: true })\n    }\n  }\n  return snapshot\n}\n"
+        }
+      ]
+    },
+    "stage2": {
+      "sourceBefore": {
+        "gitBlob": "1eaf5b42230829466d29a82ac0d5361e98b1a64d",
+        "sha256": "484f5e47121166dbc6c083968ee33e641e9af8662c56f076c62c53fce43f097f",
+        "bytes": 28833,
+        "nonemptyLines": 533
+      },
+      "sourceAfter": {
+        "gitBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+        "sha256": "385541d3c293ce1b7dff4e8e4a9ceb1eddcbb25e0437bd4846d247eb3a951431",
+        "bytes": 29961,
+        "nonemptyLines": 550
+      },
+      "operations": [
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            83,
+            83
+          ],
+          "sourcePostimageLines": [
+            83,
+            83
+          ],
+          "targetPreimageLines": [
+            83,
+            83
+          ],
+          "oldText": "  // strings survive a call; each hit parses a new, fully detached object graph.\n",
+          "newText": "  // strings survive requests; each demanded surface gets a fresh object graph.\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            85,
+            85
+          ],
+          "sourcePostimageLines": [
+            85,
+            85
+          ],
+          "targetPreimageLines": [
+            85,
+            85
+          ],
+          "oldText": "  const loadSnapshot = (surface: Surface, payload?: string): Snapshot => {\n",
+          "newText": "  const observeSnapshot = (surface: Surface, payload?: string): (() => Snapshot) => {\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            87,
+            87
+          ],
+          "sourcePostimageLines": [
+            87,
+            87
+          ],
+          "targetPreimageLines": [
+            87,
+            87
+          ],
+          "oldText": "    if (payload !== undefined && prior?.payload === payload) return materializeSnapshot(prior)\n",
+          "newText": "    if (payload !== undefined && prior?.payload === payload) return () => materializeSnapshot(prior)\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            89,
+            89
+          ],
+          "sourcePostimageLines": [
+            89,
+            89
+          ],
+          "targetPreimageLines": [
+            89,
+            89
+          ],
+          "oldText": "    if (payload === undefined) return { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }\n",
+          "newText": "    if (payload === undefined) return () => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            101,
+            101
+          ],
+          "sourcePostimageLines": [
+            101,
+            101
+          ],
+          "targetPreimageLines": [
+            101,
+            101
+          ],
+          "oldText": "    return snapshot\n",
+          "newText": "    return () => snapshot\n"
+        },
+        {
+          "kind": "insert",
+          "sourcePreimageLines": [
+            103,
+            102
+          ],
+          "sourcePostimageLines": [
+            103,
+            103
+          ],
+          "targetPreimageLines": [
+            103,
+            102
+          ],
+          "oldText": "",
+          "newText": "  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload)()\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            225,
+            225
+          ],
+          "sourcePostimageLines": [
+            226,
+            234
+          ],
+          "targetPreimageLines": [
+            225,
+            225
+          ],
+          "oldText": "          return loadSnapshot(name, row?.payload)\n",
+          "newText": "          // Observe and validate changed bytes now, including unrequested surfaces.\n          // The captured materializer never consults SQL or the shared memo again.\n          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: observeSnapshot(name, row?.payload) }\n          return () => {\n            if (observed.value) return observed.value\n            observed.value = observed.materialize!()\n            observed.materialize = undefined\n            return observed.value\n          }\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            227,
+            227
+          ],
+          "sourcePostimageLines": [
+            236,
+            242
+          ],
+          "targetPreimageLines": [
+            227,
+            227
+          ],
+          "oldText": "        const snapshots = { dashboard: read(\"dashboard\"), planner: read(\"planner\"), procurement: read(\"procurement\") }\n",
+          "newText": "        const observed = { dashboard: read(\"dashboard\"), planner: read(\"planner\"), procurement: read(\"procurement\") }\n        // This container is private to one live root scope. The callback receives\n        // only its normal target snapshot; nested/current reads still clone.\n        const snapshots = {\n          get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },\n          get procurement() { return observed.procurement() },\n        }\n"
+        },
+        {
+          "kind": "replace",
+          "sourcePreimageLines": [
+            480,
+            480
+          ],
+          "sourcePostimageLines": [
+            495,
+            497
+          ],
+          "targetPreimageLines": [
+            509,
+            509
+          ],
+          "oldText": "// At most three entries and 16 MiB of UTF-16 string content per open store.\n",
+          "newText": "// The shared memo retains at most three entries and 16 MiB of UTF-16 strings.\n// A live root may temporarily retain observed plans evicted during admission;\n// their combined content is bounded by one additional memo budget until used.\n"
+        }
+      ]
+    },
+    "originalBundleDeltaPreservedExactly": true,
+    "preservedBundleDifferences": [
+      "currentSnapshots retains cloneSnapshot for all three surfaces",
+      "Nested staged transaction branch retains cloneSnapshot(staged)",
+      "decodeSnapshot retains validateSnapshot(decode(envelope[2]))",
+      "cloneSnapshot/copyValue/validateSnapshot bodies remain byte-for-byte; normalized tree semantics and checks are retained",
+      "contract.ts remains byte-for-byte target blob9e9bac976b503409de65868a366f352ca1e65071, including Result.fieldErrors and Result.currentVersionCAS",
+      "conflict retains currentVersionCAS: current?.version ?? 0"
+    ],
+    "localCandidatesComparedWithoutModification": [
+      {
+        "scratchPath": "third/local-store.ts",
+        "sourcePath": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "gitBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+        "sha256": "385541d3c293ce1b7dff4e8e4a9ceb1eddcbb25e0437bd4846d247eb3a951431",
+        "bytes": 29961,
+        "nonemptyLines": 550,
+        "equalsPublishedW3": true
+      },
+      {
+        "scratchPath": "third/profile.test.ts",
+        "sourcePath": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+        "gitBlob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+        "sha256": "dd12d55260321f83692dc2cc2d1cdba2ce9761ad82f5abb84f131293b155f943",
+        "bytes": 12803,
+        "nonemptyLines": 195,
+        "equalsPublishedW3": true
+      },
+      {
+        "scratchPath": "second/scope-profile.test.ts",
+        "sourcePath": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+        "gitBlob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+        "sha256": "22218690257220bf7a48e59d31494c5a32ea8feab12cc1957fb066153b16645d",
+        "bytes": 13480,
+        "nonemptyLines": 215,
+        "equalsPublishedW3": true
+      },
+      {
+        "scratchPath": "third/surface-demand.test.ts",
+        "sourcePath": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "gitBlob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+        "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+        "bytes": 15837,
+        "nonemptyLines": 311,
+        "equalsPublishedW3": true
+      }
+    ],
+    "onlyOneProductAndFiveTestFiles": true,
+    "receiptsIncludedAsProduct": false,
+    "sourceCodeExecuted": false
+  },
+  "artifacts": [
+    {
+      "path": "product.NOT_APPLIED.patch.txt",
+      "gitBlob": "12f4774b0dec057bfb0a56a95c51360abfbba478",
+      "sha256": "e06bc8d5cb98e950597813b3c020acbd9df5de2befec4920dceedd5c2953ec19",
+      "bytes": 8961,
+      "nonemptyLines": 165,
+      "role": "Product-only incremental patch against exact target preimage"
+    },
+    {
+      "path": "source-W1-to-W3.patch.txt",
+      "gitBlob": "4cfd6566ff46960e18543634fa2b691c38d1094a",
+      "sha256": "8280858c33708339f3d8fce4602c1fc7dfc371cef960a2be2474dd3ed59fc336",
+      "bytes": 4154,
+      "nonemptyLines": 69,
+      "role": "Source delta provenance; not the target application patch"
+    },
+    {
+      "path": "composed-with-tests.NOT_APPLIED.patch.txt",
+      "gitBlob": "4a90b0e422bc628e654111bbc8612cfd796e1a34",
+      "sha256": "f483c07f69b56beb93a600c1ed84fd3100d0f40bb7897de5c05f7b3f4885c1e1",
+      "bytes": 76415,
+      "nonemptyLines": 1392,
+      "role": "Target product patch plus all five exact W3 test additions"
+    }
+  ],
+  "applicationPreconditions": [
+    "Read mission34 terminal handoff and reobserve final source identity before intake; W3 is a concrete published source, not a final acceptance claim.",
+    "Reobserve PR65/sf2-stack and reconcile any head drift before a target write.",
+    "Require exact local-store and contract preimage blobs/modes and absence of all five test paths. If any differs, stop and rebuild the composition.",
+    "Session33 applies only the incremental product patch plus the five exact test additions under its current authority, through GitHub MCP expected-head CAS with force=false.",
+    "Preserve contract.ts and all unrelated bundle work; do not copy the Finance local-store postimage over the bundle.",
+    "Qualify the resulting material bundle candidate through its authorized dispatcher. Source results do not transfer to the bundle."
+  ],
+  "limits": [
+    "NOT_APPLIED_NOT_TESTED on the bundle. No target commit/ref/PR/product mutation occurred.",
+    "No local or remote tests, typecheck, guards, server or workflow dispatch were performed by this preparation.",
+    "Only MCP reads and deterministic textual reconstruction/hashing were used; no runtime behavior was evaluated.",
+    "All five tests are exact W3 bytes; no assertion, timeout, fixture or oracle was edited.",
+    "The prior W1 packets and their failed S2 result remain historical evidence; this packet does not rewrite them.",
+    "This composition does not close FIN-IND-005, waive source check failures or claim a completed original journey."
+  ],
+  "globalRelease": false,
+  "textualAudit": {
+    "path": "textual-audit.json",
+    "sha256": "842266b1ef85faf4e4d1d5d3df1a0a2007cc6ab47820dfed8b9e01d9398bf8a7",
+    "allSixPatchPostimagesReconstructedExactly": true,
+    "sourceCandidatesUnchanged": true,
+    "productAndTestCodeExecuted": false
+  }
+}

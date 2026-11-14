@@ -1,0 +1,1477 @@
+{
+  "schema": "finance-persistence-performance-semantics-v1",
+  "mission": 34,
+  "finding": "FIN-IND-005",
+  "candidate": {
+    "W": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+    "productPath": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "productBlob": "1eaf5b42230829466d29a82ac0d5361e98b1a64d",
+    "receivedHead": "5e3073bceca683adc5663108832094421b43325e",
+    "contractUnchanged": true
+  },
+  "status": "OWNED_SHORT_PROOFS_PASS_SELECTION_FAIL",
+  "execution": {
+    "selection": "S1",
+    "runId": 43644438895,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644438895",
+    "statusAtAssignment": "in_progress",
+    "result": "FAIL",
+    "source": "GitHub MCP run metadata and full job logs fetched and inspected directly by this matrix author.",
+    "requiredReconciliation": "S1 remains FAIL, with its sole failure reproduced on the unchanged preimage in B1. Root must attach the original long-journey and package-check receipts independently. Passing subsets retain this exact W/S/run identity; no oracle or product correction was made for this inherited failure.",
+    "request": {
+      "runner": "bun",
+      "timeout": 120000,
+      "env": {},
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts"
+      ]
+    },
+    "status": "completed",
+    "S": "88fe413d104e7f6d45af4118ca572a216770463c",
+    "jobId": 132598944546,
+    "observed": {
+      "pass": 112,
+      "fail": 1,
+      "skip": 3,
+      "expectCalls": 1061,
+      "tests": 116,
+      "files": 10,
+      "totalSeconds": 40.74,
+      "ownedNewTestsPass": 17,
+      "ownedNewTestsFail": 0,
+      "omni": "not applicable; focused selection made no omni spawn"
+    },
+    "skipped": [
+      "foreign-owned existing root rejects (requires root fixture privileges)",
+      "rejects foreign UID directory (requires root fixture privileges)",
+      "rejects foreign UID database (requires root fixture privileges)"
+    ],
+    "failure": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "line": 276,
+      "name": "surface namespaces isolate identical blob keys and snapshots",
+      "actualExtraProperty": {
+        "sfBlobGenerations": {
+          "document": 1
+        }
+      },
+      "observation": "Expected snapshot omits private blob generation metadata; received snapshot includes document generation 1. Blob bytes and other printed fields agree.",
+      "classification": "INHERITED_REPRODUCED_ON_PREIMAGE",
+      "control": {
+        "selection": "B1",
+        "W": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+        "S": "36f5f7f5f44b848990d247f846bde4e49e496111",
+        "tree": "c47a7137f4c20bc282121bfc496fbc0a160ddf85",
+        "runId": 43644706454,
+        "jobId": 132599773810,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644706454",
+        "result": "FAIL",
+        "status": "completed",
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "filtered": 35,
+          "expectCalls": 3,
+          "tests": 1,
+          "files": 1,
+          "totalMs": 207,
+          "testMs": 20.14
+        },
+        "productBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+        "unchangedTestBlob": "e1dbb391c53a56c3261554383356eb1c64ea77af",
+        "failure": {
+          "name": "surface namespaces isolate identical blob keys and snapshots",
+          "line": 276,
+          "actualExtraProperty": {
+            "sfBlobGenerations": {
+              "document": 1
+            }
+          }
+        },
+        "classification": "INHERITED_REPRODUCED_ON_PREIMAGE",
+        "verification": "This author fetched B1 metadata, full job logs, snapshot commit parent/tree and both product/test blobs through GitHub MCP. B1 executes the previous local-store.ts blob and the same unchanged failing test.",
+        "limits": "B1 proves this exact failure exists without mission34 product changes. It does not convert either B1 or S1 into PASS, waive the failure, or close any long-journey obligation."
+      },
+      "oracleEdited": false
+    },
+    "metrics": {
+      "profile": {
+        "sizes": {
+          "stateBytes": 1241296,
+          "payloadBytes": 2094712,
+          "payloadCharacters": 2094712,
+          "caseBytes": 115925,
+          "cases": 1,
+          "results": 10,
+          "transactions": 18,
+          "surfaces": [
+            {
+              "surface": "dashboard",
+              "payloadBytes": 2094712
+            },
+            {
+              "surface": "planner",
+              "payloadBytes": 10375
+            },
+            {
+              "surface": "procurement",
+              "payloadBytes": 162
+            }
+          ]
+        },
+        "counts": [
+          {
+            "mode": "decode",
+            "counts": {
+              "parseCalls": 1,
+              "parsedCharacters": 2094712,
+              "taggedParseCalls": 1,
+              "taggedCharacters": 2094712,
+              "objectAssemblies": 7457,
+              "entryTuples": 36324,
+              "encodedObjectDescriptorReads": 0
+            }
+          },
+          {
+            "mode": "transaction",
+            "counts": {
+              "parseCalls": 4,
+              "parsedCharacters": 1245363,
+              "taggedParseCalls": 0,
+              "taggedCharacters": 0,
+              "objectAssemblies": 1,
+              "entryTuples": 0,
+              "encodedObjectDescriptorReads": 0
+            }
+          },
+          {
+            "mode": "currentSnapshots",
+            "counts": {
+              "parseCalls": 3,
+              "parsedCharacters": 2105249,
+              "taggedParseCalls": 3,
+              "taggedCharacters": 2105249,
+              "objectAssemblies": 7499,
+              "entryTuples": 36506,
+              "encodedObjectDescriptorReads": 7499
+            }
+          },
+          {
+            "mode": "nestedRead",
+            "counts": {
+              "parseCalls": 1,
+              "parsedCharacters": 2094712,
+              "taggedParseCalls": 1,
+              "taggedCharacters": 2094712,
+              "objectAssemblies": 7457,
+              "entryTuples": 36324,
+              "encodedObjectDescriptorReads": 7457
+            }
+          }
+        ],
+        "timings": [
+          {
+            "mode": "decode",
+            "elapsedMs": 21.603039000001445
+          },
+          {
+            "mode": "transaction",
+            "elapsedMs": 6.022290000000794
+          },
+          {
+            "mode": "currentSnapshots",
+            "elapsedMs": 44.67703600000095
+          },
+          {
+            "mode": "nestedRead",
+            "elapsedMs": 39.13427000000229
+          },
+          {
+            "mode": "nestedRead",
+            "elapsedMs": 51.68700499999977
+          },
+          {
+            "mode": "currentSnapshots",
+            "elapsedMs": 47.40052199999627
+          },
+          {
+            "mode": "transaction",
+            "elapsedMs": 6.166776999998547
+          },
+          {
+            "mode": "decode",
+            "elapsedMs": 19.940683000000718
+          },
+          {
+            "mode": "decode",
+            "elapsedMs": 26.67523600000277
+          },
+          {
+            "mode": "transaction",
+            "elapsedMs": 6.1280079999996815
+          },
+          {
+            "mode": "currentSnapshots",
+            "elapsedMs": 47.56675299999915
+          },
+          {
+            "mode": "nestedRead",
+            "elapsedMs": 44.35565099999803
+          },
+          {
+            "mode": "nestedRead",
+            "elapsedMs": 39.38229300000239
+          },
+          {
+            "mode": "currentSnapshots",
+            "elapsedMs": 52.49200800000108
+          },
+          {
+            "mode": "transaction",
+            "elapsedMs": 6.958070000000589
+          },
+          {
+            "mode": "decode",
+            "elapsedMs": 28.371163000003435
+          },
+          {
+            "mode": "decode",
+            "elapsedMs": 21.362676999997348
+          },
+          {
+            "mode": "transaction",
+            "elapsedMs": 6.043501000000106
+          },
+          {
+            "mode": "currentSnapshots",
+            "elapsedMs": 53.84627999999793
+          },
+          {
+            "mode": "nestedRead",
+            "elapsedMs": 42.62905799999862
+          },
+          {
+            "mode": "nestedRead",
+            "elapsedMs": 48.30865199999971
+          },
+          {
+            "mode": "currentSnapshots",
+            "elapsedMs": 44.36185100000148
+          },
+          {
+            "mode": "transaction",
+            "elapsedMs": 7.032752999999502
+          },
+          {
+            "mode": "decode",
+            "elapsedMs": 24.4989659999992
+          }
+        ],
+        "summary": [
+          {
+            "mode": "decode",
+            "samples": 6,
+            "medianMs": 23.051002500000322,
+            "minimumMs": 19.940683000000718,
+            "maximumMs": 28.371163000003435
+          },
+          {
+            "mode": "transaction",
+            "samples": 6,
+            "medianMs": 6.147392499999114,
+            "minimumMs": 6.022290000000794,
+            "maximumMs": 7.032752999999502
+          },
+          {
+            "mode": "currentSnapshots",
+            "samples": 6,
+            "medianMs": 47.48363749999771,
+            "minimumMs": 44.36185100000148,
+            "maximumMs": 53.84627999999793
+          },
+          {
+            "mode": "nestedRead",
+            "samples": 6,
+            "medianMs": 43.49235449999833,
+            "minimumMs": 39.13427000000229,
+            "maximumMs": 51.68700499999977
+          }
+        ],
+        "coldWarm": {
+          "cold": {
+            "parseCalls": 3,
+            "parsedCharacters": 2105249,
+            "taggedParseCalls": 3,
+            "taggedCharacters": 2105249,
+            "objectAssemblies": 7500,
+            "entryTuples": 36506,
+            "encodedObjectDescriptorReads": 0
+          },
+          "warm": {
+            "parseCalls": 4,
+            "parsedCharacters": 1245363,
+            "taggedParseCalls": 0,
+            "taggedCharacters": 0,
+            "objectAssemblies": 1,
+            "entryTuples": 0,
+            "encodedObjectDescriptorReads": 0
+          }
+        },
+        "interpretation": "Direct codec and transaction timings overlap; scoped modes exclude outer admission/load. Do not add these categories or extrapolate a whole-journey speedup.",
+        "disclosure": "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged."
+      },
+      "oversize": {
+        "payloadCharacters": 9437429,
+        "reads": [
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 9437429
+          },
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 9437429
+          },
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 9437429
+          }
+        ]
+      },
+      "aggregateBound": {
+        "surfaces": [
+          {
+            "surface": "dashboard",
+            "payloadCharacters": 2097374
+          },
+          {
+            "surface": "planner",
+            "payloadCharacters": 2097372
+          },
+          {
+            "surface": "procurement",
+            "payloadCharacters": 2097376
+          }
+        ],
+        "reads": [
+          {
+            "taggedParseCalls": 3,
+            "taggedCharacters": 6292122
+          },
+          {
+            "taggedParseCalls": 3,
+            "taggedCharacters": 6292122
+          },
+          {
+            "taggedParseCalls": 3,
+            "taggedCharacters": 6292122
+          }
+        ]
+      },
+      "traversalBounds": [
+        {
+          "mode": "depth",
+          "payloadCharacters": 3384,
+          "reads": [
+            {
+              "taggedParseCalls": 1,
+              "taggedCharacters": 3384
+            },
+            {
+              "taggedParseCalls": 1,
+              "taggedCharacters": 3384
+            }
+          ]
+        },
+        {
+          "mode": "fixups",
+          "payloadCharacters": 57643,
+          "reads": [
+            {
+              "taggedParseCalls": 1,
+              "taggedCharacters": 57643
+            },
+            {
+              "taggedParseCalls": 1,
+              "taggedCharacters": 57643
+            }
+          ]
+        },
+        {
+          "mode": "nodes",
+          "payloadCharacters": 2600373,
+          "reads": [
+            {
+              "taggedParseCalls": 1,
+              "taggedCharacters": 2600373
+            },
+            {
+              "taggedParseCalls": 1,
+              "taggedCharacters": 2600373
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "reviewProvenance": {
+    "author": "/root/short_proof",
+    "authorship": "Author of profile.test.ts and bounds.test.ts; this is an authorial semantics map, not independent E17/G4 review.",
+    "readSet": [
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-backups.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts"
+    ],
+    "localTestsExecuted": false,
+    "remoteWrites": false,
+    "ciDispatched": false,
+    "directlyReadRunLogs": true,
+    "directlyReadPreimageControl": true
+  },
+  "implementationBoundary": {
+    "changed": "Private SQL-payload decode/materialization path only, plus clearing its per-store memo after dispose drains.",
+    "unchanged": [
+      "Public Snapshot/Persistence/LocalStore contracts",
+      "v1 encodeSnapshot/decodeSnapshot and their validation",
+      "SQLite schema, WAL, synchronous=FULL, BEGIN IMMEDIATE, writer admission and retry timeout",
+      "SQL SELECT statements and three-surface observation order",
+      "Callback execution/return semantics and domain algorithms",
+      "CurrentSnapshots and staged nested-read encode/decode roundtrips",
+      "Commit validation, blob operations and generation checks",
+      "Authentication payload reads, expiry and atomic take/removal"
+    ],
+    "memo": "Per-open-store map with at most one entry per surface, at most three entries. A frozen record holds only original payload, compact JSON, JSON-encoded undefined paths and a numeric string-length charge. No decoded graph, callback result, grant, Request, session binding or credential bytes is retained in the memo.",
+    "hitCondition": "The just-observed SQL payload string must equal the complete validated original payload string. No version, object identity, function identity, digest approximation or payload-length equality substitutes for it.",
+    "hitBehavior": "JSON.parse creates a new graph; -0 is emitted as a native JSON numeric literal; null placeholders are restored to own enumerable/writable/configurable undefined properties with Object.defineProperty. Object key order and dense arrays match the unchanged decoder.",
+    "missBehavior": "Delete the previous entry for that surface, run the complete unchanged v1 decoder/validator before creating an optional plan. Missing SQL rows delete the old entry and synthesize the unchanged empty snapshot. Invalid rows throw before user callback.",
+    "writeBehavior": "Only previously observed SQL input bytes may be retained. Mutated callback snapshots and write outcomes are not inserted. All commit=true writes still encode and independently decode/validate before SQL writes and COMMIT."
+  },
+  "invariants": [
+    {
+      "id": "MATERIAL-REDUCTION",
+      "invariant": "Prove less actual snapshot work on representative SQLite state before the original journey.",
+      "mechanism": "Warm exact-payload materialization replaces the recursive tagged decoder and its tuple/object assembly with fresh compact JSON parsing plus bounded undefined restoration.",
+      "tests": [
+        "P01"
+      ],
+      "expected": "Cold parse count equals present SQL rows and their total characters. Warm transaction tagged parse count and encode descriptor reads are zero, object assemblies at most three; direct decode remains an independent full tagged-work control with more than 1000 entry tuples. Both outputs re-encode to identical persisted bytes.",
+      "limits": [
+        "S1 counters and test outcomes are observed. Selection failure remains explicit; these passing short proofs do not close FIN-IND-005.",
+        "Six interleaved timing samples are observations, never pass/fail ratio or whole-journey acceleration proof.",
+        "Scoped currentSnapshots/nestedRead timings exclude outer admission and must not be added to transaction timings."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "FRESH-SQL",
+      "invariant": "Preserve fresh SQL observations even at identical versions and payload length.",
+      "mechanism": "Each read still SELECTs under the existing transaction/lock; exact string comparison happens after the SELECT. Changed bytes, deleted rows or malformed payloads invalidate the prior surface entry.",
+      "tests": [
+        "I03",
+        "I04",
+        "F01",
+        "F03"
+      ],
+      "expected": "Same-length same-version replacement is observed, deletion yields empty state, restoration is re-read, malformed rows reject before callback. Case read/draft/prepare-intent races still suppress stale disclosure.",
+      "limits": [
+        "The SQL content tests cover selected races and malformed examples, not all possible filesystem faults.",
+        "No claim of eliminating SQL reads or lock admission cost."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "CALLBACK-OUTPUT-ISOLATION",
+      "invariant": "No mutable state or callback outputs are shared between requests.",
+      "mechanism": "Every hit parses a new full object graph. Plans contain strings rather than callback objects, and are built before callbacks mutate the snapshot. Existing provider clone boundaries remain intact.",
+      "tests": [
+        "P01",
+        "I01",
+        "I02",
+        "C01",
+        "C02"
+      ],
+      "expected": "Mutating retained read, declined-write, committed-write, opaque-callback or egress-observed objects cannot change the next request or durable SQL state.",
+      "limits": [
+        "Persisted financial results remain data in the byte-equivalent snapshot representation; no previously authorized response, result object or predicate outcome is reused.",
+        "These tests do not prove behavior for arbitrary monkey-patched platform intrinsics."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "AUTHORITY-INDEPENDENCE",
+      "invariant": "Preserve principal, Request, header, binding, lease and source-authority fences.",
+      "mechanism": "The memo never receives authority inputs or callback results. State-provider and case-port are untouched; original authorize/revalidate/request/source checks execute on each observation.",
+      "tests": [
+        "C03",
+        "C04",
+        "F01",
+        "F02",
+        "F03",
+        "S01"
+      ],
+      "expected": "Principal mismatch, Request replacement, header mutation, revocation, mutable/accessor binding changes, ended leases and final case mutations suppress values as before.",
+      "limits": [
+        "S01 uses the in-memory testPersistence adapter and is supplementary only.",
+        "The synthetic authority/empty-case tests are not installed native-session acceptance.",
+        "Full financial source/replay assertions still require the unchanged original journey."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "TX-LOCK-CAS",
+      "invariant": "Preserve transactions, WAL, admission ordering, CAS and one callback execution.",
+      "mechanism": "BEGIN IMMEDIATE, writer queue, waitForAdmission, retryLock, transaction ownership and callback execution code are unchanged; the memo is read only after the fresh locked SELECT.",
+      "tests": [
+        "I08",
+        "L03",
+        "L05",
+        "L06"
+      ],
+      "expected": "Independent warm stores serialize same-version writers; one wins and the other sees fresh version and declines. Different-record changes survive, callbacks are not replayed, cancelled/timed-out admissions do not overtake their predecessor.",
+      "limits": [
+        "No new cross-process crash or power-loss injection is introduced.",
+        "Durability remains SQLite's existing FULL/WAL contract, with reopen/concurrency regression coverage.",
+        "The selected namespace-isolation test fails on extra sfBlobGenerations metadata. B1 reproduced the exact failure on the unchanged preimage; the test and overall S1 selection still remain FAIL."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_INCLUDE_FAILURE"
+    },
+    {
+      "id": "ABORT-ERROR-NOCOMMIT",
+      "invariant": "Abort, callback throw, rejected writes and invalid commits cannot publish state or blobs.",
+      "mechanism": "Signal checks, commit=false behavior, final ROLLBACK and error propagation are unchanged. A memo entry describes only input read from SQL; it never contains staged mutation outputs.",
+      "tests": [
+        "I02",
+        "I05",
+        "L04",
+        "L05",
+        "C04"
+      ],
+      "expected": "After abort/throw/invalid snapshots, original snapshot and document bytes remain, orphan blobs do not exist, and reopen observes the unchanged state.",
+      "limits": [
+        "No injected low-level disk-full or COMMIT I/O failure in the new tests; existing validation and transaction mechanics are retained by source inspection."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "NESTED-READ-POISON",
+      "invariant": "Nested reads see staged state without sharing it, and caught nested writes poison the enclosing transaction.",
+      "mechanism": "Staged parent snapshots retain the original encode/decode clone path, not the SQL-payload memo. Parent/root readers, poisoned flags, scope checks and nested blob-write rejection are unchanged.",
+      "tests": [
+        "I06",
+        "L01",
+        "L02",
+        "C04"
+      ],
+      "expected": "Child/currentSnapshots mutations do not change the parent's staged object; uncommitted staged values are visible to nested reads; caught forbidden writes still prevent parent commit.",
+      "limits": [
+        "The optimization does not reduce staged snapshot cloning work.",
+        "The currentSnapshots path remains intentionally unoptimized."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "CLOSED-SCOPES-DISPOSE",
+      "invariant": "Closed callback scopes and disposed stores reject later use while admitted operations drain.",
+      "mechanism": "requireScope, context ownership and capability checks are unchanged. dispose adds memo.clear only after Promise.allSettled of already active operations.",
+      "tests": [
+        "L01",
+        "L02",
+        "L07"
+      ],
+      "expected": "Late currentSnapshots/blob capabilities fail, live children cannot outlive successful parent completion, admitted work drains, new operations are denied.",
+      "limits": [
+        "Tests do not inspect private map entries or measure immediate garbage collection; bounded retention and dispose clearing are source-verified."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "BLOBS-ATOMICITY",
+      "invariant": "Preserve blobs, private generations and atomicity with state.",
+      "mechanism": "No blob bytes enter the materialization plan. Blob SQL reads/writes/removal, generation increment/overflow checks and generation-integrity checks stay inside the same existing transaction.",
+      "tests": [
+        "I05",
+        "L04",
+        "L06",
+        "A01",
+        "A02"
+      ],
+      "expected": "Rollback restores prior blob state; namespace separation and concurrent mixed state/blob workloads survive; backup restore retains matching snapshot/blob content.",
+      "limits": [
+        "The memo may serialize generation metadata as ordinary snapshot data, with fresh detached reconstruction.",
+        "No change to blob storage format or backup lifecycle.",
+        "Namespace-isolation comparison fails on sfBlobGenerations metadata, while the other listed blob/rollback tests pass. B1 reproduced the same failure on the preimage; overall S1 selection remains FAIL."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_INCLUDE_FAILURE"
+    },
+    {
+      "id": "CREDENTIALS",
+      "invariant": "Credential/session reads remain fresh and independent of business locks and snapshot optimization.",
+      "mechanism": "Authentication methods are unchanged and do not call loadSnapshot. secrets.get still queries expiry-filtered SQL without a write lock and returns fresh Uint8Array bytes.",
+      "tests": [
+        "I09",
+        "L09"
+      ],
+      "expected": "Mutating returned secret bytes does not affect later reads; expiration, independent-store update and removal are observed inside and outside a business transaction.",
+      "limits": [
+        "No claim of new identity-provider or external credential-system validation."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "V1-STRUCTURAL-EQUIVALENCE",
+      "invariant": "Preserve v1 values, exact re-encoding, property order, special names and compatibility.",
+      "mechanism": "Persisted encoder/decoder are unchanged. Only validated normalized decoder output is converted. Direct JSON emission avoids toJSON invocation; native -0 literals preserve negative zero; known own-path fixups preserve undefined and property insertion order, including __proto__.",
+      "tests": [
+        "I01",
+        "L08",
+        "P01",
+        "A01"
+      ],
+      "expected": "Warm/reopened objects re-encode byte-identically; integer/empty/special/escaped keys, null-prototype input normalization, nonenumerable input normalization, sparse-array normalization, tagged-looking arrays, lone surrogates and owned undefined retain original decoder semantics.",
+      "limits": [
+        "This is equivalence over the v1 codec's accepted normalized value domain, not arbitrary JavaScript objects.",
+        "Nonenumerable/sparse/null-prototype inputs are normalized exactly as the existing codec; original input descriptors/prototypes are not newly promised."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "STATE-VALIDATION",
+      "invariant": "Malformed state and invalid future writes must still fail closed.",
+      "mechanism": "Every new SQL payload runs the complete old decodeSnapshot; exact-equal validated strings alone permit memoization. All commits still use encodeSnapshot plus decodeSnapshot. Existing accessor/prototype/symbol/cycle/type rejection remains in encode.",
+      "tests": [
+        "I04",
+        "I07",
+        "L08",
+        "C05",
+        "A02"
+      ],
+      "expected": "Malformed JSON/envelope/duplicate keys/negative version reject before callback; accessors are not executed during encoding; inherited-prototype writes fail; invalid product-state outcomes are preserved.",
+      "limits": [
+        "The test corpus is representative and does not enumerate every malformed v1 node combination.",
+        "A validated identical payload need not repeat the pure validator; this is byte-equivalent memoization, not validation skipped on version/function identity."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "BOUNDED-RETENTION",
+      "invariant": "Bound retained decoder-plan resources without introducing new acceptance limits.",
+      "mechanism": "At most three per-store entries; sum of original payload, compact JSON and encoded undefined-path string lengths is at most 8*1024*1024 UTF-16 code units. Admission evicts oldest entries until within the aggregate bound. Plan traversal stops above depth 128, 200000 nodes or 4096 undefined fixups; a failed plan leaves the original decoded result valid and uncached.",
+      "tests": [
+        "B01",
+        "B02",
+        "B03"
+      ],
+      "expected": "Oversized and traversal-limited valid snapshots retain bytes and special values and repeat full tagged decoding; cycling the three individually cacheable large surfaces produces misses rather than exceeding aggregate retention.",
+      "limits": [
+        "16 MiB means retained UTF-16 string content at two bytes per charged code unit, not total heap/RSS.",
+        "The bound excludes JS object/Map overhead, temporary parse/planning arrays, active callback/output graphs, SQLite memory and other independent open stores.",
+        "No native heap profiler or GC timing proof is claimed.",
+        "Fallback is an optimization limit only; legacy acceptance limits and errors remain unchanged."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_PASS"
+    },
+    {
+      "id": "REOPEN-BACKUP-ROLLBACK",
+      "invariant": "Reopen and backup restore preserve exact state without migration.",
+      "mechanism": "No on-disk schema, snapshot envelope or writer codec change. The per-store memo is empty on open and is discarded after dispose drains. Existing backup code continues full encode/decode structural checks and snapshotSha256 validation.",
+      "tests": [
+        "I01",
+        "I02",
+        "I05",
+        "L06",
+        "A01",
+        "A02"
+      ],
+      "expected": "Warm-store disposal/reopen and real capture/restore preserve state, undefined/-0 and blobs; corrupt archives fail before target changes.",
+      "limits": [
+        "Reopen is not a simulated OS crash or power-loss experiment.",
+        "No original financial historical-choice/replay/reopen assertion is satisfied merely by these storage tests."
+      ],
+      "testEvidenceStatus": "REFERENCED_TESTS_INCLUDE_FAILURE"
+    }
+  ],
+  "migrationRollback": {
+    "migrationRequired": false,
+    "diskFormat": "Unchanged sucafina-snapshot envelope version 1; unchanged SQLite tables and writes.",
+    "forwardCompatibility": "Existing valid v1 rows are decoded by the unchanged validator on the first observation. Cold stores do not depend on a previous process's memo.",
+    "rollbackOfMission34": "Reverting only mission34's local-store.ts optimization to received baseline returns to full decoding and reads the same persisted v1 bytes; no data rewrite or migration is required. This conclusion is scoped to the unchanged snapshot codec and should not be generalized to earlier Finance business-receipt revisions.",
+    "mixedVersionBoundary": "New and received-baseline store implementations still use identical SQLite transaction and snapshot formats; the short tests cover independent current-version instances, not a mixed-binary deployment.",
+    "predecessorBoundary": "Mission18's compact Finance receipts and all other prior business changes are preserved. Their separate older-reader rollback caveats are not waived by snapshot compatibility.",
+    "performanceOnRollback": "Expected loss of the optimization only; no performance-budget guarantee for the old decoder."
+  },
+  "notProven": [
+    "FIN-IND-005 closure before the original unchanged 180000/300000-budget journey finishes its 15000/15001, actual historical reread, replay, real reopen and access-negative assertions.",
+    "Integrated sf2-stack/bundle behavior, installed NativeMCP/Atlas/AM01-AM06 acceptance, independent E17/G4/G8 or GLOBAL_RELEASE.",
+    "A whole-process heap/RSS ceiling or absence of GC pauses.",
+    "Crash/power-loss behavior beyond unchanged SQLite settings, source inspection and reopen/rollback tests.",
+    "Green typecheck/guards or inherited diagnostic disposition; those require their own actual Actions receipts."
+  ],
+  "testCatalog": {
+    "P01": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "name": "FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work",
+      "driver": "real SQLite; unchanged Finance/C08 fixture with synthetic source grants",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work",
+          "status": "PASS",
+          "durationMs": 33262.85
+        }
+      ]
+    },
+    "I01": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "snapshot materialization preserves v1 values, property order and owned undefined across warm reads and reopen",
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "snapshot materialization preserves v1 values, property order and owned undefined across warm reads and reopen",
+          "status": "PASS",
+          "durationMs": 9.26
+        }
+      ]
+    },
+    "I02": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "warm snapshot outputs and declined callbacks never become the next observation",
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "warm snapshot outputs and declined callbacks never become the next observation",
+          "status": "PASS",
+          "durationMs": 11.46
+        }
+      ]
+    },
+    "I03": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "warm materialization observes changed SQL bytes with identical versions and payload length, deletion and restoration",
+      "driver": "real SQLite plus independent SQL replacement",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "warm materialization observes changed SQL bytes with identical versions and payload length, deletion and restoration",
+          "status": "PASS",
+          "durationMs": 11.3
+        }
+      ]
+    },
+    "I04": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "changed malformed payloads reject before callback after a valid warm observation",
+      "driver": "real SQLite plus independent SQL corruption",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "changed malformed payloads reject before callback after a valid warm observation",
+          "status": "PASS",
+          "durationMs": 19.54
+        }
+      ]
+    },
+    "I05": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "names": [
+        "warm snapshot abort rolls back snapshot and blob mutations without publishing a materialization",
+        "warm snapshot throw rolls back snapshot and blob mutations without publishing a materialization",
+        "warm snapshot invalid rolls back snapshot and blob mutations without publishing a materialization"
+      ],
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "warm snapshot abort rolls back snapshot and blob mutations without publishing a materialization",
+          "status": "PASS",
+          "durationMs": 9.51
+        },
+        {
+          "name": "warm snapshot throw rolls back snapshot and blob mutations without publishing a materialization",
+          "status": "PASS",
+          "durationMs": 8.55
+        },
+        {
+          "name": "warm snapshot invalid rolls back snapshot and blob mutations without publishing a materialization",
+          "status": "PASS",
+          "durationMs": 7.48
+        }
+      ]
+    },
+    "I06": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "warm nested reads copy staged values and nested write poison survives a caught child rejection",
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "warm nested reads copy staged values and nested write poison survives a caught child rejection",
+          "status": "PASS",
+          "durationMs": 7.99
+        }
+      ]
+    },
+    "I07": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "warm observations cannot validate later accessor or inherited-prototype writes",
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "warm observations cannot validate later accessor or inherited-prototype writes",
+          "status": "PASS",
+          "durationMs": 6.59
+        }
+      ]
+    },
+    "I08": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "independently warmed stores serialize fresh same-version CAS and never replay callbacks",
+      "driver": "two independent real SQLite store instances",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "independently warmed stores serialize fresh same-version CAS and never replay callbacks",
+          "status": "PASS",
+          "durationMs": 30.92
+        }
+      ]
+    },
+    "I09": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "name": "warm snapshots do not cache credential reads, expiry or returned secret byte arrays",
+      "driver": "real SQLite authentication table and two store instances",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "warm snapshots do not cache credential reads, expiry or returned secret byte arrays",
+          "status": "PASS",
+          "durationMs": 12.57
+        }
+      ]
+    },
+    "B01": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "name": "snapshot materialization bypasses oversized payloads without changing their bytes or special values",
+      "driver": "real SQLite; 9 MiB ASCII content; three reads",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "snapshot materialization bypasses oversized payloads without changing their bytes or special values",
+          "status": "PASS",
+          "durationMs": 135.36
+        }
+      ]
+    },
+    "B02": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "name": "snapshot materialization enforces its aggregate bound across all three SQLite surfaces",
+      "driver": "real SQLite; three distinct 2 MiB values; three complete admissions",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "snapshot materialization enforces its aggregate bound across all three SQLite surfaces",
+          "status": "PASS",
+          "durationMs": 79.41
+        }
+      ]
+    },
+    "B03": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "names": [
+        "snapshot materialization depth limit falls back to the valid legacy decoder",
+        "snapshot materialization fixups limit falls back to the valid legacy decoder",
+        "snapshot materialization nodes limit falls back to the valid legacy decoder"
+      ],
+      "driver": "real SQLite; depth 140, 4100 undefined elements, 200010 scalar elements",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "snapshot materialization depth limit falls back to the valid legacy decoder",
+          "status": "PASS",
+          "durationMs": 8.19
+        },
+        {
+          "name": "snapshot materialization fixups limit falls back to the valid legacy decoder",
+          "status": "PASS",
+          "durationMs": 14.73
+        },
+        {
+          "name": "snapshot materialization nodes limit falls back to the valid legacy decoder",
+          "status": "PASS",
+          "durationMs": 309.74
+        }
+      ]
+    },
+    "L01": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "name": "current snapshots are isolated copies in a live transaction and expire with its scope",
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "current snapshots are isolated copies in a live transaction and expire with its scope",
+          "status": "PASS",
+          "durationMs": 8.13
+        }
+      ]
+    },
+    "L02": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "name": "all-surface transaction exposes staged nested reads and rejects nested writes",
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "all-surface transaction exposes staged nested reads and rejects nested writes",
+          "status": "PASS",
+          "durationMs": 8.57
+        }
+      ]
+    },
+    "L03": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "names": [
+        "independent instances serialize same-record CAS writes without replay",
+        "independent instances serialize different-record writes without replay"
+      ],
+      "driver": "two independent real SQLite store instances",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "independent instances serialize same-record CAS writes without replay",
+          "status": "PASS",
+          "durationMs": 37.97
+        },
+        {
+          "name": "independent instances serialize different-record writes without replay",
+          "status": "PASS",
+          "durationMs": 38.11
+        }
+      ]
+    },
+    "L04": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "names": [
+        "false rolls back state, versions, sequences, audit, notices and blob additions/removals",
+        "throw rolls back state, versions, sequences, audit, notices and blob additions/removals",
+        "abort rolls back state, versions, sequences, audit, notices and blob additions/removals"
+      ],
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "false rolls back state, versions, sequences, audit, notices and blob additions/removals",
+          "status": "PASS",
+          "durationMs": 7.52
+        },
+        {
+          "name": "throw rolls back state, versions, sequences, audit, notices and blob additions/removals",
+          "status": "PASS",
+          "durationMs": 8.7
+        },
+        {
+          "name": "abort rolls back state, versions, sequences, audit, notices and blob additions/removals",
+          "status": "PASS",
+          "durationMs": 6.98
+        }
+      ]
+    },
+    "L05": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "names": [
+        "pending lock cancellation never invokes work",
+        "pending lock timeout never invokes work",
+        "already aborted transactions never invoke callback",
+        "same-instance abort before admission never invokes work or lets a later operation overtake its active predecessor",
+        "same-instance timeout before admission never invokes work or lets a later operation overtake its active predecessor"
+      ],
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "pending lock cancellation never invokes work",
+          "status": "PASS",
+          "durationMs": 87.2
+        },
+        {
+          "name": "pending lock timeout never invokes work",
+          "status": "PASS",
+          "durationMs": 86.69
+        },
+        {
+          "name": "already aborted transactions never invoke callback",
+          "status": "PASS",
+          "durationMs": 3.76
+        },
+        {
+          "name": "same-instance abort before admission never invokes work or lets a later operation overtake its active predecessor",
+          "status": "PASS",
+          "durationMs": 118.61
+        },
+        {
+          "name": "same-instance timeout before admission never invokes work or lets a later operation overtake its active predecessor",
+          "status": "PASS",
+          "durationMs": 118.21
+        }
+      ]
+    },
+    "L06": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "names": [
+        "real SQLite persists the entire snapshot, binary blobs and undefined across reopen",
+        "surface namespaces isolate identical blob keys and snapshots",
+        "one SQLite store survives a mixed concurrent burst across surfaces, secrets and binary assets without lost or replayed writes"
+      ],
+      "driver": "real SQLite",
+      "executionStatus": "MIXED_WITH_FAIL",
+      "observed": [
+        {
+          "name": "real SQLite persists the entire snapshot, binary blobs and undefined across reopen",
+          "status": "PASS",
+          "durationMs": 8.96
+        },
+        {
+          "name": "surface namespaces isolate identical blob keys and snapshots",
+          "status": "FAIL",
+          "durationMs": 7.15
+        },
+        {
+          "name": "one SQLite store survives a mixed concurrent burst across surfaces, secrets and binary assets without lost or replayed writes",
+          "status": "PASS",
+          "durationMs": 151.21
+        }
+      ],
+      "baselineControl": {
+        "selection": "B1",
+        "W": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+        "S": "36f5f7f5f44b848990d247f846bde4e49e496111",
+        "tree": "c47a7137f4c20bc282121bfc496fbc0a160ddf85",
+        "runId": 43644706454,
+        "jobId": 132599773810,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644706454",
+        "result": "FAIL",
+        "status": "completed",
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "filtered": 35,
+          "expectCalls": 3,
+          "tests": 1,
+          "files": 1,
+          "totalMs": 207,
+          "testMs": 20.14
+        },
+        "productBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+        "unchangedTestBlob": "e1dbb391c53a56c3261554383356eb1c64ea77af",
+        "failure": {
+          "name": "surface namespaces isolate identical blob keys and snapshots",
+          "line": 276,
+          "actualExtraProperty": {
+            "sfBlobGenerations": {
+              "document": 1
+            }
+          }
+        },
+        "classification": "INHERITED_REPRODUCED_ON_PREIMAGE",
+        "verification": "This author fetched B1 metadata, full job logs, snapshot commit parent/tree and both product/test blobs through GitHub MCP. B1 executes the previous local-store.ts blob and the same unchanged failing test.",
+        "limits": "B1 proves this exact failure exists without mission34 product changes. It does not convert either B1 or S1 into PASS, waive the failure, or close any long-journey obligation."
+      }
+    },
+    "L07": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "names": [
+        "blob capabilities expire after callback and dispose drains work while prohibiting new operations",
+        "dispose drains already admitted mixed operations and cancelled work without admitting late writes"
+      ],
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "blob capabilities expire after callback and dispose drains work while prohibiting new operations",
+          "status": "PASS",
+          "durationMs": 7.82
+        },
+        {
+          "name": "dispose drains already admitted mixed operations and cancelled work without admitting late writes",
+          "status": "PASS",
+          "durationMs": 5020.01
+        }
+      ]
+    },
+    "L08": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "names": [
+        "codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined",
+        "cyclic state rejects atomically",
+        "corrupt stored snapshot payload rejects before callback instead of synthesizing empty state",
+        "malformed but encodable snapshot rejects before commit and rolls back staged bytes"
+      ],
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined",
+          "status": "PASS",
+          "durationMs": 6.64
+        },
+        {
+          "name": "cyclic state rejects atomically",
+          "status": "PASS",
+          "durationMs": 4.2
+        },
+        {
+          "name": "corrupt stored snapshot payload rejects before callback instead of synthesizing empty state",
+          "status": "PASS",
+          "durationMs": 4.92
+        },
+        {
+          "name": "malformed but encodable snapshot rejects before commit and rolls back staged bytes",
+          "status": "PASS",
+          "durationMs": 4.25
+        }
+      ]
+    },
+    "L09": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "name": "secrets get is read-only inside a business write; expiry, atomic take and removal persist",
+      "driver": "real SQLite",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "secrets get is read-only inside a business write; expiry, atomic take and removal persist",
+          "status": "PASS",
+          "durationMs": 20.12
+        }
+      ]
+    },
+    "A01": {
+      "path": "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+      "name": "SQLite capture survives live deletion and reopens for actual atomic restore, preserving exact tagged state",
+      "driver": "real SQLite, filesystem backup and atomic restore",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "SQLite capture survives live deletion and reopens for actual atomic restore, preserving exact tagged state",
+          "status": "PASS",
+          "durationMs": 84.89
+        }
+      ]
+    },
+    "A02": {
+      "path": "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+      "names": [
+        "corrupt encoded snapshot rejects restore before target state changes",
+        "missing retained blob rejects restore without changing SQLite state or staged blobs",
+        "corrupt retained blob rejects restore without changing SQLite state or staged blobs",
+        "missing live blob prevents publication of an incomplete archive",
+        "capture enters the real store exactly once and never nests a SQL transaction"
+      ],
+      "driver": "real SQLite and filesystem backup",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "corrupt encoded snapshot rejects restore before target state changes",
+          "status": "PASS",
+          "durationMs": 18.16
+        },
+        {
+          "name": "missing retained blob rejects restore without changing SQLite state or staged blobs",
+          "status": "PASS",
+          "durationMs": 24.08
+        },
+        {
+          "name": "corrupt retained blob rejects restore without changing SQLite state or staged blobs",
+          "status": "PASS",
+          "durationMs": 26.08
+        },
+        {
+          "name": "missing live blob prevents publication of an incomplete archive",
+          "status": "PASS",
+          "durationMs": 11.97
+        },
+        {
+          "name": "capture enters the real store exactly once and never nests a SQL transaction",
+          "status": "PASS",
+          "durationMs": 14.89
+        }
+      ]
+    },
+    "C01": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "name": "C08 case selection detaches its result before the final authority callback and across requests",
+      "driver": "real SQLite/C08 with synthetic UI authority",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "C08 case selection detaches its result before the final authority callback and across requests",
+          "status": "PASS",
+          "durationMs": 8.52
+        }
+      ]
+    },
+    "C02": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "name": "C08 opaque and wrapped selectors retain detached mutable callbacks on success, throw and rejection",
+      "driver": "real SQLite/C08 with synthetic UI authority",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "C08 opaque and wrapped selectors retain detached mutable callbacks on success, throw and rejection",
+          "status": "PASS",
+          "durationMs": 9.22
+        }
+      ]
+    },
+    "C03": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "names": [
+        "C08 selectors observe a mutable or accessor binding after admission instead of a captured authority",
+        "C08 selectors cannot reuse access across principals, Request identity, header mutation or revocation"
+      ],
+      "driver": "real SQLite/C08 with synthetic UI authority",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "C08 selectors observe a mutable or accessor binding after admission instead of a captured authority",
+          "status": "PASS",
+          "durationMs": 8.02
+        },
+        {
+          "name": "C08 selectors cannot reuse access across principals, Request identity, header mutation or revocation",
+          "status": "PASS",
+          "durationMs": 8.51
+        }
+      ]
+    },
+    "C04": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "name": "C08 selected reads retain cancellation and cannot commit a caught nested-write attempt",
+      "driver": "real SQLite/C08 with synthetic UI authority",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "C08 selected reads retain cancellation and cannot commit a caught nested-write attempt",
+          "status": "PASS",
+          "durationMs": 7.5
+        }
+      ]
+    },
+    "C05": {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "names": [
+        "C08 case selectors preserve missing, inherited, legacy and malformed state outcomes",
+        "C08 case selectors preserve accessor counts and omitted parent cases without an extra observation"
+      ],
+      "driver": "real SQLite/C08 with synthetic UI authority",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "C08 case selectors preserve missing, inherited, legacy and malformed state outcomes",
+          "status": "PASS",
+          "durationMs": 20.03
+        },
+        {
+          "name": "C08 case selectors preserve accessor counts and omitted parent cases without an extra observation",
+          "status": "PASS",
+          "durationMs": 9.57
+        }
+      ]
+    },
+    "F01": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "names": [
+        "case read suppresses its projection when membership changes during the final host revalidation",
+        "case read suppresses its projection when same-version content changes during the final host revalidation"
+      ],
+      "driver": "real SQLite/C08 and UI leases; deliberately empty business case",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "case read suppresses its projection when membership changes during the final host revalidation",
+          "status": "PASS",
+          "durationMs": 12.36
+        },
+        {
+          "name": "case read suppresses its projection when same-version content changes during the final host revalidation",
+          "status": "PASS",
+          "durationMs": 10.46
+        }
+      ]
+    },
+    "F02": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "names": [
+        "case read refuses a finished lease after the final C08 namespace authorization",
+        "case read refuses a expired lease after the final C08 namespace authorization",
+        "case draft refuses a finished lease after the final C08 namespace authorization",
+        "case draft refuses a expired lease after the final C08 namespace authorization",
+        "case prepare-intent refuses a finished lease after the final C08 namespace authorization",
+        "case prepare-intent refuses a expired lease after the final C08 namespace authorization"
+      ],
+      "driver": "real SQLite/C08 and UI leases; deliberately empty business case",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "case read refuses a finished lease after the final C08 namespace authorization",
+          "status": "PASS",
+          "durationMs": 16.6
+        },
+        {
+          "name": "case read refuses a expired lease after the final C08 namespace authorization",
+          "status": "PASS",
+          "durationMs": 10.9
+        },
+        {
+          "name": "case draft refuses a finished lease after the final C08 namespace authorization",
+          "status": "PASS",
+          "durationMs": 13.32
+        },
+        {
+          "name": "case draft refuses a expired lease after the final C08 namespace authorization",
+          "status": "PASS",
+          "durationMs": 11.57
+        },
+        {
+          "name": "case prepare-intent refuses a finished lease after the final C08 namespace authorization",
+          "status": "PASS",
+          "durationMs": 11.76
+        },
+        {
+          "name": "case prepare-intent refuses a expired lease after the final C08 namespace authorization",
+          "status": "PASS",
+          "durationMs": 10.79
+        }
+      ]
+    },
+    "F03": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "names": [
+        "draft suppresses membership changed by host check 3 before its response",
+        "draft suppresses incarnation changed by host check 3 before its response",
+        "draft suppresses same-version content changed by host check 3 before its response",
+        "prepare-intent suppresses membership changed by host check 5 before its response",
+        "prepare-intent suppresses incarnation changed by host check 5 before its response",
+        "prepare-intent suppresses same-version content changed by host check 5 before its response",
+        "prepare-intent suppresses same-version content changed by host check 3 before its response"
+      ],
+      "driver": "real SQLite/C08 and UI leases; deliberately empty business case",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "draft suppresses membership changed by host check 3 before its response",
+          "status": "PASS",
+          "durationMs": 11.47
+        },
+        {
+          "name": "draft suppresses incarnation changed by host check 3 before its response",
+          "status": "PASS",
+          "durationMs": 8.8
+        },
+        {
+          "name": "draft suppresses same-version content changed by host check 3 before its response",
+          "status": "PASS",
+          "durationMs": 9.93
+        },
+        {
+          "name": "prepare-intent suppresses membership changed by host check 5 before its response",
+          "status": "PASS",
+          "durationMs": 13.88
+        },
+        {
+          "name": "prepare-intent suppresses incarnation changed by host check 5 before its response",
+          "status": "PASS",
+          "durationMs": 14.67
+        },
+        {
+          "name": "prepare-intent suppresses same-version content changed by host check 5 before its response",
+          "status": "PASS",
+          "durationMs": 13.91
+        },
+        {
+          "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+          "status": "PASS",
+          "durationMs": 12.98
+        }
+      ]
+    },
+    "S01": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "names": [
+        "dashboard administrator is denied without product authority",
+        "exact retry recovers the result, digest reuse conflicts and principals remain isolated",
+        "a retry after authority revocation never discloses the stored result",
+        "read callback cannot mutate persisted state",
+        "revoked authority at egress prevents read disclosure and write commit",
+        "target replacement during work prevents commit and disclosure",
+        "a callback cannot mutate a different namespace, versions, or receipts",
+        "runtime rejects internal and prototype-key namespaces before work"
+      ],
+      "driver": "testPersistence in-memory adapter: supplementary provider semantics, not SQLite durability proof",
+      "executionStatus": "PASS",
+      "observed": [
+        {
+          "name": "dashboard administrator is denied without product authority",
+          "status": "PASS",
+          "durationMs": 0.46
+        },
+        {
+          "name": "exact retry recovers the result, digest reuse conflicts and principals remain isolated",
+          "status": "PASS",
+          "durationMs": 0.83
+        },
+        {
+          "name": "a retry after authority revocation never discloses the stored result",
+          "status": "PASS",
+          "durationMs": 0.33
+        },
+        {
+          "name": "read callback cannot mutate persisted state",
+          "status": "PASS",
+          "durationMs": 0.4
+        },
+        {
+          "name": "revoked authority at egress prevents read disclosure and write commit",
+          "status": "PASS",
+          "durationMs": 0.57
+        },
+        {
+          "name": "target replacement during work prevents commit and disclosure",
+          "status": "PASS",
+          "durationMs": 0.28
+        },
+        {
+          "name": "a callback cannot mutate a different namespace, versions, or receipts",
+          "status": "PASS",
+          "durationMs": 0.63
+        },
+        {
+          "name": "runtime rejects internal and prototype-key namespaces before work",
+          "status": "PASS",
+          "durationMs": 0.3
+        }
+      ]
+    }
+  }
+}

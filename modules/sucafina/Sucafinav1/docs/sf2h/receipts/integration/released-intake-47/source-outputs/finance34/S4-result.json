@@ -1,0 +1,2597 @@
+{
+  "schema": "sf2h.finance-persistence-performance.result.v2",
+  "mission": 34,
+  "stage": "S4_FINAL_SHORT",
+  "finding": "FIN-IND-005",
+  "selectionStatus": "FAIL",
+  "ownedTestsStatus": "25_PASS_0_FAIL",
+  "findingStatus": "OPEN_PENDING_ORIGINAL_LONG",
+  "source": {
+    "commit": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "productBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+    "contractBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5"
+  },
+  "snapshot": {
+    "branch": "ci-run-linux-finance-persistence-ebbc90dd-short",
+    "commit": "ab67e9059f194199fdd10652bb054d50d883914e",
+    "tree": "1cc4e371accada47a9ae4f319d487d57c71aedd9",
+    "onlyAdditionalPath": ".ci-run.json",
+    "requestBlob": "66fd046d046705d6a7338d27922595057d3c7584",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/local-store.test.ts",
+        "Sucafinav1/test/local-backups.test.ts",
+        "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+        "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43647736006,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKKZuYxg",
+    "head_branch": "ci-run-linux-finance-persistence-ebbc90dd-short",
+    "head_sha": "ab67e9059f194199fdd10652bb054d50d883914e",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "test(sucafina): verify demand materialization and real Finance parse …",
+    "run_number": 660,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 416464764,
+    "check_suite_id": 118178960213,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbhAPTVQ",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006",
+    "pull_requests": [],
+    "created_at": "2026-11-14T22:22:15Z",
+    "updated_at": "2026-11-14T22:25:18Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T22:22:15Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118178960213",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "ab67e9059f194199fdd10652bb054d50d883914e",
+      "tree_id": "1cc4e371accada47a9ae4f319d487d57c71aedd9",
+      "message": "test(sucafina): verify demand materialization and real Finance parse work",
+      "timestamp": "2026-11-14T22:22:12Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "jobs": {
+    "total_count": 2,
+    "jobs": [
+      {
+        "id": 132609151438,
+        "run_id": 43647736006,
+        "workflow_name": "test-ci",
+        "head_branch": "ci-run-linux-finance-persistence-ebbc90dd-short",
+        "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVsSYps8AAAAe4B8Rzg",
+        "head_sha": "ab67e9059f194199fdd10652bb054d50d883914e",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132609151438",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006/job/132609151438",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-14T22:22:16Z",
+        "started_at": "2026-11-14T22:22:17Z",
+        "completed_at": "2026-11-14T22:25:12Z",
+        "name": "test (ubuntu-24.04)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-14T22:22:17Z",
+            "completed_at": "2026-11-14T22:22:20Z"
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-14T22:22:20Z",
+            "completed_at": "2026-11-14T22:22:29Z"
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3,
+            "started_at": "2026-11-14T22:22:29Z",
+            "completed_at": "2026-11-14T22:22:29Z"
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4,
+            "started_at": "2026-11-14T22:22:29Z",
+            "completed_at": "2026-11-14T22:22:29Z"
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-14T22:22:29Z",
+            "completed_at": "2026-11-14T22:22:33Z"
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-14T22:22:33Z",
+            "completed_at": "2026-11-14T22:22:33Z"
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7,
+            "started_at": "2026-11-14T22:22:33Z",
+            "completed_at": "2026-11-14T22:22:33Z"
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-14T22:22:33Z",
+            "completed_at": "2026-11-14T22:23:21Z"
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-14T22:23:21Z",
+            "completed_at": "2026-11-14T22:23:21Z"
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10,
+            "started_at": "2026-11-14T22:23:21Z",
+            "completed_at": "2026-11-14T22:23:21Z"
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11,
+            "started_at": "2026-11-14T22:23:21Z",
+            "completed_at": "2026-11-14T22:23:21Z"
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-11-14T22:23:21Z",
+            "completed_at": "2026-11-14T22:23:41Z"
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13,
+            "started_at": "2026-11-14T22:23:41Z",
+            "completed_at": "2026-11-14T22:23:41Z"
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14,
+            "started_at": "2026-11-14T22:23:41Z",
+            "completed_at": "2026-11-14T22:23:41Z"
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-11-14T22:23:41Z",
+            "completed_at": "2026-11-14T22:23:41Z"
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-11-14T22:23:41Z",
+            "completed_at": "2026-11-14T22:23:41Z"
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17,
+            "started_at": "2026-11-14T22:23:41Z",
+            "completed_at": "2026-11-14T22:24:05Z"
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18,
+            "started_at": "2026-11-14T22:24:05Z",
+            "completed_at": "2026-11-14T22:24:05Z"
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19,
+            "started_at": "2026-11-14T22:24:05Z",
+            "completed_at": "2026-11-14T22:24:05Z"
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 20,
+            "started_at": "2026-11-14T22:24:05Z",
+            "completed_at": "2026-11-14T22:25:11Z"
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 21,
+            "started_at": "2026-11-14T22:25:11Z",
+            "completed_at": "2026-11-14T22:25:11Z"
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22,
+            "started_at": "2026-11-14T22:25:11Z",
+            "completed_at": "2026-11-14T22:25:11Z"
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 42,
+            "started_at": "2026-11-14T22:25:11Z",
+            "completed_at": "2026-11-14T22:25:11Z"
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 43,
+            "started_at": "2026-11-14T22:25:11Z",
+            "completed_at": "2026-11-14T22:25:11Z"
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 44,
+            "started_at": "2026-11-14T22:25:11Z",
+            "completed_at": "2026-11-14T22:25:11Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 45,
+            "started_at": "2026-11-14T22:25:11Z",
+            "completed_at": "2026-11-14T22:25:11Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132609151438",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "runner_id": 1000058988,
+        "runner_name": "GitHub Actions 1000058988",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 132609955236,
+        "run_id": 43647736006,
+        "workflow_name": "test-ci",
+        "head_branch": "ci-run-linux-finance-persistence-ebbc90dd-short",
+        "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43647736006",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVsSYps8AAAAe4CtVpA",
+        "head_sha": "ab67e9059f194199fdd10652bb054d50d883914e",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132609955236",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006/job/132609955236",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-14T22:25:12Z",
+        "started_at": "2026-11-14T22:25:14Z",
+        "completed_at": "2026-11-14T22:25:17Z",
+        "name": "cleanup",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-14T22:25:15Z",
+            "completed_at": "2026-11-14T22:25:15Z"
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-14T22:25:15Z",
+            "completed_at": "2026-11-14T22:25:16Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-14T22:25:16Z",
+            "completed_at": "2026-11-14T22:25:16Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132609955236",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "runner_id": 1000058991,
+        "runner_name": "GitHub Actions 1000058991",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      }
+    ]
+  },
+  "artifacts": {
+    "artifacts": []
+  },
+  "summary": {
+    "pass": 120,
+    "fail": 1,
+    "skip": 3,
+    "expectCalls": 1221,
+    "tests": 124,
+    "files": 12,
+    "totalSeconds": 65.09,
+    "newOwnedTestsPass": 25
+  },
+  "inheritedFailure": {
+    "name": "surface namespaces isolate identical blob keys and snapshots",
+    "path": "Sucafinav1/test/local-store.test.ts",
+    "line": 276,
+    "unchangedTestBlob": "e1dbb391c53a56c3261554383356eb1c64ea77af",
+    "difference": "Actual private sfBlobGenerations.document=1 is omitted by the old expected snapshot.",
+    "preimageControl": {
+      "runId": 43644706454,
+      "jobId": 132599773810,
+      "result": "FAIL on unchanged preimage",
+      "sourceCommit": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8"
+    },
+    "disposition": "Retained and reported; no oracle, test or blob semantics edited."
+  },
+  "skips": {
+    "count": 3,
+    "reason": "Existing foreign-UID directory checks require a privileged runner; no claim that these ran."
+  },
+  "tests": [
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "current snapshots are isolated copies in a live transaction and expire with its scope",
+      "milliseconds": 13.8
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "all-surface transaction exposes staged nested reads and rejects nested writes",
+      "milliseconds": 6.02
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "real SQLite persists the entire snapshot, binary blobs and undefined across reopen",
+      "milliseconds": 6.68
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined",
+      "milliseconds": 4.53
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "false rolls back state, versions, sequences, audit, notices and blob additions/removals",
+      "milliseconds": 5.56
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "throw rolls back state, versions, sequences, audit, notices and blob additions/removals",
+      "milliseconds": 4.56
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "abort rolls back state, versions, sequences, audit, notices and blob additions/removals",
+      "milliseconds": 5.45
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "unsupported codec value NaN rejects without modifying persisted state",
+      "milliseconds": 3.24
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "unsupported codec value Infinity rejects without modifying persisted state",
+      "milliseconds": 2.71
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "unsupported codec value -Infinity rejects without modifying persisted state",
+      "milliseconds": 3
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "unsupported codec value () => 1 rejects without modifying persisted state",
+      "milliseconds": 2.66
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "unsupported codec value [object Object] rejects without modifying persisted state",
+      "milliseconds": 2.32
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "cyclic state rejects atomically",
+      "milliseconds": 3.24
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "independent instances serialize different-record writes without replay",
+      "milliseconds": 36.5
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "independent instances serialize same-record CAS writes without replay",
+      "milliseconds": 35.8
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "fail",
+      "name": "surface namespaces isolate identical blob keys and snapshots",
+      "milliseconds": 5.48
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "pending lock cancellation never invokes work",
+      "milliseconds": 85.41
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "pending lock timeout never invokes work",
+      "milliseconds": 85.33
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "secrets get is read-only inside a business write; expiry, atomic take and removal persist",
+      "milliseconds": 12.16
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "blob capabilities expire after callback and dispose drains work while prohibiting new operations",
+      "milliseconds": 4.97
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "relative and memory paths are rejected before opening storage",
+      "milliseconds": 0.16
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "an existing accessible directory is rejected without changing its permissions",
+      "milliseconds": 2.37
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "a corrupt existing SQLite file rejects rather than returning an empty installation",
+      "milliseconds": 2.99
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "corrupt stored snapshot payload rejects before callback instead of synthesizing empty state",
+      "milliseconds": 3.2
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "already aborted transactions never invoke callback",
+      "milliseconds": 3.04
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "rejects directory symlinks without creating storage through an alias",
+      "milliseconds": 0.79
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "rejects ancestor symlinks without creating storage through an alias",
+      "milliseconds": 0.39
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "rejects database symlinks without creating storage through an alias",
+      "milliseconds": 2.55
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "creating nested private directories preserves existing parent permissions",
+      "milliseconds": 2.65
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "skip",
+      "name": "rejects foreign UID directory (requires root fixture privileges)",
+      "milliseconds": null
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "skip",
+      "name": "rejects foreign UID database (requires root fixture privileges)",
+      "milliseconds": null
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "malformed but encodable snapshot rejects before commit and rolls back staged bytes",
+      "milliseconds": 2.88
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "one SQLite store survives a mixed concurrent burst across surfaces, secrets and binary assets without lost or replayed writes",
+      "milliseconds": 95.72
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "dispose drains already admitted mixed operations and cancelled work without admitting late writes",
+      "milliseconds": 5014.28
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "same-instance abort before admission never invokes work or lets a later operation overtake its active predecessor",
+      "milliseconds": 115.92
+    },
+    {
+      "file": "Sucafinav1/test/local-store.test.ts",
+      "outcome": "pass",
+      "name": "same-instance timeout before admission never invokes work or lets a later operation overtake its active predecessor",
+      "milliseconds": 116.02
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "SQLite capture survives live deletion and reopens for actual atomic restore, preserving exact tagged state",
+      "milliseconds": 26.24
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "missing retained blob rejects restore without changing SQLite state or staged blobs",
+      "milliseconds": 12.7
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "corrupt retained blob rejects restore without changing SQLite state or staged blobs",
+      "milliseconds": 12.23
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "symlink retained blob rejects restore without changing SQLite state or staged blobs",
+      "milliseconds": 11.1
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "permissive retained blob rejects restore without changing SQLite state or staged blobs",
+      "milliseconds": 12.47
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "corrupt encoded snapshot rejects restore before target state changes",
+      "milliseconds": 11.4
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "dashboard preserves supplied daily dates and applies the documented strict daily cutoff",
+      "milliseconds": 30.78
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "procurement preserves supplied daily dates and applies the documented strict daily cutoff",
+      "milliseconds": 25.19
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "planner preserves supplied daily dates and applies the documented strict daily cutoff",
+      "milliseconds": 28.73
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"../live\" rejects before filesystem traversal",
+      "milliseconds": 4.26
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"/etc/passwd\" rejects before filesystem traversal",
+      "milliseconds": 3.86
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"..\" rejects before filesystem traversal",
+      "milliseconds": 5.13
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"a/b\" rejects before filesystem traversal",
+      "milliseconds": 3.56
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"a\\\\b\" rejects before filesystem traversal",
+      "milliseconds": 3.31
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"%2e%2e\" rejects before filesystem traversal",
+      "milliseconds": 3.89
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"\" rejects before filesystem traversal",
+      "milliseconds": 4.31
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "unsafe archive id \"x\\u0000y\" rejects before filesystem traversal",
+      "milliseconds": 3.91
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "missing live blob prevents publication of an incomplete archive",
+      "milliseconds": 7.96
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "relative roots, permissive existing roots and symlink ancestors reject without changing paths",
+      "milliseconds": 4.21
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "skip",
+      "name": "foreign-owned existing root rejects (requires root fixture privileges)",
+      "milliseconds": null
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "pruning leaves unknown, incomplete and aliased paths untouched and never copies secrets",
+      "milliseconds": 14.66
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "capture enters the real store exactly once and never nests a SQL transaction",
+      "milliseconds": 9.57
+    },
+    {
+      "file": "Sucafinav1/test/local-backups.test.ts",
+      "outcome": "pass",
+      "name": "invalid capture time cannot publish; archive blob reads never fall back to unrelated live keys",
+      "milliseconds": 11.91
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "outcome": "pass",
+      "name": "FIN-IND-005 real confirmed witness classifies SQLite root and nested materialization work",
+      "milliseconds": 36278.23
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "outcome": "pass",
+      "name": "FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work",
+      "milliseconds": 21918.55
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "outcome": "pass",
+      "name": "snapshot materialization bypasses oversized payloads without changing their bytes or special values",
+      "milliseconds": 112.29
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "outcome": "pass",
+      "name": "snapshot materialization enforces its aggregate bound across all three SQLite surfaces",
+      "milliseconds": 53.07
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "outcome": "pass",
+      "name": "snapshot materialization depth limit falls back to the valid legacy decoder",
+      "milliseconds": 5.82
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "outcome": "pass",
+      "name": "snapshot materialization fixups limit falls back to the valid legacy decoder",
+      "milliseconds": 14.85
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "outcome": "pass",
+      "name": "snapshot materialization nodes limit falls back to the valid legacy decoder",
+      "milliseconds": 228.15
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "snapshot materialization preserves v1 values, property order and owned undefined across warm reads and reopen",
+      "milliseconds": 6.12
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm snapshot outputs and declined callbacks never become the next observation",
+      "milliseconds": 6.54
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm materialization observes changed SQL bytes with identical versions and payload length, deletion and restoration",
+      "milliseconds": 6.38
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "changed malformed payloads reject before callback after a valid warm observation",
+      "milliseconds": 9.48
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm snapshot abort rolls back snapshot and blob mutations without publishing a materialization",
+      "milliseconds": 5.73
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm snapshot throw rolls back snapshot and blob mutations without publishing a materialization",
+      "milliseconds": 4.32
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm snapshot invalid rolls back snapshot and blob mutations without publishing a materialization",
+      "milliseconds": 4.59
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm nested reads copy staged values and nested write poison survives a caught child rejection",
+      "milliseconds": 5.62
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm observations cannot validate later accessor or inherited-prototype writes",
+      "milliseconds": 4.84
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "independently warmed stores serialize fresh same-version CAS and never replay callbacks",
+      "milliseconds": 26.45
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "warm snapshots do not cache credential reads, expiry or returned secret byte arrays",
+      "milliseconds": 6.8
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "outcome": "pass",
+      "name": "warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation",
+      "milliseconds": 18.35
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "outcome": "pass",
+      "name": "new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores",
+      "milliseconds": 27.12
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "outcome": "pass",
+      "name": "one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies",
+      "milliseconds": 4.4
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "outcome": "pass",
+      "name": "ended root scopes reject deferred sibling access before any lazy materialization",
+      "milliseconds": 4.5
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "outcome": "pass",
+      "name": "a captured Dashboard plan survives eviction while other surfaces are observed during the same admission",
+      "milliseconds": 31.94
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "outcome": "pass",
+      "name": "missing sibling rows invalidate old plans and restore only after a fresh SQL observation",
+      "milliseconds": 8.23
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "outcome": "pass",
+      "name": "independent writers cannot replace an admitted sibling observation and the next root sees their commit",
+      "milliseconds": 26.34
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "C08 case selection detaches its result before the final authority callback and across requests",
+      "milliseconds": 5.93
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "C08 opaque and wrapped selectors retain detached mutable callbacks on success, throw and rejection",
+      "milliseconds": 6.37
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "C08 selectors observe a mutable or accessor binding after admission instead of a captured authority",
+      "milliseconds": 5.39
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "C08 selectors cannot reuse access across principals, Request identity, header mutation or revocation",
+      "milliseconds": 4.97
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "C08 selected reads retain cancellation and cannot commit a caught nested-write attempt",
+      "milliseconds": 5.98
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "C08 case selectors preserve missing, inherited, legacy and malformed state outcomes",
+      "milliseconds": 11.49
+    },
+    {
+      "file": "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "outcome": "pass",
+      "name": "C08 case selectors preserve accessor counts and omitted parent cases without an extra observation",
+      "milliseconds": 6.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "outcome": "pass",
+      "name": "draft suppresses membership changed by host check 3 before its response",
+      "milliseconds": 7.88
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "outcome": "pass",
+      "name": "draft suppresses incarnation changed by host check 3 before its response",
+      "milliseconds": 5.26
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "outcome": "pass",
+      "name": "draft suppresses same-version content changed by host check 3 before its response",
+      "milliseconds": 5.59
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "outcome": "pass",
+      "name": "prepare-intent suppresses membership changed by host check 5 before its response",
+      "milliseconds": 8.95
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "outcome": "pass",
+      "name": "prepare-intent suppresses incarnation changed by host check 5 before its response",
+      "milliseconds": 8.49
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "outcome": "pass",
+      "name": "prepare-intent suppresses same-version content changed by host check 5 before its response",
+      "milliseconds": 7.71
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "outcome": "pass",
+      "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+      "milliseconds": 7.26
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "outcome": "pass",
+      "name": "case read refuses a finished lease after the final C08 namespace authorization",
+      "milliseconds": 7.02
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "outcome": "pass",
+      "name": "case read refuses a expired lease after the final C08 namespace authorization",
+      "milliseconds": 5.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "outcome": "pass",
+      "name": "case draft refuses a finished lease after the final C08 namespace authorization",
+      "milliseconds": 7.01
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "outcome": "pass",
+      "name": "case draft refuses a expired lease after the final C08 namespace authorization",
+      "milliseconds": 6.6
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "outcome": "pass",
+      "name": "case prepare-intent refuses a finished lease after the final C08 namespace authorization",
+      "milliseconds": 5.72
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "outcome": "pass",
+      "name": "case prepare-intent refuses a expired lease after the final C08 namespace authorization",
+      "milliseconds": 6.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "outcome": "pass",
+      "name": "case read suppresses its projection when membership changes during the final host revalidation",
+      "milliseconds": 7.86
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "outcome": "pass",
+      "name": "case read suppresses its projection when same-version content changes during the final host revalidation",
+      "milliseconds": 6.29
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "dashboard administrator is denied without product authority",
+      "milliseconds": 0.34
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "exact retry recovers the result, digest reuse conflicts and principals remain isolated",
+      "milliseconds": 0.77
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "concurrent different commands at the same version commit once",
+      "milliseconds": 0.3
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "a retry after authority revocation never discloses the stored result",
+      "milliseconds": 0.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "failure before commit rolls back all staged changes",
+      "milliseconds": 0.4
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "read callback cannot mutate persisted state",
+      "milliseconds": 0.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "revoked authority at egress prevents read disclosure and write commit",
+      "milliseconds": 0.5
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "preview does not persist state or consume the command",
+      "milliseconds": 0.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "writes in another namespace do not invalidate section CAS",
+      "milliseconds": 0.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "replacing the actual target blocks replay of the old receipt",
+      "milliseconds": 0.35
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "target replacement during work prevents commit and disclosure",
+      "milliseconds": 0.21
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "a callback cannot mutate a different namespace, versions, or receipts",
+      "milliseconds": 0.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "malformed command digest is rejected without work or persistence",
+      "milliseconds": 0.18
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "admitted Atlas and outbox commit atomically with independent versions",
+      "milliseconds": 0.72
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "stale secondary namespace blocks all work",
+      "milliseconds": 0.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "secondary authority revoked at egress rolls back both sections",
+      "milliseconds": 0.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "retry with a changed admitted namespace scope conflicts without executing",
+      "milliseconds": 0.55
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "outcome": "pass",
+      "name": "runtime rejects internal and prototype-key namespaces before work",
+      "milliseconds": 0.45
+    }
+  ],
+  "representativeProfile": {
+    "sizes": {
+      "stateBytes": 1241296,
+      "payloadBytes": 2094712,
+      "payloadCharacters": 2094712,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 10,
+      "transactions": 18,
+      "surfaces": [
+        {
+          "surface": "dashboard",
+          "payloadBytes": 2094712
+        },
+        {
+          "surface": "planner",
+          "payloadBytes": 10375
+        },
+        {
+          "surface": "procurement",
+          "payloadBytes": 162
+        }
+      ]
+    },
+    "counts": [
+      {
+        "mode": "decode",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "transaction",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 1241376,
+          "taggedParseCalls": 0,
+          "taggedCharacters": 0,
+          "objectAssemblies": 1,
+          "entryTuples": 0,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "currentSnapshots",
+        "counts": {
+          "parseCalls": 6,
+          "parsedCharacters": 2109236,
+          "taggedParseCalls": 3,
+          "taggedCharacters": 2105249,
+          "objectAssemblies": 7499,
+          "entryTuples": 36506,
+          "encodedObjectDescriptorReads": 7499
+        }
+      },
+      {
+        "mode": "nestedRead",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 7457
+        }
+      }
+    ],
+    "timings": [
+      {
+        "mode": "decode",
+        "elapsedMs": 14.90994800000044
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 4.98337100000208
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 28.470015999999305
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 38.40870700000232
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 34.1243089999989
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 30.817561999996542
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 4.805999999996857
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 15.484742000000551
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 13.116539000002376
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 4.847748000000138
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 34.72574899999745
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 28.285406000002695
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 33.947761000003084
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 33.66925900000206
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 4.604374000002281
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 14.753371999999217
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 13.341841000001295
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 4.861687000004167
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 35.4044619999986
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 34.963379000000714
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 29.330332000005
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 32.32878000000346
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 4.716032000003906
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 15.982224999999744
+      }
+    ],
+    "summary": [
+      {
+        "mode": "decode",
+        "samples": 6,
+        "medianMs": 14.831659999999829,
+        "minimumMs": 13.116539000002376,
+        "maximumMs": 15.982224999999744
+      },
+      {
+        "mode": "transaction",
+        "samples": 6,
+        "medianMs": 4.826873999998497,
+        "minimumMs": 4.604374000002281,
+        "maximumMs": 4.98337100000208
+      },
+      {
+        "mode": "currentSnapshots",
+        "samples": 6,
+        "medianMs": 32.99901950000276,
+        "minimumMs": 28.470015999999305,
+        "maximumMs": 35.4044619999986
+      },
+      {
+        "mode": "nestedRead",
+        "samples": 6,
+        "medianMs": 34.03603500000099,
+        "minimumMs": 28.285406000002695,
+        "maximumMs": 38.40870700000232
+      }
+    ],
+    "coldWarm": {
+      "cold": {
+        "parseCalls": 3,
+        "parsedCharacters": 2105249,
+        "taggedParseCalls": 3,
+        "taggedCharacters": 2105249,
+        "objectAssemblies": 7500,
+        "entryTuples": 36506,
+        "encodedObjectDescriptorReads": 0
+      },
+      "warm": {
+        "parseCalls": 1,
+        "parsedCharacters": 1241376,
+        "taggedParseCalls": 0,
+        "taggedCharacters": 0,
+        "objectAssemblies": 1,
+        "entryTuples": 0,
+        "encodedObjectDescriptorReads": 0
+      }
+    },
+    "surfaceDemand": {
+      "coldPlanner": {
+        "parseCalls": 3,
+        "parsedCharacters": 2105249,
+        "taggedParseCalls": 3,
+        "taggedCharacters": 2105249,
+        "objectAssemblies": 7500,
+        "entryTuples": 36506,
+        "encodedObjectDescriptorReads": 0
+      },
+      "warmPlanner": {
+        "parseCalls": 2,
+        "parsedCharacters": 3923,
+        "taggedParseCalls": 0,
+        "taggedCharacters": 0,
+        "objectAssemblies": 1,
+        "entryTuples": 0,
+        "encodedObjectDescriptorReads": 0
+      },
+      "eagerAll": {
+        "parseCalls": 4,
+        "parsedCharacters": 1245363,
+        "taggedParseCalls": 0,
+        "taggedCharacters": 0,
+        "objectAssemblies": 1,
+        "entryTuples": 3,
+        "encodedObjectDescriptorReads": 0
+      },
+      "timings": [
+        {
+          "mode": "planner",
+          "elapsedMs": 1.1848119999995106
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.366651999996975
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 10.105447000001732
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.120020000002114
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.924564000000828
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.744407999998657
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.812669999999343
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.5695080000004964
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 1.7172569999966072
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 4.811419999998179
+        },
+        {
+          "mode": "all",
+          "elapsedMs": 5.964673000002222
+        },
+        {
+          "mode": "planner",
+          "elapsedMs": 0.9934889999931329
+        }
+      ]
+    },
+    "interpretation": "Direct codec and transaction timings overlap; scoped modes exclude outer admission and target load, while currentSnapshots may first demand sibling graphs. Do not add these categories or extrapolate a whole-journey speedup.",
+    "surfaceInterpretation": "Cold Planner admission validates all three new SQL payloads. Warm Planner needs only its own fresh graph; transactionAll is the unchanged eager materialization control on the same Finance state. Both retain fresh SQL observations. Their timing samples are separate from the four original modes.",
+    "disclosure": "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged."
+  },
+  "realConfirmedState": {
+    "stateBytes": 1311209,
+    "payloadCharacters": 2213251,
+    "caseBytes": 115925,
+    "cases": 1,
+    "results": 12,
+    "transactions": 20,
+    "surfaces": [
+      {
+        "surface": "dashboard",
+        "payloadCharacters": 2213251
+      },
+      {
+        "surface": "planner",
+        "payloadCharacters": 10375
+      },
+      {
+        "surface": "procurement",
+        "payloadCharacters": 162
+      }
+    ]
+  },
+  "realConsumerProfile": {
+    "fixtureCreateMs": 5546.534625000001,
+    "observations": [
+      {
+        "label": "omitted.evaluate",
+        "elapsedMs": 13191.522029,
+        "outcome": "resolved",
+        "maximumDepth": 3,
+        "root": {
+          "dashboard": {
+            "calls": 1256,
+            "callbacks": 1256,
+            "completed": 1256,
+            "rejected": 0,
+            "inclusiveElapsedMs": 6955.119713000049
+          },
+          "planner": {
+            "calls": 449,
+            "callbacks": 449,
+            "completed": 449,
+            "rejected": 0,
+            "inclusiveElapsedMs": 3840.8636290000377
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 1856,
+            "callbacks": 1856,
+            "completed": 1856,
+            "rejected": 0,
+            "inclusiveElapsedMs": 4040.335099000007
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 1707,
+            "characters": 687022301,
+            "taggedCalls": 4,
+            "taggedCharacters": 3628640
+          },
+          "nested": {
+            "calls": 1856,
+            "characters": 6238016,
+            "taggedCalls": 1856,
+            "taggedCharacters": 6238016
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "choice.record",
+        "elapsedMs": 4179.947929999998,
+        "outcome": "resolved",
+        "maximumDepth": 3,
+        "root": {
+          "dashboard": {
+            "calls": 342,
+            "callbacks": 342,
+            "completed": 342,
+            "rejected": 0,
+            "inclusiveElapsedMs": 1718.6266439999745
+          },
+          "planner": {
+            "calls": 154,
+            "callbacks": 154,
+            "completed": 154,
+            "rejected": 0,
+            "inclusiveElapsedMs": 1248.1005400000067
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 41.5227109999978
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 672,
+            "callbacks": 672,
+            "completed": 672,
+            "rejected": 0,
+            "inclusiveElapsedMs": 1378.7973669999155
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 502,
+            "characters": 192168364,
+            "taggedCalls": 4,
+            "taggedCharacters": 2392713
+          },
+          "nested": {
+            "calls": 672,
+            "characters": 2258592,
+            "taggedCalls": 672,
+            "taggedCharacters": 2258592
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "training.confirm",
+        "elapsedMs": 11509.124888000002,
+        "outcome": "resolved",
+        "maximumDepth": 2,
+        "root": {
+          "dashboard": {
+            "calls": 557,
+            "callbacks": 557,
+            "completed": 557,
+            "rejected": 0,
+            "inclusiveElapsedMs": 6379.535034999943
+          },
+          "planner": {
+            "calls": 821,
+            "callbacks": 821,
+            "completed": 821,
+            "rejected": 0,
+            "inclusiveElapsedMs": 1611.702494000012
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 5,
+            "callbacks": 5,
+            "completed": 5,
+            "rejected": 0,
+            "inclusiveElapsedMs": 290.12138699999923
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 768,
+            "callbacks": 768,
+            "completed": 768,
+            "rejected": 0,
+            "inclusiveElapsedMs": 438.0628190000425
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 2238,
+            "characters": 713503282,
+            "taggedCalls": 28,
+            "taggedCharacters": 31526831
+          },
+          "nested": {
+            "calls": 768,
+            "characters": 7968000,
+            "taggedCalls": 768,
+            "taggedCharacters": 7968000
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "confirmed.issuer.resolve",
+        "elapsedMs": 838.2360429999972,
+        "outcome": "resolved",
+        "maximumDepth": 2,
+        "root": {
+          "dashboard": {
+            "calls": 41,
+            "callbacks": 41,
+            "completed": 41,
+            "rejected": 0,
+            "inclusiveElapsedMs": 433.69061800002237
+          },
+          "planner": {
+            "calls": 68,
+            "callbacks": 68,
+            "completed": 68,
+            "rejected": 0,
+            "inclusiveElapsedMs": 130.68424299999606
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 72,
+            "callbacks": 72,
+            "completed": 72,
+            "rejected": 0,
+            "inclusiveElapsedMs": 38.22976699999708
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 177,
+            "characters": 54029613,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 72,
+            "characters": 747000,
+            "taggedCalls": 72,
+            "taggedCharacters": 747000
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "confirmed.witness.15000",
+        "elapsedMs": 908.6077269999951,
+        "outcome": "resolved",
+        "maximumDepth": 2,
+        "root": {
+          "dashboard": {
+            "calls": 54,
+            "callbacks": 54,
+            "completed": 54,
+            "rejected": 0,
+            "inclusiveElapsedMs": 652.6757960000105
+          },
+          "planner": {
+            "calls": 56,
+            "callbacks": 56,
+            "completed": 56,
+            "rejected": 0,
+            "inclusiveElapsedMs": 106.1682039999796
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 48,
+            "callbacks": 48,
+            "completed": 48,
+            "rejected": 0,
+            "inclusiveElapsedMs": 30.475237000006018
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 166,
+            "characters": 71029294,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 48,
+            "characters": 498000,
+            "taggedCalls": 48,
+            "taggedCharacters": 498000
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "history.read",
+        "elapsedMs": 13.235969000001205,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 12.457052000005206
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 1,
+            "characters": 1311289,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "isolation.history.read",
+        "elapsedMs": 12.765488000004552,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 11.988498999999138
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 1,
+            "characters": 1311289,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "isolation.snapshot.first",
+        "elapsedMs": 4.541487000002235,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 4.427703000001202
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 1,
+            "characters": 1311289,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      },
+      {
+        "label": "isolation.snapshot.fresh",
+        "elapsedMs": 4.688658000006399,
+        "outcome": "resolved",
+        "maximumDepth": 1,
+        "root": {
+          "dashboard": {
+            "calls": 1,
+            "callbacks": 1,
+            "completed": 1,
+            "rejected": 0,
+            "inclusiveElapsedMs": 4.664205000000948
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "parse": {
+          "root": {
+            "calls": 1,
+            "characters": 1311289,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "nested": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          },
+          "outsideTransaction": {
+            "calls": 0,
+            "characters": 0,
+            "taggedCalls": 0,
+            "taggedCharacters": 0
+          }
+        }
+      }
+    ],
+    "interpretation": "Ancestry follows real store calls across awaits. Surface labels name requested transaction surfaces; all means transactionAll. Timings are inclusive and may overlap. JSON sizes count UTF-16 code units; payloads are never retained by the observer. Counts classify observed work, not expected product behavior.",
+    "disclosure": "Unchanged real Finance/C08/SQLite fixture and original omitted.evaluate preparation, with synthetic grants. The confirmed operation is issuer.resolve plus witness 15000 only. This does not rerun confirmed sensitivity, witness 15001, replay, restart or access and cannot close FIN-IND-005."
+  },
+  "causalComparisonToS3": [
+    {
+      "label": "confirmed.issuer.resolve",
+      "rootCharactersBefore": 143365084,
+      "rootCharactersAfter": 54029613,
+      "saved": 89335471,
+      "reductionPercent": 62.31326938712637,
+      "rootParsesBefore": 436,
+      "rootParsesAfter": 177,
+      "sameCallCounts": true,
+      "nestedParseBefore": {
+        "calls": 72,
+        "characters": 747000,
+        "taggedCalls": 72,
+        "taggedCharacters": 747000
+      },
+      "nestedParseAfter": {
+        "calls": 72,
+        "characters": 747000,
+        "taggedCalls": 72,
+        "taggedCharacters": 747000
+      },
+      "elapsedBeforeMs": 1353.8751269999993,
+      "elapsedAfterMs": 838.2360429999972
+    },
+    {
+      "label": "confirmed.witness.15000",
+      "rootCharactersBefore": 144680360,
+      "rootCharactersAfter": 71029294,
+      "saved": 73651066,
+      "reductionPercent": 50.90605663408634,
+      "rootParsesBefore": 440,
+      "rootParsesAfter": 166,
+      "sameCallCounts": true,
+      "nestedParseBefore": {
+        "calls": 48,
+        "characters": 498000,
+        "taggedCalls": 48,
+        "taggedCharacters": 498000
+      },
+      "nestedParseAfter": {
+        "calls": 48,
+        "characters": 498000,
+        "taggedCalls": 48,
+        "taggedCharacters": 498000
+      },
+      "elapsedBeforeMs": 1340.1648350000032,
+      "elapsedAfterMs": 908.6077269999951
+    }
+  ],
+  "surfaceCounterproof": {
+    "cold": {
+      "calls": 3,
+      "characters": 2098360,
+      "taggedCalls": 3,
+      "taggedCharacters": 2098360,
+      "nativeDashboard": 0,
+      "taggedDashboard": 1
+    },
+    "warmPlanner": {
+      "calls": 2,
+      "characters": 215,
+      "taggedCalls": 0,
+      "taggedCharacters": 0,
+      "nativeDashboard": 0,
+      "taggedDashboard": 0
+    },
+    "eagerAll": {
+      "calls": 6,
+      "characters": 2097831,
+      "taggedCalls": 0,
+      "taggedCharacters": 0,
+      "nativeDashboard": 1,
+      "taggedDashboard": 0
+    }
+  },
+  "capturedEvictionCounterproof": {
+    "calls": 4,
+    "characters": 6292527,
+    "taggedCalls": 2,
+    "taggedCharacters": 4195130,
+    "nativeDashboard": 1,
+    "taggedDashboard": 0
+  },
+  "quantitativeConclusion": {
+    "rootCharactersBefore": 288045444,
+    "rootCharactersAfter": 125058907,
+    "charactersAvoided": 162986537,
+    "reductionPercent": 56.583619145873385,
+    "rootTransactionsBeforeAndAfter": 219,
+    "rootPlannerBeforeAndAfter": 124,
+    "rootDashboardBeforeAndAfter": 95,
+    "nestedPlannerBeforeAndAfter": 120,
+    "nestedTaggedCharactersBeforeAndAfter": 1245000,
+    "scope": "Same unchanged probe/fixture and financial preparation, identical measured sizes/counts/assertions and callback workload across S3/S4. Each run proves its SQL bytes unchanged within the measured subflow. No cross-run whole-payload digest equality is claimed because payload digests were not logged. The within-S4 Planner versus transactionAll control uses exactly the same payloads. Count reduction is not a whole-journey or cross-run timing speedup; unchanged nested tagged work is the control."
+  },
+  "executionPolicy": {
+    "localTests": false,
+    "fixturesChanged": false,
+    "oraclesChanged": false,
+    "timeoutsChanged": false,
+    "oneActiveMissionRunAtATime": true,
+    "deduplicated": true,
+    "nativeOmniProof": false
+  },
+  "nextGate": "Existing package checks, then original unchanged long request on this product candidate; no closure from short result.",
+  "environment": {
+    "runner": "ubuntu-24.04",
+    "bun": "1.3.14 (0d9b296a)",
+    "envOverrides": {},
+    "omniControlNonce": "52e001987496d85e96cabc50773469c6",
+    "omniVerdict": "not applicable (focused: no declaring test ran)",
+    "nativeOmniProof": false
+  }
+}

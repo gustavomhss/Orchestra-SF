@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.finance-persistence-performance.bundle-w3-textual-audit.v1",
+  "status": "TEXTUAL_RECONSTRUCTION_CONFIRMED_NOT_RUNTIME_TESTED",
+  "source": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+  "target": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+  "patchSha256": "f483c07f69b56beb93a600c1ed84fd3100d0f40bb7897de5c05f7b3f4885c1e1",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimageState": "PRESENT",
+      "hunks": 6,
+      "reconstructedBlob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "preimageState": "ABSENT",
+      "hunks": 1,
+      "reconstructedBlob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "preimageState": "ABSENT",
+      "hunks": 1,
+      "reconstructedBlob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "preimageState": "ABSENT",
+      "hunks": 1,
+      "reconstructedBlob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "preimageState": "ABSENT",
+      "hunks": 1,
+      "reconstructedBlob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "preimageState": "ABSENT",
+      "hunks": 1,
+      "reconstructedBlob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "postimageMatches": true
+    }
+  ],
+  "sourceCandidatesUnchanged": true,
+  "contractOmittedFromPatchAndKeptExact": true,
+  "method": "Parsed unified hunks against exact saved preimages in memory, then compared bytes and Git blob identities to declared postimages. No product/test code executed.",
+  "testRuns": 0,
+  "remoteMutations": 0
+}

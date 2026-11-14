@@ -1,0 +1,398 @@
+{
+  "schema": "finance-persistence-short-result-v1",
+  "selection": "S1",
+  "finding": "FIN-IND-005",
+  "W": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+  "Wtree": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4",
+  "S": "88fe413d104e7f6d45af4118ca572a216770463c",
+  "Stree": "eaba7206e7fa4a3de3841be749a0260793248ed4",
+  "runId": 43644438895,
+  "jobId": 132598944546,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644438895",
+  "conclusion": "failure",
+  "tests": {
+    "pass": 112,
+    "fail": 1,
+    "skip": 3,
+    "assertions": 1061,
+    "files": 10,
+    "total": 116,
+    "totalSeconds": 40.74,
+    "profileTestMs": 33262.85,
+    "newTestsPass": 17,
+    "newTestsFail": 0
+  },
+  "profile": {
+    "sizes": {
+      "stateBytes": 1241296,
+      "payloadBytes": 2094712,
+      "payloadCharacters": 2094712,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 10,
+      "transactions": 18,
+      "surfaces": [
+        {
+          "surface": "dashboard",
+          "payloadBytes": 2094712
+        },
+        {
+          "surface": "planner",
+          "payloadBytes": 10375
+        },
+        {
+          "surface": "procurement",
+          "payloadBytes": 162
+        }
+      ]
+    },
+    "counts": [
+      {
+        "mode": "decode",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "transaction",
+        "counts": {
+          "parseCalls": 4,
+          "parsedCharacters": 1245363,
+          "taggedParseCalls": 0,
+          "taggedCharacters": 0,
+          "objectAssemblies": 1,
+          "entryTuples": 0,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      {
+        "mode": "currentSnapshots",
+        "counts": {
+          "parseCalls": 3,
+          "parsedCharacters": 2105249,
+          "taggedParseCalls": 3,
+          "taggedCharacters": 2105249,
+          "objectAssemblies": 7499,
+          "entryTuples": 36506,
+          "encodedObjectDescriptorReads": 7499
+        }
+      },
+      {
+        "mode": "nestedRead",
+        "counts": {
+          "parseCalls": 1,
+          "parsedCharacters": 2094712,
+          "taggedParseCalls": 1,
+          "taggedCharacters": 2094712,
+          "objectAssemblies": 7457,
+          "entryTuples": 36324,
+          "encodedObjectDescriptorReads": 7457
+        }
+      }
+    ],
+    "timings": [
+      {
+        "mode": "decode",
+        "elapsedMs": 21.603039000001445
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 6.022290000000794
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 44.67703600000095
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 39.13427000000229
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 51.68700499999977
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 47.40052199999627
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 6.166776999998547
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 19.940683000000718
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 26.67523600000277
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 6.1280079999996815
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 47.56675299999915
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 44.35565099999803
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 39.38229300000239
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 52.49200800000108
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 6.958070000000589
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 28.371163000003435
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 21.362676999997348
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 6.043501000000106
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 53.84627999999793
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 42.62905799999862
+      },
+      {
+        "mode": "nestedRead",
+        "elapsedMs": 48.30865199999971
+      },
+      {
+        "mode": "currentSnapshots",
+        "elapsedMs": 44.36185100000148
+      },
+      {
+        "mode": "transaction",
+        "elapsedMs": 7.032752999999502
+      },
+      {
+        "mode": "decode",
+        "elapsedMs": 24.4989659999992
+      }
+    ],
+    "summary": [
+      {
+        "mode": "decode",
+        "samples": 6,
+        "medianMs": 23.051002500000322,
+        "minimumMs": 19.940683000000718,
+        "maximumMs": 28.371163000003435
+      },
+      {
+        "mode": "transaction",
+        "samples": 6,
+        "medianMs": 6.147392499999114,
+        "minimumMs": 6.022290000000794,
+        "maximumMs": 7.032752999999502
+      },
+      {
+        "mode": "currentSnapshots",
+        "samples": 6,
+        "medianMs": 47.48363749999771,
+        "minimumMs": 44.36185100000148,
+        "maximumMs": 53.84627999999793
+      },
+      {
+        "mode": "nestedRead",
+        "samples": 6,
+        "medianMs": 43.49235449999833,
+        "minimumMs": 39.13427000000229,
+        "maximumMs": 51.68700499999977
+      }
+    ],
+    "coldWarm": {
+      "cold": {
+        "parseCalls": 3,
+        "parsedCharacters": 2105249,
+        "taggedParseCalls": 3,
+        "taggedCharacters": 2105249,
+        "objectAssemblies": 7500,
+        "entryTuples": 36506,
+        "encodedObjectDescriptorReads": 0
+      },
+      "warm": {
+        "parseCalls": 4,
+        "parsedCharacters": 1245363,
+        "taggedParseCalls": 0,
+        "taggedCharacters": 0,
+        "objectAssemblies": 1,
+        "entryTuples": 0,
+        "encodedObjectDescriptorReads": 0
+      }
+    },
+    "interpretation": "Direct codec and transaction timings overlap; scoped modes exclude outer admission/load. Do not add these categories or extrapolate a whole-journey speedup.",
+    "disclosure": "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged."
+  },
+  "bounds": [
+    {
+      "kind": "FIN_PERSISTENCE_OVERSIZE",
+      "value": {
+        "payloadCharacters": 9437429,
+        "reads": [
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 9437429
+          },
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 9437429
+          },
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 9437429
+          }
+        ]
+      }
+    },
+    {
+      "kind": "FIN_PERSISTENCE_AGGREGATE_BOUND",
+      "value": {
+        "surfaces": [
+          {
+            "surface": "dashboard",
+            "payloadCharacters": 2097374
+          },
+          {
+            "surface": "planner",
+            "payloadCharacters": 2097372
+          },
+          {
+            "surface": "procurement",
+            "payloadCharacters": 2097376
+          }
+        ],
+        "reads": [
+          {
+            "taggedParseCalls": 3,
+            "taggedCharacters": 6292122
+          },
+          {
+            "taggedParseCalls": 3,
+            "taggedCharacters": 6292122
+          },
+          {
+            "taggedParseCalls": 3,
+            "taggedCharacters": 6292122
+          }
+        ]
+      }
+    },
+    {
+      "kind": "FIN_PERSISTENCE_TRAVERSAL_BOUND",
+      "value": {
+        "mode": "depth",
+        "payloadCharacters": 3384,
+        "reads": [
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 3384
+          },
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 3384
+          }
+        ]
+      }
+    },
+    {
+      "kind": "FIN_PERSISTENCE_TRAVERSAL_BOUND",
+      "value": {
+        "mode": "fixups",
+        "payloadCharacters": 57643,
+        "reads": [
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 57643
+          },
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 57643
+          }
+        ]
+      }
+    },
+    {
+      "kind": "FIN_PERSISTENCE_TRAVERSAL_BOUND",
+      "value": {
+        "mode": "nodes",
+        "payloadCharacters": 2600373,
+        "reads": [
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 2600373
+          },
+          {
+            "taggedParseCalls": 1,
+            "taggedCharacters": 2600373
+          }
+        ]
+      }
+    }
+  ],
+  "materialReduction": {
+    "status": "PROVEN",
+    "coldWarmSameStoreSamePayload": true,
+    "coldAssemblies": 7500,
+    "warmAssemblies": 1,
+    "coldEntryTuples": 36506,
+    "warmEntryTuples": 0,
+    "taggedDecodeCalls": {
+      "cold": 3,
+      "warm": 0
+    },
+    "freshDetachedGraphs": true,
+    "nativeParsingRemains": true,
+    "notZeroObjectAllocation": true
+  },
+  "timingInterpretation": "Six interleaved samples per mode on the same persisted state. Exported full dashboard decoder median23.0510025ms; warm top-level SQL transaction median6.1473925ms (includes three surfaces and SQL). Different categories are not additive. P0 transaction median23.5400055ms is from a different Actions runner/run, not a controlled end-to-end speedup.",
+  "inheritedFailure": {
+    "name": "surface namespaces isolate identical blob keys and snapshots",
+    "path": "Sucafinav1/test/local-store.test.ts",
+    "line": 276,
+    "testMs": 7.15,
+    "reason": "Exact expected snapshot omits pre-existing sfBlobGenerations.document=1",
+    "status": "INHERITED_REPRODUCED_ON_PREIMAGE",
+    "control": "B1-result.json",
+    "testUnchanged": true,
+    "oracleNotRelaxed": true,
+    "productMetadataPreserved": true
+  },
+  "skips": [
+    "foreign-owned existing root rejects (requires root fixture privileges)",
+    "rejects foreign UID directory (requires root fixture privileges)",
+    "rejects foreign UID database (requires root fixture privileges)"
+  ],
+  "omni": {
+    "nonce": "82bbb6ead63203f9389abe3820060596",
+    "verdict": "not applicable",
+    "nativeProof": false
+  },
+  "artifacts": [],
+  "allJobsTerminal": true,
+  "fixtureOraclesUnchanged": true,
+  "closesFinding": false
+}

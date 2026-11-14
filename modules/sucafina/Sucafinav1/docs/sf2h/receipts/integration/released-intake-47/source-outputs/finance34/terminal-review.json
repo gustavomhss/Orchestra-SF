@@ -1,0 +1,247 @@
+{
+  "schema": "sf2h.finance-persistence-performance.terminal-review.v1",
+  "mission": 34,
+  "reviewedAt": "2026-11-14T22:42:20Z",
+  "finding": "FIN-IND-005",
+  "result": "SOURCE_LONG_JOURNEY_PASS_PENDING_BUNDLE_INTEGRATION",
+  "source": {
+    "received": "5e3073bceca683adc5663108832094421b43325e",
+    "productCandidate": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "productTree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "productBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+    "contractUnchanged": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+    "oneProductFileChanged": true,
+    "onlyOwnedTestsAndReceiptsOtherwise": true,
+    "compareEvidence": "source-identities.json"
+  },
+  "acceptance": {
+    "realImplementationDelivered": true,
+    "priorCasePortOptimizationUntouched": true,
+    "shortRealSqliteAndRepresentativeFinanceState": true,
+    "materialCountReduction": true,
+    "rootParsedCharactersAvoided": 162986537,
+    "rootReductionPercent": 56.583619145873385,
+    "rootPlusNestedReductionPercent": 56.34010399596884,
+    "all25OwnedShortTestsPass": true,
+    "allSevenDemandCounterproofsPass": true,
+    "originalLongRequestUnchanged": true,
+    "originalLongJourneyPass": true,
+    "all43PriorRegressionNamesAndOrderPreserved": true,
+    "totalLongAssertions": 396,
+    "journeyExpectSites": 43,
+    "journeyExpectCallsIncludingTwoWitnessIterations": 46,
+    "budgets": {
+      "fixture": 180000,
+      "test": 300000
+    },
+    "observedJourneyMilliseconds": 137976.36,
+    "observedFixtureBudgetMarginMilliseconds": 42023.64,
+    "checkpoints": [
+      {
+        "elapsedMs": 22376,
+        "event": "checkpoint",
+        "label": "omitted.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 3
+        },
+        "knownSubtotal": 210000,
+        "threshold": 55000.000000000015,
+        "comparisonStatus": "conditioned"
+      },
+      {
+        "elapsedMs": 27545,
+        "event": "checkpoint",
+        "label": "choice.persisted",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 4
+        },
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      },
+      {
+        "elapsedMs": 41531,
+        "event": "checkpoint",
+        "label": "confirmed.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "total": 250000,
+        "advantage": -10000,
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      },
+      {
+        "elapsedMs": 134337,
+        "event": "checkpoint",
+        "label": "confirmed.threshold-assertions-complete",
+        "threshold": 15000.00000000002,
+        "comparisonStatus": "complete"
+      },
+      {
+        "elapsedMs": 136580,
+        "event": "checkpoint",
+        "label": "witness.15000.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "baselineRef": "decision-result:wp11-history-result-9",
+        "metric": -20000,
+        "meetsMinimum": true
+      },
+      {
+        "elapsedMs": 137737,
+        "event": "checkpoint",
+        "label": "witness.15001.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "baselineRef": "decision-result:wp11-history-result-9",
+        "metric": -19999,
+        "meetsMinimum": false
+      },
+      {
+        "elapsedMs": 137756,
+        "event": "checkpoint",
+        "label": "history.assertions-complete",
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      },
+      {
+        "elapsedMs": 137791,
+        "event": "checkpoint",
+        "label": "choice.replay-assertions-complete"
+      },
+      {
+        "elapsedMs": 137971,
+        "event": "checkpoint",
+        "label": "persistence.restart-and-revocation-assertions-complete",
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        }
+      }
+    ],
+    "historyActuallyRereadAfterAnalysis": true,
+    "authorizedReplayIdempotent": true,
+    "realSqliteAndUiClosedThenReopened": true,
+    "oldContextInvalidAfterReopen": true,
+    "collaboratorReadPass": true,
+    "outsiderDenied": true,
+    "revokedCollaboratorDenied": true
+  },
+  "materializationBoundary": {
+    "freshSQLBeforeMemoComparison": true,
+    "allThreeSurfaceObservationsBeforeRootCallback": true,
+    "changedUnrequestedPayloadsDecodedAndValidatedImmediately": true,
+    "exactFullPayloadMatchRequired": true,
+    "perRootFreshGraphOnFirstDemand": true,
+    "capturedPlanSurvivesEviction": true,
+    "ordinaryPublicSnapshotOutputs": true,
+    "transactionAllEagerUnchanged": true,
+    "stagedNestedAndCurrentCopiesUnchanged": true,
+    "mutableObjectsReusedAcrossRequests": false,
+    "authorizationOrResultsReused": false,
+    "resourceBound": "migration-rollback.json"
+  },
+  "reviews": [
+    {
+      "path": "lazy-review.json",
+      "role": "Independent static reviewer of W3; authored earlier isolation tests",
+      "phase": "pre-execution",
+      "historicalStatusPreserved": true
+    },
+    {
+      "path": "lazy-review-S4.json",
+      "role": "Same reviewer reconciles execution separately from static review",
+      "phase": "S4",
+      "historicalStatusPreserved": true
+    },
+    {
+      "path": "S4-review.json",
+      "role": "Author of short proof tests, not author of product delta; disclosed non-cold-author status",
+      "phase": "S4",
+      "historicalStatusPreserved": true
+    },
+    {
+      "path": "K2-review.json",
+      "role": "Independent log/identity comparison against K1 and mission22 baseline",
+      "phase": "K2"
+    },
+    {
+      "path": "S5-review.json",
+      "role": "Independent review of full original journey and helpers; no product/test edits or dispatch",
+      "phase": "S5"
+    }
+  ],
+  "truthfulFailures": {
+    "shortSelection": "FAIL:120 PASS/1 inherited FAIL/3 SKIP;25 owned PASS",
+    "preimageControl": "B1 FAIL proves same legacy blob oracle on old product",
+    "packageTypecheck": "FAIL:115 inherited diagnostics,0 new/removed/owned",
+    "guards": "FAIL:43 inherited gates/15 warnings,0 engine errors;58 findings unchanged in order",
+    "intermediateLong": "S2/W1 FAIL at180000 retained",
+    "receiptOnlyCommit": "No tests are claimed on the terminal documentation-only commit; verified product/test blobs are those of W3."
+  },
+  "migration": {
+    "required": false,
+    "persistedFormatChanged": false,
+    "publicCodecChanged": false,
+    "rollback": "Reverse only mission34 delta against recorded preimage; retain prior Finance/bundle work."
+  },
+  "bundle": {
+    "status": "NOT_APPLIED_NOT_TESTED",
+    "productPreimage": "b753e3ffbfcdc06de373388845c686afac26dec8",
+    "productPostimage": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "contractKept": "9e9bac976b503409de65868a366f352ca1e65071",
+    "patchSha256": "f483c07f69b56beb93a600c1ed84fd3100d0f40bb7897de5c05f7b3f4885c1e1",
+    "finalObservedHead": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "sourcePostimageDidNotOverwriteTarget": true,
+    "cloneAndResultAdditionsPreserved": true,
+    "ownTestNamespaceAbsentAtFinalObservation": true,
+    "consumer": "session33"
+  },
+  "execution": {
+    "allNineRunsAndCleanupsTerminal": true,
+    "pendingRuns": [],
+    "oneActiveMissionRunAtATime": true,
+    "unchangedFailedLongRepeated": false,
+    "localTests": false,
+    "localServer": false,
+    "epicOrFullSuite": false,
+    "newDispatcher": false,
+    "remoteGitHubMCPOnly": true,
+    "sourceUpdatesCAS": true,
+    "force": false,
+    "devMerge": false,
+    "deploy": false,
+    "azure": false,
+    "enginesChanged": false,
+    "orchestraRestart": false,
+    "thirdPartyMessagesSent": false,
+    "nativeGoalsOrControllersStarted": false
+  },
+  "globalGates": {
+    "E17": "NOT_GRANTED",
+    "G4": "NOT_GRANTED",
+    "G8": "NOT_GRANTED",
+    "C_G7": "REMAINS_OWNER_GATE",
+    "D_G8": "REMAINS_OWNER_GATE",
+    "finalAMCI": "REMAINS_OWNER_GATE",
+    "globalRelease": false
+  },
+  "handoff": {
+    "terminalArtifact": "HANDOFF-FINAL.md",
+    "consumerSession": 33,
+    "writeAuthorityEndsWithPublishedHandoff": true,
+    "sourceResumptionRequiresNewAuthority": true,
+    "terminalCommitIdentifiedExternally": true
+  }
+}

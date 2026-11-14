@@ -1,0 +1,638 @@
+{
+  "schema": "finance-persistence-performance-lazy-review-v1",
+  "mission": 34,
+  "finding": "FIN-IND-005",
+  "status": "STATIC_REVIEW_COMPLETE_EXECUTION_PENDING",
+  "findingStatus": "OPEN",
+  "candidate": {
+    "label": "W3",
+    "W": null,
+    "publicationStatusAtReview": "NOT_PUBLISHED",
+    "productPath": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "localPath": "mission34/third/local-store.ts",
+    "productBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+    "productBytes": 29961,
+    "productSha256": "385541d3c293ce1b7dff4e8e4a9ceb1eddcbb25e0437bd4846d247eb3a951431",
+    "W1": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+    "W1ProductBlob": "1eaf5b42230829466d29a82ac0d5361e98b1a64d",
+    "W1ProductBytes": 28833,
+    "receivedHead": "5e3073bceca683adc5663108832094421b43325e",
+    "contractUnchanged": true,
+    "originalJourneyUnchanged": true
+  },
+  "reviewedTestFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "localPath": "mission34/third/profile.test.ts",
+      "bytes": 12803,
+      "gitBlob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+      "sha256": "dd12d55260321f83692dc2cc2d1cdba2ce9761ad82f5abb84f131293b155f943",
+      "executionStatus": "NOT_RUN_YET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "localPath": "mission34/third/surface-demand.test.ts",
+      "bytes": 15837,
+      "gitBlob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+      "executionStatus": "NOT_RUN_YET"
+    }
+  ],
+  "provenance": {
+    "author": "/root/persistence_review",
+    "reviewKind": "Read-only cold source diff and test-oracle/type inspection; review receipt written locally.",
+    "independence": "Reviewer did not implement W3 product code or the two reviewed W3 test files; authored prior isolation.test.ts.",
+    "directlyRead": [
+      "mission34/changes/modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mission34/third/local-store.ts",
+      "mission34/third/profile.test.ts",
+      "mission34/third/surface-demand.test.ts",
+      "mission34/review/semantics-matrix.json",
+      "mission34/review/checks-review.json",
+      "mission34/source/runtime/local-contract.ts",
+      "mission34/inputs/contract.ts",
+      "mission34/source/test/local-store.test.ts"
+    ],
+    "localTestsExecuted": false,
+    "localTypecheckExecuted": false,
+    "ciDispatched": false,
+    "remoteWrites": false,
+    "productEdits": false,
+    "evidenceParsingAndHashingOnly": true,
+    "S3EvidenceSource": "Terminal result and counters reported by /root; this reviewer did not independently fetch S3 logs in this review."
+  },
+  "baselineMatrix": {
+    "localPath": "mission34/review/semantics-matrix.json",
+    "bytes": 63959,
+    "gitBlob": "284bd608c73dd24c6f83bfea1810ae59f9fc2087",
+    "sha256": "fb24a7c9fcc2da4dae15c05d5f80f4cf70cdd1ae183ac93bd02a7688262ff557",
+    "W": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+    "selection": "S1",
+    "selectionResult": "FAIL",
+    "runId": 43644438895,
+    "jobId": 132598944546,
+    "ownedNewTestsPass": 17,
+    "inheritedFailure": "surface namespaces isolate identical blob keys and snapshots: expected snapshot omits existing sfBlobGenerations.document=1",
+    "preimageControl": {
+      "selection": "B1",
+      "runId": 43644706454,
+      "jobId": 132599773810,
+      "result": "FAIL"
+    },
+    "disposition": "Historical evidence remains tied to W1. No prior PASS or inherited failure classification is silently transferred to W3."
+  },
+  "actualDiff": [
+    {
+      "location": "openLocalStore private loadSnapshot/observeSnapshot helpers",
+      "change": "observeSnapshot now returns a per-observation materializer. Hits capture the frozen exact-payload plan; missing rows return a fresh empty factory; misses eagerly decode/validate/plan then return the fresh decoded graph. loadSnapshot immediately invokes this materializer for unchanged eager paths."
+    },
+    {
+      "location": "root single-surface transaction admission",
+      "change": "All three reads/observations still execute synchronously in Dashboard/Planner/Procurement order. Private per-root cells memoize one graph each. Private getters demand those cells. Successful demand clears materialize, retaining only that root's value."
+    },
+    {
+      "location": "materialization resource comment",
+      "change": "Clarifies shared memo budget and additional per-root capture of immutable plans evicted during admission."
+    }
+  ],
+  "unchangedByDiff": [
+    "Public Snapshot/Persistence/LocalStore types and runtime/contract.ts",
+    "SQLite schema, WAL/FULL settings, SQL SELECT statements and observation order",
+    "BEGIN IMMEDIATE, admission queue, retry/deadline/abort behavior and connection ownership",
+    "transactionAll eager ordinary Record and nested fallback eager load",
+    "currentSnapshots and staged nested encode/decode cloning",
+    "Callback execution count, commit checks, original v1 encoder/decoder and pure materialization encoding",
+    "Blob SQL, generation integrity and atomic commit/rollback",
+    "Authentication methods, disposal checks and memo clearing after active drain",
+    "State-provider, case-port and Finance algorithms",
+    "Original journey fixtures, assertions and 180000/300000 budgets"
+  ],
+  "retention": {
+    "sharedMemoEntriesAtMost": 3,
+    "sharedMemoUtf16UnitsAtMost": 8388608,
+    "sharedMemoUtf16ContentBytesAtMost": 16777216,
+    "capturedEvictedPlansPerRootUtf16UnitsAtMost": 8388608,
+    "proof": "Each root observes each of the three surfaces once. Any hit it captures belongs to the admission-start Map; misses capture decoded graphs rather than an additional plan. Thus captured old plans form a subset of one bounded initial Map. Independent admitted root writers serialize within the store.",
+    "release": "First successful demand sets materialize to undefined. Unused private captures remain reachable with their root until the scope/context becomes unreachable.",
+    "excludedFromBound": [
+      "Decoded active graphs and returned objects",
+      "Temporary decoder/planner structures, JS object/Map/closure overhead and SQLite memory",
+      "Other open store instances",
+      "Externally retained ended AsyncLocalStorage contexts or detached promises",
+      "Whole-process RSS, garbage-collection timing and allocation-failure behavior"
+    ],
+    "optimizationLimitsUnchanged": {
+      "depth": 128,
+      "nodes": 200000,
+      "undefinedFixups": 4096
+    },
+    "limitsAreAcceptanceRules": false
+  },
+  "S3CausalEvidence": {
+    "selection": "S3",
+    "result": "PASS",
+    "provenance": "PARENT_REPORTED",
+    "W": null,
+    "S": null,
+    "runId": 43646928826,
+    "jobId": 132606687358,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646928826",
+    "expectCalls": 38,
+    "testSeconds": 49.079,
+    "reportedExactConfirmedState": {
+      "stateBytes": 1311209,
+      "results": 12,
+      "transactions": 20
+    },
+    "subflows": [
+      {
+        "name": "confirmed.issuer.resolve",
+        "roots": {
+          "dashboard": 41,
+          "planner": 68
+        },
+        "nested": {
+          "dashboard": 0,
+          "planner": 72
+        },
+        "currentSnapshots": 0,
+        "rootJsonParseCalls": 436,
+        "rootParsedCharacters": 143365084,
+        "rootTaggedParseCalls": 0,
+        "rootAdmissions": 109,
+        "charactersPerRoot": 1315276
+      },
+      {
+        "name": "witness15000",
+        "roots": {
+          "dashboard": 54,
+          "planner": 56
+        },
+        "nested": {
+          "dashboard": 0,
+          "planner": 48
+        },
+        "currentSnapshots": 0,
+        "rootJsonParseCalls": 440,
+        "rootParsedCharacters": 144680360,
+        "rootTaggedParseCalls": 0,
+        "rootAdmissions": 110,
+        "charactersPerRoot": 1315276
+      }
+    ],
+    "SQLBytesUnchangedWithinMeasuredSubflows": true,
+    "unusedDashboardMaterializationsInPlannerRoots": 124,
+    "inference": "With unchanged SQL bytes and zero tagged root parses, these are exact-payload hits. All 124 Planner roots reconstructed the large Dashboard graph under W1 but had neither nested Dashboard reads nor currentSnapshots consumers. W3 directly removes that identified work while retaining every SQL observation and changed-payload validation.",
+    "limits": [
+      "S3 does not execute W3 and is not W3 performance evidence.",
+      "Do not infer an end-to-end speedup ratio from these counts.",
+      "The actual Finance/C08/SQLite fixture uses synthetic source grants/authority; installed-session acceptance is outside this measurement."
+    ]
+  },
+  "semanticMatrix": [
+    {
+      "id": "MATERIAL-REDUCTION",
+      "baselineTestRefs": [
+        "P01"
+      ],
+      "w3TestRefs": [
+        "P01-W3",
+        "D01"
+      ],
+      "mechanism": "Exact-byte hits retain immutable plans, but a single-surface root reconstructs only demanded graphs. Cold or changed payloads still execute the complete original decoder before callback.",
+      "limits": "S3 causally identifies 124 Planner roots with unchanged SQL bytes and no Dashboard consumer. W3 counter/timing evidence is pending; no whole-journey speedup is claimed.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "FRESH-SQL",
+      "baselineTestRefs": [
+        "I03",
+        "I04",
+        "F01",
+        "F03"
+      ],
+      "w3TestRefs": [
+        "D01",
+        "D02",
+        "D05",
+        "D06",
+        "D07"
+      ],
+      "mechanism": "Every root still SELECTs Dashboard, Planner and Procurement in the same order under the existing lock. Each observer captures that exact observation before callback; deferred demand never re-reads SQL or the Map.",
+      "limits": "Captured plans must survive admission-time eviction; changed and absent rows cannot reuse a previous tree.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "CALLBACK-OUTPUT-ISOLATION",
+      "baselineTestRefs": [
+        "P01",
+        "I01",
+        "I02",
+        "C01",
+        "C02"
+      ],
+      "w3TestRefs": [
+        "P01-W3",
+        "D01",
+        "D03",
+        "D04",
+        "D06"
+      ],
+      "mechanism": "Every root owns new loader cells. A loader memoizes one fresh tree only inside that root. No graph, result, authorization or callback output enters the shared Map. Outputs remain normal objects; nested/current consumers still clone.",
+      "limits": "Mutable values may remain referenced by the caller after return, but must never become a subsequent root's observation.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "AUTHORITY-INDEPENDENCE",
+      "baselineTestRefs": [
+        "C03",
+        "C04",
+        "F01",
+        "F02",
+        "F03",
+        "S01"
+      ],
+      "w3TestRefs": [],
+      "mechanism": "The private materialization path still receives only Surface and observed payload bytes. State-provider, case-port, Request/lease/grant/source checks and credential methods are unchanged.",
+      "limits": "No new end-to-end authorization acceptance is inferred from the lazy-specific tests or S3 synthetic fixture.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "TX-LOCK-CAS",
+      "baselineTestRefs": [
+        "I08",
+        "L03",
+        "L05",
+        "L06"
+      ],
+      "w3TestRefs": [
+        "D07"
+      ],
+      "mechanism": "BEGIN IMMEDIATE, queue admission, retry/deadline logic, connection ownership, single callback invocation and post-callback checks are unchanged. The new path remains inside the same locked work function.",
+      "limits": "D07 proves lock ordering and next-root freshness, not by itself same-version CAS. Existing L06 inherited failure remains separately recorded.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "ABORT-ERROR-NOCOMMIT",
+      "baselineTestRefs": [
+        "I02",
+        "I05",
+        "L04",
+        "L05",
+        "C04"
+      ],
+      "w3TestRefs": [
+        "D02"
+      ],
+      "mechanism": "New-payload decoding occurs before callback. Signal checks, commit=false/throw behavior, final rollback and commit validation are unchanged; plans describe only SQL input.",
+      "limits": "No new disk-full, COMMIT I/O fault or allocation-failure injection is claimed.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "NESTED-READ-POISON",
+      "baselineTestRefs": [
+        "I06",
+        "L01",
+        "L02",
+        "C04"
+      ],
+      "w3TestRefs": [
+        "D03"
+      ],
+      "mechanism": "The root getter returns the same staged tree after its first demand. Nested reads retain encode/decode cloning. Readers, scope checks and nested write/blob poison are unchanged.",
+      "limits": "D03 adds lazy-demand identity/isolation evidence; nested-write poison continues to rely on its existing regression tests. Clone cost itself is not optimized.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "CLOSED-SCOPES-DISPOSE",
+      "baselineTestRefs": [
+        "L01",
+        "L02",
+        "L07"
+      ],
+      "w3TestRefs": [
+        "D04"
+      ],
+      "mechanism": "currentSnapshots and nested transaction verify requireScope before touching getters. dispose still closes admission and clears the memo only after admitted work drains.",
+      "limits": "No immediate garbage-collection or private Map inspection is claimed. Ended AsyncLocalStorage contexts retained by external promises can retain their private root data until unreachable.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "BLOBS-ATOMICITY",
+      "baselineTestRefs": [
+        "I05",
+        "L04",
+        "L06",
+        "A01",
+        "A02"
+      ],
+      "w3TestRefs": [],
+      "mechanism": "The target snapshot is demanded before generations is constructed. Blob SQL, generation checks, mutation, overflow behavior and atomic commit/rollback are untouched.",
+      "limits": "No blob bytes enter the memo. The inherited namespace-isolation expectation failure is not waived.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "CREDENTIALS",
+      "baselineTestRefs": [
+        "I09",
+        "L09"
+      ],
+      "w3TestRefs": [],
+      "mechanism": "Authentication table methods remain separate and do not call observeSnapshot/loadSnapshot; expiry and returned byte-array isolation are unchanged.",
+      "limits": "No identity-provider or external authentication validation is added.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "V1-STRUCTURAL-EQUIVALENCE",
+      "baselineTestRefs": [
+        "I01",
+        "L08",
+        "P01",
+        "A01"
+      ],
+      "w3TestRefs": [
+        "P01-W3",
+        "D03",
+        "D05",
+        "D06"
+      ],
+      "mechanism": "encodeSnapshot/decodeSnapshot and materializeSnapshot are byte-identical to W1. Getters do not escape the private container; only timing of reconstruction of known-valid graphs changes.",
+      "limits": "The accepted normalized v1 value domain, property order, own undefined, -0 and normal callback objects remain the contract. Arbitrary global-intrinsic monkey-patching is not covered.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "STATE-VALIDATION",
+      "baselineTestRefs": [
+        "I04",
+        "I07",
+        "L08",
+        "C05",
+        "A02"
+      ],
+      "w3TestRefs": [
+        "D01",
+        "D02"
+      ],
+      "mechanism": "A miss deletes the old entry and runs the complete original v1 decoder/validator immediately, including for unrequested surfaces. Only exact-equal already validated bytes use a deferred plan. Commit encode/decode validation is unchanged.",
+      "limits": "The new corruption corpus includes syntax, envelope, shape and content errors; duplicate-key and other codec rejection remain covered by existing tests.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "BOUNDED-RETENTION",
+      "baselineTestRefs": [
+        "B01",
+        "B02",
+        "B03"
+      ],
+      "w3TestRefs": [
+        "D05"
+      ],
+      "mechanism": "The shared Map retains its exact 8*1024*1024 UTF-16-unit aggregate bound and three-entry limit. A root can additionally hold observed plans evicted during its admission; first successful demand releases the materializer closure.",
+      "limits": "The additional captured immutable plans of one root are a subset of its admission-start memo and therefore at most one memo budget. This is not a total heap/RSS or retained-async-context bound.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    },
+    {
+      "id": "REOPEN-BACKUP-ROLLBACK",
+      "baselineTestRefs": [
+        "I01",
+        "I02",
+        "I05",
+        "L06",
+        "A01",
+        "A02"
+      ],
+      "w3TestRefs": [
+        "D01",
+        "D02",
+        "D05"
+      ],
+      "mechanism": "No format, table, writer codec, backup path or public contract changes. New store instances start with an empty memo; eager transactionAll remains a normal public Record.",
+      "limits": "New independent instances are supplementary cold controls. Full historical-choice/replay/reopen/access assertions still require the original journey on W3.",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "w3ExecutionStatus": "NOT_RUN_YET",
+      "previousEvidence": "S1/W1 status is retained in semantics-matrix.json and is not promoted to W3 evidence."
+    }
+  ],
+  "newTestCatalog": [
+    {
+      "id": "D01",
+      "name": "warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation",
+      "coverage": [
+        "MATERIAL-REDUCTION",
+        "FRESH-SQL",
+        "CALLBACK-OUTPUT-ISOLATION",
+        "STATE-VALIDATION"
+      ],
+      "oracle": "Cold Planner parses all three persisted tagged payloads and their exact total characters. Warm Planner performs zero tagged parses and zero native Dashboard parses. Eager transactionAll performs one native Dashboard parse and parses over 2 MiB more characters. Planner outputs re-encode identically; retained output mutation does not persist; all SQL rows remain unchanged.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "NOT_RUN_YET"
+    },
+    {
+      "id": "D02",
+      "name": "new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores",
+      "coverage": [
+        "FRESH-SQL",
+        "STATE-VALIDATION",
+        "ABORT-ERROR-NOCOMMIT"
+      ],
+      "oracle": "Independent SQL replaces Dashboard and Procurement with malformed JSON, unsupported envelope, invalid shape and negative-version content. Both the warm instance and a new instance reject with the unchanged decoder's error before any Planner callback. Restoring bytes permits the same Planner result; final SQL rows match.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "NOT_RUN_YET"
+    },
+    {
+      "id": "D03",
+      "name": "one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies",
+      "coverage": [
+        "CALLBACK-OUTPUT-ISOLATION",
+        "NESTED-READ-POISON",
+        "V1-STRUCTURAL-EQUIVALENCE"
+      ],
+      "oracle": "Two nested Dashboard reads and two currentSnapshots calls in one Planner root produce exactly one native Dashboard parse. Nested and current outputs are distinct graphs, mutations do not alter siblings or the parent, Planner staged values remain visible, own undefined and -0 survive, and durable rows do not change.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "NOT_RUN_YET"
+    },
+    {
+      "id": "D04",
+      "name": "ended root scopes reject deferred sibling access before any lazy materialization",
+      "coverage": [
+        "CLOSED-SCOPES-DISPOSE",
+        "CALLBACK-OUTPUT-ISOLATION"
+      ],
+      "oracle": "An untouched Dashboard stays unmaterialized during a Planner root. Deferred currentSnapshots and nested Dashboard callbacks reject after root completion, before any JSON.parse or nested callback. The retained Planner snapshot remains an ordinary detached value; later SQL read is unchanged.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "NOT_RUN_YET"
+    },
+    {
+      "id": "D05",
+      "name": "a captured Dashboard plan survives eviction while other surfaces are observed during the same admission",
+      "coverage": [
+        "BOUNDED-RETENTION",
+        "FRESH-SQL",
+        "V1-STRUCTURAL-EQUIVALENCE"
+      ],
+      "oracle": "A reader captures its warm 2 MiB Dashboard plan before changed 2 MiB Planner and Procurement payloads force eviction. Demand after admission yields the original Dashboard bytes via one native Dashboard parse, zero tagged Dashboard parses and exactly two tagged sibling parses, preserving own undefined and -0.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "NOT_RUN_YET"
+    },
+    {
+      "id": "D06",
+      "name": "missing sibling rows invalidate old plans and restore only after a fresh SQL observation",
+      "coverage": [
+        "FRESH-SQL",
+        "CALLBACK-OUTPUT-ISOLATION",
+        "V1-STRUCTURAL-EQUIVALENCE"
+      ],
+      "oracle": "Deleting the warmed Dashboard SQL row makes nested/current reads inside Planner return isolated empty snapshots. A missing-row output mutation does not become another observation. Re-insertion is observed by the next root, which re-encodes the restored original bytes.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "NOT_RUN_YET"
+    },
+    {
+      "id": "D07",
+      "name": "independent writers cannot replace an admitted sibling observation and the next root sees their commit",
+      "coverage": [
+        "TX-LOCK-CAS",
+        "FRESH-SQL"
+      ],
+      "oracle": "An admitted Planner root holds its existing write lock while Dashboard remains undemanded. An independent Dashboard writer cannot enter its callback until release. The first root sees persisted Dashboard, the second commits, and the next first-store Planner root sees the new content/version. This supplements rather than replaces existing same-version CAS tests.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "NOT_RUN_YET"
+    }
+  ],
+  "modifiedProfile": {
+    "id": "P01-W3",
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+    "name": "FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work",
+    "executionStatus": "NOT_RUN_YET",
+    "staticReview": "NO_BLOCKER_FOUND",
+    "addedOracles": [
+      "Cold Planner tagged count and characters equal the present persisted SQL rows.",
+      "Warm Planner and unchanged eager transactionAll both perform zero tagged decoding and no encode descriptor reads.",
+      "Both return fresh Planner graphs with exact byte-equivalent re-encoding.",
+      "Eager transactionAll parses at least 800000 more characters than Planner on the same representative Finance state.",
+      "Six alternating timing samples per arm are observations only; no time ratio is an assertion.",
+      "Retained Planner output mutation does not change the next read."
+    ],
+    "timingInterpretation": "Original four modes remain distinct. currentSnapshots timing now includes first-demand sibling reconstruction inside that scope, while outer admission and requested Dashboard load remain excluded. Do not add overlapping timing categories.",
+    "unchangedTimeoutMs": 120000
+  },
+  "staticTestReview": {
+    "result": "NO_BLOCKER_FOUND",
+    "checked": [
+      "Relative imports match the intended finance-persistence-performance namespace.",
+      "Optional transactionAll is narrowed before capture and called as the existing arrow implementation; no this-dependent binding is assumed.",
+      "One-argument transaction callbacks receive contextual Snapshot typing; no new two-argument callback inference problem was found.",
+      "JSON.parse counting wrappers delegate to the original parser and restore it in finally.",
+      "Marker counting distinguishes native Dashboard materialization from tagged nested clones and undefined-path metadata.",
+      "The eviction scenario uses three individually cacheable 2 MiB values whose payload-plus-native-plan aggregate exceeds the existing bound.",
+      "Missing-row restoration uses INSERT rather than UPDATE of a deleted row.",
+      "Deferred scope promises attach rejection handlers and are released/drained in finally.",
+      "Concurrent writer promises are observed with allSettled before waiting, and the held owner is released in finally.",
+      "No existing fixture, original journey oracle, product contract or timeout was relaxed."
+    ],
+    "blockers": [],
+    "limitations": [
+      "This is static inspection, not a TypeScript compiler result.",
+      "The parse instrumentation is process-global and is scoped/restored as in the existing serial focused test selection; concurrent execution of instrumented tests would need separate evaluation.",
+      "Timing samples establish observations only after CI execution; they are not a correctness oracle."
+    ]
+  },
+  "executionToBeFilledByRoot": {
+    "W3ShortSelection": {
+      "status": "NOT_RUN_YET",
+      "W": null,
+      "S": null,
+      "runId": null,
+      "jobId": null,
+      "result": null
+    },
+    "W3PackageChecksK2": {
+      "status": "NOT_RUN_YET",
+      "W": null,
+      "runId": null,
+      "jobId": null,
+      "result": null
+    },
+    "W3OriginalJourney": {
+      "status": "NOT_RUN_YET",
+      "W": null,
+      "S": null,
+      "runId": null,
+      "jobId": null,
+      "result": null
+    },
+    "note": "Populate exact identities and observed results from GitHub Actions; do not turn static review or W1/S3 observations into a W3 PASS."
+  },
+  "closureBoundary": {
+    "FIN_IND_005": "OPEN",
+    "W1OriginalJourney": {
+      "selection": "S2",
+      "runId": 43645018624,
+      "jobId": 132600738071,
+      "result": "FAIL",
+      "pass": 43,
+      "fail": 1,
+      "expectCalls": 368,
+      "journeyMs": 180019.5,
+      "reached": "confirmed.exact completed; confirmed.evaluate stopped during second coverage.verify; only first three checkpoints completed"
+    },
+    "requiredOriginalJourneyBudgetsMs": {
+      "fixture": 180000,
+      "bunTest": 300000
+    },
+    "remainingAssertions": [
+      "Confirmed threshold 15000",
+      "Actual 15000/15001 witness assertions without oracle changes",
+      "Historical choice read from fresh actual state",
+      "Original-choice replay idempotence",
+      "Store disposal/reopen and historical/result persistence",
+      "Original access-negative and revocation assertions"
+    ],
+    "notProven": [
+      "FIN-IND-005 closure by any short PASS",
+      "W3 global package typecheck or guards success",
+      "Bundle/PR65 execution or installed native-session acceptance",
+      "Independent E17/G4/G8 or GLOBAL_RELEASE",
+      "Crash/power-loss or mixed-binary deployment qualification"
+    ]
+  }
+}

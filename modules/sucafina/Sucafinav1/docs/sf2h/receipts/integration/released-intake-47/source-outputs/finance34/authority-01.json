@@ -1,0 +1,72 @@
+{
+  "schema": "finance-persistence-performance-authority-v1",
+  "mission": 34,
+  "finding": "FIN-IND-005",
+  "state": "IN_PROGRESS",
+  "actor": "S0-C scoped SF persistence source support",
+  "execution": "ChatGPT /root with read-only auxiliary analysis and isolated test authoring",
+  "leaseEpoch": "finance-persistence-browser34",
+  "branch": "finance-resume",
+  "pr": 42,
+  "consumer": "session33",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionSha": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+  "receivedHead": "5e3073bceca683adc5663108832094421b43325e",
+  "receivedTree": "90a76e1e5191407ee072c04d2982fd6d322da9aa",
+  "predecessor": {
+    "mission": 22,
+    "handoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/HANDOFF-FINAL.md",
+    "handoffBlob": "154be08934e9210fc973323dfd3be51ce16dcaaa",
+    "residualBlob": "15e4a39e62de748952f23cc15d02d5d017f2da5e",
+    "writeAuthorityEndsWithPublishedHandoff": true,
+    "pendingRuns": []
+  },
+  "headReconciled": true,
+  "laterCommitsObserved": false,
+  "authority": "User mission34 is the new explicit scoped source lease. Mission22 terminal authority was ended. Source34 is not supervisor or sf2-stack integrator; session33 alone integrates.",
+  "writePaths": [
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "modules/sucafina/Sucafinav1/runtime/contract.ts (only private snapshot encode/decode validation performance; no normative/domaincontractchange)",
+    "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/"
+  ],
+  "readSources": {
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "COMMON": "7839082081554eb288758460bdd8ce52529ba7da",
+    "mission34": "97bc705011dc6ef6788c0a3737daa153bb621cb0",
+    "START": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW": "043205bee6031b4517a98591b3588fca0ab12925",
+    "executionCOMMON": "d61f32af03fe10747a50274233f953af044decf6",
+    "packS0C": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "acceptance": "ded082688fce327def0b48968fa3b89a5831029c",
+    "resident": "033737b1051b23443e633df7874c550629bf55a1",
+    "atlas": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+    "CI": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+  },
+  "nestedAgents": "None: modules and modules/sucafina directory listings; complete Sucafinav1 recursive tree (1736 entries, not truncated) contains no AGENTS.md.",
+  "productPreimages": {
+    "runtime/local-store.ts": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+    "runtime/contract.ts": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5"
+  },
+  "plan": [
+    "Measure actual tagged decode and staged roundtrips on real SQLite and representative existing Finance state; no product delta in first probe.",
+    "Implement only a demonstrated private persistence reduction, preserving actual SQL, authority, transactions, callback/output isolation and legacy encoded format.",
+    "Run short material reduction plus isolation/concurrency/error/legacy/poison regressions before the unchanged 180000/300000 original journey.",
+    "Publish exact source and composed preimage/postimage patches, all real CI results, and terminal handoff to session33."
+  ],
+  "validation": {
+    "interface": "Existing test-ci GitHub MCP snapshot protocol in pinned CI.md; existing astra-check-fresume for bun typecheck and guards.",
+    "oneRunAtATime": true,
+    "deduplicate": true,
+    "localTests": false,
+    "servers": false,
+    "globalRelease": false
+  },
+  "boundaries": {
+    "contractSemanticsUnchanged": true,
+    "noOtherLaneWrites": true,
+    "noAuthorizationOrMutableObservationReuse": true,
+    "noFixtureOracleBudgetWeakening": true,
+    "noForceMergeDeploy": true
+  }
+}
