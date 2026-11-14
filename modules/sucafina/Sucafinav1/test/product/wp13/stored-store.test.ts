@@ -29,7 +29,7 @@ test("stored contribution survives reopen and remains case-authorized", async ()
   const open = async () => {
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => active.value ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => request, revalidate: async () => active.value }, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => active.value, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => request, revalidate: async () => active.value }, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => active.value, verifyScenarioOperations: async () => active.value, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const read = createStoredPortfolioReader({ state, cases, evidence, requestFor: () => request, revalidate: async () => active.value, revalidatePortfolio: async () => active.value })
     return { store, state, read }
   }

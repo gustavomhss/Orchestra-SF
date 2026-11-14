@@ -50,6 +50,32 @@ describe("portfolio composition", () => {
     expect(await createPortfolioPort(input).evaluate(request, context)).toEqual({ status: "stale", reason: "candidate-changed-or-revoked" })
   })
 
+  test("detects an in-place candidate mutation at egress", async () => {
+    const input = host()
+    const candidate = { ref: "a", caseRef: "case-a", operations: [{ kind: "replace" as const, targetRef: "a", amount: 10 }], scenario: { baseRef: "base", operations: [{ kind: "replace" as const, targetRef: "a", amount: 10 }], assumptions: [] } }
+    input.resolveCandidate = async () => ({ status: "ok", value: candidate })
+    input.evaluate = async () => {
+      candidate.operations[0]!.amount = 20
+      candidate.scenario.operations[0]!.amount = 20
+      return { status: "ok", value: { scenario, costCoverageRefs: ["coverage-a"], constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } }
+    }
+    expect(await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)).toEqual({ status: "stale", reason: "candidate-changed-or-revoked" })
+  })
+
+  test("preserves scenario observations when the domain reuses a result object", async () => {
+    const input = host()
+    const shared = structuredClone(scenario)
+    const observed: (number | null)[] = []
+    input.evaluate = async ({ candidates }) => {
+      shared.knownSubtotal = candidates.length === 1 && candidates[0]!.ref === "a" ? 100 : 200
+      return { status: "ok", value: { scenario: shared, costCoverageRefs: ["coverage-a"], constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } }
+    }
+    input.revalidateEvaluation = async (value) => { observed.push(value.knownSubtotal); return true }
+    const result = await createPortfolioPort(input).evaluate(request, context)
+    expect(result.status).toBe("ok")
+    expect(observed).toEqual([100, 200, 200])
+  })
+
   test("does not expose a result when scenario coverage is revoked before egress", async () => {
     const input = host()
     input.revalidateEvaluation = async () => false
