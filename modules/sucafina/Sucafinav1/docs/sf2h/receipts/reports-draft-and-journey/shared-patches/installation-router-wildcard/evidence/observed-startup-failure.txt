@@ -1,0 +1,14 @@
+Repository: gustavomhss/Orchestra-SF
+Run: 43646916265
+Job: 132606651286
+Source W: 83d7102664c9983a06fabffcc61334165cba756d
+Snapshot S: 624bfe326a7a11f8509541eb254501c28e6ee3f9
+Read via GitHub MCP workflow job logs. Minimal excerpt; not a passing result.
+
+2026-11-14T22:15:10.7941281Z Running 4 tests using 1 worker
+2026-11-14T22:15:14.5570590Z     Error: Reports CLI exited 1 before readiness: 
+2026-11-14T22:15:14.5571025Z     [22:15:14.415] ERROR (#2): Error: Method 'ACL' already declared for route '/sucafina'
+2026-11-14T22:15:14.5574856Z         at _on (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/find-my-way-ts@0.1.6/node_modules/find-my-way-ts/dist/esm/internal/router.js:141:19)
+2026-11-14T22:15:14.5578527Z         at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/unstable/http/HttpRouter.js:68:18)
+2026-11-14T22:15:14.5585454Z         at _on (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/find-my-way-ts@0.1.6/node_modules/find-my-way-ts/dist/esm/internal/router.js:141:19)
+2026-11-14T22:15:14.5587211Z         at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/unstable/http/HttpRouter.js:68:18)

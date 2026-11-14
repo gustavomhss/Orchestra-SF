@@ -1,0 +1,79 @@
+{
+  "schema": "sf-mission36-shared-check-patch-v1",
+  "mission": 36,
+  "consumer": "session33 / existing authorized WP07 dispatcher",
+  "status": "PROPOSED_NOT_APPLIED_NOT_RUN",
+  "target": ".github/workflows/astra-wp07-check.yml",
+  "source_preimage": {
+    "commit": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+    "blob": "28c453f4b7735f944e1237715e399e955d86546c",
+    "sha256": "1d049295758daee3a3bfcc5e454e2bbf52bd42590a2c9fe920b2b0093bb2f24d",
+    "bytes": 1998,
+    "path": "preimage/.github/workflows/astra-wp07-check.yml.txt"
+  },
+  "proposed_postimage": {
+    "blob": "99bae26c6fe2b5d6e63199bd13baf9c351120030",
+    "sha256": "6b3e1a3f4eabeca26cc8fe19e508688ed65eeda5e61e3046a9746a1028a013f7",
+    "bytes": 2273,
+    "path": "postimage/.github/workflows/astra-wp07-check.yml.txt"
+  },
+  "patch": {
+    "path": "reports-e2e-check.patch",
+    "sha256": "70935d0df9561473236890d3b6441b5aca3ac968fd7a8ca57033e2435a93c199",
+    "git_blob": "9ade2cb58f4b99c0beb6c5e8ce26db0e74dbf048"
+  },
+  "C6_boundary": {
+    "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "target_exists": false,
+    "observed_workflows": [
+      ".github/workflows/test-ci.yml",
+      ".github/workflows/sf2-epic.yml"
+    ],
+    "e2e_graph": {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob": "141da754e380d7410da97f9ca44505880cca55c9",
+      "state": "Reports spec/support inclusion already consumed"
+    }
+  },
+  "delta": {
+    "added_lines": 7,
+    "removed_lines": 0,
+    "command": "bun typecheck:e2e",
+    "working_directory": "packages/app-shell",
+    "condition": "success() || failure()",
+    "log": "wp07-check-evidence/typecheck-e2e.txt",
+    "purpose": "Run the existing package E2E typecheck and retain its full diagnostics even when the earlier Sucafina typecheck fails."
+  },
+  "preserved": {
+    "trigger": "push branches:[astra-check-wp07]",
+    "permissions": "contents:read",
+    "checkout": "github.sha with fetch-depth0 and recorded SHA/tree/base",
+    "job_budget_minutes": 30,
+    "setup": "Existing pinned repository setup-bun",
+    "existing_steps": [
+      "Sucafina bun typecheck",
+      "check:guards --base origin/dev",
+      "WP07 export fixture generation",
+      "upload complete wp07-check-evidence"
+    ]
+  },
+  "application": [
+    "Only the shared workflow owner consumes this inert patch; mission36 did not modify any active workflow.",
+    "For an existing exact source-preimage workflow, apply this complete diff and verify the full postimage hash. Reconcile any different current blob instead of blind replacement.",
+    "C6 has no target workflow. An owner-approved import must explicitly use the recorded source preimage plus this delta; do not assert the diff applies to a nonexistent C6 file or import the source branch wholesale.",
+    "Use a coherent actual product candidate whose E2E graph includes the Reports spec and transitive helpers. Source-only branch checks do not establish composed-candidate coverage.",
+    "Preserve the existing astra-check-wp07 trigger. Reconcile ancestry and current trigger ref through normal GitHub MCP expected-head CAS without force; no second dispatcher or copied concurrent run.",
+    "Record actual checked candidate/tree, E2E graph blob, base origin/dev, run/job/artifacts and unsuppressed diagnostics. Report inherited failures explicitly."
+  ],
+  "verification": {
+    "artifact_processing": "Complete preimage/postimage and unified diff prepared; Git blob and SHA256 hashes checked as text artifacts only.",
+    "product_execution": "NOT_RUN",
+    "workflow_execution": "NOT_RUN",
+    "application": "NOT_APPLIED"
+  },
+  "limitations": [
+    "This patch provides no recipient identity, ACL, C05 external lease or native witness.",
+    "A successful typecheck is not execution of the four nominal E2Es or approval of86 canonical criteria.",
+    "The update does not widen allowed test selection, change retries/timeouts or dispatch full/epic."
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "orchestra-sf.mission36.findings.v1",
+  "mission": 36,
+  "findings": [
+    {
+      "id": "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR",
+      "criterion": "CAMP.QLT.03",
+      "state": "IMPLEMENTED_NOT_ACCEPTED_RUNTIME_BLOCKED",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+          "C6_blob": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+          "product_blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+          "status": "modified",
+          "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+          "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+          "source_matches_W": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+          "C6_blob": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+          "product_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+          "status": "modified",
+          "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+          "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+          "source_matches_W": true
+        }
+      ],
+      "behavior": "Recoverable failures preserve exact unsent draft and immutable action intent. Unknown outcome requires an authorized read reconciliation then explicit same-key/same-payload retry. No automatic resend and no silent version rebase. Access loss clears protected state and rejects late results.",
+      "isolated_evidence": {
+        "run": 43646667683,
+        "client_pass": 19,
+        "bundle_pass": 4
+      },
+      "dom_reproduction": "NOT_REACHED; all four real nominal cases failed at host startup. Real UI regression tests are authored in RPT-02 but have not reached the textarea assertions.",
+      "acceptance": false
+    },
+    {
+      "id": "REPORTS36-SHARED-ROUTER-DUPLICATE-MOUNT",
+      "state": "BLOCKED_OWNER_PATCH",
+      "input": "C6",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "run": 43646916265,
+      "job": 132606651286,
+      "effect": "All four cases initiated and failed before installation readiness; no independent Reports flow can reach the UI.",
+      "patch": "shared-patches/installation-router-wildcard/manifest.json",
+      "owner": "session33",
+      "test_status": "Patch proposed only; never applied to tested tree."
+    },
+    {
+      "id": "REPORTS36-DISCUSSION-ACCESS-BINDING",
+      "state": "BLOCKED_OWNER_PATCH",
+      "effect": "Safe preservation requires the current admitted principal/scope binding be checked before an action and echoed on authorized responses. C6 lacks this handshake. The new client closes only the unsupported discussion before its actions; it does not turn missing support into a fabricated global revocation.",
+      "patch": "shared-patches/review-discussion-binding/manifest.json",
+      "owner": "session33 + authority/producer owners",
+      "acceptance": false
+    },
+    {
+      "id": "distinct-legitimate-recipient",
+      "status": "BLOCKED",
+      "reason": "Installed local-operator authenticates exactly one principal; directory/enroll do not establish a second legitimate person. No identity or grant change is proposed.",
+      "consumer_interface": "createSfExtendedBusinessServices.reviewRecipientAuthority must receive a real current caller+recipient+immutable-pin+all-source-fields/periods ACL provider with synchronous checkAtCommit. Directory lookup is insufficient.",
+      "identity_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "git_blob_sha1": "4845de24285df2459991da7d9895aad95eb93b19"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_sha1": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+        }
+      ],
+      "owner": "Reports25 / S3-A + actual identity/recipient-authority owner"
+    },
+    {
+      "id": "nonplain-c05-source-lease",
+      "status": "BLOCKED_FOR_NONPLAIN_C05",
+      "reason": "Local lease supports only Dashboard record reviews whose authority is contained in protected domain snapshots. Captured comments, external outcomes, decisions, sensitivity, calculations/documents and non-Dashboard sources fail closed until their real producer supplies a protected current authority lease.",
+      "owner": "Reports25 / S3-A + source domain producer authority owners"
+    },
+    {
+      "id": "REPORTS36-APP-E2E-TYPECHECK",
+      "state": "NOT_RUN_OWNER_ROUTE_REQUIRED",
+      "effect": "C6 includes Reports in the app E2E type graph, but the existing WP07 source check does not execute package typecheck:e2e.",
+      "patch": "shared-patches/reports-e2e-check/manifest.json",
+      "owner": "session33 / authorized scoped hosted dispatcher"
+    },
+    {
+      "id": "REPORTS36-INHERITED-SOURCE-TYPECHECK",
+      "state": "FAIL_UNCHANGED_EXTERNAL_DIAGNOSTICS",
+      "run": 43647268470,
+      "diagnostics": 137,
+      "owned_changed_path_diagnostics": 0,
+      "comparison": "evidence/typecheck-diagnostics.json",
+      "effect": "No overall typecheck PASS. The full same 137 diagnostics occur in predecessor run 43640600856.",
+      "owner": "respective shared/domain owners + session33"
+    },
+    {
+      "id": "REPORTS36-NOMINAL-COLLECTION",
+      "state": "CORRECTED_AND_SELECTED",
+      "failure_run": 43646667683,
+      "fix": "Move unchanged trace/video/screenshot test.use from describe to top-level; no increased timeout or removed assertion.",
+      "confirmation_run": 43646916265,
+      "selected": 4,
+      "journey_pass": 0
+    }
+  ],
+  "global_acceptance": false,
+  "forbidden_substitutions": [
+    "No fake second principal, native provider or ACL",
+    "No skip/xfail or weakened oracle",
+    "No browser bundle or fixture archive counted as four nominal E2Es",
+    "No read-only shared patch applied in W or S"
+  ]
+}
+

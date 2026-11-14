@@ -1,0 +1,395 @@
+{
+  "schema": "orchestra-sf.mission36.input-closure.v1",
+  "mission": 36,
+  "planning": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "readings": "READINGS.json",
+    "pack": "S3-A full 86 canonical criteria retained in CRITERIA.json"
+  },
+  "source_start": {
+    "branch": "astra-wp07",
+    "PR": 27,
+    "commit": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+    "terminal_handoff_blob": "332028625a14f46e7febea188d341d9c9cb1f9f5",
+    "consumer_release_blob": "956ab44f80d52f8a7c2aa22711e8db316770ed3b",
+    "reconciliation": "Explicit bounded continuation after terminal mission25 release; no presumed absent writer."
+  },
+  "coherent_input": {
+    "symbol": "C6",
+    "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+    "record_commit": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+    "record_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/candidate-C6.json",
+    "record_blob": "6770803f83d51e3816a13159bd3344cb42353680",
+    "ack": {
+      "source": "Reports25",
+      "source_commit": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+      "integrated_commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "integrated_tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+      "status": "CONSUMED_IMPLEMENTATION_ONLY_NOT_FUNCTIONALLY_ACCEPTED",
+      "material_paths": 19,
+      "original_receipts": 54,
+      "source_PASS_transferred": false
+    },
+    "assembly": "PRESENT_AND_CONSUMED; no missing-assembly diagnosis or re-creation"
+  },
+  "source_product": {
+    "W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+    "tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249"
+  },
+  "test_product": {
+    "W": "83d7102664c9983a06fabffcc61334165cba756d",
+    "tree": "5cf09ca749d89b6705ee0ded2182ef672303407f",
+    "parent": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "recipe": "C6 complete tree plus exactly the ten owned product/test postimages below. No shared patch and no source branch shared dependency imported.",
+    "compare": "https://github.com/gustavomhss/Orchestra-SF/compare/52add8433f8ecf9d361ee635cda484142131ef84...83d7102664c9983a06fabffcc61334165cba756d",
+    "changed_paths": 10,
+    "unexpected": 0
+  },
+  "nominal_envelope": {
+    "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+    "tree": "8d3731cab27de62da6844b0ba76cf42cc95e2d9a",
+    "parent": "83d7102664c9983a06fabffcc61334165cba756d",
+    "changed_paths": [
+      {
+        "path": ".ci-run.json",
+        "blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b"
+      }
+    ],
+    "all_other_blobs_identical": true,
+    "compare": "https://github.com/gustavomhss/Orchestra-SF/compare/83d7102664c9983a06fabffcc61334165cba756d...624bfe326a7a11f8509541eb254501c28e6ee3f9"
+  },
+  "owned_overlay": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "C6_blob": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+      "product_blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+      "status": "modified",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "C6_blob": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+      "product_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+      "status": "modified",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+      "C6_blob": null,
+      "product_blob": "cf67dc28e24e0dcca00de604739a1eaddf2db3ed",
+      "status": "added",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+      "C6_blob": null,
+      "product_blob": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+      "status": "added",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+      "C6_blob": null,
+      "product_blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+      "status": "added",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+      "C6_blob": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+      "product_blob": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+      "status": "modified",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+      "C6_blob": null,
+      "product_blob": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+      "status": "added",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "C6_blob": "40591b3e4e2f672a80a898ac6d6238fa08f4d565",
+      "product_blob": "1465b8a2f2c512705f965ec493cd4c08a80d23f0",
+      "status": "modified",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "C6_blob": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+      "product_blob": "4af1d169e39f945de01314fef73e3689ff297545",
+      "status": "modified",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "C6_blob": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+      "product_blob": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+      "status": "modified",
+      "source_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+      "S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "source_matches_W": true
+    }
+  ],
+  "consumed_C6_material_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "C6_blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "C6_blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "C6_blob": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "C6_blob": "d8e0d149e37c640db8957f3e917f867088923d93",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-source-links.ts",
+      "C6_blob": "f655f9d0728d8c92efe9b78efa1f379c5be67efd",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+      "C6_blob": "0da7d51672dc2519019f7880806d61c529456aa9",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-collaboration.ts",
+      "C6_blob": "0912fc1f33fb1b4fe81d92eeb509c7806ab1a380",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "C6_blob": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+      "C6_blob": "ea194a5c8cf0624c278c8dc2bf81c0dac6222887",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "C6_blob": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+      "mission36_action": "owned delta listed above"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "C6_blob": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+      "mission36_action": "owned delta listed above"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+      "C6_blob": "4b148e2bfea0e356641c18f0821e503b18e33590",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+      "C6_blob": "5d75db3b4f22259b239a69c0e37e90f4ce1a851d",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+      "C6_blob": "9580eaf32f59508ad50d02339b4e8cf396ff405e",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+      "C6_blob": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+      "mission36_action": "owned delta listed above"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "C6_blob": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+      "mission36_action": "owned delta listed above"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "C6_blob": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "C6_blob": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+      "mission36_action": "owned delta listed above"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "C6_blob": "141da754e380d7410da97f9ca44505880cca55c9",
+      "mission36_action": "READ_ONLY_OR_UNCHANGED"
+    }
+  ],
+  "unchanged_C6_reports_support": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+      "blob": "9580eaf32f59508ad50d02339b4e8cf396ff405e"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/corpus.ts",
+      "blob": "301e30515aac62a2fb50937eb5d507d7faae06fd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+      "blob": "2a53115e2f116f49dc23c779aff2349cd149dc1c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/model.ts",
+      "blob": "dc4c34866e35b8eee0911897b79396dce51a600e"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/ooxml.ts",
+      "blob": "8ab65231d7f94a18e71ac3a78ef2b9a4995b1c79"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
+      "blob": "a32cac26786e4ace96490f719677370e42f87958"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "blob": "21d21cac3b28211e3360ccbc8a3a4abe58653232"
+    }
+  ],
+  "shared_runtime_pins": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+      "blob": "9fd36deee7a2ef4b3584faa7f49b682d0304741f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19"
+    }
+  ],
+  "protocol_and_config": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "blob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob": "141da754e380d7410da97f9ca44505880cca55c9",
+      "status": "C6_INPUT_READ_ONLY"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "status": "C6_INPUT_READ_ONLY"
+    }
+  ],
+  "unresolved_C6_resources": [
+    {
+      "id": "distinct-legitimate-recipient",
+      "status": "BLOCKED",
+      "reason": "Installed local-operator authenticates exactly one principal; directory/enroll do not establish a second legitimate person. No identity or grant change is proposed.",
+      "consumer_interface": "createSfExtendedBusinessServices.reviewRecipientAuthority must receive a real current caller+recipient+immutable-pin+all-source-fields/periods ACL provider with synchronous checkAtCommit. Directory lookup is insufficient.",
+      "identity_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "git_blob_sha1": "4845de24285df2459991da7d9895aad95eb93b19"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_sha1": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+        }
+      ],
+      "owner": "Reports25 / S3-A + actual identity/recipient-authority owner"
+    },
+    {
+      "id": "nonplain-c05-source-lease",
+      "status": "BLOCKED_FOR_NONPLAIN_C05",
+      "reason": "Local lease supports only Dashboard record reviews whose authority is contained in protected domain snapshots. Captured comments, external outcomes, decisions, sensitivity, calculations/documents and non-Dashboard sources fail closed until their real producer supplies a protected current authority lease.",
+      "owner": "Reports25 / S3-A + source domain producer authority owners"
+    }
+  ],
+  "proof_scope": {
+    "shared_active_writes": 0,
+    "source_control_updates": "Only astra-wp07 and existing astra-check-wp07 via no-force CAS; unique ci-run refs at request-only S.",
+    "sf2_stack_updates": 0,
+    "dev_merges": 0,
+    "deploys": 0,
+    "local_product_execution": 0
+  },
+  "handoff": "Session33 must consume new owned postimages and explicitly reconcile inert owner patches into a new coherent candidate. C6 remains historical input, not updated approval."
+}
+

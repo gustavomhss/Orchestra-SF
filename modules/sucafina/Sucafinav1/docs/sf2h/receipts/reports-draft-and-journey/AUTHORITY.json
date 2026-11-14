@@ -3,7 +3,7 @@
   "mission": 36,
   "actor": "S3-A",
   "lease_epoch": "reports-browser36",
-  "state": "IN_PROGRESS",
+  "state": "TERMINAL_BLOCKED_SHARED_ROUTER",
   "session": "ChatGPT task /root",
   "model": "GPT-6 Astra Pro",
   "observed_at_utc": "2026-11-14 21:50:42 UTC",
@@ -40,8 +40,8 @@
   "local_delegation": {
     "root": "collaboration view/client and new regression tests; only root publishes GitHub CAS and dispatches existing WP07 CI",
     "reports_e2e": "reports.spec.ts and reports-support only after local lease acknowledgement; no remote writes or dispatch",
-    "ci_closure": "read-only CI/provenance",
-    "draft_security": "read-only security review; no independent campaign acceptance claimed"
+    "ci_closure": "Read-only CI/provenance plus explicitly delegated owned READINGS/CRITERIA/PRECONDITIONS receipt authoring; no remote mutation or dispatch",
+    "draft_security": "Static review plus complete inert shared patch artifacts under own receipts; no active shared-source mutation, remote write or dispatch"
   },
   "constraints": {
     "shared_source": "READ_ONLY; inert complete patches only",
@@ -49,5 +49,19 @@
     "tests": "Actions only, surgical existing dispatcher, one WP07 run in flight",
     "global_acceptance": false,
     "consumer": "session33 exclusive sf2-stack writer; S0 final acceptance"
+  },
+  "terminal": {
+    "product_W": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+    "product_tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+    "coherent_W": "83d7102664c9983a06fabffcc61334165cba756d",
+    "nominal_S": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+    "nominal_run": 43646916265,
+    "disposition": "READY_FOR_SESSION33_CONSUMPTION_AS_IMPLEMENTATION_ONLY",
+    "acceptance": false,
+    "handoff": "HANDOFF.md",
+    "consumer_release": "CONSUMER-RELEASE.json",
+    "receipt_commit": "Containing commit; receipts-only delta after source W.",
+    "writer": "No further product edits planned in this lease; explicit bounded implementation release to session33."
   }
 }
+

@@ -1,0 +1,265 @@
+{
+  "schema": "orchestra-sf.mission36.delivery-manifest.v1",
+  "mission": 36,
+  "state": "TERMINAL_BLOCKED_SHARED_ROUTER",
+  "branch": "astra-wp07",
+  "PR": 27,
+  "product_source": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+  "product_tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+  "coherent_test_product": "83d7102664c9983a06fabffcc61334165cba756d",
+  "nominal_snapshot": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+  "receipt_commit": "Containing commit, resolved through GitHub; only allowed receipts differ from product source",
+  "hash_scope": "All other delivered receipt files; this manifest excludes itself to avoid recursive identity.",
+  "files": [
+    {
+      "path": "ACK-REQUEST.json",
+      "bytes": 1838,
+      "blob": "877e226c9f2da5b3b22de7e6d0dcba3224826184",
+      "sha256": "06dcb4f74cffbdb13324a61986dc2403b659a6f18db2b94875f5ebbd1a583367"
+    },
+    {
+      "path": "AUTHORITY.json",
+      "bytes": 3507,
+      "blob": "7d6dde501daae83b622d440daed877c98754fe4e",
+      "sha256": "ca96db17337fb64d9fb7f4db5595054e5444a0241da38a55955e206d53165de5"
+    },
+    {
+      "path": "CONSUMER-RELEASE.json",
+      "bytes": 5228,
+      "blob": "427cb8a0e258017efae99efe4ebeaf938f981872",
+      "sha256": "3e778647a5cfcf52e7679ed96ce3e4df30b5a2daecf4f87ea857176cef5c6662"
+    },
+    {
+      "path": "CRITERIA.json",
+      "bytes": 482987,
+      "blob": "ef879397c9add43014f0487ba257855c0468c285",
+      "sha256": "a9904dab8005da23be7cff9a45f99c356f5a17af02cc4887ef29809885c8bc95"
+    },
+    {
+      "path": "FINDINGS.json",
+      "bytes": 6034,
+      "blob": "ace0d014ccd03517e619c915c1a7813a46476958",
+      "sha256": "c7c2439fed63de25649f2baa687ab5143ced3626b4c071cb3e0024a321c0c289"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 15698,
+      "blob": "b9f8f74f56b131a527b8115d1bca075485c5190c",
+      "sha256": "197d273d00dad41f157331c3a9f59867103fa08d6124bf587386138191e31763"
+    },
+    {
+      "path": "INPUT-CLOSURE.json",
+      "bytes": 16348,
+      "blob": "4a475e52fe7c1ca790161aeaac6540432e5a843d",
+      "sha256": "9d16cfe457f4ea17ed887519a6bd1130e2c6571a56a06a6a6511d465d687e71a"
+    },
+    {
+      "path": "PRECONDITIONS.json",
+      "bytes": 42375,
+      "blob": "1f861a3b6ca48124847548a0310ff6d23d42e643",
+      "sha256": "9456216f99242e68755a34a320dc0565d8cb1236a6ba53b908af808ab3e63077"
+    },
+    {
+      "path": "READINGS.json",
+      "bytes": 35982,
+      "blob": "6470c76073d5f1381372e6f2d5811d6de8a1d920",
+      "sha256": "b86354e4ee37046f2fac3aa1f950b7aacc55a087552209f285d5f9728a6d1241"
+    },
+    {
+      "path": "RUNS.json",
+      "bytes": 20715,
+      "blob": "843e1b56bad5a15426421c4489dfb8ad4bf5ab07",
+      "sha256": "225de88dcfaeb66f7b2f02859a9bd1b8bbb1cfb9ce3310c7beff97367a5dca58"
+    },
+    {
+      "path": "evidence/client-and-collection.log",
+      "bytes": 3521,
+      "blob": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+      "sha256": "c970f2b1086a3dd786a99b793a1fa63f178063fe56b3bfb1dfcfe8d7d9bc6cf5"
+    },
+    {
+      "path": "evidence/nominal-03.log",
+      "bytes": 3234,
+      "blob": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+      "sha256": "477ce850949a05411995ba8c46184da94b7d6e9a9ad34926c9bf09727299240c"
+    },
+    {
+      "path": "evidence/source-guards.log",
+      "bytes": 3981,
+      "blob": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+      "sha256": "1963cd34face01d5971c24bb8ee4a80f46d2b507ed3b777bce0ab4091af4947a"
+    },
+    {
+      "path": "evidence/typecheck-diagnostics.json",
+      "bytes": 32312,
+      "blob": "3e2fc9688652f7128eee0605a6f70fa5a361dade",
+      "sha256": "51c641701a5158e8c1267d72eece4700402f4e6f9f4102c50e44c199a76aac35"
+    },
+    {
+      "path": "requests/client-and-bundles.json",
+      "bytes": 294,
+      "blob": "3fab0314e8a32dc29547ec8c23cd8c02d8f07850",
+      "sha256": "05962659b4c35b80a2a4b3092c0991f8726b9e44beaabb223664a2774148bd75"
+    },
+    {
+      "path": "requests/collection-and-client.json",
+      "bytes": 465,
+      "blob": "9492fe531fc12b9881c69928d7ed838d70345555",
+      "sha256": "e3c7228582c056476bf0054d72f52e04fb6f6c2f43dacf418f0c06c8cc60340f"
+    },
+    {
+      "path": "requests/reports-nominal.json",
+      "bytes": 274,
+      "blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+      "sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766"
+    },
+    {
+      "path": "shared-patches/reports-e2e-check/README.md",
+      "bytes": 1932,
+      "blob": "3a4e3c7c6046de8b88c8044fed55956b08e4cb70",
+      "sha256": "019b799ae5ee16d67bd3e77f7b56eb15a360dadffef9e51ed0b153dab74abf08"
+    },
+    {
+      "path": "shared-patches/reports-e2e-check/manifest.json",
+      "bytes": 3945,
+      "blob": "3da30e304fdbd2a24e0ed4013f9c82d49bddbe5c",
+      "sha256": "81daab670642a0b5939d62b0649e32354688e3d720ef58d838682a3f067dcc96"
+    },
+    {
+      "path": "shared-patches/reports-e2e-check/postimage/.github/workflows/astra-wp07-check.yml.txt",
+      "bytes": 2273,
+      "blob": "99bae26c6fe2b5d6e63199bd13baf9c351120030",
+      "sha256": "6b3e1a3f4eabeca26cc8fe19e508688ed65eeda5e61e3046a9746a1028a013f7"
+    },
+    {
+      "path": "shared-patches/reports-e2e-check/preimage/.github/workflows/astra-wp07-check.yml.txt",
+      "bytes": 1998,
+      "blob": "28c453f4b7735f944e1237715e399e955d86546c",
+      "sha256": "1d049295758daee3a3bfcc5e454e2bbf52bd42590a2c9fe920b2b0093bb2f24d"
+    },
+    {
+      "path": "shared-patches/reports-e2e-check/reports-e2e-check.patch",
+      "bytes": 2540,
+      "blob": "9ade2cb58f4b99c0beb6c5e8ce26db0e74dbf048",
+      "sha256": "70935d0df9561473236890d3b6441b5aca3ac968fd7a8ca57033e2435a93c199"
+    },
+    {
+      "path": "shared-patches/installation-router-wildcard/README.md",
+      "bytes": 5564,
+      "blob": "170bd131e1460b900a6e131fa5436b88d9ac00bf",
+      "sha256": "b74dfe3503eaadce7f348fa01597a67b63e8aa6753111acf1b7aad96b0cb21b3"
+    },
+    {
+      "path": "shared-patches/installation-router-wildcard/evidence/effect-wildcard-expansion.txt",
+      "bytes": 539,
+      "blob": "cd9f95445c7605c34e5b7c27510e453ed8c994fa",
+      "sha256": "633a5ca3677c1c049b290ed04f8d8b2308cdb9b2e8830f19c0f96609b527c5a9"
+    },
+    {
+      "path": "shared-patches/installation-router-wildcard/evidence/observed-startup-failure.txt",
+      "bytes": 1290,
+      "blob": "a2c5e4ec54430159d65ca5d8e18e98dd8eac00dc",
+      "sha256": "6733b3e1abf1be03d79d107ec61210097260f78f6867f86a8a5ce499b9acf483"
+    },
+    {
+      "path": "shared-patches/installation-router-wildcard/installation-router-wildcard.patch",
+      "bytes": 1461,
+      "blob": "fe26bc053ec5dbc1b759ca56472f0e91ba3278a7",
+      "sha256": "c8a32901dd900eab75afefe20e18cb1991595a8b404c8f6144be7dbc5b4c86dd"
+    },
+    {
+      "path": "shared-patches/installation-router-wildcard/manifest.json",
+      "bytes": 7100,
+      "blob": "ce7e55eff6bb5c428c4548474bb2ef0cf908e97c",
+      "sha256": "132add9296f20056000fb46276a61825f63fccec94bfc489013f5edff0fb6463"
+    },
+    {
+      "path": "shared-patches/installation-router-wildcard/postimage/apps/cli/src/sucafina-product/installation.ts.txt",
+      "bytes": 2545,
+      "blob": "edc4d574854a39583fb6847e4e8bb135ede93cc1",
+      "sha256": "8a13e2514661503449217f7fb75bfb5a0705a076ad08da98cba365207ea0db40"
+    },
+    {
+      "path": "shared-patches/installation-router-wildcard/preimage/apps/cli/src/sucafina-product/installation.ts.txt",
+      "bytes": 2463,
+      "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "sha256": "b480f09a5a0269988ac15e5c9cd38a0793caa2d94f00833564bc7b993bc4edd1"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/README.md",
+      "bytes": 9204,
+      "blob": "7d72c14939642814fad81b50c1c13ed1002ac079",
+      "sha256": "c4b383e84f5e0420dfdee0fe9cd9327f1a8a6e851a277ad3ed3d9b4c2c213fc7"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/independent-static-review.json",
+      "bytes": 7056,
+      "blob": "2d16c25857871c1208ef56162a9d35be5586b2ca",
+      "sha256": "6d0774df6f1766b964f5d94a0b82c5e01cb402e8494bfbba3ef93943a57f8cd6"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/manifest.json",
+      "bytes": 8358,
+      "blob": "953a2f3b5813c41dc5e5967896547be04fd05924",
+      "sha256": "f273567dc8747830f50c9403b48a24cd4e18a873a92e6b2209697372f9188f0b"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/postimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "bytes": 17788,
+      "blob": "fcf5a23b44eb4bcbea135858bfa6326eb9e6b10c",
+      "sha256": "394626cd227efc8fb0d101010398ab445bc0c50fd586bef7dc74181c08a70549"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/postimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+      "bytes": 5331,
+      "blob": "956ff69dbe8941ec50b2b29c9b923327379c269d",
+      "sha256": "8e4981e266cead721561fcdd7e1a88e743b6c1d395f174d1b6e155e5a9ed59df"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/postimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+      "bytes": 11180,
+      "blob": "7c6d585a6245ad95b0948b8ca3d6b0c8f45f810f",
+      "sha256": "9925f33be30c9858d182a6686799a45a010062d684319e22271683a328f78848"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/postimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+      "bytes": 19946,
+      "blob": "42ca69647984e4bc1d4afc22f3fa11deeeeea6a5",
+      "sha256": "800bfc74f34edcc170ca881e2b809ccae2ffb73a867f01427ac6e2adcf5a7716"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/preimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "bytes": 17497,
+      "blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "sha256": "4c28afeb113132ce7836f2d247d175418c9c5ef3be25323cb55e4161efb7d3f2"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/preimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+      "bytes": 4683,
+      "blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+      "sha256": "eb9dcaee2e9c2fc314c28f6b22a9f2044ad2d450a8811fd3d2a9fc6824631c55"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/preimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+      "bytes": 11104,
+      "blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+      "sha256": "048039ee0b9397325731932487bfe4ff4ea72fcf2182c8cf19d94c62732ac751"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/preimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+      "bytes": 19480,
+      "blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+      "sha256": "1fc0be8b40f4ea036080987c67619d8f8480dc3dc74c399897534dae95abab0c"
+    },
+    {
+      "path": "shared-patches/review-discussion-binding/review-discussion-binding.patch",
+      "bytes": 10324,
+      "blob": "fbe10dad5d6aff68222e8c92a5953fb37f9854e7",
+      "sha256": "23d799f3bbf7df3d293fb41c714edab5ec92d569486dd383c7a0492f2e700ce8"
+    }
+  ],
+  "receipt_files_excluding_this": 41,
+  "product_files_modified_after_tested_source": 0,
+  "scope": "No shared production file or active config/workflow modified; shared source images remain inert .txt.",
+  "acceptance": false
+}

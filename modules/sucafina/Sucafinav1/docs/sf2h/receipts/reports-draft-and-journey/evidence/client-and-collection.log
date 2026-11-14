@@ -1,0 +1,31 @@
+2026-11-14T22:12:08.5988952Z (pass) a lost reply response remains unknown and sends again only on an explicit exact retry [8.23ms]
+2026-11-14T22:12:08.5989749Z (pass) a 503 is recoverable with unknown outcome and never retries the edit [0.20ms]
+2026-11-14T22:12:08.5990554Z (pass) a stale CAS is a rejected conflict, preserving the supplied version and avoiding another mutation [0.16ms]
+2026-11-14T22:12:08.5991776Z (pass) conflict idempotency-content-changed cannot discard an earlier durable intent [0.13ms]
+2026-11-14T22:12:08.5992327Z (pass) conflict target-replaced cannot discard an earlier durable intent [0.04ms]
+2026-11-14T22:12:08.5994554Z (pass) denial status %s closes the client and invokes access loss once [0.20ms]
+2026-11-14T22:12:08.5995385Z (pass) denial status %s closes the client and invokes access loss once [0.11ms]
+2026-11-14T22:12:08.5996045Z (pass) denial status %s closes the client and invokes access loss once [0.07ms]
+2026-11-14T22:12:08.5998689Z (pass) the C6 masked thread-access denial also closes the client [0.22ms]
+2026-11-14T22:12:08.6000851Z (pass) a followed login redirect purges access even when its HTML response is 200 [0.21ms]
+2026-11-14T22:12:08.6002785Z (pass) a missing or changed response binding never releases a protected response (%s) [0.21ms]
+2026-11-14T22:12:08.6003704Z (pass) a missing or changed response binding never releases a protected response (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) [0.08ms]
+2026-11-14T22:12:08.6005090Z (pass) an absent or malformed initial binding fails closed without a global revocation claim (%s) [0.16ms]
+2026-11-14T22:12:08.6005708Z (pass) an absent or malformed initial binding fails closed without a global revocation claim (not-an-access-digest) [0.04ms]
+2026-11-14T22:12:08.6006420Z (pass) changing the local access binding refuses a request before transport [0.10ms]
+2026-11-14T22:12:08.6008711Z (pass) a response from an earlier access binding cannot resolve after the binding changes [0.18ms]
+2026-11-14T22:12:08.6010714Z (pass) dispose aborts transport and rejects even a late successful response [0.22ms]
+2026-11-14T22:12:08.6015260Z (pass) binding changes during response body consumption still suppress its protected value [0.35ms]
+2026-11-14T22:12:08.6017345Z (pass) malformed JSON is an unknown outcome and does not trigger an automatic resend [0.25ms]
+2026-11-14T22:12:09.9145880Z (fail) the existing production Playwright interface collects all four Reports journeys [1075.54ms]
+2026-11-14T22:12:09.9146912Z (pass) review browser entry bundles without server runtime dependencies [9.34ms]
+2026-11-14T22:12:09.9207798Z (pass) review workspace entry bundles without server runtime dependencies [6.94ms]
+2026-11-14T22:12:09.9218596Z (pass) review collaboration-client entry bundles without server runtime dependencies [1.09ms]
+2026-11-14T22:12:09.9235177Z (pass) review collaboration-view entry bundles without server runtime dependencies [1.62ms]
+2026-11-14T22:12:09.9240453Z omni positive control [be2d06488e8e9c359b3c10b45ac50425]: pass (declared: 1 test(s) in Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts); 1 omni spawn(s), 0 delegated.
+2026-11-14T22:12:09.9241721Z (fail) the existing production Playwright interface collects all four Reports journeys [1075.54ms]
+2026-11-14T22:12:09.9242158Z  23 pass
+2026-11-14T22:12:09.9242332Z  1 fail
+2026-11-14T22:12:09.9242519Z  178 expect() calls
+2026-11-14T22:12:09.9242775Z Ran 24 tests across 3 files. [1354.00ms]
+

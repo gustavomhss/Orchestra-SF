@@ -1,0 +1,875 @@
+{
+  "schema": "orchestra-sf.reports-draft-and-journey.preconditions.v1",
+  "mission": 36,
+  "actor": "S3-A",
+  "lease_epoch": "reports-browser36",
+  "phase": "TERMINAL_BLOCKED_SHARED_ROUTER",
+  "identities": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "astra-wp07",
+    "pr": 27,
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "C6": {
+      "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d"
+    },
+    "Wsource": {
+      "commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "tree": "fbe942eb99a3e73e95fcf79ec2d9ef056001b249",
+      "parent": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+      "sequence_label": "Wsource4"
+    },
+    "Wtest": {
+      "commit": "83d7102664c9983a06fabffcc61334165cba756d",
+      "tree": "5cf09ca749d89b6705ee0ded2182ef672303407f",
+      "parent": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "sequence_label": "Wtest4",
+      "definition": "C6 plus ten exact owned source/test paths from the PR27 source lineage. No shared patch application or sf2-stack ref update."
+    },
+    "S_nominal_attempt_03": {
+      "commit": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "tree": "8d3731cab27de62da6844b0ba76cf42cc95e2d9a",
+      "parent": "83d7102664c9983a06fabffcc61334165cba756d",
+      "sequence_label": "S3 nominal / dispatch m36-05",
+      "branch": "ci-run-linux-astra-wp07-83d71026-37251a43-m36-05",
+      "request_blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+      "request_sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+      "request_compact_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f"
+    },
+    "active_nominal_snapshot": "S_nominal_attempt_03",
+    "diagnostic_evidence": {
+      "Wsource": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+      "Wtest": {
+        "commit": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+        "tree": "11a0cca0b20eea60876c9860ad0bedaea0acc5a1",
+        "parent": "52add8433f8ecf9d361ee635cda484142131ef84"
+      },
+      "S": {
+        "commit": "b4cdbe602c9501f68b15b0d8ed5bafa94084e9c8",
+        "tree": "c46f86ce3162896fe50e31d94f0e25f8002d1e83",
+        "parent": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+        "request_blob": "9492fe531fc12b9881c69928d7ed838d70345555"
+      }
+    },
+    "history": [
+      {
+        "label": "W1 / nominal snapshot S1",
+        "Wsource": {
+          "commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+          "tree": "1c947764252d16753ce151950783c620a6606c0d",
+          "parent": "1a7bbe4258c155f48854e9f67471f12924457bd7"
+        },
+        "Wtest": {
+          "commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+          "tree": "eefc0e053eb7241b9404b8d60d649eba13d33968",
+          "parent": "52add8433f8ecf9d361ee635cda484142131ef84",
+          "definition": "C6 plus eight exact owned source/test blobs from Wsource; no shared patch application or sf2-stack ref update."
+        },
+        "S_nominal_attempt_01": {
+          "commit": "2d487a886657fe79af1b7d718785f555f3a6a0e9",
+          "tree": "79fa3b5ce55264576501a4c9584ce642008a6807",
+          "parent": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+          "branch": "ci-run-linux-astra-wp07-2a518ef4-37251a43-m36-01",
+          "request_blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+          "request_sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+          "request_compact_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f"
+        },
+        "owned_overlay": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+            "post_blob": "261fd8b248361c7c3a2dc513d2a9d6ffd7b5a8f0",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+            "post_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+            "post_blob": "e0ba79d4fb1ab45ad9ed468a0926659382ca7b31",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+            "post_blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+            "post_blob": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+            "post_blob": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "post_blob": "4af1d169e39f945de01314fef73e3689ff297545",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+            "post_blob": "3cdd7848eaf85e12a010d8352cca471d380d6138",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          }
+        ],
+        "request_only_snapshot": {
+          "base": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+          "snapshot": "2d487a886657fe79af1b7d718785f555f3a6a0e9",
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b"
+            }
+          ],
+          "comparison": "Only .ci-run.json is added; product/test/config/fixture blobs are identical between Wtest and S."
+        }
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "M36-EXISTING-BRANCH-AND-AUTHORITY",
+      "state": "SATISFIED_RECONCILED_SOURCE",
+      "evidence": "Root acknowledged full mission, applicable instructions, mission25 terminal handoff/CONSUMER-RELEASE and C6 reconciliation. PR27 source lineage is preserved; READINGS.json records the reader and immutable pins.",
+      "source": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "authority_commit": "1a7bbe4258c155f48854e9f67471f12924457bd7"
+    },
+    {
+      "id": "M36-C6-REPORTS-ASSEMBLY",
+      "state": "SATISFIED_STATIC",
+      "candidate": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+      "evidence": "candidate-C6.json consumed19 material Reports paths and54 original receipts. Missing old mounting is not the blocker."
+    },
+    {
+      "id": "M36-COHERENT-OWNED-OVERLAY",
+      "state": "SATISFIED_STATIC",
+      "candidate": "83d7102664c9983a06fabffcc61334165cba756d",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+          "post_blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+          "status": "modified",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+          "post_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+          "status": "modified",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+          "post_blob": "cf67dc28e24e0dcca00de604739a1eaddf2db3ed",
+          "status": "added",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+          "post_blob": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+          "status": "added",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+          "post_blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+          "status": "added",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+          "post_blob": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+          "status": "modified",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+          "post_blob": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+          "status": "added",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "post_blob": "1465b8a2f2c512705f965ec493cd4c08a80d23f0",
+          "status": "modified",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+          "post_blob": "4af1d169e39f945de01314fef73e3689ff297545",
+          "status": "modified",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "post_blob": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+          "status": "modified",
+          "source_commit": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "composed_commit": "83d7102664c9983a06fabffcc61334165cba756d"
+        }
+      ],
+      "evidence": "The C6-parent Wtest4 commit contains exactly10 owned source/test changes. No shared product/workflow patch is present and sf2-stack was not moved.",
+      "source": "73b716b89d84dfba10070cf4a9369ca9c9e75159"
+    },
+    {
+      "id": "M36-REQUEST-ONLY-S",
+      "state": "SATISFIED_STATIC",
+      "base": "83d7102664c9983a06fabffcc61334165cba756d",
+      "snapshot": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b"
+        }
+      ],
+      "comparison": "Only .ci-run.json is added; product/test/config/fixture blobs are identical between Wtest4 and nominal S3."
+    },
+    {
+      "id": "M36-NOMINAL-PRODUCTION-SELECTION",
+      "state": "SELECTION_SATISFIED_EXECUTION_BLOCKED_SHARED_ROUTER",
+      "expected_tests": 4,
+      "workers": 1,
+      "retries": 0,
+      "repeat": 1,
+      "request": {
+        "package": "app",
+        "packageSelector": "packages/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "run_id": 43646916265,
+      "actual_selected_tests": 4,
+      "actual_executed_tests": 4,
+      "conclusion": "failure",
+      "evidence": [
+        {
+          "id": "E-M36-NOMINAL-S3",
+          "kind": "ACTUAL_COMPOSED_SETUP_FAILURE",
+          "source_sha": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "product_candidate_sha": "83d7102664c9983a06fabffcc61334165cba756d",
+          "ci_snapshot_sha": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+          "run_id": 43646916265,
+          "job_id": 132606651286,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/job/132606651286",
+          "workflow_conclusion": "failure",
+          "expected_selection": "Exactly RPT-01, RPT-02, RPT-03 and RPT-04 from e2e/sucafina/reports.spec.ts",
+          "selected_files": [
+            "packages/app-shell/e2e/sucafina/reports.spec.ts"
+          ],
+          "expected_cases": 4,
+          "selected_cases": 4,
+          "started_cases": 4,
+          "failed_setup_cases": 4,
+          "completed_journeys": 0,
+          "passed_cases": 0,
+          "skipped_cases": 0,
+          "business_assertions_reached": 0,
+          "config": "packages/app-shell/e2e/playwright.production.config.ts",
+          "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+          "workers": 1,
+          "retries": 0,
+          "repeat_each": 1,
+          "observed": "Reports CLI exited 1 before readiness: Method 'ACL' already declared for route '/sucafina'.",
+          "artifacts": [
+            {
+              "id": 14134114103,
+              "name": "playwright-ubuntu-24.04-1",
+              "sha256": "bec6567f190060f719a203b584e870fc6ab6f697276d2bc1928e2e983ddaeb30",
+              "size_bytes": 241618,
+              "file_count": 13,
+              "file_count_provenance": "Root artifact inspection",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/artifacts/14134114103"
+            }
+          ],
+          "log_reviewers": [
+            "/root",
+            "/root/ci_closure"
+          ],
+          "verified_at": "2026-11-14 22:19:35 UTC",
+          "acceptance_credit": false,
+          "interpretation": "Reports25 assembly is already present. This is a newly observed shared router registration collision before server readiness, not absent mounting. All nominal scenarios were selected and started, but none reached its first business assertion.",
+          "owner_patch": {
+            "manifest": "shared-patches/installation-router-wildcard/manifest.json",
+            "target": "apps/cli/src/sucafina-product/installation.ts",
+            "preimage_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+            "postimage_blob": "edc4d574854a39583fb6847e4e8bb135ede93cc1",
+            "preimage_commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+            "preimage_also_verified_at": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+            "patch_sha256": "c8a32901dd900eab75afefe20e18cb1991595a8b404c8f6144be7dbc5b4c86dd",
+            "status": "PROPOSED_NOT_APPLIED",
+            "tested_with_shared_patch": false,
+            "owner": "session33",
+            "scope": "Complete inert preimage/postimage/diff; no shared production mutation or execution on the patch."
+          }
+        }
+      ],
+      "job_id": 132606651286,
+      "actual_started_tests": 4,
+      "actual_failed_setup_tests": 4,
+      "completed_journeys": 0,
+      "business_assertions_reached": 0,
+      "cases": [
+        {
+          "id": "RPT-01",
+          "assertion_intent": "Preserve authorized dossier, change annual source 1320 to 1400 without changing the capture, export all25 projects and long notes to private DOCX/PPTX, reopen and follow current source.",
+          "status": "FAILED_SETUP",
+          "execution_state": "STARTED_BEFORE_FIRST_BUSINESS_ASSERTION",
+          "observed": "Reports CLI exited 1 before readiness: Method 'ACL' already declared for route '/sucafina'.",
+          "selected": true,
+          "started": true,
+          "attempts": 1,
+          "retries": 0,
+          "business_assertions_reached": 0,
+          "journey_completed": false,
+          "evidence": [
+            {
+              "run_id": 43646916265,
+              "job_id": 132606651286,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/job/132606651286",
+              "kind": "ACTUAL_COMPOSED_SETUP_FAILURE",
+              "artifact_id": 14134114103
+            }
+          ]
+        },
+        {
+          "id": "RPT-02",
+          "assertion_intent": "Actual C05 question/reply; deliberately lose only the successful reply response, retain exact draft/key/body, reconcile through authorized reads, explicitly retry without duplicate write; confirm/reuse/history; recover a failed edit request without losing draft.",
+          "status": "FAILED_SETUP",
+          "execution_state": "STARTED_BEFORE_FIRST_BUSINESS_ASSERTION",
+          "observed": "Reports CLI exited 1 before readiness: Method 'ACL' already declared for route '/sucafina'.",
+          "selected": true,
+          "started": true,
+          "attempts": 1,
+          "retries": 0,
+          "business_assertions_reached": 0,
+          "journey_completed": false,
+          "evidence": [
+            {
+              "run_id": 43646916265,
+              "job_id": 132606651286,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/job/132606651286",
+              "kind": "ACTUAL_COMPOSED_SETUP_FAILURE",
+              "artifact_id": 14134114103
+            }
+          ]
+        },
+        {
+          "id": "RPT-03",
+          "assertion_intent": "Remove exactly one authorized selection25to24 without editing source; explicitly preserve a new revision while keeping the previous one immutable.",
+          "status": "FAILED_SETUP",
+          "execution_state": "STARTED_BEFORE_FIRST_BUSINESS_ASSERTION",
+          "observed": "Reports CLI exited 1 before readiness: Method 'ACL' already declared for route '/sucafina'.",
+          "selected": true,
+          "started": true,
+          "attempts": 1,
+          "retries": 0,
+          "business_assertions_reached": 0,
+          "journey_completed": false,
+          "evidence": [
+            {
+              "run_id": 43646916265,
+              "job_id": 132606651286,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/job/132606651286",
+              "kind": "ACTUAL_COMPOSED_SETUP_FAILURE",
+              "artifact_id": 14134114103
+            }
+          ]
+        },
+        {
+          "id": "RPT-04",
+          "assertion_intent": "Logout removes protected content and denies old credentials; fresh legitimate admission reopens the same preserved material and export hash without reviving the revoked credential.",
+          "status": "FAILED_SETUP",
+          "execution_state": "STARTED_BEFORE_FIRST_BUSINESS_ASSERTION",
+          "observed": "Reports CLI exited 1 before readiness: Method 'ACL' already declared for route '/sucafina'.",
+          "selected": true,
+          "started": true,
+          "attempts": 1,
+          "retries": 0,
+          "business_assertions_reached": 0,
+          "journey_completed": false,
+          "evidence": [
+            {
+              "run_id": 43646916265,
+              "job_id": 132606651286,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/job/132606651286",
+              "kind": "ACTUAL_COMPOSED_SETUP_FAILURE",
+              "artifact_id": 14134114103
+            }
+          ]
+        }
+      ],
+      "observed": "Reports CLI exited 1 before readiness: Method 'ACL' already declared for route '/sucafina'."
+    },
+    {
+      "id": "M36-SHARED-ROUTER-READINESS",
+      "state": "BLOCKED_SHARED_ROUTER",
+      "owner": "session33 / shared router owner",
+      "candidate": "83d7102664c9983a06fabffcc61334165cba756d",
+      "ci_snapshot": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+      "run_id": 43646916265,
+      "job_id": 132606651286,
+      "observed": "Reports CLI exited 1 before readiness: Method 'ACL' already declared for route '/sucafina'.",
+      "stage": "Fixture setup before the first business assertion",
+      "patch_status": "COMPLETE_INERT_PROPOSAL_NOT_APPLIED",
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646916265/job/132606651286",
+      "requirement": "Consume a complete owner patch against the coherent shared preimage, publish a new candidate/ACK, then revalidate the affected four real scenarios without skipping them or weakening assertions.",
+      "not_diagnosed": "Missing Reports assembly",
+      "patch": {
+        "manifest": "shared-patches/installation-router-wildcard/manifest.json",
+        "target": "apps/cli/src/sucafina-product/installation.ts",
+        "preimage_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+        "postimage_blob": "edc4d574854a39583fb6847e4e8bb135ede93cc1",
+        "preimage_commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+        "preimage_also_verified_at": "624bfe326a7a11f8509541eb254501c28e6ee3f9",
+        "patch_sha256": "c8a32901dd900eab75afefe20e18cb1991595a8b404c8f6144be7dbc5b4c86dd",
+        "status": "PROPOSED_NOT_APPLIED",
+        "tested_with_shared_patch": false,
+        "owner": "session33",
+        "scope": "Complete inert preimage/postimage/diff; no shared production mutation or execution on the patch."
+      }
+    },
+    {
+      "id": "M36-DISCUSSION-HOST-BINDING",
+      "state": "BLOCKED_OWNER_PATCH_NOT_APPLIED",
+      "owner": "session33 / shared authority-boundary owners",
+      "contract": "X-SF-Review-Binding exact current admitted64hex accessRevision; expected revision checked before invoke and echoed on success. No grant is supplied by this header.",
+      "patch": "shared-patches/review-discussion-binding/manifest.json",
+      "observed_limit": "Static C6 boundary has no successful response binding echo. The new client closes discussion if that echo is absent, without asserting global revocation. Actual Wtest4/S3 did not reach this boundary: shared router setup failed before readiness.",
+      "acceptance": "Not satisfied by isolated client tests, source bundles or inert postimages. Requires the real owner patch plus composed evidence after router repair."
+    },
+    {
+      "id": "M36-DISTINCT-LEGITIMATE-RECIPIENT",
+      "state": "BLOCKED_EXTERNAL_RESOURCE",
+      "owner": "Real identity and recipient-authority provider owner",
+      "required": "A second legitimately admitted person plus current caller+recipient+immutable C05 pin+all fields/periods ACL provider with synchronous checkAtCommit.",
+      "observed": "Existing local-operator/enroll exposes one principal. Directory records and a second session of the same operator do not satisfy the requirement.",
+      "not_supplied": [
+        "second principal",
+        "positive ACL fixture",
+        "native witness",
+        "broad grants"
+      ]
+    },
+    {
+      "id": "M36-NONPLAIN-C05-LEASE",
+      "state": "BLOCKED_EXTERNAL_RESOURCE",
+      "owner": "External source domain producer authority owners",
+      "required": "Protected current authority leases for captured comments, external outcomes, decisions, sensitivity, calculations/documents and non-Dashboard sources.",
+      "observed": "C6 only supplies local lease for plain Dashboard record reviews; missing producers fail closed."
+    },
+    {
+      "id": "M36-REPORTS-E2E-TYPE-GRAPH",
+      "state": "SATISFIED_STATIC",
+      "candidate": "52add8433f8ecf9d361ee635cda484142131ef84",
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob": "141da754e380d7410da97f9ca44505880cca55c9",
+      "observed": "Reports spec/support includes already consumed. Graph inclusion does not prove a typecheck execution."
+    },
+    {
+      "id": "M36-HOSTED-E2E-TYPECHECK",
+      "state": "BLOCKED_SCOPED_ROUTE",
+      "owner": "session33 / authorized scoped dispatcher",
+      "observed": "The existing source check has no app typecheck:e2e step; C6 carries only test-ci and full sf2-epic workflows. No full/epic is authorized.",
+      "patch": "shared-patches/reports-e2e-check/manifest.json",
+      "required": "Consume the complete minimal check patch on a coherent candidate whose real E2E graph includes Reports, then run the existing bounded trigger without force or duplicate dispatcher.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "M36-SOURCE-TYPECHECK-GUARDS",
+      "state": "EXECUTED_SOURCE_TYPECHECK_FAIL",
+      "candidate": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "existing_trigger": "astra-check-wp07",
+      "source_workflow_blob": "28c453f4b7735f944e1237715e399e955d86546c",
+      "typecheck_status": "FAIL",
+      "guards_status": "PASS",
+      "run_id": 43647268470,
+      "limits": "137 ordered diagnostics match the historical source job exactly and no new owned-path diagnostic is observed; the typecheck still FAILS. Guards and fixture-generation PASS are source checks, not actual Wtest4 business journeys or app E2E typecheck.",
+      "export_fixture_generation_status": "PASS",
+      "job_id": 132607741091,
+      "diagnostics": 137,
+      "diagnostic_paths": 46,
+      "diagnostics_in_modified_owned_paths": 0,
+      "baseline_comparison": {
+        "kind": "DETERMINISTIC_ORDERED_TEXT_COMPARISON_OF_EXISTING_LOG_DIAGNOSTICS",
+        "matching_diagnostics": 137,
+        "total_diagnostics": 137,
+        "identical_in_order": true,
+        "performed_by": "/root",
+        "remote_read_transport": "GitHub MCP",
+        "baseline_rerun": false
+      },
+      "baseline": {
+        "source_sha": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+        "run_id": 43640600856,
+        "job_id": 132587110097,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640600856/job/132587110097"
+      },
+      "guards": {
+        "status": "PASS",
+        "rules": 78,
+        "paths": 735,
+        "gate": 0,
+        "warnings": 12,
+        "errors": 0,
+        "base_ref": "origin/dev",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "export_fixture_generation": {
+        "status": "PASS",
+        "files": 4,
+        "limitation": "Generated inspection fixtures; no installed nominal journey, rendered export inspection or visual acceptance."
+      },
+      "artifacts": [
+        {
+          "id": 14134232699,
+          "name": "wp07-check-73b716b89d84dfba10070cf4a9369ca9c9e75159-1",
+          "size_bytes": 87254,
+          "sha256": "6dcdb871d5cef7d02ebc84c435a20a998b781efaad6090f55bd7bd0539b2d499",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647268470/artifacts/14134232699"
+        }
+      ],
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647268470/job/132607741091"
+    },
+    {
+      "id": "M36-EVIDENCE-BOUNDARIES",
+      "state": "ENFORCED_BY_RECEIPTS",
+      "observed": "No product tests, browser or server ran locally. Hosted evidence now records the four failed setup attempts, isolated client/build passes, the failing collection diagnostic, source typecheck failure and passing guards/fixture generation. No general criterion, UI, native or visual acceptance is inferred."
+    },
+    {
+      "id": "M36-ISOLATED-CLIENT-REGRESSION",
+      "state": "PASS_ISOLATED_CLIENT_ONLY",
+      "evidence": {
+        "id": "E-M36-CLIENT-DIAG",
+        "source_sha": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+        "product_candidate_sha": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+        "ci_snapshot_sha": "b4cdbe602c9501f68b15b0d8ed5bafa94084e9c8",
+        "run_id": 43646667683,
+        "job_id": 132605902167,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646667683/job/132605902167",
+        "aggregate_conclusion": "failure",
+        "log_reviewers": [
+          "/root",
+          "/root/ci_closure"
+        ],
+        "verified_at": "2026-11-14 22:19:35 UTC",
+        "kind": "ISOLATED_TRANSPORT_CLIENT_REGRESSION",
+        "status": "PASS",
+        "selected_cases": 19,
+        "passed_cases": 19,
+        "failed_cases": 0,
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+        "test_blob": "cf67dc28e24e0dcca00de604739a1eaddf2db3ed",
+        "client_blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+        "scope": "Actual exported client with injected transport responses/faults. No real host ACL, second principal, provider, native witness or UI draft-preservation acceptance.",
+        "composed_ui_credit": false
+      },
+      "acceptance": "No composed UI/ACL/native/campaign acceptance."
+    },
+    {
+      "id": "M36-BROWSER-BUNDLES",
+      "state": "PASS_BUILD_ONLY",
+      "evidence": {
+        "id": "E-M36-BROWSER-BUILD-DIAG",
+        "source_sha": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+        "product_candidate_sha": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+        "ci_snapshot_sha": "b4cdbe602c9501f68b15b0d8ed5bafa94084e9c8",
+        "run_id": 43646667683,
+        "job_id": 132605902167,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646667683/job/132605902167",
+        "aggregate_conclusion": "failure",
+        "log_reviewers": [
+          "/root",
+          "/root/ci_closure"
+        ],
+        "verified_at": "2026-11-14 22:19:35 UTC",
+        "kind": "BROWSER_BUNDLE_COMPATIBILITY_ONLY",
+        "status": "PASS",
+        "selected_cases": 4,
+        "passed_cases": 4,
+        "failed_cases": 0,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+        "observed": "review browser, workspace, collaboration-client and collaboration-view entry bundles passed.",
+        "composed_ui_credit": false,
+        "limitation": "These are four build checks, not the four Reports E2E journeys."
+      },
+      "acceptance": "The four bundle checks do not substitute for the four nominal journeys."
+    },
+    {
+      "id": "M36-COLLECTION-DIAGNOSTIC",
+      "state": "LAST_EXECUTED_DIAGNOSTIC_FAIL",
+      "evidence": {
+        "id": "E-M36-COLLECTION-DIAG",
+        "source_sha": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+        "product_candidate_sha": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+        "ci_snapshot_sha": "b4cdbe602c9501f68b15b0d8ed5bafa94084e9c8",
+        "run_id": 43646667683,
+        "job_id": 132605902167,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646667683/job/132605902167",
+        "aggregate_conclusion": "failure",
+        "log_reviewers": [
+          "/root",
+          "/root/ci_closure"
+        ],
+        "verified_at": "2026-11-14 22:19:35 UTC",
+        "kind": "PLAYWRIGHT_COLLECTION_DIAGNOSTIC",
+        "status": "FAIL",
+        "selected_cases": 1,
+        "passed_cases": 0,
+        "failed_cases": 1,
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+        "blob": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+        "observed": "Nested reportsTest.use for trace/video/screenshot caused collection failure.",
+        "subsequent_fix": {
+          "source_sha": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+          "spec_blob": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+          "change": "Move capture options to file scope without enabling private trace/video/screenshot capture.",
+          "evidence_ref": "E-M36-NOMINAL-S3",
+          "observed_selection": 4,
+          "diagnostic_reexecuted": false
+        },
+        "limitation": "The last executed diagnostic remains FAIL; subsequent actual nominal collection of four cases establishes that collection progressed, without relabeling this old diagnostic run or the UI as PASS."
+      },
+      "aggregate": {
+        "source_sha": "2e902bcc5ccdf6183309c80c13c82a51d9af0e6f",
+        "product_candidate_sha": "5cc6ec112a7e5cf8e69947f93b78e5b4066a9cbf",
+        "ci_snapshot_sha": "b4cdbe602c9501f68b15b0d8ed5bafa94084e9c8",
+        "run_id": 43646667683,
+        "job_id": 132605902167,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646667683/job/132605902167",
+        "aggregate_conclusion": "failure",
+        "log_reviewers": [
+          "/root",
+          "/root/ci_closure"
+        ],
+        "verified_at": "2026-11-14 22:19:35 UTC",
+        "status": "FAIL",
+        "selected_cases": 24,
+        "passed_cases": 23,
+        "failed_cases": 1,
+        "request": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+            "Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+            "Sucafinav1/test/product/wp07/browser-build.test.ts"
+          ],
+          "env": {
+            "ORCHESTRA_CHANNEL": "prod",
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+          }
+        },
+        "breakdown": {
+          "client": {
+            "pass": 19,
+            "fail": 0
+          },
+          "browser_build": {
+            "pass": 4,
+            "fail": 0
+          },
+          "collection": {
+            "pass": 0,
+            "fail": 1
+          }
+        },
+        "evidence_refs": [
+          "E-M36-CLIENT-DIAG",
+          "E-M36-BROWSER-BUILD-DIAG",
+          "E-M36-COLLECTION-DIAG"
+        ]
+      },
+      "acceptance": "Wsource4 actual nominal collection selects four cases; this is limited collection progress, not an invented passing diagnostic rerun or green UI."
+    }
+  ],
+  "closure_requirements": [
+    "Session33/shared router owner must consume shared-patches/installation-router-wildcard/manifest.json against the recorded preimage, publish a coherent candidate/ACK, and validate real readiness. The complete inert proposal has not been applied or tested; no skip, own-path substitution or timeout increase.",
+    "Run the four actual Reports scenarios again only after a material coherent shared repair; all four business journeys remain incomplete at this terminal receipt.",
+    "Keep recoverable-versus-revocation discriminants and immutable intent/key/payload behavior. Reconciliation must use current authorization and retry remains explicit; no automatic resend.",
+    "Session33 must consume the complete discussion binding/CAS patch and scoped typecheck:e2e workflow patch against verified preimages; both remain inert here.",
+    "Source typecheck remains FAIL137 unchanged external diagnostics. Preserve its failure and the passing guards/export-fixture subresults separately; no broad acceptance from the passing subsets.",
+    "Leave distinct legitimate recipient and nonplain C05 resource requirements blocked until their real producer capabilities exist. Router repair and client transport simulations do not satisfy them.",
+    "Preserve all86 canonical IDs, texts, oracles, proof links and historical receipts; current outcome is blocked shared setup with zero approved general criteria.",
+    "RUNS.json, HANDOFF and CONSUMER-RELEASE are authored by root; this receipt does not invent missing runs, native witnesses or rendered export review."
+  ],
+  "prior_receipt_state": {
+    "phase": "AWAITING_HOSTED_RESULTS",
+    "identities": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "branch": "astra-wp07",
+      "pr": 27,
+      "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "C6": {
+        "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+        "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d"
+      },
+      "Wsource": {
+        "commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+        "tree": "1c947764252d16753ce151950783c620a6606c0d",
+        "parent": "1a7bbe4258c155f48854e9f67471f12924457bd7"
+      },
+      "Wtest": {
+        "commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+        "tree": "eefc0e053eb7241b9404b8d60d649eba13d33968",
+        "parent": "52add8433f8ecf9d361ee635cda484142131ef84",
+        "definition": "C6 plus eight exact owned source/test blobs from Wsource; no shared patch application or sf2-stack ref update."
+      },
+      "S_nominal_attempt_01": {
+        "commit": "2d487a886657fe79af1b7d718785f555f3a6a0e9",
+        "tree": "79fa3b5ce55264576501a4c9584ce642008a6807",
+        "parent": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+        "branch": "ci-run-linux-astra-wp07-2a518ef4-37251a43-m36-01",
+        "request_blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+        "request_sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+        "request_compact_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f"
+      }
+    },
+    "checks": [
+      {
+        "id": "M36-COHERENT-OWNED-OVERLAY",
+        "state": "SATISFIED_STATIC",
+        "candidate": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+            "post_blob": "261fd8b248361c7c3a2dc513d2a9d6ffd7b5a8f0",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+            "post_blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+            "post_blob": "e0ba79d4fb1ab45ad9ed468a0926659382ca7b31",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+            "post_blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+            "post_blob": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+            "post_blob": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+            "status": "added",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "post_blob": "4af1d169e39f945de01314fef73e3689ff297545",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+            "post_blob": "3cdd7848eaf85e12a010d8352cca471d380d6138",
+            "status": "modified",
+            "source_commit": "8038b99b724165948ecc6c03ed3ee1a2729e7ec1",
+            "composed_commit": "2a518ef409e67b88859f07444ee3c4a4693eb8e4"
+          }
+        ],
+        "evidence": "GitHub compare C6...Wtest reports exactly8 owned source/test changes, one child commit; no shared product patch is present."
+      },
+      {
+        "id": "M36-REQUEST-ONLY-S",
+        "state": "SATISFIED_STATIC",
+        "base": "2a518ef409e67b88859f07444ee3c4a4693eb8e4",
+        "snapshot": "2d487a886657fe79af1b7d718785f555f3a6a0e9",
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added",
+            "blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b"
+          }
+        ],
+        "comparison": "Only .ci-run.json is added; product/test/config/fixture blobs are identical between Wtest and S."
+      },
+      {
+        "id": "M36-NOMINAL-PRODUCTION-SELECTION",
+        "state": "DISPATCHED_AWAITING_RESULT",
+        "expected_tests": 4,
+        "workers": 1,
+        "retries": 0,
+        "repeat": 1,
+        "request": {
+          "package": "app",
+          "packageSelector": "packages/app",
+          "directory": "packages/app-shell",
+          "runner": "playwright",
+          "args": [
+            "e2e/sucafina/reports.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_CHANNEL": "prod"
+          },
+          "config": "e2e/playwright.production.config.ts"
+        },
+        "run_id": null,
+        "actual_selected_tests": null,
+        "actual_executed_tests": null,
+        "conclusion": null,
+        "evidence": []
+      }
+    ],
+    "note": "Historical initial W1/S1 state preserved, not the current terminal status."
+  }
+}
