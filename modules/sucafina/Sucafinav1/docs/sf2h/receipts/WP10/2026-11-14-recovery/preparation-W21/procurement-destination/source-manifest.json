@@ -1,0 +1,54 @@
+{
+  "schema": "wp10.builder.source-manifest.v1",
+  "wave": "W21",
+  "status": "frozen-for-publication-and-hosted-ci",
+  "builder": "/root/c17_composition",
+  "createdAtUtc": "2026-11-14T14:11:30.749832+00:00",
+  "baseCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "baseTree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "ownership": "own WP10 host composition / own integration test",
+      "baseCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "baseBlobSha": "89881259b635344d626ed5f90d60bfbd31488b79",
+      "baseSha256": "3c6e45ba0eed0a3a4ff1a5869fbdb59f1dd81355620e2045149c7ae68b0887ab",
+      "mode": "own-overlay",
+      "packagePath": "agents/c17/W21-procurement-destination/package/apps/cli/src/sucafina-product/business-services.ts",
+      "patchPath": "agents/c17/W21-procurement-destination/diffs/business-services.patch",
+      "bytes": 67787,
+      "sha256": "c5c2a68d0efe67e2bbb53963ec50fdfc5f00d61de8ad4c25351db639119d697d",
+      "blobSha": "520a71460ba69a9c8a07fd1b7db838ca13108c32",
+      "patchSha256": "d7c6bcaf9e968e186c030621daf6de44ba024285f1bfc9e5e5d6e4e1b13b5bf8"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "ownership": "own WP10 host composition / own integration test",
+      "baseCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "baseBlobSha": "d05c992da009c31cc9c2f9827ad9d58c3807db77",
+      "baseSha256": "cbc527deeddca75e50919f3022b70bcbde8c7761ddf4dba1837730b9ef595aa0",
+      "mode": "own-overlay",
+      "packagePath": "agents/c17/W21-procurement-destination/package/apps/cli/src/sucafina-product/work-destinations.ts",
+      "patchPath": "agents/c17/W21-procurement-destination/diffs/work-destinations.patch",
+      "bytes": 15566,
+      "sha256": "d91126137f5c77664148e6cf6066f030915c911cd079bc5ab7020d43b3f63e81",
+      "blobSha": "3ee3eea082dea99ab68f55013726967a34546ce8",
+      "patchSha256": "b7493dd86746a1f21553bfa530ae273f19ebafb2249e3ac79441470548c37f04"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "ownership": "own WP10 host composition / own integration test",
+      "baseCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "baseBlobSha": "cb92eb45d239048f53de6b6149bab3d2759e8ef2",
+      "baseSha256": "bd90a9cc13b1a124e162487ff0a2ab4fa7af24dac97570e064d37591b3330d9b",
+      "mode": "own-overlay",
+      "packagePath": "agents/c17/W21-procurement-destination/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "patchPath": "agents/c17/W21-procurement-destination/diffs/work-bridge.test.patch",
+      "bytes": 33892,
+      "sha256": "5e638e2f19f28f23ce6ce41ef4c92dfaba8740a2c3713a75787c864fbc29d0be",
+      "blobSha": "cd63b34552bc9d01712939407071e157c6e20abd",
+      "patchSha256": "f0beeaf4c3f02bbbfbe66dc686a1873d98053f400c83b2974b7e3522779cc6ea"
+    }
+  ],
+  "foreignProductWrites": []
+}

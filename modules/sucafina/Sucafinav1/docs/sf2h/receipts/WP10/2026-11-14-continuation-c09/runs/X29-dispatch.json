@@ -1,0 +1,46 @@
+{
+  "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+  "Wtree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219",
+  "S": "d356d543298835b09b0452777fbd76cdaea77c85",
+  "Stree": "d6e9e7e25fa52d292fb4d09b444e2440c4c3b728",
+  "branch": "ci-run-linux-astra-wp10-813806af-821eb0a6-01",
+  "requestBlob": "e21191fec19858eeaf49109057fb9203ac72dd3b",
+  "requestSha256": "821eb0a6ccf2937cf026854389f3f882a6cad60e2e9c14941c9327212f3e3cb4",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "dedup": 0,
+  "basis": {
+    "structural": {
+      "run": 43628006308,
+      "scope": "Both source-observation tests PASS; full mixed run FAIL on UI fixture timeout."
+    },
+    "fences": {
+      "run": 43628418430,
+      "scope": "10/10 PASS, 132 expects; cleanup success."
+    },
+    "newHypothesis": "Measured 4-to-2 source envelopes with unchanged 6 direct authenticate /4 revalidate. Actual X invokes that production path.",
+    "testBlob": "fa4bdf61e69af2498b5668a5dfceb9286613d0bd",
+    "budget": {
+      "cooperativeMs": 285000,
+      "bunMs": 300000
+    },
+    "preserved": "Same 40 asserts, numeric fixture, genuine producers, independent recertifications and W27 trace."
+  },
+  "run": {
+    "id": 43628663680,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628663680",
+    "status": "in_progress",
+    "created_at": "2026-11-14T18:48:43Z"
+  }
+}

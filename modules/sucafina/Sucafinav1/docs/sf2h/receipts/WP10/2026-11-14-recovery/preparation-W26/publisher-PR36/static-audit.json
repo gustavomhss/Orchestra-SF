@@ -1,0 +1,32 @@
+{
+  "kind": "static-builder-intake-audit-not-independent-review",
+  "baseProduct": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "proposedSourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+  "selectedFiles": 7,
+  "relativeImportReferences": 89,
+  "unresolvedImports": [],
+  "productionAPIs": "No public required input or method return contract changed; validatePlannerThreshold adds one optional structural argument. Existing PlannerDirectIntervalProof fields and createPlannerIntervalProof export are present in the verified W22 closure. Type compatibility is static assessment, not a typecheck result.",
+  "originalCoverageAssertionLines": 57,
+  "newCoverageAssertionLines": 77,
+  "originalCoverageAssertionLinesRemoved": [],
+  "originalCoverageTestNamesPreserved": [
+    "WP13 persists and cold-reads real 55000/15000 sensitivity with omitted training conditioned and all three training states idempotent",
+    "WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary",
+    "WP13 withholds an exact bound for a real null price or missing FX before consulting an exact callback"
+  ],
+  "coverageBudgetsPreserved": [
+    "300000",
+    "300000",
+    "120000"
+  ],
+  "productionVerifierPermissiveFallbackIntroduced": false,
+  "qualifications": [
+    "No source files modified; proposed exact consumption only.",
+    "No tests/build/typecheck/imports or product code executed locally.",
+    "No hosted test or performance result for this composed candidate is claimed.",
+    "Controlled retry/recovery boundary fixtures are not substituted for the real canonical coverage integration witness.",
+    "The final operation-key callback is a fresh observation, not a universal liveness oracle. The resident WP10 callback at portfolio-services.ts:64-67 revalidates the real host before returning a key.",
+    "The three own D22 files must receive complete-file hosted requests; no producer test pass is used as substitute.",
+    "All existing PR35 receipts and both stronger ec052 fixture blobs remain exact."
+  ]
+}

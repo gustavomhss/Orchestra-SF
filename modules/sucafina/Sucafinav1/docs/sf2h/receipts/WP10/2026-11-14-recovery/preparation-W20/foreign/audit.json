@@ -1,0 +1,147 @@
+{
+  "schema": "wp10.w20.foreign-intake-triage.v1",
+  "role": "source audit and evidence builder; not independent review",
+  "baseline": {
+    "label": "W19",
+    "commit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "tree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2"
+  },
+  "sourcePins": {
+    "PR35": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "PR36": "8bb72c8cdeda149b000d91403c368642c3b53dec"
+  },
+  "selections": {
+    "core": {
+      "file": "core-17.json",
+      "count": 17
+    },
+    "portfolioComplete": {
+      "file": "portfolio-complete-6.json",
+      "count": 6
+    },
+    "publishedRegressionCompanions": {
+      "file": "published-regressions-10.json",
+      "count": 10
+    },
+    "combined": {
+      "file": "suggested-intake.json",
+      "count": 33
+    }
+  },
+  "verdict": "STATIC_INTAKE_SUGGESTION_WITH_EXPLICIT_HOST_GAPS; NO_HOSTED_PASS_INFERRED",
+  "sourceValidation": {
+    "newCaptures": 27,
+    "allNewGitBlobsVerified": true,
+    "probeBlobsVerified": 24,
+    "relativeImportEdges": 450,
+    "unresolvedRelativeImportPaths": 0,
+    "typescriptCompilation": false,
+    "localProductExecution": false,
+    "receiptOrPRBodyAcceptedAsRuntimeProof": false
+  },
+  "findings": [
+    {
+      "id": "W20-PLANNER-BATCH-01",
+      "paths": [
+        "product/planner/scenario-comparison-port.ts",
+        "product/planner/stored-scenarios.ts",
+        "product/planner/sensitivity-units.ts"
+      ],
+      "finding": "The three published sources form a compatible API closure: resolveMany is optional, resolvePlannerScenarioBatch preserves a sequential fallback and rejects malformed cardinality without falling back. Each batch reads every result, shares initial case observations only by full stored.caseRef, reads each result again, then starts a separate final case map. No map survives a resolveMany call; duplicates still authenticate separately and return cloned values.",
+      "proofSource": "test/product/wp11/scenario-batch.test.ts",
+      "qualification": "Static inspection only. Hosted timing, authority negatives and concurrency behavior still require actual execution."
+    },
+    {
+      "id": "W20-FINANCE-CURRENT-01",
+      "paths": [
+        "product/decisions/mutations.ts",
+        "product/decisions/result-store.ts",
+        "product/decisions/scenario-request-store.ts",
+        "product/decisions/hot-topic-draft.ts"
+      ],
+      "finding": "Use PR35 owner bytes. Mutations always requests the real coverage proof, including matching/no-op assessments. Result/request/draft readers perform final C08 observations after asynchronous callbacks; hot-topic draft writes target Dashboard. Existing mutation/result/source authority and case digest checks remain present.",
+      "preserve": [
+        "product/decisions/apply.ts",
+        "product/decisions/application-attempt.ts"
+      ],
+      "qualification": "apply and application-attempt at the exact current PR35 pin are already identical to W19. Do not downrev from PR32 or replace with divergent copies."
+    },
+    {
+      "id": "W20-REJECT-CHANGE-01",
+      "finding": "PR35 host-product blob 74450e928e9bdf67df701f0a1e790ce5829016c7 maps reject-change to decisions.prepare-changes, but it also requires currentChoice.preview/promotion and two locked-source verifiers absent from W19 Product/own composition. Hold this file until that closure is supplied. Keeping current mutations with explicit own default deny is coherent; do not expose rejection as a live completed flow.",
+      "owner": "WP10/S0 own grants/UI + Finance producer closure",
+      "rootAction": "Root reports explicit default deny added to portfolio-services and portfolio-preparation; recorded in agents/root/W20/own-corrections.json. This audit did not edit those files or execute the correction."
+    },
+    {
+      "id": "W20-RENEWAL-FIXTURE-01",
+      "finding": "The current Finance fixture closure retains real SQLite, UI authority and Planner computations. It removes unrelated persisted sensitivity bootstrap from coverage/choice setup, adds phase/deadline observations, deduplicates evidence only within a single context call, and uses real source projection/operation admission without recursively enriching every target through classified coverage. Source revisions explicitly confirm zero in the other eleven months. Existing sensitivity consumers still call createWp05SensitivityFixture and retain the required saved result.",
+      "limitations": "Synthetic source declarations and human grants are explicitly fixture boundaries; neither native acceptance nor a timing improvement is established from these files."
+    },
+    {
+      "id": "W20-PORTFOLIO-CLOSURE-01",
+      "finding": "The current product.ts requires reconciliation.ts and coverage-preview.ts, and its coveragePreview argument requires matching planner-sensitivity.ts and sensitivity.ts. The persisted/cold-reader path additionally requires verification.ts. Compose all six as one source closure. Current PR36 contracts/ports.ts and operations.ts match W19 exactly and need no intake.",
+      "hostGap": "W19 own portfolio-services does not supply resolveCoverageAuthority to createPortfolioProduct, does not supply coveragePreview to createPortfolioProofVerifier, and does not supply reconciliation.readPortfolio/readMaterialChange. Source composition preserves existing behavior but does not install these optional flows."
+    },
+    {
+      "id": "W20-PORTFOLIO-TYPES-01",
+      "finding": "The previously incomplete coverage-preview/SensitivityHost source closure is present at the cited PR36 pin. SensitivityHost defines optional verifyCoverageQualification, planner-sensitivity supplies it, and verification rebuilds the private coverage proof for cold reads. Public PlannerPort/PlannerSourceHost/PlannerScenarioHost replace the earlier producer ReturnType coupling.",
+      "qualification": "This resolves identified missing-source/API seams by inspection. No TypeScript or hosted test result is claimed; new and unchanged consumers still require hosted validation."
+    },
+    {
+      "id": "W20-COVERAGE-DOUBLE-CAPTURE-01",
+      "finding": "With the new Finance mutator, the W19 own prepareNoop path captures a proof first and the subsequent coverageEvidence.entries call captures it again. They are sequential within the same PromotionRun/AsyncLocalStorage context. The second capture replaces proofs.get(call) with the freshly reassessed result; final verifySnapshot still checks exact result/basis, Request, input, state and source fences. running.has(call) refuses a nested runPromotion, and the finally clears selections/proofs.",
+      "risk": "Extra work remains. The old pre-mutator equality check can still refuse before the fixed producer is reached. Removing that pre-capture is an own change that needs focused hosted counterproofs; do not weaken final fences or bypass identity/reentry guards.",
+      "scope": "Only the actual composed W19 path plus the exact proposed mutator was statically traced; not a universal reentrancy proof."
+    }
+  ],
+  "heldFile": "held-and-preserved.json",
+  "remainingProof": [
+    {
+      "owner": "WP10/S0 + WP13",
+      "item": "If complete Portfolio coverage must become live, provide authenticated case/selection/rule/classification/source authority via resolveCoverageAuthority, and the equivalent coveragePreview service to the cold proof verifier. Do not manufacture complete assessments, thresholds or receipts."
+    },
+    {
+      "owner": "WP10/S0 + WP13/WP14",
+      "item": "For Portfolio reconciliation, supply historical C08/binding/selection/candidate reader and current domain materiality producer. Explicit UI/native/MCP route selection/authority remains needed. No transport-supplied proof or source alias."
+    },
+    {
+      "owner": "WP10/S0 + WP11",
+      "item": "Rejection stays unavailable until explicit grants, current-choice producer closure and UI/HTTP negative/positive proof are composed."
+    },
+    {
+      "owner": "WP04",
+      "item": "W19 has analysisHistory export mismatch and two finance-sourcing-integration sites (issuer shape, missing verifyScenarioOperations). Finance fixture intake alone does not fix those sites."
+    },
+    {
+      "owner": "WP06",
+      "item": "W19 has three importPreview union accesses and contribution(output,{mount}) arity mismatch. Root UI/AI intake may change dependencies; not resolved by this Finance fixture selection itself."
+    },
+    {
+      "owner": "WP08/WP09",
+      "item": "Six W19 fixture sites lack verifyScenarioOperations (5 WP08 +1 WP09). Preserve required verifier; owner fixes needed."
+    },
+    {
+      "owner": "WP10/S0",
+      "item": "Run hosted surgical typecheck and selected runtime tests on the sealed composed candidate. W19 check remains historically 14 unique diagnostics (1 own,13 foreign), never retroactively green."
+    },
+    {
+      "owner": "S0 + independent reviewers",
+      "item": "Three independent reviews, native/governed proof and later global campaign remain separate. This audit provides no native/global acceptance."
+    }
+  ],
+  "noChanges": [
+    "shared repo",
+    "root/builder implementation paths",
+    "foreign branches",
+    "sf2-stack",
+    "published receipts",
+    "final review package"
+  ],
+  "noExecution": [
+    "local product tests",
+    "typecheck",
+    "build",
+    "runtime imports"
+  ],
+  "sourceVsNarrative": "Selections use retrieved exact source bytes and their actual dependency relationships. README/receipt descriptions were treated as documentation, not proof of executed behavior."
+}

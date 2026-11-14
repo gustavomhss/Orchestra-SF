@@ -1,0 +1,18 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "author": "/root",
+  "status": "CLOSED",
+  "baseCandidate": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+  "finding": "R3-NATIVE-EVIDENCE-FIXTURE-01",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/native-evidence.test.ts",
+      "beforeSha256": "837aee520fc8586d7d13fccfd7387161df8701888f89a80b30f90b2c4e1857af",
+      "afterSha256": "1298fbdf383a0a2d14f9cc6adce6bc5307c778ac28d85d6f1c059296b944c5b3",
+      "bytes": 7341
+    }
+  ],
+  "change": "Persist a typed preparing run through actual C08 contributions before attempting its removal through preferences. Assert full C08 state/version/revision unchanged by both denied mutations, preserve positive theme edit and SQLite reopen, bind reservation to the persisted run and selected manifest.",
+  "verification": "Static diff only. No local product execution. Hosted execution and independent finding closure pending.",
+  "scope": "Persistence/authority fixture; no installed provider, native execution, C07, AM or global acceptance."
+}

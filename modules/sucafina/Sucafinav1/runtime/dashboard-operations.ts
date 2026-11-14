@@ -638,8 +638,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     const id = row.id == null ? "" : String(row.id)
     const version = context.versions[`${collection}:${id}`]?.version ?? 0
     return (
+      `<details class="editor-panel"><summary>${id ? `Edit ${esc(text(row.title) || text(row.name) || text(row.text) || kind)}` : `Add ${esc(kind)}`}</summary>` +
       form(page, `save-${kind}`, id, version, body, `Save ${kind}`, disabled) +
-      (id ? form(page, `delete-${kind}`, id, version, "", `Delete ${kind}`, disabled) : "")
+      (id ? form(page, `delete-${kind}`, id, version, "", `Delete ${kind}`, disabled) : "") + "</details>"
     )
   }
   const actions = [...rows(data.secActions), {}]
@@ -762,7 +763,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         return esc(value == null || value === "" ? "No data" : String(value))
       }),
     ]),
-  )}${kpiForm}${entry.id == null ? "" : form(page, "delete-kpi", String(entry.id), context.versions[`security:${monthID}`]?.version ?? 0, periodFields(context), "Delete monthly entry", disabled)}</section><section><h2>Management Actions</h2>${actions}</section>${chart(
+  )}<details class="editor-panel"><summary>Edit monthly security KPIs</summary>${kpiForm}${entry.id == null ? "" : form(page, "delete-kpi", String(entry.id), context.versions[`security:${monthID}`]?.version ?? 0, periodFields(context), "Delete monthly entry", disabled)}</details></section><section><h2>Management Actions</h2><p>Current action records as of ${esc(context.at.slice(0, 10))}; the selected KPI year does not create a historical action snapshot.</p>${table(["Action", "Status"], rows(data.secActions).map((row) => [esc(text(row.text)), row.done === true ? "Done" : "Open"]))}${actions}</section>${chart(
     "SOC trend",
     entries.map((row) => String(row.month)),
     series(["socPending", "socTP", "socFP"]),
@@ -774,7 +775,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
     "Patch trend",
     entries.map((row) => String(row.month)),
     series(["patch", "patchEndpoint", "patchServer"]),
-  )}<section><h2>Phishing Simulation</h2>${campaigns}</section><section><h2>Security Incidents with Business Impact</h2>${metric("Open incidents", String(incidents.filter((row) => !row.contained || !row.remediated || !row.rootCause).length))}${table(
+  )}<section><h2>Phishing Simulation</h2><p>Current campaign records as of ${esc(context.at.slice(0, 10))}; the selected KPI year does not create a historical campaign snapshot.</p>${campaigns}</section><section><h2>Security Incidents with Business Impact</h2><p>Incidents dated in ${context.year}; containment, remediation and root-cause status are current as of ${esc(context.at.slice(0, 10))}.</p>${metric("Open incidents", String(incidents.filter((row) => !row.contained || !row.remediated || !row.rootCause).length))}${table(
     ["Title", "Date", "Status", "Impact"],
     incidents.map((row) => [
       esc(text(row.title)),

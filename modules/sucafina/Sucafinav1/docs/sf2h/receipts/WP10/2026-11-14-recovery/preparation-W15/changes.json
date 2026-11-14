@@ -1,0 +1,41 @@
+{
+  "schema": "wp10-own-review-corrections-v1",
+  "candidateLabel": "W15-recovery",
+  "parentProduct": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+  "parentTree": "ffae7f1279c8c7af7b98f19f3ebc04960db75cc7",
+  "changes": [
+    {
+      "findings": ["R1-W14-TYPECHECK-01"],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "cause": "ASI joined enteredWriter = true with the following parenthesized expression. Hosted TypeScript reported TS2322 and TS2349 at one site, repeated in two steps.",
+      "correction": "Use an explicit typed state variable before the actual participation mutation; preserve the independent queued writer and every assertion."
+    },
+    {
+      "findings": ["R2-W14-BI-ASSET-CONTRACT-04"],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+      "cause": "The test still expected one script after W14 restored the real shell beside the BI bundle.",
+      "correction": "Require exactly two scripts, compare the first to the real canonical documentHtml shell, preserve byte-for-byte BI bundle comparison, require the retained BI root, and reject extra scripts."
+    }
+  ],
+  "observedParentCheck": {
+    "snapshotSha": "0f895a5086dd270f024aa291b876d1a4cc9677f6",
+    "runId": 43582254372,
+    "jobId": 132409279269,
+    "conclusion": "failure",
+    "sucafinaDiagnostics": { "owned": 2, "foreign": 54 },
+    "cliDiagnostics": { "owned": 0, "foreign": 10 },
+    "wp10TestDiagnostics": { "owned": 2, "foreign": 8 },
+    "countPolicy": "Occurrences within each step, with repetition between steps; two owned diagnostics at one source site; no owned production diagnostics observed.",
+    "atlasGeneration": "pass",
+    "atlasTypecheck": "pass",
+    "spawnGuard": "pass",
+    "guardsAgainstDev": "pass",
+    "artifactId": 14108789141,
+    "artifactSha256": "a3f90e3b2660031f9a05b5b7424a64ae196bcb309858842caf2efd2b63699308"
+  },
+  "foreignIntakeChanged": false,
+  "productTestsExecutedLocally": false,
+  "criteriaCountUnchanged": 171,
+  "taskCountUnchanged": 7,
+  "acceptance": "Pending exact successor hosted evidence and three independent reviews; no native/global acceptance claimed."
+}

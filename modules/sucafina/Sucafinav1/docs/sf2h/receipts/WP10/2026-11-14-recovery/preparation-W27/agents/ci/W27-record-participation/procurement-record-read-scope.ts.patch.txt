@@ -1,0 +1,186 @@
+--- a/apps/cli/src/sucafina-product/procurement-record-read-scope.ts
++++ b/apps/cli/src/sucafina-product/procurement-record-read-scope.ts
+@@ -1,3 +1,4 @@
++import { AsyncLocalStorage } from "node:async_hooks"
+ import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+@@ -13,7 +14,9 @@
+ import { procurementRequestFields, projectProcurementScope } from "../../../../modules/sucafina/Sucafinav1/product/procurement/source-projection.ts"
+ 
+ type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
+-type Fence = { kind: "sf-procurement-evidence-fence"; digest: string } | { kind: "unsupported" } | { kind: "changed" }
++type Witness = { kind: "sf-procurement-evidence-fence"; digest: string; snapshots: string; sources: string;
++  environment: string; principal: string }
++type Fence = Witness | { kind: "unsupported" } | { kind: "changed" }
+ 
+ export type SfProcurementRecordReadScopeInput = {
+   host: DomainPortHost
+@@ -28,31 +31,83 @@
+   | { kind: "unsupported" }
+   | { kind: "changed" }
+ 
++type Dependencies = Pick<SfProcurementRecordReadScopeInput, "host" | "state" | "contextFor" | "selection" | "lockedSourceFences"> & {
++  persistence: DomainPortHost["persistence"]
++  snapshots: DomainPortHost["persistence"]["currentSnapshots"]
++}
++type Participation = { dependencies: Dependencies; call: TrustedDomainContext; request: Request; current: () => boolean;
++  refs: ReadonlySet<string>; witness: Witness; pins: Set<() => boolean>; parent?: Participation;
++  open: boolean; accepting: boolean; invalid: boolean; children: number }
++
++// Only this module can establish an owner, after its complete witness under the
++// actual read transaction. Snapshot availability alone is never a capability.
++const participation = new AsyncLocalStorage<Participation>()
++
+ /** Group one complete canonical read only when every current source scope is already materialized. */
+ export function createSfProcurementRecordReadScope(input: SfProcurementRecordReadScopeInput) {
+   return async <Value>(incoming: readonly BusinessEvidenceRef[], call: TrustedDomainContext,
+     work: () => Promise<Value>): Promise<SfProcurementRecordObservation<Value>> => {
+-    if (call.kind !== "ui" || !input.host.persistence.currentSnapshots || !incoming.length) return { kind: "unsupported" }
++    const parent = participation.getStore()
++    if (parent && (!live(parent) || !parent.accepting)) return changed(parent)
++    if (call.kind !== "ui" || !input.host.persistence.currentSnapshots || !incoming.length) return parent ? changed(parent) : { kind: "unsupported" }
+     const selected = structuredClone(incoming).filter(procurementRecord)
+-    if (selected.length !== incoming.length) return { kind: "unsupported" }
+-    const request = input.host.requestFor(call), selection = input.selection(call), reader = input.readerIdentity()
+-    if (!request || request.signal.aborted) return { kind: "changed" }
+-    if (!selection || !reader) return { kind: "unsupported" }
++    if (selected.length !== incoming.length) return parent ? changed(parent) : { kind: "unsupported" }
++    const readerIdentity = input.readerIdentity
++    const request = input.host.requestFor(call), selection = input.selection(call), reader = readerIdentity()
++    if (!request || request.signal.aborted) return changed(parent)
++    if (!selection || !reader) return parent ? changed(parent) : { kind: "unsupported" }
+     const requestDigest = requestIdentity(request), binding = digestSfValue([call.kind, call.binding])
+     const lease = call.lease, bindingIdentity = call.binding
+     const incomingDigest = digestSfValue(incoming), selectionDigest = digestSfValue(selection)
++    const dependencies: Dependencies = { host: input.host, state: input.state, contextFor: input.contextFor,
++      selection: input.selection, lockedSourceFences: input.lockedSourceFences, persistence: input.host.persistence,
++      snapshots: input.host.persistence.currentSnapshots }
+     const current = () => input.host.requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
+       call.lease === lease && call.binding === bindingIdentity && digestSfValue([call.kind, call.binding]) === binding && digestSfValue(incoming) === incomingDigest &&
+-      input.selection(call) === selection && selection.expiresAt > Date.now() && digestSfValue(selection) === selectionDigest && input.readerIdentity() === reader
++      input.selection(call) === selection && selection.expiresAt > Date.now() && digestSfValue(selection) === selectionDigest &&
++      input.readerIdentity === readerIdentity && readerIdentity() === reader &&
++      sameDependencies(dependencies, { host: input.host, state: input.state, contextFor: input.contextFor, selection: input.selection,
++        lockedSourceFences: input.lockedSourceFences, persistence: input.host.persistence, snapshots: input.host.persistence.currentSnapshots })
+     const environment = async () => {
+       const value = await input.host.environment(request)
+       const at = Date.parse(value.at)
+       return Number.isFinite(at) ? { day: new Date(at).toISOString().slice(0, 10), directory: structuredClone(value.directory),
+         bankKey: value.bankKey ? Array.from(value.bankKey) : undefined } : undefined
+     }
++    if (parent) parent.children++
+     try {
++      if (parent && sameDependencies(parent.dependencies, dependencies)) {
++        // Full references, not refId/currentRef, define the admitted closure.
++        // A changed inner call must poison its owner even if a caller restores
++        // mutable headers/auth/environment before the owner's final witness.
++        if (parent.call !== call || parent.request !== request || !selected.every((ref) => parent.refs.has(digestSfValue(ref))))
++          return changed(parent)
++        const pinned = () => live(parent) && parent.accepting && current() &&
++          digestSfValue(input.host.persistence.currentSnapshots?.()) === parent.witness.snapshots &&
++          digestSfValue(input.lockedSourceFences()) === parent.witness.sources
++        const boundary = async () => {
++          if (!pinned() || !await input.host.revalidate(call) || !pinned()) return false
++          const before = await environment()
++          if (!before || digestSfValue(before) !== parent.witness.environment || !pinned()) return false
++          // currentSnapshots returns defensive copies. Reopen it after the
++          // awaited environment call; compare bytes, never object identity.
++          const locked = input.host.persistence.currentSnapshots?.()
++          if (!locked || digestSfValue(locked) !== parent.witness.snapshots) return false
++          const principal = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(locked.procurement, "procurement") })
++          if (!principal || digestSfValue(principal) !== parent.witness.principal || !pinned()) return false
++          const after = await environment()
++          return !!after && digestSfValue(after) === parent.witness.environment && pinned() && await input.host.revalidate(call) && pinned()
++        }
++        if (!await boundary()) return changed(parent)
++        const value = await work()
++        if (!await boundary()) return changed(parent)
++        parent.pins.add(current)
++        // Every child executes its actual canonical producer. No projection,
++        // pending Promise, authorization result or environment value is reused.
++        return { kind: "observed", value: structuredClone(value) }
++      }
+       const enteredEnvironment = await environment()
+-      if (!enteredEnvironment || !current() || !await input.host.revalidate(call) || !current()) return { kind: "changed" }
++      if (!enteredEnvironment || !current() || !await input.host.revalidate(call) || !current()) return changed(parent)
+       const environmentDigest = digestSfValue(enteredEnvironment)
+       const snapshot = async (): Promise<Fence> => {
+         if (!current() || !await input.host.revalidate(call) || !current()) return { kind: "changed" }
+@@ -81,8 +136,10 @@
+           if (!after || digestSfValue(after) !== environmentDigest || digestSfValue(principal) !== digestSfValue(again) ||
+             !await input.host.revalidate(call) || !current() || snapshotDigest !== digestSfValue(input.host.persistence.currentSnapshots?.()) ||
+             digestSfValue(sources) !== digestSfValue(input.lockedSourceFences())) return { kind: "changed" }
+-          return { kind: "sf-procurement-evidence-fence", digest: digestSfValue({ state, snapshots: snapshotDigest, sources, principal,
+-            context: context.value, environment: enteredEnvironment, selection, request: requestDigest, binding, input: incomingDigest }) }
++          return { kind: "sf-procurement-evidence-fence", snapshots: snapshotDigest, sources: digestSfValue(sources),
++            environment: environmentDigest, principal: digestSfValue(principal),
++            digest: digestSfValue({ state, snapshots: snapshotDigest, sources, principal,
++              context: context.value, environment: enteredEnvironment, selection, request: requestDigest, binding, input: incomingDigest }) }
+         })
+         const finalEnvironment = await environment()
+         if (!finalEnvironment || digestSfValue(finalEnvironment) !== environmentDigest || !await input.host.revalidate(call) || !current())
+@@ -96,22 +153,53 @@
+         // Only absence of the zero-write closure before canonical work may
+         // return to the ordinary producer outside this root.
+         if (before.kind === "unsupported") return { commit: false, value: { kind: "unsupported" } }
+-        if (before.kind !== "sf-procurement-evidence-fence" || !current()) return { commit: false, value: { kind: "changed" } }
+-        const value = await work()
+-        const after = await snapshot()
+-        if (after.kind !== "sf-procurement-evidence-fence" || after.digest !== before.digest || !current())
+-          return { commit: false, value: { kind: "changed" } }
+-        // Preserve every canonical result, including undefined, without caching it.
+-        return { commit: false, value: { kind: "observed", value: structuredClone(value) } }
++        if (before.kind !== "sf-procurement-evidence-fence" || !current()) return { commit: false, value: changed(parent) }
++        const scope: Participation = { dependencies, call, request, current, refs: new Set(selected.map((ref) => digestSfValue(ref))),
++          witness: before, pins: new Set(), parent, open: true, accepting: true, invalid: false, children: 0 }
++        try {
++          return await participation.run(scope, async () => {
++            if (!live(scope)) return { commit: false, value: changed(scope) }
++            const value = await work()
++            scope.accepting = false
++            // Detached children cannot outlive the owner or make an otherwise
++            // successful parent return while canonical work is still pending.
++            if (scope.children || !live(scope)) return { commit: false, value: changed(scope) }
++            const after = await snapshot()
++            if (after.kind !== "sf-procurement-evidence-fence" || after.digest !== before.digest || !live(scope))
++              return { commit: false, value: changed(scope) }
++            // A separately qualified nested owner also pins its completed
++            // readers/inputs until the surrounding root finishes.
++            if (parent) {
++              parent.pins.add(current)
++              for (const pin of scope.pins) parent.pins.add(pin)
++            }
++            // Preserve every canonical result, including undefined, without caching it.
++            return { commit: false, value: { kind: "observed" as const, value: structuredClone(value) } }
++          })
++        } finally { scope.accepting = false; scope.open = false; scope.pins.clear() }
+       }, { signal: request.signal })
+-      if (!current()) return { kind: "changed" }
++      if (!current() || result.kind === "changed") return changed(parent)
+       return result
+     } catch {
+       // A nested writer poisons the actual LocalStore root. Never retry it or
+       // any canonical failure outside the scope after execution has begun.
+-      return { kind: "changed" }
+-    }
++      return changed(parent)
++    } finally { if (parent) parent.children-- }
+   }
++}
++
++function sameDependencies(left: Dependencies, right: Dependencies) {
++  return left.host === right.host && left.state === right.state && left.persistence === right.persistence && left.snapshots === right.snapshots &&
++    left.contextFor === right.contextFor && left.selection === right.selection && left.lockedSourceFences === right.lockedSourceFences
++}
++
++function live(scope: Participation): boolean {
++  return scope.open && !scope.invalid && scope.current() && [...scope.pins].every((pin) => pin()) && (!scope.parent || live(scope.parent))
++}
++
++function changed(scope?: Participation): { kind: "changed" } {
++  for (let owner = scope; owner; owner = owner.parent) owner.invalid = true
++  return { kind: "changed" }
+ }
+ 
+ /** Predict only that issueForActor's current scope needs no write; the producer still proves history. */

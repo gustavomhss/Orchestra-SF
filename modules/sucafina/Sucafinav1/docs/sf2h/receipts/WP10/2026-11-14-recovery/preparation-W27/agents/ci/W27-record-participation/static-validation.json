@@ -1,0 +1,264 @@
+{
+  "kind": "pure-data-static-comparison",
+  "base": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "oldTestBodiesByteExact": true,
+  "oldExpectTokens": 24,
+  "oldTestBudgets": [
+    "120_000",
+    "120_000",
+    "120_000"
+  ],
+  "oldTestBodySha256": "8161a187b96a9ac085977c97339cc634c9518015829bbe4151442700b1fab063",
+  "materializedAndReferenceHelpersByteExact": true,
+  "newExpectTokens": 65,
+  "testDeclarations": 9,
+  "testCasesExpectedBySource": 16,
+  "onlyNewTestsUse120000": true,
+  "centralTwoPathsUntouched": true,
+  "imports": [
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "node:async_hooks",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "9e9bac976b503409de65868a366f352ca1e65071",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "9e9bac976b503409de65868a366f352ca1e65071",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "resolved": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "locallyHydrated": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "resolved": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "locallyHydrated": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "102c849084980ae52223809d33bdeea36a58536b",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "locallyHydrated": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "ab9814817d11c0b477636ee54d1b2763d365f405",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "bun:test",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "node:crypto",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "node:fs/promises",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "node:os",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "node:path",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "@orchestra/core/location",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "@orchestra/core/schema",
+      "kind": "builtin-or-public-package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "28d0eaf1013e6a7f53672a43d3d440bded1fd462",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "resolved": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "7438cac1582ec97b4e55fcef0494554a21e9e7b4",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "102c849084980ae52223809d33bdeea36a58536b",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/integration/source-lifecycle.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/integration/source-projections.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../product/integration/source-inventory.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../runtime/local-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "locallyHydrated": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "import": "../../../../src/initial-settings.ts",
+      "resolved": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+      "sourceCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blobSha": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+      "locallyHydrated": true
+    }
+  ],
+  "productExecution": false,
+  "typecheckExecuted": false,
+  "testExecution": false,
+  "hostedResult": "not-dispatched"
+}

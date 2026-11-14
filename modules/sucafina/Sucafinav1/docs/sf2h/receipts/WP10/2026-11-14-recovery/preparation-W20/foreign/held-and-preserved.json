@@ -1,0 +1,66 @@
+[
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+    "sourceCommit": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "gitBlob": "74450e928e9bdf67df701f0a1e790ce5829016c7",
+    "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr35/modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+    "status": "HOLD_INCOMPLETE_CURRENT_CHOICE_HOST_CLOSURE",
+    "reason": "Published file explicitly maps reject-change to decisions.prepare-changes but also requires currentChoice preview/promotion and two locked source verifiers, absent from W19 Product and own host. Keep W19 host-product and explicitly deny reject-change in own fallback maps until complete own/foreign/UI closure."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "sourceCommit": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "gitBlob": "964a53310c340f4496d7410d66f8b852270b75f1",
+    "sha256": "debb437646fff9e9143b713b42e445f34754fe33df379fdd5f62b35e4a26a6da",
+    "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr35/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "status": "KEEP_W19_IDENTICAL",
+    "reason": "Exact current producer bytes already in W19; no replacement necessary."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+    "sourceCommit": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "gitBlob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+    "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c",
+    "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr35/modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+    "status": "KEEP_W19_IDENTICAL",
+    "reason": "Exact current producer bytes already in W19; no replacement necessary."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+    "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+    "gitBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+    "sha256": "4f7effda926f72b7c6a61b944e5e9a9acd6dce4a39d0780e735ab6efed3471b1",
+    "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+    "status": "KEEP_W19_IDENTICAL",
+    "reason": "Exact current producer bytes already in W19; no replacement necessary."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+    "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+    "gitBlob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+    "sha256": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+    "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+    "status": "KEEP_W19_IDENTICAL",
+    "reason": "Exact current producer bytes already in W19; no replacement necessary."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+    "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+    "gitBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+    "status": "EXCLUDE_DIVERGENT_FOREIGN_COPY",
+    "reason": "Select exact current Finance PR35 owner output. This PR36 copy is not substituted for the owner version; its source was not fetched for semantic inspection."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+    "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+    "gitBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+    "status": "EXCLUDE_DIVERGENT_FOREIGN_COPY",
+    "reason": "Select exact current Finance PR35 owner output. This PR36 copy is not substituted for the owner version; its source was not fetched for semantic inspection."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+    "candidateBlob": "7edeb37247fd3f9229749e2bb94460b8ac57271f",
+    "status": "PRESERVE_W19_FINANCIAL_FENCES",
+    "reason": "W19 already makes a definitive failed constraint ineligible while retaining conditioned/null financial evidence. Do not replace from older duplicate branches."
+  }
+]

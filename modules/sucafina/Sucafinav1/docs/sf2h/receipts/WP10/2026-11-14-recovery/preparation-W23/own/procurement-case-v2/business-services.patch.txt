@@ -1,0 +1,21 @@
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -50,6 +50,7 @@
+ import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
+ import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
+ import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
++import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
+ import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
+ import { createSfSourceFenceReader } from "./source-fence-read.ts"
+ import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
+@@ -161,7 +162,9 @@
+     authorizeCase,
+     verifyScenarioOperations: (value, call) => scenarioOperationAccess ? scenarioOperationAccess(value, call) : Promise.resolve(false),
+     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
+-  const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
++  const procurementCaseRead = createSfProcurementCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
++    selection: selectedPeriod, readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences })
++  const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: procurementCaseRead,
+     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
+   const cases = { ...canonicalCases, read: memoryCaseScope.read }
+   const withMemoryObservation: SfMemoryObservation = (request, call, work) => {

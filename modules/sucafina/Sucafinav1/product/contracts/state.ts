@@ -1,10 +1,11 @@
-import type { Snapshot } from "../../runtime/contract.ts"
+import type { Snapshot, Command } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult } from "./decisions.ts"
 import type { SensitivityResult } from "./outputs.ts"
-import type { PreservedReview, ConfirmationRecord, CommandReceipt } from "./context.ts"
+import type { PreservedReview, ConfirmationRecord, CommandReceipt, Period, DomainProjection, BiPresentation, BiViewId } from "./context.ts"
 import type { ContributionEnvelope, ResidentProfile, SkillManifest, SkillLoadReceipt } from "./resident-ai.ts"
 import type { BusinessEvidenceRef, MemoryWriteReceipt } from "./business-context.ts"
+import type { DashboardReadRequest, ScenarioRequest } from "./operations.ts"
 
 export type SfAtlasOutboxEntry = {
   eventRef: Extract<BusinessEvidenceRef, { kind: "case-event" }>
@@ -16,6 +17,90 @@ export type SfAtlasOutboxEntry = {
   | { state: "pending"; receipt?: never }
   | { state: "settled"; receipt: MemoryWriteReceipt }
 )
+
+/** A human-confirmed link, not proof that the claim is true or currently accessible. */
+export type SfConfirmedClaimField = {
+  id: string
+  incarnation: string
+  version: number
+  caseRef: { id: string; incarnation: string; version: number }
+  claimRef: string
+  fieldKey: string
+  value: string | number | boolean | null
+  unit?: string
+  period?: Period
+  sourceRef: BusinessEvidenceRef
+  confirmedBy: string
+  accessRevision: string
+  policyVersion: string
+  confirmedAt: string
+}
+
+/** Human-authored domain intent; its selector never grants authorization or applies the command. */
+export type SfDomainCommandProposal = {
+  id: string
+  incarnation: string
+  version: number
+  caseRef: { id: string; incarnation: string; version: number }
+  target: Extract<BusinessEvidenceRef, { kind: "record" }>
+  command: Command
+  commandDigest: string
+  sourceRefs: readonly BusinessEvidenceRef[]
+  principalRef: string
+  accessRevision: string
+  policyVersion: string
+  createdAt: string
+  choiceId?: string
+}
+
+/** Mixed-domain evaluation retains the original request and never presents a partial result as complete. */
+export type SfCompositeScenario = {
+  schema: "sf-composite-scenario-v1"
+  recordRef: string
+  incarnation: string
+  version: number
+  caseRef: { id: string; incarnation: string; version: number }
+  request: ScenarioRequest
+  requestDigest: string
+  principalRef: string
+  accessRevision: string
+  policyVersion: string
+  operations: readonly ({ index: number; operationDigest: string; evidenceRefs: readonly BusinessEvidenceRef[] } & (
+    | { state: "evaluated"; producer: "planner" | "dashboard" | "procurement"; target: BusinessEvidenceRef; impactRef: string; impactDigest: string }
+    | { state: "pending" | "unavailable"; producer?: "planner" | "dashboard" | "procurement"; target?: BusinessEvidenceRef; reason: string }
+  ))[]
+  plannerSubsetRequestDigest?: string
+  partialResultRef?: string
+  partialResultDigest?: string
+  coverageRefs: readonly string[]
+  coverageDigest: string
+  recordDigest: string
+  domainApplied: false
+}
+
+/** Durable BI bytes remain subject to current case and source authorization on every read. */
+export type SfBiArtifact = {
+  schemaVersion: 1
+  id: string
+  incarnation: string
+  version: number
+  caseRef: { id: string; incarnation: string; version: number }
+  selection: { viewId: BiViewId; version: number; filters: readonly { field: string; values: readonly string[] }[] }
+  dashboardSelection: DashboardReadRequest
+  period: Period
+  projectionRef: string
+  tableRef: string
+  projection: DomainProjection
+  projectionDigest: string
+  presentation: BiPresentation
+  rows: readonly DomainProjection["values"][number][]
+  tableDigest: string
+  projectionRefs: readonly BusinessEvidenceRef[]
+  sourceRefs: readonly BusinessEvidenceRef[]
+  sourceFenceDigest: string
+  binding: { installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string }
+  createdAt: string
+}
 
 /** Private admission state, distinct from a contribution whose load provenance must already exist. */
 export type SfNativeRunRecord = {
@@ -73,6 +158,14 @@ export type SfProductState = {
   threads: Record<string, unknown>
   confirmations: Record<string, ConfirmationRecord>
   cases: Record<string, DecisionCase>
+  /** Owned by the cases namespace; omitted by stores predating claim-field confirmation. */
+  claimBindings?: Record<string, SfConfirmedClaimField>
+  /** Owned by cases; a draft is bound to a choice only after the human choice exists. */
+  commandProposals?: Record<string, SfDomainCommandProposal>
+  /** Owned by cases; a subset result never replaces the original request. */
+  compositeScenarios?: Record<string, SfCompositeScenario>
+  /** Added by the BI namespace migration; absence is not an empty authorized result. */
+  biArtifacts?: Record<string, SfBiArtifact>
   /** Owned by the existing cases namespace; older stores omit it. */
   decisionResults?: Record<string, SfStoredDecisionResult>
   contributions: Record<string, ContributionEnvelope>
@@ -84,13 +177,16 @@ export type SfProductState = {
   outbox: Record<string, SfAtlasOutboxEntry>
   transactions: Record<string, { namespace: SfStateNamespace; scopeDigest: string; principalRef: string; targetRef: string; targetIncarnation: string; commandDigest: string; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown }>
 }
-export type SfStateNamespace = "preferences" | "reviews" | "relations" | "threads" | "confirmations" | "cases" | "contributions" | "documents" | "receipts" | "atlas" | "outbox"
+export type SfStateNamespace = "preferences" | "reviews" | "relations" | "threads" | "confirmations" | "cases" | "contributions" | "documents" | "receipts" | "atlas" | "outbox" | "bi-artifacts"
 export type SfStateAuthority = { principalRef: string; accessRevision: string; policyVersion: string }
 export type SfStateMutation = {
   namespace: SfStateNamespace
   domainSurface?: Surface
+  sourceFence?: "all"
   expectedStorageVersion: number
   additionalNamespaces?: readonly { namespace: SfStateNamespace; expectedStorageVersion: number }[]
+  /** Read-authorized CAS guards; these namespaces are checked without advancing their versions. */
+  checkNamespaces?: readonly { namespace: SfStateNamespace; expectedStorageVersion: number }[]
   idempotencyKey: string
   commandDigest: string
   targetRef: string

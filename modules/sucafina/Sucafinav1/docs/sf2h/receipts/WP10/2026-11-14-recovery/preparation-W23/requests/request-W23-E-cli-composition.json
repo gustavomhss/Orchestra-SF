@@ -1,0 +1,14 @@
+{
+  "package": "cli",
+  "directory": "apps/cli",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "test/sucafina-host-context.test.ts",
+    "test/native-execution.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

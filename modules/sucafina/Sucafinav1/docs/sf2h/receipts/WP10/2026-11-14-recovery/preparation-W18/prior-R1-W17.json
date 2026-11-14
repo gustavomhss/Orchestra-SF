@@ -1,0 +1,645 @@
+{
+  "schema": "wp10-independent-review-v1",
+  "review": "R1-W17",
+  "generatedAt": "2026-11-14T11:05:13.202513+00:00",
+  "candidateSha": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+  "candidateTree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+  "parentSha": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+  "pullRequest": 29,
+  "baseBranch": "sf2-stack",
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "authoredProductTests": false,
+    "independenceDeclaration": "Independent reader of immutable W17. No product/test edits, local product execution or remote mutation. Source findings were derived independently; builder audit is not approval."
+  },
+  "state": "FINAL_W17_REVIEW_CHECK_OBSERVED_FUNCTIONAL_HOLD",
+  "verdict": "REQUEST_CHANGES_HOLD",
+  "approval": false,
+  "functionalAcceptance": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "localProductExecution": false,
+  "sourceInventory": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "gitBlob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "sha256": "9d497b424797430aa713cae24a3bdd6a433ddbf678f4acc88da87d66230f6abf",
+      "reviewScope": "Full new production helper; original intent/case capture, historical lifecycle entry, final authority and cleanup.",
+      "changedFromW16": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "gitBlob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "reviewScope": "Exact W16/W17 delta; host injection plus verify/preflight/commit and native lifecycle surrounding code.",
+      "changedFromW16": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "gitBlob": "65ec2c948a1c83aa7ada84d5f0f806bd236038b5",
+      "sha256": "470838fbabb9a7b023f5c9d1ee2faf04f71ebb27c937a18fbb6834d82120e3e2",
+      "reviewScope": "Exact W16/W17 delta: referenceDigest allowlist and full admission-intent digest.",
+      "changedFromW16": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "gitBlob": "dbddde16519d6fa4342d3e942c58f4533f011619",
+      "sha256": "421b2b24d559416f87515f8d2c6bf1f4902b3477de84799c063057290f4f82d7",
+      "reviewScope": "withCase/selectedCase/withCalculationCase, exact source verifiers, planner wiring and caseForEvidence route.",
+      "changedFromW16": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "gitBlob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "sha256": "e7d9a480a7ae191de355047f70f46cc5509650c1d0240fa4409b1ceab7bd06b3",
+      "reviewScope": "Full source; ordinary request/result readers, canonical replay, source verifier wrapper and resolveEvidence.",
+      "changedFromW16": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "gitBlob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "sha256": "8c237876e2a2636ab0634cf9599bc136300253c621784fa4496d4636dc73e311",
+      "reviewScope": "Full unchanged source rechecked for helper integration and C17 source prerequisites.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "gitBlob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "sha256": "90727faf94f3632d7ae7054d4f48cec148056068c50fea5e4be3be42f0d86221",
+      "reviewScope": "Full prior review plus exact W17 digest/alias safety delta; readLifecycle, mutate and publication boundaries.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "gitBlob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "sha256": "0805ac5f3e5a36d8c288ef2ff625905b79aad0b980b62b5ac0317b81d9b391f4",
+      "reviewScope": "W17 terminal settlement delta plus run/collect/revalidate/markStale/preserve flow.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "gitBlob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "sha256": "54e0f971b348eaf495fecb63bb3a84f3153d753b132c4e7e658b32cb64a5f693",
+      "reviewScope": "Revalidate, lifecycle readers and terminal/result composition.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "gitBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+      "reviewScope": "Current case projection, evidenceReferences including ledger, accessible, exact case authority checks.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "gitBlob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "sha256": "2ddd4c7f64c24e781b5914cec322b0efa3ee0aa02c5f9b27cdd61271bb17fd5d",
+      "reviewScope": "Full source; ordinary vs historical readers and allowedCase version semantics.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "gitBlob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "sha256": "8d2164156cb51c038c77bf08ddeda0f7298e429075f8213041c4c2cdc1f20b47",
+      "reviewScope": "Full source; readHistorical current case/event lane versus ordinary exact-case reader.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "gitBlob": "4e92219aae9046891f167502139412bf9c509529",
+      "sha256": "06d7d1acbf1857550bb65c5e9251984aa8ef712ced3add121e5fdbad9d103fe3",
+      "reviewScope": "Historical event/ref/source/run association from W16, byte identical in W17.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "gitBlob": "866d5e2106a8da680d0496e1ac9b1e3d5763ce3f",
+      "sha256": "f77f584f53b9f7a92f8a136d261e8b712cc1733efc8e05e4110bcd6418bf71a7",
+      "reviewScope": "Current BCS/router/ancestry/history requirements and calculation binding; no synthetic historical projection accepted.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "gitBlob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47",
+      "reviewScope": "Eligibility is exact current case; conservative fallback and private bounded proof reuse.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/confirmation.ts",
+      "gitBlob": "7c8fbe1fccd59de8371e53ad267f41d2b2a8cf70",
+      "sha256": "496e2067f1f99a6c6a41d59b3b769b1ce786c6e14367bc06f6efd717a144b12f",
+      "reviewScope": "Exact type-narrowing delta; no removed runtime validation.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule-native.ts",
+      "gitBlob": "0711a5d689e303f7cbca97b46d10a10aab4c2b8e",
+      "sha256": "83b77115726c9b4367caa22e7c272f9fa136eb84eb4cad6868d71febc2aeca3c",
+      "reviewScope": "Exact provider identity pinning delta and final egress checks.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "gitBlob": "c6be5fbecf49e93237b873bb79ac12260022bdf1",
+      "sha256": "408b5143a34452e85628b51211d032f053d97920fe76aca59726f04c4330bab1",
+      "reviewScope": "Full new test; real human/C08 but no actual run-store stale call and empty sourceRefs.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "gitBlob": "24c13d2ec384e573c47bf0359a98205e685ac468",
+      "sha256": "823ea2019cba3d6c7ba62665f2de0a5eeccb119706d7a688f68ee47d633b5ade",
+      "reviewScope": "Exact discriminant typefix delta.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "gitBlob": "cf90ba55860b36ce085fa500c0c51f987ad06743",
+      "sha256": "b525c02969323232de5c216e6feb3a9076fe734dad3d5ca1570aaa215e3a0783",
+      "reviewScope": "Exact conservative readLifecycle fixture addition.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "gitBlob": "714f6a55cb3ed7f32a457259341ea68704bfad7e",
+      "sha256": "67e874a622090716bb15887081c33f624d5a93e62bfe3f92178c73da45ec1e0c",
+      "reviewScope": "Explicit producer historical lane, expected ordinary rejection after v1→v2, accepted ledger and restart assertions; fixture limits acknowledged.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/business-services-fixture.ts",
+      "gitBlob": "7294b6c3240ae4b2858dd1603b12e49b0067041f",
+      "sha256": "b4fd1cfa2efbc9d304e5528e0b2648413c84e9deea58b368228e44f781b733e8",
+      "reviewScope": "Full published fixture: actual BusinessServices/Atlas initialization with scanner unavailable.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "gitBlob": "bbfad3882e0ab38ebab9b943eadad8b4c478ac07",
+      "sha256": "ddd6dc60524fbd19bf1d37262888aaea2ceb29d7fc8dcc83e8baf16f3c9abd8f",
+      "reviewScope": "Exact W16/W17 delta replaces incomplete fixture with actual BusinessServices; preserves assertions.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "gitBlob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+      "sha256": "d321f4d671d20e6852ba939dadf1753f72b2810d7b6ebac1b4e0156b496ad6bd",
+      "reviewScope": "All38 artifact hashes compared against W17.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+      "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+      "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+      "reviewScope": "Archive blob identity checked against W16;128+131 inputs retained.",
+      "changedFromW16": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "gitBlob": "75399d5f593bba467151e6debe34a7b17e6f13f3",
+      "sha256": "dd2d50822e28f72ea5c42c092bcd7b884fb8110074f131dbe2b9bff2a60dad32",
+      "reviewScope": "Inspected new mutation/alias race counterproofs and conservative execution fixture addition; no execution claimed.",
+      "changedFromW16": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-calculation-history.test.ts",
+      "gitBlob": "0aaef8f596b5be01cd386f0f2987dfca35517425",
+      "sha256": "fe2bbfe5dcc8af8f5dfbead05706fb22f3d33ff44f10a6fe1ce18181f0f0fc10",
+      "reviewScope": "Full source: protected historical review proof fixture, not a substitute for actual C17 calculation replay or ledger-bound BCS.",
+      "changedFromW16": false
+    }
+  ],
+  "remoteBlobVerification": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "ref": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "remoteGitBlob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ec17b2c8204d5e953eec3186b7e236c0faaad47/apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 2358,
+      "encoding": "utf-8",
+      "localGitBlob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "matchesLocal": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "ref": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "remoteGitBlob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ec17b2c8204d5e953eec3186b7e236c0faaad47/apps/cli/src/sucafina-product/host-context.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 74908,
+      "encoding": "utf-8",
+      "localGitBlob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "matchesLocal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "ref": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "remoteGitBlob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ec17b2c8204d5e953eec3186b7e236c0faaad47/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 23180,
+      "encoding": "utf-8",
+      "localGitBlob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "matchesLocal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "ref": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "remoteGitBlob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ec17b2c8204d5e953eec3186b7e236c0faaad47/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 26209,
+      "encoding": "utf-8",
+      "localGitBlob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "matchesLocal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "ref": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "remoteGitBlob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 23180,
+      "encoding": "utf-8",
+      "localGitBlob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "matchesLocal": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "ref": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "remoteGitBlob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ec17b2c8204d5e953eec3186b7e236c0faaad47/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 13930,
+      "encoding": "utf-8",
+      "localGitBlob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "matchesLocal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "ref": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "remoteGitBlob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ec17b2c8204d5e953eec3186b7e236c0faaad47/modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 17054,
+      "encoding": "utf-8",
+      "localGitBlob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "matchesLocal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "ref": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "remoteGitBlob": "c6be5fbecf49e93237b873bb79ac12260022bdf1",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ec17b2c8204d5e953eec3186b7e236c0faaad47/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 7042,
+      "encoding": "utf-8",
+      "localGitBlob": "c6be5fbecf49e93237b873bb79ac12260022bdf1",
+      "matchesLocal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "ref": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "remoteGitBlob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "transport": "GitHub MCP github_fetch_file",
+      "characters": 26209,
+      "encoding": "utf-8",
+      "localGitBlob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "matchesLocal": true
+    }
+  ],
+  "treeAndOwnership": {
+    "completeTreeBlobs": 16093,
+    "hydratedFiles": 1115,
+    "hydrationHashMismatches": 0,
+    "actualChangedBlobs": 28,
+    "manifestMatchesActualDelta": true,
+    "deletions": 0,
+    "ownChangedBlobs": 10,
+    "ownCodeAndTestChanges": 6,
+    "ownReceiptAdditions": 4,
+    "foreignExactChangedBlobs": 18,
+    "effectivePins": 393,
+    "uniqueEffectivePinPaths": 393,
+    "pinMismatches": [],
+    "ownershipViolations": [],
+    "changedPriorReceipts": [],
+    "partialHydrationIsNotDeletion": true,
+    "foreignSources": {
+      "PR31": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+      "PR33": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "PR36": "c21a990c57b714cd60bb7f915beb6be51acbafdb"
+    },
+    "remoteSamplingQualification": "Nine direct GitHub MCP blob reads; run-store and analysis-port also read from their foreign source commit. Remaining effective pins were independently compared to the complete candidate tree, not all refetched individually."
+  },
+  "archivePreservation": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+    "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+    "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+    "unchangedFromW16": true,
+    "foreignCopies": 128,
+    "recordedReadonlyInputs": 131,
+    "archivedInputsNotAdmittedAsSources": true
+  },
+  "criteriaIntegrity": {
+    "canonicalCount": 171,
+    "taskCount": 7,
+    "allLiteralTuplesPreserved": true,
+    "comparedFields": [
+      "id",
+      "text",
+      "family",
+      "task",
+      "task_title"
+    ],
+    "draftPath": "agents/criteria/final-package/draft-W16-v2/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W16-draft/criteria-map.json",
+    "draftQualification": "Draft source map remains parameterized; it is not W17 functional acceptance. All171 tuples were compared again to the canonical pack. Final W17 map/evidence still must bind actual outcomes.",
+    "acceptedCriteria": 0,
+    "classificationRequirement": "Bind R1-W17-CALCULATION-HISTORY-01 and lifecycle integration proof gap to affected criteria. Do not mark literal criteria fulfilled by code presence or current test collection."
+  },
+  "freeze": {
+    "revision": 9,
+    "artifactBindings": 38,
+    "matchingBindings": 37,
+    "mismatches": [
+      {
+        "path": "../../../../../apps/cli/src/sucafina-product/host-context.ts",
+        "expectedSha256": "4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922",
+        "actualSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772"
+      }
+    ],
+    "owner": "WP00",
+    "status": "BLOCKED_PUBLISHED_OWNER_BINDING_REQUIRED"
+  },
+  "priorFindingRechecks": [
+    {
+      "id": "R1-W16-LIFECYCLE-CASE-01",
+      "sourceState": "SOURCE_FIXED",
+      "proofState": "HOSTED_RECHECK_PENDING",
+      "observedDelta": "Host uses production createSfAnalysisRunContext. allowHistoricalRetry permits same-incarnation newer case; original selected case is cloned/preserved, fresh selectedCase/resolveCase remain strict, and final human/Request/active/replay identity is checked before return.",
+      "limits": "New106-line test covers real helper/human/C08 and version advance, membership/active/abort/incarnation and cleanup. It does not call actual markStale/preserveStale through reentry and uses no sourceRefs. C17 case with historical calculation remains blocked by the new finding.",
+      "fullyClosed": false
+    },
+    {
+      "id": "R1-W16-TYPES-02",
+      "sourceState": "SOURCE_FIXED",
+      "proofState": "CLOSED_SCOPED_EXACT_W17_TYPECHECK",
+      "observedDelta": "Discriminant now uses reason-in-result guard; injected RunStore adds conservative unavailable readLifecycle. No type suppression or assertions removed in these two deltas.",
+      "fullyClosed": true,
+      "closureEvidence": {
+        "runId": 43587702180,
+        "jobId": 132425652500,
+        "artifactId": 14111600606,
+        "scope": "Zero owned SF diagnostics; CLI and WP10 test consumer typechecks successful. Does not accept whole SF check or product functionality."
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1-W17-CALCULATION-HISTORY-01",
+      "severity": "high",
+      "blocking": true,
+      "owner": "WP10 composition, consuming WP11 published historical readers",
+      "status": "OPEN_ON_W17",
+      "category": "C17-historical-composition",
+      "title": "Host does not compose ledger-bound historical calculation readers after case advancement",
+      "preExistingBeforeW17": true,
+      "newlyIdentifiedInThisReview": true,
+      "paths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts"
+      ],
+      "locations": [
+        "business-services.ts:221-229,236-284,287-295",
+        "planner-calculation-services.ts:35-39,66-91,116-162",
+        "case-port.ts:79-85,133-145",
+        "result-store.ts:64-79 and allowedCase",
+        "scenario-request-store.ts:31-66",
+        "calculation-history.test.ts:66-90,120-140"
+      ],
+      "cause": "withCase still calls cases.read. That reader includes ledger evidence and requires each ref to resolve fresh/historical. The WP10 calculation adapter always issues through requests.read and results.readForCalculation; the ordinary producer requires current.case.version === stored.caseRef.version. After acceptance advances v1 to v2 while retaining the C17 reference in the ledger, that ordinary reader refuses and cases.read becomes unavailable before lifecycle reentry. Published readHistoricalCalculation/readHistorical accept an exact current case/event/reference association, but WP10 does not compose them; its verifyCalculationSources wrapper also binds stored.caseRef to an exact-current withCalculationCase.",
+      "impact": "The current case and its retained calculation evidence cannot be reopened through the real host after a legitimate advance. Stale lifecycle reentry for that case also fails before the action, even though the new helper works for an empty-evidence case. This is a safe refusal and availability/functional gap, not evidence of leaked data or fresh authorization bypass.",
+      "proofBasis": "Exact published source causal chain, plus explicit owner test which expects current readers to reject and explicit historical lane to reopen the case after analysis acceptance. No local product execution or observed hosted reproduction claimed.",
+      "requiredCorrection": "Compose the published historical result/request readers in a private authorized host lane derived from a real current case and retained exact ledger event/reference. Preserve old result/source/provenance bytes, canonical replay, current authority and BCS projection/currentRef/differences/continuity requirements. Leave ordinary fresh read/selection/publication strict.",
+      "prohibitedShortcut": "Do not copy the WP11 fixture resolver as BCS implementation: it omits fields/continuity required by the production BCS. Do not mark historical calculation fresh or loosen version equality globally.",
+      "requiredProof": [
+        "Hosted real WP10 BusinessServices + C08: persist a canonical calculation at v1, accept its exact ref into a real ledger event and advance the case to v2, then reopen cases.read and the historical evidence through the host.",
+        "Ordinary result/request/fresh-selection paths must still deny old case version; historical resolution must retain exact immutable request/result/source identity and expose current authorized differences.",
+        "Exercise the production run reentry through markStale/preserveStale with relevant real C08/historical sources; no fabricated native acceptance.",
+        "Missing/wrong ledger event, changed reference, new case incarnation, source/access revocation and mutation during awaited verification deny without leaks.",
+        "Bound nested/self references and verify no recursive cases.read cycle, permission cache reuse or old scope borrowing."
+      ],
+      "criteria": [
+        "WP10.T01.DOD.10",
+        "WP10.T01.CMP.10",
+        "WP10.T07.DOD.01",
+        "WP10.T07.CMP.01",
+        "WP10.T06.CHK.10"
+      ],
+      "reportedImmediately": true
+    }
+  ],
+  "securityAndCompositionObservations": [
+    {
+      "topic": "No fresh upgrade in new run context",
+      "observation": "The helper retains original selected/start bytes and only changes reentry option; underlying fresh selector and verify continue to require original version. Finally always removes replay mapping and human admission.",
+      "limit": "Source reasoning plus test source; no hosted functional acceptance yet."
+    },
+    {
+      "topic": "Run-store foreign hardening",
+      "observation": "Pins mutation/record digests before awaits, rejects verifier/caller mutations after awaits, clones admitted record/output/alternative into C08 state, and checks returned identity. Existing terminal CAS and private Alternative capture remain.",
+      "limit": "No own weakening found in delta; hosted hostile-alias tests still pending for W17."
+    },
+    {
+      "topic": "Publication settlement",
+      "observation": "Foreign analysis-port explicitly settles unavailable/needs-input publication outcomes via a fresh withRunContext; denied/conflict do not acquire terminal write. Existing host/store transition checks remain.",
+      "limit": "No real native run completion observed."
+    },
+    {
+      "topic": "BI source intent",
+      "observation": "referenceDigest is allowed only for bi-source and added to admission bootstrap digest, preserving exact source intent.",
+      "limit": "Functional consumer proof is pending; R1 does not substitute R2 UX review."
+    },
+    {
+      "topic": "Published WP02 fixture",
+      "observation": "New fixture composes actual BusinessServices/cases/BCS instead of omitting verifyScenarioOperations; scanner remains explicitly absent. The inspected workbench delta keeps test assertions.",
+      "limit": "Old four failures are not declared fixed at runtime until exact current hosted test outcome."
+    },
+    {
+      "topic": "Cycle/bypass search",
+      "observation": "Existing ancestry/run guards cap nested replay at16 and reject self-recursion; private calculation scope uses direct C08 case selection rather than cases.read. The new helper does not introduce an unbounded recursion or relax fresh selection.",
+      "limit": "Historical calculation availability remains broken by R1-W17-CALCULATION-HISTORY-01; no positive runtime cycle proof claimed."
+    }
+  ],
+  "ci": {
+    "check": {
+      "runId": 43587702180,
+      "jobId": 132425652500,
+      "snapshotSha": "585831c5d9279a7b87f804bc3598ed66af1bb9e5",
+      "status": "completed",
+      "conclusion": "failure",
+      "independentRemoteObservation": "reviews/R1/check-job-W17-observation.json",
+      "artifactId": 14111600606,
+      "artifactZipSha256": "7dc49186b98b1732a8ab444a1d535b9b4d44a77cfc71d83066432b5fefb3247c",
+      "all11ArtifactHashesVerified": true,
+      "revisionsFileMatchesCandidateShaAndTree": true,
+      "sucafinaTypecheck": {
+        "conclusion": "failure",
+        "diagnostics": 19,
+        "owned": 0,
+        "foreign": 19
+      },
+      "cliTypecheck": {
+        "conclusion": "success",
+        "diagnostics": 0
+      },
+      "wp10TestTypecheck": {
+        "conclusion": "success",
+        "diagnostics": 0
+      },
+      "atlasGeneration": "success",
+      "atlasTypecheck": "success",
+      "spawnImports": {
+        "conclusion": "success",
+        "checkedFiles": 4674,
+        "allowlistedSites": 66
+      },
+      "guards": {
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 1301,
+        "gateFindings": 0,
+        "warnings": 48,
+        "errors": 0,
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "artifactFiles": [
+        {
+          "path": "atlas-generate.log",
+          "bytes": 22,
+          "sha256": "0279c8a6959392e6cbdc8daf40011385f56fd4a7cbe09b5af76072e401a2b44f"
+        },
+        {
+          "path": "atlas-generated-check.log",
+          "bytes": 30,
+          "sha256": "8040b8b602fe9bb0035e66ee567e05648e496a8edfd36495e4d79c65e84892fb"
+        },
+        {
+          "path": "atlas-generated-diff.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "atlas-typecheck.log",
+          "bytes": 16,
+          "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87"
+        },
+        {
+          "path": "cli-typecheck.log",
+          "bytes": 16,
+          "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87"
+        },
+        {
+          "path": "guards.log",
+          "bytes": 19524,
+          "sha256": "5560009d84e546bf9ed1a17547360fa05453b1ed557a0351f2897f1047688fbf"
+        },
+        {
+          "path": "merge-base.txt",
+          "bytes": 41,
+          "sha256": "541c6844015c5a0839167f338dcca8932ce7eb70c1d79cdd891584a105bf9961"
+        },
+        {
+          "path": "revisions.txt",
+          "bytes": 123,
+          "sha256": "c5f462fb5d09ac8f516f9ab705cfce0c3666b5cf411ae49c5299c894ed75fc65"
+        },
+        {
+          "path": "spawn-imports.log",
+          "bytes": 97,
+          "sha256": "2e8a811792603f2af0d14280132af600affbb368e64570d3d52d44b3c28cc1ed"
+        },
+        {
+          "path": "sucafina-typecheck.log",
+          "bytes": 7416,
+          "sha256": "96f20a555b39e791a50053b37612c80a6dcd568f8aeec724c9f6fcc8d4bcd17f"
+        },
+        {
+          "path": "wp10-test-typecheck.log",
+          "bytes": 60,
+          "sha256": "ad028ac630d212f71ae85efc93f29822c39adeb741bab228fff9298ab604f496"
+        }
+      ]
+    },
+    "functionalW17": "NOT_OBSERVED_DISPATCH_OR_TERMINAL_RESULT",
+    "historicalW16A": {
+      "runId": 43585812801,
+      "status": "PARENT_REPORTED_TERMINAL_FAILURE",
+      "parentReportedCounts": {
+        "pass": 82,
+        "fail": 20,
+        "tests": 102,
+        "files": 18,
+        "durationSeconds": 1405.57
+      },
+      "independentlyInspectedByR1": false,
+      "doesNotProveW17": true,
+      "qualification": "Parent identified own BI/review failures; must be triaged separately. This review does not infer W17 outcomes from W16."
+    },
+    "functionalHold": true
+  },
+  "remainingDependencies": [
+    {
+      "id": "WP00-FREEZE-HOST-BINDING",
+      "owner": "WP00",
+      "state": "OPEN",
+      "needed": "Publish final exact host binding; strict freeze check remains37/38."
+    },
+    {
+      "id": "C07-NATIVE-ADAPTER",
+      "owner": "NativeTask/Relay producer, WP09 and WP10 consumer",
+      "state": "OPEN",
+      "needed": "Actual governed runtime adapter/receipts; five routine descriptors and full39/eight packs remain unaccepted."
+    },
+    {
+      "id": "FOREIGN-TYPECHECK-OUTPUTS",
+      "owner": "Respective producers",
+      "state": "19_FOREIGN_DIAGNOSTICS_OBSERVED_W17",
+      "needed": "Owner published corrections for current SF19 foreign diagnostics; global package check remains failure."
+    },
+    {
+      "id": "NATIVE-GLOBAL-BUNDLE",
+      "owner": "S0 and all producers",
+      "state": "DEFERRED_UNTIL_TOTAL_BUNDLE",
+      "needed": "All required real native/scanner/resident outputs and final epic after total bundle."
+    }
+  ],
+  "requiredBeforeApproval": [
+    "Correct and independently recheck C17 historical host composition on a published candidate.",
+    "Complete actual lifecycle integration proof through production reentry and strict negative fresh paths.",
+    "Inspect current hosted check and affected functional selections with exact candidate/snapshot/run/job/request/control binding.",
+    "Retain three independent reviewers and all native/global/owner gates."
+  ],
+  "reportLimits": [
+    "R1 scope is source/composition/contracts/persistence, not complete UI or provider acceptance.",
+    "All171 criteria remain preserved; source/metadata verification cannot fulfill their functional text.",
+    "No local product execution and no fabricated native/session/scanner/global evidence.",
+    "Immutable W17 remains the report target even if a fix is prepared in the mutable working tree."
+  ],
+  "newPublishedInputsNotPartOfCandidate": [
+    {
+      "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "pr": 32,
+      "description": "Parent reports published C17 historical composition delta under audit after review finding. Not composed into W17 and not reviewed here; cannot close W17 finding."
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "wp10.data-draft-delivery.v1",
+  "role": "data-builder-not-independent-review",
+  "revision": "W26-v2",
+  "files": [
+    {
+      "path": "agents/criteria/final-package/parameters.draft-W26-v2-final.json",
+      "bytes": 959550,
+      "sha256": "ea9110990f0753ab1e79aec943f6dcc27cc85a238e8aa9dd9690028bca836600",
+      "git_blob_sha1": "c8c6773322f6da51c219d2c5029963cf1f8d3565"
+    },
+    {
+      "path": "agents/criteria/final-package/prepare_w26_v2_parameters.py",
+      "bytes": 33000,
+      "sha256": "476d8f4849aab03c6f383958d51c005c44d05ba084010850535c3ca01b2527d2",
+      "git_blob_sha1": "af92d363224d32c92112a90585bb16810bd397fa"
+    },
+    {
+      "path": "agents/criteria/final-package/README-W26-v2-draft.md",
+      "bytes": 11588,
+      "sha256": "72548d4255a827587f58020e67577e3e3843dc3aea06363cb9c3b28681b460d5",
+      "git_blob_sha1": "7c6e89815fd19bfa8617bc2bf420c9eefe5ba5ea"
+    },
+    {
+      "path": "agents/criteria/final-package/validation-W26-v2-draft.json",
+      "bytes": 3517,
+      "sha256": "b68be68b68e84f48e33c01e4b2552187d5ce155aa8d6d6421dc1f0fc0695b4a6",
+      "git_blob_sha1": "04af1621e31b742d2c964485d4612df0541ba120"
+    },
+    {
+      "path": "agents/criteria/final-package/draft-W26-v2-final/validation.json",
+      "bytes": 2295,
+      "sha256": "dcea95b51f7427fd8dba54a973cd256d8f7aa4ec970caaa943fcd7d6d988ba2f",
+      "git_blob_sha1": "ad0a8901d32630fd85fc37ea828362b2a60bca4b"
+    },
+    {
+      "path": "agents/criteria/final-package/draft-W26-v2-final/delivery-audit.json",
+      "bytes": 297,
+      "sha256": "4b9eeffefbe0938aff0a1d7520b6e7f36b2e98b9262a2acc195da8ff5bb98a45",
+      "git_blob_sha1": "d735e85525db98ee37410e773792e5e1a6ed0908"
+    },
+    {
+      "path": "agents/criteria/final-package/draft-W26-v2-final/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W26-v2-draft/review-bundle-index.json",
+      "bytes": 841550,
+      "sha256": "8352964dea2312c6489c07ae44b05c41f4c3479f4329ad6cdb5f1d5b11ae3399",
+      "git_blob_sha1": "11b83ebb50371c21d15d0955877f7a3d3de8f578"
+    },
+    {
+      "path": "agents/criteria/final-package/seal_data_draft.py",
+      "bytes": 9670,
+      "sha256": "09476d4985267467d0e99ebc055556a7a77fb6dc238db8f08e3b8046eb9196a7",
+      "git_blob_sha1": "8f769ce4c4ea6214a173811834f93a874e2bc7a2"
+    }
+  ],
+  "package": {
+    "path": "agents/criteria/final-package/draft-W26-v2-final/package",
+    "files": 950,
+    "index": {
+      "path": "agents/criteria/final-package/draft-W26-v2-final/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W26-v2-draft/review-bundle-index.json",
+      "bytes": 841550,
+      "sha256": "8352964dea2312c6489c07ae44b05c41f4c3479f4329ad6cdb5f1d5b11ae3399",
+      "git_blob_sha1": "11b83ebb50371c21d15d0955877f7a3d3de8f578"
+    },
+    "criteria": 171,
+    "tasks": 7,
+    "obligations": 80
+  },
+  "captures_preserved_through_package_index": true,
+  "prior_config": {
+    "path": "agents/criteria/final-package/parameters.draft-W26-v1.json",
+    "bytes": 899540,
+    "sha256": "76a11e664fcbf59b115af5c618beafba663c6d310fe151caf719f37ce26713ba",
+    "git_blob_sha1": "dac2baa63da3a05c38289a3542268200bd238b9b"
+  },
+  "prior_seal": {
+    "path": "agents/criteria/final-package/DELIVERY-W26-v1-draft.json",
+    "bytes": 4981,
+    "sha256": "1c9de3551f4218f9fcd7d4f60498f6c8c9dc4093b3afeb071c0e8b97809da69f",
+    "git_blob_sha1": "9e52c35aca85987c9bbd0520411dc43a61a44dd1"
+  },
+  "shared_utilities": [
+    {
+      "path": "agents/criteria/final-package/build_final.py",
+      "bytes": 54718,
+      "sha256": "834509b54245f8d320a657cdac6b50395033bd7f50784ea51f14f9381228faba",
+      "git_blob_sha1": "27300432907be461f63edfef763fa881bf5758b6"
+    },
+    {
+      "path": "agents/criteria/final-package/bind_successor_parameters.py",
+      "bytes": 17826,
+      "sha256": "7c3b8b8f501574d4b973be6559c01d125897c4f4a56cafe5c9045a3562823c1b",
+      "git_blob_sha1": "01a44600ba6f7c8d4f7e361557991552c0c2acd3"
+    }
+  ],
+  "acceptance": {
+    "criteria": 0,
+    "tasks": 0,
+    "native": false,
+    "global": false,
+    "independent_final_reviews": 0
+  },
+  "binding_performed": false,
+  "FINAL_W": null,
+  "FINAL_D": null,
+  "formal_current_ci": [],
+  "observed_ci_pending_binding": [
+    "W26-check",
+    "W26-A-authority-lifecycle"
+  ],
+  "local_product_execution": false,
+  "remote_mutations": false,
+  "unresolved_fields": [
+    "Confirm the chosen FINAL_W SHA/tree/manifest/full tree and immutable frozen bytes.",
+    "Supply exact current hosted terminal entry paths/SHAs for every selected gate; never turn initial A or partial D22 into a complete terminal.",
+    "Supply three final non-author current-candidate review JSON/MD paths and hashes, with actual findings/dispositions.",
+    "Supply supported per-obligation evidence updates; no finding closes merely because a source path exists or own typecheck is zero.",
+    "Publish append-only D only after the concrete bundle; keep D identity/real guard external and validate W/D/S/trees/envelope."
+  ]
+}

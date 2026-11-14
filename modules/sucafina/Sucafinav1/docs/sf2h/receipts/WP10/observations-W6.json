@@ -1,0 +1,72 @@
+{
+  "schema": "sf-wp10-observation-v1",
+  "product": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+  "tree": "ff3ccb2c7347245c8c59f2665fc46c4e3dec86d5",
+  "status": "SUPERSEDED_CANDIDATE_REQUIRES_RECHECK",
+  "canonicalCriteria": {
+    "count": 171,
+    "accepted": 0,
+    "scopeReduced": false
+  },
+  "test": {
+    "product": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+    "snapshot": "c90922d5530795b311f4cfa70548fb60c3c93746",
+    "tree": "9bfa3aec2c774cfd310f46e00c4105520fbefe59",
+    "branch": "ci-run-linux-astra-wp10-441fbbee-c3049e32-1",
+    "requestHash": "c3049e324beb510513efb40fabb6c3d2e53123ad0ef2fa006d582010dec25d48",
+    "requestBlob": "e41f2a162d46429896027d713b6180fafcd21f1b",
+    "runId": 43543628377,
+    "jobId": 132289644720,
+    "pass": 80,
+    "fail": 7,
+    "errors": 2,
+    "assertions": 667,
+    "files": 13,
+    "seconds": 147.85,
+    "omni": "Not applicable; no declaring test, no spawn or delegation"
+  },
+  "check": {
+    "product": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+    "snapshot": "144990991714729c876a8e4f33d403f276d6a711",
+    "tree": "2565c165bc41d53c0d69c49f32cd4293dafb1484",
+    "branch": "astra-check-wp10",
+    "envelopeBlob": "343b2e7d94be9f6ed32f5f18485a75b8e4c4c5bd",
+    "previous": "42076007fc785ffa055b59d606da5ae0090cf3b5",
+    "runId": 43543639877,
+    "jobId": 132289681671,
+    "ownDiagnostics": 2,
+    "foreignDiagnostics": 47,
+    "atlasAndGuards": "PASS"
+  },
+  "findings": [
+    {
+      "id": "FIN-W6-01",
+      "reviewer": "finance_review",
+      "owner": "WP10",
+      "severity": "P1",
+      "state": "CORRECTION_IMPLEMENTED_RECHECK_PENDING",
+      "evidenceKind": "STATIC",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "finding": "Baseline freshness resolves BCS Planner evidence through the same coverage-aware Planner port, forming an unbounded async dependency cycle.",
+      "correction": "Use separately authenticated source projection with explicit unavailable decision coverage; retain registry evidence validation."
+    },
+    {
+      "id": "FIN-W6-02",
+      "reviewer": "finance_review",
+      "owner": "WP10",
+      "severity": "P1",
+      "state": "CORRECTION_IMPLEMENTED_RECHECK_PENDING",
+      "evidenceKind": "STATIC",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "finding": "Ordinary forecast reads without a private case selection inherit denied from mandatory baseline selection.",
+      "correction": "Treat no UI case selector as absent optional baseline coverage after revalidation. Existing or revoked selections retain registry denial."
+    }
+  ],
+  "limits": [
+    "Not three completed final reviews.",
+    "Native-input fixtures are authority boundary evidence, not model/skill-loader execution.",
+    "WP04 Apply 503/timeouts remain; transaction wrapper counts do not prove SQL or CPU cost.",
+    "No full epic/eight final selections/AM/global acceptance.",
+    "No foreign source edits, sf2-stack mutation, dev merge or deployment."
+  ]
+}

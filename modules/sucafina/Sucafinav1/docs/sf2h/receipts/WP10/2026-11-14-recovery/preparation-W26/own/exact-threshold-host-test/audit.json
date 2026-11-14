@@ -1,0 +1,76 @@
+{
+  "schema": "wp10-host-exact-threshold-test-audit-v1",
+  "role": "WP10 implementation author; not an independent reviewer",
+  "status": "AUTHORED_STATICALLY_INSPECTED_HOSTED_PROOF_PENDING",
+  "baseProductSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "baseTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "candidateSha": null,
+  "finding": "R1-W26-HOST-EXACT-THRESHOLD-01",
+  "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+  "testDeclarations": 1,
+  "outerBudgetMs": 300000,
+  "cooperativeDeadlineMs": 285000,
+  "budgetJustification": "New bounded integration proof must include initial real C08 calculation/bind, fresh host verifier recertification, durable read, same-operation retry and authority revocation. 15 seconds retained for cleanup. No existing budget changed; actual hosted cost unmeasured.",
+  "criterionBindings": [
+    {
+      "id": "WP10.SUC.10",
+      "relation": "Production Portfolio consumer and canonical exact-threshold producer; no result callback or fake evaluator",
+      "acceptance": "PENDING_HOSTED_EVIDENCE"
+    },
+    {
+      "id": "WP10.T01.CHK.02",
+      "relation": "Actual host consumer persists and reads its scoped domain result; no choice/application inference",
+      "acceptance": "PARTIAL_TEST_SCOPE_PENDING_HOSTED_EVIDENCE"
+    },
+    {
+      "id": "WP10.T04.CHK.01",
+      "relation": "New product composition requires fresh candidate CI and independent review",
+      "acceptance": "PENDING"
+    }
+  ],
+  "realBoundaries": [
+    "financialCompositionFixture -> openLocalStore SQLite -> actual source lifecycle and C08 state",
+    "createSfPortfolioServices -> actual createPortfolioProduct and createPortfolioProofVerifier",
+    "Planner issueSource + simulateScenario + decision result write with real canonical outputs",
+    "product.http.sensitivityUnits -> createPlannerSensitivityUnits.issue -> human-authorized criterion registry",
+    "UI admit/validate sf_sensitivity_evaluate + same authenticated Request and operation identity",
+    "product.http.sensitivity -> durable C08 sensitivity and rule binding",
+    "New createSfPortfolioServices instance -> product.http.readSensitivity with a new verifier",
+    "Same-operation retry + authoritative C08 result and version equality",
+    "Revoked fixture authenticator after entering current case scope -> same read/retry refuse without value"
+  ],
+  "fixtureLimits": [
+    "Pending training coverage is an explicit fixture binding, not complete financial coverage.",
+    "Binding actual source scenarios as case alternatives is fixture preparation, not human promotion.",
+    "No injected exactThreshold, sensitivity evaluator, fake engine, verifier callback, mocked result or replacement auth validation.",
+    "Cold service composition reuses the current store and authority; it is not a durable store/process restart.",
+    "Fallback createSfDecisionDomainServices was inspected but is not functionally exercised by this file.",
+    "Product HTTP methods are invoked directly, not through network transport, browser or MCP.",
+    "This file does not replace the foreign WP13 boundary matrix."
+  ],
+  "expectedChecksNotObservedResults": [
+    "Three genuine evaluated points 80/-240, 240/-80, 400/80; unique sample references.",
+    "Exact known-subtotal IEEE threshold between 320 and 321, outside sampled parameter values.",
+    "Conditioned result retains training/pending/known-subtotal disclosure.",
+    "C08 holds five scenarios and exactly one sensitivity; case, choices and prepared changes unchanged.",
+    "Recomposed read and retry return byte-equivalent data and do not change C08 result set/storage version.",
+    "Revoked authority refuses both existing result read and retry for the same case and input."
+  ],
+  "counterMeaning": "beforeEnvironment counts actual calls to the fixture authority environment hook, not physical SQLite connections or wall-clock guarantees.",
+  "hostedResult": null,
+  "currentCI": null,
+  "independentAcceptance": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "localProductExecution": false,
+  "foreignFilesModified": 0,
+  "repoFilesWritten": 0,
+  "preserves171CriteriaAnd7Tasks": true,
+  "validation": [
+    "Static source inspection",
+    "Relative import target existence and byte hashing",
+    "No wildcard/aliased imports",
+    "One whole test file, 40 textual expect sites",
+    "SHA256/Git blob manifests; no runtime loading"
+  ]
+}

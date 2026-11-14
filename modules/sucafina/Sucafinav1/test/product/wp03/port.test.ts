@@ -1,13 +1,27 @@
 import { expect, test } from "bun:test"
+import { mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { openLocalStore } from "../../../runtime/local-store.ts"
+import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
+import { createPlannerResultPersistence } from "../../../product/planner/persistence.ts"
+import { createPlannerCalculationEvidence } from "../../../product/planner/calculation-evidence.ts"
 import { plannerOperationUnits } from "../../../product/planner/sensitivity-units.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
 import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
+import { createPlannerIntervalProof } from "../../../product/planner/interval-proof.ts"
 import type { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
 import { createPlannerScenarioInputs, plannerValueRef } from "../../../product/planner/scenario-inputs.ts"
 import { comparePlannerVersions } from "../../../product/planner/version-comparison.ts"
 import { plannerCapacityPresentation, plannerMonthlyPresentation } from "../../../product/planner/bi.ts"
 import { plannerDifferencePresentation } from "../../../product/planner/bi-difference.ts"
 import { projectHeadcount, prepareHeadcountIncrease, previewHeadcountCommand } from "../../../product/planner/headcount.ts"
+import { plannerCatalogs, plannerCurrencyComposition, previewPlannerCatalog } from "../../../product/planner/catalogs.ts"
+import { previewMonthlyOperation } from "../../../product/planner/monthly-edit.ts"
+import { createPlannerObservedProjection } from "../../../product/planner/observed.ts"
+import { createPlannerForecastInsights } from "../../../product/planner/forecast-insights.ts"
+import { createPlannerOperationResolver, createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -30,17 +44,55 @@ const initial = (): Snapshot => ({
 test("headcount projection follows domain visibility and increase preview is disposable", () => {
   const snapshot = initial()
   const version = (snapshot.data.versions as Record<string, unknown>[])[0]!
-  version.hc = { positions: [{ id: "person", name: "Private Person", include: true, fte: 1, start: 1, end: 12, type: "Employee", location: "Brazil", domain: "IT", rateId: "rate" }], rates: [{ id: "rate", name: "Employee", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {}, inc: 0, incMonth: 1 }
+  version.hc = { positions: [{ id: "person", name: "Private Person", include: true, fte: 1, start: 1, end: 12, type: "Employee", location: "Brazil", domain: "IT", rateId: "rate", talentReview: "Private classification", outlook: "Private talent outlook" }], rates: [{ id: "rate", name: "Employee", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {}, inc: 0, incMonth: 1 }
   const environment = { at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }
   expect(projectHeadcount(snapshot, { id: "none", roles: [], canWrite: false }, environment, "v0")).toBeUndefined()
   const viewer = projectHeadcount(snapshot, { id: "viewer", roles: ["viewer"], canWrite: false }, environment, "v0")
-  expect(viewer?.groups[0]?.monthlyOutlookUsd).toBeNull()
+  expect(viewer?.groups[0]?.monthlyOutlookUsd?.slice(9)).toEqual([10000, 10000, 10000])
+  const viewerSource = projectPlannerSource(snapshot, { id: "viewer", roles: ["viewer"], canWrite: false }, "v0")
+  expect(viewerSource?.restrictedHr).toBe(false)
+  expect(JSON.stringify(viewerSource)).toContain("HR:IT")
+  for (const privateField of ['"rates"', '"rateId"', "Private classification", "Private talent outlook"]) expect(JSON.stringify(viewerSource)).not.toContain(privateField)
   const finance = projectHeadcount(snapshot, actor, environment, "v0")
   expect(finance?.plannedDecemberFte).toBe(1)
   expect(Array.isArray(finance?.groups[0]?.monthlyOutlookUsd)).toBe(true)
+  const withoutRate = structuredClone(snapshot)
+  const missingHc = (withoutRate.data.versions as { hc: { rates: unknown[] } }[])[0]!.hc
+  missingHc.rates = []
+  expect(projectHeadcount(withoutRate, actor, environment, "v0")?.groups[0]).toMatchObject({ costState: "partial", monthlyOutlookUsd: Array(12).fill(null) })
   const command = prepareHeadcountIncrease("v0", 0, 10, 12)!
   const before = structuredClone(snapshot)
   expect(previewHeadcountCommand(snapshot, { id: "hr", roles: ["hr"], canWrite: true }, environment, command)?.result.ok).toBe(true)
+  expect(snapshot).toEqual(before)
+})
+
+test("catalog preview uses the domain without writing or inventing a missing exchange rate", () => {
+  const snapshot = initial()
+  const environment = { at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }
+  expect(plannerCatalogs(snapshot, { id: "none", roles: [], canWrite: false }, environment, "v0")).toBeUndefined()
+  expect(plannerCurrencyComposition(snapshot, actor, environment, "v0", 100, "EUR")).toMatchObject({ usd: null, legacyUsd: 0, missingRate: true })
+  expect(plannerCurrencyComposition(snapshot, actor, environment, "v0", 100, "USD")).toMatchObject({ usd: 100, rate: 1, missingRate: false })
+  const catalogs = plannerCatalogs(snapshot, actor, environment, "v0")
+  expect(catalogs).toMatchObject({ fx: { scope: "version", versionId: "v0", usd: { code: "USD", rate: 1, editable: false } }, shared: { scope: "shared", writable: false } })
+  expect(catalogs?.shared.allocations.every((allocation) => allocation.classificationOnly)).toBe(true)
+  const before = structuredClone(snapshot)
+  const preview = previewPlannerCatalog(snapshot, actor, environment, "v0", { page: "FX rates", action: "save", id: "eur", version: 0, values: { versionId: "v0", cur: "EUR", rate: 1.25 } })
+  expect(preview?.result.ok).toBe(true)
+  expect(preview?.after?.fx.rates.find((rate) => rate.id === "eur")).toMatchObject({ currency: "EUR", rate: 1.25 })
+  expect(snapshot).toEqual(before)
+})
+
+test("annual budget preview retains manual months and does not write the Planner", () => {
+  const snapshot = initial()
+  const version = (snapshot.data.versions as { closed: number; lines: { b: number[]; bm: boolean[] }[] }[])[0]!
+  version.closed = 0
+  version.lines[0]!.b = [200, ...Array(11).fill(0)]
+  version.lines[0]!.bm = [true, ...Array(11).fill(false)]
+  const before = structuredClone(snapshot)
+  const preview = previewMonthlyOperation(snapshot, { id: "admin", roles: ["admin"], canWrite: true }, { at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }, "OPEX", "v0", "line", 0, "annual", 1520)
+  expect(preview.errors).toEqual([])
+  expect(preview.after[0]).toMatchObject({ value: 200, manual: true })
+  expect(preview.after.slice(1).map((month) => month.value)).toEqual(Array(11).fill(120))
   expect(snapshot).toEqual(before)
 })
 
@@ -60,7 +112,21 @@ test("forecast port compares the real engine, and detects source changes", async
   const sources: PlannerSourceHost = { resolveForecastSource: async (reference) => { const evidence = refs.find((ref) => ref.refId === reference); return evidence ? { status: "ok", value: { versionId: reference, evidence } } : { status: "unavailable", reason: "missing" } }, resolveForecastCoverage: async (reference) => coverageMode.available ? { status: "ok", value: { coverageRef: reference === "coverage-scenario" ? "coverage-scenario" : reference === "v0" || reference === "coverage-v0" ? "coverage-v0" : "coverage-v1", basis, assessment: reference === "coverage-scenario" && coverageMode.scenario ? coverageMode.scenario : assessments[reference === "v0" || reference === "coverage-v0" ? 0 : 1] } } : { status: "unavailable", reason: "missing" } }
   const scenarios = { resolve: async (reference: string) => scenarioRecords[reference] ? { status: "ok" as const, value: scenarioRecords[reference] } : { status: "unavailable" as const, reason: "missing" } }
   const port = createPlannerPort({ host, sources, scenarios })
+  const futureHost = { ...host, environment: async () => ({ at: "2028-01-01T00:00:00Z", id: () => "unused", directory: [] }) }
+  const observe = createPlannerObservedProjection({ host: futureHost, sources, planner: createPlannerPort({ host: futureHost, sources }) })
+  const observedPeriod = { start: "2027-01-01", end: "2027-01-31" }
+  const observed = await observe({ valueId: "line:1:actual-usd", period: observedPeriod, evidenceRefs: [refs[0]] }, binding)
+  expect(observed).toMatchObject({ unit: "USD", cutoff: "2027-01-31T23:59:59.999Z", coverage: "complete", projection: { values: expect.arrayContaining([expect.objectContaining({ id: "line:1:actual-usd", value: 40000, unit: "USD", evidenceState: "confirmed" })]) } })
+  expect(await createPlannerObservedProjection({ host, sources, planner: port })({ valueId: "line:1:actual-usd", period: observedPeriod, evidenceRefs: [refs[0]] }, binding)).toBeUndefined()
+  expect(await observe({ valueId: "line:10:forecast", period: { start: "2027-10-01", end: "2027-10-31" }, evidenceRefs: [refs[0]] }, binding)).toBeUndefined()
   const scenarioInputs = createPlannerScenarioInputs({ planner: port, sources, verifyAssumption: async () => ({ status: "unavailable", reason: "human-confirmation-required" }) })
+  const verifyOperations = createPlannerOperationVerifier({ host, planner: port, sources, scenarioInputs })
+  expect(await verifyOperations({ baseRef: "v0", operations: [{ kind: "replace", targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] }, binding)).toBe(true)
+  expect(await verifyOperations({ baseRef: "v0", operations: [{ kind: "replace", targetRef: "missing:11", amount: 124000, currency: "USD" }], assumptions: [] }, binding)).toBe(false)
+  const resolveOperation = createPlannerOperationResolver({ host, planner: port, sources, scenarioInputs })
+  const operation = { kind: "replace" as const, targetRef: "line:11", amount: 124000, currency: "USD" }
+  expect(await resolveOperation({ baseRef: "v0", operation }, binding)).toMatchObject({ status: "ok", value: { operationDigest: digestSfValue(operation), producer: "planner", target: refs[0], sourceVersion: 1 } })
+  expect(await resolveOperation({ baseRef: "v0", operation: { ...operation, targetRef: "missing:11" } }, binding)).toMatchObject({ status: "unavailable" })
   const referenced = await scenarioInputs.resolveAmount(plannerValueRef("v0", "line:11:forecast"), binding)
   expect(referenced).toMatchObject({ status: "ok", value: { amount: 112000, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" }, evidence: refs[0] } })
   expect(await scenarioInputs.resolveAmount(plannerValueRef("v0", "line:1:forecast"), binding)).toMatchObject({ status: "unavailable" })
@@ -69,6 +135,8 @@ test("forecast port compares the real engine, and detects source changes", async
   expect(result.status).toBe("ok")
   if (result.status !== "ok") return
   expect(result.value.knownDifference).toBe(12000)
+  const insights = await createPlannerForecastInsights({ host, planner: port, sources })({ baseRef: "v0", candidateRef: "v1", period, currency: "USD" }, binding)
+  expect(insights).toMatchObject({ status: "ok", value: { budgetMargin: { value: 2000, currency: "USD", evidenceRefs: [refs[1]] }, absentActual: expect.arrayContaining([expect.objectContaining({ valueId: "line:10:actual" })]), responsibles: [] } })
   const waterfall = plannerDifferencePresentation(result.value, "BI02")
   expect(waterfall).toMatchObject({ status: "ok", value: { presentation: { viewId: "BI02", waterfall: { reconciliation: "reconciled" } } } })
   if (waterfall.status === "ok") {
@@ -76,13 +144,15 @@ test("forecast port compares the real engine, and detects source changes", async
     expect(waterfall.value.projection.values.find((value) => value.id === "difference:candidate-total")?.value).toBe(602000)
     expect(waterfall.value.presentation.series.find((series) => series.role === "contribution")?.valueIds).toHaveLength(12)
   }
+  const partialWaterfall = plannerDifferencePresentation({ ...result.value, candidate: { ...result.value.candidate, components: result.value.candidate.components.slice(1) } }, "BI03")
+  expect(partialWaterfall).toMatchObject({ status: "ok", value: { presentation: { waterfall: { reconciliation: "unreconciled" } } } })
   const breakdown = comparePlannerVersions(result.value.baseline, result.value.candidate)
   expect(breakdown.status).toBe("ok")
   expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ state: "matched", difference: 12000 })
   expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ evidenceStates: ["confirmed"], explanation: "The projected amount changed; this comparison does not identify a cause." })
   const changes = comparePlannerVersions({ ...result.value.baseline, components: result.value.baseline.components.slice(0, 1) }, { ...result.value.candidate, components: result.value.candidate.components.slice(1, 2) })
   expect(changes.rows.map((row) => row.state)).toEqual(["removed", "added"])
-  expect(changes.rows.every((row) => row.difference === null)).toBe(true)
+  expect(changes.rows.map((row) => row.difference)).toEqual([-40000, 40000])
   expect(result.value.comparison.comparisonStatus).toBe("conditioned")
   expect(result.value.completeDifference).toBeNull()
   expect(result.value.baseline.components.reduce((sum, component) => sum + (component.amount ?? 0), 0)).toBe(590000)
@@ -104,6 +174,34 @@ test("forecast port compares the real engine, and detects source changes", async
   const simulated = await port.simulateScenario({ baseRef: "v0", operations: [{ kind: "replace", targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] }, binding)
   expect(simulated.status).toBe("ok")
   if (simulated.status === "ok") {
+    const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-planner-calculation-"))
+    const db = await openLocalStore(directory)
+    try {
+      const state = createSfProductState({ persistence: db, createId: () => "state", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "finance", policyVersion: "1", accessRevision: "1" }) })
+      const source = new Request("https://example.test")
+      const decision = { id: "case", incarnation: "inc", version: 1, state: "draft", objective: "decision", currency: "USD", horizon: period, criteria: [], participants: ["finance"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
+      await state.transaction(source, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = decision; return { commit: true, value: true } })
+      const access = { allowed: true }
+      const store = createSfDecisionResultStore({ state, host: { requestFor: () => source, revalidate: async () => access.allowed }, authorizeCase: async () => access.allowed, verifySources: async (_result, evidence) => access.allowed && evidence.every((ref) => ref.kind === "record"), createId: () => "result", now: () => "2026-11-13T00:00:00Z" })
+      const persist = createPlannerResultPersistence({ store, replay: port, resolveCase: async () => ({ status: "ok", value: { id: "case", incarnation: "inc", version: 1 } }) })
+      const request = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] }
+      const saved = await persist({ kind: "scenario", request, result: simulated.value }, "call", binding)
+      expect(saved.status).toBe("ok")
+      if (saved.status === "ok") {
+        const issuer = createPlannerCalculationEvidence({ host: { requestFor: () => source, revalidate: async () => access.allowed }, readForCalculation: store.read, loadRecordOnlyRequest: async () => ({ status: "ok", value: { resultRef: saved.value.resultRef, request, engineVersion: "planner-runtime-v1" } }), replayRecordOnly: port.simulateScenario })
+        const nested = createPlannerCalculationEvidence({ host: { requestFor: () => source, revalidate: async () => access.allowed }, readForCalculation: async () => { throw new Error("nested result must not resolve") }, loadRecordOnlyRequest: async () => ({ status: "ok", value: { resultRef: saved.value.resultRef, request: { ...request, operations: [{ kind: "replace", targetRef: "line:11", replacementRef: "nested-calculation" }] }, engineVersion: "planner-runtime-v1" } }), replayRecordOnly: async () => { throw new Error("nested request must not replay") } })
+        expect(await nested.issue(saved.value.resultRef, binding)).toMatchObject({ status: "unavailable", reason: "calculation-nested-evidence-unavailable" })
+        const issued = await issuer.issue(saved.value.resultRef, binding)
+        expect(issued).toMatchObject({ status: "ok", value: { kind: "calculation", target: { inputDigest: digestSfValue(request), resultDigest: digestSfValue(simulated.value), sourceRefs: [refs[0]] } } })
+        if (issued.status === "ok") expect(await issuer.resolve(issued.value.refId, binding)).toEqual(issued)
+        const version = (storage.state.planner.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!
+        version.lines[0]!.f[10] = 1
+        expect(await issuer.issue(saved.value.resultRef, binding)).toMatchObject({ status: "stale" })
+        version.lines[0]!.f[10] = 112000
+        access.allowed = false
+        expect(await issuer.issue(saved.value.resultRef, binding)).toMatchObject({ status: "denied" })
+      }
+    } finally { await db.dispose(); await rm(directory, { recursive: true, force: true }) }
     expect(simulated.value.knownSubtotal).toBe(602000)
     expect(simulated.value.total).toBeNull()
     expect(simulated.value.costCoverage.coverageState).toBe("pending")
@@ -119,6 +217,8 @@ test("forecast port compares the real engine, and detects source changes", async
       const units = { issue: async () => ({ status: "ok", value: { scenario, metadataDigest: "stable", units: { sourceRefs: [refs[0]], engineVersion: "planner-runtime-v1", parameterUnit: "USD", resultUnit: "USD" } } }) } as unknown as ReturnType<typeof createPlannerSensitivityUnits>
       const compare = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner: port }, request, context)
       const threshold = createPlannerExactThreshold({ units, preview: compare })
+      const proof = await createPlannerIntervalProof({ units, preview: compare })({ scenarioRef: "candidate", parameterBounds: { parameterRef: "line:11", minimum: 0, maximum: 150000, steps: 3 }, criterion: { id: "cost", operator: "gte", value: -57000 } }, "base", binding)
+      expect(proof).toMatchObject({ status: "ok", value: { kind: "planner-direct-usd-v1", minimum: 0, maximum: 150000, parameterRef: "line:11", sourceRefs: [refs[0]] } })
       for (const criterion of [{ id: "cost", operator: "gte" as const, value: -57000, expected: 55000 }, { id: "cost", operator: "lte" as const, value: -97000, expected: 15000 }]) {
         const solved = await threshold({ scenarioRef: "candidate", parameterBounds: { parameterRef: "line:11", minimum: 0, maximum: 150000, steps: 3 }, criterion }, "base", binding)
         expect(solved.status).toBe("ok")
@@ -162,6 +262,31 @@ test("forecast port compares the real engine, and detects source changes", async
   const sourcedRequest = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", replacementRef: "amount-ref" }], assumptions: [{ id: "source", value: 1, evidenceRefs: [refs[0]], state: "confirmed" as const }] }
   const sourcedResult = await sourced.simulateScenario(sourcedRequest, binding)
   expect(sourcedResult).toMatchObject({ status: "ok", value: { knownSubtotal: 602000, comparisonStatus: "conditioned" } })
+  const clock = { ticks: 0 }
+  const advancingHost: DomainPortHost = { ...host, environment: async () => ({ at: new Date(Date.parse("2026-11-13T00:00:00Z") + ++clock.ticks * 1000).toISOString(), id: () => "unused", directory: [] }) }
+  const advancingRead = createPlannerPort({ host: advancingHost, sources })
+  const actualInputs = createPlannerScenarioInputs({ planner: advancingRead, sources })
+  const referenceRequest = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", replacementRef: plannerValueRef("v1", "line:11:forecast") }], assumptions: [] }
+  const advancing = createPlannerPort({ host: advancingHost, sources, evidence, scenarioInputs: actualInputs })
+  expect(await advancing.simulateScenario(referenceRequest, binding)).toMatchObject({ status: "ok", value: { knownSubtotal: 602000 } })
+  expect(clock.ticks).toBeGreaterThan(2)
+  for (const mutation of ["amount", "identity"] as const) {
+    const reads = { count: 0 }
+    const changed = createPlannerPort({ host: advancingHost, sources, evidence, scenarioInputs: { ...actualInputs, resolveAmount: async (reference, context) => {
+      const resolved = await actualInputs.resolveAmount(reference, context)
+      if (++reads.count !== 2 || resolved.status !== "ok") return resolved
+      return { status: "ok", value: mutation === "amount" ? { ...resolved.value, amount: resolved.value.amount + 1 } : { ...resolved.value, source: { ...resolved.value.source, id: "changed-identity" } } }
+    } } })
+    expect(await changed.simulateScenario(referenceRequest, binding)).toMatchObject({ status: "stale", reason: "replacement-changed" })
+  }
+  const mutableForecast = { baseRef: "v0", candidateRef: "v1", period: structuredClone(period), currency: "USD" }
+  const mutatedPort = createPlannerPort({ host: { ...host, revalidate: async () => { mutableForecast.candidateRef = "mutated-after-admission"; return true } }, sources })
+  expect(await mutatedPort.compareForecast(mutableForecast, binding)).toMatchObject({ status: "ok", value: { knownDifference: 12000 } })
+  const mutableScenario = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", amount: 124000, currency: "USD" }], assumptions: [] }
+  const mutatedScenarioPort = createPlannerPort({ host: { ...host, revalidate: async () => { mutableScenario.operations[0]!.amount = 1; return true } }, sources })
+  expect(await mutatedScenarioPort.simulateScenario(mutableScenario, binding)).toMatchObject({ status: "ok", value: { knownSubtotal: 602000 } })
+  expect(await port.compareForecast({ ...mutableForecast, actor: "admin" } as unknown as Parameters<typeof port.compareForecast>[0], binding)).toMatchObject({ status: "needs-input", reason: "invalid-forecast-input" })
+  expect(await port.simulateScenario({ ...referenceRequest, actor: "admin" } as unknown as Parameters<typeof port.simulateScenario>[0], binding)).toMatchObject({ status: "needs-input", reason: "invalid-scenario-input" })
   fresh.value = false
   expect(await sourced.simulateScenario(sourcedRequest, binding)).toMatchObject({ status: "stale", reason: "scenario-evidence-not-current" })
   expect(await port.simulateScenario({ baseRef: "v0", operations: [{ kind: "defer", targetRef: "line:11" }], assumptions: [] }, binding)).toMatchObject({ status: "needs-input" })

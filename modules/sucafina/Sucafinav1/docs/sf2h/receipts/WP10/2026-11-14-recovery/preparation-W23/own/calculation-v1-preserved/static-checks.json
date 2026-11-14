@@ -1,0 +1,918 @@
+{
+  "schema": "wp10-static-checks-v1",
+  "productExecution": false,
+  "imports": [
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "./planner-calculation-history.ts",
+      "resolved": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "./planner-calculation-read-scope.ts",
+      "resolved": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": null,
+      "newOwn": true
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "./planner-calculation-read-scope.ts",
+      "resolved": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": null,
+      "newOwn": true
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "4e92219aae9046891f167502139412bf9c509529",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "4e92219aae9046891f167502139412bf9c509529",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "newOwn": false
+    },
+    {
+      "source": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "target": "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../../../../packages/core/test/fixture/omni-expect.ts",
+      "resolved": "packages/core/test/fixture/omni-expect.ts",
+      "hydrated": false,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "da80511814c86214a963fc721fda4a3a891df147",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../../../../apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "resolved": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1d9a8a9589f3884a083ac09cbc951d4cce0bbdca",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../../../../apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "resolved": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/integration/source-lifecycle.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/integration/source-inventory.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/integration/source-projections.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/contracts/decisions.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/contracts/resident-ai.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../product/ai/run-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../wp12/run-fixture.ts",
+      "resolved": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../runtime/contract.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../runtime/local-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "./composition-test-deadline.ts",
+      "resolved": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "da80511814c86214a963fc721fda4a3a891df147",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../product/integration/source-lifecycle.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../product/integration/source-inventory.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../product/integration/source-projections.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "target": "../../../../runtime/local-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "da80511814c86214a963fc721fda4a3a891df147",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/integration/source-lifecycle.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/integration/source-inventory.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/integration/source-projections.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/contracts/decisions.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/contracts/operations.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "../../../../runtime/local-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "target": "./composition-test-deadline.ts",
+      "resolved": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../../../../packages/core/test/fixture/omni-expect.ts",
+      "resolved": "packages/core/test/fixture/omni-expect.ts",
+      "hydrated": false,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../product/contracts/decisions.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../product/decisions/case-port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../product/planner/scenario-inputs.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/scenario-inputs.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "f2a49fc79880ccb204184c6c83e957bab97b483f",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../product/planner/operation-verifier.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "resolved": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "../../../../../../../apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "resolved": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "./financial-composition-fixture.ts",
+      "resolved": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "newOwn": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "target": "./composition-test-deadline.ts",
+      "resolved": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "hydrated": true,
+      "presentInPublishedTreeOrOwnPackage": true,
+      "baseBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "newOwn": false
+    }
+  ],
+  "budgetChecks": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "beforeBudgets": [
+        "compositionTestDeadline(`planner-calculation.${name}`, 105_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)"
+      ],
+      "afterBudgets": [
+        "compositionTestDeadline(`planner-calculation.${name}`, 105_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)"
+      ],
+      "oldBudgetOccurrencesRetained": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "beforeBudgets": [
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)"
+      ],
+      "afterBudgets": [
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)",
+        "}, 120_000)"
+      ],
+      "oldBudgetOccurrencesRetained": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "beforeBudgets": [
+        "compositionTestDeadline(\"calculation-ancestry-composition\")",
+        "}, 120_000)"
+      ],
+      "afterBudgets": [
+        "compositionTestDeadline(\"calculation-ancestry-composition\")",
+        "}, 120_000)"
+      ],
+      "oldBudgetOccurrencesRetained": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "beforeBudgets": [
+        "compositionTestDeadline(\"planner-recorded-history\", 165_000)",
+        "}, 180_000)",
+        "compositionTestDeadline(\"planner-recorded-history-negative\", 165_000)",
+        "}, 180_000)"
+      ],
+      "afterBudgets": [
+        "compositionTestDeadline(\"planner-recorded-history\", 165_000)",
+        "}, 180_000)",
+        "compositionTestDeadline(\"planner-recorded-history-negative\", 165_000)",
+        "}, 180_000)"
+      ],
+      "oldBudgetOccurrencesRetained": true
+    }
+  ],
+  "freshRecordSources": {
+    "byteEqualToFrozenW22": true,
+    "sha256": "9f00ce378c07fa0af2e15498aa020e70df53c8082172642bcf8f2b51f0fe72ab"
+  },
+  "newParameterConsumers": [
+    {
+      "parameter": "verifyCurrentPlannerRecords",
+      "definition": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "soleInjection": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "optionalFallback": "original BCS context for native, mixed records or absent callback"
+    }
+  ],
+  "newHelperConsumers": [
+    "apps/cli/src/sucafina-product/planner-calculation-services.ts"
+  ],
+  "foreignProductWrites": false,
+  "businessServicesWrites": false,
+  "allImportsExist": true,
+  "checksKind": "text reads, full-tree presence, diffs and hashes only; not typecheck or product tests"
+}

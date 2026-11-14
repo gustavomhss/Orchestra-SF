@@ -1,0 +1,2230 @@
+{
+  "productSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "snapshotSha": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+  "counts": {
+    "pass": 188,
+    "fail": 11,
+    "expects": 3964,
+    "tests": 199,
+    "files": 29,
+    "durationSeconds": 670.02,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp00/contract-freeze.test.ts": {
+      "pass": 4,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts": {
+      "pass": 8,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts": {
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/historical-reader.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/contribution-reader.test.ts": {
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/contribution-builder.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts": {
+      "pass": 20,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/run-store.test.ts": {
+      "pass": 22,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/continuation.test.ts": {
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/analysis.test.ts": {
+      "pass": 21,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts": {
+      "pass": 7,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts": {
+      "pass": 0,
+      "fail": 5,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts": {
+      "pass": 6,
+      "fail": 4,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts": {
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts": {
+      "pass": 19,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts": {
+      "pass": 10,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "tests": [
+    {
+      "status": "fail",
+      "name": "the contract freeze binds current artifact bytes without hashing itself",
+      "durationMs": 15.76,
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "rawLogLine": 855,
+      "kind": "named-test",
+      "context": [
+        "    node --experimental-strip-types --test \"${args[@]}\"",
+        "    ;;",
+        "esac",
+        "shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+        "env:",
+        "  ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1",
+        "  ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+        "  HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so",
+        "  HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor",
+        "  ORCHESTRA_OMNI_CONTROL_NONCE: 7cd023f3cd15545e0f2c79fc6b0f094e",
+        "  ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: false",
+        "  ORCHESTRA_OMNI_CONTROL: declared",
+        "  PACKAGE: sucafina",
+        "  DIRECTORY: modules/sucafina",
+        "  RUNNER: bun",
+        "##[endgroup]",
+        "bun test v1.3.14 (0d9b296a)",
+        "",
+        "Sucafinav1/test/product/wp00/contract-freeze.test.ts:",
+        "14 |   expect(freeze.planningSha).toBe(\"dbf9547211d9b0fade619790de7c19c0869b7c7d\")",
+        "15 |   expect(freeze.canonicalSha256).toBe(\"703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba\")",
+        "16 |   expect(Object.hasOwn(freeze.artifacts, \"freeze-v1.json\")).toBe(false)",
+        "17 |   for (const [file, digest] of Object.entries(freeze.artifacts)) {",
+        "18 |     const bytes = await Bun.file(path.join(import.meta.dir, \"../../../product/contracts\", file)).arrayBuffer()",
+        "19 |     expect(new Bun.CryptoHasher(\"sha256\").update(bytes).digest(\"hex\")).toBe(digest)",
+        "                                                                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772\"",
+        "Received: \"42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893\"",
+        "",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts:19:72)",
+        "(fail) the contract freeze binds current artifact bytes without hashing itself [15.76ms]",
+        "(pass) all seventeen contracts identify actual public exports, writers and consumers [2.99ms]",
+        "(pass) five profiles and eighteen skills have schemas, consumers and proof assignments [0.66ms]",
+        "(pass) eight packs and every operation have a declared producer and effective loaded-skill route [1.47ms]",
+        "(pass) C08 assigns every stored field to one namespace or to the provider [0.21ms]"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "all seventeen contracts identify actual public exports, writers and consumers",
+      "durationMs": 2.99,
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "rawLogLine": 856,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "five profiles and eighteen skills have schemas, consumers and proof assignments",
+      "durationMs": 0.66,
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "rawLogLine": 857,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "eight packs and every operation have a declared producer and effective loaded-skill route",
+      "durationMs": 1.47,
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "rawLogLine": 858,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "C08 assigns every stored field to one namespace or to the provider",
+      "durationMs": 0.21,
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "rawLogLine": 859,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "all 28 baseline capabilities retain a real registered entry and an assigned destination",
+      "durationMs": 0.49,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 862,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "new requirements and journeys retain explicit owners without claiming execution",
+      "durationMs": 0.41,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 863,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native domain role fixtures retain restricted and unaffiliated entry behavior",
+      "durationMs": 0.46,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 864,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the real Planner projects the declared monthly corpus and replaces the license once",
+      "durationMs": 6.73,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 865,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the corpus preserves stale edits and denies a viewer through the real Planner command",
+      "durationMs": 1.7,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 866,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the real quote assessor consumes FX02 inputs, preserves submitted FX and excludes C",
+      "durationMs": 0.96,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 867,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a real procurement return and resubmission retain separate history and reject a stale retry",
+      "durationMs": 2.64,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 868,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "both real report renderers retain all 20 diagnostic corpus records once",
+      "durationMs": 209.3,
+      "file": "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "rawLogLine": 869,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+      "durationMs": 597.62,
+      "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "rawLogLine": 872,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles normal without repeating Planner effects",
+      "durationMs": 88.19,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 875,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles lost-response without repeating Planner effects",
+      "durationMs": 78.8,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 876,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles revoked without repeating Planner effects",
+      "durationMs": 78.56,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 877,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles receipt-removed without repeating Planner effects",
+      "durationMs": 114.95,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 878,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles receipt-replaced without repeating Planner effects",
+      "durationMs": 111.75,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 879,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles receipt-collision without repeating Planner effects",
+      "durationMs": 110.07,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 880,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles receipt-removed-late without repeating Planner effects",
+      "durationMs": 108.4,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 881,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles receipt-replaced-late without repeating Planner effects",
+      "durationMs": 108.6,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 882,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles receipt-collision-late without repeating Planner effects",
+      "durationMs": 106.26,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rawLogLine": 883,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "historical contribution survives SQLite reopen and requires current access to case and sources",
+      "durationMs": 97.92,
+      "file": "Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "rawLogLine": 886,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "consumer opens the stored result and refuses revoked or mismatched provenance",
+      "durationMs": 6.43,
+      "file": "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "rawLogLine": 889,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real C08 current reader fences verifier aliases and returns private output and run copies",
+      "durationMs": 797.92,
+      "file": "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "rawLogLine": 890,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "host builds persisted provenance from the observed assistant model and skill receipt",
+      "durationMs": 1.03,
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "rawLogLine": 893,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "review provenance is assigned by the host for an independent run",
+      "durationMs": 0.59,
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "rawLogLine": 894,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "durable output must belong to the active skill and observed model",
+      "durationMs": 0.45,
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "rawLogLine": 895,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "standalone reviewer conditions require the same independent host-owned target as a critique",
+      "durationMs": 1.47,
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "rawLogLine": 896,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "malformed review payloads fail while missing or reused review authority stays denied",
+      "durationMs": 0.88,
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "rawLogLine": 897,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication refuses a resealed command changed by verification without altering real C08 state",
+      "durationMs": 135.93,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 900,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a command resealed after a stale authorization or write still settles only the original metadata through real C08",
+      "durationMs": 143.51,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 901,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "source changed strictly between publication authorization and write settles the original output as stale",
+      "durationMs": 44.25,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 902,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "source changed after the ready commit downgrades only the exact persisted output",
+      "durationMs": 53.54,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 903,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a closed strict source scope settles a pre-write run through current lifecycle without content",
+      "durationMs": 87.59,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 904,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a closed strict source scope marks the exact committed output stale through metadata only",
+      "durationMs": 57.02,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 905,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "revocation of current lifecycle authority prevents stale metadata writes after strict scope closes",
+      "durationMs": 84.46,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 906,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "lifecycle fallback cannot overwrite a concurrent cancellation at the C08 boundary",
+      "durationMs": 52.0,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 907,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "ready metadata fallback refuses injected run or output changes between its read and C08 commit",
+      "durationMs": 112.29,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 908,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stale observation refuses a replacement publication before the lifecycle callback begins",
+      "durationMs": 230.52,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 909,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stale reconciliation cannot overwrite a concurrent cancellation at the C08 commit boundary",
+      "durationMs": 50.2,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 910,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "ready reconciliation validates the original output bytes inside C08 and never overwrites a replacement",
+      "durationMs": 51.15,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 911,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "unpublished AlternativeDraft without private capture settles stale without persisting a payload or new grant",
+      "durationMs": 41.96,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 912,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "revocation or a denied historical-source validator prevents stale preservation",
+      "durationMs": 76.24,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 913,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "invalid model payload and ungranted kind finish failed through the real C08 host",
+      "durationMs": 83.28,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 914,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication validation failure settles failed under new authority, and simultaneous revocation prevents the write",
+      "durationMs": 73.65,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 915,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "invalid collected model output cannot settle through revoked authority",
+      "durationMs": 29.07,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 916,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication unavailable or needs-input settles through a fresh C08 authority, and revocation prevents it",
+      "durationMs": 165.86,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 917,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a late unavailable or needs-input signal cannot overwrite a committed ready output",
+      "durationMs": 99.52,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 918,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication denied or conflict does not create a terminal lifecycle write",
+      "durationMs": 66.24,
+      "file": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "rawLogLine": 919,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "run is durably prepared without a fabricated skill receipt and rejects a stale transition",
+      "durationMs": 22.32,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 922,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "an invalid native receipt cannot move a preparing run to queued",
+      "durationMs": 12.07,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 923,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "analysis host binds validation to the actual stored skill receipt",
+      "durationMs": 19.49,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 924,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stale run is preserved when its case advances",
+      "durationMs": 26.91,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 925,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "commit validator cannot mutate the storage snapshot",
+      "durationMs": 8.25,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 926,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "new runs require a valid complete-intent digest",
+      "durationMs": 5.6,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 927,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "run admission rejects a contribution version changed during preflight",
+      "durationMs": 11.03,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 928,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stale output is preserved with its original provenance and cannot be published as current",
+      "durationMs": 42.71,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 929,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real C08 host cancels an independent review using its durable target even when its source becomes stale",
+      "durationMs": 105.36,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 930,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "read-only preflight cannot rewrite the admitted run",
+      "durationMs": 17.54,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 931,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a commit verifier cannot replace an already validated contribution",
+      "durationMs": 31.35,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 932,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "C08 keeps its admitted record when the caller changes an alias during final write authorization",
+      "durationMs": 10.65,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 933,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "C08 keeps validated contribution bytes when the caller changes an alias during final write authorization",
+      "durationMs": 35.23,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 934,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication pins its validated output before awaiting mutation authority",
+      "durationMs": 31.0,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 935,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "read rejects a retained preflight reference changed during final authorization",
+      "durationMs": 11.44,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 936,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "durable cancellation wins a publication that is still validating its source",
+      "durationMs": 48.83,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 937,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "late publication failure cannot overwrite a ready result",
+      "durationMs": 48.39,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 938,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "lifecycle access survives source unavailability while current case membership and principal remain mandatory",
+      "durationMs": 22.51,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 939,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "terminal settlement persists without source preflight and still requires the host commit authority",
+      "durationMs": 115.16,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 940,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a committed ready output can become stale only with its exact stored bytes",
+      "durationMs": 54.69,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 941,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "review cancellation validates its durable target before committing even without an attached native runtime",
+      "durationMs": 43.86,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 942,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real C08 analysis progress fences host verification aliases and returns private ready content",
+      "durationMs": 216.53,
+      "file": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "rawLogLine": 943,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation admits a fresh run with exact human-response lineage and a new session/receipt",
+      "durationMs": 2.19,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 946,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation refuses a response changed between initial resolution and pre-admission recheck",
+      "durationMs": 0.43,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 947,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation refuses an admitted run whose returned receipt differs from its persisted receipt",
+      "durationMs": 0.6,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 948,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation does not admit after current authority is revoked",
+      "durationMs": 0.34,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 949,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation withholds the new run if authority is revoked after admission",
+      "durationMs": 1.0,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 950,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation binds the original command before any authority callback or admission",
+      "durationMs": 6.92,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 951,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation isolates the admission command and refuses its alteration without mutating caller input",
+      "durationMs": 1.7,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 952,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation withholds admitted aliases changed during final authorization and returns an isolated result",
+      "durationMs": 39.6,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 953,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "continuation rejects stale prior versions and non-UI contexts before resolving a response",
+      "durationMs": 0.4,
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "rawLogLine": 954,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "cancellation refuses a session different from the loaded skill receipt",
+      "durationMs": 0.15,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 957,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "cancellation persists before interrupting and permits a source-stale run under current authority",
+      "durationMs": 0.57,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 958,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "revocation after durable cancellation prevents interruption through an expired authority",
+      "durationMs": 0.35,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 959,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a routine result cannot start another routine",
+      "durationMs": 0.25,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 960,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "tampered contribution digest is rejected before publication",
+      "durationMs": 0.45,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 961,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a review cannot reuse the author's run or session",
+      "durationMs": 0.24,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 962,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "analysis rejects invalid skill input before host admission",
+      "durationMs": 0.28,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 963,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "revoked access after a native wait blocks collection and publication",
+      "durationMs": 0.44,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 964,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "analysis uses separate host authority scopes before and after the native wait",
+      "durationMs": 2.17,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 965,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "analysis rejects model-supplied identity before host admission",
+      "durationMs": 0.17,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 966,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "admitted runs persist non-executing native outcomes under fresh authority",
+      "durationMs": 0.72,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 967,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "revoked authority prevents settling an admitted run",
+      "durationMs": 0.44,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 968,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real SQLite and C08 reject a changed Planner source and persist settlement after reopening",
+      "durationMs": 619.54,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 969,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication settles an exact output after a stale post-write check using fresh authority",
+      "durationMs": 1.32,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 970,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "terminal metadata uses current lifecycle authority after the execution source scope closes",
+      "durationMs": 1.21,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 971,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "lifecycle progress cannot use its current metadata authority to return a ready payload",
+      "durationMs": 0.82,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 972,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication pins its envelope across authorization and later write or preservation scopes",
+      "durationMs": 1.53,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 973,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication refuses changed load provenance even when a verifier reseals the contribution",
+      "durationMs": 0.51,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 974,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication pins the independent review target until its write scope",
+      "durationMs": 0.7,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 975,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "ready read returns copies that retained host references cannot rewrite",
+      "durationMs": 1.1,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 976,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "ready read pins the scoped result and isolates the final returned copy",
+      "durationMs": 2.14,
+      "file": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "rawLogLine": 977,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native host ownership cleanup: dispose",
+      "durationMs": 4068.14,
+      "file": "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "rawLogLine": 1001,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native host ownership cleanup: interrupt-failure",
+      "durationMs": 2903.12,
+      "file": "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "rawLogLine": 1020,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native host ownership cleanup: abort-attach",
+      "durationMs": 2503.31,
+      "file": "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "rawLogLine": 1039,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native host ownership cleanup: revoke-attach",
+      "durationMs": 2329.26,
+      "file": "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "rawLogLine": 1058,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native host ownership cleanup: throw-attach",
+      "durationMs": 2302.88,
+      "file": "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "rawLogLine": 1077,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native host ownership cleanup: throw-announcement",
+      "durationMs": 2483.51,
+      "file": "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "rawLogLine": 1096,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "native host ownership cleanup: pending-interruption",
+      "durationMs": 2366.9,
+      "file": "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "rawLogLine": 1115,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "installed routine publication reads the authenticated Relay store, real skill bytes and required controls",
+      "durationMs": 23.8,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 1120,
+      "kind": "named-test",
+      "context": [
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[14:18:47.354] INFO (#9800): all LSPs are disabled",
+        "[14:18:47.368] INFO (#9534): booting location services {",
+        "  directory: \"/tmp/sf-host-disposal-5iimcO\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: throw-announcement [2483.51ms]",
+        "[14:18:49.742] INFO (#11402): watcher backend {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  platform: \"linux\",",
+        "  backend: \"inotify\",",
+        "}",
+        "[14:18:49.742] INFO (#11551): project copy refresh started {",
+        "  projectID: \"global\",",
+        "}",
+        "[14:18:49.743] INFO (#11551): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[14:18:49.758] INFO (#11668): all LSPs are disabled",
+        "[14:18:49.773] INFO (#11402): booting location services {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: pending-interruption [2366.90ms]",
+        "",
+        "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts:",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed routine publication reads the authenticated Relay store, real skill bytes and required controls [23.80ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters [16.12ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution"
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters",
+      "durationMs": 16.12,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 1123,
+      "kind": "named-test",
+      "context": [
+        "[14:18:47.354] INFO (#9800): all LSPs are disabled",
+        "[14:18:47.368] INFO (#9534): booting location services {",
+        "  directory: \"/tmp/sf-host-disposal-5iimcO\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: throw-announcement [2483.51ms]",
+        "[14:18:49.742] INFO (#11402): watcher backend {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  platform: \"linux\",",
+        "  backend: \"inotify\",",
+        "}",
+        "[14:18:49.742] INFO (#11551): project copy refresh started {",
+        "  projectID: \"global\",",
+        "}",
+        "[14:18:49.743] INFO (#11551): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[14:18:49.758] INFO (#11668): all LSPs are disabled",
+        "[14:18:49.773] INFO (#11402): booting location services {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: pending-interruption [2366.90ms]",
+        "",
+        "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts:",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed routine publication reads the authenticated Relay store, real skill bytes and required controls [23.80ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters [16.12ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended [16.45ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution"
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended",
+      "durationMs": 16.45,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 1126,
+      "kind": "named-test",
+      "context": [
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: throw-announcement [2483.51ms]",
+        "[14:18:49.742] INFO (#11402): watcher backend {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  platform: \"linux\",",
+        "  backend: \"inotify\",",
+        "}",
+        "[14:18:49.742] INFO (#11551): project copy refresh started {",
+        "  projectID: \"global\",",
+        "}",
+        "[14:18:49.743] INFO (#11551): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[14:18:49.758] INFO (#11668): all LSPs are disabled",
+        "[14:18:49.773] INFO (#11402): booting location services {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: pending-interruption [2366.90ms]",
+        "",
+        "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts:",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed routine publication reads the authenticated Relay store, real skill bytes and required controls [23.80ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters [16.12ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended [16.45ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses another project before a store read and revokes retained providers on disposal [17.38ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution"
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "installed publication refuses another project before a store read and revokes retained providers on disposal",
+      "durationMs": 17.38,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 1129,
+      "kind": "named-test",
+      "context": [
+        "[14:18:49.742] INFO (#11402): watcher backend {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  platform: \"linux\",",
+        "  backend: \"inotify\",",
+        "}",
+        "[14:18:49.742] INFO (#11551): project copy refresh started {",
+        "  projectID: \"global\",",
+        "}",
+        "[14:18:49.743] INFO (#11551): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[14:18:49.758] INFO (#11668): all LSPs are disabled",
+        "[14:18:49.773] INFO (#11402): booting location services {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: pending-interruption [2366.90ms]",
+        "",
+        "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts:",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed routine publication reads the authenticated Relay store, real skill bytes and required controls [23.80ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters [16.12ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended [16.45ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses another project before a store read and revokes retained providers on disposal [17.38ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) publication author comes from the real registered Core session and refuses archive, removal and lease revocation [16.28ms]",
+        ""
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "publication author comes from the real registered Core session and refuses archive, removal and lease revocation",
+      "durationMs": 16.28,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 1132,
+      "kind": "named-test",
+      "context": [
+        "  backend: \"inotify\",",
+        "}",
+        "[14:18:49.742] INFO (#11551): project copy refresh started {",
+        "  projectID: \"global\",",
+        "}",
+        "[14:18:49.743] INFO (#11551): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[14:18:49.758] INFO (#11668): all LSPs are disabled",
+        "[14:18:49.773] INFO (#11402): booting location services {",
+        "  directory: \"/tmp/sf-host-disposal-babPrG\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) native host ownership cleanup: pending-interruption [2366.90ms]",
+        "",
+        "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts:",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed routine publication reads the authenticated Relay store, real skill bytes and required controls [23.80ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters [16.12ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended [16.45ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) installed publication refuses another project before a store read and revokes retained providers on disposal [17.38ms]",
+        "error: Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "Task requires an exported process-global service: @orchestra/v2/SessionExecution",
+        "(fail) publication author comes from the real registered Core session and refuses archive, removal and lease revocation [16.28ms]",
+        "",
+        "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts:",
+        "(pass) routine host registers every producer descriptor and refuses absent native admission explicitly [1.86ms]",
+        "(pass) routine host consumes pinned publication and native receipts without promoting a reference to completion [59.04ms]"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "routine host registers every producer descriptor and refuses absent native admission explicitly",
+      "durationMs": 1.86,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "rawLogLine": 1135,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "routine host consumes pinned publication and native receipts without promoting a reference to completion",
+      "durationMs": 59.04,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "rawLogLine": 1136,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "routine publication requires an installed public port and revokes retained providers on replacement or disposal",
+      "durationMs": 14.85,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "rawLogLine": 1137,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "an invocation confines real proof reuse to its UTC day and rejects revocation during its final clock read",
+      "durationMs": 284.43,
+      "file": "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "rawLogLine": 1140,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Alternative final fence serializes an actual case writer and rejects its changed proof",
+      "durationMs": 151.84,
+      "file": "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "rawLogLine": 1143,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Alternative final fence serializes an actual planner writer and rejects its changed proof",
+      "durationMs": 147.9,
+      "file": "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "rawLogLine": 1146,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "review and BI links retain the actual page's scoped year and selected month",
+      "durationMs": 47.22,
+      "file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "rawLogLine": 1149,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a non-Budget review update preserves topic, period, notes and predecessor after explicit new record selection",
+      "durationMs": 3944.65,
+      "file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "rawLogLine": 1150,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "saved views accept only each page's real filter values and authorized record identities",
+      "durationMs": 1.0,
+      "file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "rawLogLine": 1151,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "saved-view authorization and BI choice reads stop after actual host revocation",
+      "durationMs": 53.1,
+      "file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "rawLogLine": 1152,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "dossier composition retains actual authorized proposal facts and fences a changed second observation",
+      "durationMs": 626.33,
+      "file": "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "rawLogLine": 1155,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "dossier does not turn an uninitialized protected document catalog into an empty authorized selection",
+      "durationMs": 133.49,
+      "file": "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "rawLogLine": 1156,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the internal dossier reader refuses a real Request changed after authorized discovery",
+      "durationMs": 296.7,
+      "file": "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "rawLogLine": 1157,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Chromium renders the real dossier commercial terms and next steps without financial writes",
+      "durationMs": 2135.18,
+      "file": "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "rawLogLine": 1159,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "source fences join the real C08 read without opening a nested writer or changing stored state",
+      "durationMs": 36.76,
+      "file": "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "rawLogLine": 1164,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "source fences reject every domain revision and unversioned C08 changes across either authorization boundary",
+      "durationMs": 37.22,
+      "file": "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "rawLogLine": 1165,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "source fences reject changed Requests, all headers, aborted calls and revoked real authority before returning a locked proof",
+      "durationMs": 211.65,
+      "file": "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "rawLogLine": 1166,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "BI HTTP opens each explicitly chosen real Planner origin and rejects absent or outside-row choices",
+      "durationMs": 506.71,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts",
+      "rawLogLine": 1183,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real lifecycle authority settles non-executing states after source loss without granting fresh data or replay",
+      "durationMs": 245.79,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "rawLogLine": 1186,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "lifecycle forwards an isolated stale observation and retains only the exact already-stored output under CAS",
+      "durationMs": 128.39,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "rawLogLine": 1187,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "lifecycle rejects current authority loss, released leases, changed case identity and abort without metadata writes",
+      "durationMs": 91.23,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "rawLogLine": 1188,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "lifecycle cannot substitute for the separate current human cancellation intent",
+      "durationMs": 70.54,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "rawLogLine": 1189,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector",
+      "durationMs": 149.16,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "rawLogLine": 1194,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period",
+      "durationMs": 877.77,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1215,
+      "kind": "named-test",
+      "context": [
+        "(pass) BI HTTP opens each explicitly chosen real Planner origin and rejects absent or outside-row choices [506.71ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts:",
+        "(pass) real lifecycle authority settles non-executing states after source loss without granting fresh data or replay [245.79ms]",
+        "(pass) lifecycle forwards an isolated stale observation and retains only the exact already-stored output under CAS [128.39ms]",
+        "(pass) lifecycle rejects current authority loss, released leases, changed case identity and abort without metadata writes [91.23ms]",
+        "(pass) lifecycle cannot substitute for the separate current human cancellation intent [70.54ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts:",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"analysis-run-context\",\"phase\":\"lifecycle.after-case-advance\",\"state\":\"started\",\"elapsedMs\":42}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"analysis-run-context\",\"phase\":\"lifecycle.after-case-advance\",\"state\":\"returned\",\"phaseMs\":25,\"elapsedMs\":66,\"aborted\":false}",
+        "(pass) Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector [149.16ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:",
+        "31 | ",
+        "32 | const origin = \"https://example.test\", mount = \"/sucafina\"",
+        "33 | const period = { start: \"2026-01-01\", end: \"2026-12-31\" }",
+        "34 | ",
+        "35 | function ok<T>(value: PortResult<T>, name: string): T {",
+        "36 |   expect(value.status).toBe(\"ok\")",
+        "                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"ok\"",
+        "Received: \"unavailable\"",
+        "",
+        "      at ok (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:36:24)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:97:20)",
+        "      at async fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:116:32)",
+        "      at async procurementFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:126:19)",
+        "      at async procurementSession (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:182:19)",
+        "      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:193:49)",
+        "(fail) Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period [877.77ms]",
+        "31 | ",
+        "32 | const origin = \"https://example.test\", mount = \"/sucafina\"",
+        "33 | const period = { start: \"2026-01-01\", end: \"2026-12-31\" }",
+        "34 | "
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "Procurement destination refuses a different period, actor and actually changed source after its canonical positive",
+      "durationMs": 838.92,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1234,
+      "kind": "named-test",
+      "context": [
+        "36 |   expect(value.status).toBe(\"ok\")",
+        "                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"ok\"",
+        "Received: \"unavailable\"",
+        "",
+        "      at ok (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:36:24)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:97:20)",
+        "      at async fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:116:32)",
+        "      at async procurementFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:126:19)",
+        "      at async procurementSession (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:182:19)",
+        "      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:193:49)",
+        "(fail) Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period [877.77ms]",
+        "31 | ",
+        "32 | const origin = \"https://example.test\", mount = \"/sucafina\"",
+        "33 | const period = { start: \"2026-01-01\", end: \"2026-12-31\" }",
+        "34 | ",
+        "35 | function ok<T>(value: PortResult<T>, name: string): T {",
+        "36 |   expect(value.status).toBe(\"ok\")",
+        "                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"ok\"",
+        "Received: \"unavailable\"",
+        "",
+        "      at ok (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:36:24)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:97:20)",
+        "      at async fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:116:32)",
+        "      at async procurementFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:126:19)",
+        "      at async procurementSession (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:182:19)",
+        "      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:234:49)",
+        "(fail) Procurement destination refuses a different period, actor and actually changed source after its canonical positive [838.92ms]",
+        "31 | ",
+        "32 | const origin = \"https://example.test\", mount = \"/sucafina\"",
+        "33 | const period = { start: \"2026-01-01\", end: \"2026-12-31\" }",
+        "34 | "
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "Procurement period scope rejects overlap and header replacement and cleans up after throw or lease finish",
+      "durationMs": 856.3,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1253,
+      "kind": "named-test",
+      "context": [
+        "36 |   expect(value.status).toBe(\"ok\")",
+        "                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"ok\"",
+        "Received: \"unavailable\"",
+        "",
+        "      at ok (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:36:24)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:97:20)",
+        "      at async fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:116:32)",
+        "      at async procurementFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:126:19)",
+        "      at async procurementSession (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:182:19)",
+        "      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:234:49)",
+        "(fail) Procurement destination refuses a different period, actor and actually changed source after its canonical positive [838.92ms]",
+        "31 | ",
+        "32 | const origin = \"https://example.test\", mount = \"/sucafina\"",
+        "33 | const period = { start: \"2026-01-01\", end: \"2026-12-31\" }",
+        "34 | ",
+        "35 | function ok<T>(value: PortResult<T>, name: string): T {",
+        "36 |   expect(value.status).toBe(\"ok\")",
+        "                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"ok\"",
+        "Received: \"unavailable\"",
+        "",
+        "      at ok (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:36:24)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:97:20)",
+        "      at async fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:116:32)",
+        "      at async procurementFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:126:19)",
+        "      at async procurementSession (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:182:19)",
+        "      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:260:46)",
+        "(fail) Procurement period scope rejects overlap and header replacement and cleans up after throw or lease finish [856.30ms]",
+        "31 | ",
+        "32 | const origin = \"https://example.test\", mount = \"/sucafina\"",
+        "33 | const period = { start: \"2026-01-01\", end: \"2026-12-31\" }",
+        "34 | "
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "Procurement secondary read cleans both scopes on exception and refuses real access revocation before display",
+      "durationMs": 844.46,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1272,
+      "kind": "named-test",
+      "context": [
+        "36 |   expect(value.status).toBe(\"ok\")",
+        "                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"ok\"",
+        "Received: \"unavailable\"",
+        "",
+        "      at ok (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:36:24)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:97:20)",
+        "      at async fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:116:32)",
+        "      at async procurementFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:126:19)",
+        "      at async procurementSession (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:182:19)",
+        "      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:260:46)",
+        "(fail) Procurement period scope rejects overlap and header replacement and cleans up after throw or lease finish [856.30ms]",
+        "31 | ",
+        "32 | const origin = \"https://example.test\", mount = \"/sucafina\"",
+        "33 | const period = { start: \"2026-01-01\", end: \"2026-12-31\" }",
+        "34 | ",
+        "35 | function ok<T>(value: PortResult<T>, name: string): T {",
+        "36 |   expect(value.status).toBe(\"ok\")",
+        "                            ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: \"ok\"",
+        "Received: \"unavailable\"",
+        "",
+        "      at ok (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:36:24)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:97:20)",
+        "      at async fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:116:32)",
+        "      at async procurementFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:126:19)",
+        "      at async procurementSession (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:182:19)",
+        "      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:299:49)",
+        "(fail) Procurement secondary read cleans both scopes on exception and refuses real access revocation before display [844.46ms]",
+        "(pass) actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key [50509.70ms]",
+        "(pass) an action ID, a different period or actor and missing exact content grant cannot bypass current work membership [8132.24ms]",
+        "(pass) the current work reader refuses a real session revocation after the canonical thread read [12511.62ms]",
+        "(pass) render egress rejects header replacement after the last real C08 work witness [16589.93ms]"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key",
+      "durationMs": 50509.7,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1273,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "an action ID, a different period or actor and missing exact content grant cannot bypass current work membership",
+      "durationMs": 8132.24,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1274,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the current work reader refuses a real session revocation after the canonical thread read",
+      "durationMs": 12511.62,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1275,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "render egress rejects header replacement after the last real C08 work witness",
+      "durationMs": 16589.93,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1276,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a complete C08 witness detects preference or case mutation with the same live Request",
+      "durationMs": 16616.88,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1277,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real registered C17 bindings have stable private work refs across key reload and isolated actor, case and key rotation",
+      "durationMs": 955.76,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 1278,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "composed C12 preserves the original, receipt and case read after apply and rejects broken provenance",
+      "durationMs": 16451.8,
+      "file": "Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+      "rawLogLine": 1281,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "registered condition IDs select exact material changes and retain the full original criterion set",
+      "durationMs": 9472.1,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 1284,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "material signals reconcile durably once and do not resolve without an actual resolution proof",
+      "durationMs": 31421.06,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 1285,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a real source write between selection and C08 commit prevents condition persistence",
+      "durationMs": 217.31,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 1286,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "outcomes use an explicitly selected closed-month actual and never substitute the latest source",
+      "durationMs": 10957.01,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 1287,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private memory routes bind writes to the human intent and reread authority at egress",
+      "durationMs": 453.37,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 1288,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "material selection parsing rejects invented scope and duplicated identities",
+      "durationMs": 7.69,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 1289,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP traverses native lease and refuses a normalized configured namesake",
+      "durationMs": 25.88,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1292,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses revoke during real client.close without egress or capture",
+      "durationMs": 4.27,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1293,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses generation during real client.close without egress or capture",
+      "durationMs": 1.94,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1294,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses abort during real client.close without egress or capture",
+      "durationMs": 1.84,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1295,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses configuration during real client.close without egress or capture",
+      "durationMs": 1.76,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1296,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses revoke during real server.close without egress or capture",
+      "durationMs": 1.71,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1297,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses generation during real server.close without egress or capture",
+      "durationMs": 1.62,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1298,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses abort during real server.close without egress or capture",
+      "durationMs": 1.86,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1299,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list refuses configuration during real server.close without egress or capture",
+      "durationMs": 1.72,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1300,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses revoke during real client.close without egress or capture",
+      "durationMs": 2.36,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1301,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses generation during real client.close without egress or capture",
+      "durationMs": 1.69,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1302,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses abort during real client.close without egress or capture",
+      "durationMs": 1.75,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1303,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses configuration during real client.close without egress or capture",
+      "durationMs": 1.92,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1304,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses revoke during real server.close without egress or capture",
+      "durationMs": 1.92,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1305,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses generation during real server.close without egress or capture",
+      "durationMs": 1.86,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1306,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses abort during real server.close without egress or capture",
+      "durationMs": 2.4,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1307,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call refuses configuration during real server.close without egress or capture",
+      "durationMs": 2.25,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1308,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP list delivers unchanged authority only after both real SDK closes and finishes its lease",
+      "durationMs": 1.95,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1309,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private MCP call delivers unchanged authority only after both real SDK closes and finishes its lease",
+      "durationMs": 1.59,
+      "file": "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "rawLogLine": 1310,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "decision controls use authorized cases and real absence, and revalidate every surface and read",
+      "durationMs": 3207.83,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "rawLogLine": 1313,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "human coverage POSTs from all workbench surfaces share the real CAS and identical-retry receipt",
+      "durationMs": 1994.25,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "rawLogLine": 1314,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Chromium navigates the own decision controls, saves real classification and removes revoked content",
+      "durationMs": 28601.99,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "rawLogLine": 1318,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "dependency variants reopen exact C09 choice and Dashboard milestone and preserve human declarations",
+      "durationMs": 6861.62,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1377,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "dependency variants refuse absent choices, noncanonical IDs, ambiguous milestones, stale evidence and revocation",
+      "durationMs": 3092.73,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1460,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict preserves a real confirmed relation and selected unverified constraint as needs-input",
+      "durationMs": 38612.92,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1523,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict refuses reversed relations and unselected or unrelated constraints",
+      "durationMs": 45548.46,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1594,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict preserves the literal declaration without inventing capacity",
+      "durationMs": 31397.1,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1648,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict requires exact payload and envelope evidence",
+      "durationMs": 38567.96,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1711,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict revalidates selected input and actual relation removal",
+      "durationMs": 19965.65,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1760,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real Dashboard confirmations preserve stale and executive output cannot erase the confirmation gap",
+      "durationMs": 10228.82,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1813,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "C06 Planner summary uses the selected subperiod of annual source evidence",
+      "durationMs": 919.97,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1832,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "confirmation composition rejects a real source change between observations and never skips unavailable matches",
+      "durationMs": 1620.79,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "rawLogLine": 1856,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "historical decision recall binds original/current evidence and rejects changed proof or authority",
+      "durationMs": 225021.63,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "rawLogLine": 1885,
+      "kind": "named-test",
+      "context": [
+        "SF_COMPOSITION_PHASE {\"fixture\":\"analysis-variants.standard\",\"phase\":\"dashboard.refresh\",\"state\":\"returned\",\"phaseMs\":13,\"elapsedMs\":852,\"aborted\":false}",
+        "SF_ANALYSIS_VARIANTS_CLEANUP {\"state\":\"started\",\"transactions\":1483,\"allTransactions\":33,\"snapshotCopies\":1709,\"authentications\":3646,\"environments\":101,\"caseReads\":0,\"relationReads\":0,\"dashboardReads\":0,\"evidenceContexts\":0,\"evidenceResolutions\":0}",
+        "SF_ANALYSIS_VARIANTS_CLEANUP {\"state\":\"returned\",\"transactions\":1483,\"allTransactions\":33,\"snapshotCopies\":1709,\"authentications\":3646,\"environments\":101,\"caseReads\":0,\"relationReads\":0,\"dashboardReads\":0,\"evidenceContexts\":0,\"evidenceResolutions\":0}",
+        "(pass) confirmation composition rejects a real source change between observations and never skips unavailable matches [1620.79ms]",
+        "",
+        "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts:",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.ensure\",\"state\":\"started\",\"elapsedMs\":4}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.ensure\",\"state\":\"returned\",\"phaseMs\":264,\"elapsedMs\":269,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.version\",\"state\":\"started\",\"elapsedMs\":269}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.version\",\"state\":\"returned\",\"phaseMs\":315,\"elapsedMs\":583,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"procurement.capture-original\",\"state\":\"started\",\"elapsedMs\":980}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"procurement.capture-original\",\"state\":\"returned\",\"phaseMs\":114,\"elapsedMs\":1094,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"atlas.emit-ledger\",\"state\":\"started\",\"elapsedMs\":1094}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"atlas.emit-ledger\",\"state\":\"returned\",\"phaseMs\":2242,\"elapsedMs\":3336,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.resolve-original\",\"state\":\"started\",\"elapsedMs\":3352}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.resolve-original\",\"persistenceCalls\":175,\"c08Reads\":3,\"caseReads\":0,\"caseFences\":0,\"atlasCanonicalReads\":0,\"atlasCanonicalCompleted\":0}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.resolve-original\",\"state\":\"returned\",\"phaseMs\":589,\"elapsedMs\":3941,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.prepare\",\"state\":\"started\",\"elapsedMs\":3941}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.prepare\",\"persistenceCalls\":24954,\"c08Reads\":738,\"caseReads\":24,\"caseFences\":36,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.prepare\",\"state\":\"returned\",\"phaseMs\":84840,\"elapsedMs\":88781,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.verify\",\"state\":\"started\",\"elapsedMs\":88782}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.verify\",\"persistenceCalls\":40050,\"c08Reads\":1042,\"caseReads\":33,\"caseFences\":36,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+        "1 | /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.verify\",\"state\":\"returned\",\"phaseMs\":136224,\"elapsedMs\":225007,\"aborted\":true}",
+        "2 | export function compositionTestDeadline(name: string, budgetMs = 105_000) {",
+        "3 |   const started = performance.now()",
+        "4 |   const cancellation = new AbortController()",
+        "5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)",
+        "                                ^",
+        "error: historical-memory exceeded its 225000ms cooperative deadline",
+        "      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)",
+        "      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts:78:20",
+        "(fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225021.63ms]",
+        "",
+        "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts:",
+        "(pass) native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation [116.88ms]",
+        "(pass) the joint alternative reader samples real C08 once for both projections and repeats authorization on every call [148.84ms]"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation",
+      "durationMs": 116.88,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1888,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the joint alternative reader samples real C08 once for both projections and repeats authorization on every call",
+      "durationMs": 148.84,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1889,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample refuses a private input mutation between its real run reads",
+      "durationMs": 100.65,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1890,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample refuses a committed C08 run change between its real run reads",
+      "durationMs": 69.01,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1891,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample refuses revocation between passes and exposes no input",
+      "durationMs": 51.42,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1892,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample observes a private holder mutation during its final authentication",
+      "durationMs": 82.25,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1893,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "alternative publication adapter cannot grant arbitrary preferences or provenance writes and clears both private guards",
+      "durationMs": 46.02,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1894,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the C08 final publication guard rejects native revocation during authentication after the work callback",
+      "durationMs": 42.35,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1895,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "actual run-store publication exposes no ready preview after native capture veto=%s",
+      "durationMs": 65.1,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1896,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "actual run-store publication exposes no ready preview after native capture veto=%s",
+      "durationMs": 52.13,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1897,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "decision registry HTTP routes reject malformed or foreign-origin inputs and never upgrade a read grant",
+      "durationMs": 39.05,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1898,
+      "kind": "named-test"
+    }
+  ],
+  "unhandledErrors": [],
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+    "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+    "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+    "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+    "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+    "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+    "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Sucafinav1/test/product/wp12/analysis.test.ts",
+    "Sucafinav1/test/product/wp12/continuation.test.ts",
+    "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+    "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+    "Sucafinav1/test/product/wp12/historical-reader.test.ts",
+    "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp12/run-store.test.ts",
+    "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+    "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts"
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [7cd023f3cd15545e0f2c79fc6b0f094e]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts); 2 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 2,
+    "delegated": 0,
+    "declaredTests": 1,
+    "declaringFile": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+  },
+  "summaryRawLogLine": 1901,
+  "summaryDuplicateFailuresExcluded": true
+}

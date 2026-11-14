@@ -1,0 +1,53 @@
+{
+  "kind": "static-data-verification-only",
+  "timestampUtc": "2026-11-14T15:39:28.781705+00:00",
+  "baseBlobMatchesW22": true,
+  "sourceBlobsMatchW22": true,
+  "changedProductPaths": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+  ],
+  "allowedMutationExact": true,
+  "testCountBefore": 5,
+  "testCountAfter": 5,
+  "testNamesPreserved": true,
+  "testBudgetsMsBefore": [
+    120000,
+    120000,
+    120000,
+    120000,
+    120000
+  ],
+  "testBudgetsMsAfter": [
+    120000,
+    120000,
+    120000,
+    120000,
+    120000
+  ],
+  "fourPreviouslyPassingBodiesByteIdentical": true,
+  "fifthBodyFromSessionCreateByteIdentical": true,
+  "importsAndSharedFixtureByteIdentical": true,
+  "reverseExactAfterRemovingNewSetupAssertionAndRestoringSourceArgument": true,
+  "expectExpressionsBefore": 51,
+  "expectExpressionsAfter": 52,
+  "assertionsRemoved": 0,
+  "assertionsAdded": 1,
+  "newMocks": 0,
+  "permissiveVerifierIntroduced": false,
+  "duplicateSourceGuardModified": false,
+  "runtimeProviderModified": false,
+  "foreignModified": false,
+  "testNameFilters": [],
+  "testExecutionPerformed": false,
+  "typecheckPerformed": false,
+  "buildPerformed": false,
+  "productImportsExecuted": false,
+  "remoteMutationsPerformed": false,
+  "protectedScenarioFixture": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+    "blobSha": "2b198e3a3f51c6c4e1abbc3a9a8cf77a18a2183d",
+    "sha256": "9d0675797aa2f575b7ba9b2193ce93db54db6f34faeee5cd8264abe8cc544191",
+    "matchesSealedW23": true
+  },
+  "claim": "Only fixture registration causality and text/hash preservation were checked. Hosted successor execution remains required."
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "wp10-w21-own-fixture-type-correction-v1",
+  "base": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "runId": 43601767154,
+  "jobId": 132467830629,
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "reason": "Assert actual UI kind before finishing the authentic UI admission; no cast or fabricated context.",
+      "sha256": "6a5d50e3dd2b074386b12d6cdce047c153191c1b5abd26abd969e99bd51f6926",
+      "blobSha": "2250ef8a6ed3bdee2cb26d38ab5b7a2daa3301e9",
+      "bytes": 9327
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "reason": "Expose the actual SessionStore and LocationServiceMap nodes explicitly at the fixture root, as the real test consumes both services directly. Intended to resolve the Effect requirement and derived never inference; only the published hosted check can confirm that correction. Actual installed providers and disposal assertions are preserved.",
+      "sha256": "8c6f4f73808679e1886fc65e385744780a3858707552fec6a2fde48924df31f7",
+      "blobSha": "848f81ae5e9315295f84ffc6a63d3b09ff7016fc",
+      "bytes": 22589
+    }
+  ],
+  "referenceFixture": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+  "budgetsUnchanged": true,
+  "assertionsRemoved": 0,
+  "localProductExecution": false
+}

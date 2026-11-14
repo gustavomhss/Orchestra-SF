@@ -1,0 +1,48 @@
+{
+  "schema": "wp10-auxiliary-static-composition-audit-v1",
+  "status": "BUILDER_AUXILIARY_NOT_INDEPENDENT_REVIEW",
+  "reviewed": [
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "reviewedLocalPath": "/workspace/scratch/301a7f2754f4/agents/root/W26-memory-case-records/package/apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "bytes": 19434,
+      "sha256": "d8ffc62f8e9c2c9bb49dcbff0ef3324154f4369a8db2184838f11e6a8f16c4db",
+      "blobSha": "bd4701de1dabd10be4b19253981d288108c2a3f7",
+      "writtenByThisAgent": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "reviewedLocalPath": "/workspace/scratch/301a7f2754f4/agents/root/W26-memory-case-records/package/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 69530,
+      "sha256": "cde7d5280d7fa9408cac1677faea09d0a4fc5c11fca7875ceebdf95d4928361e",
+      "blobSha": "28d0eaf1013e6a7f53672a43d3d440bded1fd462",
+      "writtenByThisAgent": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "reviewedLocalPath": "/workspace/scratch/301a7f2754f4/agents/root/W26-memory-case-records/package/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "bytes": 47804,
+      "sha256": "e43d2c13137e1ccadc42ada89b0e9e2b8514fc8412704a14e5c7fc386d5ac3fd",
+      "blobSha": "a56e9a13b84d67cf5367b3abd609989fb4e1e3b7",
+      "writtenByThisAgent": false
+    }
+  ],
+  "findings": [
+    {
+      "id": "W26-REC-CAPTURE",
+      "disposition": "RECOMMENDATION_SENT_TO_ROOT",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "finding": "Capture the case read request before awaiting generic preflight; the work callback should consume the captured clone. Keep fallback and outer original-input fence unchanged.",
+      "rootOwnership": true
+    }
+  ],
+  "closure": [
+    "Memory raw case recursively gathers every complete Procurement record ref into a Map keyed by digestSfValue(ref); refId-only map remains solely for scenario membership.",
+    "The new callback is used only for the first canonical case read after an eligible sf-memory-case-fence witness. Pending/busy, outside-observation, unsupported and completed-proof paths are unchanged.",
+    "Generic records check covers all fields and current materialization, while canonical case/BCS and historical original/capture/continuity proof remain actual producers.",
+    "Memory sf-memory-case-fence witnesses are awaited before entry and after return from the generic callback, not inside its LocalStore transaction. The existing test hook explicitly asserts currentSnapshots is undefined before its real source/capture writers.",
+    "The generic witness retains the separate sf-procurement-evidence-fence tag so those instrumentation callbacks expect the current actual root.",
+    "Root instrumented groupedCaseContextReads==4 while preserving six canonical evidence contexts and two full Atlas completions across two observations; this expectation is unexecuted for W26."
+  ],
+  "remaining": "Hosted W26 test and typecheck are required; static analysis is not an acceptance receipt."
+}

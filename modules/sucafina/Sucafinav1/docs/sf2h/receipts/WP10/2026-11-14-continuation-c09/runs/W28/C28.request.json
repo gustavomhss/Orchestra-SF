@@ -1,0 +1,15 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+    "Sucafinav1/test/product/wp10/integration/authority-composition.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

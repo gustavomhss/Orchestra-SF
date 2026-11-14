@@ -1,0 +1,15 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+    "Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+    "Sucafinav1/test/product/wp13/threshold-recertification.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

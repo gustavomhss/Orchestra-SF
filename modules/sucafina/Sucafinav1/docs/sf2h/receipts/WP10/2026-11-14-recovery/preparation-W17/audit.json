@@ -1,0 +1,195 @@
+{
+  "auditedAtUtc": "2026-11-14T10:54:33.137698+00:00",
+  "kind": "static-read-only-source-audit",
+  "sourceIntegrity": "18/18 Git blob SHA1 and SHA256 verified; original excluded fetches also preserved/verified",
+  "selectedCount": 18,
+  "initialDeltaCount": 13,
+  "essentialDependencyCount": 5,
+  "noDownrev": true,
+  "missingRelativeImports": [],
+  "relativeImportsChecked": 240,
+  "testAudit": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "literalTestDeclarationsBefore": 1,
+      "literalTestDeclarationsAfter": 1,
+      "removedNames": [],
+      "addedNames": [],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [
+        "timeout: 10000",
+        "}, 90000)\n"
+      ],
+      "budgetsAfter": [
+        "timeout: 10000",
+        "}, 90000)\n"
+      ],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "literalTestDeclarationsBefore": 1,
+      "literalTestDeclarationsAfter": 1,
+      "removedNames": [],
+      "addedNames": [],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [
+        "}, 60000)\n"
+      ],
+      "budgetsAfter": [
+        "}, 60000)\n"
+      ],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "literalTestDeclarationsBefore": 6,
+      "literalTestDeclarationsAfter": 6,
+      "removedNames": [],
+      "addedNames": [],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [],
+      "budgetsAfter": [],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "literalTestDeclarationsBefore": 5,
+      "literalTestDeclarationsAfter": 5,
+      "removedNames": [],
+      "addedNames": [],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [
+        "}, 60000)\n",
+        "}, 60000)\n",
+        "}, 60000)\n"
+      ],
+      "budgetsAfter": [
+        "}, 60000)\n",
+        "}, 60000)\n",
+        "}, 60000)\n"
+      ],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+      "literalTestDeclarationsBefore": 1,
+      "literalTestDeclarationsAfter": 1,
+      "removedNames": [],
+      "addedNames": [],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [
+        "}, 15000)\n\n"
+      ],
+      "budgetsAfter": [
+        "}, 15000)\n\n"
+      ],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-period-continuity.test.ts",
+      "literalTestDeclarationsBefore": 1,
+      "literalTestDeclarationsAfter": 1,
+      "removedNames": [],
+      "addedNames": [],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [],
+      "budgetsAfter": [],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "literalTestDeclarationsBefore": 6,
+      "literalTestDeclarationsAfter": 8,
+      "removedNames": [],
+      "addedNames": [
+        "a provider replacement during initial authorization stops before result recovery",
+        "a provider replacement during final authorization cannot release an already recovered result"
+      ],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [],
+      "budgetsAfter": [],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "literalTestDeclarationsBefore": 9,
+      "literalTestDeclarationsAfter": 12,
+      "removedNames": [],
+      "addedNames": [
+        "publication unavailable or needs-input settles through a fresh C08 authority, and revocation prevents it",
+        "a late unavailable or needs-input signal cannot overwrite a committed ready output",
+        "publication denied or conflict does not create a terminal lifecycle write"
+      ],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [],
+      "budgetsAfter": [],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "literalTestDeclarationsBefore": 9,
+      "literalTestDeclarationsAfter": 17,
+      "removedNames": [],
+      "addedNames": [
+        "read-only preflight cannot rewrite the admitted run",
+        "a commit verifier cannot replace an already validated contribution",
+        "C08 keeps its admitted record when the caller changes an alias during final write authorization",
+        "C08 keeps validated contribution bytes when the caller changes an alias during final write authorization",
+        "publication pins its validated output before awaiting mutation authority",
+        "read rejects a retained preflight reference changed during final authorization",
+        "durable cancellation wins a publication that is still validating its source",
+        "late publication failure cannot overwrite a ready result"
+      ],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [],
+      "budgetsAfter": [],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-composition.test.ts",
+      "literalTestDeclarationsBefore": 1,
+      "literalTestDeclarationsAfter": 1,
+      "removedNames": [],
+      "addedNames": [],
+      "newSkipTodoOnlyOrNameFilters": [],
+      "budgetsBefore": [
+        "}, 120000)\n"
+      ],
+      "budgetsAfter": [
+        "}, 120000)\n"
+      ],
+      "assertionReview": "All prior semantic assertions retained; schedule tests moved intact; byte/readonly expectations copied into ordinary arrays with exact equality."
+    }
+  ],
+  "compatibility": {
+    "runStoreReadLifecycleByteUnchanged": true,
+    "runStorePublicMethodsByteUnchanged": true,
+    "runStoreCaseVersionIncarnationAuthorityOutputAndVersionCasByteUnchanged": true,
+    "runStoreContractChanged": false,
+    "analysisPortContractChanged": false,
+    "analysisStaleCommit": "wrapStore/preflight/commit/commitCancellation retain signatures and original/case/output CAS; new digest guards accept unchanged records and reject callback/alias mutations. No wrapper replacement.",
+    "historical": "Same-incarnation newer current case remains readable only through unchanged readLifecycle; stale preservation retains exact output, current access and original CAS. Source/permission revocation are not bypassed.",
+    "withRunContext": "New unavailable/needs-input settlement invokes existing callback with a fresh context. Compatible with W17 createSfAnalysisRunContext preserving original selected case and allowHistoricalRetry lifecycle scope.",
+    "ownFilesReadOnlyAtAudit": [
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+        "blobSha": "f40a30aca8668f3ef7636ca8af4bf65d4e987217"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+        "blobSha": "5b0f9e394f433bc904724019678d08555078dc0b"
+      }
+    ]
+  },
+  "noNewPermissiveVerifier": true,
+  "verifierQualification": "The existing explicit policy adapters in WP13 synthetic calculation fixtures remain unchanged; they are not a native/ACL acceptance claim. PR31 uses real business services; PR36 restart uses real Planner operation verification. Unused native execution methods fail closed.",
+  "assertions": "No prior testcase or semantic assertion removed/weakened. Exact equality retained for byte/readonly expectations. Existing schedule value-change witnesses remain, provider replacement proofs are added. Sensitivity fixture removes only unused positive comparison precomputation; removed comparisonRef/boundComparison and second case have no dependent consumers.",
+  "budgetsAndCases": "Existing testcase names and explicit timeout values preserved. No skip/todo/only or name-pattern filter added. Run-store +8, publication-lifecycle +3, schedule-native +10 executed cases (8 parameterized +2 direct).",
+  "limits": [
+    "No product tests/typecheck/build/parser/runtime executed locally.",
+    "No shared repository file or remote state changed.",
+    "17/36 diagnostics are addressed by source inspection; a hosted check remains required.",
+    "No candidate, independent-review, native or global acceptance established."
+  ]
+}

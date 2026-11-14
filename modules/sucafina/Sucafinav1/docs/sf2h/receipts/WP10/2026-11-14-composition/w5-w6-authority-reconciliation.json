@@ -1,0 +1,107 @@
+{
+  "schema": "sf2.wp10.authority-business-w5-w6-merge.v1",
+  "at": "2026-11-14T02:07:53.926158+00:00",
+  "builder": "/root/authority_builder",
+  "independent_review": false,
+  "status": "MERGED_NOT_EXECUTED",
+  "source_revisions": {
+    "W4_parent_prefix": "4041575a",
+    "W5": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+    "W6": "fdbb184f1df7c58f00ee8555e42bce017fd0e942"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "base_w4_blob": "8e741f7eb850921e67b223e0987234c017bcea83",
+      "published_w5_blob": "0ce1c76b0cb14cad904301a139b8b935ae521da1",
+      "ours_before_blob": "cfe951334581c09a0d8dbe7610ae2da58a83ffaa",
+      "merged_blob": "254a02e25a70c24c511dcee628a5c5856b7f22a7",
+      "merged_sha256": "41f70ec273e8c0e83dd124925711349fe8fd7eb8c5f467cd874b0be888b85f7a",
+      "published_w6_blob": "ba89d80c77c1300aeeb18a16d10e6198cc0285d7",
+      "delta_file": "analysis/concurrent-v5/authority-diffs/apps/cli/src/sucafina-product/business-services.ts.patch",
+      "equals_w5": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "base_w4_blob": "18eb9d1cfb4f98bbbcdf3e499368f1e6b2d0c8ed",
+      "published_w5_blob": "d5b28120c983251476891e4049b24426173c636d",
+      "ours_before_blob": "d5640d0dc0df1a78efb44d696610ba94d95e2afb",
+      "merged_blob": "14d3380cf4a95747197c1dc6e02430defad9a8ea",
+      "merged_sha256": "1acb4f4e4ecdd7900572c47f68bfb3c24a6f2cfa876178c7b0931a51efa96d0b",
+      "published_w6_blob": null,
+      "delta_file": "analysis/concurrent-v5/authority-diffs/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts.patch",
+      "equals_w5": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "base_w4_blob": "df4ee73745769ea8c202a1bf86f567e5f303eb0a",
+      "published_w5_blob": "a00643547284a9ca5d0723d8e0f365248fa5f144",
+      "ours_before_blob": "7b190c49a71f61fca9af043c2d305b5df238dede",
+      "merged_blob": "0a44053b36e80061bfe59d92578ae90c88f898d8",
+      "merged_sha256": "789566802c31ee11d9d84aae0deeff70040db24d46e9d1ee6dc2c3c8b5f96c08",
+      "published_w6_blob": null,
+      "delta_file": "analysis/concurrent-v5/authority-diffs/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.patch",
+      "equals_w5": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "base_w4_blob": "a59d81888d828250dc1e2244137458f79579b37a",
+      "published_w5_blob": "3df97be6b5649ce6348dff8ed90437df6083482d",
+      "ours_before_blob": "76093811d46d4d5491d33a543a48d7844b2d1833",
+      "merged_blob": "b22896f9870a5951b1ddfe1aa166ab612be90fe7",
+      "merged_sha256": "56f46aec6bec2a6e8d16a3ceedf906b1135ef232786aef7ad4408566a3280e9a",
+      "published_w6_blob": null,
+      "delta_file": "analysis/concurrent-v5/authority-diffs/modules/sucafina/Sucafinav1/product/integration/product-authority.ts.patch",
+      "equals_w5": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "base_w4_blob": "6d961b84ffbc105b0797524f1a899d831a13195f",
+      "published_w5_blob": "6de0459d3897490b89b85d7f375a4234f554025f",
+      "ours_before_blob": "6d961b84ffbc105b0797524f1a899d831a13195f",
+      "merged_blob": "6de0459d3897490b89b85d7f375a4234f554025f",
+      "merged_sha256": "aa899b7653262a861150cf3ceeea5e795c3751f683a01a3a51a7863b5f5f4f0c",
+      "published_w6_blob": null,
+      "delta_file": "analysis/concurrent-v5/authority-diffs/modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts.patch",
+      "equals_w5": true
+    }
+  ],
+  "composition_decisions": [
+    "W5 selectedCase authorizes current C08 selection and exact binding without recursively calling cases.read; individual producers still authorize sources.",
+    "W5 baselineCoverage and bindDecisionDomain added. Proposal coverage and planner criteria are delegated to bound domain; binding rejects a second binding.",
+    "Existing bindForecastCoverage preserved for composition without a bound decision domain. Once domain is bound, W5 baselineCoverage provides raw-selectedCase authorization; same durable baseline producer store remains in use.",
+    "W6 no-case UI forecast returns unavailable rather than a fabricated coverage or unnecessary access denial; revoked authority still returns denied.",
+    "W6 source/evidence separation is satisfied by the retained direct projectPlannerEvidence adapter in BCS. No duplicate sourcePlanner factory was introduced. Partial-period baseline-services projection remains untouched.",
+    "W5 context deduplicates only identical reads within one pass; aggregate budget is checked before IO/dedup, request and binding digests rechecked, returned values cloned, no cross-call cache.",
+    "W5 nativePublicationGuards WeakMap forwarded into state; same work identity guard checked synchronously before revision/receipt commit. All existing namespace, source, dashboard, procurement, analysis and history fences retained.",
+    "W5 published BCS tests copied exactly because ours matched W4 base; no tests executed.",
+    "Late WP06 documentScenarios, projectPlannerEvidence, callable procurement resolver, caseRecall, Atlas recovery/lifecycle and all source fences retained."
+  ],
+  "new_business_exports": [
+    "selectedCase",
+    "baselineCoverage",
+    "bindDecisionDomain"
+  ],
+  "authority_input": "nativePublicationGuards?: WeakMap<object, () => boolean>",
+  "preservation_text_checks": {
+    "BCS_direct_projection_preserved": true,
+    "BCS_direct_projection_wired": true,
+    "callable_procurement_preserved": true,
+    "late_WP06_document_scenarios_preserved": true,
+    "forecast_one_time_closure_preserved": true,
+    "domain_one_time_binding": true,
+    "caseRecall_preserved": true,
+    "native_guard_before_revision": true,
+    "native_guard_forwarded": true,
+    "aggregate_budget_before_dedup": true,
+    "W5_tests_exact": true,
+    "W6_ui_no_selection_denial_split": true
+  },
+  "relative_imports_missing_in_partial_checkout": [],
+  "validation_limits": [
+    "Text/diff/hash inspection only; no product tests, build or typecheck locally.",
+    "No remote writes or branch changes by this builder.",
+    "Native/global acceptance and three independent reviews are not claimed.",
+    "host-context and decision helpers are merged by composition_intake; integration and signatures must be proved by hosted CI."
+  ]
+}

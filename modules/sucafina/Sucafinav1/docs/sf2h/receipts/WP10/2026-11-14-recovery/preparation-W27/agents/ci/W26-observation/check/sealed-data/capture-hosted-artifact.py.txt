@@ -1,0 +1,47 @@
+"""Capture a tool-returned artifact URL and verify its published ZIP identity.
+
+Data transfer and archive validation only; this never imports product code.
+The private download URL config is not a user-facing or published receipt.
+"""
+from pathlib import Path, PurePosixPath
+import hashlib
+import json
+import sys
+import urllib.request
+import zipfile
+
+root = Path(__file__).resolve().parent
+cfg = json.loads(Path(sys.argv[1]).read_text())
+archive = root / cfg['archivePath']
+directory = root / cfg['directoryPath']
+manifest_path = root / cfg['manifestPath']
+assert not archive.exists() and not directory.exists() and not manifest_path.exists()
+archive.parent.mkdir(parents=True, exist_ok=True)
+with urllib.request.urlopen(cfg['downloadUrl'], timeout=45) as response:
+    data = response.read()
+sha = hashlib.sha256(data).hexdigest()
+assert len(data) == cfg['expectedBytes'], 'Artifact byte count differs from GitHub metadata'
+assert sha == cfg['expectedSha256'], 'Artifact SHA256 differs from GitHub metadata'
+archive.write_bytes(data)
+directory.mkdir(parents=True)
+members = []
+with zipfile.ZipFile(archive) as z:
+    seen = set()
+    for info in z.infolist():
+        name = PurePosixPath(info.filename)
+        assert not name.is_absolute() and '..' not in name.parts and '\\' not in info.filename
+        assert info.filename not in seen, 'Duplicate ZIP member'
+        seen.add(info.filename)
+        if info.is_dir():
+            continue
+        raw = z.read(info)
+        destination = directory.joinpath(*name.parts)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(raw)
+        members.append({'file': info.filename, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest(),
+                        'gitBlob': hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()})
+manifest = {'artifactId': cfg['artifactId'], 'bytes': len(data), 'sha256': sha,
+            'archivePath': cfg['archivePath'], 'files': members, 'verifiedAgainstGithubMetadata': True,
+            'localProductExecution': False}
+manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
+print(json.dumps({'artifactId': cfg['artifactId'], 'bytes': len(data), 'sha256': sha, 'members': len(members)}))

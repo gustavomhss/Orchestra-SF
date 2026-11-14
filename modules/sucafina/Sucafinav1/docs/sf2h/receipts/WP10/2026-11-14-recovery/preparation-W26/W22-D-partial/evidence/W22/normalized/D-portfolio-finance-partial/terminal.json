@@ -1,0 +1,47 @@
+{
+  "schema": "wp10-hosted-partial-terminal-v1",
+  "label": "W22-D-portfolio-finance-partial",
+  "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "productTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "snapshotSha": "c00c167bdf368d89273d60ca29e5eb24c01dc577",
+  "snapshotTree": "1f247dc062ee7bf18e905ba791207604cda0813c",
+  "runId": 43610668152,
+  "runAttempt": 1,
+  "jobId": 132494810814,
+  "envelopeSHA256": "e37346919bd55922c607df4c645eaedc0461c29ba54047a845914800fa042937",
+  "observedRunStatus": "completed",
+  "observedRunConclusion": "cancelled",
+  "observedJobStatus": "completed",
+  "observedJobConclusion": "cancelled",
+  "runStartedAt": "2026-11-14T15:31:51Z",
+  "runUpdatedAt": "2026-11-14T16:17:20Z",
+  "testTerminalObservedAt": "2026-11-14T16:17:18Z",
+  "cleanupObservedAt": "2026-11-14T16:17:49Z",
+  "cleanupJobId": 132507288922,
+  "cleanupStatus": "completed",
+  "cleanupConclusion": "success",
+  "deleteSnapshotBranchStep": {
+    "name": "Delete the snapshot branch",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 2
+  },
+  "cancellationMessages": [
+    {
+      "rawLogLine": 975,
+      "text": "##[error]The operation was canceled."
+    }
+  ],
+  "cancellationCause": null,
+  "qualification": "GitHub reports cancelled. The raw job says operation canceled. No inferred timed_out conclusion or cancellation actor is assigned.",
+  "rawLog": {
+    "path": "evidence/W22/D-job-132494810814.raw.txt",
+    "bytes": 97263,
+    "sha256": "98e1ca1414d36cccbe9a52f881dfc2f92c77c851ba830451647dae109b1654b5",
+    "encoding": "utf-8",
+    "exactToolDecodedContent": true,
+    "lfCount": 998,
+    "crlfCount": 0,
+    "endsWithLF": true
+  }
+}

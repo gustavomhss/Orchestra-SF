@@ -6,19 +6,18 @@ import { object } from "../../runtime/contract.ts"
 import { documentHtml, pageMain } from "../../src/screen-shell.ts"
 import { dashboardPages } from "../../src/nav.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
-import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import { createDashboardPort } from "../dashboard/port.ts"
 import { createDashboardSourceHost } from "../dashboard/sources.ts"
 import { presentDashboardBi, resolveDashboardBiSelection } from "../dashboard/bi-metadata.ts"
-import { createBiDescriptor, readBiPresentation } from "../analytics/capabilities.ts"
+import { dispatchBiPresentation } from "../analytics/consumer.ts"
 import type { BiPresentationPort } from "../analytics/capabilities.ts"
 import { sameBiProjection } from "../analytics/projection.ts"
-import { dispatchSfCapability } from "../host-binding/capability-dispatch.ts"
 import { createSfUiAuthority } from "./ui-authority.ts"
 import { createDashboardSourceIssuer } from "./dashboard-sources.ts"
 import type { SfScopedSourcePort } from "./source-lifecycle.ts"
+import { sfBiBrowserLifecycle } from "./bi-browser-lifecycle.ts"
 
 /** Composed with the installation's existing authenticator, store and three surfaces. Starts no server. */
 export function createSfBiHttp(input: {
@@ -82,7 +81,6 @@ export function createSfBiHttp(input: {
       return current.status === "ok" && (!projection || sameBiProjection(current.value, projection)) && await host.revalidate(context)
     },
   }
-  const descriptor = createBiDescriptor(source, authority)
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
@@ -121,7 +119,7 @@ export function createSfBiHttp(input: {
         const script = (await input.browserScript()).replace(/<\/script/gi, "<\\/script")
         if (!await ui.revalidate(context)) return json({ status: "denied", reason: "authority-changed" }, 403)
         const html = documentHtml("Business intelligence", "dashboard", `<a href="${input.mount}/dashboard">Dashboard</a>`,
-          pageMain({ drawn: true, key: "Business intelligence", index: 0 }, '<section data-sf-bi><p role="status">Loading analyses…</p></section>'), "").replace("</body>", `<script>${script}</script></body>`)
+          pageMain({ drawn: true, key: "Business intelligence", index: 0 }, '<section data-sf-bi data-sf-retain-view><p role="status">Loading analyses…</p></section>'), "").replace("</body>", () => `<script>${script}</script><script>${sfBiBrowserLifecycle}</script></body>`)
         const policy = htmlPolicy(html).replace("; style-src", ` 'sha256-${createHash("sha256").update(script).digest("base64")}'; style-src`)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": policy, "X-Content-Type-Options": "nosniff" } })
       }
@@ -131,15 +129,10 @@ export function createSfBiHttp(input: {
       const next = await ui.admit(request, "sf_bi_view", digestSfValue(payload))
       if (next.status !== "ok") return json(next, 403)
       try {
-        const result = await dispatchSfCapability({ operation: "sf_bi_view", payload, context: next.value, descriptors: [descriptor], authority,
-          validateInput: (_descriptor, value) => decodeSfOperationInput("sf_bi_view", value).ok,
-          validateOutput: (_descriptor, value) => value.status !== "ok" || decodeSfOperationOutput("sf_bi_view", value.result).ok })
+        const result = await dispatchBiPresentation(payload, next.value, source, authority)
         if (result.status !== "ok") return json(result, result.status === "denied" ? 403 : 409)
-        const presentation = await readBiPresentation(payload, next.value, source, authority)
-        if (presentation.status !== "ok") return json(presentation, 409)
-        const decoded = decodeSfOperationOutput("sf_bi_view", result.result)
-        if (!decoded.ok || !sameBiProjection(decoded.value, presentation.value.projection) || !await ui.revalidate(next.value)) return json({ status: "stale", reason: "projection-changed" }, 409)
-        return json({ request: payload, ...presentation.value, receipt: result.receipt })
+        if (!await ui.revalidate(next.value)) return json({ status: "stale", reason: "projection-changed" }, 409)
+        return json(result.value)
       } finally { ui.finish(next.value) }
     } finally { ui.finish(context) }
   }

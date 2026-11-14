@@ -1,0 +1,20 @@
+{
+  "affectedFullFiles": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts"
+  ],
+  "testNameFilters": [],
+  "canonicalTimeoutMs": 120000,
+  "omniStrict": true,
+  "preservedOverrides": {
+    "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts": {
+      "outerMs": 240000,
+      "cooperativeMs": 225000
+    }
+  },
+  "newCases": 4,
+  "requiredIntegration": "/workspace/scratch/301a7f2754f4/agents/ci/W23-memory-evidence-read-scope/business-integration.patch",
+  "dispatchPerformed": false,
+  "successorProductSha": null,
+  "claim": "No hosted result for this successor."
+}

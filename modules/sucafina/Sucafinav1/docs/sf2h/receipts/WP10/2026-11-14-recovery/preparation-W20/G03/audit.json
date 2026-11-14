@@ -1,0 +1,79 @@
+{
+  "schema": "wp10-g03-builder-audit-v1",
+  "wave": "W20",
+  "status": "frozen",
+  "role": "builder-not-independent-review",
+  "sourceManifestSha256": "9906122ab6684311a4bd97fe434afab551aaa1ea6996f716fb183c3db67ee3a0",
+  "authorizedScope": [
+    "private host composition",
+    "existing Dashboard mount",
+    "own work readers, HTTP and tests",
+    "separate host-context patch"
+  ],
+  "changes": [
+    "Bind canonical C17 WorkSignals through one root-private bridge; absent durable key remains unavailable, including empty selections.",
+    "Derive installation-separated HMAC key only from typed assets.services.signingKey; canonical issuer further separates the key and includes installation/project/principal/case/incarnation/condition.",
+    "Every destination starts with exact membership in the complete real WorkPresentationItem list and uses its real destination producer.",
+    "Work GET requires collaboration.work.destination plus a separate actual UI grant for thread/confirmation/case/Procurement/Dashboard content on the same authentic Request.",
+    "Canonical work and detail reads complete before the real C08 snapshot witness; a repeated entire read and full-snapshot equality bind item, identity, versions, period, digest and sources.",
+    "After rendering, a further real C08 read proves full snapshots, __sfProductV1/state, source fences, actual grant authority, directory/day, Request method/URL/all headers, binding, payload and lease. No producer executes inside the read lock.",
+    "Href uses existing Dashboard work-item GET; its current case/domain links derive only from authorized sources and same-origin fixed mount. No human/domain mutation is forwarded through GET. Canonical reads can materialize captures or reconcile derived C17 preferences before the witness, as disclosed."
+  ],
+  "staticChecks": {
+    "relativeImports": "all-present",
+    "memoryFixtureDefaults": "original text identical after reversing only optional actor/case parameters",
+    "foreignAuthorship": "none",
+    "newSurface": "none",
+    "publicCreateHostContractEdits": "none",
+    "priorReceiptsAuditsAndFrozenW19": "untouched",
+    "productExecution": "none"
+  },
+  "tests": {
+    "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "count": 6,
+    "positive": [
+      "real C08/SQLite case, selection and thread; canonical real registry empty signal read",
+      "actual source link plus read-only GET and rebuilt authority/business using persisted asset key bytes",
+      "actual human registered C17 bindings for opaque issuer; same key reload"
+    ],
+    "counterproofs": [
+      "missing exact thread-read grant despite work.destination grant",
+      "forged action ID",
+      "different selection period",
+      "another actual authenticated actor",
+      "wrong mount / POST method",
+      "real session revocation after canonical thread read",
+      "Request header replacement after final actual C08 witness",
+      "preferences change without storageVersion update with same valid UI lease",
+      "current case version change",
+      "registered C17 other actor/case; key rotation; unavailable/short key; revoked issuer authority"
+    ]
+  },
+  "limits": [
+    "No hosted W20 execution yet; all new tests require publication and CI.",
+    "The full host composition test has a genuinely empty canonical signal registry. Nonempty material signals are covered separately by the real registered Memory fixture plus opaque issuer; a nonempty signal through the whole installed host remains an explicit additional integration proof.",
+    "Rebuilding host objects and reloading durable key bytes is not a native process restart or MCP proof.",
+    "PR33 reviewContexts hook closure is not included; arbitrary review-thread provenance remains owned by the producer.",
+    "Unknown or unverifiable destinations, source period mappings and missing grants remain unavailable.",
+    "No native/global acceptance and no independent-review substitution.",
+    "Published source pins stay in parent intake; this package has no new foreign output selected."
+  ],
+  "ciSelection": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-services.test.ts"
+  ],
+  "execution": {
+    "localProductTests": "unexecuted-by-instruction",
+    "localTypecheck": "unexecuted-by-instruction",
+    "hosted": "pending-publication-and-CI",
+    "native": "unexecuted",
+    "globalEpic": "unexecuted"
+  },
+  "hostPatch": {
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "baseSha256": "c4e2f2739eafc8328b72fe40a25f1555828b5f0d8751d4136b250156391880ac",
+    "patchedSha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+    "applied": false,
+    "changes": "3 imports, private durable-key derivation plus bridge binding, existing productHttp chain"
+  }
+}

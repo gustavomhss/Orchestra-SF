@@ -1,0 +1,237 @@
+{
+  "schema": "wp10-hosted-failure-triage-v1",
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "snapshotSha": "edc61b259cc0479d1916a7dd3a2e2ee89d7724a9",
+  "runId": 43620440087,
+  "jobId": 132524715232,
+  "conclusion": "failure",
+  "counts": {
+    "pass": 38,
+    "fail": 2,
+    "expects": 533,
+    "tests": 40,
+    "files": 7,
+    "durationSeconds": 1420.51,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "ownerCounts": {
+    "WP10": {
+      "pass": 28,
+      "fail": 1,
+      "tests": 29
+    },
+    "WP11": {
+      "pass": 10,
+      "fail": 1,
+      "tests": 11
+    }
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/scenario-batch.test.ts": {
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts": {
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts": {
+      "pass": 21,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "failures": [
+    {
+      "test": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "own": false,
+      "owner": "WP11",
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "productCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "blobSha": "04185fa8e4e3c9c2c25d7bf4e898831f4f891ea7",
+        "sha256": "b8d9dbc65d092b993ba61d2f61673552b5969d2785c7dc383807dd34c55c86a8",
+        "owner": "WP11",
+        "publisherPin": {
+          "pr": 35,
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "blobSha": "04185fa8e4e3c9c2c25d7bf4e898831f4f891ea7",
+          "sha256": "b8d9dbc65d092b993ba61d2f61673552b5969d2785c7dc383807dd34c55c86a8",
+          "owner": "astra-finance / WP03-WP05-WP11",
+          "reason": "Owner-published product/test delta; static causal inspection found no ingestion blocker. Hosted candidate evidence remains required."
+        },
+        "sourceOnly": true,
+        "hostedResult": null
+      },
+      "rawLogLine": 817,
+      "durationMs": 188985.84,
+      "observedCause": "Bun reported test timeout after 180000 ms",
+      "localization": {
+        "phase": "unknown; publisher test has no phase trace"
+      },
+      "unobservedScope": [
+        "Completion of the nested calculation persistence/reopen test; individual reached assertions cannot be localized from this uninstrumented timeout."
+      ]
+    },
+    {
+      "test": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "own": true,
+      "owner": "WP10",
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "productCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "blobSha": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+        "sha256": "3370333c7cf108d9624a2271231d71747847bcfee2af15ccae87b3c72ac14887",
+        "owner": "WP10",
+        "publisherPin": null,
+        "sourceOnly": true,
+        "hostedResult": null
+      },
+      "rawLogLine": 864,
+      "durationMs": 105004.76,
+      "observedCause": "105000 ms cooperative deadline during produce-outer",
+      "localization": {
+        "phase": "produce-outer",
+        "phaseMs": 101691,
+        "elapsedMs": 105001,
+        "canonicalResultReads": 373,
+        "canonicalResultReadsCompleted": 373,
+        "aborted": true
+      },
+      "unobservedScope": [
+        "successful outer result",
+        "cold reopen and ancestry resolution",
+        "persisted cycle refusal",
+        "authority revocation refusal"
+      ]
+    }
+  ],
+  "ancestryTrace": [
+    {
+      "rawLogLine": 847,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "started",
+      "elapsedMs": 1
+    },
+    {
+      "rawLogLine": 848,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "returned",
+      "phaseMs": 33,
+      "elapsedMs": 34,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 849,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "started",
+      "elapsedMs": 34
+    },
+    {
+      "rawLogLine": 850,
+      "marker": "SF_CALCULATION_ANCESTRY",
+      "phase": "produce-inner",
+      "elapsedMs": 3270,
+      "canonicalResultReads": 14,
+      "canonicalResultReadsCompleted": 14,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 851,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "returned",
+      "phaseMs": 3270,
+      "elapsedMs": 3303,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 852,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "started",
+      "elapsedMs": 3310
+    },
+    {
+      "rawLogLine": 853,
+      "marker": "SF_CALCULATION_ANCESTRY",
+      "phase": "produce-outer",
+      "elapsedMs": 101691,
+      "canonicalResultReads": 373,
+      "canonicalResultReadsCompleted": 373,
+      "aborted": true
+    },
+    {
+      "rawLogLine": 854,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "returned",
+      "phaseMs": 101691,
+      "elapsedMs": 105001,
+      "aborted": true
+    }
+  ],
+  "staticCausalDistinction": {
+    "foreignTest": "Direct composition of createPlannerCalculationEvidence, decision result/request stores and the WP05 engine fixture. It does not import createSfBusinessServices or own calculation adapters.",
+    "ownTest": "Composes actual createSfBusinessServices, real C08/UI leases/Planner and persisted calculation adapters. Instrumentation wraps actual results.readForCalculation and counts all calls/completions.",
+    "inferenceLimit": "Both timeouts concern nested calculation ancestry, but the captured log does not prove one shared implementation defect or locate the foreign test phase. The direct publisher composition demonstrates that its timeout cannot be attributed solely to the own business wrapper.",
+    "units": "373 counts are canonical result-reader API invocations, not distinct results, SQLite connections, commits or physical I/O."
+  },
+  "cleanup": {
+    "jobId": 132531826661,
+    "conclusion": "success",
+    "deleteSnapshotBranchStep": "success"
+  },
+  "artifacts": [],
+  "artifactQualification": "Actual GitHub artifacts API returned an empty list.",
+  "omni": {
+    "observedLines": [
+      "omni positive control [1fa62a43ed81082d17ab022dffff998a]: pass (declared: 23 test(s) in Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts, Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts); 46 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 46,
+    "delegated": 0,
+    "declaredTests": 23,
+    "declaringFile": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts, Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts"
+  },
+  "qualification": "Historical exact W26 observation. Scoped passes do not change failed run status or transfer to W27. No native/global/criterion/independent-review acceptance.",
+  "localProductExecution": false,
+  "remoteMutation": false
+}

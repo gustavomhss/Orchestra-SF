@@ -1,0 +1,80 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts
+@@ -12,6 +12,7 @@
+ import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+ import type { DecisionCase, ScenarioResult } from "../../../../product/contracts/decisions.ts"
+ import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
++import type { SfProductState, SfStateAuthority, SfStateNamespace } from "../../../../product/contracts/state.ts"
+ import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
+ import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
+ import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
+@@ -57,6 +58,69 @@
+         scoped: { ...f.metrics, ...f.runtime.counts }, unit: "Persistence API invocations; rootTransactions excludes an already-held snapshot, not physical commits" }))
+     }
+     expect(await f.snapshot()).toEqual(before)
++  } finally { await deadline.close() }
++}, 120_000)
++
++for (const mode of ["missing-case", "nonparticipant", "invalid-c08"] as const)
++test(`Procurement case preflight preserves the real ${mode} refusal outside its own store scope`, async () => {
++  const deadline = compositionTestDeadline(`procurement-case-contract-${mode}`)
++  try {
++    const f = await fixture(deadline)
++    expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
++    let input = f.input, call = f.call
++    if (mode === "missing-case") {
++      input = { caseRef: encodeCaseRef({ id: `absent-${randomUUID()}`, incarnation: randomUUID() }) }
++      call = await f.runtime.admitCase("alice", input)
++    }
++    if (mode === "nonparticipant") {
++      const decision = await f.stored()
++      expect(decision.participants).toContain("bob")
++      const before = await f.runtime.authority.state.read(f.request, "cases", () => null)
++      if (before.status !== "ok") throw new Error("Actual case namespace absent")
++      const next = { ...decision, version: decision.version + 1, participants: decision.participants.filter((actor) => actor !== "bob") }
++      const saved = await f.runtime.authority.state.transaction(f.request, { namespace: "cases", expectedStorageVersion: before.storageVersion,
++        targetRef: decision.id, targetIncarnation: decision.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(next) },
++      async (state) => { state.cases[decision.id] = next; return { commit: true, value: true } })
++      if (saved.status !== "ok") throw new Error("Actual participant removal failed")
++      await f.runtime.select("bob", period)
++      call = await f.runtime.admitCase("bob", input)
++    }
++    if (mode === "invalid-c08") await f.persistence.transaction("dashboard", async (snapshot) => {
++      object(snapshot.data.__sfProductV1).schemaVersion = -1
++      return { commit: true, value: undefined }
++    })
++    // The UI admission is still valid; this is a case/C08 refusal, not lost
++    // Request authority. Obtain the expected outcome from the actual reader.
++    expect(await f.runtime.authority.host.revalidate(call)).toBe(true)
++    const canonical = await f.runtime.canonicalRead(input, call)
++    expect(canonical).toEqual(mode === "invalid-c08"
++      ? { status: "unavailable", reason: "invalid-product-state" }
++      : { status: "denied", reason: "case-access-unavailable" })
++    f.reset()
++    expect(await f.runtime.read(input, call)).toEqual(canonical)
++    expect(f.runtime.counts).toMatchObject({ canonical: 1, inside: 0, contexts: 0, resolutions: 0 })
++    if (mode === "missing-case") {
++      const request = f.runtime.authority.host.requestFor(call)
++      if (!request) throw new Error("Actual missing-case Request absent")
++      const readState = f.runtime.authority.state.read
++      let changed = false
++      f.runtime.authority.state.read = async <Value>(source: Request, namespace: SfStateNamespace,
++        read: (state: Readonly<SfProductState>, actor: SfStateAuthority) => Value | Promise<Value>) => {
++        const found = await readState(source, namespace, read)
++        if (!changed && source === request && namespace === "cases" && found.status === "ok" && found.value === undefined) {
++          changed = true
++          request.headers.set("x-before-eligibility", "changed-after-real-c08")
++        }
++        return found
++      }
++      try {
++        f.reset()
++        expect(await f.runtime.read(input, call)).toEqual({ status: "unavailable", reason: "procurement-case-read-changed" })
++        expect(changed).toBe(true)
++        expect(f.runtime.counts.canonical).toBe(0)
++        expect(await f.runtime.authority.host.revalidate(call)).toBe(true)
++      } finally { f.runtime.authority.state.read = readState }
++    }
+   } finally { await deadline.close() }
+ }, 120_000)
+ 

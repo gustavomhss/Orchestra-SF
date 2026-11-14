@@ -1,0 +1,216 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "created_at": "2026-11-14T06:35:05.091478+00:00",
+  "builder": {
+    "id": "/root/fixture_repair_w6",
+    "role": "author of own WP10 Review browser diagnostics",
+    "lease": "CLOSED",
+    "independent_reviewer": false
+  },
+  "task": "W12 Review bootstrap: retain the real browser failure evidence before cleanup; root cause remains unproved pending hosted execution",
+  "source_lineage": {
+    "base": {
+      "sha": "68027467de0bbe3e9136be7b458724e387f55839",
+      "tree": "fe9ed15af54c06c5724b445752efcf91d69f5087"
+    },
+    "before": {
+      "path": "analysis/review-bootstrap-W12-before/modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "bytes": 10063,
+      "sha256": "61ddb847a5b92a812e8817c38b22383c2cd995065b102fbd7a1eaba3abb21711",
+      "git_blob_sha1": "2abbd120ff65d769fa63b9dc729900ed1fd52b4f"
+    },
+    "previous_helper_receipt": {
+      "path": "analysis/fixture-repair-W8b.json",
+      "bytes": 8023,
+      "sha256": "cc063b1394e18c18af8b8970ce5833e50e579d855010692a8aaeff928838a126",
+      "git_blob_sha1": "124b3f255ffd7e97fa8a77f479b5ef9d6228e2c0"
+    },
+    "alternative_closed_receipt": {
+      "path": "analysis/alternative-authority-W12.json",
+      "bytes": 16856,
+      "sha256": "faceeea192b2df273f65641486a6ef9aba0ae7ec191c5c496e7839387bf5ddf9",
+      "git_blob_sha1": "d64627c2ec7a75f386d6a47458a476c07aff0379"
+    },
+    "alternative_final_bytes_unchanged": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "bytes": 9897,
+        "sha256": "3bc85fd0f2d80bad3e3ba11438fd23ea4fe89e407230c9cb6c1b054e810db019",
+        "git_blob_sha1": "378f7e3601954f33c24c463995649d96eecde566",
+        "matches_closed_W12": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "bytes": 10468,
+        "sha256": "25e025636945b39765e46fdafdee1817db333b8a863a0a90c4260533415dd33c",
+        "git_blob_sha1": "86555f4165b36dbf6bc0468a5ce1885e5a87a6d1",
+        "matches_closed_W12": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+        "bytes": 23381,
+        "sha256": "42aadaa970cf79b53752dd8891ab1b332e15889f07e5324c839bc7831198848d",
+        "git_blob_sha1": "f7702eaf6fc8fbf5505f026189510093837237ba",
+        "matches_closed_W12": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+        "bytes": 38409,
+        "sha256": "7dea00d79621b6b5e6805dc9487ae2a93970faf198497a3450e34ed5b1fcdf3e",
+        "git_blob_sha1": "4933e8c24b6288f10dd69b196bd12ab32ecf4f63",
+        "matches_closed_W12": true
+      }
+    ]
+  },
+  "authored_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "bytes": 14586,
+      "sha256": "173b1a7fdf70d97cb194af40a12785d43e7e9444c1d98ce95c06aa1091b12795",
+      "git_blob_sha1": "100527ca776200af7106c8e8763ebab117c61a2c",
+      "base": {
+        "path": "analysis/frozen-W8/repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+        "bytes": 10063,
+        "sha256": "61ddb847a5b92a812e8817c38b22383c2cd995065b102fbd7a1eaba3abb21711",
+        "git_blob_sha1": "2abbd120ff65d769fa63b9dc729900ed1fd52b4f"
+      }
+    }
+  ],
+  "patch": {
+    "path": "analysis/review-bootstrap-W12.patch",
+    "bytes": 12742,
+    "sha256": "1d5ade30bad5c28aafd4285395ea47a948f5def0fdd3ad1122eaeb1ef2def7fc",
+    "git_blob_sha1": "3b16d3cfdc6b7da0792fe6f4b9f57dd8d62490d7"
+  },
+  "read_only_inspection_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "bytes": 13738,
+      "sha256": "e40a91c63c064012ce68c502b96956b1e846560195a6df2c772046ffbb86a5c0",
+      "git_blob_sha1": "fadc7cf0a3dc2a8df187c3f0634a824e801de560",
+      "unchanged_from_W8": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "bytes": 15025,
+      "sha256": "fc2f7ecb16f7ab66f894cc1d2bc21a85b25513177da4eeb08a4e827814e618eb",
+      "git_blob_sha1": "a69d632fd44bf387c26391f3e6479ff1c1de0643",
+      "unchanged_from_W8": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+      "bytes": 995,
+      "sha256": "8070debc6f7ccac7eed67b6d736c7051405d9584d4610ceb81c2d066ec2884f0",
+      "git_blob_sha1": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "unchanged_from_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+      "bytes": 21677,
+      "sha256": "5cac94eb6150666dcdb85ac918a91dd49a2bb7dfd0ce29c78c12c6287146320a",
+      "git_blob_sha1": "c2c8bf7ff6209daf43edc6a74faafc1da5604329",
+      "unchanged_from_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "bytes": 33220,
+      "sha256": "c868760bdfbe3cd981104108bf0c14c27e0ce09b20ec263d2aa62cf8430faa58",
+      "git_blob_sha1": "f87d1002f3cd15935ba388072344416c25c94020",
+      "unchanged_from_W8": true
+    }
+  ],
+  "hosted_input": {
+    "W": "68027467de0bbe3e9136be7b458724e387f55839",
+    "treeW": "fe9ed15af54c06c5724b445752efcf91d69f5087",
+    "S": "8127463fa0bff1f408afd565ddb2757c293fb865",
+    "treeS": "a7d91806ca743ef01a72fc4673d8d44bb52a35cd",
+    "run_id": 43564553695,
+    "job_id": 132355419787,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43564553695",
+    "conclusion": "failure",
+    "raw_log": {
+      "path": "analysis/hosted/job-132355419787.log",
+      "bytes": 140439,
+      "sha256": "23685c73e3881603a2cdf33750010efba935e1c939ff0676dd769752b7cc96fb",
+      "git_blob_sha1": "1405b0d6745e8443e4222ed01998c1ad1d83d12c"
+    },
+    "curated_results": {
+      "path": "analysis/hosted/W8-recovery-results.json",
+      "bytes": 148897,
+      "sha256": "0abae690aa42d9038c9159c2e546aa0ec024ff9b3dd30b8c52fdc5566084b3b5",
+      "git_blob_sha1": "a45a44e44cad525f68ab77282dae7f5828a945d0"
+    },
+    "observed_failure": {
+      "group": "browser-case-revocation",
+      "test_ms": 38101.56,
+      "actual_initial_review_http_status": 200,
+      "actual_initial_review_handler_ms": 14903,
+      "review_read_route_observed": false,
+      "error": "WP10_REVIEW_BROWSER_TRANSPORT_DEADLINE",
+      "deadline_aborted": false
+    }
+  },
+  "static_findings": [
+    "The own extended-assets entry resolves reviews to extended-browser.ts with browser target, IIFE and minification. The actual hosted HTML handler returned200; no browser error or console transcript survived its catch.",
+    "The own browser requires the workspace and JSON bootstrap, parses reviewRef and constructs createMeetingViewFromReads with an actual review-read fetch. The published Meeting source invokes show(0); show invokes input.read synchronously before its first awaited result. Its API matches the composition.",
+    "The own HTML path supplies workspace and JSON and inserts the real asset, then calls the published htmlPolicy over the final HTML. Static source alone does not establish actual emitted bundle bytes or browser CSP/parse/runtime success.",
+    "Absent review-read route output localizes the observed failure before an observed read producer. It does not distinguish missing bootstrap, script parsing/execution, CSP, or request transport. No causal product correction is claimed."
+  ],
+  "implemented": [
+    "Capture at most16 console error/warning entries, pageerror stack entries and failed browser requests, while retaining the existing errors array and its final empty assertion.",
+    "Record synchronous stage and each observed real request arrival, actual handled status and browser response delivery. Observer matching and producer/transport promises are unchanged.",
+    "Emit SF_REVIEW_BROWSER_FAILURE before cleanup with the original exception and captured observations. The initial bootstrap exception is no longer discarded behind a generic transport deadline.",
+    "Emit SF_REVIEW_BROWSER_DOM using real page.evaluate observations: readyState, workspace/selected section/table/button/link counts, bootstrap presence/length, inline script metadata and a boolean indicating the fixture private text. No DOM text, preserved body, script contents or financial output is copied into this diagnostic.",
+    "DOM diagnostics use the existing10s bounded helper and caller AbortSignal, are skipped once cancellation has fired, and cannot turn a failure into a pass. They also run for revocation/late-response verification failures. The original exception is rethrown and existing captureChromiumCleanup remains responsible for owned processes."
+  ],
+  "preserved_assertions": {
+    "helper_statements_before": 11,
+    "helper_statements_after": 11,
+    "helper_assertion_lines_identical": true,
+    "review_suite_expect_statements": 73,
+    "review_groups": 11,
+    "review_suite_bytes_unchanged": true,
+    "unchanged_checks": [
+      "actual initial HTML200 and read200 on each of two pages",
+      "actual selected table and private text, bootstrap removed",
+      "actual authorized source200 held across later membership revocation",
+      "host still authenticated while case participation removed",
+      "focus actual403 and source actual403",
+      "both DOMs cleared of table/link/button/selected section/private text/bootstrap",
+      "release of actual held200 cannot restore either DOM",
+      "all existing server/history/integrity/egress cases"
+    ]
+  },
+  "budgets": {
+    "cooperative_ms": 105000,
+    "outer_test_ms": 120000,
+    "transport_ms": 10000,
+    "navigation_ms": 15000,
+    "chrome_launch_ms": 15000,
+    "product_waits_changed": false,
+    "note": "Only failure diagnostics add bounded observation inside the existing caller deadline; no setup was moved outside the budget."
+  },
+  "validation": {
+    "local_product_execution": false,
+    "local_tests": false,
+    "local_build": false,
+    "local_typecheck": false,
+    "local_browser": false,
+    "remote_mutations": false,
+    "hosted_after_change": "PENDING root candidate and surgical CI",
+    "performed": [
+      "static source inspection",
+      "byte/SHA256/git-blob identity verification",
+      "assertion-line and timer preservation by text comparison",
+      "read-only W8 comparison for production/WP07/Review suite",
+      "closed Alternative byte identity verification"
+    ],
+    "independent_review": "PENDING; author is not an independent reviewer"
+  },
+  "open_items": [
+    "Run the unchanged Review browser-case-revocation group in hosted CI at the next candidate. If it still fails, classify the now-retained pageerrors/console/requestfailed/DOM evidence before changing production or waits.",
+    "First browser read200, selected DOM on both pages, held actual source200, case-only403 clearing and late200 non-resurrection remain unproved for W8 and pending for this diagnostic delta.",
+    "Annual Review report/download and successor/comparison latency remain open; partitioning and diagnostics are not product performance fixes.",
+    "No native/global acceptance, no reviewer signoff, no findings closure, no merge or deploy. S0 retains review/integration responsibility."
+  ]
+}

@@ -61,6 +61,7 @@ export function createProductionPortfolio(input: {
   }
   return createPortfolioContribution({
     cases: input.cases,
+    validateCatalogSources: (projection, context) => projection.case.alternatives.length ? fresh(projection.evidenceRefs, context) : input.revalidate(context),
     enabledOperations: input.enabledOperations.filter((operation) => operation === "sf_portfolio_evaluate" ? !!input.persistence.portfolioBindings : !!input.sensitivity),
     createReceipt: input.createReceipt,
     decisions: input.decisions,

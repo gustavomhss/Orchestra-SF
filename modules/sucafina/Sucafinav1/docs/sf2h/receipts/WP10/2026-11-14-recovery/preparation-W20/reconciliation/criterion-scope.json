@@ -1,0 +1,90 @@
+{
+  "schema": "sf-wp10-scoped-criterion-contribution-v1",
+  "canonicalCriterionCount": 171,
+  "canonicalTaskCount": 7,
+  "inventoryChanged": false,
+  "criteria": [
+    {
+      "id": "WP10.CMP.02",
+      "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados.",
+      "family": "completeness_criteria",
+      "task": "WP10",
+      "task_title": "Composição, revisão independente e aceitação",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    },
+    {
+      "id": "WP10.QLT.02",
+      "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números.",
+      "family": "quality_standards",
+      "task": "WP10",
+      "task_title": "Composição, revisão independente e aceitação",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    },
+    {
+      "id": "WP10.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "family": "quality_standards",
+      "task": "WP10",
+      "task_title": "Composição, revisão independente e aceitação",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    },
+    {
+      "id": "WP10.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "family": "success_criteria",
+      "task": "WP10",
+      "task_title": "Composição, revisão independente e aceitação",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    },
+    {
+      "id": "WP10.T01.CHK.02",
+      "text": "Abrir cada função nova através da navegação real e observar leitura/escrita no domínio correto.",
+      "family": "checks",
+      "task": "WP10.T01",
+      "task_title": "Compor host e módulo continuamente desde o início",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    },
+    {
+      "id": "WP10.T01.CHK.03",
+      "text": "Rotinas usam recibo de run real; gráficos, imports e relatórios usam os mesmos valores autorizados dos domínios.",
+      "family": "checks",
+      "task": "WP10.T01",
+      "task_title": "Compor host e módulo continuamente desde o início",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    },
+    {
+      "id": "WP10.T01.DOD.01",
+      "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
+      "family": "dod",
+      "task": "WP10.T01",
+      "task_title": "Compor host e módulo continuamente desde o início",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    },
+    {
+      "id": "WP10.T05.QLT.10",
+      "text": "Limitações e falhas são específicas e rastreáveis ao produtor.",
+      "family": "quality_standards",
+      "task": "WP10.T05",
+      "task_title": "Fechar a campanha e entregar o produto revisável",
+      "status": "IMPLEMENTED_SOURCE_AWAITING_HOSTED_PROOF",
+      "acceptanceClaimed": false,
+      "scope": "Only own Portfolio reconciliation host/HTTP/read-only consumer and explicit limitation semantics. Existing 171-criterion inventory is untouched."
+    }
+  ],
+  "nativeAcceptance": false,
+  "globalAcceptance": false
+}

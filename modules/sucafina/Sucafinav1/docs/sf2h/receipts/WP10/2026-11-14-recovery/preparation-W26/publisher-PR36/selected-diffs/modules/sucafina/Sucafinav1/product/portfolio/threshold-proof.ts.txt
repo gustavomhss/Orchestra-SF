@@ -1,0 +1,40 @@
+--- W22/modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts
++++ 48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts
+@@ -6,6 +6,7 @@
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import { exactComponents, plannerDirectUsdParameter } from "../planner/exact-threshold.ts"
+ import { plannerComponentDigest } from "../planner/comparison.ts"
++import type { PlannerDirectIntervalProof } from "../decisions/coverage-interval.ts"
+ import type { createPlannerSensitivity, PlannerSensitivityBinding } from "./planner-sensitivity.ts"
+ 
+ export type KnownSubtotalThreshold = { value: number; evidenceRefs: readonly BusinessEvidenceRef[]; scope: "known-subtotal" }
+@@ -19,16 +20,21 @@
+   source: ScenarioResult
+   baseline: ScenarioResult
+   certificate: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }
++  /** Current canonical domain proof when a persisted number is being recertified. */
++  structural?: PlannerDirectIntervalProof
+   preview: Parameters<typeof createPlannerSensitivity>[0]["preview"]
+   context: TrustedDomainContext
+ }): Promise<PortResult<KnownSubtotalThreshold>> {
+   const { request, binding, context } = input
+   const certificate = structuredClone(input.certificate)
++  const structural = input.structural ? structuredClone(input.structural) : undefined
+   const value = certificate.value
+   const unsupported = () => ({ status: "unavailable" as const, reason: "exact-threshold-certificate-incompatible" })
+   if (value === null || !Number.isFinite(value) || value < request.parameterBounds.minimum || value > request.parameterBounds.maximum || !["lte", "gte"].includes(request.criterion.operator) || binding.metric !== "alternative-minus-baseline-known-subtotal" || binding.parameterUnit !== "USD" || binding.resultUnit !== "USD" || binding.unit !== "USD" || binding.engineVersion !== "planner-runtime-v1" || !plannerDirectUsdParameter(binding.scenario, request.parameterBounds.parameterRef, binding.parameterOperation)) return unsupported()
+   if ([input.source, input.baseline].some((scenario) => scenario.currency !== binding.resultUnit || scenario.knownSubtotal === null || !Number.isFinite(scenario.knownSubtotal) || ["incompatible", "unavailable"].includes(scenario.comparisonStatus)) || digestSfValue(input.source.horizon) !== digestSfValue(input.baseline.horizon)) return unsupported()
+   if (!certificate.evidenceRefs.length || new Set(certificate.evidenceRefs.map((ref) => ref.refDigest)).size !== certificate.evidenceRefs.length || certificate.evidenceRefs.some((ref) => ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) || !binding.evidenceRefs.some((ref) => ref.refId === binding.unitMetadataRef && certificate.evidenceRefs.some((proof) => digestSfValue(proof) === digestSfValue(ref)))) return unsupported()
++  const referenceSet = (refs: readonly BusinessEvidenceRef[]) => digestSfValue(refs.map((ref) => digestSfValue(ref)).sort())
++  if (structural && (structural.kind !== "planner-direct-usd-v1" || structural.baselineRef !== binding.baselineRef || structural.scenarioRef !== request.scenarioRef || structural.scenarioDigest !== digestSfValue(binding.scenario) || digestSfValue(structural.parameterOperation) !== digestSfValue(binding.parameterOperation) || structural.metadataDigest !== binding.metadataDigest || structural.engineVersion !== binding.engineVersion || structural.parameterRef !== request.parameterBounds.parameterRef || structural.minimum !== request.parameterBounds.minimum || structural.maximum !== request.parameterBounds.maximum || structural.unit !== binding.resultUnit || digestSfValue(structural.period) !== digestSfValue(input.source.horizon) || referenceSet(structural.sourceRefs) !== referenceSet(certificate.evidenceRefs))) return unsupported()
+   const rejected = adjacent(value, request.criterion.operator === "lte" ? 1 : -1)
+   if (!Number.isFinite(rejected) || rejected < request.parameterBounds.minimum || rejected > request.parameterBounds.maximum) return unsupported()
+   const preview = async (parameter: number) => structuredClone(await input.preview({ baselineRef: binding.baselineRef, scenario: plannerSensitivityScenario(binding, request.parameterBounds.parameterRef, parameter) }, context))
+@@ -39,6 +45,7 @@
+   const valid = (observation: typeof included.value, parameter: number) => observation.comparison.baselineResultRef === binding.baselineRef && observation.comparison.alternativeResultRef === observation.sample.id && observation.comparison.comparisonStatus === "conditioned" && observation.comparison.completeDifference === null && digestSfValue(observation.comparison.costCoverageRefs) === digestSfValue([binding.baselineCoverageRef]) && observation.metric.metricRef === "planner:known-subtotal-difference" && observation.metric.state === "conditioned" && observation.metric.engineVersion === binding.engineVersion && observation.metric.unit === binding.resultUnit && observation.metric.value !== null && Number.isFinite(observation.metric.value) && observation.metric.value === observation.comparison.knownDifference && digestSfValue(observation.metric.period) === digestSfValue(input.source.horizon) && observation.metric.evidenceRefs.length > 0 && observation.metric.evidenceRefs.every((ref) => certificate.evidenceRefs.some((proof) => digestSfValue(proof) === digestSfValue(ref))) && exactComponents(observation.sample, request.parameterBounds.parameterRef, parameter)
+   const fixed = (scenario: ScenarioResult) => plannerComponentDigest(scenario.components.filter((component) => component.id !== request.parameterBounds.parameterRef))
+   if (!valid(included.value, value) || !valid(excluded.value, rejected) || fixed(included.value.sample) !== fixed(excluded.value.sample) || digestSfValue(included.value.sample.components.map((component) => component.id)) !== digestSfValue(excluded.value.sample.components.map((component) => component.id))) return unsupported()
++  if (structural && [included.value, excluded.value].some((observation) => fixed(observation.sample) !== structural.fixedComponentsDigest || digestSfValue(observation.sample.components.map((component) => component.id)) !== digestSfValue(structural.componentIds))) return unsupported()
+   const meets = (metric: number) => request.criterion.operator === "lte" ? metric <= request.criterion.value : metric >= request.criterion.value
+   if (!meets(included.value.metric.value!) || meets(excluded.value.metric.value!)) return unsupported()
+   return { status: "ok", value: { value, evidenceRefs: certificate.evidenceRefs, scope: "known-subtotal" } }

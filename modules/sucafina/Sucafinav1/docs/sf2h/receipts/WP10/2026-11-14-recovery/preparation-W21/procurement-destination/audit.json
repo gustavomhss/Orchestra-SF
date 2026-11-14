@@ -1,0 +1,122 @@
+{
+  "schema": "wp10.builder.correction-audit.v1",
+  "wave": "W21",
+  "scope": "Procurement work destination only",
+  "status": "frozen-for-publication-and-hosted-ci",
+  "builder": "/root/c17_composition",
+  "baseCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "baseTree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+  "sourceManifest": {
+    "path": "agents/c17/W21-procurement-destination/source-manifest.json",
+    "bytes": 3027,
+    "sha256": "c150c04554f81eee7ec80cbe146b24bf65df69c0dd07f21cb74bd24499ee0608",
+    "blobSha": "d11db8c959f4181f9dc43c7a2de5b941ec28d31b"
+  },
+  "productPaths": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blobSha": "520a71460ba69a9c8a07fd1b7db838ca13108c32",
+      "sha256": "c5c2a68d0efe67e2bbb53963ec50fdfc5f00d61de8ad4c25351db639119d697d"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "blobSha": "3ee3eea082dea99ab68f55013726967a34546ce8",
+      "sha256": "d91126137f5c77664148e6cf6066f030915c911cd079bc5ab7020d43b3f63e81"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "blobSha": "cd63b34552bc9d01712939407071e157c6e20abd",
+      "sha256": "5e638e2f19f28f23ce6ce41ef4c92dfaba8740a2c3713a75787c864fbc29d0be"
+    }
+  ],
+  "failureEvidence": {
+    "productCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "runId": 43601767154,
+    "jobId": 132467830629,
+    "snapshotCommit": "746652850ccfc46c6ae5c9987c129daedcf12799",
+    "conclusion": "failure",
+    "diagnostic": "TS2339 work-destinations.ts:95 individual.resolveRequestSource does not exist",
+    "provenancePath": "agents/c17/W21-procurement-destination/failure-provenance.json"
+  },
+  "causes": [
+    "Wrong individual resolver method name; actual API is resolve(ref, context).",
+    "Both outer work.listPresentation and exact secondary sf_request_read require a call-local canonical period when ambient periods is empty."
+  ],
+  "changes": [
+    "Replace nonexistent individual.resolveRequestSource with individual.resolve without changing foreign contracts.",
+    "Scope complete collect and canonical final destination resolver using existing pagePeriods only.",
+    "Scope exact secondary sf_request_read with canonical item.period, same parent Request and current parent entry.",
+    "Pin complete Request method/URL/headers, full bindings, payload, period, principal identity, exact grants/intents and leases before/after awaits; reject overlap; finally deletes own entry only."
+  ],
+  "preserved": [
+    "Six existing full-file tests and budgets byte exact.",
+    "Existing C12 final egress guards, C17 historical contracts, source-fence reader and case selection helpers unchanged.",
+    "No broadening of RequestReadRequest, matchesIntent, resident Surface or grants.",
+    "Full existing C08 snapshot/source/current-authority witnesses, canonical collection/source validation and repeated work reads retained."
+  ],
+  "collectionLifetime": {
+    "producerCollectionIsEphemeral": true,
+    "rebuildTestUsesNewCanonicalSelection": true,
+    "selectionCreatedBy": "Actual procurementQueueView -> actual registry.createSelection; observer records output only.",
+    "noAmbientGlobalSelection": true,
+    "retainedQueuePagePeriodOnlyBelongsToQueueUi": true,
+    "persistedOldCollectionReferenceClaim": false,
+    "durableCaseSelectionTestsPreserved": true
+  },
+  "tests": {
+    "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "selectedByParent": "W21 A whole-file request",
+    "newCases": [
+      "Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period",
+      "Procurement destination refuses a different period, actor and actually changed source after its canonical positive",
+      "Procurement period scope rejects overlap and header replacement and cleans up after throw or lease finish",
+      "Procurement secondary read cleans both scopes on exception and refuses real access revocation before display"
+    ],
+    "setup": "Real C08/SQLite source persistence and authority with explicit fixture authentication/configuration; real Domain.execute create/submit_pr/cancel, real registry/queue/work/individual/port/HTTP; no fabricated presentation/actionRef/accepted receipt.",
+    "execution": "not-run-locally; awaiting hosted W21 exact published SHA",
+    "assertionsOrExistingBudgetsRelaxed": false
+  },
+  "staticChecks": {
+    "baseFilesByteExactToFrozenW20": true,
+    "businessOnlyNewHelperAndReturnEntry": true,
+    "existingSixTestsAndBudgetsByteExact": true,
+    "wholeFileTestCount": 10,
+    "newProcurementTests": 4,
+    "newTestsBudgetMs": 120000,
+    "productMethodExistsBySourceInspection": true,
+    "outerCollectAndCanonicalResolverScoped": true,
+    "secondaryPeriodFromCanonicalItem": true,
+    "noGlobalPeriodSetterCalledInNewTests": true,
+    "foreignContractsEdited": false,
+    "localProductExecution": false
+  },
+  "supplementalBuilderAudit": {
+    "agent": "/root/c17_composition/w21_static_scope_audit",
+    "result": "No additional static blocker identified. API, scope, cleanup, actual domain commands, canonical queue actionRef and actual accessRevision revocation inspected.",
+    "independentReview": false,
+    "postAuditTestDelta": "Only void first.then(enter, enter) was added to unblock the test barrier if the first scoped call settles before entering the callback. Product hashes unchanged."
+  },
+  "validation": {
+    "localTests": "not-executed",
+    "localTypecheck": "not-executed",
+    "localBuild": "not-executed",
+    "localProductImport": "not-executed",
+    "localBrowser": "not-executed",
+    "hostedW21Check": "pending-publication",
+    "hostedW21Functional": "pending-publication",
+    "nativeAcceptance": "unexecuted",
+    "globalAcceptance": "unexecuted",
+    "independentAcceptance": "not-granted",
+    "performanceMeasured": false
+  },
+  "limits": [
+    "No persistence/recovery claimed for an old ephemeral Procurement collection ref.",
+    "Queue selection release and five-minute expiry remain producer-owned.",
+    "No installed-session, browser, native or global acceptance inferred from this fixture.",
+    "Three independent reviewers must review the published successor and its own evidence."
+  ],
+  "remoteMutationsPerformed": false,
+  "publicationPerformed": false,
+  "readOnlyDependenciesDirectory": "agents/c17/W21-procurement-destination/dependencies",
+  "notesPath": "agents/c17/W21-procurement-destination/audit.md"
+}

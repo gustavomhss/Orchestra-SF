@@ -1,0 +1,41 @@
+{
+  "kind": "text-and-bytes-only",
+  "productExecution": false,
+  "localTests": false,
+  "localTypecheck": false,
+  "remoteMutation": false,
+  "hostedVerdict": "not-run-by-this-builder",
+  "relativeImportsResolved": true,
+  "baselineImportsNotHydrated": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "specifier": "../../../../modules/atlas/boundary/package.json",
+      "resolvedPath": "modules/atlas/boundary/package.json"
+    }
+  ],
+  "strictRunContextBodyUnchanged": true,
+  "sourcePreservationAndCancellationGuardBodiesUnchanged": true,
+  "nativeExecuteCollectCancelAndReleaseBodiesUnchanged": true,
+  "existingCliTestAssertionsUnchanged": true,
+  "C07": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "unchanged": true
+    }
+  ],
+  "budgets": {
+    "newIntegrationTests": 4,
+    "newCliTests": 1,
+    "timeoutMsPerNewTest": 120000,
+    "existingBudgetsChanged": false
+  },
+  "independentReview": "not-performed-by-this-builder"
+}

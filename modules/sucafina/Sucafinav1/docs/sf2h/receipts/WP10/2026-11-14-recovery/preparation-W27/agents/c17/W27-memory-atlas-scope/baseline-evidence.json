@@ -1,0 +1,46 @@
+{
+  "source": "evidence/W26/normalized/A-authority-lifecycle/terminal.json",
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "snapshotSha": "dd53af531181d1b05e5081b765dbfecc2a6ba6a9",
+  "runId": 43618475702,
+  "jobId": 132518644009,
+  "conclusion": "failure",
+  "counts": {
+    "pass": 45,
+    "fail": 1,
+    "expects": 1904,
+    "tests": 46,
+    "files": 8,
+    "durationSeconds": 391.43,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "rawLog": {
+    "path": "evidence/W26/A-job-132518644009.raw.txt",
+    "bytes": 95897,
+    "sha256": "b4b41f42838860c118967c8a08182f9f0cf2af01835bd2b1cf3ce8817c8f7f41",
+    "git_blob_sha1": "6ab08bac6c64d048f708e9a2dc73f86039819b5e",
+    "characters": 95895,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "targetFile": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+  "failure": "225000ms cooperative cumulative deadline during memory.same-request-new-proof",
+  "prepare": {
+    "durationMs": 37782,
+    "persistenceApiInvocations": 11030,
+    "rootApiInvocations": 3450,
+    "nestedApiInvocations": 7580,
+    "evidenceWitnesses": 188,
+    "c08Calls": 786,
+    "caseCalls": 24,
+    "externalCaseWitnesses": 40,
+    "bcsContexts": 6,
+    "groupedBcsContexts": 4,
+    "canonicalAtlasReads": 2,
+    "canonicalAtlasCompleted": 2
+  },
+  "metricsBoundary": "Observed W26 metrics only. API invocations are not physical commits/connections; W27 runtime improvement remains unmeasured.",
+  "counterPrecision": "The 188 evidence-tag witnesses include the generic roots around canonical case reads. 94 is a count inferred for two-witness generic observations, not independently instrumented evidence-resolver calls."
+}

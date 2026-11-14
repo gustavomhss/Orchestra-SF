@@ -1,0 +1,337 @@
+{
+  "schema": "wp10-independent-preflight-v1",
+  "reviewer": "R2",
+  "agent": "/root/independent_r2_w16",
+  "candidateSha": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+  "candidateTree": "6c967deebc9f4127b12d33bdbad6ed1ff80e649d",
+  "parentSha": "f7466375e268b70113312096b2a06ff2d75e4a53",
+  "parentTree": "1fc3a38e95bbbbe2b60987bf6faf62c3e40a4359",
+  "pr": 29,
+  "base": "sf2-stack",
+  "verdict": "HOLD",
+  "phase": "source-and-hosted-check-preflight",
+  "finalForCandidate": false,
+  "evidenceCutoffUtc": "2026-11-14 16:20:34 UTC",
+  "independence": {
+    "productAuthorship": false,
+    "testAuthorship": false,
+    "productEdits": false,
+    "remoteMutation": false,
+    "localProductExecution": false,
+    "localProductImports": false,
+    "localTests": false,
+    "localTypecheck": false,
+    "localBuild": false,
+    "browserExecution": false,
+    "method": "Independent frozen-source/contract/diff/JSON/tree/hash reads and read-only GitHub MCP. Only new R2 review artifacts were written; the audit script processes static bytes and JSON without importing product code.",
+    "builderNarrativeAcceptedAsProof": false,
+    "threeIndependentFinalReviewsSatisfied": false
+  },
+  "summary": "W24 remains HOLD. Publication, own overlays and preservation are coherent. The exact hosted W24 check fails on two own TS7006 diagnostics in one fixture and thirteen foreign diagnostics. Financial/source/ledger/capture paths retain actual canonical readers, actual replay and final witnesses in the inspected source, but W23/W24 functional and performance success is not established. The foreign H05 producer/test contract divergence is independently corroborated. This preflight is not approval.",
+  "verifiedStatic": {
+    "hydratedFiles": 1543,
+    "matchingHydratedFiles": 1543,
+    "fullTreeBlobs": 16516,
+    "gitTreeDirectoriesRehashed": 2611,
+    "gitTreeHashMismatches": 0,
+    "W23Delta": {
+      "paths": 120,
+      "ownSourceAndTest": 15,
+      "newReceipts": 105
+    },
+    "W24Delta": {
+      "paths": 26,
+      "ownSourceAndTest": 1,
+      "newReceipts": 25
+    },
+    "productionIdenticalW23W24": true,
+    "deletedPaths": 0,
+    "undeclaredChangedPaths": 0,
+    "ownershipViolations": 0,
+    "effectivePins": 437,
+    "effectivePinMismatches": 0,
+    "newForeignIntakes": 0,
+    "removedOwnPins": 3,
+    "removedOwnPinsPreservedExactlyInSuperseded": true,
+    "oldRemovedPinBytesStillPresentInW22Freeze": true,
+    "priorW22ReceiptsPreserved": 333,
+    "priorW23ReceiptsPreserved": 438,
+    "canonicalCriteria": 171,
+    "candidateCriteria": 171,
+    "literalCriteriaAndProofIdsPreserved": true,
+    "tasks": 7,
+    "criterionMapSha256": "95fc2fe3cdbebffa5aefe990991fb495c7d4f6c194395c27e01b7d8e2208a8e1",
+    "foreignArchiveIndexCount": 128,
+    "readonlyInputIndexCount": 131,
+    "archiveAndReadonlyIndicesByteExact": true,
+    "individualOriginalForeignFilesRefetched": false,
+    "priorR2IndexedArtifactsPreserved": true,
+    "remoteCandidateBlobChecks": 6,
+    "remoteUpstreamBlobChecks": 2,
+    "remoteUtf8ContentBlobHashesMatch": true
+  },
+  "sourceObservations": [
+    {
+      "id": "R2-W24-SOURCE-C17-01",
+      "paths": [
+        "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+        "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts"
+      ],
+      "conclusion": "source-consistent-functional-unproven",
+      "observation": "The preselection reads actual stored result/case under cases authority, then separately admits preferences and rechecks the same stored result/case. It enters withCalculationCase before canonical request/result loaders. The observer records clones only after the actual loaders return; it neither replaces the loaders nor caches authorization or their promises. Two outer request and two outer result observations are required. The unchanged producer still performs two real simulation replays and full result/source equality checks. The test asserts six actual result-reader calls; that count is source-level expectation, not observed W24 performance.",
+      "financialEquivalence": "Projection retains the complete stored ScenarioResult JSON, components, knownSubtotal, total including null, currency, horizon, missing/conditioned coverage and sourceRefs. It does not convert incomplete coverage into a scalar total or current execution authority."
+    },
+    {
+      "id": "R2-W24-SOURCE-C17-02",
+      "paths": [
+        "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+        "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "apps/cli/src/sucafina-product/business-services.ts"
+      ],
+      "conclusion": "source-consistent-functional-unproven",
+      "observation": "The historical fast admission is UI + Planner record-version only and calls the actual existing freshRecordSources implementation inside the exact lexical historical Request/binding/header scope. It compares whole references and current source fences before/after actual admission. Native, mixed and unavailable-callback paths retain canonical BCS. Actual historical request/result readers, selected source ledger/current case identity, protected capture before/after, original calculation ref, and two actual financial replays remain. Output stays historical; current selectedCase is not upgraded.",
+      "fence": "withCalculationCase invokes the observed egress after its final awaited selectedCase read, while holding its exact private case owner. The current observation covers complete C08 product state, snapshots/source fences, principal, day/environment, Request identity/headers and binding. withHistoricalCalculationCase similarly runs historical final capture/state verification after its current selection read while preserving the original scope."
+    },
+    {
+      "id": "R2-W24-SOURCE-C12-01",
+      "paths": [
+        "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts"
+      ],
+      "conclusion": "source-consistent-functional-unproven",
+      "observation": "Only UI cases with real planned Procurement prepared changes, no receipts, current already-materialized source scope and actual matching authority are admitted. It invokes the actual canonical case reader once inside one read root; that reader retains both canonical BCS passes and redacted public view. Unsupported cases leave the root before canonical fallback. Missing case, nonparticipant and invalid C08 preserve their actual canonical refusal while authority pins remain intact. Changes after canonical invocation, nested writers or poison refuse without a second unprotected retry. Chosen/unprepared, historical/mixed/native and apply writes are outside this optimization."
+    },
+    {
+      "id": "R2-W24-SOURCE-MEMORY-01",
+      "paths": [
+        "apps/cli/src/sucafina-product/procurement-evidence-read-scope.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+      ],
+      "conclusion": "source-consistent-functional-unproven",
+      "observation": "Only one actual canonical Procurement evidence resolution is grouped under a real readonly root. The current actor's canonical materialized scope is reconstructed and compared without promoting an old reference to current history. C08 preferences/full state, all domain snapshots, principal, environment/day, selected period/expiry, dynamic resolver identity, Request/header and binding pins are checked before/after. Cold C08 or lack of preferences falls through outside the root to the existing source behavior. Canonical undefined remains undefined. Whole Memory/Atlas observation is not wrapped, so interleaved durable source/capture writes remain outside that evidence root.",
+      "testQualification": "The new real fixture cases call the canonical producer and cover cold C08, denied preferences, ready state and nested writer/no durable side effect. Historical Memory adds assertions that producer fences own a root and Memory fences do not. Full historical proof, original counterproofs, two-Atlas/six-context assertions and budgets remain. These are inspected tests, not executed W24 passes."
+    },
+    {
+      "id": "R2-W24-SOURCE-COUNTERPROOFS-01",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts"
+      ],
+      "conclusion": "causal-tests-present-not-executed",
+      "observation": "The new observed-store counterproof waits for six completed actual result readers, then mutates persisted request/result/capture, a Request header, or the UI lease; it requires unavailable output with neither projection nor currentRef, released selectedCase scope and fresh-invocation recovery. Wrong-case refusal now additionally requires zero result reads before scope rejection. Existing null totals, exact stored JSON, ancestry, ledger/capture and revocation assertions remain. Recorded-history additions are phase/count diagnostics; they do not establish resolution of its prior performance failures."
+    }
+  ],
+  "newMandatoryOwnFindings": [
+    {
+      "id": "R2-W24-FIXTURE-TYPECHECK-01",
+      "severity": "blocking",
+      "status": "OPEN",
+      "owner": "WP10",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "lines": [
+        268
+      ],
+      "candidateBlob": "863aabc6fef39b87701f1dac005793309b3372a6",
+      "diagnostics": [
+        {
+          "code": "TS7006",
+          "line": 268,
+          "column": 48,
+          "parameter": "snapshot"
+        },
+        {
+          "code": "TS7006",
+          "line": 268,
+          "column": 58,
+          "parameter": "blobs"
+        }
+      ],
+      "evidence": {
+        "runId": 43614178262,
+        "jobId": 132505501377,
+        "snapshotSha": "5f8626d87c211343777ebc27ed51ce1091a8395c",
+        "artifactId": 14121138829,
+        "logs": [
+          "sucafina-typecheck.log",
+          "wp10-test-typecheck.log"
+        ]
+      },
+      "cause": "The W24 two-argument callback corrects the prior rest-argument arity problem but the LocalStore intersection/overload does not contextually type these parameters. Both become implicit any.",
+      "requiredAction": "Apply explicit callback parameter types compatible with the actual Snapshot and BlobTransaction contracts, retaining forwarding of both actual arguments and every assertion/budget; publish a successor and obtain its exact hosted check. Do not transfer W24 failure or an announced W25 correction into a passing result.",
+      "fixAuthoredByReviewer": false
+    }
+  ],
+  "corroboratedOwnerBlockers": [
+    {
+      "id": "R2-W24-H05-OWNER-CONTRACT-01",
+      "relatedFinding": "W23-OWNER-C12-H05-RECONCILIATION-01",
+      "status": "OPEN-OWNER-DECISION-REQUIRED",
+      "owners": [
+        "WP04",
+        "WP11",
+        "S0"
+      ],
+      "test": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "lines": [
+          248,
+          283
+        ],
+        "blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+        "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "pr": 34
+      },
+      "producer": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "lines": [
+          109,
+          143
+        ],
+        "blob": "964a53310c340f4496d7410d66f8b852270b75f1",
+        "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+        "pr": 35
+      },
+      "evidence": "The unchanged foreign test edits the real case objective and advances case.version after durable domain receipt, then requires HTTP409/stale/case-changed-after-application with planned change and no case receipt. The unchanged foreign producer accepts a newer compatible case version, re-observes the authoritative receipt, requires unchanged prepared change/authority, spreads the fresh case, and reconciles it under a current CAS. The two semantics differ. Candidate and both upstream blobs were fetched independently through MCP.",
+      "historicalRuntime": {
+        "productSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+        "runId": 43605495862,
+        "jobId": 132479126824,
+        "snapshotSha": "6cc1999f0614f6002f2d1bfc72be2edd82ae7594",
+        "expectedHttp": 409,
+        "actualHttp": 200,
+        "elapsedMs": 16942,
+        "declaredBudgetMs": 15000,
+        "laterStateAssertionsReached": false,
+        "rawSha256": "37c9dad034c51ee8c0fc1ccf84639468f5d035df26f484c1272efecc7fdf14da",
+        "creditedAsW24": false
+      },
+      "requiredAction": "Owner/S0 must choose and publish a coherent producer/test contract, then obtain current exact-candidate hosted evidence. Preserve current foreign inputs; do not patch them merely to manufacture409 or change this to an observed preservation success."
+    }
+  ],
+  "heldCurrentChoice": {
+    "notAdmitted": true,
+    "existingProducerBlob": "d19f735539df9b9b4fa637367f58fa0c0b674562",
+    "threeProposedNewFilesAbsentFromFullTree": true,
+    "allFourUnchangedFromW22": true,
+    "relatedFinding": "W22-OWNER-CURRENT-CHOICE-FINAL-LEASE-01",
+    "qualification": "Prior static final Request/UI lease concern remains an owner hypothesis for the excluded proposed cohort. This preflight neither admits that cohort nor approves the retained older implementation."
+  },
+  "freeze": {
+    "revision": 10,
+    "matching": 37,
+    "total": 38,
+    "foreignManifestUnchanged": true,
+    "mismatch": {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "expectedSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "actualSha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893"
+    },
+    "accepted": false
+  },
+  "ci": {
+    "currentCheck": {
+      "productSha": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "productTree": "6c967deebc9f4127b12d33bdbad6ed1ff80e649d",
+      "snapshotSha": "5f8626d87c211343777ebc27ed51ce1091a8395c",
+      "snapshotTree": "782bc71e9826fc5d1019fa646510c5c2794a9c70",
+      "runId": 43614178262,
+      "jobId": 132505501377,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "ownUniqueDiagnostics": 2,
+      "foreignUniqueDiagnostics": 13,
+      "diagnosticOccurrences": 17,
+      "successfulSteps": [
+        "CLI typecheck",
+        "Atlas generation",
+        "Atlas boundary typecheck",
+        "Subprocess import guard",
+        "Product guard"
+      ],
+      "failedSteps": [
+        "Sucafina typecheck",
+        "WP10 test consumer typecheck"
+      ],
+      "artifactId": 14121138829,
+      "artifactSha256": "25c8e504bc2789495cc5ddf286a3e57a73452732a2200f2dcd407dd6fa643077",
+      "artifactMembersVerified": 11,
+      "rawSha256": "513bb433ff41838801bb8ee7366a7e582bdad33f415db804cd909c4faff5c0df",
+      "remoteTerminalIndependentlyObserved": true,
+      "envelopeOnlyDiffVerified": true
+    },
+    "historicalW23Check": {
+      "productSha": "f7466375e268b70113312096b2a06ff2d75e4a53",
+      "runId": 43613489123,
+      "jobId": 132503406799,
+      "snapshotSha": "690ddfe29105688519437dc523c69ed6bc46b726",
+      "status": "completed",
+      "conclusion": "failure",
+      "ownUniqueDiagnostics": 1,
+      "foreignUniqueDiagnostics": 13,
+      "artifactId": 14121127627,
+      "artifactSha256": "f6df043d719f7dd4b95c101dbac733c8dd8606772c537a0e3c33e95f66a8bd72",
+      "artifactMembersVerified": 11,
+      "qualification": "TS2554 prior fixture site replaced in W24; W24 has two different own TS7006 diagnostics. Neither check is passing."
+    },
+    "functional": {
+      "W23": "No functional test-ci terminal admitted.",
+      "W24": "No functional test-ci dispatched per root cutoff; A snapshot prepared without branch/dispatch, no run to credit.",
+      "W22D": {
+        "runId": 43610668152,
+        "statusAtRootHandoff": "in_progress",
+        "independentlyReobservedInThisPreflight": false,
+        "creditedAsW24": false
+      },
+      "historicalW21B": {
+        "pass": 49,
+        "fail": 30,
+        "additionalErrors": 1,
+        "tests": 79,
+        "files": 10,
+        "creditedAsW24": false
+      },
+      "historicalW22A": {
+        "pass": 37,
+        "fail": 2,
+        "creditedAsW24": false
+      },
+      "historicalW22Check": {
+        "own": 0,
+        "foreign": 13,
+        "creditedAsW24": false
+      }
+    },
+    "nativeAcceptance": false,
+    "globalAcceptance": false
+  },
+  "remainingBoundaries": [
+    "W23-C17-RECORDED-HISTORY-PENDING-01: prior recorded-operation history performance remains unresolved by these source changes; added diagnostics do not prove completion or permit larger budgets.",
+    "Actual two-replay/source/capture preservation and six-reader expectations require current-candidate hosted functional runs, with financial null/conditions and causal negative tests intact.",
+    "The foreign calculationProof has two separate historical observations. The new own lexical frame covers each resolve; it does not establish one new header pin spanning those two foreign calls. No executed breach or acceptance is asserted.",
+    "Portfolio readMaterialChange remains uncomposed and materiality remains explicitly unknown. BI/Portfolio source outside the reviewed seams is unchanged; previous source review does not substitute for current functional proof.",
+    "Frozen hydration is partial. Absent local files were never treated as deleted; complete Git tree listings determine presence.",
+    "128 archived/131 readonly references were checked as preserved indices and append-only receipts. This preflight did not individually refetch all original historical foreign source copies.",
+    "Native Task/knowledge/full matrix, AM, GNATIVE, C07 and the global epic remain unaccepted. Three final independent reports must bind one final candidate and its exact terminal evidence.",
+    "Any successor W25 is outside this report. Source-identical runtime does not transfer typecheck or functional acceptance across candidates."
+  ],
+  "reviewArtifacts": [
+    "reviews/R2/source-inventory-W24-preflight.json",
+    "reviews/R2/intake-audit-W24-preflight.json",
+    "reviews/R2/remote-observation-W24-preflight.json",
+    "reviews/R2/audit-W24-preflight.py"
+  ],
+  "requiredForFinal": [
+    "Close own fixture typing on a published successor with exact successful own checks; triage all foreign diagnostics without editing excluded owner files.",
+    "Resolve H05 producer/test semantics through owners/S0 and preserve exact publisher inputs.",
+    "Run all required current-candidate hosted functional selections, retain full negative proofs and original budgets, and report failures as failures.",
+    "Give an explicit owner/S0 disposition for freeze10 mismatch and any held CurrentChoice intake.",
+    "Bind the eventual final review package,171 criteria,7 tasks,3 independent non-author reports and complete terminal run/artifact SHAs to one exact final candidate. No merge/deploy or native/global acceptance is authorized by this preflight."
+  ]
+}

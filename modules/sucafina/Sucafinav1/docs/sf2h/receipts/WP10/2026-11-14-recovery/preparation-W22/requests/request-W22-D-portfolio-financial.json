@@ -1,0 +1,30 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+    "Sucafinav1/test/product/wp03/exact-threshold-fallback.test.ts",
+    "Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+    "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+    "Sucafinav1/test/product/wp13/planner-composition.test.ts",
+    "Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+    "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+    "Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts",
+    "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+    "Sucafinav1/test/product/wp13/coverage.test.ts",
+    "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+    "Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+    "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+    "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+    "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+    "Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+    "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

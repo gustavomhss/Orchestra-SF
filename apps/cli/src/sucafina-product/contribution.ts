@@ -14,9 +14,12 @@ import type { BusinessPorts } from "../../../../modules/sucafina/Sucafinav1/prod
 import { dispatchSfCapability } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts"
 import { registerSfResidentAgents } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts"
 import { createSfBusinessMcpBridge } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+import type { SfVerifiedCallObserver } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts"
 
 /** Add SF services to each Location without replacing core Session or execution services. */
-export const createSfProductContribution: CreateSfProductContribution = (input) => ({
+export const createSfProductContribution = (input: Parameters<CreateSfProductContribution>[0] & {
+  onVerifiedCall?: SfVerifiedCallObserver
+}): ReturnType<CreateSfProductContribution> => ({
   id: "sucafina-product",
   locationNodes: [makeLocationNode({
     name: "sucafina/product-runtime",
@@ -32,7 +35,7 @@ export const createSfProductContribution: CreateSfProductContribution = (input) 
       input.onRegistered({ skills, sourceCapability })
       const bridge = createSfBusinessMcpBridge({
         registry: input.registry, mcp, descriptors: input.descriptors,
-        dispatch: createSfProductDispatch(input),
+        dispatch: createSfProductDispatch(input), onVerifiedCall: input.onVerifiedCall,
       })
       yield* tools.register(Object.fromEntries(input.descriptors.map((descriptor) => [descriptor.id, Tool.dynamic({
         description: `Sucafina ${descriptor.id}`,

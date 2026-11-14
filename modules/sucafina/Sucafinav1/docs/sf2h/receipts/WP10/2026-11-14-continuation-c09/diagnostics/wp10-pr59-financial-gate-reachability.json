@@ -1,0 +1,271 @@
+{
+  "schema": "wp10-pr59-financial-gate-reachability-v1",
+  "qualification": "STATIC_SOURCE_REACHABILITY_ONLY; no new product execution, no performance PASS, no FINAL or GLOBAL_RELEASE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewedProduct": {
+    "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+    "tree": "232c69db4eed34e913f125bb787b926971d6d031",
+    "sourceAccess": "GitHub MCP at immutable W28"
+  },
+  "productDelta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "preimageBlob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "postimageBlob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "changedMechanism": "createSfSourcePersistence returns optional readScopedSourcePrepared; preparation on snapshot clone and existing scoped observation share one underlying transaction."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "preimageBlob": "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+      "postimageBlob": "02d75207b2978cc5c05368cc7e3517efeb3ce3ce",
+      "changedMechanism": "createSfPlannerSourceHost selects prepared capability when available, retaining separate current and again reads; per-success source envelopes change4→2, fallback retained."
+    }
+  ],
+  "selectedFinancialFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "publisher": {
+        "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "owner": "WP13"
+      },
+      "tests": 3,
+      "budgetsMs": [
+        300000,
+        300000,
+        120000
+      ],
+      "reachesChangedObservation": false,
+      "routes": [
+        {
+          "cases": "first and third",
+          "chain": [
+            "createPortfolioCoverageFixture",
+            "createWp05ComparisonFixture",
+            "literal PlannerSourceHost.resolveForecastSource backed by sourceRefs",
+            "createPlannerPort / real numerical producers"
+          ],
+          "sourceBoundary": "engine-fixture.ts uses raw openLocalStore as host.persistence and resolves sourceRefs directly. It never composes createSfSourcePersistence or createSfPlannerSourceHost."
+        },
+        {
+          "cases": "second",
+          "chain": [
+            "createRenewalChoiceHistory",
+            "createRenewalSourceFixture",
+            "literal PlannerSourceHost",
+            "createRenewalQuoteRevision / direct store.transaction and projectPlannerSource"
+          ],
+          "sourceBoundary": "The initial source lookup and later quote revision are explicit fixture source boundaries. The revision delegates other refs to the same fixture sources; it does not install the changed source host."
+        }
+      ],
+      "disposition": "Preserve as outstanding global financial evidence. No new performance or regression discriminant for PR59 4→2; do not rerun under that claim."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "blob": "b4da64e28c6a207311859595b0a36e07e0c5151b",
+      "publisher": {
+        "commit": "66bbe152c145f04c16223a938589c63cedb3b716",
+        "owner": "WP11"
+      },
+      "tests": 2,
+      "budgetsMs": [
+        180000,
+        180000
+      ],
+      "reachesChangedObservation": false,
+      "routes": [
+        {
+          "cases": "both",
+          "chain": [
+            "createWp05SensitivityFixture",
+            "createWp05ComparisonFixture",
+            "literal PlannerSourceHost.resolveForecastSource",
+            "createPlannerPort / createPlannerExactThreshold"
+          ],
+          "sourceBoundary": "Synthetic scoped source lookup with real Planner/C08/numerical producers. No prepared source observation."
+        }
+      ],
+      "disposition": "Preserve pending financial coverage. Not included in B26; do not attribute B26's foreign timeout to this file. No PR59-specific rerun hypothesis."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+      "blob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+      "publisher": {
+        "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "owner": "WP13"
+      },
+      "tests": 1,
+      "budgetsMs": [
+        60000
+      ],
+      "reachesChangedObservation": false,
+      "routes": [
+        {
+          "cases": "single",
+          "chain": [
+            "createWp13SensitivityRuntimeFixture",
+            "createWp13AnalysisFixture",
+            "createWp13PortfolioFixture",
+            "literal PlannerSourceHost with v0 ref",
+            "createPlannerPort / validatePlannerThreshold"
+          ],
+          "sourceBoundary": "Raw openLocalStore and explicit synthetic context/source boundary. Real interval, threshold and adjacent numerical witnesses do not invoke the changed source-observation adapter."
+        }
+      ],
+      "disposition": "Preserve pending threshold recertification. Valuable numerical/structural proof, but no PR59-specific changed-path recheck."
+    }
+  ],
+  "fixturePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "blob": "608b1a95b491740041f8689a41b4a064c7254b24"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+      "blob": "6e56a64ee1b76422706d685e2f646a156a8ade39"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "2da82bf379910826f4558b5b330c97cdaf6806df"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b"
+    }
+  ],
+  "causalComposedGate": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+    "blob": "fa4bdf61e69af2498b5668a5dfceb9286613d0bd",
+    "route": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+        "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+        "calls": "createSfSourcePersistence; createSfBusinessServices with same authoritative persistence"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+        "calls": "createPlannerProduct({host, scopedSources: input.persistence, ...})"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+        "blob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+        "calls": "createSfPlannerSourceHost then inject sources into createPlannerPort"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+        "blob": "02d75207b2978cc5c05368cc7e3517efeb3ce3ce",
+        "calls": "resolveForecastSource performs current + again through readScopedSourcePrepared"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+        "calls": "one prepared source transaction for each independent observation"
+      }
+    ],
+    "prerequisites": "Complete short structural/source-observation and full three source-fence gates on exact applied product, with original failures retained.",
+    "newHypothesis": "Fewer source transaction envelopes in the actual composed host may allow evaluate/store and the later cold-read, retry and revocation assertions to complete under unchanged budgets.",
+    "cooperativeDeadlineMs": 285000,
+    "testTimeoutMs": 300000,
+    "disposition": "Only proposed new long PR59 run after prerequisite gates. Preserve X27 failure and original tracing; one discriminating run, no repeated unchanged run.",
+    "limits": [
+      "4→2 is a structural envelope count, not measured end-to-end latency reduction.",
+      "The five sensitivity binding verifications remain; X27 reached only the first.",
+      "If the same deadline remains, do not raise budget or rerun without another causal hypothesis.",
+      "Numerical and authority guarantees belong to assertions actually reached; a partial run does not close later paths."
+    ]
+  },
+  "historicalEvidence": {
+    "B26": {
+      "W": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "S": "edc61b259cc0479d1916a7dd3a2e2ee89d7724a9",
+      "runId": 43620440087,
+      "jobId": 132524715232,
+      "runConclusion": "failure",
+      "pass": 38,
+      "fail": 2,
+      "tests": 40,
+      "files": 7,
+      "expects": 533,
+      "durationSeconds": 1420.51,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W27/agents/ci/W26-observation/B/triage.json",
+      "correction": "The foreign timeout is calculation-persistence.test.ts, not composite-coverage.test.ts; composite-coverage was not selected.",
+      "foreignFailure": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "blob": "04185fa8e4e3c9c2c25d7bf4e898831f4f891ea7",
+        "test": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+        "testTimeoutMs": 180000,
+        "observedDurationMs": 188985.84,
+        "phase": "unknown; no phase trace",
+        "sourceRoute": "Direct producer composition via WP05 engine fixture; no createSfBusinessServices or installed own calculation adapters."
+      },
+      "ownFailure": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+        "phase": "produce-outer",
+        "cooperativeDeadlineMs": 105000,
+        "resultReaders": 373,
+        "completedResultReaders": 373
+      },
+      "limits": "No observed common root cause is established. No composite-coverage result can be inferred. No whole-B26 rerun proposed for PR59."
+    },
+    "P27": {
+      "request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W27/requests/request-W27-P-coverage-sensitivity.json",
+      "selection": [
+        "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+      ],
+      "qualification": "Preserved request only in consulted receipts; no terminal PASS asserted. Remains pending global financial evidence."
+    },
+    "Q27": {
+      "request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W27/requests/request-W27-Q-sensitivity-proofs.json",
+      "selection": [
+        "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+        "Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+        "Sucafinav1/test/product/wp13/threshold-recertification.test.ts"
+      ],
+      "qualification": "Preserved request only in consulted receipts; no terminal PASS asserted. This reachability review addresses threshold-recertification, not the other two Q files."
+    },
+    "D22": {
+      "W": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "S": "c00c167bdf368d89273d60ca29e5eb24c01dc577",
+      "runId": 43610668152,
+      "jobId": 132494810814,
+      "conclusion": "cancelled",
+      "cleanupJobId": 132507288922,
+      "cleanupConclusion": "success",
+      "completeBunSummary": false,
+      "observationsReceipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W26/W22-D-partial/evidence/W22/normalized/D-portfolio-finance-partial/test-observations.json",
+      "rawLogSha256": "98e1ca1414d36cccbe9a52f881dfc2f92c77c851ba830451647dae109b1654b5",
+      "relevantFile": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "oldBlob": "5b4579143250700a313744cc2240741f1bc15237",
+        "currentBlob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+        "observedPass": 0,
+        "observedNamedFailures": 2,
+        "completeFileOutcome": false,
+        "observedFailureDurationsMs": [
+          757097.89,
+          1383750.72
+        ]
+      },
+      "limits": "Two named failures on an older test blob, partial cancelled job, no complete file or suite outcome. Do not transfer success or exact current-candidate failure from these observations."
+    }
+  },
+  "evidenceReuse": "Current three test/fixture source pins are preserved. No qualifying historical success for these exact three selections was identified in the bounded consulted receipts. Unchanged numerical producer source is not a substitute for executing the changed installed source boundary.",
+  "operations": {
+    "remoteWrites": 0,
+    "newRuns": 0,
+    "localProductTests": 0,
+    "localTypecheck": 0,
+    "codeChanges": 0
+  },
+  "parentDecision": "Preserve all three as global financial pending items; after C29 and F29 successful, X29 is the sole new long run proposed for the 4→2 hypothesis. C29 running status is parent-provided, not a terminal result in this review."
+}

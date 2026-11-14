@@ -1,0 +1,1877 @@
+{
+  "observedAtUtc": "2026-11-14T18:22:58Z",
+  "scope": "Read-only reconciliation of existing WP10 runs and delivered diagnostics; no product test, run dispatch or remote mutation performed by diagnostics_ci.",
+  "product": {
+    "branch": "astra-wp10",
+    "pullRequest": 29,
+    "W": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+    "tree": "6b889a436fafe019580801edba3015d90fa75dfd"
+  },
+  "A27": {
+    "run": {
+      "id": 43624030665,
+      "name": "test-ci",
+      "event": "push",
+      "head_branch": "ci-run-linux-astra-wp10-ab8fb4f2-a32eb240-01",
+      "head_sha": "e336f3e945fc22ae737af9b2425186c25b46a43d",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-14T17:59:04Z",
+      "updated_at": "2026-11-14T18:06:07Z",
+      "run_started_at": "2026-11-14T17:59:04Z",
+      "run_attempt": 1,
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624030665"
+    },
+    "snapshotTree": "56b50dd0bab45311b7859f30179eb3d91ea68f32",
+    "requestBlob": "661cbd88494d80b48c193177137f61980b034bf8",
+    "requestSha256": "a32eb2400374c5dff4b9f8d523b5424c238b9926ea6c43dba909eb4262e64eab",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+        "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+        "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+        "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+        "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+        "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+        "Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    },
+    "jobs": [
+      {
+        "id": 132535810515,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 43624030665,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 20
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 21
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 42
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 43
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 44
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 45
+          }
+        ]
+      },
+      {
+        "id": 132537774635,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43624030665,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ],
+    "artifacts": [],
+    "result": {
+      "pass": 59,
+      "fail": 1,
+      "expects": 1447,
+      "tests": 60,
+      "files": 8,
+      "bunSeconds": 297.68,
+      "omni": {
+        "status": "pass",
+        "nonce": "74ca257a3395f4a50d6b13f89d92b487",
+        "declaredTests": 1,
+        "spawns": 2,
+        "delegated": 0
+      }
+    },
+    "failure": {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "line": 580,
+      "column": 103,
+      "name": "historical decision recall binds original/current evidence and rejects changed proof or authority",
+      "assertion": "staleAccess.preflight(staleRecord, corrupted.value, fixtureOutput).status",
+      "expected": "denied",
+      "received": "ok",
+      "testMs": 182124.35,
+      "kind": "assertion; no timeout",
+      "precedingObserved": "Real Atlas recall of the corrupted persisted capture was unavailable; positive stale.preserve and same-request-new-proof completed.",
+      "notReached": [
+        "Final three authority-revocation probes after access.allowed=false"
+      ]
+    },
+    "memoryPhases": [
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "scanner.ensure",
+        "state": "started",
+        "elapsedMs": 8
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "scanner.ensure",
+        "state": "returned",
+        "phaseMs": 278,
+        "elapsedMs": 286,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "scanner.version",
+        "state": "started",
+        "elapsedMs": 286
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "scanner.version",
+        "state": "returned",
+        "phaseMs": 230,
+        "elapsedMs": 516,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "procurement.capture-original",
+        "state": "started",
+        "elapsedMs": 796
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "procurement.capture-original",
+        "state": "returned",
+        "phaseMs": 87,
+        "elapsedMs": 883,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "atlas.emit-ledger",
+        "state": "started",
+        "elapsedMs": 883
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "atlas.emit-ledger",
+        "state": "returned",
+        "phaseMs": 1450,
+        "elapsedMs": 2333,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.resolve-original",
+        "state": "started",
+        "elapsedMs": 2346
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.resolve-original",
+        "persistenceCalls": 105,
+        "rootPersistenceCalls": 25,
+        "nestedPersistenceCalls": 80,
+        "groupedEvidenceFences": 2,
+        "c08Reads": 5,
+        "caseReads": 0,
+        "caseFences": 0,
+        "evidenceContextReads": 0,
+        "groupedCaseContextReads": 0,
+        "atlasCanonicalReads": 0,
+        "atlasCanonicalCompleted": 0,
+        "groupedAtlasReads": 0,
+        "groupedAtlasCompleted": 0
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.resolve-original",
+        "state": "returned",
+        "phaseMs": 263,
+        "elapsedMs": 2609,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.prepare",
+        "state": "started",
+        "elapsedMs": 2609
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.prepare",
+        "persistenceCalls": 9996,
+        "rootPersistenceCalls": 2216,
+        "nestedPersistenceCalls": 7780,
+        "groupedEvidenceFences": 88,
+        "c08Reads": 690,
+        "caseReads": 24,
+        "caseFences": 36,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2,
+        "groupedAtlasReads": 2,
+        "groupedAtlasCompleted": 2
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.prepare",
+        "state": "returned",
+        "phaseMs": 27126,
+        "elapsedMs": 29735,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.verify",
+        "state": "started",
+        "elapsedMs": 29736
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.verify",
+        "persistenceCalls": 10038,
+        "rootPersistenceCalls": 2258,
+        "nestedPersistenceCalls": 7780,
+        "groupedEvidenceFences": 88,
+        "c08Reads": 702,
+        "caseReads": 36,
+        "caseFences": 48,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2,
+        "groupedAtlasReads": 2,
+        "groupedAtlasCompleted": 2
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.verify",
+        "state": "returned",
+        "phaseMs": 26648,
+        "elapsedMs": 56384,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.accept-output",
+        "state": "started",
+        "elapsedMs": 56400
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.accept-output",
+        "persistenceCalls": 10038,
+        "rootPersistenceCalls": 2258,
+        "nestedPersistenceCalls": 7780,
+        "groupedEvidenceFences": 88,
+        "c08Reads": 702,
+        "caseReads": 36,
+        "caseFences": 48,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2,
+        "groupedAtlasReads": 2,
+        "groupedAtlasCompleted": 2
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.accept-output",
+        "state": "returned",
+        "phaseMs": 26442,
+        "elapsedMs": 82842,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.exclude-history-and-isolate",
+        "state": "started",
+        "elapsedMs": 82842
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.exclude-history-and-isolate",
+        "persistenceCalls": 4557,
+        "rootPersistenceCalls": 987,
+        "nestedPersistenceCalls": 3570,
+        "groupedEvidenceFences": 36,
+        "c08Reads": 320,
+        "caseReads": 10,
+        "caseFences": 15,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.exclude-history-and-isolate",
+        "state": "returned",
+        "phaseMs": 12111,
+        "elapsedMs": 94953,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-source",
+        "state": "started",
+        "elapsedMs": 94961
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.fence-source",
+        "persistenceCalls": 2822,
+        "rootPersistenceCalls": 212,
+        "nestedPersistenceCalls": 2610,
+        "groupedEvidenceFences": 12,
+        "c08Reads": 186,
+        "caseReads": 6,
+        "caseFences": 7,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-source",
+        "state": "returned",
+        "phaseMs": 7826,
+        "elapsedMs": 102787,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-capture",
+        "state": "started",
+        "elapsedMs": 102798
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.fence-capture",
+        "persistenceCalls": 2876,
+        "rootPersistenceCalls": 266,
+        "nestedPersistenceCalls": 2610,
+        "groupedEvidenceFences": 12,
+        "c08Reads": 189,
+        "caseReads": 6,
+        "caseFences": 8,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-capture",
+        "state": "returned",
+        "phaseMs": 7993,
+        "elapsedMs": 110791,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-principal",
+        "state": "started",
+        "elapsedMs": 110803
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.fence-principal",
+        "persistenceCalls": 2319,
+        "rootPersistenceCalls": 29,
+        "nestedPersistenceCalls": 2290,
+        "groupedEvidenceFences": 4,
+        "c08Reads": 147,
+        "caseReads": 6,
+        "caseFences": 7,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-principal",
+        "state": "returned",
+        "phaseMs": 6836,
+        "elapsedMs": 117638,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-clock",
+        "state": "started",
+        "elapsedMs": 117651
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.fence-clock",
+        "persistenceCalls": 2875,
+        "rootPersistenceCalls": 265,
+        "nestedPersistenceCalls": 2610,
+        "groupedEvidenceFences": 12,
+        "c08Reads": 189,
+        "caseReads": 6,
+        "caseFences": 8,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-clock",
+        "state": "returned",
+        "phaseMs": 8328,
+        "elapsedMs": 125979,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-lease",
+        "state": "started",
+        "elapsedMs": 125986
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.fence-lease",
+        "persistenceCalls": 2318,
+        "rootPersistenceCalls": 28,
+        "nestedPersistenceCalls": 2290,
+        "groupedEvidenceFences": 4,
+        "c08Reads": 147,
+        "caseReads": 6,
+        "caseFences": 7,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-lease",
+        "state": "returned",
+        "phaseMs": 6842,
+        "elapsedMs": 132827,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-final-request-headers",
+        "state": "started",
+        "elapsedMs": 132839
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.fence-final-request-headers",
+        "persistenceCalls": 4557,
+        "rootPersistenceCalls": 987,
+        "nestedPersistenceCalls": 3570,
+        "groupedEvidenceFences": 36,
+        "c08Reads": 320,
+        "caseReads": 10,
+        "caseFences": 15,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.fence-final-request-headers",
+        "state": "returned",
+        "phaseMs": 12476,
+        "elapsedMs": 145315,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.same-request-new-proof",
+        "state": "started",
+        "elapsedMs": 145327
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "memory.same-request-new-proof",
+        "persistenceCalls": 4557,
+        "rootPersistenceCalls": 987,
+        "nestedPersistenceCalls": 3570,
+        "groupedEvidenceFences": 36,
+        "c08Reads": 320,
+        "caseReads": 10,
+        "caseFences": 15,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1,
+        "groupedAtlasReads": 1,
+        "groupedAtlasCompleted": 1
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "memory.same-request-new-proof",
+        "state": "returned",
+        "phaseMs": 12398,
+        "elapsedMs": 157725,
+        "aborted": false
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "stale.preserve",
+        "state": "started",
+        "elapsedMs": 158282
+      },
+      {
+        "kind": "SF_MEMORY_READ_COUNTS",
+        "phase": "stale.preserve",
+        "persistenceCalls": 304,
+        "rootPersistenceCalls": 44,
+        "nestedPersistenceCalls": 260,
+        "groupedEvidenceFences": 6,
+        "c08Reads": 23,
+        "caseReads": 0,
+        "caseFences": 0,
+        "evidenceContextReads": 3,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 0,
+        "atlasCanonicalCompleted": 0,
+        "groupedAtlasReads": 0,
+        "groupedAtlasCompleted": 0
+      },
+      {
+        "kind": "SF_COMPOSITION_PHASE",
+        "fixture": "historical-memory",
+        "phase": "stale.preserve",
+        "state": "returned",
+        "phaseMs": 837,
+        "elapsedMs": 159119,
+        "aborted": false
+      }
+    ],
+    "interpretation": [
+      "The functional stale capture integrity failure remains open.",
+      "No unchanged rerun is justified.",
+      "Prior analysis-stale-commit.ts blob 9f574a7573538c2a46796dfd650fadbac052dc80 is unchanged W26/W27; this observation is not proof of a W27 regression.",
+      "analysis-lifecycle-context.test.ts was not selected."
+    ]
+  },
+  "X27": {
+    "run": {
+      "id": 43623440133,
+      "name": "test-ci",
+      "event": "push",
+      "head_branch": "ci-run-linux-astra-wp10-ab8fb4f2-f6f9f060-01",
+      "head_sha": "329a3b4547ec77c6b516ac1f28c732f0fc076902",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-14T17:52:19Z",
+      "updated_at": "2026-11-14T17:58:40Z",
+      "run_started_at": "2026-11-14T17:52:19Z",
+      "run_attempt": 1,
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43623440133"
+    },
+    "requestBlob": "d0cd8beb633493d4083b3d964c6df813c4090d90",
+    "requestSha256": "f6f9f060070f9a06a1798d1558c0e69f3638ea54df85304e45572e80f935b076",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    },
+    "jobs": [
+      {
+        "id": 132533968037,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 43623440133,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 20
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 21
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 42
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 43
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 44
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 45
+          }
+        ]
+      },
+      {
+        "id": 132535684366,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43623440133,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ],
+    "artifacts": [],
+    "result": {
+      "pass": 0,
+      "fail": 1,
+      "expects": 3,
+      "tests": 1,
+      "files": 1,
+      "bunSeconds": 285.57,
+      "testMs": 285169.32,
+      "deadlineMs": 285000,
+      "testTimeoutMs": 300000,
+      "omni": {
+        "status": "not applicable",
+        "nonce": "ece62b3e8f3339828170ddbac8afa548",
+        "spawns": 0,
+        "delegated": 0
+      }
+    },
+    "bindingTrace": [
+      {
+        "elapsedMs": 208547,
+        "environmentReads": 1913,
+        "state": "started",
+        "id": 5869,
+        "parentId": 372,
+        "name": "shared.results.write",
+        "ordinal": 6,
+        "details": {
+          "kind": "sensitivity"
+        }
+      },
+      {
+        "elapsedMs": 209914,
+        "environmentReads": 1919,
+        "state": "returned",
+        "id": 5869,
+        "parentId": 372,
+        "name": "shared.results.write",
+        "ordinal": 6,
+        "status": "ok",
+        "durationMs": 1367,
+        "details": {
+          "kind": "sensitivity"
+        }
+      },
+      {
+        "elapsedMs": 209916,
+        "environmentReads": 1919,
+        "state": "started",
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "ordinal": 1,
+        "details": {}
+      },
+      {
+        "elapsedMs": 212103,
+        "environmentReads": 1929,
+        "state": "started",
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "ordinal": 1,
+        "details": {}
+      },
+      {
+        "elapsedMs": 285163,
+        "environmentReads": 2246,
+        "state": "returned",
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "ordinal": 1,
+        "status": "false",
+        "durationMs": 73060,
+        "details": {}
+      },
+      {
+        "elapsedMs": 285163,
+        "environmentReads": 2246,
+        "state": "returned",
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "ordinal": 1,
+        "status": "denied",
+        "durationMs": 75247,
+        "details": {}
+      }
+    ],
+    "finalTrace": {
+      "elapsedMs": 285167,
+      "environmentReads": 2246,
+      "state": "finished",
+      "aborted": true,
+      "active": [],
+      "metrics": {
+        "phase.fixture.complete": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 7766,
+          "maximumMs": 7766,
+          "outcomes": {
+            "returned": 1
+          },
+          "active": 0
+        },
+        "shared.sources.resolveForecastSource": {
+          "started": 4885,
+          "completed": 4885,
+          "threw": 0,
+          "inclusiveMs": 189597,
+          "maximumMs": 142,
+          "outcomes": {
+            "ok": 4885
+          },
+          "active": 0
+        },
+        "shared.cases.read": {
+          "started": 177,
+          "completed": 177,
+          "threw": 0,
+          "inclusiveMs": 97897,
+          "maximumMs": 1501,
+          "outcomes": {
+            "ok": 176,
+            "unavailable": 1
+          },
+          "active": 0
+        },
+        "shared.evidence.context": {
+          "started": 1003,
+          "completed": 1002,
+          "threw": 1,
+          "inclusiveMs": 269829,
+          "maximumMs": 820,
+          "outcomes": {
+            "array:2": 876,
+            "array:4": 37,
+            "array:3": 88,
+            "array:6": 1
+          },
+          "active": 0
+        },
+        "shared.sources.resolveForecastCoverage": {
+          "started": 370,
+          "completed": 370,
+          "threw": 0,
+          "inclusiveMs": 39850,
+          "maximumMs": 1419,
+          "outcomes": {
+            "ok": 370
+          },
+          "active": 0
+        },
+        "shared.results.write": {
+          "started": 6,
+          "completed": 6,
+          "threw": 0,
+          "inclusiveMs": 3717,
+          "maximumMs": 1367,
+          "outcomes": {
+            "ok": 6
+          },
+          "active": 0
+        },
+        "shared.results.readHistoricalScenario": {
+          "started": 245,
+          "completed": 245,
+          "threw": 0,
+          "inclusiveMs": 154478,
+          "maximumMs": 1844,
+          "outcomes": {
+            "ok": 243,
+            "denied": 2
+          },
+          "active": 0
+        },
+        "shared.scenarios.resolveMany": {
+          "started": 24,
+          "completed": 24,
+          "threw": 0,
+          "inclusiveMs": 73923,
+          "maximumMs": 6108,
+          "outcomes": {
+            "array:2": 24
+          },
+          "active": 0
+        },
+        "shared.evidence.resolve": {
+          "started": 80,
+          "completed": 80,
+          "threw": 0,
+          "inclusiveMs": 15545,
+          "maximumMs": 414,
+          "outcomes": {
+            "fresh": 78,
+            "unavailable": 2
+          },
+          "active": 0
+        },
+        "phase.storage.before": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 6,
+          "maximumMs": 6,
+          "outcomes": {
+            "returned": 1
+          },
+          "active": 0
+        },
+        "phase.host.evaluate-and-store": {
+          "started": 1,
+          "completed": 0,
+          "threw": 1,
+          "inclusiveMs": 277391,
+          "maximumMs": 277391,
+          "outcomes": {},
+          "active": 0
+        },
+        "shared.results.readByRequest": {
+          "started": 5,
+          "completed": 5,
+          "threw": 0,
+          "inclusiveMs": 135,
+          "maximumMs": 36,
+          "outcomes": {
+            "ok": 5
+          },
+          "active": 0
+        },
+        "shared.scenarios.resolve": {
+          "started": 44,
+          "completed": 44,
+          "threw": 0,
+          "inclusiveMs": 124342,
+          "maximumMs": 6314,
+          "outcomes": {
+            "ok": 44
+          },
+          "active": 0
+        },
+        "primary.planner.simulateScenario": {
+          "started": 22,
+          "completed": 22,
+          "threw": 0,
+          "inclusiveMs": 12318,
+          "maximumMs": 1240,
+          "outcomes": {
+            "ok": 22
+          },
+          "active": 0
+        },
+        "primary.hostUnits.issue": {
+          "started": 3,
+          "completed": 3,
+          "threw": 0,
+          "inclusiveMs": 31935,
+          "maximumMs": 12179,
+          "outcomes": {
+            "ok": 2,
+            "stale": 1
+          },
+          "active": 0
+        },
+        "shared.results.read": {
+          "started": 10,
+          "completed": 10,
+          "threw": 0,
+          "inclusiveMs": 12337,
+          "maximumMs": 1507,
+          "outcomes": {
+            "ok": 10
+          },
+          "active": 0
+        },
+        "primary.sensitivityBindings.bind": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 75247,
+          "maximumMs": 75247,
+          "outcomes": {
+            "denied": 1
+          },
+          "active": 0
+        },
+        "primary.proof.verifySensitivity": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 73060,
+          "maximumMs": 73060,
+          "outcomes": {
+            "false": 1
+          },
+          "active": 0
+        },
+        "primary.hostUnits.resolve": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 22807,
+          "maximumMs": 22807,
+          "outcomes": {
+            "ok": 1
+          },
+          "active": 0
+        }
+      }
+    },
+    "notReached": [
+      "Usable persisted sensitivity with verified binding",
+      "New composition reads same final result",
+      "Same-request idempotent retry and unchanged storage",
+      "Read/retry revocation"
+    ],
+    "limits": [
+      "Metrics are inclusive, overlapping and include fixture; they must not be summed as wall-clock partitions.",
+      "The sixth results.write is sensitivity and returned ok at elapsed 209914 ms; five earlier writes are scenarios, including fixture and produced scenarios.",
+      "The first binding recertification expires at elapsed 285163 ms; no evidence establishes a deadlock or single lock as dominant cause.",
+      "The retained test recomposes services over the same open store; it does not restart a process or reopen SQLite.",
+      "No unchanged X rerun; use diagnose-calculation proposal and short hosted structural/fence gates before another X."
+    ]
+  },
+  "CHECK27": {
+    "run": {
+      "id": 43623374771,
+      "name": "astra-wp10-check",
+      "event": "push",
+      "head_branch": "astra-check-wp10",
+      "head_sha": "26db95e4764bf80148543798aa594ac7921f3b22",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-14T17:51:36Z",
+      "updated_at": "2026-11-14T17:55:00Z",
+      "run_started_at": "2026-11-14T17:51:36Z",
+      "run_attempt": 1,
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43623374771"
+    },
+    "snapshotTree": "a337c227a96394e68ccf7ca8f3f471b748559ecf",
+    "jobs": [
+      {
+        "id": 132533766371,
+        "name": "composition",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 43623374771,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout check envelope",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Validate exact product and envelope",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Checkout exact product",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Record product and guard base",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Typecheck Sucafina",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 7
+          },
+          {
+            "name": "Typecheck CLI consumers",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Typecheck WP10 test consumers",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Verify canonical Atlas generation",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Typecheck Atlas boundary",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Guard subprocess imports",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Guard product against origin/dev",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Upload exact-check evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 26
+          },
+          {
+            "name": "Post Checkout exact product",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 27
+          },
+          {
+            "name": "Post Checkout check envelope",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 28
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 29
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14125043272,
+        "name": "astra-wp10-check-1",
+        "size_in_bytes": 4363,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14125043272",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14125043272/zip",
+        "expired": false,
+        "created_at": "2026-11-14T17:54:57Z",
+        "expires_at": "2026-11-28T17:54:56Z",
+        "updated_at": "2026-11-14T17:54:57Z",
+        "digest": "sha256:2766c43771fc434a8a75ac5f2af3efd314ab22e7abe9d1a8e25bd4fb6fd73a1f",
+        "workflow_run": {
+          "id": 43623374771,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp10",
+          "head_sha": "26db95e4764bf80148543798aa594ac7921f3b22"
+        }
+      }
+    ],
+    "failure": "Sucafina package typecheck: 13 external diagnostics (WP04 3, WP06 4, WP08 5, WP09 1).",
+    "pass": [
+      "CLI package typecheck",
+      "WP10 test consumers typecheck",
+      "Atlas canonical generate/check/diff",
+      "Atlas typecheck",
+      "spawn import guard",
+      "guards against origin/dev"
+    ],
+    "noForceCheckUpdate": {
+      "currentRef": "astra-check-wp10",
+      "currentSha": "26db95e4764bf80148543798aa594ac7921f3b22",
+      "observedParents": [
+        "ab8fb4f29d078d179742a77679ef85e5c549b114",
+        "f3e863c00eabfa852e56452b083701f00b9ebff5"
+      ],
+      "nextEnvelope": "Use current W as first parent and current check head as second parent; tree equals W plus added .astra-wp10-check.json; fast-forward update_ref with force:false. Workflow validates HEAD^, not parent-count. Re-read ref before mutation."
+    }
+  },
+  "R27": {
+    "run": {
+      "id": 43624794783,
+      "name": "test-ci",
+      "event": "push",
+      "head_branch": "ci-run-linux-astra-wp10-ab8fb4f2-588e0a75-01",
+      "head_sha": "7ddf90ea85adbfc15c9ce2e6f4acc54a5f74e906",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-11-14T18:07:12Z",
+      "updated_at": "2026-11-14T18:07:15Z",
+      "run_started_at": "2026-11-14T18:07:12Z",
+      "run_attempt": 1,
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624794783"
+    },
+    "snapshotTree": "40b62994a45278fe00b3680006bf475e746ad879",
+    "parent": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+    "requestBlob": "54b907f85068641160e57aa24a01ef2af94d1bdf",
+    "requestSha256": "588e0a75e6f22023a1100a1d0383b940494f1c8a1099454651d419ea7bf62690",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+        "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-fallback-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+        "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+        "Sucafinav1/test/product/wp05/projection.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    },
+    "jobs": [
+      {
+        "id": 132538121932,
+        "name": "test (ubuntu-24.04)",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_id": 43624794783,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19
+          },
+          {
+            "name": "Run tests",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 20
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "pending",
+            "conclusion": null,
+            "number": 21
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "pending",
+            "conclusion": null,
+            "number": 22
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "pending",
+            "conclusion": null,
+            "number": 42
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "pending",
+            "conclusion": null,
+            "number": 43
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "pending",
+            "conclusion": null,
+            "number": 44
+          }
+        ]
+      }
+    ],
+    "result": "IN_PROGRESS; no functional result inferred.",
+    "action": "Reattach; do not dispatch another WP10 test-ci until terminal+cleanup and dedup."
+  },
+  "writerContinuity": {
+    "observed": "R27 snapshot authored 18:01:55Z, run created 18:07:12Z, later than prior PR body state. No fresh lifecycle ACK or proof that old writer is active/terminated was available to this agent.",
+    "interpretation": "Hosted run is active work to preserve, not proof the previous author session remains active. Git silence is not proof of termination. Parent coordinates explicit user-authorized context replacement."
+  },
+  "diagnoseMemory": {
+    "pr": 55,
+    "branch": "diagnose-memory",
+    "head": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+    "tree": "51c7f4cb50fda8d327d1b7c5a3da802489ff4b0f",
+    "parent": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "state": "READY_FOR_OWNER_REVIEW; shared patches NOT_APPLIED; new tests NOT_RUN",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/diagnostics/memory/HANDOFF.md",
+    "conclusion": "Existing W27 independent lexical observation scopes preserved. A27 passed the former cumulative timeout point and now fails real stale capture integrity. Classifier currentSnapshots creates three clones per nested count; its runtime dominance is not measured.",
+    "preparedWork": "Own persistence observer helper + short test; optional W27 patch01 measurement then patch02 callback-scope counter if justified, preserving readers/assertions/timeouts. No unchanged A27 replay."
+  },
+  "diagnoseCalculation": {
+    "pr": 59,
+    "branch": "diagnose-calculation",
+    "head": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+    "tree": "f1ef898362d27d16f53aebfc278eee6d6ff9d73d",
+    "parent": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "state": "PROPOSAL_READY; patch NOT_APPLIED; new tests NOT_RUN",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/diagnostics/calculation/OWNER_HANDOFF.md",
+    "manifest": {
+      "status": "NOT_APPLIED",
+      "validation": "NOT_RUN",
+      "patch": "0001-wp10-source-observation.patch.txt",
+      "owner": "WP10",
+      "producer_owner": "Financeiro; no producer patch requested",
+      "base_commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "base_tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+      "observed_compatible_owner_commit": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "preimages": [
+        {
+          "owner": "WP10",
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "git_blob_sha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+          "source_commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+        },
+        {
+          "owner": "WP10",
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "git_blob_sha": "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+          "source_commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+        }
+      ],
+      "preimage_sha_algorithm": "Git blob SHA-1 (repository object id), not a file SHA-256",
+      "reason": "Each successful canonical source resolver repeats preparation plus observation in separate Planner transactions. Consolidate each pair while retaining both current/again observations, original readers/authentication/projection and materialization kernel.",
+      "changes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "actions": [
+            "Add optional prepared observation to existing port",
+            "Extract original readScopedSource snapshot kernel unchanged",
+            "Validate source identities before preparing",
+            "Prepare on isolated clone and call kernel directly in same surface transaction",
+            "Forward TransactionOptions signal"
+          ],
+          "preserve": [
+            "observe",
+            "resolveScopedSource",
+            "checkScopedSource",
+            "source identity/write/restore guards",
+            "synchronizeSources",
+            "synchronizeScopes",
+            "transactionAll"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "actions": [
+            "Prepare original selector and authorizer in prepared transaction if available",
+            "Keep original fallback for existing ports",
+            "Retain Request signal",
+            "Preserve independent current/again observations and all outside-transaction revalidations"
+          ],
+          "preserve": [
+            "selector parsing",
+            "principal/policy/access revision",
+            "incarnation/version equality",
+            "projection/evidence digests",
+            "final egress"
+          ]
+        }
+      ],
+      "excluded": [
+        "Financial formulas and producers",
+        "exactThreshold algorithm",
+        "Mandatory sensitivity recertification count",
+        "Readers/assertions",
+        "Cross-invocation cache",
+        "Runtime engines/local-store",
+        "Policies/grants/lease/C08 contract",
+        "Timeouts",
+        "Memory/Atlas"
+      ],
+      "expected_source_path": {
+        "source_transaction_envelopes_before": 4,
+        "source_transaction_envelopes_after": 2,
+        "source_observations_before": 2,
+        "source_observations_after": 2,
+        "direct_authenticate_before": 6,
+        "direct_authenticate_after": 6,
+        "direct_revalidate_before": 4,
+        "direct_revalidate_after": 4
+      },
+      "required_proof": [
+        "New real source-observation diagnostic: identical source/digests,4→2 envelopes with6auth/4revalidate, fresh same-instance invocation, A→B→A, final revalidation revoke, actual abort after authorizer, unchanged durable snapshots.",
+        "Existing full source lifecycle/read-fence/source-fence-read files: mutation/identity/restore/incarnation/C08/Request/lease guards.",
+        "Unchanged full portfolio-exact-threshold with W27 trace retained: samples/exact IEEE/pending coverage, durable sensitivity, recomposed verifier, unchanged retry storage, revoked read and retry.",
+        "Canonical financial coverage/recertification files on same applied W:55k/15k,N-A/shared,absence/zero,current evidence and one-ULP rejection.",
+        "Affected typecheck and repository guard checks on applied W through existing owner CI; no local execution.",
+        "Capture remaining queue/admission/callback cost and full host completion within unchanged budgets; no performance PASS based solely on counts."
+      ],
+      "residual_risks": [
+        "Longer individual transaction occupancy; net runtime/fairness unmeasured.",
+        "Full successful path has five mandatory binding verifications plus downstream journey; X27 observed only first.",
+        "Abort test uses already-materialized scope; it does not prove first materialization or queued cancellation.",
+        "If owner source preimage changed after observed W27, refresh/review patch; do not overwrite successor code."
+      ]
+    },
+    "test": "modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts",
+    "testBlob": "2bf73c9b16a502ba9b858227697d0b509e3a7d60",
+    "gateOrder": [
+      "Own real source-observation two cases; structural 4→2 with 6 auth/4 revalidate, fresh same-context, A→B→A, revoke and abort",
+      "Full source-lifecycle/source-read-fence/source-fence-read files",
+      "Only after short gates pass, existing exact-threshold full file retaining W27 trace and deadlines",
+      "Selected coverage/threshold financial preservation files and hosted checks"
+    ]
+  },
+  "pendingSelectionPolicy": {
+    "source": "preparation-W27/ci-selection.draft.json on W27",
+    "required": [
+      "A8 completed FAIL",
+      "R10 in progress",
+      "C browser29 pending",
+      "E CLI2 pending",
+      "D1 portfolio-promotion1 pending",
+      "D2 alternative-selection1 pending",
+      "D3 portfolio-reconciliation1 pending",
+      "P coverage-sensitivity1 pending",
+      "Q sensitivity-proof3 pending",
+      "X1 completed FAIL"
+    ],
+    "conditional": [
+      "B7 requires concrete risk/delta after W26 failure",
+      "H3 preserve historical H05 unless affected"
+    ],
+    "scope": "171 criteria, 7 tasks, 80 obligations preserved; no release acceptance."
+  },
+  "readingCompleted": {
+    "immutableExecutionCommon": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md@dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "workflow": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md@dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ci": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md@a3d29d011ba3607a57914701300f09117a3e2de9",
+    "pack": "COMPLETE related_actor_context section of WP10.pack.json@a3d29d011ba3607a57914701300f09117a3e2de9",
+    "canonicalCiFiles": [
+      ".github/workflows/test-ci.yml",
+      "script/test-ci.ts",
+      "script/test-ci-request.ts",
+      "script/test-ci-location.ts"
+    ],
+    "existingCheck": ".github/workflows/astra-wp10-check.yml"
+  },
+  "acceptance": "This receipt reconciles observations only. No FIN-IND-002 functional proof, performance fix, whole WP10 acceptance, merge or GLOBAL_RELEASE is declared."
+}
+

@@ -1,0 +1,562 @@
+{
+  "schema": "wp10-hosted-scope-triage-v1",
+  "productSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "productTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "snapshotSha": "c4e212a3970be85fc639007a31e156e9ef5883b7",
+  "snapshotTree": "dd968ebaa9b8712730aa6ac9c15d0ca7d2beb762",
+  "runId": 43616586837,
+  "jobId": 132512863120,
+  "status": "failure",
+  "counts": {
+    "pass": 42,
+    "fail": 1,
+    "expects": 429,
+    "tests": 43,
+    "files": 3,
+    "durationSeconds": 239.74,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp04/host-integration.test.ts": {
+      "pass": 7,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts": {
+      "pass": 16,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts": {
+      "pass": 19,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "failures": [
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 262,
+      "name": "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+      "rawLogLine": 865,
+      "observed": "Expected HTTP 409, received 200 after a durable receipt callback changes only the case objective and version. The test fails before its later receipt/no-reapplication assertions.",
+      "classification": "FOREIGN_CONTRACT_EXPECTATION_CONFLICT",
+      "producerPath": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "producerLines": [
+        109,
+        141
+      ],
+      "inference": "Published WP11 reopens the case after a durable domain receipt and preserves unrelated versioned case edits, fencing the selected change, current receipt and full final case bytes. That published behavior is consistent with HTTP 200 and conflicts with the WP04 H05 expectation. This static attribution is not a second executed assertion.",
+      "timing": {
+        "durationMs": 11341.16,
+        "budgetMs": 15000,
+        "timedOut": false
+      },
+      "action": "Root/owners must reconcile WP04 expectation versus WP11 semantics through published owner outputs; no foreign assertion or budget was edited."
+    }
+  ],
+  "measurements": [
+    {
+      "rawLogLine": 843,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H01",
+        "milliseconds": 1579,
+        "sqliteTransactions": 1225,
+        "sqliteAllTransactions": 12,
+        "sqliteMilliseconds": 1472,
+        "http": []
+      }
+    },
+    {
+      "rawLogLine": 845,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H02",
+        "milliseconds": 32298,
+        "sqliteTransactions": 8936,
+        "sqliteAllTransactions": 20,
+        "sqliteMilliseconds": 45542,
+        "http": [
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 719,
+            "sqliteTransactions": 442
+          },
+          {
+            "mode": "decision-apply",
+            "status": 400,
+            "milliseconds": 0,
+            "sqliteTransactions": 0
+          },
+          {
+            "mode": "decision-apply",
+            "status": 403,
+            "milliseconds": 1461,
+            "sqliteTransactions": 357
+          },
+          {
+            "mode": "decision-review",
+            "status": 200,
+            "milliseconds": 4920,
+            "sqliteTransactions": 1243
+          },
+          {
+            "mode": "decision-apply",
+            "status": 200,
+            "milliseconds": 5485,
+            "sqliteTransactions": 1349
+          },
+          {
+            "mode": "decision-apply",
+            "status": 200,
+            "milliseconds": 5161,
+            "sqliteTransactions": 1459
+          },
+          {
+            "mode": "decision-apply",
+            "status": 403,
+            "milliseconds": 9,
+            "sqliteTransactions": 1
+          }
+        ]
+      }
+    },
+    {
+      "rawLogLine": 847,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H03",
+        "milliseconds": 31588,
+        "sqliteTransactions": 5500,
+        "sqliteAllTransactions": 15,
+        "sqliteMilliseconds": 47752,
+        "http": [
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 691,
+            "sqliteTransactions": 442
+          },
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 1662,
+            "sqliteTransactions": 407
+          },
+          {
+            "mode": "decision-review",
+            "status": 200,
+            "milliseconds": 8331,
+            "sqliteTransactions": 1243
+          },
+          {
+            "mode": "decision-apply",
+            "status": 200,
+            "milliseconds": 9288,
+            "sqliteTransactions": 1349
+          },
+          {
+            "mode": "decision-apply",
+            "status": 403,
+            "milliseconds": 600,
+            "sqliteTransactions": 80
+          }
+        ]
+      }
+    },
+    {
+      "rawLogLine": 849,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H04",
+        "milliseconds": 932,
+        "sqliteTransactions": 615,
+        "sqliteAllTransactions": 7,
+        "sqliteMilliseconds": 984,
+        "http": [
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 694,
+            "sqliteTransactions": 442
+          },
+          {
+            "mode": "decision-apply",
+            "status": 400,
+            "milliseconds": 0,
+            "sqliteTransactions": 0
+          },
+          {
+            "mode": "decision-apply",
+            "status": 400,
+            "milliseconds": 0,
+            "sqliteTransactions": 0
+          },
+          {
+            "mode": "decision-apply",
+            "status": 400,
+            "milliseconds": 0,
+            "sqliteTransactions": 0
+          },
+          {
+            "mode": "decision-apply",
+            "status": 400,
+            "milliseconds": 0,
+            "sqliteTransactions": 0
+          },
+          {
+            "mode": "decision-apply",
+            "status": 400,
+            "milliseconds": 0,
+            "sqliteTransactions": 0
+          },
+          {
+            "mode": "decision-apply",
+            "status": 400,
+            "milliseconds": 0,
+            "sqliteTransactions": 0
+          },
+          {
+            "mode": "decision-apply",
+            "status": 403,
+            "milliseconds": 5,
+            "sqliteTransactions": 1
+          }
+        ]
+      }
+    },
+    {
+      "rawLogLine": 851,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H05",
+        "milliseconds": 11341,
+        "sqliteTransactions": 3205,
+        "sqliteAllTransactions": 8,
+        "sqliteMilliseconds": 19197,
+        "http": [
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 689,
+            "sqliteTransactions": 442
+          },
+          {
+            "mode": "decision-review",
+            "status": 200,
+            "milliseconds": 4930,
+            "sqliteTransactions": 1243
+          },
+          {
+            "mode": "decision-apply",
+            "status": 200,
+            "milliseconds": 5517,
+            "sqliteTransactions": 1351
+          }
+        ]
+      }
+    },
+    {
+      "rawLogLine": 866,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H06",
+        "milliseconds": 24014,
+        "sqliteTransactions": 6911,
+        "sqliteAllTransactions": 20,
+        "sqliteMilliseconds": 34635,
+        "http": [
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 700,
+            "sqliteTransactions": 442
+          },
+          {
+            "mode": "decision-review",
+            "status": 200,
+            "milliseconds": 4935,
+            "sqliteTransactions": 1243
+          },
+          {
+            "mode": "decision-apply",
+            "status": 503,
+            "milliseconds": 5214,
+            "sqliteTransactions": 1286
+          },
+          {
+            "mode": "decision-apply",
+            "status": 409,
+            "milliseconds": 3775,
+            "sqliteTransactions": 1135
+          },
+          {
+            "mode": "decision-apply",
+            "status": 200,
+            "milliseconds": 4081,
+            "sqliteTransactions": 1194
+          },
+          {
+            "mode": "decision-apply",
+            "status": 403,
+            "milliseconds": 5043,
+            "sqliteTransactions": 1446
+          }
+        ]
+      }
+    },
+    {
+      "rawLogLine": 868,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H07",
+        "milliseconds": 8632,
+        "sqliteTransactions": 2569,
+        "sqliteAllTransactions": 7,
+        "sqliteMilliseconds": 15112,
+        "http": [
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 699,
+            "sqliteTransactions": 442
+          },
+          {
+            "mode": "decision-review",
+            "status": 200,
+            "milliseconds": 4893,
+            "sqliteTransactions": 1243
+          },
+          {
+            "mode": "decision-apply",
+            "status": 409,
+            "milliseconds": 1371,
+            "sqliteTransactions": 354
+          },
+          {
+            "mode": "decision-apply",
+            "status": 403,
+            "milliseconds": 1419,
+            "sqliteTransactions": 354
+          }
+        ]
+      }
+    },
+    {
+      "rawLogLine": 870,
+      "kind": "wp04-host",
+      "value": {
+        "scenario": "H08",
+        "milliseconds": 10964,
+        "sqliteTransactions": 3355,
+        "sqliteAllTransactions": 11,
+        "sqliteMilliseconds": 17056,
+        "http": [
+          {
+            "mode": "decision-prepare-changes",
+            "status": 200,
+            "milliseconds": 684,
+            "sqliteTransactions": 442
+          },
+          {
+            "mode": "decision-review",
+            "status": 200,
+            "milliseconds": 4881,
+            "sqliteTransactions": 1243
+          },
+          {
+            "mode": "decision-apply",
+            "status": 409,
+            "milliseconds": 5172,
+            "sqliteTransactions": 1501
+          }
+        ]
+      }
+    },
+    {
+      "rawLogLine": 878,
+      "kind": "procurement-case-read",
+      "value": {
+        "invocation": 0,
+        "baseline": {
+          "persistenceCalls": 516,
+          "rootTransactions": 336,
+          "commitRequests": 0,
+          "canonical": 1,
+          "inside": 0,
+          "contexts": 2,
+          "resolutions": 4
+        },
+        "scoped": {
+          "persistenceCalls": 333,
+          "rootTransactions": 1,
+          "commitRequests": 0,
+          "canonical": 1,
+          "inside": 1,
+          "contexts": 2,
+          "resolutions": 4
+        },
+        "unit": "Persistence API invocations; rootTransactions excludes an already-held snapshot, not physical commits"
+      }
+    },
+    {
+      "rawLogLine": 881,
+      "kind": "procurement-case-read",
+      "value": {
+        "invocation": 1,
+        "baseline": {
+          "persistenceCalls": 516,
+          "rootTransactions": 336,
+          "commitRequests": 0,
+          "canonical": 1,
+          "inside": 0,
+          "contexts": 2,
+          "resolutions": 4
+        },
+        "scoped": {
+          "persistenceCalls": 333,
+          "rootTransactions": 1,
+          "commitRequests": 0,
+          "canonical": 1,
+          "inside": 1,
+          "contexts": 2,
+          "resolutions": 4
+        },
+        "unit": "Persistence API invocations; rootTransactions excludes an already-held snapshot, not physical commits"
+      }
+    },
+    {
+      "rawLogLine": 914,
+      "kind": "scenario-proof",
+      "value": {
+        "attempt": 0,
+        "scenario": 4,
+        "context": 2,
+        "fences": 8
+      }
+    },
+    {
+      "rawLogLine": 915,
+      "kind": "scenario-proof",
+      "value": {
+        "attempt": 1,
+        "scenario": 4,
+        "context": 2,
+        "fences": 8
+      }
+    }
+  ],
+  "measurementQualification": "Counters are Persistence API invocations. rootTransactions means no already-held snapshot and is not a physical connection/transaction/commit count. Inclusive sqliteMilliseconds are not additive wall-time phases.",
+  "omni": {
+    "status": "not-applicable",
+    "declaringTests": 0,
+    "spawns": 0,
+    "delegated": 0,
+    "evidence": {
+      "rawLogLine": 937,
+      "text": "omni positive control [7f4524da0bb101f1e81117d78fe58bf6]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    },
+    "qualification": "The explicit no-declaring/no-spawn/no-delegated line is recorded separately. The generic normalizer leaves absent numeric counters null; no Omni/native acceptance follows."
+  },
+  "artifacts": [],
+  "cleanup": {
+    "jobId": 132514395471,
+    "conclusion": "success",
+    "snapshotDeletion": "success"
+  },
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "candidateCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "bytes": 46778,
+      "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+      "blobSha": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "publisherPins": [
+        {
+          "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+          "blobSha": "3dbad125693da9898b1435eff2a1108476c09f40",
+          "pr": 34,
+          "owner": "astra-operations / WP04-WP06"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "candidateCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "bytes": 20833,
+      "sha256": "debb437646fff9e9143b713b42e445f34754fe33df379fdd5f62b35e4a26a6da",
+      "blobSha": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "publisherPins": [
+        {
+          "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+          "blobSha": "964a53310c340f4496d7410d66f8b852270b75f1",
+          "pr": 35,
+          "owner": "astra-finance/WP11"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "candidateCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "bytes": 1585,
+      "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c",
+      "blobSha": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+      "publisherPins": [
+        {
+          "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+          "blobSha": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+          "pr": 35,
+          "owner": "astra-finance/WP11"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "candidateCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "bytes": 18411,
+      "sha256": "eb621371e679b84989e8a7bbb23b4944e52bc5d3134dd65c272ac30cd4ebf449",
+      "blobSha": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+      "publisherPins": [
+        {
+          "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+          "blobSha": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+          "pr": 35,
+          "owner": "astra-finance/WP11"
+        }
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "candidateCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "bytes": 10647,
+      "sha256": "c2f8ed94d0dc3aef1ad95faf95255a8ab3cc2de433570c609e32d5e75b88ccf8",
+      "blobSha": "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6",
+      "publisherPins": []
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "candidateCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "bytes": 7873,
+      "sha256": "53f1fb931b261e567aa4e2695e69194544d708dca618f5e6497cfa2c8fcc18c5",
+      "blobSha": "2ebb518403bc463dddd645f77af12cb877bce3e1",
+      "publisherPins": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "candidateCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "bytes": 25445,
+      "sha256": "9d0675797aa2f575b7ba9b2193ce93db54db6f34faeee5cd8264abe8cc544191",
+      "blobSha": "2b198e3a3f51c6c4e1abbc3a9a8cf77a18a2183d",
+      "publisherPins": []
+    }
+  ],
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReviewAcceptance": false,
+  "noTransferToW26": true,
+  "changesMade": "Evidence only; no product source, foreign fixture, budget, reference or CI dispatch was changed."
+}

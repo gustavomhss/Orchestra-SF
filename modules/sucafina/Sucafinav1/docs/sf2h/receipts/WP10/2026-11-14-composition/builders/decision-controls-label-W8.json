@@ -1,0 +1,24 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "author": "/root",
+  "status": "CLOSED",
+  "baseCandidate": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "beforeSha256": "2d1e40d01f59a153b0d66342cc8a2809af747196fc044977aa7f262af3307e24",
+      "afterSha256": "7a2a0685702d59959ab2c951bdb2515198768e7bcec425bd0b7f0adf1e3a4413",
+      "bytes": 35020
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "beforeSha256": "3b9256d7bb7fbaecdccf5dabcf900c2a008c53b47fee5a828389ef94f01d0993",
+      "afterSha256": "937dac6645780d045e7f2a1ad98ba77e5292bf249e5820551ed1c4a657dd751f",
+      "bytes": 24701
+    }
+  ],
+  "finding": "W7 core decision-controls Chromium exact multi-select label timeout",
+  "change": "Provide explicit accessible name matching the visible Components included label; preserve exact selector, assert rendered aria-label and nonempty actual options before selecting. No selector broadening or timeout change.",
+  "verification": "Observed W7 failure at multi-select after case/forecast/classification navigation succeeded. Static diff only for correction; hosted execution and independent review pending.",
+  "scope": "Real UI accessibility change; no native/global acceptance."
+}

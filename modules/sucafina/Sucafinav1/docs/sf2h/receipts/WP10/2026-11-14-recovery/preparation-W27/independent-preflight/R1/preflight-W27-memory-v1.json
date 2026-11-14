@@ -1,0 +1,124 @@
+{
+  "schema": "wp10-independent-source-preflight-v1",
+  "reviewId": "R1-W27-MEMORY-V1",
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "authoredProductTests": false,
+    "independenceDeclaration": "Independent non-author source review. I did not modify product or tests, run product locally, mutate remotes, or substitute builder audits for this assessment."
+  },
+  "finalForCandidate": false,
+  "criteriaAcceptance": false,
+  "cutoffUtc": "2026-11-14T17:40:39.582186+00:00",
+  "baseCandidateSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "baseCandidateTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "candidateSha": null,
+  "candidateTree": null,
+  "candidateStatus": "Pre-publication overlays; v1 preserved and v2 being prepared independently",
+  "verdict": "HOLD_V1_SOURCE_BLOCKER",
+  "functionalVerdict": "HOLD_NO_W27_HOSTED_EVIDENCE",
+  "scope": "Focal review of Memory Atlas observation composition and sealed v1 private record participation. This is not one of the three FINAL product reviews.",
+  "findings": [
+    {
+      "id": "R1-W27-PARTICIPANT-EGRESS-01",
+      "severity": "high",
+      "status": "OPEN_IN_SEALED_V1",
+      "ownership": "WP10 own",
+      "blocks": "Composition of the v1 private-participation overlay",
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "overlayPath": "agents/ci/W27-record-participation/package/apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "blobSha": "b6d0fee3e7b267d2deb484350e630dbf887d7cf9",
+      "lines": [
+        104,
+        151,
+        172,
+        179,
+        180,
+        181,
+        197
+      ],
+      "title": "Completed child predicates are discarded before the owner transaction has returned",
+      "cause": "The root transaction callback clears scope.pins in its finally at line 179. The outer transaction Promise is still awaited at line 180; after it resolves line 181 checks only the root current(), not the completed children. A child-only reader or incoming-reference mutation between callback completion and transaction Promise settlement can therefore escape this check. This is a source-level gap, not a claim of an executed exploit.",
+      "impact": "The successful observed result does not enforce the requested child reader/input lifetime through the final owner await. The root and child deliberately use different reader identities in the actual Memory/decision-evidence composition.",
+      "existingCounterproofLimitation": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+        "blobSha": "226ce02c006221e5a55fcb10605d7087ef9d788a",
+        "lines": [
+          195,
+          219
+        ],
+        "detail": "This test mutates the reader or child input inside the parent work callback, before its final protected snapshot. It cannot establish the transaction-egress invariant."
+      },
+      "requiredSourceCorrection": "Retain all completed child current predicates through a synchronous check after the awaited transaction returns. Keep lexical admission closed; do not reopen ALS or admit new children. Retain and check independently qualified nested owners and their transferred child predicates.",
+      "requiredCounterproof": "Inject a child-only reader/input mutation after the real protected callback completes and before the owner persistence.transaction Promise resolves. Require changed, one actual canonical execution, no writes or retry, and preserve the unchanged positive outcome. The eventual published SHA needs hosted whole-file qualification.",
+      "criteriaStatusChange": null
+    }
+  ],
+  "independentStaticObservations": [
+    "Full reference digests, exact call/Request and dependency identities bound the v1 participating closure; each child executes canonical work, followed by fresh authority and environment checks.",
+    "The Memory overlay pins Request headers/method/URL, binding/lease, selection, reader, full SfProductState/current snapshots and exact source fences. It explicitly authorizes cases and atlas through their own state.read namespaces.",
+    "The Memory Atlas closure collects complete record references from both the case and the entire authorized memory partition, retaining selector/version distinctions; calculations, mixed or unsupported closure do not enter this record path.",
+    "The real canonical Atlas call runs once per grouped observation. Unsupported fallback is allowed only before canonical work; changed, partial, double or altered result observations refuse rather than retry.",
+    "Grouped case reads require the actual cases grant and a completed same-observation proof; new observations do not inherit a cross-call memory cache. Closed async markers prevent detached reuse.",
+    "The business overlay adds the existing memoryRecordRead callback to the Memory helper. Its root and decision-evidence child readers differ, making the v1 child lifetime issue relevant to this composition.",
+    "Historical-memory test assertions increased 84 to 92; all previous expect lines remain in order; the race/lifecycle tail is byte-identical. Cooperative deadline 225000 ms and Bun budget 240000 ms are unchanged."
+  ],
+  "seals": {
+    "genericV1": {
+      "path": "agents/ci/W27-record-participation/seal.json",
+      "bytes": 2677,
+      "sha256": "e36cf86214eb31a0bf206aa6a942e6a6ec202467d6f928843b21818d0d80291c",
+      "blobSha": "a7697aee7258e636945751c52fcacfce874d2cae"
+    },
+    "memoryOverlay": {
+      "path": "agents/c17/W27-memory-atlas-scope/seal.json",
+      "bytes": 3839,
+      "sha256": "6eb52791d8131151081f8d0af1993ccd018ccb1fe03fc864f10ab10085c9cd7e",
+      "blobSha": "ae16347417eacba12c15fec25431960b26ac6d64"
+    },
+    "rootComposition": "Observed exact files and draft audit; no final root seal at this cutoff."
+  },
+  "evidence": {
+    "W27PublishedCandidate": null,
+    "W27HostedTerminals": [],
+    "historicalW26A": {
+      "candidateSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "snapshotSha": "dd53af531181d1b05e5081b765dbfecc2a6ba6a9",
+      "runId": 43618475702,
+      "jobId": 132518644009,
+      "conclusion": "failure",
+      "passed": 45,
+      "failed": 1,
+      "tests": 46,
+      "files": 8,
+      "errors": 0,
+      "skipped": 0,
+      "failure": "historical-memory cooperative 225 s",
+      "transferableToW27": false
+    }
+  },
+  "requirements": {
+    "canonicalCriteriaCount": 171,
+    "tasks": 7,
+    "literalPackSha256": "b34a53e66e33b88a13bcb30d17fb8b7a2a009f12e6a8922bc7ab7fedbf70d1e7",
+    "promotedCriteria": [],
+    "preservedArchiveDisposition": {
+      "archived": 128,
+      "readOnly": 131
+    },
+    "fullArchiveReauditPerformed": false
+  },
+  "limits": [
+    "No W27 product SHA or CI terminal exists in this focal review; no functional, performance or timeout-fix conclusion.",
+    "No native admission, resident runtime, governed Task/knowledge, complete financial viability, global epic or integration acceptance is granted.",
+    "The v1 seal and builder readyForRootComposition flag prove bytes and declared intent, not independent approval.",
+    "The optional exact-threshold trace was inspected only as delegation/instrumentation source; it does not repair or prove financial behavior.",
+    "No reviewer product mutation, local product execution, test execution, typecheck, build, browser or remote mutation."
+  ],
+  "followup": "Preserve this sealed v1 checkpoint. Review agents/ci/W27-record-participation-v2 as a separate report, then exact published candidate and current hosted terminals before any FINAL judgment.",
+  "audit": {
+    "path": "reviews/R1/audit-W27-memory-v1.json",
+    "sha256": "ba17eb623d38312ccd6ffe720990c759a8749d4c16f09dff8582da5df8c4bb7c"
+  }
+}

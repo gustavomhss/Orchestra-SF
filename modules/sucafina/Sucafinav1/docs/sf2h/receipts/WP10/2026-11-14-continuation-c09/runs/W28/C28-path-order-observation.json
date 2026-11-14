@@ -1,0 +1,21 @@
+{
+  "schema": "wp10-c28-selection-order-observation-v1",
+  "run": 43627315630,
+  "request": "C28.request.json",
+  "requestedOrder": [
+    "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+    "Sucafinav1/test/product/wp10/integration/authority-composition.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts"
+  ],
+  "observedOrder": [
+    "Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts",
+    "Sucafinav1/test/product/wp10/integration/authority-composition.test.ts",
+    "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts"
+  ],
+  "observation": "C28 used preserved unprefixed request paths. Actual headers establish exactly the intended three files/nine tests, in the observed order above. Requested order was not asserted as execution order.",
+  "rootReconciliation": {
+    "source": "script/test-ci-paths.ts on W28, inspected by root",
+    "finding": "Canonical normalizer prefixes explicit file paths with ./; future requests will use it. Existing manual C28 request remains unchanged."
+  },
+  "impact": "No additional executed file was observed. Do not rewrite the historic request, infer ordered execution from request order, or introduce a dispatcher."
+}

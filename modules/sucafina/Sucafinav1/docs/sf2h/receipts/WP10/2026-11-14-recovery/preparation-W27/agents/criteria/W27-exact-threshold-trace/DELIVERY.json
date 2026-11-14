@@ -1,0 +1,100 @@
+{
+  "schema": "wp10-own-test-delivery-v1",
+  "status": "SEALED_DIAGNOSTIC_AUTHORING_PENDING_HOSTED_CHECK_AND_TEST",
+  "owner": "WP10",
+  "finding": "R1-W26-HOST-EXACT-THRESHOLD-01",
+  "candidateProductSha": null,
+  "basisProductSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "basisProductTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "productPaths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "bytes": 24978,
+      "sha256": "aaa39b8a4570ea483542062d8345d2eeac2e8e8dfb92693a3bf76246170f9327",
+      "gitBlob": "fa4bdf61e69af2498b5668a5dfceb9286613d0bd",
+      "operation": "modify",
+      "owner": "WP10",
+      "mode": "100644",
+      "baseGitBlob": "e526fffa28318367b9180b419509949c93abb273",
+      "baseSha256": "33faf5709c5465b99c6c18658eda6d80088af63dc6d3f596a08a8033caea0ee0"
+    }
+  ],
+  "testSelection": {
+    "wholeFiles": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+    ],
+    "testDeclarations": 1,
+    "expectExpressions": 40,
+    "outerBudgetMs": 300000,
+    "cooperativeBudgetMs": 285000,
+    "existingBudgetsModified": 0,
+    "requestReuseByteExact": {
+      "path": "evidence/W26/X-envelope.json",
+      "localPath": "/workspace/scratch/301a7f2754f4/evidence/W26/X-envelope.json",
+      "bytes": 279,
+      "sha256": "f6f9f060070f9a06a1798d1558c0e69f3638ea54df85304e45572e80f935b076",
+      "gitBlob": "d0cd8beb633493d4083b3d964c6df813c4090d90"
+    },
+    "suggestedGroup": "W27-X",
+    "dispatched": false
+  },
+  "artifacts": [
+    {
+      "path": "README.md",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/README.md",
+      "bytes": 7465,
+      "sha256": "2c031c16a697b6d1316787cb9d737bc82baa6b30aa6d2edbf93c3353bca2bce4",
+      "gitBlob": "7c3e57290809b482f2f05aeb134f5a8b3dac00f9"
+    },
+    {
+      "path": "audit.json",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/audit.json",
+      "bytes": 6083,
+      "sha256": "205d70d7293b4e7774e39add8aef008f09a9c236901f335f5713d37a5a3b7233",
+      "gitBlob": "4f3614ea81dda3921aba2d808799f78ff74e69b9"
+    },
+    {
+      "path": "changes.patch",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/changes.patch",
+      "bytes": 12140,
+      "sha256": "e1aa2878759b5382abb5e6f0338e62279385aac5bcf90773e9deb162875448fc",
+      "gitBlob": "d8a11d357453680029d70408acaf99d5bcd1d16e"
+    },
+    {
+      "path": "package/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "bytes": 24978,
+      "sha256": "aaa39b8a4570ea483542062d8345d2eeac2e8e8dfb92693a3bf76246170f9327",
+      "gitBlob": "fa4bdf61e69af2498b5668a5dfceb9286613d0bd"
+    },
+    {
+      "path": "source-manifest.json",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/source-manifest.json",
+      "bytes": 11886,
+      "sha256": "72b5f70f84fde747a0322752669266bad0fdbc48b6c391d5a062258dee45ccc5",
+      "gitBlob": "a710022689fdce52742a114798a73d602cf758b7"
+    },
+    {
+      "path": "static-validation.json",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/static-validation.json",
+      "bytes": 3874,
+      "sha256": "e215e02fe0825131f6482a9fd1a779c740c9644bccba2fcf5f2923b1b837a37b",
+      "gitBlob": "61b9a9ab9fccc10d17dd01cef46a175d404360c4"
+    }
+  ],
+  "sameReceiverArgumentsValuesErrors": true,
+  "newProductApis": 0,
+  "foreignSourceChanges": 0,
+  "numericCaches": 0,
+  "performanceFixClaimed": false,
+  "localProductExecution": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReview": false,
+  "requiredNext": [
+    "Root composes the single own test file after checking its base blob.",
+    "Hosted CHECK validates wrappers; X executes the unchanged full test request.",
+    "Use observed traces before any functional performance correction or acceptance."
+  ]
+}

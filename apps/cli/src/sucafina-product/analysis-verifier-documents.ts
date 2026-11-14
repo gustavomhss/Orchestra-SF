@@ -1,9 +1,12 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
+import type { CostCoverageEntry } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import type { createChangeProposalStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts"
 import type { DocumentEvidenceHost } from "../../../../modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
 import { readDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/store.ts"
+import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { SfAnalysisDependencies, SfAnalysisVerifier } from "./analysis-verifier.ts"
 
@@ -21,7 +24,7 @@ export function createSfDocumentExtractionVerifier(dependencies: SfAnalysisDepen
       const read = async (currentCall: TrustedDomainContext) => {
         const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
         if (current.status !== "ok" || current.value.case.version !== request.caseRef.version) return undefined
-        const schema = await dependencies.documentHost.resolveFieldSchema(value.targetFieldSchema.id, currentCall)
+        const schema = await dependencies.documentHost.resolveFieldSchema(`schema:${value.targetFieldSchema.id}:${value.targetFieldSchema.version}`, currentCall, value.authorizedFileRef)
         if (schema.status !== "ok" || digestSfValue(schema.value) !== digestSfValue(value.targetFieldSchema)) return undefined
         const document = await dependencies.documentHost.documents.read(value.authorizedFileRef, currentCall)
         if (document.status !== "ok" || document.value.revision !== value.documentRevision || !value.limits.formats.includes(document.value.mediaType) ||
@@ -39,8 +42,12 @@ export function createSfDocumentExtractionVerifier(dependencies: SfAnalysisDepen
         const stored = await readDocumentEvidence(output.payload.id, currentCall, { state: dependencies.documentHost.state, documents: dependencies.documentHost.documents, requestFor: dependencies.documentHost.host.requestFor, revalidate: dependencies.documentHost.host.revalidate })
         if (stored.status !== "ok" || stored.value.schemaRef !== value.targetFieldSchema.id || stored.value.schemaVersion !== value.targetFieldSchema.version || stored.value.snapshot.documentRef !== value.authorizedFileRef ||
           digestSfValue(stored.value.evidence) !== digestSfValue(output.payload) || output.payload.status !== "extracted" || digestSfValue(output.evidenceRefs) !== digestSfValue([output.payload.ref])) return { status: "unavailable", reason: "analysis-output-unverified" }
-        const source = await dependencies.context.resolve(output.payload.ref, currentCall)
-        if (source.state !== "fresh" || !source.authorizedProjection || !source.currentRef || digestSfValue(source.ref) !== digestSfValue(output.payload.ref) || digestSfValue(source.currentRef) !== digestSfValue(source.ref) || !await read(currentCall)) return { status: "unavailable", reason: "analysis-output-unverified" }
+        const reader = dependencies.documentHost.reader
+        if (!reader) return { status: "unavailable", reason: "analysis-output-unverified" }
+        const source = await resolveSfDocumentEvidence(output.payload.ref, currentCall, reader)
+        if (source.state !== "fresh" || source.accessRevision !== currentCall.binding.accessRevision ||
+          digestSfValue(source.ref) !== digestSfValue(output.payload.ref) || digestSfValue(source.authorizedProjection) !== digestSfValue(output.payload) ||
+          !await read(currentCall)) return { status: "unavailable", reason: "analysis-output-unverified" }
         return { status: "ok", value: true }
       } } }
     },
@@ -91,7 +98,7 @@ export function createSfContractReviewVerifier(dependencies: SfAnalysisDependenc
   }
 }
 
-export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDependencies): SfAnalysisVerifier {
+export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDependencies & { changeProposals?: Pick<ReturnType<typeof createChangeProposalStore>, "readSet"> }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-preparar-compra"],
     verify: async (input, request, call) => {
@@ -108,7 +115,9 @@ export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDepe
         if (!status || status.value !== value.request.stage) return undefined
         const requestRefs = status.sourceRefs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.target.version === value.request.version)
         if (requestRefs.length !== 1 || value.allowedChangeTargets.some((target) => !purchase.value.context.sourceRefs.some((item) => digestSfValue(item) === digestSfValue(target)) && !current.value.case.preparedChanges.some((change) => digestSfValue(change.target) === digestSfValue(target)))) return undefined
-        const refs = [...requestRefs, ...value.choice.evidenceRefs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
+        const targetRefs = value.allowedChangeTargets.flatMap((target) => current.value.evidenceRefs.filter((ref) => ref.kind === "record" && ref.target.surface === target.surface && ref.target.recordType === target.type && ref.target.recordId === target.id && ref.target.incarnation === target.incarnation && ref.target.version === target.version && ref.target.period?.start === target.period.start && ref.target.period.end === target.period.end && target.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field))))
+        if (value.allowedChangeTargets.some((target) => !targetRefs.some((ref) => ref.kind === "record" && ref.target.surface === target.surface && ref.target.recordType === target.type && ref.target.recordId === target.id && ref.target.incarnation === target.incarnation && ref.target.version === target.version && ref.target.period?.start === target.period.start && ref.target.period.end === target.period.end && target.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field))))) return undefined
+        const refs = [...requestRefs, ...value.choice.evidenceRefs, ...targetRefs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
         if (refs.some((ref) => !current.value.evidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return undefined
         const sources = await dependencies.context.context({ refs }, currentCall)
         if (sources.length !== refs.length || sources.some((item, index) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.ref) !== digestSfValue(refs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || !await dependencies.host.revalidate(currentCall)) return undefined
@@ -117,12 +126,20 @@ export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDepe
       const proof = await read(call)
       if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
       return { status: "ok", value: { current: proof.current, input: value, sources: proof.sources, acceptsOutput: async (output, currentCall) => {
-        if (output.state !== "ready" || output.kind !== "DossierDraft") return { status: "unavailable", reason: "analysis-output-unverified" }
+        if (output.state !== "ready" || (output.kind !== "DossierDraft" && output.kind !== "PreparedChangeSet")) return { status: "unavailable", reason: "analysis-output-unverified" }
         const current = await read(currentCall)
         if (!current) return { status: "unavailable", reason: "analysis-output-unverified" }
+        if (output.kind === "PreparedChangeSet") {
+          if (!dependencies.changeProposals) return { status: "unavailable", reason: "purchase-change-store-unavailable" }
+          const changes = output.payload
+          if (changes.caseRef !== encodeCaseRef(request.caseRef) || changes.caseVersion !== request.caseRef.version || !changes.changes.length || new Set(changes.changes.map((item) => item.changeRef)).size !== changes.changes.length || changes.changes.some((item) => !current.refs.some((ref) => digestSfValue(ref) === digestSfValue(item.targetRef)) || !value.allowedChangeTargets.some((target) => item.targetRef.kind === "record" && item.targetRef.target.surface === target.surface && item.targetRef.target.recordType === target.type && item.targetRef.target.recordId === target.id && item.targetRef.target.incarnation === target.incarnation && item.targetRef.target.version === target.version && item.targetRef.target.period?.start === target.period.start && item.targetRef.target.period.end === target.period.end && item.targetRef.target.fields.every((field) => target.fields.includes(field)))) || changes.conditions.some((item) => item.evidenceRefs.some((ref) => !current.refs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref)))) || output.evidenceRefs.some((ref) => !current.refs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref))) || changes.changes.some((item) => !output.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(item.targetRef)))) return { status: "unavailable", reason: "analysis-output-unverified" }
+          const stored = await dependencies.changeProposals.readSet({ caseRef: request.caseRef, changeRefs: changes.changes.map((item) => item.changeRef) }, currentCall)
+          return stored.status === "ok" && stored.value.request.choiceRef === value.choice.id && digestSfValue(stored.value.output) === digestSfValue(changes) && !!await read(currentCall)
+            ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-unverified" }
+        }
         const dossier = output.payload
-        const pending = value.choice.costCoverage.entries.filter((entry) => entry.status === "pending")
-        const missing = value.choice.costCoverage.derivedMissingCategoryIds
+        const pending = [...value.choice.costCoverage.entries].filter((entry): entry is Extract<CostCoverageEntry, { status: "pending" }> => entry.status === "pending")
+        const missing: readonly string[] = value.choice.costCoverage.derivedMissingCategoryIds
         if (dossier.requestRef !== value.request.requestRef || dossier.requestVersion !== value.request.version || dossier.domainApplied !== false || digestSfValue(dossier.alternatives) !== digestSfValue([value.choice.alternativeId]) ||
           digestSfValue(dossier.gaps) !== digestSfValue(value.choice.costCoverage.issues) || pending.some((entry) => !dossier.conditions.some((condition) => condition.category === entry.categoryId && condition.reason === entry.reason)) || missing.some((category) => !dossier.conditions.some((condition) => condition.category === category)) ||
           dossier.conditions.some((condition) => !condition.reason.trim() || (!pending.some((entry) => entry.categoryId === condition.category && entry.reason === condition.reason) && !missing.includes(condition.category)) || condition.evidenceRefs.some((ref) => !current.refs.some((item) => digestSfValue(item) === digestSfValue(ref)))) ||

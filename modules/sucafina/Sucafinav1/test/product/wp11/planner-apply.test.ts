@@ -22,7 +22,7 @@ test("real Planner mutation and case receipt commit atomically across surfaces",
   const store = await openLocalStore(directory)
   try {
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => "2026-11-13T00:00:00Z") })
-    await persistence.initializeSources("planner")
+    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]
       snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
@@ -49,7 +49,7 @@ test("real Planner mutation and case receipt commit atomically across surfaces",
     const state = createSfProductState({ persistence, createId: () => "state", resolveTarget: async (_request, _snapshot, namespace) => ({ incarnation: namespace === "cases" ? "case-inc" : target.incarnation }), authorize: async () => ({ principalRef: "finance", policyVersion: "1", accessRevision: "1" }) })
     await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: "case", targetIncarnation: "case-inc", idempotencyKey: "seed", commandDigest: "a".repeat(64) }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
     const human = { granted: false, nextReceipt: 0 }
-    const apply = createSfPreparedApply({ state, host, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => human.granted, resolveActor: () => actor, resolveMutation: (_snapshot, selected) => selected.id === "stale-change" ? stale.mutation : produced.mutation, verifyGrant: () => human.granted, receiptVersion: () => 1, environment: () => environment, createId: () => `receipt-${++human.nextReceipt}`, now: () => environment.at })
+    const apply = createSfPreparedApply({ state, host, authorizeCase: async () => true, authorizeLookup: async () => true, authorizeReceipt: async () => true, confirmHuman: async () => human.granted, reviewDigestFor: () => "a".repeat(64), resolveActor: () => actor, resolveMutation: (_snapshot, selected) => selected.id === "stale-change" ? stale.mutation : produced.mutation, verifyGrant: () => human.granted, receiptVersion: () => 1, environment: () => environment, createId: () => `receipt-${++human.nextReceipt}`, now: () => environment.at })
     const operation = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
     expect((await apply.executePrepared(operation, context)).status).toBe("denied")
     human.granted = true

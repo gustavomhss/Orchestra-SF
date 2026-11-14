@@ -263,9 +263,9 @@
           "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages in the contributor navigation map; assignments restrict write access, not this navigation list. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
         "command_route_observation": "Read aggregate through composed dashboard view; render source is DashboardBudget.",
-        "commands_and_roles_observed": "No page-level write action asserted; reports use selected topics.",
+        "commands_and_roles_observed": "Executive Dashboard accepts save-users for itUsersMonthly and save-benchmark for costPerUserBenchmarks only for admin; both validate the selected year and month. Reports use selected topics. Static baseline source: dashboard-budget.ts 284-289.",
         "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
         "runtime_execution": "NOT_RUN",
         "import_export_page_relevance": "Dashboard reports (PPTX/DOCX); admin-only JSON export/import; no page-specific import observed.",
@@ -443,9 +443,9 @@
           "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages in the contributor navigation map; assignments restrict write access, not this navigation list. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
         "command_route_observation": "DashboardBudget.",
-        "commands_and_roles_observed": "save-month/save-revenue; admin/domain-leader module gate.",
+        "commands_and_roles_observed": "save-month/save-revenue; the module admits admin or domain leader, but these Budget Overview writes require admin. Static baseline source: dashboard-budget.ts 301-304.",
         "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
         "runtime_execution": "NOT_RUN",
         "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
@@ -527,7 +527,7 @@
           "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages in the contributor navigation map; assignments restrict write access, not this navigation list. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
         "command_route_observation": "DashboardBudget; MonthEntry ownerId.",
         "commands_and_roles_observed": "save/delete/save-entry/save-deviation/annual-entry/year-amount/import.",
         "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
@@ -611,7 +611,7 @@
           "line_anchor": "27,41-63,230-270,295-350,577,996-1010",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages mapped by assigned modules. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
+        "read_role_rule": "Navigation: admin/domain leader see all dashboard pages; viewer sees Executive Dashboard plus explicitly configured summaries; contributor sees pages in the contributor navigation map; assignments restrict write access, not this navigation list. Budget view allows admin/domain leader/viewer; edit execute guard requires canWrite and admin/domain leader; budget-line guard has separate assignment rules. See nav.ts 51-58,84-120 and dashboard-budget.ts 42-58.",
         "command_route_observation": "DashboardBudget; MonthEntry projId/projectId.",
         "commands_and_roles_observed": "save/delete/save-entry/save-deviation/annual-entry/year-amount.",
         "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
@@ -946,10 +946,10 @@
         },
         "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
         "command_route_observation": "DashboardPortfolio projects collection.",
-        "commands_and_roles_observed": "Read; writes follow projects collection gate.",
+        "commands_and_roles_observed": "Portfolio Dashboard and All Projects use the projects collection: save/delete/save-milestone/delete-milestone; import is admin-only. Writes require admin or contributor assigned projects. Static baseline source: dashboard-portfolio.ts 120-147, 259-266, 361-368.",
         "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
         "runtime_execution": "NOT_RUN",
-        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
+        "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; the projects import action is available for this projects-backed page to admin.",
         "command_role_evidence": {
           "source": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
           "line_anchor": "26-41,120-253,259-266,361+,639+",
@@ -1211,7 +1211,7 @@
         },
         "read_role_rule": "Read allows admin/domain leader/contributor; viewer only when the admin-owned summaries list contains the page. Write requires canWrite plus admin or contributor assigned Operations/security as applicable. dashboard-operations.ts 54-67,155-160.",
         "command_route_observation": "DashboardOperations security KPI/campaign/incident collections.",
-        "commands_and_roles_observed": "save-campaign/save-incident plus security action handlers.",
+        "commands_and_roles_observed": "save-kpi/delete-kpi, save-action/delete-action, save-incident/delete-incident and save-campaign/delete-campaign. Static baseline source: dashboard-operations.ts 342-350; write access is checked separately.",
         "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
         "runtime_execution": "NOT_RUN",
         "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
@@ -1543,7 +1543,7 @@
         },
         "read_role_rule": "Navigation/read follows dashboardPages. Portfolio mutation helper allows admin or contributor with matching assigned collection projects/risks/contracts; other collections are admin-only. dashboard-portfolio.ts 120-148,226-266.",
         "command_route_observation": "DashboardPortfolio itperf collection.",
-        "commands_and_roles_observed": "save-item/delete-item/save-sub/delete-sub.",
+        "commands_and_roles_observed": "save/save-item/delete-item/save-sub/delete-sub; the itperf collection requires admin. Static baseline source: dashboard-portfolio.ts 120-146, 502-504.",
         "import_export": "Surface footer: Generate Report (PPTX/DOCX) for allowed topics; Import/Export JSON and members/OPEX template export admin-only. Talent Review topic requires admin. application.ts 590-610,737-776. Page-specific import: OPEX Detail import; Talent Review import/exportAllMembers; All Projects import; IT Operations import-month.",
         "runtime_execution": "NOT_RUN",
         "import_export_page_relevance": "Dashboard report topic; admin-only JSON export/import; no page-specific import observed.",
@@ -1628,10 +1628,10 @@
         },
         "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
         "command_route_observation": "PlannerModule page.",
-        "commands_and_roles_observed": "Read summary; no write action for Overview observed.",
+        "commands_and_roles_observed": "Overview-specific writes are rejected; the module-level import-workbook action is dispatched before that rejection and is subject to its own permissions. Static baseline source: planner.ts 368-369, 1979 onward.",
         "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
         "runtime_execution": "NOT_RUN",
-        "import_export_page_relevance": "Planner XLSX export surface-wide; no page-specific workbook import form observed for Overview.",
+        "import_export_page_relevance": "Planner XLSX export is surface-wide; Overview includes the shared version selector and workbook import form, subject to its permission checks.",
         "command_role_evidence": {
           "source": "modules/sucafina/Sucafinav1/runtime/planner.ts",
           "line_anchor": "33-41,295-352,354-512,1411+,1510+,1842+,1979+",
@@ -1958,7 +1958,7 @@
         },
         "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
         "command_route_observation": "PlannerModule lists entities and allocations.",
-        "commands_and_roles_observed": "common/save/delete.",
+        "commands_and_roles_observed": "common/save/delete require admin. common applies only to allocations and adds missing canonical names. Static baseline source: planner.ts 1510-1545.",
         "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
         "runtime_execution": "NOT_RUN",
         "import_export_page_relevance": "Planner XLSX export; workbook import action is module-level; no page-specific form asserted.",
@@ -2022,7 +2022,7 @@
         },
         "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
         "command_route_observation": "PlannerModule rate data; FX capability is an observed page.",
-        "commands_and_roles_observed": "save/delete actions through page collection; import-workbook module action.",
+        "commands_and_roles_observed": "save/delete actions through the per-version FX collection; import-workbook is a module action. USD is fixed at 1, an empty rate stays null, and positive rates are rounded to six decimal places. Static baseline source: planner.ts 845-859.",
         "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
         "runtime_execution": "NOT_RUN",
         "import_export_page_relevance": "Planner XLSX export; workbook import action is module-level; no page-specific form asserted.",
@@ -2086,7 +2086,7 @@
         },
         "read_role_rule": "Navigation allows admin/finance/hr/budget owner/viewer; execution requires canWrite and admin/finance/hr/budget owner. Private fields are redacted for roles outside privateAccess. nav.ts 52,122-126; planner.ts 295-351.",
         "command_route_observation": "PlannerModule versions/officials.",
-        "commands_and_roles_observed": "save/copy/lock/unlock/official/delete.",
+        "commands_and_roles_observed": "save/copy/lock/unlock/official/delete require admin; the current official version cannot be unlocked or deleted. Static baseline source: planner.ts 1411-1430, 1478-1506.",
         "import_export": "Surface footer exposes XLSX export; module supports import-workbook. application.ts 595-596; planner.ts 301-313,368,1979+; workbooks source S13.",
         "runtime_execution": "NOT_RUN",
         "import_export_page_relevance": "Planner XLSX export; workbook import action is module-level; no page-specific form asserted.",
@@ -2153,7 +2153,7 @@
           "line_anchor": "26,358-420,602-710,797-849,1026+",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings navigation is listed for procurement roles; rendering and save/reset require admin. Supplier creation requires buyer; save permits buyer, admin or supplier admin; activate/block/inactivate and bank actions require admin or supplier admin. Static baseline: procurement.ts supplier/settings handlers and nav.ts 129-145.",
         "command_route_observation": "ProcurementModule baseline page label; capability label is Procurement Dashboard.",
         "commands_and_roles_observed": "Read dashboard; no domain edit route for Dashboard.",
         "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
@@ -2220,7 +2220,7 @@
           "line_anchor": "26,358-420,602-710,797-849,1026+",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings navigation is listed for procurement roles; rendering and save/reset require admin. Supplier creation requires buyer; save permits buyer, admin or supplier admin; activate/block/inactivate and bank actions require admin or supplier admin. Static baseline: procurement.ts supplier/settings handlers and nav.ts 129-145.",
         "command_route_observation": "ProcurementModule Store.requests / RequestView.",
         "commands_and_roles_observed": "create/save/submit_pr/submit_sourcing/select_quote/submit_po/approve/reject/issue/cancel/delete.",
         "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
@@ -2319,7 +2319,7 @@
           "line_anchor": "26,358-420,602-710,797-849,1026+",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings navigation is listed for procurement roles; rendering and save/reset require admin. Supplier creation requires buyer; save permits buyer, admin or supplier admin; activate/block/inactivate and bank actions require admin or supplier admin. Static baseline: procurement.ts supplier/settings handlers and nav.ts 129-145.",
         "command_route_observation": "ProcurementModule approvals over Store.requests.",
         "commands_and_roles_observed": "approve/reject and request-level actions accepted by shared route; role/state guards remain in handlers.",
         "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
@@ -2402,7 +2402,7 @@
           "line_anchor": "26,358-420,602-710,797-849,1026+",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings navigation is listed for procurement roles; rendering and save/reset require admin. Supplier creation requires buyer; save permits buyer, admin or supplier admin; activate/block/inactivate and bank actions require admin or supplier admin. Static baseline: procurement.ts supplier/settings handlers and nav.ts 129-145.",
         "command_route_observation": "ProcurementModule Store.suppliers.",
         "commands_and_roles_observed": "create/save/activate/block/inactivate/delete/change-bank.",
         "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
@@ -2470,7 +2470,7 @@
           "line_anchor": "26,358-420,602-710,797-849,1026+",
           "observation": "static source read at pinned commit; functions were not executed"
         },
-        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings are admin-only. Supplier create/save requires buyer; activate/block/inactivate/bank actions require admin or supplier admin. procurement.ts 602-710,797-828 and nav.ts 53,129-145.",
+        "read_role_rule": "Navigation allows requester/buyer/approver/supplier admin/admin/viewer; view applies visibleRequests to requester data. Settings navigation is listed for procurement roles; rendering and save/reset require admin. Supplier creation requires buyer; save permits buyer, admin or supplier admin; activate/block/inactivate and bank actions require admin or supplier admin. Static baseline: procurement.ts supplier/settings handlers and nav.ts 129-145.",
         "command_route_observation": "ProcurementModule Store.settings.",
         "commands_and_roles_observed": "save/reset; admin-only.",
         "import_export": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+.",
@@ -2522,6 +2522,21 @@
     "procurement": "Surface footer exports register CSV, or suppliers CSV on Suppliers; per-request PO download is present. No bulk import route observed. application.ts 597-600; procurement.ts render 1026+."
   },
   "orphans": [],
+  "review_notes": {
+    "classification": "Static review at the pinned baseline only; destination mappings are campaign intent and all runtime observations remain NOT_RUN.",
+    "consumer_evidence": "Each capability names its registered module/page or collection route in baseline_observation.command_route_observation; this identifies actual source consumers, not a runtime execution receipt.",
+    "confirmed_baseline_gap": {
+      "capability_id": "CAP06",
+      "observation": "The registered Headcount Overview baseline page is explicitly rejected by DashboardPeople execute; its projection is read-only and has no page-specific command route.",
+      "source_refs": ["registry", "people"],
+      "classification": "static source fact; runtime behavior not executed"
+    },
+    "unverified": [
+      "No runtime receipt IDs are present for Sucafina source flows.",
+      "No claim is made here that a mapped campaign destination is implemented or integrated.",
+      "Policy, approval authority, and accounting classifications are preserved as observed; this inventory does not authorize changes to them."
+    ]
+  },
   "status": "STATIC_TRACEABILITY_DRAFT_NOT_RUNTIME_VERIFIED",
   "registry_reconciliation": {
     "kind": "static string-array comparison at pinned baseline; no functions executed",

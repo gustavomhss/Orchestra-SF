@@ -1,0 +1,22 @@
+{
+  "kind": "recommendation-only-no-dispatch",
+  "package": "sucafina",
+  "files": [
+    "test/product/wp10/native-host/routine-installed-publication.test.ts"
+  ],
+  "fullFiles": true,
+  "testNamePattern": null,
+  "timeoutMs": 120000,
+  "omniStrict": true,
+  "reason": "All five cases previously failed before exercising installed publication because Task could not capture the root execution export. Run the complete unchanged five-case file on the published successor.",
+  "receiptReuse": {
+    "referenceFile": "test/product/wp10/native-host/native-host-disposal.test.ts",
+    "productSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "runId": 43604032487,
+    "jobId": 132474686748,
+    "pass": 7,
+    "meaning": "Evidence for the real public Core graph already used at this same source pin; not a pass for the changed C07 fixture."
+  },
+  "nativeAcceptance": false,
+  "globalAcceptance": false
+}

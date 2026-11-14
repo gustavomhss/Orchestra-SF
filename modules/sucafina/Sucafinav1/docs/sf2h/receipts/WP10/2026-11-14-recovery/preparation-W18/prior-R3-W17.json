@@ -1,0 +1,1865 @@
+{
+  "schema": "sf2h-independent-review-v1",
+  "candidateSha": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+  "candidateTree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+  "parentSha": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+  "branch": "astra-wp10",
+  "pullRequest": 29,
+  "base": "sf2-stack",
+  "createdAt": "2026-11-14T11:04:36.983477+00:00",
+  "reviewer": {
+    "agent": "/root/independent_r3_w16",
+    "reviewRound": "W17 followup",
+    "role": "R3 independent authority/privacy/concurrency review",
+    "productAuthorship": false,
+    "productEdits": false,
+    "localProductTests": false,
+    "localBuildTypecheckBrowser": false,
+    "remoteMutations": false,
+    "declaration": "Mesmo revisor independente do W16, sem autoria do produto ou das correções. Apenas fontes/metadata e MCP read-only; somente pareceres/recibos próprios foram escritos."
+  },
+  "verdict": "CHANGES_REQUESTED_HOLD_FOR_C17_COMPOSITION_AND_EXACT_HOSTED_PROOF",
+  "independentApproval": false,
+  "newConfirmedImplementationBugs": 0,
+  "mandatoryFindingsAwaitingFunctionalClosure": 2,
+  "closedScopedTypecheckFindings": 1,
+  "findings": [
+    {
+      "id": "R3-W16-HOST-CASE-REENTRY-01",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "WP10",
+      "status": "FIX_IMPLEMENTED_COMPOSED_PROOF_PENDING",
+      "codeCauseRemoved": true,
+      "hostedFunctionalClosure": false,
+      "evidence": [
+        "apps/cli/src/sucafina-product/analysis-run-context.ts",
+        "apps/cli/src/sucafina-product/host-context.ts:420",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts"
+      ],
+      "assessment": "Host now uses the extracted production helper and withCase allowHistoricalRetry while retaining its original selected case. The exact version checks of fresh selectedCase/resolveCase/verify remain, so no implicit upgrade to v+1 was introduced.",
+      "remaining": "The new test returns current case.version from a callback called readLifecycle, without creating a real run store or calling preserveStale. Existing historical-memory exercises the own helper/store directly. No authored or hosted proof yet composes outer helper + actual withCase + stale wrapper + actual store through a case advance; this is required to close the original end-to-end finding.",
+      "requiredProof": "Use explicitly unexecuted lifecycle fixture metadata, real current source access, original Request and production helper, advance the same case and call wrapped preserveStale. Assert durable stale version/output digest, original case selector, real C08/CAS, and refusal after participant revocation/incarnation replacement. Keep direct historical/cancel tests. No fabricated native/provider claim.",
+      "sharedReview": "R1 independently observed the same proof gap; no reviewer authored the fix."
+    },
+    {
+      "id": "R3-W16-BI-SELECTOR-02",
+      "severity": "P2",
+      "mandatory": true,
+      "owner": "WP10",
+      "status": "FIX_IMPLEMENTED_HOSTED_RECHECK_PENDING",
+      "codeCauseRemoved": true,
+      "hostedFunctionalClosure": false,
+      "evidence": [
+        "apps/cli/src/sucafina-product/extended-http.ts:43-49",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts"
+      ],
+      "assessment": "referenceDigest is now included both in the precise bi-source allowlist and in the authenticated bootstrap digest. The downstream 64-hex, selected-row-origin membership and current producer reread remain unchanged.",
+      "remaining": "No exact-W17 functional receipt accepted for the two real origins and absent/outside/invalid/drift counterexamples. W16 A cannot supply this result because its HTTP blob differs."
+    },
+    {
+      "id": "R3-W16-TYPECHECK-03",
+      "severity": "P2",
+      "mandatory": true,
+      "owner": "WP10",
+      "status": "CLOSED_SCOPED_HOSTED_TYPECHECK",
+      "codeCauseRemoved": true,
+      "hostedTypecheckClosure": true,
+      "evidence": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts:19",
+        "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts:167",
+        "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587702180"
+      ],
+      "assessment": "reason is narrowed with an in guard, and cleanup stub declares readLifecycle explicitly unavailable/not-exercised. W17 CLI and WP10 consumer typechecks passed. The Sucafina check has only 19 foreign diagnostics; the two own diagnostics are absent.",
+      "limits": "Closure applies only to the exact two type errors; it is not behavioral acceptance of native cleanup, dossier journey, or overall check."
+    }
+  ],
+  "candidateDelta": {
+    "verifiedAgainstGitHubMCP": true,
+    "changedPaths": 28,
+    "added": 7,
+    "modified": 21,
+    "deleted": 0,
+    "ownCodeAndTests": 6,
+    "newOwnReceipts": 4,
+    "foreignExactPublishedInputs": 18,
+    "effectiveForeignPins": 393,
+    "unchangedPriorWP10ReceiptBlobs": 96,
+    "fullTreeBlobCount": 16093,
+    "partialCheckoutNotTreatedAsDeletion": true,
+    "limits": "All 28 candidate delta identities compared with full trees and remote compare. Source provenance of the two changed AI production files was independently verified remotely against PR36 sourceCommit; remaining foreign pins are candidate/manifest integrity checks, not a semantic re-audit of every foreign change."
+  },
+  "remoteFileChecks": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "sha": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "encoding": "utf-8",
+      "exactTextMatch": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "sha": "65ec2c948a1c83aa7ada84d5f0f806bd236038b5",
+      "encoding": "utf-8",
+      "exactTextMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "sha": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "encoding": "utf-8",
+      "exactTextMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "sha": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "encoding": "utf-8",
+      "exactTextMatch": true
+    }
+  ],
+  "foreignFileChecks": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "sourceCommit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "sha": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "exactCandidateTextMatch": true,
+      "exactCandidateBlobMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "sourceCommit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "sha": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "exactCandidateTextMatch": true,
+      "exactCandidateBlobMatch": true
+    }
+  ],
+  "reviewedFiles": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "gitBlobSha": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "sha256": "8c237876e2a2636ab0634cf9599bc136300253c621784fa4496d4636dc73e311",
+      "bytes": 13190,
+      "matchesCandidateTree": true,
+      "W16Blob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "changedSinceW16": false,
+      "inspection": "Leitura integral: prepared proofs, actual snapshots, original Request, stale/cancel wrapper and commit guards.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "gitBlobSha": "42439e65042399bb2597dc4e6e3ccb81c88f4d9b",
+      "sha256": "c573f84f959b1590f65dae9b95cb99f8a14159278a561515252f187122e36379",
+      "bytes": 17000,
+      "matchesCandidateTree": true,
+      "W16Blob": "42439e65042399bb2597dc4e6e3ccb81c88f4d9b",
+      "changedSinceW16": false,
+      "inspection": "Leitura integral: joint admission, two current run reads, final holder identity, exact private provenance and publication guards.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/alternative-call-scope.ts",
+      "gitBlobSha": "6f6f914cb84ec79afe500a02fb3b033e30cb534d",
+      "sha256": "db0c0d338c15389f09d97e6e10d28180b6a9ef3242326974b21570bb4c9db8be",
+      "bytes": 7207,
+      "matchesCandidateTree": true,
+      "W16Blob": "6f6f914cb84ec79afe500a02fb3b033e30cb534d",
+      "changedSinceW16": false,
+      "inspection": "Leitura integral: lexical scope, original Request, C08 fences, UTC day, current membership and joint admission.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "gitBlobSha": "dbddde16519d6fa4342d3e942c58f4533f011619",
+      "sha256": "421b2b24d559416f87515f8d2c6bf1f4902b3477de84799c063057290f4f82d7",
+      "bytes": 56906,
+      "matchesCandidateTree": true,
+      "W16Blob": "dbddde16519d6fa4342d3e942c58f4533f011619",
+      "changedSinceW16": false,
+      "inspection": "Delta W15/W16 e escopo withCase/resolveCase/selectedCase; não revisão integral dos serviços.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "gitBlobSha": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "bytes": 74908,
+      "matchesCandidateTree": true,
+      "W16Blob": "28046172e5a540c8418aff0b968b2e098888c432",
+      "changedSinceW16": true,
+      "inspection": "Delta W16/W17 e releitura da costura de execution/preflight/store/cancel; helper importado e usado; fresh verify conserva versão exata.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "gitBlobSha": "65ec2c948a1c83aa7ada84d5f0f806bd236038b5",
+      "sha256": "470838fbabb9a7b023f5c9d1ee2faf04f71ebb27c937a18fbb6834d82120e3e2",
+      "bytes": 18214,
+      "matchesCandidateTree": true,
+      "W16Blob": "5a907dc4a550b263e5177d5f8ec428a7e143b20e",
+      "changedSinceW16": true,
+      "inspection": "Delta de allowlist e bootstrap/intent digest; releitura da validação da origem real e egress BI/Review preservados.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+      "gitBlobSha": "8f7b3ebb09bdaacfcad25d653e3ff333956d35f6",
+      "sha256": "aa6d51892554668d656c544f09009adf8c710ba9332788d68a2e8e782bff9728",
+      "bytes": 11888,
+      "matchesCandidateTree": true,
+      "W16Blob": "8f7b3ebb09bdaacfcad25d653e3ff333956d35f6",
+      "changedSinceW16": false,
+      "inspection": "Leitura das fronteiras de scope/fence e final authorization; não auditoria integral de todos consumidores BI.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "gitBlobSha": "328893225e338bc2f6d806874156bc5eef7b97b3",
+      "sha256": "bf1452db4d42e1efe39b6a313977e388b516e9c8f8ac493b5de511075ed3c1b0",
+      "bytes": 25870,
+      "matchesCandidateTree": true,
+      "W16Blob": "328893225e338bc2f6d806874156bc5eef7b97b3",
+      "changedSinceW16": false,
+      "inspection": "Delta W15/W16 e consumo da joint admission/Alternative selection.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "gitBlobSha": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+      "sha256": "3fb3ec75f01117aca0f28ed4330c96f7f5e9e48f6b72e0cf7c5610536f516650",
+      "bytes": 31572,
+      "matchesCandidateTree": true,
+      "W16Blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+      "changedSinceW16": false,
+      "inspection": "Delta W15/W16: historical protected reader and preserved writer fences.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "gitBlobSha": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+      "sha256": "03c79b31b4b9e8345dada415a0c7ff4b499eb0bb6b6de0c0b6b8bcfd822ffd60",
+      "bytes": 22455,
+      "matchesCandidateTree": true,
+      "W16Blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+      "changedSinceW16": false,
+      "inspection": "Recorte dos guards de native plan/admission/execution e leitura indisponível; não prova de native provider.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "gitBlobSha": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "sha256": "90727faf94f3632d7ae7054d4f48cec148056068c50fea5e4be3be42f0d86221",
+      "bytes": 23180,
+      "matchesCandidateTree": true,
+      "W16Blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "changedSinceW16": true,
+      "inspection": "Delta completo W16/W17, slots de mutation/read e compatibilidade com own wrapStore; digests antes de awaits e clones antes do staging.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "gitBlobSha": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "sha256": "54e0f971b348eaf495fecb63bb3a84f3153d753b132c4e7e658b32cb64a5f693",
+      "bytes": 5026,
+      "matchesCandidateTree": true,
+      "W16Blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "changedSinceW16": false,
+      "inspection": "Delta e chamadas readLifecycle/markStale/preserveStale.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "gitBlobSha": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "sha256": "0805ac5f3e5a36d8c288ef2ff625905b79aad0b980b62b5ac0317b81d9b391f4",
+      "bytes": 26209,
+      "matchesCandidateTree": true,
+      "W16Blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+      "changedSinceW16": true,
+      "inspection": "Delta completo de unavailable/needs-input settlement e releitura do pipeline publish/cancel; delayed failure respeita CAS/state machine.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "gitBlobSha": "866d5e2106a8da680d0496e1ac9b1e3d5763ce3f",
+      "sha256": "f77f584f53b9f7a92f8a136d261e8b712cc1733efc8e05e4110bcd6418bf71a7",
+      "bytes": 43387,
+      "matchesCandidateTree": true,
+      "W16Blob": "866d5e2106a8da680d0496e1ac9b1e3d5763ce3f",
+      "changedSinceW16": false,
+      "inspection": "Delta W15/W16 e leitura de record-history, original capture, current projection/scope lineage and final proof.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "gitBlobSha": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+      "bytes": 34119,
+      "matchesCandidateTree": true,
+      "W16Blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "changedSinceW16": false,
+      "inspection": "Delta W15/W16 e readOriginalCapture protected event/owner/digest and current case checks.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "gitBlobSha": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "bytes": 19836,
+      "matchesCandidateTree": true,
+      "W16Blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "changedSinceW16": false,
+      "inspection": "Leitura de read/transaction authorization, C08 snapshots and CAS checks; restante do provider fora do recorte.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "gitBlobSha": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "sha256": "88f2ae42e9f85f38c33a3d2763301c2e7eb2482367d9ffb9ed3c5cc93b4bb5dc",
+      "bytes": 10224,
+      "matchesCandidateTree": true,
+      "W16Blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "changedSinceW16": false,
+      "inspection": "Leitura integral de private immutable Request admission, native lease consumption/revocation and final active checks.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "gitBlobSha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+      "bytes": 6876,
+      "matchesCandidateTree": true,
+      "W16Blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "changedSinceW16": false,
+      "inspection": "Leitura integral de private UI Request admission, exact intent, single consume and final current checks.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "gitBlobSha": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+      "sha256": "d321f4d671d20e6852ba939dadf1753f72b2810d7b6ebac1b4e0156b496ad6bd",
+      "bytes": 183239,
+      "matchesCandidateTree": true,
+      "W16Blob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+      "changedSinceW16": false,
+      "inspection": "Metadados, revisionProvenance e hash estático de todos os 38 artifacts; não execução do teste.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "gitBlobSha": "cfe79311ca579fd3e51df0c8da00ece5cf03972f",
+      "sha256": "5be7cb2cefbcc54e30e83951e55565e8e0d4d157710e5150266d2c3d0bea91a8",
+      "bytes": 33267,
+      "matchesCandidateTree": true,
+      "W16Blob": "cfe79311ca579fd3e51df0c8da00ece5cf03972f",
+      "changedSinceW16": false,
+      "inspection": "Leitura das contraprovas historical source and own stale/cancel using actual C08/store; direct helper seam limitation.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "gitBlobSha": "8a9eb8eb63274c004ef188ff46eb33f18cf215d6",
+      "sha256": "8f22b0e8ea97dbdeac42865daf37a2af85caadc98a286e09ba0e68699d4659e8",
+      "bytes": 30609,
+      "matchesCandidateTree": true,
+      "W16Blob": "8a9eb8eb63274c004ef188ff46eb33f18cf215d6",
+      "changedSinceW16": false,
+      "inspection": "Leitura das cinco contraprovas joint admission, real run mutation/revocation/final private holder plus publication guards.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "gitBlobSha": "339a7ba1b57f31ca985b6b1015e0242ac60e2eb3",
+      "sha256": "14ea3b9394648d9d5d43ef8af09b7874ae50144d854f53a9cbc161a3b8cd98fa",
+      "bytes": 49347,
+      "matchesCandidateTree": true,
+      "W16Blob": "339a7ba1b57f31ca985b6b1015e0242ac60e2eb3",
+      "changedSinceW16": false,
+      "inspection": "Leitura dos scopes, overlap, UTC day, private selected alternative and all three annual 2026 additions; não execução.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "gitBlobSha": "357266b9c8de41ba43051c03815863a2744e78e9",
+      "sha256": "9b515e1b012d5f09d2b5c2e81cf2f4e5f80c20c0e1086e9093f8b6388749a1bb",
+      "bytes": 13319,
+      "matchesCandidateTree": true,
+      "W16Blob": "357266b9c8de41ba43051c03815863a2744e78e9",
+      "changedSinceW16": false,
+      "inspection": "Leitura das duas contraprovas reais de writer case/Planner retido no C08 final; não transferência de PASS antigo.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "gitBlobSha": "08505e70b5994d2b6845dd69ac60cde79fed6035",
+      "sha256": "2ada4d0dd05be9ab5275fda6b47e1ecd0d88f5d33f0c3fa80f627ce9e3527eef",
+      "bytes": 29959,
+      "matchesCandidateTree": true,
+      "W16Blob": "08505e70b5994d2b6845dd69ac60cde79fed6035",
+      "changedSinceW16": false,
+      "inspection": "Leitura da contraprova HTTP source participation revocation after actual destination resolution.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "gitBlobSha": "6c54d0175fc1e6330666f6fd3bc7efaab9f69ca1",
+      "sha256": "1216b73a92e437b65c7f5f65967dbf7339f21d6a527a8cf95f5a07a82f744e68",
+      "bytes": 40224,
+      "matchesCandidateTree": true,
+      "W16Blob": "6c54d0175fc1e6330666f6fd3bc7efaab9f69ca1",
+      "changedSinceW16": false,
+      "inspection": "Leitura dos três testes current-case/previous-case/successor-body e finalReads locked; demais jornadas não inteiramente reauditadas.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts",
+      "gitBlobSha": "12cbd71500e0e1d573e6c6579f3dfb71f7985091",
+      "sha256": "be0795c380d386a933e0e25eb9b59be1348f7d655bd10fa8656dcf91e57dde80",
+      "bytes": 5591,
+      "matchesCandidateTree": true,
+      "W16Blob": "12cbd71500e0e1d573e6c6579f3dfb71f7985091",
+      "changedSinceW16": false,
+      "inspection": "Leitura integral: positive distinct origins, absent/outside/invalid choice and source drift.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/record-history.test.ts",
+      "gitBlobSha": "e6d29ab48f12d260672ba4e1fde2d263b7e3fdc4",
+      "sha256": "1bdb7b1b0588e923886a5dbf3d7eddc77b452e6f848ebe1f6b080ee727a1d851",
+      "bytes": 8290,
+      "matchesCandidateTree": true,
+      "W16Blob": "e6d29ab48f12d260672ba4e1fde2d263b7e3fdc4",
+      "changedSinceW16": false,
+      "inspection": "Leitura integral: Dashboard/Planner physical lineage, captured original, missing/mutated/denied/recreated source counterproofs.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "gitBlobSha": "24c13d2ec384e573c47bf0359a98205e685ac468",
+      "sha256": "823ea2019cba3d6c7ba62665f2de0a5eeccb119706d7a688f68ee47d633b5ade",
+      "bytes": 12259,
+      "matchesCandidateTree": true,
+      "W16Blob": "19362229a384c15c3361f386d23246bdbe43a64f",
+      "changedSinceW16": true,
+      "inspection": "Leitura do trecho exato do diagnóstico hospedado próprio; não execução nem revisão integral da jornada.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "gitBlobSha": "cf90ba55860b36ce085fa500c0c51f987ad06743",
+      "sha256": "b525c02969323232de5c216e6feb3a9076fe734dad3d5ca1570aaa215e3a0783",
+      "bytes": 19963,
+      "matchesCandidateTree": true,
+      "W16Blob": "82d9e7f168b9dbe3f82333ec6985ffb10fb249c4",
+      "changedSinceW16": true,
+      "inspection": "Leitura do stub de store e recorte de cleanup afetado pelo diagnóstico hospedado; não execução nativa.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-execution.ts",
+      "gitBlobSha": "2423138831dbac9eaf65eb44485499e5c9475027",
+      "sha256": "a7aad58501d45f7411ca358abe9a776a3ed16ae5c3b515341eff0d96ed9013d9",
+      "bytes": 19738,
+      "matchesCandidateTree": true,
+      "W16Blob": "2423138831dbac9eaf65eb44485499e5c9475027",
+      "changedSinceW16": false,
+      "inspection": "Recortes de cancelRun/releaseRun, Request de cancelamento e native interruption; não execução nativa.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "gitBlobSha": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "sha256": "9d497b424797430aa713cae24a3bdd6a433ddbf678f4acc88da87d66230f6abf",
+      "bytes": 2358,
+      "matchesCandidateTree": true,
+      "W16Blob": null,
+      "changedSinceW16": true,
+      "inspection": "Leitura integral do helper novo, clones de selector/start, admissão com Request original, allowHistoricalRetry limitado, revalidação final e cleanup.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "gitBlobSha": "c6be5fbecf49e93237b873bb79ac12260022bdf1",
+      "sha256": "408b5143a34452e85628b51211d032f053d97920fe76aca59726f04c4330bab1",
+      "bytes": 7042,
+      "matchesCandidateTree": true,
+      "W16Blob": null,
+      "changedSinceW16": true,
+      "inspection": "Leitura integral: metadata/current case, original selector, Request, lease cleanup, revocation/abort/recreation; NÃO cobre preserveStale outer context.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "gitBlobSha": "75399d5f593bba467151e6debe34a7b17e6f13f3",
+      "sha256": "dd2d50822e28f72ea5c42c092bcd7b884fb8110074f131dbe2b9bff2a60dad32",
+      "bytes": 28129,
+      "matchesCandidateTree": true,
+      "W16Blob": "88bceff95ecf08681ff65b7888b7105b73b57062",
+      "changedSinceW16": true,
+      "inspection": "Leitura do delta completo incluindo oito contraprovas de alias mutation, final authorization, publication cancellation race e ready output preservation; autoridade da fixture injetada explicitamente.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "gitBlobSha": "e3e3dacbb3af4c62cc5c3f57582dfaac5581ae3c",
+      "sha256": "9880318bd6b22b5ef745135915cb194603620f850928c4ce70632366f18110be",
+      "bytes": 20242,
+      "matchesCandidateTree": true,
+      "W16Blob": "20fc3e771613161367e5d0108e6de8f3949fec5a",
+      "changedSinceW16": true,
+      "inspection": "Leitura do delta completo de settlement, revocation, denied/conflict and already committed ready output; não prova native host.",
+      "reviewBasis": "W17 delta/new source inspected",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "gitBlobSha": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "sha256": "e7d9a480a7ae191de355047f70f46cc5509650c1d0240fa4409b1ceab7bd06b3",
+      "bytes": 13930,
+      "matchesCandidateTree": true,
+      "W16Blob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "changedSinceW16": false,
+      "inspection": "Inspeção de issue/withCalculationCase/resolveEvidence para avaliar limite de composição de refs de cálculo; nenhuma conclusão de aceite ampliado.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "gitBlobSha": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47",
+      "bytes": 13845,
+      "matchesCandidateTree": true,
+      "W16Blob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "changedSinceW16": false,
+      "inspection": "Leitura de record-only recall scope, physical/current case fence, Request identity, lexical isolation e final C08 awaits; arquivo inalterado.",
+      "reviewBasis": "Same independent reviewer W16 inspection; unchanged blob verified, relevant seams reread where noted",
+      "remoteExactMatch": false
+    }
+  ],
+  "staticObservations": [
+    {
+      "area": "Original Request and fresh execution",
+      "assessment": "Helper clones original selected case/start, readmits the original Request for analysis.start, installs a private replay holder, uses historical retry only to enter lifecycle callback, reauthorizes after callback and clears lease/holder in finally. Fresh verifier and selectedCase remain exact; cancellation still requires its separate human intent."
+    },
+    {
+      "area": "Run-store mutation and C08",
+      "assessment": "New producer pins command/record digests before awaits; compares after preflight/current authority and commit callback; rejects verifier mutation of actual snapshot or admitted values; clones run/output/provenance before placing them into C08 staged state. Caller aliases therefore cannot rewrite durable staged output during final C08 authentication. Exact stale/cancel CAS, existing-output retention and sourceFence all remain."
+    },
+    {
+      "area": "Publication settlement",
+      "assessment": "analysis-port now settles unavailable/needs-input through a fresh run context. Failed retains failure settlement; denied/conflict still do not create a terminal write. State-machine/CAS prevents a late settlement from overwriting an already ready or cancelled run. New producer tests explicitly check these cases with injected host authority, not a native qualification."
+    },
+    {
+      "area": "Alternative and recall",
+      "assessment": "Joint admission, Alternative final-C08 fences and historical source/capture scopes are byte-identical to W16. Existing independent static observations remain applicable to unchanged blobs, with no hosted PASS transferred. The helper proof does not yet establish the full stale path with every mixed/calculation reference shape."
+    },
+    {
+      "area": "BI and Review egress",
+      "assessment": "Only allowlist/bootstrap changed. BI still selects an origin from the actual producer row and rereads the current projection after resolving links. Review still reopens current/predecessor bodies together under C08 before releasing links. No new confirmed egress regression found."
+    }
+  ],
+  "freeze9": {
+    "revision": 9,
+    "matches": 37,
+    "total": 38,
+    "mismatches": [
+      {
+        "path": "../../../../../apps/cli/src/sucafina-product/host-context.ts",
+        "expectedSha256": "4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922",
+        "actualSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+        "match": false
+      }
+    ],
+    "status": "BLOCKED_EXTERNAL_FINAL_HOST_BINDING",
+    "owner": "WP00 with WP10/S0",
+    "required": "Consume a published strict binding for the final host bytes; do not weaken the foreign freeze test or silently repin it."
+  },
+  "hostedCI": {
+    "check": {
+      "runId": 43587702180,
+      "jobId": 132425652500,
+      "snapshotSha": "585831c5d9279a7b87f804bc3598ed66af1bb9e5",
+      "conclusion": "failure",
+      "independentlyReadViaGitHubMCP": true,
+      "observedProductCheckout": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "sucafinaTypecheck": {
+        "conclusion": "failure",
+        "diagnostics": 19,
+        "own": 0,
+        "foreign": 19
+      },
+      "cliTypecheck": "success",
+      "WP10TestConsumersTypecheck": "success",
+      "atlasGeneration": "success",
+      "atlasTypecheck": "success",
+      "spawnImports": "success",
+      "guards": {
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 1301,
+        "gate": 0,
+        "warnings": 48,
+        "errors": 0
+      },
+      "rawLog": "reviews/R3/check-job-W17.txt",
+      "rawLogSha256": "4b89203b02bac91cfe6521c2c627a9e7a72878e9f4799460fdb90f5073cfbcc4",
+      "artifact": {
+        "id": 14111600606,
+        "announcedBytes": 4382,
+        "announcedSha256": "7dc49186b98b1732a8ab444a1d535b9b4d44a77cfc71d83066432b5fefb3247c",
+        "zipIndependentlyVerified": true,
+        "claim": "Independent R3 byte hashing against digest announced in GitHub MCP log; all eleven extracted files compared with ZIP; revisions.txt matches exact W17 SHA/tree.",
+        "verifiedBytes": 4382,
+        "entries": [
+          {
+            "file": "atlas-generate.log",
+            "bytes": 22,
+            "sha256": "0279c8a6959392e6cbdc8daf40011385f56fd4a7cbe09b5af76072e401a2b44f"
+          },
+          {
+            "file": "atlas-generated-check.log",
+            "bytes": 30,
+            "sha256": "8040b8b602fe9bb0035e66ee567e05648e496a8edfd36495e4d79c65e84892fb"
+          },
+          {
+            "file": "atlas-generated-diff.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "file": "atlas-typecheck.log",
+            "bytes": 16,
+            "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87"
+          },
+          {
+            "file": "cli-typecheck.log",
+            "bytes": 16,
+            "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87"
+          },
+          {
+            "file": "guards.log",
+            "bytes": 19524,
+            "sha256": "5560009d84e546bf9ed1a17547360fa05453b1ed557a0351f2897f1047688fbf"
+          },
+          {
+            "file": "merge-base.txt",
+            "bytes": 41,
+            "sha256": "541c6844015c5a0839167f338dcca8932ce7eb70c1d79cdd891584a105bf9961"
+          },
+          {
+            "file": "revisions.txt",
+            "bytes": 123,
+            "sha256": "c5f462fb5d09ac8f516f9ab705cfce0c3666b5cf411ae49c5299c894ed75fc65"
+          },
+          {
+            "file": "spawn-imports.log",
+            "bytes": 97,
+            "sha256": "2e8a811792603f2af0d14280132af600affbb368e64570d3d52d44b3c28cc1ed"
+          },
+          {
+            "file": "sucafina-typecheck.log",
+            "bytes": 7416,
+            "sha256": "96f20a555b39e791a50053b37612c80a6dcd568f8aeec724c9f6fcc8d4bcd17f"
+          },
+          {
+            "file": "wp10-test-typecheck.log",
+            "bytes": 60,
+            "sha256": "ad028ac630d212f71ae85efc93f29822c39adeb741bab228fff9298ab604f496"
+          }
+        ]
+      },
+      "remainingDiagnostics": [
+        "2026-11-14T10:59:05.2559138Z ##[error]product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+        "2026-11-14T10:59:05.2578152Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+        "2026-11-14T10:59:05.2592017Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "2026-11-14T10:59:05.2598971Z ##[error]test/product/wp04/ui-browser-selection.test.ts(3,37): error TS2307: Cannot find module '../../../../../../packages/app-shell/e2e/sucafina/wp04/selection.ts' or its corresponding type declarations.",
+        "2026-11-14T10:59:05.2603089Z ##[error]test/product/wp06/imports/source-fences.test.ts(12,47): error TS2307: Cannot find module '../../../../product/planner/evidence-reader.ts' or its corresponding type declarations.",
+        "2026-11-14T10:59:05.2606355Z ##[error]test/product/wp06/imports/source-fences.test.ts(155,41): error TS7019: Rest parameter 'args' implicitly has an 'any[]' type.",
+        "2026-11-14T10:59:05.2609558Z ##[error]test/product/wp06/imports/source-fences.test.ts(156,80): error TS2556: A spread argument must either have a tuple type or be passed to a rest parameter.",
+        "2026-11-14T10:59:05.2612804Z ##[error]test/product/wp06/imports/source-fences.test.ts(187,41): error TS7019: Rest parameter 'args' implicitly has an 'any[]' type.",
+        "2026-11-14T10:59:05.2616051Z ##[error]test/product/wp06/imports/source-fences.test.ts(188,80): error TS2556: A spread argument must either have a tuple type or be passed to a rest parameter.",
+        "2026-11-14T10:59:05.2620942Z ##[error]test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+        "2026-11-14T10:59:05.2627844Z ##[error]test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+        "2026-11-14T10:59:05.2634829Z ##[error]test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+        "2026-11-14T10:59:05.2639401Z ##[error]test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+        "2026-11-14T10:59:05.2649834Z ##[error]test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "2026-11-14T10:59:05.2664291Z ##[error]test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "2026-11-14T10:59:05.2678178Z ##[error]test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "2026-11-14T10:59:05.2692217Z ##[error]test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "2026-11-14T10:59:05.2706206Z ##[error]test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "2026-11-14T10:59:05.2717129Z ##[error]test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+      ]
+    },
+    "functionalW17": "No exact-W17 functional receipt accepted in this checkpoint",
+    "historicalW16A": {
+      "runId": 43585812801,
+      "acceptedForW17": false,
+      "reason": "Different product/changed run-store, analysis-port, host helper and HTTP source binding."
+    },
+    "priorPassTransfer": false
+  },
+  "criteriaInventory": {
+    "canonicalPack": "context/WP10.pack.json",
+    "total": 171,
+    "taskCount": 7,
+    "tasks": [
+      {
+        "id": "WP10.T01",
+        "title": "Compor host e módulo continuamente desde o início",
+        "accepted": false
+      },
+      {
+        "id": "WP10.T02",
+        "title": "Executar jornadas reais e verificar experiência",
+        "accepted": false
+      },
+      {
+        "id": "WP10.T03",
+        "title": "Executar três revisões independentes e fechar correções",
+        "accepted": false
+      },
+      {
+        "id": "WP10.T04",
+        "title": "Concluir verificação cumulativa no candidato de produto C",
+        "accepted": false
+      },
+      {
+        "id": "WP10.T05",
+        "title": "Fechar a campanha e entregar o produto revisável",
+        "accepted": false
+      },
+      {
+        "id": "WP10.T06",
+        "title": "Registrar equipe residente e executar MCP com contexto confiável",
+        "accepted": false
+      },
+      {
+        "id": "WP10.T07",
+        "title": "Compor BusinessContextService e memória Atlas transacional",
+        "accepted": false
+      }
+    ],
+    "criteria": [
+      {
+        "id": "WP10.DOD.01",
+        "text": "Todos os WPs e suas tasks satisfazem os axiomas locais e as jornadas integradas; três pareceres independentes não têm achado obrigatório aberto.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.DOD.02",
+        "text": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.DOD.10",
+        "text": "As entregas residentes atribuídas a WP10 têm produção, consumo e provas reais completos.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.DOD.40",
+        "text": "Runtime, Atlas, composição, CI e julgamentos têm atores/paths/recibos explícitos; cinco perfis/18 skills/oito packs e Atlas são integrados em G4.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.DOD.60",
+        "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.INV.01",
+        "text": "Só WP10 escreve composição compartilhada; defeitos em arquivos de domínio retornam ao owner, com revisão do delta.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.INV.02",
+        "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.INV.10",
+        "text": "WP10 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.INV.40",
+        "text": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.INV.60",
+        "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.QLT.01",
+        "text": "Evidências são pequenas e suficientes para julgar cada resultado; validade é do comportamento observado, não da quantidade de testes.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.QLT.02",
+        "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.QLT.40",
+        "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.QLT.60",
+        "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.CMP.01",
+        "text": "Todas as capacidades antigas e novas, três superfícies, quatro rotinas, oito gráficos e estados relevantes têm cobertura rastreável.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.CMP.02",
+        "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.CMP.10",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.CMP.40",
+        "text": "Incluir empacotamento Atlas, APP src/APP browser separados, provas AM01-AM06, transferências e rechecagem do candidato.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.CMP.60",
+        "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.SUC.01",
+        "text": "As jornadas de contribuição, comparação, decisão, reunião e retomada funcionam com identidades e dados compartilhados no módulo real.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.SUC.02",
+        "text": "André e o time podem completar suas tarefas sem reconstruir contexto em ferramentas auxiliares para os cenários cobertos.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.SUC.40",
+        "text": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.SUC.60",
+        "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.01",
+        "text": "Inicializar estado anterior e acessar as 28 capacidades sem perda de dados ou mudança de permissão.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.02",
+        "text": "Abrir cada função nova através da navegação real e observar leitura/escrita no domínio correto.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.03",
+        "text": "Rotinas usam recibo de run real; gráficos, imports e relatórios usam os mesmos valores autorizados dos domínios.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.04",
+        "text": "Salvar preferência, revisão, thread/vínculo e recibo/correlação; recarregar em nova sessão autorizada: o estado permanece. Migrar a mesma base antiga duas vezes produz o mesmo estado, sem duplicar registro nem ampliar acesso.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.05",
+        "text": "Injetar falha antes do commit de Apply: nenhum efeito. Perder resposta depois do commit e repetir correlação: recuperar o mesmo resultado sem aplicar outra vez; edição independente não é perdida. Se o store existente não suportar a atomicidade exigida, registrar incompatibilidade em C08 e resolver dentro da fronteira de produto antes de declarar pronto.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.10",
+        "text": "Export JSON/audit/preview do usuário Dashboard não revela memória/documento/HR de outro domínio mesmo com admin local desse surface.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.11",
+        "text": "Import com __sfProductV1 ou refs/owners/scannerReceipt fornecidos rejeita metadados e conserva estado confiável; nova encarnação invalida referências.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CHK.12",
+        "text": "T06/T07 usam a mesma instância Persistence de HTTP/jobs; restart não cria store git ou runtime paralelo.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.DOD.01",
+        "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.DOD.10",
+        "text": "Provider protegido C09–C17 é consumido pelas portas reais e persiste após restart.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.INV.01",
+        "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP. Guias normativos usam o README já possuído por S0 e não entram como evidência nova em D.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.INV.02",
+        "text": "A composição preserva atomicidade dentro de cada domínio: comando e recibo local são commitados juntos ou nenhum deles é gravado. Uma operação entre domínios pode ficar parcial, com esse estado e seus recibos explícitos, sem repetir efeitos aplicados.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.INV.03",
+        "text": "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.INV.10",
+        "text": "Storage central não concede acesso cross-domain nem inventa quarto Surface; commitar domínio e memória não promete transação global.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.QLT.01",
+        "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.QLT.10",
+        "text": "Migration/idempotency preservam estado prévio; audit genérico não contém texto sensível.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CMP.01",
+        "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas. Incluir guia por papel, roteiro sintético e changelog de produto em C, cobrindo os incrementos tardios até T75.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CMP.02",
+        "text": "Preferências, C05/C06, recibos/referências C04/C07 e correlação têm formato, migração, save/load, ACL e falha antes/depois do commit verificados.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.CMP.10",
+        "text": "Leitura, escrita, import, export, audit, retry, cancelamento e restart cobrem namespace protegido.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.SUC.01",
+        "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir. T05 entrega instruções já presentes no candidato testado, sem iniciar outro ciclo de produto apenas para escrever o guia.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T01.SUC.10",
+        "text": "Usuário autorizado retoma contribuição/memória e usuário sem acesso não obtém conteúdo por nenhuma superfície.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CHK.01",
+        "text": "Um segundo usuário altera o registro entre leitura e escrita: entrada local preservada, conflito visível, nenhuma perda silenciosa.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CHK.02",
+        "text": "Após salvar revisão, alterar origem não muda o apresentado; comparação seguinte mostra a mudança.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CHK.03",
+        "text": "Gerar relatório com25 registros preserva cobertura e nega dado sensível fora do papel.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CHK.04",
+        "text": "Demo de preparar→revisar→decidir→acompanhar percorre o caminho de produto, não botões de mockup.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CHK.05",
+        "text": "No ambiente/corpus fixados em G0, medir resposta visual e conclusão com30repetições comparáveis. Verificar feedback em até200ms e investigar p95 que regrida mais de20%; registrar resultado observado, sem inventar benchmark.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CHK.10",
+        "text": "Remover uma skill ou deixar saída sem consumidor faz a matriz falhar mesmo quando as jornadas genéricas passam.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CHK.11",
+        "text": "Sem trace do Atlas real+restart ou sem paridade dos 8 packs, aceite integral permanece aberto.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.DOD.01",
+        "text": "Jornadas e estados de interface foram observados na composição real, com evidência suficiente para reproduzir cada conclusão.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.DOD.10",
+        "text": "As 6 provas integradas possuem evidência positiva e negativa no mesmo candidato.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.INV.01",
+        "text": "Captura bonita ou teste de markup não substitui comportamento; identidade de teste não pode ter privilégios extras ocultos.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.INV.10",
+        "text": "Não reciclar review histórico/fixture/catalogo como prova de runtime.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.QLT.01",
+        "text": "Toda falha visual com perda de conteúdo/ação e toda perda de contexto relevante recebe correção antes do aceite.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.QLT.10",
+        "text": "Recibos identificam handler/modulo, run, versões, digests e ação do consumidor.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CMP.01",
+        "text": "Cobrir usuários, formatos, moedas, períodos, comparações, approvals, revisão, rotinas, busca, filtros e acessibilidade previstos.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.CMP.10",
+        "text": "Os 5 perfis/18 skills/8 packs e C17 estão cobertos, incluindo failure/retry/revogação.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.SUC.01",
+        "text": "Cada persona conclui sua tarefa e entende o resultado; entender uma aprovação em cerca de30 segundos é objetivo observado no roteiro, não promessa universal.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T02.SUC.10",
+        "text": "Pessoa que não construiu reproduz caminhos felizes e contraprovas sem reconstruir o produto no chat.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.CHK.01",
+        "text": "Juiz identifica se o comparador confunde margem e economia, se o aging usa evento errado ou se dados restritos escapam por relatório.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.CHK.02",
+        "text": "Juiz de UX percorre contribuição e conclusão, não apenas a home de André.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.CHK.03",
+        "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.CHK.40",
+        "text": "Cada seção dos três pareceres identifica reviewer e authors; seção com interseção não fecha aceite até ser reatribuída.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.DOD.01",
+        "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.DOD.40",
+        "text": "Três pareceres consolidados sem autojulgamento no candidato final.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.INV.01",
+        "text": "Nenhum achado que viole axioma obrigatório pode ser reclassificado como opcional só para encerrar.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.INV.40",
+        "text": "Escrever uma correção remove o direito de aceitar aquela seção independentemente.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.QLT.01",
+        "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.QLT.40",
+        "text": "Achado registra critério/evidência/impacto/correção/recheck e SHA.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.CMP.01",
+        "text": "Produto/UX cobre tarefa e conclusão; semântica cobre cálculo, estado, papéis, fontes, versões e automações.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.CMP.02",
+        "text": "Cobrir produto/UX, finanças/permissões/persistência e IA/Relay/integração com três revisores sem autoria nos arquivos julgados; cobrir substituição de revisor caso um assuma WP14.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.CMP.40",
+        "text": "CobrirUX, semântica, IA/MCP/Atlas/Relay/documentos/WP14 e todas as fontes de skills.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.SUC.01",
+        "text": "Um revisor sem autoria da implementação consegue sustentar o aceite e explicar seus limites concretos.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T03.SUC.40",
+        "text": "Revisão encontra lacunas sem contar S0-A/B builders como revisores livres.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CHK.01",
+        "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CHK.02",
+        "text": "As suítes necessárias executam testes reais e não somente passam com zero testes coletados.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CHK.03",
+        "text": "Não rodar bun test local nem alterar guards para fugir do caminho exigido pelo repositório.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CHK.10",
+        "text": "Regenerar a boundary no mesmo baseline dá bytes idênticos; geração faltante/obsoleta ou import @atlas/* não resolvido falha.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CHK.11",
+        "text": "Scanner/provedor/driver indisponível, suite pulada ou pacote sem execução real não satisfaz AM05.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CHK.40",
+        "text": "CI-APP-SRC seleciona src e CI-APP-BROWSER seleciona test-browser, com requests/results diferentes e mesmo productcandidate SHA.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CHK.41",
+        "text": "Oito requests mínimas, generated/typecheck e inventário do epic aparecem no recibo final; missing/empty/mismatched selection falha.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.DOD.01",
+        "text": "O candidato final de produto C tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada. O guard do envelope D é verificado separadamente por T05 antes de G8.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.DOD.10",
+        "text": "CI pertinente à boundary e aos novos consumers fecha com evidência do candidato final de produto C.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.DOD.40",
+        "text": "Seleções CI exigidas e gates estáticos de produto têm recibos do candidato aceito C; D mantém essas identidades e requer seu próprio guard em G8.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.INV.01",
+        "text": "CI verde não prova automaticamente UX; pareceres e jornadas continuam obrigatórios e separados.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.INV.10",
+        "text": "Não mudar CI/validator/engine para ocultar falha; exceção de packaging fica restrita.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.INV.40",
+        "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual. D não recebe o SHA de execução de C; seu receipt aponta C e o envelope mantém o produto intacto.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.QLT.01",
+        "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido. Arquivar prova em D não exige novo teste de produto quando o envelope passa, mas exige verificação própria e guard de D.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.QLT.10",
+        "text": "Dependency/runtime import e generated declarations são verificados de forma reproduzível.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.QLT.40",
+        "text": "Medirfila/setup/run/coleta e capacidade disponível, sem afirmar que timeout 45 é duração prevista.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CMP.01",
+        "text": "Cobrir seletores de domínio, integração, browsers, relatórios, imports, concorrência, rotinas e guards afetados.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CMP.10",
+        "text": "Gate cobre gerador, types, bundle, consumer e drivers de persistência/scanner reais.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.CMP.40",
+        "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic. As seleções e seis provas AM finais identificam o mesmo C; distinguir seu aceite do envelope D.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.SUC.01",
+        "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram. O índice de D aponta C e preserva cada run, attempt, seleção e hash original, sem alegar execução inexistente em D.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.SUC.10",
+        "text": "Uma instalação limpa recebe o mesmo API/runtime bundle sem depender do checkout interno Atlas.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T04.SUC.40",
+        "text": "Aceite CI é verificável porselection/request/run, e prazo 120 permanece condicional à medição.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.CHK.01",
+        "text": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa. A aceitação distingue C de D: todas as provas de produto obrigatórias pertencem a C; o envelope de D admite apenas adições novas, com hashes e guard próprios. Alteração, remoção, rename, modo indevido, fonte normativa ou input runtime/teste/build no diff rejeita D como entrega evidencial.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.CHK.02",
+        "text": "Uma pessoa executa o roteiro a partir do guia sem depender desta conversa.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.CHK.03",
+        "text": "Itens explicitamente fora de escopo não são apresentados como entregues e capacidades aceitas não são movidas para depois sem mudança de escopo.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.CHK.10",
+        "text": "Catálogo completo com skill nunca carregada, pack parcial ou memória sem Atlas bloqueia aceite.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.DOD.01",
+        "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos no produto C e pacote D coerente: ancestralidade, envelope append-only, inputs preservados, hashes e guard de D verificados após G7.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.DOD.10",
+        "text": "Recibo de entrega inclui todas novas capacidades e seus consumidores/provas.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.INV.01",
+        "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro. D não altera produto, guias normativos, testes, skills, configurações ou recibos antigos; a evidência conserva os SHAs e runs originais. Não gravar o próprio SHA/hash/guard posterior dentro de D.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.INV.10",
+        "text": "Prazo não transforma NOT_RUN/HOLD em PASS.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.QLT.01",
+        "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes. Consumir o guia já incluído em C; o índice de entrega liga evidências sem copiar afirmações de um candidato para outro.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.QLT.10",
+        "text": "Limitações e falhas são específicas e rastreáveis ao produtor.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.CMP.01",
+        "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas. Conferir todos os paths/status/modos/blobs do diff C→D, índice de evidências, ancestralidade e guard próprio de D; diff truncado ou dependência desconhecida falha.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.CMP.10",
+        "text": "Nenhum perfil, skill, pack, caso de identidade ou roundtrip Atlas obrigatório está órfão.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.SUC.01",
+        "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar. O usuário recebe C testado e D verificável, sem reexecução causada somente pela gravação da própria evidência.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T05.SUC.10",
+        "text": "Escopo total pode ser revisado e reproduzido sem confiar em afirmações de implementação.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.01",
+        "text": "Perfil sf_finance real carrega sf-explicar-forecast por SessionV2.skill; mensagem/instructionsDigest corresponde aos bytes pinados e compareForecast real produz resultado consumido.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.02",
+        "text": "Duas sessões com mesmo perfil e usuários/casos diferentes em concorrência mantêm principal/input/output isolados.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.03",
+        "text": "Actor/role/project/session/profile/provider/endpoint em args não altera autoridade; chamada sem binding ou direto a operação não concedida falha.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.04",
+        "text": "Revogação entre listTools e callTool e entre resultado do modelo e egress bloqueia dados/efeitos, inclusive links.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.05",
+        "text": "Provider configurado sucafina-workbench ou nome normalizado colidente produz provider-conflict; nenhum client externo é escolhido.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.06",
+        "text": "Trocar generation, expirar lease, usar lease duas vezes ou alterar inputDigest recusa sem chamar domínio.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.07",
+        "text": "Os 8 packs listam só operações implementadas; prova final invoca 39 rotas e confirma mesmos handlers/resultados UI/native/MCP.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.08",
+        "text": "Skill ausente, digest alterado, fonte homônima ou perfil desconhecido falha antes do prompt; nenhum catalog-only passa.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.09",
+        "text": "Revisor executa em sessão/run novos e não acessa ferramentas de Maestro/Atlas seats ou aprovação.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.10",
+        "text": "Restart não reidrata credential/grant; nova ligação autenticada retoma histórico autorizado com novo run.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.40",
+        "text": "NATIVE-RUNTIME T+16 é consumido 18 sem alegar T06 inteiro concluído; bundle full 42 entra 45 e todos os 8 packs são exercidos até 75.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CHK.60",
+        "text": "Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.DOD.01",
+        "text": "Os 5 perfis/18 skills estão registrados e carregados; MCP de 8 packs usa contexto confiável e produz recibos consumidos.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.DOD.40",
+        "text": "Early runtime e runtime completo têm recibos distintos e fonte distribuída real.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.DOD.60",
+        "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.INV.01",
+        "text": "Identidade vem de request/host, o destino revalida; nomes e dados do modelo não concedem autoridade.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.INV.40",
+        "text": "Bridge privada/grant não dependem de McpProvided global nem de identidade gerada.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.INV.60",
+        "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.QLT.01",
+        "text": "API usa seams públicos, schema fechado, falha explícita, budgets/cancelamento e provider object identity.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.QLT.40",
+        "text": "Todos os handlers publicados declaram producer e readiness; sem sucesso quando indisponível.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.QLT.60",
+        "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CMP.01",
+        "text": "Provar duas sessões/atores, forged args, revogação, homônimo, generation, carga de 18 skills, Revisor e paridade de 8 packs.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CMP.40",
+        "text": "Contar cinco perfis/dezoito skills/oito packs, incluindo chamada forçada, revogação e provider homônimo.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.CMP.60",
+        "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.SUC.01",
+        "text": "Usuário obtém contribuições especializadas rastreáveis e chamadas indevidas falham por caminho real.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.SUC.40",
+        "text": "Cadeia T20 e equipe completa T75 usam as mesmas portas/contratos, não dois runtimes.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T06.SUC.60",
+        "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.01",
+        "text": "Bundle/package import de produção chama createMemoryEmit/read; neutralizar um factory real faz a prova integrada falhar.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.02",
+        "text": "Append admitido -> commit driver SF real -> reinício de processo -> recall real -> consumidor de UI recupera razão/diferenças.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.03",
+        "text": "Dois atores usando mesmo perfil só veem casos/fontes atuais permitidas; owner omitido/forjado não amplia; um campo revogado suprime registro completo.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.04",
+        "text": "Scanner real admite clean, bloqueia canary e distingue ausente/timeout/erro como unavailable; zero append nos refusals.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.05",
+        "text": "Falha/cancelamento antes commit deixa zero evento após restart; resposta perdida após commit retorna mesmo event/receipt sem duplicar.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.06",
+        "text": "Dois writers concorrentes/mesmo owner não perdem eventos; cap/project gate é calculado no snapshot serializado e não por cópia antiga.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.07",
+        "text": "Import substitui encarnação mesmo ID e invalida ref/caches; namespace/audit/JSON export não revela memória privada.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.08",
+        "text": "Template empresarial errado, key extra, kind pr/logbook ou raw BusinessEvidenceRef objeto são recusados por map/validator antes da escrita.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.09",
+        "text": "Map snapshot read/append permanece síncrono; não retornar Promise de DurableMemory nem admitir antes await Persistence.transaction.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.10",
+        "text": "generate/check:generated/typecheck da boundary e check:spawn-imports raiz passam no candidato; quatro artefatos derivados, scanner no subpath nativo e import real SF, sem edição manual ou allowlist ampliada.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.40",
+        "text": "ATLAS-PACKAGE20 resolve os dois subpaths SF; AST, check:generated/typecheck e check:spawn-imports ficam vinculados ao candidato, além de CI-ATLAS-BUSINESS.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.41",
+        "text": "ATLAS-FULL T+55 consome resolver 20, map 20 e protected-store 25; append/read/restart são pelo Atlas real.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.60",
+        "text": "AST do business-memory-ports contém zero spawning imports e zero imports computados/dinâmicos; a única ligação do NO_SCANNER_NAME de memory-emit é o import literal external native-memory. Adicionar scanner export ao novo bundle ou desfazer externalização deve reprovar.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.61",
+        "text": "Native-bound preserva todos os exports bound e comportamento de createNativeMemory; scanner exports são reexports das funções/constante originais e não expõem createMemoryRead/createMemoryEmit/createDurableMemory, owner ou root mutáveis.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CHK.62",
+        "text": "Gerar os dois pares JS/d.ts e executar check:spawn-imports com guard/allowlist inalterados; nova ocorrência em business-memory-ports reprova. Os nove paths Atlas e atlas-scanner.ts/capabilities.ts têm escritor exclusivo S0-A.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.DOD.01",
+        "text": "BCS e Atlas real entregam refs, resolução, emit/read persistentes, scanner e recuperação autorizada após restart.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.DOD.40",
+        "text": "Boundary publicável, BCS, Atlas ports e provider durável têm owner/path/minutos/provas reais.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.DOD.60",
+        "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.INV.01",
+        "text": "Ledger SF é oficial; scope Atlas não é ACL; sem novos acessos, store git, identidade técnica ou engine paralelo.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.INV.40",
+        "text": "Nenhuma escrita fora dos nove paths Atlas exatos; gerados são produzidos pelo gerador, engines/guard/allowlist permanecem fonte inalterada.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.INV.60",
+        "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.QLT.01",
+        "text": "Forms/types reais, atomicidade explícita, causas de scanner preservadas e build do pacote reproduzível.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.QLT.40",
+        "text": "Falha descan/commit/ACL é observável e não produz sucesso persistido.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.QLT.60",
+        "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CMP.01",
+        "text": "Recobrir owner/kind/templates, ACL por campo/registro, incarnation, concurrency, cancel, retry, scanner e consumidor instrumentado.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CMP.40",
+        "text": "Empacotamento e 8 casos AM05 integram o orçamento/proof-map, não só o teste doledgerSF.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.CMP.60",
+        "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.SUC.01",
+        "text": "Precedente útil sobrevive ao processo e nunca retorna conteúdo revogado ou referência substituída como válida.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.SUC.40",
+        "text": "Memória recupera precedente real após reinício comfonte/versão/acesso atual.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      },
+      {
+        "id": "WP10.T07.SUC.60",
+        "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada.",
+        "canonicalStatus": "NOT_RUN",
+        "reviewStatus": "NOT_ACCEPTED_BY_THIS_SCOPED_REVIEW"
+      }
+    ],
+    "scope": "No criteria removed, weakened or marked accepted by this review. Canonical IDs/text retained for reference; parent criterion map remains the full delivery map."
+  },
+  "campaignHolds": [
+    {
+      "owner": "WP10 composition, consuming WP11 published historical readers",
+      "state": "OPEN_OWN_COMPOSITION",
+      "item": "R1-W17-CALCULATION-HISTORY-01: compose actual published historical result/request readers with current case ledger binding; simple version-only helper test cannot establish this case."
+    },
+    {
+      "owner": "WP10",
+      "state": "PROOF_PENDING",
+      "item": "Composed stale/run context positive/negative proof and exact-W17 BI source functional recheck."
+    },
+    {
+      "owner": "Foreign output owners/S0",
+      "state": "HOSTED_FAILURE",
+      "item": "19 Sucafina diagnostics remain; retain precise locations in raw log and consume published fixes."
+    },
+    {
+      "owner": "WP00 with WP10/S0",
+      "state": "BLOCKED",
+      "item": "Strict Freeze9 final host-context binding."
+    },
+    {
+      "owner": "C07 provider/WP09/WP10/S0",
+      "state": "BLOCKED_EXTERNAL",
+      "item": "Actual native plan/admission/run/execution/artifact adapter not installed by this delta."
+    },
+    {
+      "owner": "S0 and independent campaign qualification",
+      "state": "NOT_PROVEN",
+      "item": "No native/global acceptance: 39 operations, 5/18/8 runtime consumption, AM01-AM06, genuine provider/Session evidence, clean installation/scanners and final bundle gates remain explicit."
+    }
+  ],
+  "remainingActions": [
+    "Resolve R1-W17-CALCULATION-HISTORY-01 through published historical calculation composition and its exact authorized negative/positive proofs; preserve strict fresh version checks.",
+    "Create/execute the composed lifecycle counterproof on the final published candidate and independently review its result.",
+    "Run the exact BI source choice/evidence and affected store/publication counterproofs hosted; no local product execution.",
+    "Keep the W17 check overall FAILURE and the 19 foreign diagnostics explicit.",
+    "Recheck a successor SHA separately; preserve W16 and W17 reports as historical evidence.",
+    "S0 reviews and integrates; reviewer performs no merge or deploy."
+  ],
+  "otherIndependentReviewerFindings": [
+    {
+      "id": "R1-W17-CALCULATION-HISTORY-01",
+      "owner": "WP10 composition, consuming WP11 published historical readers",
+      "status": "OPEN_ON_W17",
+      "blocking": true,
+      "sourceReviewer": "R1",
+      "sourceReport": "reviews/R1/review-W17.json",
+      "sourceReportSha256": "cbb36d300cf473a8c70b8f6b3a49ccfde1ab0e5d9632c6d1143c0caa401ed8f8",
+      "independentlyReproducedByR3": false,
+      "cause": "withCase still calls cases.read. That reader includes ledger evidence and requires each ref to resolve fresh/historical. The WP10 calculation adapter always issues through requests.read and results.readForCalculation; the ordinary producer requires current.case.version === stored.caseRef.version. After acceptance advances v1 to v2 while retaining the C17 reference in the ledger, that ordinary reader refuses and cases.read becomes unavailable before lifecycle reentry. Published readHistoricalCalculation/readHistorical accept an exact current case/event/reference association, but WP10 does not compose them; its verifyCalculationSources wrapper also binds stored.caseRef to an exact-current withCalculationCase.",
+      "impact": "The current case and its retained calculation evidence cannot be reopened through the real host after a legitimate advance. Stale lifecycle reentry for that case also fails before the action, even though the new helper works for an empty-evidence case. This is a safe refusal and availability/functional gap, not evidence of leaked data or fresh authorization bypass.",
+      "requiredCorrection": "Compose the published historical result/request readers in a private authorized host lane derived from a real current case and retained exact ledger event/reference. Preserve old result/source/provenance bytes, canonical replay, current authority and BCS projection/currentRef/differences/continuity requirements. Leave ordinary fresh read/selection/publication strict.",
+      "R3Assessment": "Causal concern is consistent with the inspected ordinary calculation adapter and withCalculationCase path, but this report attributes the full finding and its owner proof to R1. No second independent reproduction or authorship claimed."
+    }
+  ],
+  "historicalRunUpdateFromCoordinator": {
+    "runId": 43585812801,
+    "candidate": "W16",
+    "resultReportedByParent": "82 pass / 20 fail, 102 tests, 18 files, 1405.57 seconds",
+    "independentlyReadFinalLogByR3": false,
+    "acceptedForW17": false,
+    "note": "Coordinator update only. Failure details require source log triage; not classified or promoted to W17 evidence by R3."
+  }
+}

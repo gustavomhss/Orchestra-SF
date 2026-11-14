@@ -11,6 +11,7 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { sfPlannerProjectionSelector, createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { plannerPreparedRevision, preparePlannerMutation } from "../../../product/planner/prepared.ts"
 import { createPlannerPreparedReview } from "../../../product/planner/prepared-review.ts"
+import { createPlannerConfirmationObserver } from "../../../product/planner/confirmation.ts"
 import type { PreparedCommand } from "../../../product/contracts/context.ts"
 import { createPlannerProduct } from "../../../product/planner/product.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
@@ -37,6 +38,15 @@ test("planner issuer resolves authenticated current identities and rejects stale
     if (first.status !== "ok") return
     expect(first.value.evidence.refId).toMatch(/^planner-version:/)
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "ok" })
+    const confirmation = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner: product.planner })
+    const confirmationScope = { sourceRef: { surface: "planner" as const, type: "planner-version", id: "v0", incarnation: first.value.evidence.target.incarnation }, fields: ["summary"], period: { start: "2027-01-01", end: "2027-01-31" }, materialDependencies: [], scopeDefinitionVersion: "planner-c06-v1" }
+    const observation = await confirmation.observe(confirmationScope, binding)
+    expect(observation.state).toBe("available")
+    if (observation.state === "available") {
+      expect(await persistence.transactionAll!(async () => ({ commit: false, value: await confirmation.fence(confirmationScope, observation, binding) }))).toBe(true)
+      expect(await confirmation.fence(confirmationScope, observation, binding)).toBe(false)
+    }
+    expect(await confirmation.verifyManifest({ ...confirmationScope, materialDependencies: [{ surface: "planner", type: "planner-version", id: "other", incarnation: "other", version: 1, fields: ["summary"], period: confirmationScope.period, observedAt: "2026-11-13T00:00:00Z" }] }, binding)).toBe(false)
     const captured = await persistence.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
     const environment = { at: "2026-11-13T00:00:00Z", id: randomUUID, directory: [] }
@@ -58,7 +68,16 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(reviewerSource.status).toBe("ok")
     if (reviewerSource.status === "ok") {
       expect(reviewerSource.value.evidence.target.incarnation).not.toBe(first.value.evidence.target.incarnation)
+      expect(reviewerSource.value.evidence.target.projectionDigest).toBe(first.value.evidence.target.projectionDigest)
+      expect(await confirmation.issueForActor(first.value.evidence.target, reviewerBinding)).toEqual({ status: "ok", value: reviewerSource.value.evidence })
+      expect(await confirmation.issueForActor({ ...first.value.evidence.target, fields: ["unsupported"] }, reviewerBinding)).toMatchObject({ status: "unavailable" })
       expect(await review(operation, reviewerBinding)).toMatchObject({ status: "ok", value: { originalTargetDigest: digestSfValue(target), targetLabel: "Licenses", source: reviewerSource.value.evidence, fields: [{ field: "line:1:forecast", before: null, after: 42 }] } })
+      const reissued = await confirmation.prepareReissueScope(first.value.evidence, reviewerSource.value.evidence, reviewerBinding)
+      expect(reissued.status).toBe("ok")
+      if (reissued.status === "ok") expect(await persistence.transactionAll!(async () => ({ commit: false, value: await reissued.value.fence() }))).toBe(true)
+      const continuity = await confirmation.prepareResimulationContinuity(first.value.evidence, reviewerSource.value.evidence, reviewerBinding)
+      expect(continuity.status).toBe("ok")
+      if (continuity.status === "ok") expect(await persistence.transactionAll!(async (snapshots) => ({ commit: false, value: continuity.value.fenceSnapshot(snapshots.planner) }))).toBe(true)
     }
     session.request = new Request("https://example.test", { headers: { authorization: "finance" } })
     const staged = structuredClone(captured)
@@ -75,12 +94,14 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, evidence: first.value.evidence, target: { ...target, period: { start: "2027-02-01", end: "2027-02-28" } }, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
 
     await persistence.transaction("planner", async (snapshot) => { const versions = snapshot.data.versions as { lines: { b: number[] }[] }[]; versions[0].lines[0].b[0] = 200; return { commit: true, value: undefined } })
+    if (observation.state === "available") expect(await persistence.transactionAll!(async () => ({ commit: false, value: await confirmation.fence(confirmationScope, observation, binding) }))).toBe(false)
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "stale" })
     const second = await product.issueSource("v0", binding)
     expect(second.status).toBe("ok")
     if (second.status === "ok") expect(second.value.evidence.target.version).toBeGreaterThan(first.value.evidence.target.version)
     session.active = false
     expect(await product.issueSource("v0", binding)).toMatchObject({ status: "denied" })
+    expect(await confirmation.issueForActor(first.value.evidence.target, binding)).toMatchObject({ status: "denied" })
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "denied" })
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

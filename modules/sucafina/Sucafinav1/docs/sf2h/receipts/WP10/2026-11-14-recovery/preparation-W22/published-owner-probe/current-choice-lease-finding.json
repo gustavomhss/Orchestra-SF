@@ -1,0 +1,19 @@
+{
+  "id": "W22-OWNER-CURRENT-CHOICE-FINAL-LEASE-01",
+  "status": "STATIC_OWNER_REVIEW_HOLD_NOT_EXECUTED",
+  "sourcePr": 35,
+  "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+  "blobSha": "38f82f4b931682e255a18d52856e192f2ee43390",
+  "boundary": "read(): final awaited input.state.read(source, cases, ...) to successful binding return",
+  "observation": "After the final C08 read the published producer compares case/results/binding and source.signal.aborted, but does not check current host.requestFor(context) identity or the private UI lease. The composed product-authority state authorizer checks authenticated principal/namespace; it is distinct from the live UI call lease.",
+  "causalHypothesis": "If that private lease ends during the final awaited C08 read while Request, principal and persisted bytes stay valid, the producer has no explicit final lease refusal on its return path. This is a static egress boundary requiring owner review and a real composed counterproof, not a hosted failure claim.",
+  "fixtureLimit": "current-choice-read-fence.test.ts explicitly folds ui.revalidate(context) into its C08 authorize callback and only mutates membership/preferences with a live UI lease. Its two races do not establish this boundary for the composed product-authority.",
+  "relatedCompatibility": "The same candidate adds REQUIRED verifySources. Both archived current-choice tests supply it. No production/CLI invocation exists in the complete W21 product/CLI namespaces; broad unhydrated tests were not asserted covered. Keep the independent closure held until its complete consumers and final lease proof are qualified.",
+  "dependenciesRead": [
+    "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+    "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+    "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
+  ],
+  "recommendedDisposition": "Do not compose CurrentChoicePreview or its two tests in the D renewal closure. Owner review with a real active-session/unchanged-Request final-C08 lease-end counterproof is pending."
+}

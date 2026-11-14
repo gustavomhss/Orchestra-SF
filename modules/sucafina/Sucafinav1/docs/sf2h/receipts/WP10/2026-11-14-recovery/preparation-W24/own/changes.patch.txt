@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts
+@@ -265,7 +265,7 @@
+     transaction: (surface, work, options) => {
+       metrics.persistenceCalls++
+       if (!store.currentSnapshots?.()) metrics.rootTransactions++
+-      return store.transaction(surface, async (...args) => { const result = await work(...args); if (result.commit) metrics.commitRequests++; return result }, options)
++      return store.transaction(surface, async (snapshot, blobs) => { const result = await work(snapshot, blobs); if (result.commit) metrics.commitRequests++; return result }, options)
+     },
+     transactionAll: async (work, options) => {
+       metrics.persistenceCalls++

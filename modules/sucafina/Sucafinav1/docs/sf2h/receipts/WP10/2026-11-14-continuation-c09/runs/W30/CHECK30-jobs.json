@@ -1,0 +1,177 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 132551590764,
+      "run_id": 43629131094,
+      "workflow_name": "astra-wp10-check",
+      "head_branch": "astra-check-wp10",
+      "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43629131094",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVsSYps8AAAAe3LDDbA",
+      "head_sha": "00d1ba5220121c8490ae28ed0fc839c56b0b7192",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132551590764",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629131094/job/132551590764",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-14T18:53:56Z",
+      "started_at": "2026-11-14T18:53:57Z",
+      "completed_at": "2026-11-14T18:57:19Z",
+      "name": "composition",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T18:53:58Z",
+          "completed_at": "2026-11-14T18:53:59Z"
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T18:53:59Z",
+          "completed_at": "2026-11-14T18:54:17Z"
+        },
+        {
+          "name": "Validate exact product and envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-14T18:54:17Z",
+          "completed_at": "2026-11-14T18:54:18Z"
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-14T18:54:18Z",
+          "completed_at": "2026-11-14T18:54:19Z"
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-14T18:54:19Z",
+          "completed_at": "2026-11-14T18:54:19Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-14T18:54:19Z",
+          "completed_at": "2026-11-14T18:55:06Z"
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-11-14T18:55:06Z",
+          "completed_at": "2026-11-14T18:55:35Z"
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-14T18:55:35Z",
+          "completed_at": "2026-11-14T18:56:05Z"
+        },
+        {
+          "name": "Typecheck WP10 test consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-14T18:56:05Z",
+          "completed_at": "2026-11-14T18:56:21Z"
+        },
+        {
+          "name": "Verify canonical Atlas generation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-14T18:56:21Z",
+          "completed_at": "2026-11-14T18:57:12Z"
+        },
+        {
+          "name": "Typecheck Atlas boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-14T18:57:12Z",
+          "completed_at": "2026-11-14T18:57:12Z"
+        },
+        {
+          "name": "Guard subprocess imports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-14T18:57:12Z",
+          "completed_at": "2026-11-14T18:57:12Z"
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-14T18:57:12Z",
+          "completed_at": "2026-11-14T18:57:16Z"
+        },
+        {
+          "name": "Upload exact-check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-14T18:57:16Z",
+          "completed_at": "2026-11-14T18:57:17Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-14T18:57:17Z",
+          "completed_at": "2026-11-14T18:57:17Z"
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-14T18:57:17Z",
+          "completed_at": "2026-11-14T18:57:17Z"
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-11-14T18:57:17Z",
+          "completed_at": "2026-11-14T18:57:18Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29,
+          "started_at": "2026-11-14T18:57:18Z",
+          "completed_at": "2026-11-14T18:57:18Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132551590764",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000058820,
+      "runner_name": "GitHub Actions 1000058820",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

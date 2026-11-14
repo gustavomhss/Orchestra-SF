@@ -1,0 +1,92 @@
+{
+  "method": "text, JSON structure and cryptographic hashes only; no product imports/execution",
+  "sourceCount": 47,
+  "allW25SourcesMatchFullTree": true,
+  "nativeOperationsFromType": [
+    "resolvePlan",
+    "resolveRecipe",
+    "prepare",
+    "readAdmission",
+    "readRun",
+    "start",
+    "listRunRefs",
+    "readExecution",
+    "readArtifact"
+  ],
+  "nativeOperationCount": 9,
+  "fiveC07Callables": [
+    "sf_routine_catalog",
+    "sf_routine_prepare",
+    "sf_routine_run",
+    "sf_routine_status",
+    "sf_routine_result"
+  ],
+  "publicExports": {
+    "coreTask": "./src/tool/task.ts",
+    "coreSkill": "./src/skill.ts",
+    "coreTaskGovernance": "./src/tool/task-governance.ts",
+    "coreRelayWorkflowSession": "./src/relay-workflow-session.ts",
+    "maestroKnowledgeExport": false,
+    "maestroWorkflowHostExport": false,
+    "maestroGovernedTask": "./src/governed-task.ts"
+  },
+  "ownerFiles": [
+    {
+      "owner": "pr33",
+      "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "sourceCommit": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "bytes": 17126,
+      "blobSha": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+      "sha256": "b1f049a256fe5c524d4431ef3a0780b7484e974b0f4facbfab3c06034c42af7f",
+      "w25BlobSha": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+      "byteEqualW25": true,
+      "localPath": "agents/c17/W25-native-boundary/owners/pr33/source/modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "rawPath": "agents/c17/W25-native-boundary/owners/pr33/raw/modules__sucafina__Sucafinav1__product__routines__capabilities.ts.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2784daafbb0d3b58b6019822288a07fa38e5c5b0/modules/sucafina/Sucafinav1/product/routines/capabilities.ts"
+    },
+    {
+      "owner": "pr33",
+      "path": "modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+      "sourceCommit": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "bytes": 9097,
+      "blobSha": "098a92920857926f117e266f5b63325f6ad112ca",
+      "sha256": "1f944e243d1b5bb9517dfdd34ee16ba5d8ee0743cd096efdf9bcfdea257a25c2",
+      "w25BlobSha": "098a92920857926f117e266f5b63325f6ad112ca",
+      "byteEqualW25": true,
+      "localPath": "agents/c17/W25-native-boundary/owners/pr33/source/modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+      "rawPath": "agents/c17/W25-native-boundary/owners/pr33/raw/modules__sucafina__Sucafinav1__product__routines__result-access.ts.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2784daafbb0d3b58b6019822288a07fa38e5c5b0/modules/sucafina/Sucafinav1/product/routines/result-access.ts"
+    },
+    {
+      "owner": "pr36",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "bytes": 5212,
+      "blobSha": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "sha256": "655c545bc8bd5efe4e597c2f030835be0f0df06a14fb7a1776ad3647ead06769",
+      "w25BlobSha": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "byteEqualW25": true,
+      "localPath": "agents/c17/W25-native-boundary/owners/pr36/source/modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "rawPath": "agents/c17/W25-native-boundary/owners/pr36/raw/modules__sucafina__Sucafinav1__product__ai__analysis-host.ts.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/ai/analysis-host.ts"
+    },
+    {
+      "owner": "pr36",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "bytes": 35027,
+      "blobSha": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+      "sha256": "a6feadbff3f9e7c84120f603fa7498abcd983946fb5c96b9a0bc6d4bef454a94",
+      "w25BlobSha": "3c78f724a50c37757570e80ba18af950a9469132",
+      "byteEqualW25": false,
+      "localPath": "agents/c17/W25-native-boundary/owners/pr36/source/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "rawPath": "agents/c17/W25-native-boundary/owners/pr36/raw/modules__sucafina__Sucafinav1__product__ai__analysis-port.ts.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"
+    }
+  ],
+  "productTests": "unexecuted",
+  "typecheck": "unexecuted",
+  "build": "unexecuted",
+  "native": "unexecuted",
+  "global": "unexecuted"
+}

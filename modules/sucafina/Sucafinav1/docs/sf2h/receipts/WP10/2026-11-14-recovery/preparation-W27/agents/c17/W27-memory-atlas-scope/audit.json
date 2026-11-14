@@ -1,0 +1,109 @@
+{
+  "schema": "wp10-memory-atlas-scope-builder-audit-v1",
+  "id": "W27-MEMORY-ATLAS-SCOPE",
+  "status": "FROZEN_ISOLATED_CANDIDATE_UNEXECUTED",
+  "baseProduct": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "baseTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "role": "own builder; auxiliary, not independent reviewer",
+  "FINAL": false,
+  "change": {
+    "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+    "base": {
+      "bytes": 19434,
+      "blobSha": "bd4701de1dabd10be4b19253981d288108c2a3f7",
+      "sha256": "d8ffc62f8e9c2c9bb49dcbff0ef3324154f4369a8db2184838f11e6a8f16c4db"
+    },
+    "candidate": {
+      "bytes": 32213,
+      "blobSha": "ba55d4f1624dabed660e58d3d8b787bd991acd7a",
+      "sha256": "26f577d698afd62bd0b73c508f44ba7eafcf00d8e3bb167916c2f23f11d5ba08"
+    },
+    "ownership": "WP10 own",
+    "appliedToCentralRepo": false
+  },
+  "authorization": "Parent authorized only this own helper in a new isolated overlay; root owns wiring/tests, CI builder owns generic participation.",
+  "cause": "W26 positive prepare/verify/output proof still complete the two Atlas observations and six BCS contexts, but repeated own witnesses and transaction boundaries consume the unchanged cumulative deadline.",
+  "design": [
+    "Only UI lexical Memory observations with a completed exact case proof may attempt the optional readMemoryCanonical callback.",
+    "The external Memory fence retains full C08 state, three source snapshots, source fences, environment/principal digests and the existing Request/binding/selection identity.",
+    "An independent actual C08 atlas read derives the owner from the real authorized case projection and gathers complete refs from the case and entire matching partition.",
+    "Eligibility accepts only Procurement record leaves and case-event refs from this same case; the original recursive predicate is byte-exact. Unsupported before work keeps the canonical path.",
+    "Inside the qualified root, an actual atlas read compares the entire protected state and partition again before calling the actual canonical Atlas producer. Drift refuses without recapturing or retrying.",
+    "A private second ALS frame permits only the already-completed exact case/readDigest proof. Real cases C08 authority, full state/source hashes, environment, principal, Request/all headers, binding/lease and reader selection remain current.",
+    "Internal case reads return clones without the external sf-memory-case-fence hook tag. External before/after/final Memory witnesses remain outside the root.",
+    "The internal case reader claims before its first await. Reentry, overlap, foreign selector or detached closed frame refuses and invalidates the parent scope.",
+    "The callback must run once and the observation value must equal its actual returned value. Unsupported after entry, partial work, changed state or forged observed result cannot retry outside.",
+    "The frame closes in finally; pending internal readers invalidate it. The second Atlas observation constructs a new independent lexical scope."
+  ],
+  "compositionDependencies": {
+    "optionalHook": "readMemoryCanonical(records, call, work): Promise<SfProcurementRecordObservation<MemoryResult>>",
+    "rootWiring": "agents/root/W27-memory-observation-composition",
+    "nestedRecordParticipation": "agents/ci/W27-record-participation",
+    "publicGenericSignatureChanged": false,
+    "dependencyPinBoundary": "This package pins the W26 public generic type/API. Root must pin the final W27 generic/wiring/test union independently before publication."
+  },
+  "alternatives": [
+    {
+      "option": "Elide only child witnesses inside the existing canonical-case grouped root",
+      "assessment": "Smaller boundary, but this fixture structurally performs 10 historical evidence resolutions per canonical case, twice per prepare. Removing those 40 nested witness events alone leaves most of the observed 188. This is a static count, not timing evidence."
+    },
+    {
+      "option": "Group only the own delegation of procurementEvidence.proveContinuity",
+      "assessment": "The direct producer is read-only in the inspected path, but separate roots add witnesses and do not remove existing ones. Runtime benefit is uncertain; not implemented."
+    },
+    {
+      "option": "Drop individual authority/environment guards or cache source hashes by currentSnapshots object identity",
+      "assessment": "Rejected. Authority must be current and LocalStore returns fresh snapshot clones; object identity is not a valid root witness."
+    }
+  ],
+  "validation": {
+    "method": "read/diff/hash and data-only Python; no product test/import/typecheck/build/browser",
+    "baseVerifiedAgainstCompleteTree": true,
+    "centralSourceStillEqualsFrozenW26": true,
+    "changedPaths": [
+      "apps/cli/src/sucafina-product/memory-case-read-scope.ts"
+    ],
+    "predicateProcurementCaseAndRecursiveRefsByteExact": true,
+    "predicateSha256": "2b40e2bc7b2f918bc7a90124595df5c0323385499350ca3089c80b12ae4195c9",
+    "canonicalProducerBodiesChanged": false,
+    "foreignSourceChanged": false,
+    "namespaceAtlasReadIsSeparate": true,
+    "privateGroupedCaseReadStillUsesActualC08Cases": true,
+    "groupedCaseReadEmitsExternalWriterTag": false,
+    "readClaimBeforeFirstAwait": true,
+    "separateClosedAlsMarkerForDetachedContinuations": true,
+    "immutableBindingAndLeaseIdentityPinned": true,
+    "actualWorkMustRunExactlyOnceForObservedResult": true,
+    "observedValueComparedWithActualCallbackResult": true,
+    "canonicalFallbackWithoutOptionalHook": true,
+    "canonicalFallbackWithoutCompletedCaseProof": true,
+    "postWorkFallback": false,
+    "resultOrAuthorityCacheAdded": false,
+    "oldCaseAndMemoryCompletedProofCaches": "unchanged semantics; this patch only guards a real first canonical Atlas invocation",
+    "testsEditedByThisAgent": false,
+    "frozenHistoricalMemory": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "bytes": 47804,
+      "blobSha": "a56e9a13b84d67cf5367b3abd609989fb4e1e3b7",
+      "sha256": "e43d2c13137e1ccadc42ada89b0e9e2b8514fc8412704a14e5c7fc386d5ac3fd",
+      "expectExpressions": 84,
+      "cooperativeDeadlineMs": 225000,
+      "outerBudgetMs": 240000
+    },
+    "localExecution": false,
+    "hostedCandidateExecution": false,
+    "independentReview": false,
+    "FINAL": false
+  },
+  "remaining": [
+    "Hosted CHECK and whole-file tests on the composed W27 SHA",
+    "Root tests for new boundary races/counters",
+    "Independent R1/R2/R3 review; no builder acceptance",
+    "No native/global acceptance inferred"
+  ],
+  "localProductExecution": false,
+  "remoteMutation": false,
+  "CITriggered": false,
+  "centralRepoEdited": false,
+  "sealedPriorPackagesEdited": false
+}

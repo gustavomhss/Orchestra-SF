@@ -1,0 +1,31 @@
+{
+  "role": "builder correction; not independent review",
+  "status": "sealed-static-awaiting-hosted",
+  "baseProduct": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "baseTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+  "cause": "A review lease was passed to the period-selection front door. Both setup and the interleaved period change need their own consumed exact work-selection intent.",
+  "resolution": "A local helper admits and validates the real sf_work_list capability on the original Request with the selected period digest, awaits the actual selection producer, and finishes only the new lease in finally.",
+  "leaseIsolationProof": [
+    "createSfUiAuthority.admit constructs a fresh frozen context and lease and adds a separate WeakMap entry.",
+    "validate marks only the admitted new entry consumed after actual authorization.",
+    "finish deletes only the context argument; the helper never finishes or reassigns the original proof call.",
+    "The main call, its Request, its deadline finalizer and the final cases.read call remain unchanged.",
+    "The public period index intentionally keys installation/project/principal/policy/access revision, excluding requestId and expiry; the granted new call and original call therefore share the selected period without sharing a lease.",
+    "The interleaved changed period gets a distinct fresh admission and digest; it still runs after fence 2 and retains both expected-ok selection and denied proof assertions."
+  ],
+  "preserved": [
+    "All 19 expanded cases and their names/matrices",
+    "All existing assertions and counter expectations",
+    "All 120000ms test budgets and cooperative deadlines",
+    "Original proof call and Request",
+    "All existing grants and guards",
+    "Real state, source, capture and authority implementations"
+  ],
+  "scopeLimit": "No provider, production helper, financial fixture, business-services or foreign file was changed. No downstream scenario-proof success is claimed.",
+  "validation": "Only data/text/hash comparisons and static source reads; no product execution or hosted dispatch.",
+  "ciRecommendation": "Execute the complete scenario-operation-access.test.ts file on the published successor, with no test-name filter and unchanged strict omni/canonical timeout policy.",
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReviewAcceptance": false
+}

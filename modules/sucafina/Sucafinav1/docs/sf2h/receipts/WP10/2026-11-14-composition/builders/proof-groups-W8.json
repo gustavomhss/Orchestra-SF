@@ -1,0 +1,1661 @@
+{
+  "schema": "sf2.wp10.w8.test-partition.v1",
+  "status": "CLOSED_IMPLEMENTATION_PENDING_HOSTED_VALIDATION",
+  "author": "/root/ci_triage",
+  "role": "implementation-with-static-inventory; not an independent reviewer",
+  "scope": {
+    "productRuntimeCodeChanged": false,
+    "leasedTestFilesWritten": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts"
+    ],
+    "sharedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "beforeSha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+        "afterSha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+        "byteIdentical": true,
+        "writtenByThisTask": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+        "beforeSha256": "bc8309217742936742c843d82d58d1b4fa456a9b81454e78a8b19779b94d1494",
+        "afterSha256": "bc8309217742936742c843d82d58d1b4fa456a9b81454e78a8b19779b94d1494",
+        "byteIdentical": true,
+        "writtenByThisTask": false
+      }
+    ],
+    "externalConcurrentAuthoring": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "owner": "/root/fixture_repair_w6",
+      "window": "W8b",
+      "note": "Parent-authorized separate lease; not written here and no immutable hash claim."
+    }
+  },
+  "executionRestrictions": {
+    "localProductExecution": false,
+    "localTests": false,
+    "localBuildOrTypecheck": false,
+    "productImports": false,
+    "remoteWrites": false,
+    "hostedDispatch": false,
+    "dataOnlyWork": "Python text relocation, assertion inventory, SHA256 and diff; source/log reads."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "before": {
+        "sha256": "b702bba68bd5adee806fd080aeb44b489da540bde78d1e297e528378cd97d458",
+        "bytes": 24295,
+        "assertionSites": 39
+      },
+      "after": {
+        "sha256": "bc80b13ae1f445f7425c7ebc4b1d53f58ffe4a36919564a7c9d4fdd88fc629d2",
+        "bytes": 28011,
+        "assertionSites": 47
+      },
+      "allOriginalIdentitiesMapped": true,
+      "originalAssertionMappings": [
+        {
+          "id": "PC001",
+          "originalLine": 140,
+          "newLine": 137,
+          "group": "common-produce",
+          "expression": "expect(produced.status).toBe(\"ok\")",
+          "normalizedSha256": "49482c4cef334a0f8c13f95e18a094d68c5947af8d3338f62d734228b4e43b04",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC002",
+          "originalLine": 145,
+          "newLine": 142,
+          "group": "common-produce",
+          "expression": "expect(control.coverageReads).toBeGreaterThan(0)",
+          "normalizedSha256": "4e9d2307e62cf5d2ced20275a093985bfbfb2ec892a774bbcb9af810d2f8a9ac",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC003",
+          "originalLine": 152,
+          "newLine": 203,
+          "group": "ui-and-selectors",
+          "expression": "expect(resolved).toMatchObject({ status: \"ok\", result: { state: \"fresh\", currentRef: calculation } })",
+          "normalizedSha256": "80332ca1db910b6fcdb52035f2b79e22dd4650f5dc8413d07d269c204b6c992c",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC004",
+          "originalLine": 157,
+          "newLine": 208,
+          "group": "ui-and-selectors",
+          "expression": "expect(repeated.map((item) => item.state)).toEqual([\"fresh\", \"fresh\"])",
+          "normalizedSha256": "b7b206e3716cac9d23735987c300e830895deab933364a5ef60172838ea0a388",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC005",
+          "originalLine": 158,
+          "newLine": 209,
+          "group": "ui-and-selectors",
+          "expression": "expect(repeated.map((item) => item.currentRef)).toEqual([calculation, calculation])",
+          "normalizedSha256": "d904d22d22f2dc7cc74c95e7c79cda44ae67303e994d4667bb920f7ee5315530",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC006",
+          "originalLine": 162,
+          "newLine": 213,
+          "group": "ui-and-selectors",
+          "expression": "expect(await first.business.calculations.issue(calculation.target.runId, call))\n            .toEqual({ status: \"unavailable\", reason: \"calculation-replay-cycle\" })",
+          "normalizedSha256": "81b062c60cc208f4b43464d46f4d84f39ee9b611f0784d847815ebbe28d6d6e5",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC007",
+          "originalLine": 165,
+          "newLine": 216,
+          "group": "ui-and-selectors",
+          "expression": "expect((await first.business.calculations.issue(calculation.target.runId, call)).status).toBe(\"ok\")",
+          "normalizedSha256": "df0fb84e4af83171dcc92dc76fd6462669ae446f4b1d3272f9e1a43bf66a790c",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC008",
+          "originalLine": 166,
+          "newLine": 217,
+          "group": "ui-and-selectors",
+          "expression": "expect(reentered).toBe(true)",
+          "normalizedSha256": "a432d6f3a9efed7a843cf615d83566b9aeb8a7de661befa808e8945ab0ed777a",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC009",
+          "originalLine": 169,
+          "newLine": 220,
+          "group": "ui-and-selectors",
+          "expression": "expect(found.authorizedProjection.components).toEqual(produced.value.result.components)",
+          "normalizedSha256": "8c3dea00ebff1c0c8ac85c0ca9595e10525c0298d30dd9d20cf6001ca7bf44b5",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC010",
+          "originalLine": 170,
+          "newLine": 221,
+          "group": "ui-and-selectors",
+          "expression": "expect(found.authorizedProjection.decision).toBeUndefined()",
+          "normalizedSha256": "60b68afed615c295c18869a2f1a2ccbf6e1b1df4868e7e00f12b1def0906ed9b",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC011",
+          "originalLine": 171,
+          "newLine": 222,
+          "group": "ui-and-selectors",
+          "expression": "expect(found.authorizedProjection.values.find((value) => value.id === \"scenario:total\")?.value).toBeNull()",
+          "normalizedSha256": "36806cbbd3c4b2be87f8f19270a951cc58a39eda1a2c9c16d3bbbe0a6b1b0e2d",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC012",
+          "originalLine": 172,
+          "newLine": 223,
+          "group": "ui-and-selectors",
+          "expression": "expect(JSON.parse(String(found.authorizedProjection.values.find((value) => value.id === \"scenario:result\")?.value))).toEqual(produced.value.result)",
+          "normalizedSha256": "830072625374b9c317d6fd0e7349fb503b181113e5e8d8ba00c8c4c8ab3197e5",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC013",
+          "originalLine": 176,
+          "newLine": 227,
+          "group": "ui-and-selectors",
+          "expression": "expect((await first.business.context.resolve({ ...tampered, refDigest: digestSfEvidenceRef(tampered) }, call)).state).toBe(\"unavailable\")",
+          "normalizedSha256": "b8baf90adcd7176dbb5aff52f3da783a0a3c38a95682f91405af201b54093729",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC014",
+          "originalLine": 181,
+          "newLine": 232,
+          "group": "ui-and-selectors",
+          "expression": "expect((await first.business.context.resolve(cyclic, call)).state).toBe(\"unavailable\")",
+          "normalizedSha256": "c90dd21875a69c6408005f259eecccc3ea51fc42623ec2aa41b23769ae7269d2",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC015",
+          "originalLine": 182,
+          "newLine": 233,
+          "group": "ui-and-selectors",
+          "expression": "expect((await first.business.context.context({ refs: Array.from({ length: 513 }, () => calculation) }, call)).every((item) => item.state === \"unavailable\")).toBe(true)",
+          "normalizedSha256": "8da30e03592155296bfee56d31aab161da465785509c57a5e5d57fa08158b119",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC016",
+          "originalLine": 183,
+          "newLine": 234,
+          "group": "ui-and-selectors",
+          "expression": "expect(control.coverageReads).toBe(reads)",
+          "normalizedSha256": "c4bbf93c52fb66aca4bf4c867661c322d1f386c2148d285bbda086d1e81be8ae",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC017",
+          "originalLine": 204,
+          "newLine": 171,
+          "group": "durable-reopen",
+          "expression": "expect(seeded.status).toBe(\"ok\")",
+          "normalizedSha256": "ad91b0bd847c2c8f8f34989e0ef8bbd74585fd92fbb1b9bf0a14778f19765045",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC018",
+          "originalLine": 206,
+          "newLine": 173,
+          "group": "durable-reopen",
+          "expression": "expect(appended).toMatchObject({ status: \"committed\" })",
+          "normalizedSha256": "06e2ff27988f27b6379b50ccc9aa6338dd0d40ba4b04bc0ba6f934023de6afd4",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC019",
+          "originalLine": 216,
+          "newLine": 246,
+          "group": "reopen-and-context",
+          "expression": "expect((await reopened.business.context.resolve(calculation, call)).state).toBe(\"fresh\")",
+          "normalizedSha256": "39c8d07d8542e5b06a3837d6d17f7898f3813f3ec1394b788081a98ed3ff59cf",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC020",
+          "originalLine": 218,
+          "newLine": 248,
+          "group": "reopen-and-context",
+          "expression": "expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)",
+          "normalizedSha256": "3381b1f2d65e5e25bb27c6dd528fe97467b6d8135e85d2e55e8def260b48fb10",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC021",
+          "originalLine": 220,
+          "newLine": 250,
+          "group": "reopen-and-context",
+          "expression": "expect(await reopened.atlas.memory.readOriginal(caseRef, calculation.refDigest, call)).toEqual(calculation)",
+          "normalizedSha256": "4d4c14896246f0225dd045e4c06e333ac8a810b6d4767dc60534bb030cfbdda4",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC022",
+          "originalLine": 226,
+          "newLine": 256,
+          "group": "reopen-and-context",
+          "expression": "expect(resolved).toHaveLength(refs.length)",
+          "normalizedSha256": "dfa85ac0dd61247293780e9e1f2b40ec0fddf6183be504671910bbdf034a55f1",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC023",
+          "originalLine": 228,
+          "newLine": 258,
+          "group": "reopen-and-context",
+          "expression": "expect(result).toMatchObject({ state: \"fresh\", ref: refs[index], currentRef: refs[index] })",
+          "normalizedSha256": "8fe9f91aa4be1c3462652d154d1d68ec82e25d864edbd996e06efa275ce200b9",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC024",
+          "originalLine": 229,
+          "newLine": 259,
+          "group": "reopen-and-context",
+          "expression": "expect(result.authorizedProjection).toBeDefined()",
+          "normalizedSha256": "5e5d8ccbdd8b7548a2a87889fcbf7c3bfeeaf37d8358f138c32f342ef3d38e32",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC025",
+          "originalLine": 233,
+          "newLine": 274,
+          "group": "reopen-and-recall",
+          "expression": "expect(recalled.status).toBe(\"ok\")",
+          "normalizedSha256": "17d49097f22fe79263effe31d73e3d21eb914ab56bd211511d3b0dabb3a8ebfc",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC026",
+          "originalLine": 234,
+          "newLine": 275,
+          "group": "reopen-and-recall",
+          "expression": "expect(recalled.records).toHaveLength(1)",
+          "normalizedSha256": "b6eb8d14fdeaa0ae508411ae9c9fca8ed52f5ca4cf3be1d59e62cba862990b11",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC027",
+          "originalLine": 236,
+          "newLine": 277,
+          "group": "reopen-and-recall",
+          "expression": "expect((await reopened.business.context.emitFromLedger(eventRef, call)).status).toBe(\"already-committed\")",
+          "normalizedSha256": "d4fabb3065740c3f5af9cf6fc19e8f887d7625b6c6e3d284fc6b898dcdf8017b",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC028",
+          "originalLine": 253,
+          "newLine": 299,
+          "group": "capture-integrity",
+          "expression": "expect(await reopened.atlas.memory.readOriginal(otherCase, calculation.refDigest, call)).toBeUndefined()",
+          "normalizedSha256": "041be0198e3a1b302d549654c4aabcb3d3e424d3f7d313fcb975182d61751bb3",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC029",
+          "originalLine": 264,
+          "newLine": 310,
+          "group": "capture-integrity",
+          "expression": "expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(false)",
+          "normalizedSha256": "8181dae1c46f294769876b1091d4abb0090009cf085dd1cdfe276fb72f1e5f95",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC030",
+          "originalLine": 267,
+          "newLine": 313,
+          "group": "capture-integrity",
+          "expression": "expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)",
+          "normalizedSha256": "3381b1f2d65e5e25bb27c6dd528fe97467b6d8135e85d2e55e8def260b48fb10",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC031",
+          "originalLine": 271,
+          "newLine": 332,
+          "group": "membership-race",
+          "expression": "expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(false)",
+          "normalizedSha256": "8181dae1c46f294769876b1091d4abb0090009cf085dd1cdfe276fb72f1e5f95",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC032",
+          "originalLine": 272,
+          "newLine": 333,
+          "group": "membership-race",
+          "expression": "expect(interleave.environment).toBeUndefined()",
+          "normalizedSha256": "d17717ab6b6ba0373f7ab76dc051dc484b11083277773f8c224df8fb565c011e",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC033",
+          "originalLine": 273,
+          "newLine": 334,
+          "group": "membership-race",
+          "expression": "expect(await reopened.authority.host.revalidate(call)).toBe(true)",
+          "normalizedSha256": "7bbedb2cd3bcd1616cda4a8127f5ad5cb69b4485100795732bf93d2e698c1065",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC034",
+          "originalLine": 278,
+          "newLine": 338,
+          "group": "membership-race",
+          "expression": "expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)",
+          "normalizedSha256": "3381b1f2d65e5e25bb27c6dd528fe97467b6d8135e85d2e55e8def260b48fb10",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC035",
+          "originalLine": 291,
+          "newLine": 366,
+          "group": "overlapping-revocation",
+          "expression": "expect(outcomes[0]!.status).not.toBe(\"ok\")",
+          "normalizedSha256": "81bf339e61bc6c8d34b0c767d9bd6a5bf5514cc122e4f61446f9cb3f89e38d8e",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC036",
+          "originalLine": 292,
+          "newLine": 367,
+          "group": "overlapping-revocation",
+          "expression": "expect(outcomes[1]!.status).not.toBe(\"ok\")",
+          "normalizedSha256": "5c6a33aab484055bf2cca2084ec6767408436fbf30931414f437085a33473b95",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC037",
+          "originalLine": 294,
+          "newLine": 369,
+          "group": "overlapping-revocation",
+          "expression": "expect((await reopened.business.context.resolve(calculation, call)).state).toBe(\"unavailable\")",
+          "normalizedSha256": "ba5343c019fa8a69598d7f2649a587e877e8429c79fb8bade7332a9243e9b8e2",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC038",
+          "originalLine": 295,
+          "newLine": 370,
+          "group": "overlapping-revocation",
+          "expression": "expect((await reopened.atlas.memory.recall(caseRef, call)).status).toBe(\"unavailable\")",
+          "normalizedSha256": "a12efe6c98887c7b4203692579ea5154bbd0e6f1d442b3bb7af0a7d2e78a4527",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "PC039",
+          "originalLine": 300,
+          "newLine": 386,
+          "group": "changed-source",
+          "expression": "expect((await reopened.business.context.resolve(calculation, call)).state).toBe(\"unavailable\")",
+          "normalizedSha256": "ba5343c019fa8a69598d7f2649a587e877e8429c79fb8bade7332a9243e9b8e2",
+          "identity": "unchanged-excluding-code-whitespace"
+        }
+      ],
+      "addedBaselineOrRecoveryAssertions": [
+        {
+          "newLine": 272,
+          "group": "reopen-and-recall",
+          "expression": "expect((await reopened.business.context.resolve(calculation, call)).state).toBe(\"fresh\")",
+          "normalizedSha256": "39c8d07d8542e5b06a3837d6d17f7898f3813f3ec1394b788081a98ed3ff59cf"
+        },
+        {
+          "newLine": 289,
+          "group": "capture-integrity",
+          "expression": "expect(await reopened.atlas.memory.readOriginal(caseRef, calculation.refDigest, call)).toEqual(calculation)",
+          "normalizedSha256": "4d4c14896246f0225dd045e4c06e333ac8a810b6d4767dc60534bb030cfbdda4"
+        },
+        {
+          "newLine": 290,
+          "group": "capture-integrity",
+          "expression": "expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)",
+          "normalizedSha256": "3381b1f2d65e5e25bb27c6dd528fe97467b6d8135e85d2e55e8def260b48fb10"
+        },
+        {
+          "newLine": 326,
+          "group": "membership-race",
+          "expression": "expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)",
+          "normalizedSha256": "3381b1f2d65e5e25bb27c6dd528fe97467b6d8135e85d2e55e8def260b48fb10"
+        },
+        {
+          "newLine": 350,
+          "group": "overlapping-revocation",
+          "expression": "expect((await reopened.business.context.resolve(calculation, call)).state).toBe(\"fresh\")",
+          "normalizedSha256": "39c8d07d8542e5b06a3837d6d17f7898f3813f3ec1394b788081a98ed3ff59cf"
+        },
+        {
+          "newLine": 352,
+          "group": "overlapping-revocation",
+          "expression": "expect(recalled.status).toBe(\"ok\")",
+          "normalizedSha256": "17d49097f22fe79263effe31d73e3d21eb914ab56bd211511d3b0dabb3a8ebfc"
+        },
+        {
+          "newLine": 353,
+          "group": "overlapping-revocation",
+          "expression": "expect(recalled.records).toHaveLength(1)",
+          "normalizedSha256": "b6eb8d14fdeaa0ae508411ae9c9fca8ed52f5ca4cf3be1d59e62cba862990b11"
+        },
+        {
+          "newLine": 381,
+          "group": "changed-source",
+          "expression": "expect((await reopened.business.context.resolve(calculation, call)).state).toBe(\"fresh\")",
+          "normalizedSha256": "39c8d07d8542e5b06a3837d6d17f7898f3813f3ec1394b788081a98ed3ff59cf"
+        }
+      ],
+      "independentTests": 7,
+      "cooperativeBudgetMs": 105000,
+      "outerBudgetMs": 120000,
+      "observedExecution": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "before": {
+        "sha256": "b10bddf3ce9230897182c88032ff99f63180bcca15f62e0932792aad9ca33afb",
+        "bytes": 28367,
+        "assertionSites": 66
+      },
+      "after": {
+        "sha256": "c868760bdfbe3cd981104108bf0c14c27e0ce09b20ec263d2aa62cf8430faa58",
+        "bytes": 33220,
+        "assertionSites": 73
+      },
+      "allOriginalIdentitiesMapped": true,
+      "originalAssertionMappings": [
+        {
+          "id": "RV001",
+          "originalLine": 68,
+          "newLine": 75,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(targets).toHaveLength(1)",
+          "normalizedSha256": "ddf082b0ac07cec3c88d4f64f0f62cf7069e46f24668bccddcecd68e01f7a287",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV002",
+          "originalLine": 71,
+          "newLine": 78,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(target.amount).toBeGreaterThan(0)",
+          "normalizedSha256": "dca0fe7878d2236aab32a9ede79730d271a5e97cd8f15c7844c02563146cd105",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV003",
+          "originalLine": 76,
+          "newLine": 83,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(preview.value).toMatchObject({ comparisonStatus: \"conditioned\", total: null })",
+          "normalizedSha256": "e978faa0006bc7dd456e90a0c7c2c7f4589d3fd8b2df4a596793da13f6fc41a7",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV004",
+          "originalLine": 77,
+          "newLine": 84,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(preview.value.components.find((component) => component.id === target.id)).toMatchObject({ amount: 0, evidenceState: \"hypothetical\" })",
+          "normalizedSha256": "31a7d6c216ca8626265afb9b3fdbcd2caf9ccf58b538233610ee047388d5f5da",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV005",
+          "originalLine": 78,
+          "newLine": 85,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(preview.value.restrictions).toContain(\"preview-not-applied\")",
+          "normalizedSha256": "89ca937cc3bf438af1c0031cda6289d83f1634978c9730566fcf891a499ec6d5",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV006",
+          "originalLine": 81,
+          "newLine": 88,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(unchanged.value.baseline.components.find((component) => component.id === target.id)).toEqual(target)",
+          "normalizedSha256": "7c9e45d810aaba6b0ea708d1b2d7034b6dc6887d9947763038a2976be7bd335c",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV007",
+          "originalLine": 104,
+          "newLine": 111,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(produced.status, produced.status !== \"ok\" ? produced.reason : undefined).toBe(\"ok\")",
+          "normalizedSha256": "275c073bf6d910bcb3753c73fdc682c348be22b38c9a100bd4b7d9842df33922",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV008",
+          "originalLine": 107,
+          "newLine": 114,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(stored.result.combinations[0]!.eligibility).toBe(\"conditioned\")",
+          "normalizedSha256": "9e07a35a0e7fb75f030a01a096c10a8a49c77539d655e3774297889aa698e7f4",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV009",
+          "originalLine": 108,
+          "newLine": 115,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(stored.result.combinations[0]!.comparisonStatus).toBe(\"conditioned\")",
+          "normalizedSha256": "c21475e427c9f91105a377f8b2ef0535882e6e087a07f415fc45cf4e2e1a0fd5",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV010",
+          "originalLine": 159,
+          "newLine": 166,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(preserved.status).toBe(\"ok\")",
+          "normalizedSha256": "0d26593fe8ef5de1bc3225ad008010dbcccaf53ca8fd1ca105d023c8721d1d3a",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV011",
+          "originalLine": 171,
+          "newLine": 178,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(first?.status).toBe(200)",
+          "normalizedSha256": "f4f6afbdc5f02235c5c767e50203fa51bac00d31ac16fdc4aeffa3ae72ada8af",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV012",
+          "originalLine": 172,
+          "newLine": 179,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(await first!.json()).toEqual(preserved)",
+          "normalizedSha256": "8782febf5b48306bc98637d94b66c9698cb9823e18622cabdce633ee762b6083",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV013",
+          "originalLine": 183,
+          "newLine": 190,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect((await business.resolveCase(call)).status).toBe(\"unavailable\")",
+          "normalizedSha256": "c7176acb9d02888eec1291ed163c991e202f2cd794ff9df5209477e182d70b5a",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV014",
+          "originalLine": 184,
+          "newLine": 191,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect((await business.results.read({ kind: \"portfolio\", resultRef: stored.resultRef }, call)).status).toBe(\"denied\")",
+          "normalizedSha256": "a18f217a81e205c4c6b4b12278131f857433ad3c81172edb00fe3c8276415623",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV015",
+          "originalLine": 186,
+          "newLine": 193,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(reopened?.status).toBe(200)",
+          "normalizedSha256": "22ff62ea614ef68bb3d322ed1a842b8ac68d57b29459cf9bf5d97ae8811dcc37",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV016",
+          "originalLine": 187,
+          "newLine": 194,
+          "group": "common-produce-preserve-advance",
+          "expression": "expect(await reopened!.json()).toEqual({ status: \"ok\", value: original })",
+          "normalizedSha256": "b5846cd0178006b03ba9e783433ffed0610ff582ab2163289eeed6e5e608f64b",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV017",
+          "originalLine": 189,
+          "newLine": 234,
+          "group": "historical-page",
+          "expression": "expect(page?.status).toBe(200)",
+          "normalizedSha256": "46f561c1196041d95eb52ccdde609a7d690169e63bcbd6a548a42cbdde2a077f",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV018",
+          "originalLine": 190,
+          "newLine": 235,
+          "group": "historical-page",
+          "expression": "expect(await page!.text()).toContain(stored.resultRef)",
+          "normalizedSha256": "9499d39f8a503987653b35b5d18e4077c22f923e8937d6e5769c11efa7659696",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV019",
+          "originalLine": 194,
+          "newLine": 215,
+          "group": "report-download",
+          "expression": "expect(report?.status).toBe(200)",
+          "normalizedSha256": "81b921799cbf712cd65a35660f8347cf5b5a5223cdceba3b6ef2bd3818e8cd17",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV020",
+          "originalLine": 196,
+          "newLine": 217,
+          "group": "report-download",
+          "expression": "expect(reportBody.status).toBe(\"ok\")",
+          "normalizedSha256": "b5544e05f9cd80536cb1303a0906000454dce19c6970518fc90284d528d586e6",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV021",
+          "originalLine": 199,
+          "newLine": 220,
+          "group": "report-download",
+          "expression": "expect(artifact?.status).toBe(200)",
+          "normalizedSha256": "38687a7a3b961825bc35bbe11b355c2db453deb4e46399af5fe90491a5ca6fd4",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV022",
+          "originalLine": 200,
+          "newLine": 221,
+          "group": "report-download",
+          "expression": "expect((await artifact!.arrayBuffer()).byteLength).toBeGreaterThan(500)",
+          "normalizedSha256": "bc29311f130792c1146eb28cce46535d9d4761c35ae692cc68268bcaf9845581",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV023",
+          "originalLine": 204,
+          "newLine": 262,
+          "group": "successor-comparison",
+          "expression": "expect(compared?.status).toBe(200)",
+          "normalizedSha256": "44001a99ff2475cf5d87a33c4c1e5e41e91367a410d338a883145814b20618cf",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV024",
+          "originalLine": 205,
+          "newLine": 263,
+          "group": "successor-comparison",
+          "expression": "expect(await compared!.json()).toMatchObject({ status: \"ok\", value: { comparison: { state: \"compared\" } } })",
+          "normalizedSha256": "e1a0026a15a2d20494deeb5737e07414bd1959cd9981213b9f1a715362285f3c",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV025",
+          "originalLine": 231,
+          "newLine": 290,
+          "group": "egress-case/session",
+          "expression": "expect(gate.script.length).toBeGreaterThan(0)",
+          "normalizedSha256": "023c2acf26d81abab52065b5e046d278cf973582da79d9b4e05142c4f567a53d",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV026",
+          "originalLine": 234,
+          "newLine": 293,
+          "group": "egress-case/session",
+          "expression": "expect(fixture.active.value).toBe(true)",
+          "normalizedSha256": "99ad86b01117d8ebc57814fd5431402f2dc3d931a3747c7e45e6bfb123bd96a4",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV027",
+          "originalLine": 235,
+          "newLine": 294,
+          "group": "egress-case/session",
+          "expression": "expect(await authority.host.revalidate(call)).toBe(true)",
+          "normalizedSha256": "11e9564e3806abe1e6747ab63e9bf094ab64d404ef9ffe214aa434d5add17f86",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV028",
+          "originalLine": 237,
+          "newLine": 296,
+          "group": "egress-case/session",
+          "expression": "expect(await authority.host.revalidate(authenticated)).toBe(true)",
+          "normalizedSha256": "0d8296661951fae61eded29e00809211fe54af523e6d7a44b133f95000033139",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV029",
+          "originalLine": 244,
+          "newLine": 303,
+          "group": "egress-case/session",
+          "expression": "expect(denied?.status, `Review egress after ${revocation} revocation`).toBe(403)",
+          "normalizedSha256": "6a73db4c678a9b92123638ab33d3984af028cc252e062573ccb54127b33aec5b",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV030",
+          "originalLine": 245,
+          "newLine": 304,
+          "group": "egress-case/session",
+          "expression": "expect(denied!.headers.get(\"content-type\")).toContain(\"application/json\")",
+          "normalizedSha256": "b92562aa3d5dc58c3d592627236493b1385f35327c2e8563e2b290b99e3214f6",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV031",
+          "originalLine": 248,
+          "newLine": 307,
+          "group": "egress-case/session",
+          "expression": "expect(body).toMatchObject({ status: \"denied\" })",
+          "normalizedSha256": "c9574aa1c7d425abd5a30afdd77d227bfcdcd7290bc135b1ce2725c641095559",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV032",
+          "originalLine": 249,
+          "newLine": 308,
+          "group": "egress-case/session",
+          "expression": "expect(body).not.toHaveProperty(\"value\")",
+          "normalizedSha256": "e8e173a3a797e787282f8cdfc6a65055e93a54ba4a47e5f4e39aeb97000b291b",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV033",
+          "originalLine": 250,
+          "newLine": 309,
+          "group": "egress-case/session",
+          "expression": "expect(body).not.toHaveProperty(\"selectedSection\")",
+          "normalizedSha256": "b4e84b628198a5b55e47ef40f5db9dcf37e337f444f2fd1221c6451233b09be5",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV034",
+          "originalLine": 251,
+          "newLine": 310,
+          "group": "egress-case/session",
+          "expression": "expect(body).not.toHaveProperty(\"bootstrap\")",
+          "normalizedSha256": "6954eb47e931e3cf07cd4074506988bb71eca5ebefba234e92f08b16fe852e6e",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV035",
+          "originalLine": 252,
+          "newLine": 311,
+          "group": "egress-case/session",
+          "expression": "expect(text).not.toContain(\"data-sf-review-bootstrap\")",
+          "normalizedSha256": "b2275abbcd6c67c26c1cd4c691f753605247f5fe52be8ee6dc2ad6356cc230b8",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV036",
+          "originalLine": 253,
+          "newLine": 312,
+          "group": "egress-case/session",
+          "expression": "expect(text).not.toContain(\"<script\")",
+          "normalizedSha256": "823405a468337a1620766e2eb877ce762ac27810fb5e26cc4c37bdb7aad323d8",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV037",
+          "originalLine": 254,
+          "newLine": 313,
+          "group": "egress-case/session",
+          "expression": "expect(text).not.toContain(\"Selected Portfolio\")",
+          "normalizedSha256": "58f020e23acb8513903f08a23ae6689d22289de46506d5c91f1377f55eb657e9",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV038",
+          "originalLine": 255,
+          "newLine": 314,
+          "group": "egress-case/session",
+          "expression": "expect(text).not.toContain(stored.resultRef)",
+          "normalizedSha256": "a1bfd59936abc53c9e691669db630a1573c567fae1602f824660e804b7b6c80f",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV039",
+          "originalLine": 265,
+          "newLine": 324,
+          "group": "egress-case/session",
+          "expression": "expect(recovered?.status, `Review recovery after ${revocation} revocation`).toBe(200)",
+          "normalizedSha256": "87cbe984dc255ac247184db7c7ab5b0d9f9dd1fd1065121db001e614048cf81e",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV040",
+          "originalLine": 267,
+          "newLine": 326,
+          "group": "egress-case/session",
+          "expression": "expect(restored).toContain(\"data-sf-review-bootstrap\")",
+          "normalizedSha256": "5702f0cf7ffcc821f84a0121b3bfa0b2221e34a9747d3441e57f653a7094732d",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV041",
+          "originalLine": 268,
+          "newLine": 327,
+          "group": "egress-case/session",
+          "expression": "expect(restored).toContain(\"Selected Portfolio\")",
+          "normalizedSha256": "b71f96ed0b8edbf972402b2f63a3447fa899e03a385025af7543d08e28450760",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV042",
+          "originalLine": 269,
+          "newLine": 328,
+          "group": "egress-case/session",
+          "expression": "expect(restored).toContain(stored.resultRef)",
+          "normalizedSha256": "eaaf22f3df4b92d25392c8d74f49f46a8eb8a15800a466ece50de0fcc827b006",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV043",
+          "originalLine": 277,
+          "newLine": 344,
+          "group": "browser-case-revocation",
+          "expression": "expect(fixture.active.value).toBe(true)",
+          "normalizedSha256": "99ad86b01117d8ebc57814fd5431402f2dc3d931a3747c7e45e6bfb123bd96a4",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV044",
+          "originalLine": 278,
+          "newLine": 345,
+          "group": "browser-case-revocation",
+          "expression": "expect(await authority.host.revalidate(call)).toBe(true)",
+          "normalizedSha256": "11e9564e3806abe1e6747ab63e9bf094ab64d404ef9ffe214aa434d5add17f86",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV045",
+          "originalLine": 280,
+          "newLine": 347,
+          "group": "browser-case-revocation",
+          "expression": "expect(await authority.host.revalidate(stillAuthenticated)).toBe(true)",
+          "normalizedSha256": "0123ef9b37488b9dad29c06fdbe632c95d2370b013694f1223a6448769b9b0ea",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV046",
+          "originalLine": 286,
+          "newLine": 353,
+          "group": "browser-case-revocation",
+          "expression": "expect(denied?.status).toBe(403)",
+          "normalizedSha256": "c0f508a6a3b6befc601a3782966b78fad3fb2fbf1499c1c03019af8e72be4ebe",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV047",
+          "originalLine": 288,
+          "newLine": 355,
+          "group": "browser-case-revocation",
+          "expression": "expect(body).toMatchObject({ status: \"denied\" })",
+          "normalizedSha256": "c9574aa1c7d425abd5a30afdd77d227bfcdcd7290bc135b1ce2725c641095559",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV048",
+          "originalLine": 289,
+          "newLine": 356,
+          "group": "browser-case-revocation",
+          "expression": "expect(body).not.toHaveProperty(\"value\")",
+          "normalizedSha256": "e8e173a3a797e787282f8cdfc6a65055e93a54ba4a47e5f4e39aeb97000b291b",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV049",
+          "originalLine": 290,
+          "newLine": 357,
+          "group": "browser-case-revocation",
+          "expression": "expect(body).not.toHaveProperty(\"selectedSection\")",
+          "normalizedSha256": "b4e84b628198a5b55e47ef40f5db9dcf37e337f444f2fd1221c6451233b09be5",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV050",
+          "originalLine": 292,
+          "newLine": 359,
+          "group": "browser-case-revocation",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV051",
+          "originalLine": 293,
+          "newLine": 245,
+          "group": "report-download",
+          "expression": "expect((await download())?.status).toBe(403)",
+          "normalizedSha256": "3cea258c24b87a1d99045fb6ee725107da7c555f52ad01c6d75640ff478c75ad",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV052",
+          "originalLine": 295,
+          "newLine": 366,
+          "group": "case-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV053",
+          "originalLine": 297,
+          "newLine": 375,
+          "group": "binding-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV054",
+          "originalLine": 299,
+          "newLine": 384,
+          "group": "result-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV055",
+          "originalLine": 303,
+          "newLine": 397,
+          "group": "body-source-and-backlink",
+          "expression": "expect((await get(\"review-read\", successor.value.id))?.status).toBe(200)",
+          "normalizedSha256": "a654402946cd329b4c3b83d78bec154c19ee09c3093d080d0a0866bbacc0c715",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV056",
+          "originalLine": 304,
+          "newLine": 398,
+          "group": "body-source-and-backlink",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV057",
+          "originalLine": 307,
+          "newLine": 401,
+          "group": "body-source-and-backlink",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV058",
+          "originalLine": 309,
+          "newLine": 403,
+          "group": "body-source-and-backlink",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(200)",
+          "normalizedSha256": "3f9dd494db34af514a4c95df386a83d39162b1173431d9131ed1da40d21f9681",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV059",
+          "originalLine": 312,
+          "newLine": 406,
+          "group": "body-source-and-backlink",
+          "expression": "expect((await get(\"review\"))?.status).toBe(200)",
+          "normalizedSha256": "1eaf2b1edf5e935a5e9e200dc2dbd5145d7309ec867767afaa688daec1158c23",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV060",
+          "originalLine": 314,
+          "newLine": 408,
+          "group": "body-source-and-backlink",
+          "expression": "expect(staleSource?.status).toBe(409)",
+          "normalizedSha256": "20ef9d57f70ad5b65084b7d144e041016ac33870e33757c90cf183be540b93fc",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV061",
+          "originalLine": 315,
+          "newLine": 409,
+          "group": "body-source-and-backlink",
+          "expression": "expect(await staleSource!.json()).toEqual({ status: \"unavailable\", reason: \"source-or-destination-period-unavailable\" })",
+          "normalizedSha256": "a2e90bfcdf2bb95a501c40bc079dcae185ba4f236bd7b9d795aed5f88d648da8",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV062",
+          "originalLine": 317,
+          "newLine": 421,
+          "group": "receipt-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV063",
+          "originalLine": 318,
+          "newLine": 422,
+          "group": "receipt-integrity",
+          "expression": "expect((await get(\"review-read\", successor.value.id))?.status).toBe(200)",
+          "normalizedSha256": "a654402946cd329b4c3b83d78bec154c19ee09c3093d080d0a0866bbacc0c715",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV064",
+          "originalLine": 320,
+          "newLine": 424,
+          "group": "receipt-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(200)",
+          "normalizedSha256": "3f9dd494db34af514a4c95df386a83d39162b1173431d9131ed1da40d21f9681",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV065",
+          "originalLine": 322,
+          "newLine": 252,
+          "group": "report-download",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725",
+          "identity": "unchanged-excluding-code-whitespace"
+        },
+        {
+          "id": "RV066",
+          "originalLine": 323,
+          "newLine": 253,
+          "group": "report-download",
+          "expression": "expect((await download())?.status).toBe(403)",
+          "normalizedSha256": "3cea258c24b87a1d99045fb6ee725107da7c555f52ad01c6d75640ff478c75ad",
+          "identity": "unchanged-excluding-code-whitespace"
+        }
+      ],
+      "addedBaselineOrRecoveryAssertions": [
+        {
+          "newLine": 244,
+          "group": "report-download",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(403)",
+          "normalizedSha256": "b9e259621740b1977a77857a38a0f81dbd1254425f25f00a23c5b468b22ba725"
+        },
+        {
+          "newLine": 249,
+          "group": "report-download",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(200)",
+          "normalizedSha256": "3f9dd494db34af514a4c95df386a83d39162b1173431d9131ed1da40d21f9681"
+        },
+        {
+          "newLine": 250,
+          "group": "report-download",
+          "expression": "expect((await download())?.status).toBe(200)",
+          "normalizedSha256": "2113925c00d65269867b94a4f80e66e4760ad7e114054346c4b692638f06d3fe"
+        },
+        {
+          "newLine": 368,
+          "group": "case-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(200)",
+          "normalizedSha256": "3f9dd494db34af514a4c95df386a83d39162b1173431d9131ed1da40d21f9681"
+        },
+        {
+          "newLine": 377,
+          "group": "binding-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(200)",
+          "normalizedSha256": "3f9dd494db34af514a4c95df386a83d39162b1173431d9131ed1da40d21f9681"
+        },
+        {
+          "newLine": 386,
+          "group": "result-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(200)",
+          "normalizedSha256": "3f9dd494db34af514a4c95df386a83d39162b1173431d9131ed1da40d21f9681"
+        },
+        {
+          "newLine": 419,
+          "group": "receipt-integrity",
+          "expression": "expect((await get(\"review-read\"))?.status).toBe(200)",
+          "normalizedSha256": "3f9dd494db34af514a4c95df386a83d39162b1173431d9131ed1da40d21f9681"
+        }
+      ],
+      "independentTests": 11,
+      "cooperativeBudgetMs": 105000,
+      "outerBudgetMs": 120000,
+      "observedExecution": null
+    }
+  ],
+  "groups": {
+    "planner": [
+      {
+        "id": "ui-and-selectors",
+        "causalChain": "UI e BCS repetido, replay reentrante real, quatro alvos adulterados, ciclo e 513 seletores",
+        "originalAssertionIds": "PC003–PC016"
+      },
+      {
+        "id": "reopen-and-context",
+        "causalChain": "Persistência real, fechamento/reabertura de SQLite e autoridade, continuidade, original e contexto ancestral/repetido",
+        "originalAssertionIds": "PC019–PC024"
+      },
+      {
+        "id": "reopen-and-recall",
+        "causalChain": "Mesmo fluxo real de persistência/reabertura, recall de um registro e emissão already-committed",
+        "originalAssertionIds": "PC025–PC027"
+      },
+      {
+        "id": "capture-integrity",
+        "causalChain": "Baseline original/continuidade, outro caso, seis corrupções do capture e restauração",
+        "originalAssertionIds": "PC028–PC030"
+      },
+      {
+        "id": "membership-race",
+        "causalChain": "Baseline de continuidade, membership alterado durante environment await, sessão viva e restauração",
+        "originalAssertionIds": "PC031–PC034"
+      },
+      {
+        "id": "overlapping-revocation",
+        "causalChain": "Baseline resolve+recall, replay concorrente real, revogação antes do retorno e supressão resolve/recall",
+        "originalAssertionIds": "PC035–PC038"
+      },
+      {
+        "id": "changed-source",
+        "causalChain": "Reabertura e resolve fresco antes de edição real da fonte; resolve indisponível depois",
+        "originalAssertionIds": "PC039"
+      }
+    ],
+    "review": [
+      {
+        "id": "historical-page",
+        "causalChain": "Portfolio produzido/persistido e Review preservado em N; caso avança a N+1; GET histórico e página reais",
+        "originalAssertionIds": "RV017–RV018"
+      },
+      {
+        "id": "report-download",
+        "causalChain": "DOCX e download reais; membership removido/restaurado com download positivo; sessão revogada",
+        "originalAssertionIds": "RV019–RV022, RV051, RV065–RV066"
+      },
+      {
+        "id": "successor-comparison",
+        "causalChain": "Sucessor efetivamente preservado via porta humana e comparação HTTP",
+        "originalAssertionIds": "RV023–RV024"
+      },
+      {
+        "id": "egress-case",
+        "causalChain": "Asset real aguardado; membership muda após leitura; resposta negada sem bytes privados; restauração real",
+        "originalAssertionIds": "RV025–RV042, ramo case"
+      },
+      {
+        "id": "egress-session",
+        "causalChain": "Fixture independente; asset real aguardado; sessão muda após leitura; supressão e restauração",
+        "originalAssertionIds": "RV025–RV042, ramo session"
+      },
+      {
+        "id": "browser-case-revocation",
+        "causalChain": "Duas páginas reais, late200 legítimo retido, revogação apenas do caso e GETs negados",
+        "originalAssertionIds": "RV043–RV050; asserts do helper continuam externos a este inventário"
+      },
+      {
+        "id": "case-integrity",
+        "causalChain": "Baseline real, incarnation substituída, negação e restauração",
+        "originalAssertionIds": "RV052"
+      },
+      {
+        "id": "binding-integrity",
+        "causalChain": "Baseline real, digest do binding adulterado, negação e restauração",
+        "originalAssertionIds": "RV053"
+      },
+      {
+        "id": "result-integrity",
+        "causalChain": "Baseline real, digest do resultado persistido adulterado, negação e restauração",
+        "originalAssertionIds": "RV054"
+      },
+      {
+        "id": "body-source-and-backlink",
+        "causalChain": "Sucessor legítimo; corpo adulterado negado antes/depois da edição real da fonte; restauração e backlink409",
+        "originalAssertionIds": "RV055–RV061"
+      },
+      {
+        "id": "receipt-integrity",
+        "causalChain": "Sucessor legítimo, fonte editada e baseline positivo; recibo próprio adulterado negado; sucessor continua200; restauração",
+        "originalAssertionIds": "RV062–RV064"
+      }
+    ]
+  },
+  "fixtureRequirements": {
+    "planner": "Every test calls calculationFixture afresh, creates a private directory and real SQLite/source/authority/Planner/BCS/Atlas/scanner, produces+persists+issues the calculation. The six durable groups append through the real ledger/context/Atlas path, dispose and reopen SQLite+authority+Atlas. Only the pre-existing case/coverage/accepted-ledger fixture remains explicit data.",
+    "review": "Each of the eleven tests calls financialCompositionFixture afresh, produces the actual February exclusion preview and Portfolio, persists the result, retains the existing explicit selection/binding fixture, preserves Review through the real human port, reads its actual transaction receipt, advances the case from N to N+1 and verifies historical GET200. Results and review receipts are never seeded.",
+    "isolation": "Only pure helper functions and registrations exist at module scope. No fixture, active authority, store, result, capture, request or response is shared between tests.",
+    "cleanup": "Every fixture is under a 105000ms cooperative deadline with unchanged 120000ms test timeout; late translated denial still fails cleanup on expiry. Fixture, UI admission and browser cleanup are registered before a phase post-await check can throw.",
+    "omni": "Seven literal expectSpawn(import.meta.path) declarations are inside the seven Planner test bodies before the real scanner operations. No observed spawn count is inferred."
+  },
+  "loopAndBranchPreservation": [
+    {
+      "file": "planner-calculation.test.ts",
+      "ids": [
+        "PC013"
+      ],
+      "variants": [
+        "engineVersion invented",
+        "inputDigest zero",
+        "resultDigest zero",
+        "sourceRefs empty"
+      ],
+      "count": 4
+    },
+    {
+      "file": "planner-calculation.test.ts",
+      "ids": [
+        "PC023",
+        "PC024"
+      ],
+      "refs": [
+        "actual eventRef",
+        "actual calculation",
+        "same actual calculation again"
+      ],
+      "count": 3
+    },
+    {
+      "file": "planner-calculation.test.ts",
+      "ids": [
+        "PC029"
+      ],
+      "variants": [
+        "delete original",
+        "alter original ref",
+        "alter projection",
+        "zero capture digest",
+        "different case envelope",
+        "delete envelopes"
+      ],
+      "count": 6,
+      "reset": "Restore original actual captured Atlas before every corruption and once at end."
+    },
+    {
+      "file": "review-portfolio-http.test.ts",
+      "ids": [
+        "RV025–RV042"
+      ],
+      "variants": [
+        "case",
+        "session"
+      ],
+      "count": 2,
+      "isolation": "Loop now registers independent tests; all case-only session-live assertions remain in the case branch."
+    },
+    {
+      "file": "review-portfolio-http.test.ts",
+      "ids": [
+        "RV046–RV049"
+      ],
+      "requests": [
+        "review",
+        "review-source",
+        "review-update"
+      ],
+      "count": 3
+    }
+  ],
+  "w7Evidence": {
+    "W": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+    "treeW": "3cb60a653fd340732d0e5f437c2e90f700976f03",
+    "S": "4d531e61bb48efeea3eb0198e86bb5b2c8595025",
+    "runId": 43559996968,
+    "jobId": 132341319922,
+    "rawLog": "analysis/hosted/job-132341319922.log",
+    "rawLogSha256": "db911d74372745fbf8c38884deaf9b354580717addc64cea1fc1c5764be2a4f4",
+    "conclusion": "failure",
+    "scope": "Prior W7 monolithic tests only; not a result for this mutable W8 partition.",
+    "phases": [
+      {
+        "logLine": 911,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "initialized-real-store-producers-and-scanner",
+        "elapsedMs": 776
+      },
+      {
+        "logLine": 912,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "persisted-and-replayed-calculation",
+        "elapsedMs": 3078
+      },
+      {
+        "logLine": 913,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "ordered-read-and-real-cycle-negative-proofs",
+        "elapsedMs": 11623
+      },
+      {
+        "logLine": 914,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "real-atlas-write-committed",
+        "elapsedMs": 16973
+      },
+      {
+        "logLine": 915,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "reopened-sqlite-and-authority",
+        "elapsedMs": 16988
+      },
+      {
+        "logLine": 916,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "reopened-calculation-resolved",
+        "elapsedMs": 25662
+      },
+      {
+        "logLine": 917,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "reopened-continuity-authorized",
+        "elapsedMs": 42857
+      },
+      {
+        "logLine": 918,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "reopened-original-capture-read",
+        "elapsedMs": 42937
+      },
+      {
+        "logLine": 919,
+        "marker": "SF_CALCULATION_PHASE",
+        "phase": "reopened-ancestor-and-repeated-context-authorized",
+        "elapsedMs": 75603
+      },
+      {
+        "logLine": 1012,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "fixture.initialize",
+        "state": "started",
+        "elapsedMs": 0
+      },
+      {
+        "logLine": 1013,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "fixture.initialize",
+        "state": "returned",
+        "phaseMs": 11,
+        "elapsedMs": 11,
+        "aborted": false
+      },
+      {
+        "logLine": 1014,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "fixture.authority",
+        "state": "started",
+        "elapsedMs": 11
+      },
+      {
+        "logLine": 1015,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "fixture.authority",
+        "state": "returned",
+        "phaseMs": 2,
+        "elapsedMs": 14,
+        "aborted": false
+      },
+      {
+        "logLine": 1016,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "portfolio.produce",
+        "state": "started",
+        "elapsedMs": 18
+      },
+      {
+        "logLine": 1017,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "planner.forecast",
+        "state": "started",
+        "elapsedMs": 34
+      },
+      {
+        "logLine": 1018,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "planner.forecast",
+        "state": "returned",
+        "phaseMs": 38,
+        "elapsedMs": 72,
+        "aborted": false
+      },
+      {
+        "logLine": 1019,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "planner.simulate",
+        "state": "started",
+        "elapsedMs": 72
+      },
+      {
+        "logLine": 1020,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "planner.simulate",
+        "state": "returned",
+        "phaseMs": 97,
+        "elapsedMs": 169,
+        "aborted": false
+      },
+      {
+        "logLine": 1021,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "planner.forecast-unchanged",
+        "state": "started",
+        "elapsedMs": 170
+      },
+      {
+        "logLine": 1022,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "planner.forecast-unchanged",
+        "state": "returned",
+        "phaseMs": 37,
+        "elapsedMs": 207,
+        "aborted": false
+      },
+      {
+        "logLine": 1023,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "portfolio.evaluate",
+        "state": "started",
+        "elapsedMs": 211
+      },
+      {
+        "logLine": 1024,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "portfolio.evaluate",
+        "state": "returned",
+        "phaseMs": 411,
+        "elapsedMs": 623,
+        "aborted": false
+      },
+      {
+        "logLine": 1025,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "portfolio.persist",
+        "state": "started",
+        "elapsedMs": 623
+      },
+      {
+        "logLine": 1026,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "portfolio.persist",
+        "state": "returned",
+        "phaseMs": 108,
+        "elapsedMs": 730,
+        "aborted": false
+      },
+      {
+        "logLine": 1027,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "portfolio.produce",
+        "state": "returned",
+        "phaseMs": 885,
+        "elapsedMs": 903,
+        "aborted": false
+      },
+      {
+        "logLine": 1028,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "review.preserve",
+        "state": "started",
+        "elapsedMs": 965
+      },
+      {
+        "logLine": 1029,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "review.preserve",
+        "state": "returned",
+        "phaseMs": 1232,
+        "elapsedMs": 2197,
+        "aborted": false
+      },
+      {
+        "logLine": 1030,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-read",
+        "state": "started",
+        "elapsedMs": 2199
+      },
+      {
+        "logLine": 1031,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-read",
+        "state": "returned",
+        "phaseMs": 776,
+        "elapsedMs": 2976,
+        "aborted": false
+      },
+      {
+        "logLine": 1032,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-read",
+        "state": "started",
+        "elapsedMs": 2998
+      },
+      {
+        "logLine": 1033,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-read",
+        "state": "returned",
+        "phaseMs": 5326,
+        "elapsedMs": 8324,
+        "aborted": false
+      },
+      {
+        "logLine": 1034,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review",
+        "state": "started",
+        "elapsedMs": 8324
+      },
+      {
+        "logLine": 1035,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review",
+        "state": "returned",
+        "phaseMs": 10387,
+        "elapsedMs": 18712,
+        "aborted": false
+      },
+      {
+        "logLine": 1036,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-report",
+        "state": "started",
+        "elapsedMs": 18712
+      },
+      {
+        "logLine": 1037,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-report",
+        "state": "returned",
+        "phaseMs": 27276,
+        "elapsedMs": 45988,
+        "aborted": false
+      },
+      {
+        "logLine": 1038,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-download",
+        "state": "started",
+        "elapsedMs": 45988
+      },
+      {
+        "logLine": 1039,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-download",
+        "state": "returned",
+        "phaseMs": 17117,
+        "elapsedMs": 63105,
+        "aborted": false
+      },
+      {
+        "logLine": 1040,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "review.successor",
+        "state": "started",
+        "elapsedMs": 63105
+      },
+      {
+        "logLine": 1041,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "review.successor",
+        "state": "returned",
+        "phaseMs": 11922,
+        "elapsedMs": 75028,
+        "aborted": false
+      },
+      {
+        "logLine": 1042,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-comparison",
+        "state": "started",
+        "elapsedMs": 75028
+      },
+      {
+        "logLine": 1043,
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "review-portfolio-http",
+        "phase": "http.review-comparison",
+        "state": "returned",
+        "phaseMs": 29995,
+        "elapsedMs": 105022,
+        "aborted": true
+      }
+    ]
+  },
+  "limitsAndPending": [
+    "All 18 newly registered test groups require hosted execution on the final frozen/published candidate. No group is marked PASS and no native/global acceptance is inferred.",
+    "Partitioning removes cumulative unrelated work from a per-test deadline and repeats real setup; it does not reduce the latency of a product endpoint or authorize an increased budget.",
+    "Review W7 comparison returned aborted after29995ms at105022ms cumulative; this is not a successful comparison or a measured successful endpoint latency.",
+    "Planner W7 reopened context ended at75603ms before recall failed at the105s cooperative deadline. Recall/revocation/capture groups remain unproven until hosted execution.",
+    "Fresh instances may expose different timing and the overall selected suite has more repeated setup. A single slow endpoint/group can still exceed105s; retain that failure if observed.",
+    "C08 clone/revalidation cost remains a profiling hypothesis outside this test-only lease. No authorization cache, foreign financial change, result seeding or production latency fix was introduced.",
+    "Review browser late200 and actual handler bytes remain required. Parent assigned its timer synchronization to the separate W8b helper owner; this report does not validate that concurrent patch.",
+    "R1/R2/R3 independent rechecks, native/global/S0 qualification and final SHA/run identities remain parent-owned pending work."
+  ]
+}

@@ -1,0 +1,21 @@
+876: 2026-11-14T14:43:16.9002360Z # Unhandled error between tests
+877: 2026-11-14T14:43:16.9002733Z -------------------------------
+878: 2026-11-14T14:43:16.9004524Z wp04-host-metrics {"scenario":"H05","milliseconds":16942,"sqliteTransactions":4966,"sqliteAllTransactions":32,"sqliteMilliseconds":16570,"http":[{"mode":"decision-prepare-changes","status":200,"milliseconds":534,"sqliteTransactions":416},{"mode":"decision-review","status":200,"milliseconds":7928,"sqliteTransactions":2152},{"mode":"decision-apply","status":200,"milliseconds":8312,"sqliteTransactions":2260}]}
+879: 2026-11-14T14:43:16.9006220Z 257 |       const changed = { ...current.value, version: current.value.version + 1, objective: "Concurrent authorized case edit" }
+880: 2026-11-14T14:43:16.9008604Z 258 |       const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: changed.id, targetIncarnation: changed.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed) }, async (state) => { state.cases[changed.id] = changed; return { commit: true, value: true } })
+881: 2026-11-14T14:43:16.9010804Z 259 |       if (saved.status !== "ok") throw new Error("concurrent real case edit failed")
+882: 2026-11-14T14:43:16.9011124Z 260 |     })
+883: 2026-11-14T14:43:16.9011449Z 261 |     const conflict = await fixture.http("decision-apply", application)
+884: 2026-11-14T14:43:16.9011835Z 262 |     expect(conflict.response.status).toBe(409)
+885: 2026-11-14T14:43:16.9012105Z                                            ^
+886: 2026-11-14T14:43:16.9012383Z error: expect(received).toBe(expected)
+887: 2026-11-14T14:43:16.9012543Z 
+888: 2026-11-14T14:43:16.9012622Z Expected: 409
+889: 2026-11-14T14:43:16.9012790Z Received: 200
+890: 2026-11-14T14:43:16.9012880Z 
+891: 2026-11-14T14:43:16.9013315Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts:262:38)
+892: 2026-11-14T14:43:16.9013835Z -------------------------------
+893: 2026-11-14T14:43:16.9013975Z 
+894: 2026-11-14T14:43:55.0420573Z (fail) a durable application recovers after a lost commit response and cleared review cache [38144.36ms]
+895: 2026-11-14T14:43:55.0421130Z   ^ this test timed out after 30000ms.
+896: 2026-11-14T14:43:55.0450917Z wp04-host-metrics {"scenario":"H06","milliseconds":38147,"sqliteTransactions":10764,"sqliteAllTransactions":44,"sqliteMilliseconds":37368,"http":[{"mode":"decision-prepare-changes","status":200,"milliseconds":531,"sqliteTransactions":416},{"mode":"decision-review","status":200,"milliseconds":7707,"sqliteTransactions":2152},{"mode":"decision-apply","status":503,"milliseconds":7869,"sqliteTransactions":2195},{"mode":"decision-apply","status":409,"milliseconds":6686,"sqliteTransactions":1832},{"mode":"decision-apply","status":200,"milliseconds":7014,"sqliteTransactions":1891},{"mode":"decision-apply","status":403,"milliseconds":8127,"sqliteTransactions":2144}]}

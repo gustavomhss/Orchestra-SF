@@ -1,0 +1,754 @@
+{
+  "schema": "sf2h-independent-review-v1",
+  "candidateSha": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+  "candidateTree": "6bace347fcd4deec2018185aff7ec152d79eaec5",
+  "parentSha": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+  "branch": "astra-wp10",
+  "pullRequest": 29,
+  "base": "sf2-stack",
+  "createdAt": "2026-11-14T11:55:24.236170+00:00",
+  "reviewer": {
+    "agent": "/root/independent_r3_w16",
+    "role": "R3 independent authority/privacy/concurrency/composition review",
+    "round": "W18",
+    "productAuthorship": false,
+    "productEdits": false,
+    "localProductTests": false,
+    "localBuildTypecheckBrowser": false,
+    "remoteMutations": false,
+    "publication": false,
+    "declaration": "Sou o revisor independente R3, não autor do produto. Li o candidato congelado W18 e blobs publicados via GitHub MCP, sem confiar em builder audits como aprovação. Escrevi apenas os artefatos desta revisão. Relatórios W16/W17 foram preservados e sua aprovação não foi transferida."
+  },
+  "verdict": "HOLD",
+  "independentApproval": false,
+  "newConfirmedImplementationBugs": [],
+  "mandatoryOwnProofGaps": [
+    "R3-W18-REVIEW-MOUNT-01"
+  ],
+  "findings": [
+    {
+      "id": "R3-W18-REVIEW-MOUNT-01",
+      "priority": "P1",
+      "classification": "MANDATORY_OWN_COMPOSITION_PROOF_GAP",
+      "status": "OPEN",
+      "owner": "WP10",
+      "externalOwner": null,
+      "title": "A prova lexical nova de Review está desabilitada na montagem residente",
+      "cause": "host-context.ts sempre passa reviewReaders.contributions e reviewReaders.outcome. review-services.ts só ativa localSnapshotReaders quando readers não contém nenhum valor definido. Logo protectedRead entra em legacyRead no host real, inclusive no grupo C08 final de review-source. O teste novo constrói createSfReviewServices sem readers e exercita outro ramo.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "261-266",
+          "remoteVerified": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "lines": "97-100",
+          "remoteVerified": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+          "lines": "88-105",
+          "remoteVerified": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "lines": "78-95"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+          "lines": "140;234-280",
+          "remoteVerified": true
+        }
+      ],
+      "impact": "O novo teste de cache não demonstra a correção do consumidor montado com os readers residentes. Mantém-se obrigação própria antes de aceitar o fechamento de Review.",
+      "notClaimed": "Não foi reproduzido HTTP 409 nem demonstrado vazamento em W18. prepare() executa dois passes do reader legado e pode materializar determinadas fontes; não inferi falha funcional apenas da configuração.",
+      "requiredClosure": "Adicionar contraprova hospedada com a mesma montagem residente, contributions/outcome instalados, source atual/predecessor, recibos e grupos C08 reais. Se necessário corrigir composição delimitando precisamente os readers locais e seus fences, sem marcar readers externos como seguros por booleano arbitrário. Manter revogação tardia, receipt/body adulterados, Request/lease, invocações paralelas e nenhum vazamento de labels/URLs."
+    },
+    {
+      "id": "R3-W18-PUBLISHED-DEPENDENCY-02",
+      "priority": "P2",
+      "classification": "FOREIGN_INPUT_COMPOSITION_BUILD_FAILURE",
+      "status": "OPEN",
+      "owner": "WP10 intake",
+      "externalOwner": "astra-operations/WP04-WP06; published source PR34",
+      "title": "O evidence-reader publicado requer export ausente do planner-sources composto",
+      "cause": "O blob 9c11e2ad6977573a14725a0b514528c09e34bcc4 importado de ba8a09e371ce8d93eb917eabb102caaee5affaf4 usa sfPlannerEvidenceRef, ausente do planner-sources em W18.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/evidence-reader.ts",
+          "lines": "8",
+          "publishedSource": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "blob": "9c11e2ad6977573a14725a0b514528c09e34bcc4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "lines": "1-80"
+        },
+        {
+          "runId": 43591239877,
+          "jobId": 132436212526,
+          "diagnostic": "TS2305: Module ../integration/planner-sources.ts has no exported member sfPlannerEvidenceRef."
+        }
+      ],
+      "impact": "Typecheck Sucafina de W18 falha; não é prova de bug de autorização nem permitido editar o input estrangeiro para silenciar o consumidor.",
+      "requiredClosure": "Compor dependência publicada compatível na branch própria com pin exato e reexecutar check hospedado no sucessor. O coordenador comunicou candidato mínimo 6230f22e7dd66fec1103f28cc9a7937b2dca1449, ainda não pertence a W18 e não foi aceito por esta revisão."
+    },
+    {
+      "id": "R3-W18-FREEZE9-03",
+      "priority": "P1",
+      "classification": "PUBLISHED_CONTRACT_BINDING_HOLD",
+      "status": "OPEN",
+      "owner": "WP10/S0 integration",
+      "externalOwner": "WP00 freeze owner",
+      "title": "Freeze9 estrito ainda não vincula o host CLI final",
+      "cause": "37/38 hashes; host-context.ts esperado 4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922 versus atual 6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "remoteVerified": true
+        }
+      ],
+      "requiredClosure": "Binding/recibo estrito publicado para os bytes finais com validação de compatibilidade pelo owner; preservar o gate original e não transferir aceite do manifesto para runtime."
+    }
+  ],
+  "candidateDelta": {
+    "fullTreeBlobCount": 16120,
+    "treeMetadataCount": 18671,
+    "completeTreeHashErrors": [],
+    "deltaCount": 47,
+    "deltaKinds": {
+      "WP10-owned": 41,
+      "published-foreign-blob": 6
+    },
+    "deltaStatuses": {
+      "modified": 20,
+      "added": 27
+    },
+    "manifestDeltaEqualsTree": true,
+    "remoteCompareEqualsTree": true,
+    "manifestByteMismatches": [],
+    "effectivePinsCount": 401,
+    "effectivePinsUniquePaths": 401,
+    "effectivePinMismatches": [],
+    "supersededPinsCount": 120,
+    "ownOwnershipViolations": [],
+    "previousWP10ReceiptCount": 100,
+    "changedPreviousWP10Receipts": []
+  },
+  "intakeAudit": {
+    "waves": [
+      {
+        "wave": 14,
+        "count": 9,
+        "fileSha256": "64f2a42670eefe3e0ee93544b1e10e9575bb826b09cd64133d714b926efe8659",
+        "entries": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+            "admission": "compose-exact-published-foreign-blob",
+            "owner": "astra-wp00/WP00",
+            "outputBlobAtIntake": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+            "actualW18Blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+            "admission": "exact-published-own-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+            "actualW18Blob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+            "admission": "own-overlay-on-published-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "1c371738c80789cfc6d0d52d482c9c09a3757b0b",
+            "actualW18Blob": "1c371738c80789cfc6d0d52d482c9c09a3757b0b",
+            "exactSourceEqualsCandidate": false
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+            "admission": "own-overlay-on-published-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "690c62d678f91146735c35c789872273dc6d5f3e",
+            "actualW18Blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+            "exactSourceEqualsCandidate": false
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+            "admission": "exact-published-own-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+            "actualW18Blob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+            "admission": "exact-published-own-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+            "actualW18Blob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+            "admission": "exact-published-own-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+            "actualW18Blob": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "80b44373f154a70553f1c9ab84139091be3e0238",
+            "admission": "own-overlay-on-published-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "8a1edca9f49c654ede0d2138df0ec8a724b2a228",
+            "actualW18Blob": "8a1edca9f49c654ede0d2138df0ec8a724b2a228",
+            "exactSourceEqualsCandidate": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+            "sourceCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+            "sourceBlob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+            "admission": "exact-published-own-composition",
+            "owner": "WP10-owned-composition-published-by-WP00",
+            "outputBlobAtIntake": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+            "actualW18Blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+            "exactSourceEqualsCandidate": true
+          }
+        ]
+      },
+      {
+        "wave": 15,
+        "count": 4,
+        "fileSha256": "976f8eef730703312a15452d45ae57ebf44fe3f741974083bc173c704b3d8a50",
+        "entries": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+            "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+            "sourceBlob": "964a53310c340f4496d7410d66f8b852270b75f1",
+            "admission": "exact-published-C12-dependency",
+            "owner": "astra-finance/WP11",
+            "outputBlobAtIntake": null,
+            "actualW18Blob": "964a53310c340f4496d7410d66f8b852270b75f1",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+            "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+            "sourceBlob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+            "admission": "exact-published-C12-dependency",
+            "owner": "astra-finance/WP11",
+            "outputBlobAtIntake": null,
+            "actualW18Blob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+            "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+            "sourceBlob": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+            "admission": "exact-published-C12-dependency",
+            "owner": "astra-finance/WP11",
+            "outputBlobAtIntake": null,
+            "actualW18Blob": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+            "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+            "sourceBlob": "3cf9948e4fefbeceb4c2e99b04dc47b4e29ad816",
+            "admission": "exact-published-C12-dependency",
+            "owner": "astra-finance/WP11",
+            "outputBlobAtIntake": null,
+            "actualW18Blob": "3cf9948e4fefbeceb4c2e99b04dc47b4e29ad816",
+            "exactSourceEqualsCandidate": true
+          }
+        ]
+      },
+      {
+        "wave": 16,
+        "count": 2,
+        "fileSha256": "119509a8e615063030eb65931f8a65f4575119d9fabbde336274d7b46dbf28a4",
+        "entries": [
+          {
+            "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+            "sourceCommit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "sourceBlob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+            "admission": "exact-published-dependency",
+            "owner": "astra-operations/WP04-WP06",
+            "outputBlobAtIntake": null,
+            "actualW18Blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+            "exactSourceEqualsCandidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/evidence-reader.ts",
+            "sourceCommit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "sourceBlob": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+            "admission": "exact-published-dependency",
+            "owner": "astra-operations/WP04-WP06",
+            "outputBlobAtIntake": null,
+            "actualW18Blob": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+            "exactSourceEqualsCandidate": true
+          }
+        ]
+      }
+    ],
+    "foreignCurrentPinsMatchTree": true,
+    "note": "Intake14 contém um output intermediário de business-services (690c62d6…). O manifest W18 identifica o overlay final 97cde4dc… e seus bytes. Não trato o output intermediário como identidade do candidato. BCS publicado igual à origem; overlays apenas em caminhos próprios. Intakes15 e16 têm seis arquivos estrangeiros exatos verificados remotamente."
+  },
+  "archivePreservation": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+    "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+    "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+    "foreignCopies": 128,
+    "readonlyInputs": 131,
+    "sameAsW17Bytes": true,
+    "remoteBlobMatches": true,
+    "qualification": "Preservation of the original indexed input records byte-for-byte; not re-admission or independent rehydration of all historical foreign blobs."
+  },
+  "criteriaInventory": {
+    "canonicalTotal": 171,
+    "draftTotal": 171,
+    "uniqueIds": 171,
+    "tasks": 7,
+    "literalTupleMatch": true,
+    "canonicalTuplesSha256": "6f8817d2f222635f39859dbaab68aa80707f37beeb4c010d93a5a7e27f431ef5",
+    "draftCriteriaSha256": "a398b2c56c0554266b5a87eccbf553879bf50ae10083b74df3ff1f3e9e648f70",
+    "draftCandidate": null,
+    "draftTree": null,
+    "acceptance": {
+      "criteria_accepted": 0,
+      "tasks_accepted": 0,
+      "native": false,
+      "global": false,
+      "builder_auto_acceptance": false
+    },
+    "draftStatusCounts": {
+      "BLOCKED_OWNER_DEPENDENCY": 36,
+      "COMPOSITION_DRAFT_CURRENT_PROOF_UNBOUND": 52,
+      "GLOBAL_PROOF_DEFERRED_UNTIL_TOTAL_BUNDLE": 8,
+      "NATIVE_OR_REAL_RUNTIME_PROOF_PENDING": 40,
+      "MANDATORY_OWN_REVIEW_FINDING_RECHECK_PENDING": 12,
+      "CURRENT_INDEPENDENT_REVIEW_AND_FINDING_RECHECK_PENDING": 15,
+      "ACCEPTED_C_AND_DELIVERY_ENVELOPE_PENDING": 8
+    },
+    "obligations": 43,
+    "qualification": "Draft not published in W18, no criteria accepted by this review.",
+    "familyCounts": {
+      "completeness_criteria": 24,
+      "dod": 22,
+      "invariants": 24,
+      "quality_standards": 22,
+      "success_criteria": 22,
+      "checks": 57
+    },
+    "scopeCounts": {
+      "WP10": 25,
+      "WP10.T01": 21,
+      "WP10.T02": 17,
+      "WP10.T03": 15,
+      "WP10.T04": 22,
+      "WP10.T05": 14,
+      "WP10.T06": 27,
+      "WP10.T07": 30
+    }
+  },
+  "criteriaArchive": "reviews/R3/criteria-W18.json",
+  "inventoryFile": "reviews/R3/inventory-W18.json",
+  "inventoryCount": 47,
+  "remoteVerificationFile": "reviews/R3/remote-W18.json",
+  "remoteCheckCount": 16,
+  "remoteAllByteEqual": true,
+  "staticObservations": [
+    {
+      "area": "C17 historical calculation",
+      "state": "SOURCE_CAUSE_ADDRESSED_FRESH_HOSTED_PROOF_PENDING",
+      "details": "O novo reader deriva a seleção histórica do ledger C08 atual, exige request/result originais e captura Atlas protegida, compara fontes/day/full-state antes e depois e retorna historical. A execução corrente continua em selectedCase/resolveCase exatos. withHistoricalCalculationCase usa ALS privado, não atualiza caseBindings. Record-only é limite explícito; não afirmo fechamento de cálculos mistos/nested."
+    },
+    {
+      "area": "R1-W17-CALCULATION-HISTORY-01",
+      "state": "ATTRIBUTED_R1_SOURCE_RECHECKED_CURRENT_FUNCTIONAL_PENDING",
+      "details": "Achado original de R1; não reivindico autoria da descoberta. Inspeção de W18 confirma ligação de requests.readHistorical/results.readHistoricalCalculation e BCS calculationHistorical. Teste novo atravessa createSfAnalysisRunContext→BCS histórico→access.wrapStore→preserveStale→C08, conserva selector v1 e observa caso v2, nega fresh execution e registra output byte a byte. Teste ainda sem resultado hospedado W18 observado; metadata native sem Task/Session/model executado."
+    },
+    {
+      "area": "C17 recorded Planner operations",
+      "state": "STATIC_NO_NEW_BYPASS_FOUND",
+      "details": "Helper só lê alternativas/choices já armazenados, exige igualdade integral com caso atual, original protegido, identidade física de fontes, seleção de componente/valor e períodos exatos, rereads e Request/binding. Não promove nem prepara/aplica operação; fresh resolve continua recusando fontes antigas. Loop guard falha fechado."
+    },
+    {
+      "area": "C12 apply/reconciliation",
+      "state": "STATIC_NO_NEW_BYPASS_FOUND_HOSTED_PENDING",
+      "details": "Input PR35 reserva tentativa global por caso/incarnation/change antes de dispatch; ausência de recibo após tentativa não autoriza novo dispatch. Reabre recibo canônico e caso, preserva mudanças independentes e usa CAS/receipt proof. Egress próprio Dashboard e Procurement revalida human intent, Request e lease após o produtor; fim de lease não retorna sucesso. Leitura estática da contraprova de replay/lease não prova run."
+    },
+    {
+      "area": "Review receipt/current/previous egress",
+      "state": "MANDATORY_RESIDENT_MOUNT_PROOF_GAP",
+      "details": "Cache novo mantém ALS por Request e call, snapshots completos dos três domínios, actor/principals/day/body/receipt; clones evitam alias; prepara atuais/predecessores antes do grupo final e não empresta provas entre invocações. Porém sua habilitação não alcança a configuração residente que passa outcome/contributions; ver finding próprio. Readers externos continuam no caminho conservador, sem inferência de segurança por cache."
+    },
+    {
+      "area": "BI no-op promotion",
+      "state": "STATIC_NO_GATE_REDUCTION_FOUND_HOSTED_PENDING",
+      "details": "O overlay conserva resultado Planner, reassessment, identidade exata da alternativa alocada pelo mutator, provas completas de estado/fontes e intent C08. ALS/WeakMap privado encerra ao sair; não troca resultado esperado por objeto parcial. Selector referenceDigest já corrigido em W17 é retido."
+    },
+    {
+      "area": "Alternative/native/run-store",
+      "state": "PRIOR_STATIC_BYTES_PRESERVED_NOT_NEW_RUNTIME_ACCEPTANCE",
+      "details": "Seams não alterados W17→W18 constam no inventário com igualdade de blob; preservo as observações estáticas anteriores de joint admission, Request privado, fences C08 e CAS. Não transfiro aprovação funcional ou nativa para W18."
+    }
+  ],
+  "hostedCI": {
+    "check": {
+      "productSha": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "productTree": "6bace347fcd4deec2018185aff7ec152d79eaec5",
+      "snapshotSha": "6d72852aa48f864338caa93204ae894ec1e978fe",
+      "snapshotTree": "4e55a9cc4bf3abcfc7aae1d8c06157aad83f465d",
+      "runId": 43591239877,
+      "jobId": 132436212526,
+      "status": "completed",
+      "conclusion": "failure",
+      "observedIndependently": "GitHub MCP jobs + decoded job log + downloaded ZIP hashed/read independently",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Validate exact product and envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Typecheck WP10 test consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Verify canonical Atlas generation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Typecheck Atlas boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Guard subprocess imports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Upload exact-check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29
+        }
+      ],
+      "SFdiagnostics": 14,
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 14,
+      "guards": {
+        "rules": 78,
+        "changedPaths": 1328,
+        "gate": 0,
+        "warn": 48,
+        "errors": 0
+      },
+      "artifact": {
+        "artifactId": 14112034219,
+        "runId": 43591239877,
+        "jobId": 132436212526,
+        "zipSha256": "08329a4279831996b48cd01911e58a5caf164185103a2acf8268d33640ec063d",
+        "zipBytes": 4194,
+        "declaredHashMatches": true,
+        "files": [
+          {
+            "file": "atlas-generate.log",
+            "bytes": 22,
+            "sha256": "0279c8a6959392e6cbdc8daf40011385f56fd4a7cbe09b5af76072e401a2b44f",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "atlas-generated-check.log",
+            "bytes": 30,
+            "sha256": "8040b8b602fe9bb0035e66ee567e05648e496a8edfd36495e4d79c65e84892fb",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "atlas-generated-diff.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "atlas-typecheck.log",
+            "bytes": 16,
+            "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "cli-typecheck.log",
+            "bytes": 16,
+            "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "guards.log",
+            "bytes": 19524,
+            "sha256": "ffa716eec3d10733085218bd9205d6452ea9e006333302817ec61f35edbb4a23",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "merge-base.txt",
+            "bytes": 41,
+            "sha256": "541c6844015c5a0839167f338dcca8932ce7eb70c1d79cdd891584a105bf9961",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "revisions.txt",
+            "bytes": 123,
+            "sha256": "0f680e2fd7f0cce5259aaf6e4c1639426f738ddf875da25c20e4339a7b384b48",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "spawn-imports.log",
+            "bytes": 97,
+            "sha256": "b5824ccb553cec36fcba18d82fd770093ae56a3dfc238401ad32ad425d098192",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "sucafina-typecheck.log",
+            "bytes": 6633,
+            "sha256": "8fcd4d5f2e12bade0d42550fcb2cfe6df67ce6e2e2b16c7c45d89e2235c330f3",
+            "metadataMatches": true,
+            "extractedMatches": true
+          },
+          {
+            "file": "wp10-test-typecheck.log",
+            "bytes": 60,
+            "sha256": "ad028ac630d212f71ae85efc93f29822c39adeb741bab228fff9298ab604f496",
+            "metadataMatches": true,
+            "extractedMatches": true
+          }
+        ],
+        "revisions": "8b1cc71d8ab2484055a0d055c8487d4579476b9b\n6bace347fcd4deec2018185aff7ec152d79eaec5\na1d37698a7bb097c1578f827eba6a19b9917ef07\n",
+        "SFdiagnostics": [
+          "product/planner/evidence-reader.ts(8,10): error TS2305: Module '\"../integration/planner-sources.ts\"' has no exported member 'sfPlannerEvidenceRef'.",
+          "product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+          "test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+          "test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+          "test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+          "test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+          "test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+        ],
+        "SFdiagnosticCount": 14
+      },
+      "logFile": "reviews/R3/check-job-W18.txt"
+    },
+    "A": {
+      "productSha": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "snapshotSha": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+      "snapshotTree": "16b526a1b18be5c977b28f3e04c54a1b1aacd0a1",
+      "runId": 43591262845,
+      "jobId": 132436280987,
+      "status": "in_progress",
+      "conclusion": null,
+      "observedIndependently": "GitHub MCP latest jobs, Run tests in progress",
+      "observedAtReview": "2026-11-14T11:55:24.236170+00:00",
+      "terminalEvidence": false
+    },
+    "otherPreparedSelections": {
+      "source": "coordinator message, not independently dispatched or observed",
+      "B": 8,
+      "C": 26,
+      "D": 10,
+      "dispatchObserved": false
+    },
+    "envelopeComparisons": [
+      {
+        "label": "check",
+        "snapshotSha": "6d72852aa48f864338caa93204ae894ec1e978fe",
+        "base": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+        "head": "6d72852aa48f864338caa93204ae894ec1e978fe",
+        "aheadBy": 25,
+        "files": [
+          {
+            "path": ".astra-wp10-check.json",
+            "status": "added"
+          }
+        ]
+      },
+      {
+        "label": "A",
+        "snapshotSha": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+        "base": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+        "head": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+        "aheadBy": 1,
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      }
+    ],
+    "qualification": "Check validates exact W18 product and its envelope. A has no terminal result in this report. W16/W17 terminal results remain historical. Full epic was neither requested for now nor executed by reviewer."
+  },
+  "freeze9": {
+    "revision": 9,
+    "matched": 37,
+    "total": 38,
+    "mismatches": [
+      {
+        "path": "../../../../../apps/cli/src/sucafina-product/host-context.ts",
+        "expectedSha256": "4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922",
+        "actualSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+        "match": false
+      }
+    ]
+  },
+  "campaignHolds": [
+    {
+      "id": "C07",
+      "owner": "NativeTask/Relay C07 producer + WP09 + WP10 integration",
+      "state": "PUBLISHED_GOVERNED_NATIVE_ADAPTER_MISSING",
+      "details": "Host creates unavailable routine services but installs no native/publication ports and does not advertise callable routines. Native statuses/fixtures cannot prove real session/task/skill loading/tool/run/artifact or complete 5/18/8/39/6 matrix."
+    },
+    {
+      "id": "NATIVE_GLOBAL",
+      "owner": "S0/campaign and independent reviewers",
+      "state": "NOT_ACCEPTED",
+      "details": "AM01–AM06, annual/persona visual journeys, four routines, native MCP/resident execution and global epic require later complete-bundle evidence. No native/global claims from scoped CI."
+    },
+    {
+      "id": "FINAL_REVIEW_DELIVERY",
+      "owner": "WP10 with R1/R2/R3; S0 integrates",
+      "state": "PENDING",
+      "details": "Three independent reports must bind final candidate after all corrective deltas. Draft map currently has null candidate and no current reviews/acceptance; fill from exact observed evidence, publish review package, keep PR against sf2-stack; no merge/dev/deploy by reviewer."
+    }
+  ],
+  "remainingActions": [
+    "Close R3-W18-REVIEW-MOUNT-01 with actual resident reader configuration and hosted counterexamples.",
+    "Complete published dependency closure, rerun typecheck on the successor and keep all remaining 14 foreign diagnostics attributable.",
+    "Obtain terminal surgical behavioral runs for the final product, including composed C17 lifecycle, C12 recovery and Review/BI races; a test source is not execution evidence.",
+    "Obtain strict final Freeze9 binding without weakening gate.",
+    "Bind final evidence package, all171 criteria/7tasks and three independent rechecks to final SHA/tree; no automatic acceptance of native/global deferred work."
+  ],
+  "limits": [
+    "Static source review and metadata hashing only; no local product execution.",
+    "Scoped read inventory is explicit; missing hydrated files are never treated as deletions. Full tree hash recomputation checks metadata identity, not behavior of 16.120 blobs.",
+    "The original 128/131 archive index is preserved byte-for-byte; historical foreign contents were not all re-fetched or re-admitted.",
+    "No HTTP failure for the resident Review path is asserted; only demonstrated branch/mount mismatch and required counterproof.",
+    "Not a security proof of the entire repository and not independent acceptance of all171 criteria.",
+    "W19 dependency proposal or future corrections are outside this W18 report."
+  ]
+}

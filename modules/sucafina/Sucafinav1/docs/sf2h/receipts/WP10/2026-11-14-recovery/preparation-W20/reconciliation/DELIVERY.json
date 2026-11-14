@@ -1,0 +1,127 @@
+{
+  "schema": "sf-wp10-W20-reconciliation-delivery-v1",
+  "status": "SEALED_SOURCE_READY_HOSTED_PENDING",
+  "builder": "criteria_audit",
+  "independentReviewer": false,
+  "candidateSha": null,
+  "productFileCount": 6,
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "bytes": 15485,
+      "gitBlob": "c3866ce59cfe6211facad9f249c81caf55d54aba",
+      "sha256": "ea4a8d1ef5670178b48a2efe5895392e34fa6d17084256f2939ae669509d1eac",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "owner": "WP10",
+      "kind": "own-composition-source",
+      "productExecution": "NOT_RUN_LOCALLY"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "bytes": 15531,
+      "gitBlob": "ba5bb69269f8bb5d679515b7de6c76a1768e1a63",
+      "sha256": "839c2c1e94677a0f6d0670dc5242a9c2255c524cf860dd7099a75e0a772bd542",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "owner": "WP10",
+      "kind": "own-composition-source",
+      "productExecution": "NOT_RUN_LOCALLY"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "bytes": 10810,
+      "gitBlob": "463dafc3e1900099391cee63f83bc0f3148df03c",
+      "sha256": "796aa756ce3a2518f71f57b75cfc23cf096748a08c41736074b0012c484cada5",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/portfolio-services.ts",
+      "owner": "WP10",
+      "kind": "own-composition-source",
+      "productExecution": "NOT_RUN_LOCALLY"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "bytes": 13217,
+      "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/portfolio-http.ts",
+      "owner": "WP10",
+      "kind": "own-composition-source",
+      "productExecution": "NOT_RUN_LOCALLY"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "bytes": 36121,
+      "gitBlob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+      "sha256": "e6f8ec6945304bcbd559c8deb73f4daf8be3b91d759c4b4c7fed01ed763cc0b5",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/decision-controls.ts",
+      "owner": "WP10",
+      "kind": "own-composition-source",
+      "productExecution": "NOT_RUN_LOCALLY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "bytes": 17047,
+      "gitBlob": "95e1afbe1026f5c5762d8c9764f61e846e0c175f",
+      "sha256": "a710f4d89c9a4f9d96e16dd47644355e9ad76dfe523bc5988f58b41e61362587",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "owner": "WP10",
+      "kind": "hosted-integration-proof-source",
+      "productExecution": "NOT_RUN_LOCALLY"
+    }
+  ],
+  "guide": {
+    "path": "docs/guides/sucafina-portfolio-reconciliation.md",
+    "bytes": 2515,
+    "gitBlob": "1ff1cd2f7214d58abf69d6b8c7b6ddf3c470aa14",
+    "sha256": "0c5a7ac33939ef1db9a4d10fef5b7ef2bdb5efa493b67d09387b4fd9ac1b81ae",
+    "localPath": "/workspace/scratch/301a7f2754f4/repo/docs/guides/sucafina-portfolio-reconciliation.md"
+  },
+  "packet": [
+    {
+      "path": "source-manifest.json",
+      "bytes": 6134,
+      "gitBlob": "14ab9edfc35da819127b3558dcfa6a2d6865df76",
+      "sha256": "43974ec56d4a9516b6ea1c0e084f8e7c54c9bb0168abd979acb13b351d0f7f8c",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-reconciliation/source-manifest.json"
+    },
+    {
+      "path": "static-inspection.json",
+      "bytes": 20896,
+      "gitBlob": "65f68757bd64dd669df44f48e72c9d9a6c68aab1",
+      "sha256": "b7d8bbfe117f701d70e0b629650dd55cf168681e252c277c9d2409f56ef6da0e",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-reconciliation/static-inspection.json"
+    },
+    {
+      "path": "criterion-scope.json",
+      "bytes": 4742,
+      "gitBlob": "0b4988e9c505907146306902bc8b8d57c3d9f847",
+      "sha256": "f081b687d9c9999a2924c6e2f744b1f64810db5c9706a7d0734414b97b6e2ebd",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-reconciliation/criterion-scope.json"
+    },
+    {
+      "path": "limits.json",
+      "bytes": 2706,
+      "gitBlob": "7a2e63bf7581e7de711f3ddd0b4173739f81f294",
+      "sha256": "563041ada44edb79258ad50ef51df8c9920a6408cd3c6d3a0091b91f134cb124",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-reconciliation/limits.json"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2857,
+      "gitBlob": "de124e3e892b6f2d647ecee0afeb21fcb057ab5d",
+      "sha256": "05a98f731bc57099c153c4b42387cf5ccccfbadb0210350e75eff684723713c9",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-reconciliation/README.md"
+    },
+    {
+      "path": "composition-diff.txt",
+      "bytes": 67895,
+      "gitBlob": "8fa034ec154096f9b5af24d72618c873861eb545",
+      "sha256": "a459df7d6095517c55e194f67e094d5bcf40e61bea46a82437463ef1b884a07b",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-reconciliation/composition-diff.txt"
+    }
+  ],
+  "hostPatchRequired": false,
+  "writesReleased": true,
+  "localProductExecution": false,
+  "hostedRun": null,
+  "nativeAcceptance": false,
+  "globalAcceptance": false
+}

@@ -1,0 +1,134 @@
+{
+  "schema": "r1-w26-exact-threshold-overlay-audit-v1",
+  "baseProductSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "productFiles": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "before": {
+        "bytes": 17331,
+        "sha256": "9b7e36cc1ba84d075bda947151f7c3ca63c34ef6616596ec1c9107760e3c8b70",
+        "blobSha": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9"
+      },
+      "after": {
+        "bytes": 17822,
+        "sha256": "2b782fb131707f8f3aceb3bec37c84f2ccff7a2d6970456e9812d8f471acf01a",
+        "blobSha": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de"
+      },
+      "afterMatches": true,
+      "baseMatches": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "before": {
+        "bytes": 10810,
+        "sha256": "796aa756ce3a2518f71f57b75cfc23cf096748a08c41736074b0012c484cada5",
+        "blobSha": "463dafc3e1900099391cee63f83bc0f3148df03c"
+      },
+      "after": {
+        "bytes": 11364,
+        "sha256": "94427fe5eaae8f348e574bbade36fa34a386d5180c423139f4687078e0fa8342",
+        "blobSha": "881ce4672d9d0e641d1cc849663c0980c118774d"
+      },
+      "afterMatches": true,
+      "baseMatches": true
+    }
+  ],
+  "seals": [
+    {
+      "path": "agents/root/W26-exact-threshold-composition/seal.json",
+      "bytes": 2071,
+      "sha256": "a89f977502a3fafb64beeedd46b566857ca6b9742e4bdcd939e35708efb73267",
+      "blobSha": "8593112fcb64c7bb1b689d07e5940a4d9a783e67",
+      "entries": 8,
+      "errors": []
+    },
+    {
+      "path": "agents/criteria/W26-exact-threshold-host/seal.json",
+      "bytes": 1495,
+      "sha256": "5e9186b00a1ee14a049e3becc044a064165c384573211a7f833539679011c5f0",
+      "blobSha": "9bcf46e7080b6d5b825c851c7e89f9d3310846cb",
+      "entries": 6,
+      "errors": []
+    }
+  ],
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+    "bytes": 16088,
+    "sha256": "33faf5709c5465b99c6c18658eda6d80088af63dc6d3f596a08a8033caea0ee0",
+    "blobSha": "e526fffa28318367b9180b419509949c93abb273",
+    "declarations": 1,
+    "skipOnlyTodo": [],
+    "cooperativeBudgetMs": 285000,
+    "newBunBudgetMs": 300000
+  },
+  "imports": [
+    {
+      "specifier": "../../../../product/contracts/canonical.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "source": "frozen-W25",
+      "exists": true,
+      "bytes": 3612,
+      "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+      "blobSha": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "specifier": "../../../../product/contracts/decisions.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "source": "frozen-W25",
+      "exists": true,
+      "bytes": 7262,
+      "sha256": "d2929cd8cf8f67e697b2584684491346905657c69cfed2ab144d26a9a646deaf",
+      "blobSha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "specifier": "../../../../product/contracts/operations.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "source": "frozen-W25",
+      "exists": true,
+      "bytes": 50543,
+      "sha256": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+      "blobSha": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "specifier": "../../../../product/contracts/ports.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "source": "frozen-W25",
+      "exists": true,
+      "bytes": 9660,
+      "sha256": "4f7effda926f72b7c6a61b944e5e9a9acd6dce4a39d0780e735ab6efed3471b1",
+      "blobSha": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "specifier": "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts",
+      "target": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "source": "sealed-own-overlay",
+      "exists": true,
+      "bytes": 11364,
+      "sha256": "94427fe5eaae8f348e574bbade36fa34a386d5180c423139f4687078e0fa8342",
+      "blobSha": "881ce4672d9d0e641d1cc849663c0980c118774d"
+    },
+    {
+      "specifier": "./financial-composition-fixture.ts",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "source": "frozen-W25",
+      "exists": true,
+      "bytes": 5929,
+      "sha256": "be6322af3235a0cfa4ab8c7c3f9d45f2e48d0146d560efca6ed6a5815418e15d",
+      "blobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1"
+    },
+    {
+      "specifier": "./composition-test-deadline.ts",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "source": "frozen-W25",
+      "exists": true,
+      "bytes": 2313,
+      "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+      "blobSha": "3eb140557b597156baf52578d8981d332e52aef3"
+    }
+  ],
+  "previousIntake": {
+    "jsonSha256": "89e0601479837c4ffd1b031a611d2f57e2fed714dac01cf1fa3f82cce5d2c06a",
+    "mdSha256": "fff524a70d042d4bfbbf1e882474682f3e94f0b9785db61614a69ea62d067d04"
+  },
+  "qualification": "Hash and textual import audit only; no product execution, imports or compilation."
+}

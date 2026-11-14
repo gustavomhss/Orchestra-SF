@@ -1,0 +1,52 @@
+{
+  "kind": "static-data-verification-only",
+  "timestampUtc": "2026-11-14T16:00:06.084048+00:00",
+  "sourceBlobsMatchW22": true,
+  "sourceCount": 20,
+  "historicalReverseExactAfterRemovingInstrumentation": true,
+  "historicalOriginalExpectExpressions": 75,
+  "historicalExpectExpressionsAfter": 79,
+  "historicalAssertionsRemoved": 0,
+  "historicalCasesRemoved": 0,
+  "historicalCooperativeBudgetMs": 225000,
+  "historicalOuterBudgetMs": 240000,
+  "historicalTailFromLifecycleFixtureByteIdentical": true,
+  "historicalTailSha256": "be1d5c73af7b7c822b59585b17b33778fb621238e421729a26ba3beccae68ad1",
+  "historicalCanonicalAtlasCountAssertionsUnchanged": true,
+  "historicalEvidenceContextCountAssertionsUnchanged": true,
+  "newIntegrationCases": 4,
+  "newIntegrationCaseBudgetsMs": [
+    120000,
+    120000,
+    120000,
+    120000
+  ],
+  "realPersistence": "openLocalStore",
+  "realAuthority": "createSfProductAuthority with real consumed sf_work_list and sf_request_read leases",
+  "realProducer": "createSfBusinessServices -> actual procurementDecisions.resolveEvidence -> BCS",
+  "newPermissiveVerifier": false,
+  "sourceWriterStillReachableOutsideGroupedRoot": true,
+  "afterCanonicalFailureRetry": false,
+  "foreignCodeModified": false,
+  "C12HelperModified": false,
+  "businessServicesModifiedByThisBuilder": false,
+  "protectedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "sha256": "9d0675797aa2f575b7ba9b2193ce93db54db6f34faeee5cd8264abe8cc544191",
+      "unchangedFromPriorSeal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "sha256": "883ab148424655ad3f716fd283096e9e836119feacc8016d434ea43d5b288f4d",
+      "unchangedFromPriorSeal": true
+    }
+  ],
+  "localProductTestPerformed": false,
+  "localTypecheckPerformed": false,
+  "localBuildPerformed": false,
+  "localProductImportPerformed": false,
+  "remoteMutationPerformed": false,
+  "hostedDispatchPerformed": false,
+  "independentReview": false
+}

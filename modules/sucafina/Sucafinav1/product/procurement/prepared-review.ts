@@ -7,7 +7,8 @@ import type { createProcurementSourceResolver } from "./sources.ts"
 
 /** The host supplies a command from an authorized case; the result contains no executable command. */
 export function createProcurementPreparedReview(input: { port: ProcurementPort; individual: ReturnType<typeof createProcurementSourceResolver> }) {
-  return async (command: PreparedCommand, binding: TrustedDomainContext): Promise<PortResult<{ fields: readonly { field: string; before: string | number | boolean | null; after: string | number | boolean | null; beforeCurrency?: string; afterCurrency?: string }[]; source: Extract<BusinessEvidenceRef, { kind: "record" }>; originalTargetDigest: string; targetLabel?: string }>> => {
+  return async (request: PreparedCommand, binding: TrustedDomainContext): Promise<PortResult<{ fields: readonly { field: string; before: string | number | boolean | null; after: string | number | boolean | null; beforeCurrency?: string; afterCurrency?: string }[]; source: Extract<BusinessEvidenceRef, { kind: "record" }>; originalTargetDigest: string; targetLabel?: string }>> => {
+    const command = structuredClone(request)
     if (command.target.surface !== "procurement" || command.target.type !== "procurement-request" || command.command.page !== "Requests" || command.command.action !== "save" || command.command.id !== command.target.id) return { status: "unavailable", reason: "prepared-review-unavailable" }
     const references = command.preview.values.flatMap((value) => value.sourceRefs)
     const source = references[0]

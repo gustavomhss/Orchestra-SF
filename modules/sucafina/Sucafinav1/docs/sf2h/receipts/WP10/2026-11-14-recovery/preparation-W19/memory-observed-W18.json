@@ -1,0 +1,104 @@
+{
+  "productSha": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+  "productTree": "6bace347fcd4deec2018185aff7ec152d79eaec5",
+  "snapshotSha": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+  "snapshotTree": "16b526a1b18be5c977b28f3e04c54a1b1aacd0a1",
+  "runId": 43591262845,
+  "jobId": 132436280987,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591262845",
+  "conclusion": "failure",
+  "counts": {
+    "pass": 105,
+    "fail": 16,
+    "errors": 1,
+    "expects": 3369,
+    "tests": 121,
+    "files": 22,
+    "durationSeconds": 1052.03,
+    "skip": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "log": {
+    "path": "evidence/W18/test-A-job-132436280987.raw.txt",
+    "bytes": 392616,
+    "sha256": "68494c25cb7de5289f767b705f2435ad3f66efe06ecec2f8b9a5775ce7988765",
+    "git_blob_sha1": "2def84cd3b82bf44702f8fe7428ef999a37a4890",
+    "characters": 392614,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "selectedObservations": [
+    {
+      "sourceLine": 1723,
+      "line": "2026-11-14T11:53:48.1928995Z SF_COMPOSITION_PHASE {\"fixture\":\"analysis-run-context\",\"phase\":\"lifecycle.after-case-advance\",\"state\":\"started\",\"elapsedMs\":46}"
+    },
+    {
+      "sourceLine": 1724,
+      "line": "2026-11-14T11:53:48.2093105Z SF_COMPOSITION_PHASE {\"fixture\":\"analysis-run-context\",\"phase\":\"lifecycle.after-case-advance\",\"state\":\"returned\",\"phaseMs\":16,\"elapsedMs\":63,\"aborted\":false}"
+    },
+    {
+      "sourceLine": 1741,
+      "line": "2026-11-14T11:53:48.2382681Z (fail) Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector [92.29ms]"
+    },
+    {
+      "sourceLine": 2463,
+      "line": "2026-11-14T11:57:09.0058772Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.ensure\",\"state\":\"started\",\"elapsedMs\":3}"
+    },
+    {
+      "sourceLine": 2464,
+      "line": "2026-11-14T11:57:09.2282060Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.ensure\",\"state\":\"returned\",\"phaseMs\":222,\"elapsedMs\":225,\"aborted\":false}"
+    },
+    {
+      "sourceLine": 2465,
+      "line": "2026-11-14T11:57:09.2283027Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.version\",\"state\":\"started\",\"elapsedMs\":225}"
+    },
+    {
+      "sourceLine": 2466,
+      "line": "2026-11-14T11:57:09.4562243Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"scanner.version\",\"state\":\"returned\",\"phaseMs\":228,\"elapsedMs\":453,\"aborted\":false}"
+    },
+    {
+      "sourceLine": 2467,
+      "line": "2026-11-14T11:57:09.7497040Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"procurement.capture-original\",\"state\":\"started\",\"elapsedMs\":746}"
+    },
+    {
+      "sourceLine": 2468,
+      "line": "2026-11-14T11:57:09.8301900Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"procurement.capture-original\",\"state\":\"returned\",\"phaseMs\":80,\"elapsedMs\":826,\"aborted\":false}"
+    },
+    {
+      "sourceLine": 2469,
+      "line": "2026-11-14T11:57:09.8303040Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"atlas.emit-ledger\",\"state\":\"started\",\"elapsedMs\":826}"
+    },
+    {
+      "sourceLine": 2470,
+      "line": "2026-11-14T11:57:12.0218122Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"atlas.emit-ledger\",\"state\":\"returned\",\"phaseMs\":2192,\"elapsedMs\":3018,\"aborted\":false}"
+    },
+    {
+      "sourceLine": 2471,
+      "line": "2026-11-14T11:57:12.0421194Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.resolve-original\",\"state\":\"started\",\"elapsedMs\":3039}"
+    },
+    {
+      "sourceLine": 2472,
+      "line": "2026-11-14T11:57:12.4535481Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.resolve-original\",\"state\":\"returned\",\"phaseMs\":412,\"elapsedMs\":3450,\"aborted\":false}"
+    },
+    {
+      "sourceLine": 2473,
+      "line": "2026-11-14T11:57:12.4537730Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.prepare\",\"state\":\"started\",\"elapsedMs\":3450}"
+    },
+    {
+      "sourceLine": 2474,
+      "line": "2026-11-14T12:00:54.0068030Z SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.prepare\",\"state\":\"returned\",\"phaseMs\":221553,\"elapsedMs\":225003,\"aborted\":true}"
+    },
+    {
+      "sourceLine": 2484,
+      "line": "2026-11-14T12:00:54.0145633Z (fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225018.50ms]"
+    },
+    {
+      "sourceLine": 2526,
+      "line": "2026-11-14T12:01:18.2833653Z (fail) Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector [92.29ms]"
+    },
+    {
+      "sourceLine": 2527,
+      "line": "2026-11-14T12:01:18.2834528Z (fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225018.50ms]"
+    }
+  ]
+}

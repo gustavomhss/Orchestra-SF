@@ -1,0 +1,305 @@
+{
+  "schema": "wp10-hosted-partial-causal-triage-v1",
+  "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "runId": 43610668152,
+  "jobId": 132494810814,
+  "readOnly": true,
+  "sourceExecution": false,
+  "observations": {
+    "namedResults": {
+      "namedResults": 29,
+      "pass": 27,
+      "fail": 2,
+      "skip": 0,
+      "unhandledErrorEvents": 1
+    },
+    "completeBunSummary": false,
+    "omniFinalReceipt": false,
+    "runConclusion": "cancelled",
+    "cleanupConclusion": "success",
+    "ownUnobserved": [
+      "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts"
+    ],
+    "phaseDurations": [
+      {
+        "training": "omitted",
+        "phase": "fixture",
+        "elapsedMs": 13698,
+        "startRawLine": 926,
+        "endRawLine": 927,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "omitted",
+        "phase": "evaluateAndStore",
+        "elapsedMs": 260243,
+        "startRawLine": 928,
+        "endRawLine": 929,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "omitted",
+        "phase": "samplesAndBinding",
+        "elapsedMs": 70940,
+        "startRawLine": 929,
+        "endRawLine": 930,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "omitted",
+        "phase": "coldRead",
+        "elapsedMs": 132945,
+        "startRawLine": 931,
+        "endRawLine": 932,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "omitted",
+        "phase": "directVerification",
+        "elapsedMs": 32034,
+        "startRawLine": 932,
+        "endRawLine": 933,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "omitted",
+        "phase": "idempotentRetry",
+        "elapsedMs": 247158,
+        "startRawLine": 933,
+        "endRawLine": 934,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "bundled",
+        "phase": "fixture",
+        "elapsedMs": 13533,
+        "startRawLine": 940,
+        "endRawLine": 941,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "bundled",
+        "phase": "evaluateAndStore",
+        "elapsedMs": 489793,
+        "startRawLine": 942,
+        "endRawLine": 943,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "bundled",
+        "phase": "samplesAndBinding",
+        "elapsedMs": 127544,
+        "startRawLine": 943,
+        "endRawLine": 944,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "bundled",
+        "phase": "coldRead",
+        "elapsedMs": 254095,
+        "startRawLine": 945,
+        "endRawLine": 946,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "bundled",
+        "phase": "directVerification",
+        "elapsedMs": 62383,
+        "startRawLine": 946,
+        "endRawLine": 947,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "bundled",
+        "phase": "idempotentRetry",
+        "elapsedMs": 434351,
+        "startRawLine": 947,
+        "endRawLine": 948,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      },
+      {
+        "training": "confirmed",
+        "phase": "fixture",
+        "elapsedMs": 15007,
+        "startRawLine": 952,
+        "endRawLine": 973,
+        "attribution": "first WP13 test training loop only; not later named test duration"
+      }
+    ],
+    "renewalLastCumulativeTrace": {
+      "rawLogLine": 905,
+      "label": "renewal-choice-history",
+      "phase": "history-restarted-collaborator:complete",
+      "elapsedMs": 149862,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 3273,
+          "elapsedMs": 71477,
+          "maximumMs": 80
+        },
+        "host.revalidate": {
+          "calls": 21214,
+          "elapsedMs": 1364,
+          "maximumMs": 32
+        },
+        "operation-source": {
+          "calls": 4364,
+          "elapsedMs": 2230,
+          "maximumMs": 34
+        },
+        "operation-coverage": {
+          "calls": 1804,
+          "elapsedMs": 19,
+          "maximumMs": 1
+        },
+        "c08.read.preferences": {
+          "calls": 564,
+          "elapsedMs": 11989,
+          "maximumMs": 67
+        },
+        "c08.transaction.preferences": {
+          "calls": 6,
+          "elapsedMs": 314,
+          "maximumMs": 106
+        },
+        "classified-source": {
+          "calls": 331,
+          "elapsedMs": 2890,
+          "maximumMs": 34
+        },
+        "classified-coverage": {
+          "calls": 312,
+          "elapsedMs": 35953,
+          "maximumMs": 243
+        },
+        "c08.transaction.cases": {
+          "calls": 12,
+          "elapsedMs": 957,
+          "maximumMs": 214
+        },
+        "planner.verifySourceOnly": {
+          "calls": 940,
+          "elapsedMs": 2997,
+          "maximumMs": 188
+        },
+        "planner.verifyOperation": {
+          "calls": 344,
+          "elapsedMs": 4730,
+          "maximumMs": 24
+        },
+        "planner.verifySourceProjection": {
+          "calls": 1880,
+          "elapsedMs": 1441,
+          "maximumMs": 46
+        },
+        "c08.read.outbox": {
+          "calls": 1,
+          "elapsedMs": 15,
+          "maximumMs": 15
+        },
+        "restarted.revalidate": {
+          "calls": 39,
+          "elapsedMs": 186,
+          "maximumMs": 34
+        }
+      },
+      "stateBytes": 1367149,
+      "transactionsBytes": 567628,
+      "casesBytes": 115934,
+      "resultBytes": 250925,
+      "transactions": 18,
+      "cases": 1,
+      "results": 10
+    },
+    "renewalLateBootstrapFailure": {
+      "rawLogLine": 951,
+      "label": "renewal-choice-history",
+      "phase": "bootstrap-start",
+      "elapsedMs": 1383745,
+      "budgetMs": 180000,
+      "status": "deadline-exceeded",
+      "counts": {}
+    }
+  },
+  "findings": [
+    {
+      "id": "D22-WP13-MULTIPLICITY",
+      "owner": [
+        "WP13",
+        "WP11 criterion bindings"
+      ],
+      "certainty": "static call-count mechanism; supported by observed phase timings, not a profiler",
+      "paths": [
+        "product/portfolio/sensitivity-store.ts:29-45,49-74",
+        "product/decisions/criterion-rules.ts:166-182,187-220",
+        "product/portfolio/verification.ts:93-153"
+      ],
+      "detail": "Persistent read has two binding reads, each with two full verifySensitivity calls. Successful cold read invokes four full replays. First evaluate/store invokes bind with one precommit replay plus its two replays on readback, then final persistent read with four: seven. Already-bound retry evaluates sensitivity before readByRequest, then invokes two replays through previous binding and four through final read: six plus the calculation. Counts assume successful unchanged canonical path. Each full replay resolves units/C08 sources/samples/C10, reproduces exact search and adjacent witnesses, and captures source/authority fences.",
+      "observedSupport": "Omitted coldRead132945ms versus directVerification32034ms. IdempotentRetry247158ms; first evaluate260243ms. Bundled phases are slower, but no per-call profile was collected.",
+      "action": "Published PR36 causal seven-file proposal; preserve all canonical/final checks. No local overlay or runtime improvement claim."
+    },
+    {
+      "id": "D22-RENEWAL-COST",
+      "owner": [
+        "WP11 fixture and decision/criterion readers",
+        "WP05 Planner",
+        "WP00 state-provider/LocalStore"
+      ],
+      "certainty": "observed API counters plus static snapshot/clone path",
+      "paths": [
+        "test/product/wp11/renewal-choice-history.test.ts:10-99",
+        "test/product/wp11/renewal-choice-fixture.ts:35-110",
+        "product/decisions/case-port.ts:70-86",
+        "product/host-binding/state-provider.ts:28-38",
+        "runtime/local-store.ts:163-205"
+      ],
+      "detail": "The standalone renewal history named test passed149866.65ms. Its final trace has3273 cases reads,564 preferences reads,21214 host revalidations; state JSON grew38346→1367149bytes while persisted results grew0→10. C08 read clones the whole state and authorizes twice. Root LocalStore transactions decode all three snapshots; nested transactions clone the selected staged snapshot. The PR35 ec052 grouped operation verifier is already present and tested.",
+      "limits": "API invocation counts do not identify physical connections, distinct SQL transactions or exclusive CPU time. Inclusive/nested API durations cannot be summed. These renewal counters are not WP13 persistent sensitivity counters.",
+      "action": "Retain exact PR35 ec052; no broad LocalStore or foreign fixture rewrite proposed."
+    },
+    {
+      "id": "D22-TIMEOUT-CARRYOVER",
+      "owner": [
+        "WP13 test lifecycle",
+        "WP11 fixture deadline guard"
+      ],
+      "certainty": "observed interleaved phase trace and static loop ownership; event-loop scheduler mechanism unprofiled",
+      "paths": [
+        "test/product/wp13/coverage-sensitivity-integration.test.ts:23-105",
+        "test/product/wp11/fixture-trace.ts:5-42",
+        "test/product/wp11/renewal-choice-fixture.ts:34-37"
+      ],
+      "rawLines": [
+        937,
+        939,
+        940,
+        951,
+        952,
+        953,
+        956,
+        974,
+        975
+      ],
+      "detail": "After the first named test timeout, its bundled/confirmed loop labels continue. The second test logs bootstrap-start, then a180000ms guard fires1383745ms later with empty counts. The1383750.72ms named timeout is not evidence that the second test completed its own calculations. The log reports both300000ms test timeouts after far more wall time; no exact event-loop/timeout implementation cause is assigned.",
+      "action": "Do not retry this unchanged foreign group beside the three unobserved own files. Preserve the full test file/training loop and budgets; producer performance delta has separate future hosted verification."
+    }
+  ],
+  "notClaimed": [
+    "Full suite counts or pass",
+    "Outcomes for nine files without headers",
+    "Native/global acceptance",
+    "Any physical connection count",
+    "Performance improvement on proposed PR36 intake",
+    "Timeout cause for the overall GitHub cancellation"
+  ],
+  "publisherProbe": {
+    "pr35Head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "pr35Delta": false,
+    "pr36Head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+    "proposal": "agents/ci/W22-D-observation/publisher-audit/selection-manifest.json",
+    "status": "proposed exact intake only; historical D22 remains W22 cancelled/partial"
+  }
+}

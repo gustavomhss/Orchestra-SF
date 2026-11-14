@@ -1,0 +1,435 @@
+{
+  "productSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "snapshotSha": "c4e212a3970be85fc639007a31e156e9ef5883b7",
+  "counts": {
+    "pass": 42,
+    "fail": 1,
+    "expects": 429,
+    "tests": 43,
+    "files": 3,
+    "durationSeconds": 239.74,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp04/host-integration.test.ts": {
+      "pass": 7,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts": {
+      "pass": 16,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts": {
+      "pass": 19,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "tests": [
+    {
+      "status": "pass",
+      "name": "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+      "durationMs": 1582.52,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 844,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence",
+      "durationMs": 32299.05,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 846,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private original evidence is immutable and a replacement Request cannot revive historical facts or receipts",
+      "durationMs": 31589.29,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 848,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent",
+      "durationMs": 932.82,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 850,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+      "durationMs": 11341.16,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 865,
+      "kind": "named-test",
+      "context": [
+        "  ORCHESTRA_OMNI_CONTROL_NONCE: 7f4524da0bb101f1e81117d78fe58bf6",
+        "  ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: false",
+        "  ORCHESTRA_OMNI_CONTROL: declared",
+        "  PACKAGE: sucafina",
+        "  DIRECTORY: modules/sucafina",
+        "  RUNNER: bun",
+        "##[endgroup]",
+        "bun test v1.3.14 (0d9b296a)",
+        "",
+        "Sucafinav1/test/product/wp04/host-integration.test.ts:",
+        "wp04-host-metrics {\"scenario\":\"H01\",\"milliseconds\":1579,\"sqliteTransactions\":1225,\"sqliteAllTransactions\":12,\"sqliteMilliseconds\":1472,\"http\":[]}",
+        "(pass) real host composes C06 confirmation, current evidence routing and the WP09 dossier [1582.52ms]",
+        "wp04-host-metrics {\"scenario\":\"H02\",\"milliseconds\":32298,\"sqliteTransactions\":8936,\"sqliteAllTransactions\":20,\"sqliteMilliseconds\":45542,\"http\":[{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":719,\"sqliteTransactions\":442},{\"mode\":\"decision-apply\",\"status\":400,\"milliseconds\":0,\"sqliteTransactions\":0},{\"mode\":\"decision-apply\",\"status\":403,\"milliseconds\":1461,\"sqliteTransactions\":357},{\"mode\":\"decision-review\",\"status\":200,\"milliseconds\":4920,\"sqliteTransactions\":1243},{\"mode\":\"decision-apply\",\"status\":200,\"milliseconds\":5485,\"sqliteTransactions\":1349},{\"mode\":\"decision-apply\",\"status\":200,\"milliseconds\":5161,\"sqliteTransactions\":1459},{\"mode\":\"decision-apply\",\"status\":403,\"milliseconds\":9,\"sqliteTransactions\":1}]}",
+        "(pass) real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence [32299.05ms]",
+        "wp04-host-metrics {\"scenario\":\"H03\",\"milliseconds\":31588,\"sqliteTransactions\":5500,\"sqliteAllTransactions\":15,\"sqliteMilliseconds\":47752,\"http\":[{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":691,\"sqliteTransactions\":442},{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":1662,\"sqliteTransactions\":407},{\"mode\":\"decision-review\",\"status\":200,\"milliseconds\":8331,\"sqliteTransactions\":1243},{\"mode\":\"decision-apply\",\"status\":200,\"milliseconds\":9288,\"sqliteTransactions\":1349},{\"mode\":\"decision-apply\",\"status\":403,\"milliseconds\":600,\"sqliteTransactions\":80}]}",
+        "(pass) private original evidence is immutable and a replacement Request cannot revive historical facts or receipts [31589.29ms]",
+        "wp04-host-metrics {\"scenario\":\"H04\",\"milliseconds\":932,\"sqliteTransactions\":615,\"sqliteAllTransactions\":7,\"sqliteMilliseconds\":984,\"http\":[{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":694,\"sqliteTransactions\":442},{\"mode\":\"decision-apply\",\"status\":400,\"milliseconds\":0,\"sqliteTransactions\":0},{\"mode\":\"decision-apply\",\"status\":400,\"milliseconds\":0,\"sqliteTransactions\":0},{\"mode\":\"decision-apply\",\"status\":400,\"milliseconds\":0,\"sqliteTransactions\":0},{\"mode\":\"decision-apply\",\"status\":400,\"milliseconds\":0,\"sqliteTransactions\":0},{\"mode\":\"decision-apply\",\"status\":400,\"milliseconds\":0,\"sqliteTransactions\":0},{\"mode\":\"decision-apply\",\"status\":400,\"milliseconds\":0,\"sqliteTransactions\":0},{\"mode\":\"decision-apply\",\"status\":403,\"milliseconds\":5,\"sqliteTransactions\":1}]}",
+        "(pass) Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent [932.82ms]",
+        "wp04-host-metrics {\"scenario\":\"H05\",\"milliseconds\":11341,\"sqliteTransactions\":3205,\"sqliteAllTransactions\":8,\"sqliteMilliseconds\":19197,\"http\":[{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":689,\"sqliteTransactions\":442},{\"mode\":\"decision-review\",\"status\":200,\"milliseconds\":4930,\"sqliteTransactions\":1243},{\"mode\":\"decision-apply\",\"status\":200,\"milliseconds\":5517,\"sqliteTransactions\":1351}]}",
+        "257 |       const changed = { ...current.value, version: current.value.version + 1, objective: \"Concurrent authorized case edit\" }",
+        "258 |       const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: \"cases\", expectedStorageVersion: current.storageVersion, targetRef: changed.id, targetIncarnation: changed.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed) }, async (state) => { state.cases[changed.id] = changed; return { commit: true, value: true } })",
+        "259 |       if (saved.status !== \"ok\") throw new Error(\"concurrent real case edit failed\")",
+        "260 |     })",
+        "261 |     const conflict = await fixture.http(\"decision-apply\", application)",
+        "262 |     expect(conflict.response.status).toBe(409)",
+        "                                           ^",
+        "error: expect(received).toBe(expected)",
+        "",
+        "Expected: 409",
+        "Received: 200",
+        "",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts:262:38)",
+        "(fail) a real case edit between durable receipt and reconciliation preserves the conflict without reapplying [11341.16ms]",
+        "wp04-host-metrics {\"scenario\":\"H06\",\"milliseconds\":24014,\"sqliteTransactions\":6911,\"sqliteAllTransactions\":20,\"sqliteMilliseconds\":34635,\"http\":[{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":700,\"sqliteTransactions\":442},{\"mode\":\"decision-review\",\"status\":200,\"milliseconds\":4935,\"sqliteTransactions\":1243},{\"mode\":\"decision-apply\",\"status\":503,\"milliseconds\":5214,\"sqliteTransactions\":1286},{\"mode\":\"decision-apply\",\"status\":409,\"milliseconds\":3775,\"sqliteTransactions\":1135},{\"mode\":\"decision-apply\",\"status\":200,\"milliseconds\":4081,\"sqliteTransactions\":1194},{\"mode\":\"decision-apply\",\"status\":403,\"milliseconds\":5043,\"sqliteTransactions\":1446}]}",
+        "(pass) a durable application recovers after a lost commit response and cleared review cache [24015.38ms]",
+        "wp04-host-metrics {\"scenario\":\"H07\",\"milliseconds\":8632,\"sqliteTransactions\":2569,\"sqliteAllTransactions\":7,\"sqliteMilliseconds\":15112,\"http\":[{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":699,\"sqliteTransactions\":442},{\"mode\":\"decision-review\",\"status\":200,\"milliseconds\":4893,\"sqliteTransactions\":1243},{\"mode\":\"decision-apply\",\"status\":409,\"milliseconds\":1371,\"sqliteTransactions\":354},{\"mode\":\"decision-apply\",\"status\":403,\"milliseconds\":1419,\"sqliteTransactions\":354}]}",
+        "(pass) C12 rejects another review proof, changed human intent and an expired observed review [8632.31ms]"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "a durable application recovers after a lost commit response and cleared review cache",
+      "durationMs": 24015.38,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 867,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "C12 rejects another review proof, changed human intent and an expired observed review",
+      "durationMs": 8632.31,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 869,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "C12 rereads the real review producer before the first application and rejects a changed source",
+      "durationMs": 10964.12,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "rawLogLine": 871,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "one current Procurement case read keeps both canonical passes and its prepared public view in one store scope",
+      "durationMs": 6834.44,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 882,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case preflight preserves the real missing-case refusal outside its own store scope",
+      "durationMs": 2725.08,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 883,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case preflight preserves the real nonparticipant refusal outside its own store scope",
+      "durationMs": 2817.37,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 884,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case preflight preserves the real invalid-c08 refusal outside its own store scope",
+      "durationMs": 2715.94,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 885,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a chosen Procurement case without a prepared change keeps the canonical read boundaries",
+      "durationMs": 1468.15,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 886,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope leaves source reauthorization/materialization on the canonical path outside its lock",
+      "durationMs": 10216.88,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 889,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope leaves actor reauthorization/materialization on the canonical path outside its lock",
+      "durationMs": 10539.13,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 892,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope leaves policy reauthorization/materialization on the canonical path outside its lock",
+      "durationMs": 10464.03,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 895,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope leaves legacy-fields reauthorization/materialization on the canonical path outside its lock",
+      "durationMs": 1437.51,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 898,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope refuses principal changes after the actual canonical reader without retrying",
+      "durationMs": 4327.68,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 899,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope refuses headers changes after the actual canonical reader without retrying",
+      "durationMs": 4379.23,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 900,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope refuses lease changes after the actual canonical reader without retrying",
+      "durationMs": 4464.14,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 901,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope refuses period changes after the actual canonical reader without retrying",
+      "durationMs": 4449.44,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 902,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement case scope refuses clock changes after the actual canonical reader without retrying",
+      "durationMs": 4421.84,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 903,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a real nested writer poisons the scoped read and is never retried outside the lock",
+      "durationMs": 6250.26,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 904,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the full C08 witness changes with protected bytes and a later read never reuses the prior projection",
+      "durationMs": 5731.16,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "rawLogLine": 905,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stored Planner selectors use the exact domain projection without reopening coverage",
+      "durationMs": 1410.99,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 908,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stored scenario rejects planner changes across the actual projection await",
+      "durationMs": 187.46,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 909,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stored scenario rejects dashboard changes across the actual projection await",
+      "durationMs": 184.49,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 910,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stored scenario rejects procurement changes across the actual projection await",
+      "durationMs": 183.53,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 911,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stored scenario rejects principal changes across the actual projection await",
+      "durationMs": 160.65,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 912,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stored scenario rejects case-input changes across the actual projection await",
+      "durationMs": 188.3,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 913,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicates retain two canonical observations per guard and recompute on every case read",
+      "durationMs": 8676.34,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 916,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "historical Procurement duplicates keep both independent canonical entry observations",
+      "durationMs": 2299.02,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 917,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects source change after its canonical double observation",
+      "durationMs": 1718.22,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 918,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects capture change after its canonical double observation",
+      "durationMs": 1703.71,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 919,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects receipt change after its canonical double observation",
+      "durationMs": 1737.69,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 920,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects preferences change after its canonical double observation",
+      "durationMs": 1738.51,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 921,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects case change after its canonical double observation",
+      "durationMs": 1737.33,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 922,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects principal change after its canonical double observation",
+      "durationMs": 1709.75,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 923,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects period change after its canonical double observation",
+      "durationMs": 1756.76,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 924,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects clock change after its canonical double observation",
+      "durationMs": 1716.27,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 925,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects headers change after its canonical double observation",
+      "durationMs": 1711.79,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 926,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement duplicate proof rejects lease change after its canonical double observation",
+      "durationMs": 1702.71,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 927,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "fresh Procurement proofs do not cross overlapping invocations or survive final Request header replacement",
+      "durationMs": 3883.72,
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "rawLogLine": 928,
+      "kind": "named-test"
+    }
+  ],
+  "unhandledErrors": [],
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+    "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+    "Sucafinav1/test/product/wp04/host-integration.test.ts"
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [7f4524da0bb101f1e81117d78fe58bf6]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "not-applicable",
+    "spawns": null,
+    "delegated": null,
+    "declaredTests": null
+  },
+  "summaryRawLogLine": 930,
+  "summaryDuplicateFailuresExcluded": true
+}

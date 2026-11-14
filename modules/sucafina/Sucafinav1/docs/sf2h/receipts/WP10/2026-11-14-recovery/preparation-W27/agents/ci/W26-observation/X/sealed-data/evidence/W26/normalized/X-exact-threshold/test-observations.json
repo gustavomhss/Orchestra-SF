@@ -1,0 +1,87 @@
+{
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "snapshotSha": "4650ebf5948747a49f04120070765aa6317e6fd8",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "expects": 3,
+    "tests": 1,
+    "files": 1,
+    "durationSeconds": 285.82,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    }
+  },
+  "tests": [
+    {
+      "status": "fail",
+      "name": "Portfolio host persists an exact known-subtotal threshold, recertifies it after composition, retries once and refuses revoked authority",
+      "durationMs": 285291.84,
+      "file": "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "rawLogLine": 871,
+      "kind": "named-test",
+      "context": [
+        "  DIRECTORY: modules/sucafina",
+        "  RUNNER: bun",
+        "##[endgroup]",
+        "bun test v1.3.14 (0d9b296a)",
+        "",
+        "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts:",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.complete\",\"state\":\"started\",\"elapsedMs\":0}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.initialize\",\"state\":\"returned\",\"phaseMs\":43,\"elapsedMs\":44,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.produce-scenarios\",\"state\":\"started\",\"elapsedMs\":102}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.produce-scenarios\",\"state\":\"returned\",\"phaseMs\":1208,\"elapsedMs\":1309,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.issue-units\",\"state\":\"started\",\"elapsedMs\":1327}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.issue-units\",\"state\":\"returned\",\"phaseMs\":7379,\"elapsedMs\":8706,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.register-human-rule\",\"state\":\"started\",\"elapsedMs\":8714}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.register-human-rule\",\"state\":\"returned\",\"phaseMs\":917,\"elapsedMs\":9631,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"fixture.complete\",\"state\":\"returned\",\"phaseMs\":9640,\"elapsedMs\":9640,\"aborted\":false}",
+        "SF_EXACT_THRESHOLD_OBSERVATION {\"phase\":\"fixture.complete\",\"environmentReads\":120,\"totalEnvironmentReads\":120}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"storage.before\",\"state\":\"started\",\"elapsedMs\":9640}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"storage.before\",\"state\":\"returned\",\"phaseMs\":5,\"elapsedMs\":9645,\"aborted\":false}",
+        "SF_EXACT_THRESHOLD_OBSERVATION {\"phase\":\"storage.before\",\"environmentReads\":0,\"totalEnvironmentReads\":120}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"host.evaluate-and-store\",\"state\":\"started\",\"elapsedMs\":9645}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"portfolio-host-exact-threshold\",\"phase\":\"host.evaluate-and-store\",\"state\":\"returned\",\"phaseMs\":275640,\"elapsedMs\":285285,\"aborted\":true}",
+        "SF_EXACT_THRESHOLD_OBSERVATION {\"phase\":\"host.evaluate-and-store\",\"environmentReads\":1934,\"totalEnvironmentReads\":2054}",
+        "1 | /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */",
+        "2 | export function compositionTestDeadline(name: string, budgetMs = 105_000) {",
+        "3 |   const started = performance.now()",
+        "4 |   const cancellation = new AbortController()",
+        "5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)",
+        "                                ^",
+        "error: portfolio-host-exact-threshold exceeded its 285000ms cooperative deadline",
+        "      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)",
+        "      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts:23:122",
+        "(fail) Portfolio host persists an exact known-subtotal threshold, recertifies it after composition, retries once and refuses revoked authority [285291.84ms]",
+        "",
+        "omni positive control [2b7cc44380703da11aed7bdada4c1a8c]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        " 0 pass",
+        " 1 fail"
+      ]
+    }
+  ],
+  "unhandledErrors": [],
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [2b7cc44380703da11aed7bdada4c1a8c]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "not-applicable",
+    "spawns": null,
+    "delegated": null,
+    "declaredTests": null
+  },
+  "summaryRawLogLine": 874,
+  "summaryDuplicateFailuresExcluded": true
+}

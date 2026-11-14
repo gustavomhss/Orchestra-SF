@@ -3,11 +3,20 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../contracts/sf-execution.ts"
 import type { createSfUiAuthority } from "./ui-authority.ts"
 
-export const sfHumanActions = ["collaboration.thread.create", "collaboration.thread.reply", "collaboration.thread.resolve",
-  "collaboration.relation.confirm", "collaboration.handoff.confirm", "collaboration.confirmation.confirm",
-  "views.read", "views.save", "views.remove", "decisions.coverage", "decisions.select-portfolio", "decisions.promote-portfolio", "decisions.prepare-portfolio",
-  "decisions.portfolio.read", "decisions.portfolio.evaluate", "decisions.sensitivity.evaluate", "documents.schema", "planner.preview", "planner.apply", "documents.confirm", "analysis.start", "analysis.read", "analysis.cancel", "imports.admit", "imports.apply", "decisions.edit", "decisions.criteria", "decisions.accept-analysis", "decisions.promote-alternative",
-  "decisions.choose", "decisions.prepare-changes", "decisions.apply", "reviews.preserve",
+/** Closed private read list: financial write permission is never required by these reads.
+ * Every action still needs an explicit installation grant and domain authorization.
+ */
+export const sfHumanReadActions = ["views.read", "analysis.read", "decisions.portfolio.read", "bi.artifact.read", "bi.selection.read", "decisions.sensitivity.selection.read",
+  "collaboration.question.output", "collaboration.thread.read", "collaboration.thread.history", "collaboration.relation.read",
+  "collaboration.confirmation.prepare", "collaboration.confirmation.project", "collaboration.answer.prepare", "collaboration.answer.read",
+  "collaboration.selection.list", "collaboration.selection.version", "collaboration.cycle.read", "collaboration.work.list",
+  "collaboration.work.destination", "collaboration.recipients", "collaboration.storage.version"] as const
+
+export const sfHumanActions = ["collaboration.thread.create", "collaboration.thread.reply", "collaboration.thread.edit", "collaboration.thread.resolve", "collaboration.question.confirm",
+  "collaboration.relation.confirm", "collaboration.handoff.confirm", "collaboration.confirmation.confirm", "collaboration.answer.confirm", "collaboration.selection.create",
+  ...sfHumanReadActions, "bi.artifact.save", "bi.selection.set", "decisions.sensitivity.select", "decisions.alternative.select", "views.save", "views.remove", "decisions.coverage", "decisions.select-portfolio", "decisions.promote-portfolio", "decisions.prepare-portfolio",
+  "decisions.portfolio.evaluate", "decisions.sensitivity.evaluate", "documents.schema", "planner.preview", "planner.apply", "documents.confirm", "analysis.prepare", "analysis.start", "analysis.cancel", "imports.admit", "imports.apply", "decisions.edit", "decisions.criteria", "decisions.accept-analysis", "decisions.promote-alternative",
+  "decisions.choose", "decisions.add-question", "decisions.answer-question", "decisions.draft-hot-topic", "decisions.promote-analysis", "decisions.condition.record", "decisions.outcome.select", "decisions.prepare-changes", "decisions.apply", "reviews.preserve",
   "routines.admit", "routines.run", "schedules.create", "schedules.update", "schedules.pause"] as const
 export type SfHumanAction = typeof sfHumanActions[number]
 

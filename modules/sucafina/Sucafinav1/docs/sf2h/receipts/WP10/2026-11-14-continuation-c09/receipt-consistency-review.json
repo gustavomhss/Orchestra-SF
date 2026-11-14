@@ -1,0 +1,34 @@
+{
+  "schema": "wp10-internal-receipt-consistency-review-v1",
+  "reviewer": "delta_provenance",
+  "scope": "Internal receipt consistency only; not FINAL, not global acceptance. No tests or remote mutations by reviewer.",
+  "candidate": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+  "read": [
+    "HANDOFF.md",
+    "outcomes.json",
+    "criteria-current-contribution.json",
+    "runs/W30/U30-terminal.json",
+    "runs/W30/CHECK30-terminal.json",
+    "runs/X29/SUMMARY.md",
+    "historical W28 crosswalk and pinned WP10 pack"
+  ],
+  "conclusion": "No new factual blocker in reviewed consolidation.",
+  "verified": [
+    "W/S and real whole-run outcomes preserved",
+    "Scoped passes are not whole-run passes",
+    "Six positive U30 assertion groups after cancel-hidden remain NOT_REACHED",
+    "X29 host result not returned; later journey NOT_REACHED",
+    "Eight linked criteria and three explicit exclusions match exact pack ID/text/status pointers",
+    "171 criteria / seven tasks / 80 obligations and NOT_CLAIMED preserved"
+  ],
+  "clarifications_addressed": [
+    "calculationIntake.action distinguishes W28 initial adaptation from W29 type/oracle/admission corrections",
+    "Historical X gating condition fulfilled once, then X29 failed; no unchanged repeat",
+    "Terminal crosswalk now identifies preflight author execution separately from actual terminal receipts"
+  ],
+  "not_claimed": [
+    "FINAL independent review",
+    "GLOBAL_RELEASE",
+    "full acceptance of any broad criterion"
+  ]
+}

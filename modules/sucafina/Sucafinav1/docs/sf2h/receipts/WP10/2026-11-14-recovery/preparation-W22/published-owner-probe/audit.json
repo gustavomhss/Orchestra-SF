@@ -1,0 +1,465 @@
+{
+  "schema": "wp10-owner-output-readonly-probe-v1",
+  "status": "sealed-root-selected-renewal-closure-only",
+  "observedAtUtc": "2026-11-14T15:07:21.594204+00:00",
+  "builder": "/root/c17_composition",
+  "scope": "Read-only GitHub MCP probe and exact data archive; no repository/remote mutation by this builder. Root separately owns intake24.",
+  "baseline": {
+    "productCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "productTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+    "treeEvidence": "publication/verified-W21-tree.json",
+    "frozenSources": "publication/frozen-W21/repo",
+    "comparisonRule": "All beforeBlobs and existing-dependency hashes remain W21 anchored even after parent applies candidate bytes. Existing saved diffs were not regenerated against mutable repo."
+  },
+  "probedSources": [
+    {
+      "pr": 32,
+      "base": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+      "commitsAhead": 5,
+      "compareComplete": true,
+      "nonDocumentPaths": [
+        {
+          "filename": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+          "status": "modified",
+          "additions": 10,
+          "deletions": 5,
+          "changes": 15,
+          "previous_filename": null
+        },
+        {
+          "filename": "apps/cli/src/sucafina-product/bi-services.ts",
+          "status": "modified",
+          "additions": 3,
+          "deletions": 1,
+          "changes": 4,
+          "previous_filename": null
+        },
+        {
+          "filename": "apps/cli/src/sucafina-product/business-services.ts",
+          "status": "modified",
+          "additions": 56,
+          "deletions": 3,
+          "changes": 59,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+          "status": "modified",
+          "additions": 45,
+          "deletions": 6,
+          "changes": 51,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+          "status": "modified",
+          "additions": 8,
+          "deletions": 4,
+          "changes": 12,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+          "status": "modified",
+          "additions": 56,
+          "deletions": 9,
+          "changes": 65,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "status": "modified",
+          "additions": 10,
+          "deletions": 4,
+          "changes": 14,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "status": "modified",
+          "additions": 4,
+          "deletions": 15,
+          "changes": 19,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+          "status": "added",
+          "additions": 196,
+          "deletions": 0,
+          "changes": 196,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+          "status": "modified",
+          "additions": 16,
+          "deletions": 3,
+          "changes": 19,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "status": "modified",
+          "additions": 81,
+          "deletions": 32,
+          "changes": 113,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+          "status": "modified",
+          "additions": 20,
+          "deletions": 1,
+          "changes": 21,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+          "status": "modified",
+          "additions": 155,
+          "deletions": 34,
+          "changes": 189,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+          "status": "modified",
+          "additions": 3,
+          "deletions": 1,
+          "changes": 4,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "status": "modified",
+          "additions": 15,
+          "deletions": 10,
+          "changes": 25,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "modified",
+          "additions": 3,
+          "deletions": 4,
+          "changes": 7,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+          "status": "added",
+          "additions": 48,
+          "deletions": 0,
+          "changes": 48,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "status": "modified",
+          "additions": 8,
+          "deletions": 5,
+          "changes": 13,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+          "status": "added",
+          "additions": 87,
+          "deletions": 0,
+          "changes": 87,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 1,
+          "changes": 2,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+          "status": "added",
+          "additions": 104,
+          "deletions": 0,
+          "changes": 104,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "status": "added",
+          "additions": 180,
+          "deletions": 0,
+          "changes": 180,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+          "status": "added",
+          "additions": 158,
+          "deletions": 0,
+          "changes": 158,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+          "status": "modified",
+          "additions": 105,
+          "deletions": 15,
+          "changes": 120,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+          "status": "modified",
+          "additions": 59,
+          "deletions": 1,
+          "changes": 60,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+          "status": "modified",
+          "additions": 145,
+          "deletions": 2,
+          "changes": 147,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+          "status": "modified",
+          "additions": 71,
+          "deletions": 3,
+          "changes": 74,
+          "previous_filename": null
+        }
+      ]
+    },
+    {
+      "pr": 35,
+      "base": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "tree": "ec517fa26571228bc1ce5e3698fcfc9c5d137ae3",
+      "commitsAhead": 6,
+      "compareComplete": true,
+      "nonDocumentPaths": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "status": "modified",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "status": "modified",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "status": "modified",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+          "status": "added",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+          "status": "added",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "status": "modified",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+          "status": "modified",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+          "status": "modified",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "status": "added",
+          "additions": 0,
+          "deletions": 0,
+          "changes": 0,
+          "previous_filename": null
+        }
+      ]
+    }
+  ],
+  "freeze": {
+    "revision": 10,
+    "artifactCount": 38,
+    "matched": 37,
+    "mismatches": [
+      {
+        "artifactKey": "../../../../../apps/cli/src/sucafina-product/host-context.ts",
+        "path": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/host-context.ts",
+        "expectedSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+        "actualSha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+        "matches": false
+      }
+    ],
+    "cohortByteExactCurrentPin": true,
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contracts-v1.md",
+      "modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts"
+    ],
+    "newHostDigestFixAvailable": false,
+    "qualification": "Only SHA256 bytes compared; no product contract test executed and no producer manifest edited."
+  },
+  "foreignCheck": {
+    "diagnostics": 13,
+    "directlyChangedFailingPaths": 0,
+    "map": {
+      "path": "agents/c17/W22-owner-probe/check-diagnostic-map.json",
+      "bytes": 9645,
+      "blobSha": "3dc8535aa576e28ccc04fbe4c66ede5b63f808ee",
+      "sha256": "7fb4d0107f1a9ee821a1a257697cd8a870d2806ea64fd29c8e4206d40686ba20"
+    },
+    "wp09DecisionAnswerConsumer": {
+      "attemptedSourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "mcpStatus": "404_NOT_FOUND",
+      "existingComposedSourceCommit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "existingBlob": "712cce53626fca058f0e66dbfafb6fb09cccc9cf",
+      "disposition": "No PR35 exact replacement; preserve current source and owner pending."
+    }
+  },
+  "selectedProposal": {
+    "path": "agents/c17/W22-owner-probe/proposal.json",
+    "bytes": 6435,
+    "blobSha": "1b9127e794dd44446a27f495cdd345e79a6d8a29",
+    "sha256": "a8b263e762bc4d42247f0def094f4393d5e415687504be0bb8a2c2a84e5fb08c"
+  },
+  "selectionCount": 5,
+  "rootDecision": "Compose exact Planner port + renewal verifier + renewal choice fixture + the two complete race files; root performs copy/intake24.",
+  "securityInspection": {
+    "plannerActor": "Pure extraction of the existing actor mapping: same null/principal/local checks, role filter, canWrite restriction and assigned/domains arrays.",
+    "sourceOnlyVerifier": "Validates full source ref digest, installation/project, type/id/period; performs two canonical actor-filtered projectPlannerSource checks and two source resolutions. Final awaited authentication/lease check precedes projection inside the held snapshot. This returns only operation admission, never a financial result or C10 completeness.",
+    "nonEmptyScenarios": "Retain decodeSfOperationInput and full createPlannerOperationVerifier inside a per-invocation readonly transaction.",
+    "groupedReads": "Each case invocation opens its own readonly LocalStore snapshot. Alternatives share this immutable snapshot, not mutable independent top-level snapshots; each underlying verifier still executes. All Promise siblings are awaited, including refused/thrown cases; final async authority callback stays inside the held snapshot. Only signal/request identity/binding checks remain outside.",
+    "noSharedAuthorizationCache": "No result, source, pending Promise or authorization observation is cached across invocations. Nested write poisoning remains enforced by real LocalStore.",
+    "fixtures": "Published no-write/nested-write/source-CAS/revocation cases and standalone source-admission race file must execute whole. Existing chosen-case monetary/C10 computations remain canonical; sourcePlanner is used only for the phase DomainProjection.",
+    "nativeLimit": "This renewal fixture composition does not establish installed/native/global acceptance."
+  },
+  "restartReader": {
+    "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+    "blobSha": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+    "sameAsW21": true,
+    "consumer": "Still createRenewalOperationVerifier per scenario with Promise.all; no grouped callback delta exists at this pin. The owner receipt names history and human-choice as its two grouped consumers, not restart.",
+    "disposition": "Preserve exact existing reader; updated underlying standalone verifier is part of the selected closure. No grouped restart performance claim."
+  },
+  "heldCurrentChoice": {
+    "finding": {
+      "path": "agents/c17/W22-owner-probe/current-choice-lease-finding.json",
+      "bytes": 2194,
+      "blobSha": "6fdcc71f17c4e51177c4469dd64499fec3c40431",
+      "sha256": "4e915c18474a07eb46dd2ec62f262193c8e32fb2b5c74a8b8f553d706de16973"
+    },
+    "heldPaths": [
+      "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts"
+    ],
+    "mountedCallerInspection": "All 454 W21 product TypeScript files and139 CLI product files were already hydrated; search found no CurrentChoicePreview invocation. The two archived owner tests supply required verifySources. Broader unhydrated test search is not claimed exhaustive; the closure is excluded."
+  },
+  "ci": {
+    "DWholeFilesBefore": 16,
+    "DWholeFilesAfter": 18,
+    "newWholeFileTests": [
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts"
+    ],
+    "existingAffectedDTests": [
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts"
+    ],
+    "R": "No new R-specific test selected by this closure. Shared Planner producer still requires exact-W22 validation.",
+    "BInFlight": "W21 B results belong only to W21. Neither owner S25/S26 nor W21 B outcome transfers to W22 with the new Planner blob.",
+    "ownerReceipts": "Archived as provenance and owner-reported evidence only; no composed acceptance inferred.",
+    "budgetsChanged": false,
+    "hostedExecutionByProbe": false,
+    "localExecutionByProbe": false
+  },
+  "artifacts": {
+    "downloads": {
+      "path": "agents/c17/W22-owner-probe/download-manifest.json",
+      "bytes": 17531,
+      "blobSha": "98bd31fc0699394a8f3d6ca8b46a01e10789604c",
+      "sha256": "82c31c1580a264562341b78c9ed27caa6a323bc53ac0c09dae59943a8ac20afe"
+    },
+    "importClosure": {
+      "path": "agents/c17/W22-owner-probe/import-closure.json",
+      "bytes": 32313,
+      "blobSha": "2f12c66c8f15cc508dc2df0df83eae2f4d736600",
+      "sha256": "2440c83bef49b583304048c7dfa61ae4aede3d074c12bd6d815c2f6259c9b281"
+    },
+    "fullTreePresence": {
+      "path": "agents/c17/W22-owner-probe/fulltree-presence.json",
+      "bytes": 1450,
+      "blobSha": "048da4dd73aa18120300f290f9394daa98d13a79",
+      "sha256": "f80d808b3ec73a1478c137a86b51a467617f4f9480c6ca9c3378c430486912ea"
+    },
+    "freezeByteAudit": {
+      "path": "agents/c17/W22-owner-probe/freeze-byte-audit.json",
+      "bytes": 15833,
+      "blobSha": "3a43cf82d608a03bdcd38d0fb0b3b510c35d53fc",
+      "sha256": "7206b3431be3e20bfd4ced9af653005ce696e1091bc6b4436c7fc0e8436688cb"
+    }
+  },
+  "imports": {
+    "relativeEdgesChecked": 68,
+    "unresolved": 0,
+    "method": "Literal specifier resolution and exact Git blob identities only; no product import/typecheck/build."
+  },
+  "permissions": {
+    "repoWrites": false,
+    "foreignAuthorship": false,
+    "remoteMutations": false,
+    "intakeWrites": false,
+    "priorFrozenArchiveWrites": false,
+    "localProductTests": false,
+    "localTypecheck": false,
+    "localBuild": false
+  },
+  "reviewQualification": "Builder audit, not one of the three independent reviewers; all CI claims remain bound to their exact published SHA."
+}

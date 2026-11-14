@@ -1,0 +1,648 @@
+{
+  "schema": "wp10-independent-intake-review-v1",
+  "reviewId": "R1-intake-W26-pr36",
+  "kind": "focal pre-intake source review",
+  "finalForCandidate": false,
+  "countsAsFinalIndependentReview": false,
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "authoredTests": false,
+    "declaration": "I inspected the exact archived proposal and immutable W25 sources independently. No product/test changes, local product execution, imports, builds, typechecks, browser use, remote mutations or CI dispatch were performed. Builder audits were used as locators, not substituted for review."
+  },
+  "evidenceCutoff": "2026-11-14T16:41:25Z",
+  "baseProductSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "baseTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "candidateSha": null,
+  "candidateTree": null,
+  "candidateBinding": "No W26 final candidate reviewed; a future published candidate and its hosted terminals require a fresh independent review.",
+  "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+  "sourcePr": 36,
+  "selectionManifest": {
+    "path": "agents/ci/W22-D-observation/publisher-audit/selection-manifest.json",
+    "sha256": "6824ff01f9c582fc8d86e7ab73514156ce5ecdf9761e20fe20f3d94da67990cc",
+    "statusAtObservation": "PROPOSED_NOT_APPLIED_NOT_ACCEPTED",
+    "basisProductShaInManifest": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "compatibilityRecheckedAgainst": "3d59829e5d9e438cbb443428a9479d7f63b5bf31"
+  },
+  "verdict": {
+    "intake": "STATIC_INTAKE_ADMISSIBLE_SEVEN_EXACT_BLOBS_ONLY",
+    "functional": "HOLD_PENDING_NEW_CANDIDATE_HOST_COMPOSITION_AND_HOSTED_PROOFS",
+    "native": "NOT_ACCEPTED",
+    "global": "NOT_ACCEPTED",
+    "newConfirmedDefectsInSelectedSeven": 0,
+    "ownCompositionFindings": 1,
+    "qualification": "No source-level financial/authority weakening found in the seven-file delta. This recommends scoped composition only and does not certify runtime correctness, timing, native admission, global gates or completion of WP10."
+  },
+  "findings": [
+    {
+      "id": "R1-W26-HOST-EXACT-THRESHOLD-01",
+      "severity": "high",
+      "status": "OPEN_IN_W25_BASE",
+      "classification": "own host composition gap; preexisting and separate from the seven proposed PR36 blobs",
+      "intakeBlocking": false,
+      "finalAcceptanceBlocking": true,
+      "title": "The composed host omits the canonical exact-threshold producer from both calculation and verification",
+      "locations": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "blobSha": "463dafc3e1900099391cee63f83bc0f3148df03c",
+          "lines": "64-101",
+          "detail": "units and sensitivityPreview exist, but exactThreshold is passed neither at verifier construction nor at product construction"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "blobSha": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+          "lines": "129-138",
+          "detail": "the fallback verifier and product omit the same optional producer"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "blobSha": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+          "lines": "95-97,146-148",
+          "detail": "without input.exactThreshold the producer returns exact-threshold-not-proven and emits no exact threshold"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "blobSha": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+          "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+          "lines": "141-150",
+          "detail": "the proposed recertification still requires an exactThreshold producer to be connected"
+        }
+      ],
+      "cause": "Optional producer ports are left undefined in both real host composition paths although the canonical implementation and its inputs are already present.",
+      "impact": "The new optimization cannot establish an exact threshold through this composed host. WP13 fixtures supply world.exact explicitly; their threshold/replay results cannot establish host integration. Fresh host results remain sampled/unavailable for exact threshold, and persisted exact results cannot be certified by a verifier lacking the callback.",
+      "canonicalApi": {
+        "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+        "blobSha": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+        "export": "createPlannerExactThreshold",
+        "constructorInputs": [
+          "units",
+          "preview"
+        ],
+        "returnedArguments": [
+          "SensitivityRequest",
+          "baselineRef",
+          "TrustedDomainContext"
+        ],
+        "consumerArgument": "exactThreshold(request, binding, context), using binding.baselineRef",
+        "existingInputs": "portfolio-services.ts has units and sensitivityPreview at 68-73; decision-domain-services.ts has units and preview. Both verifier and createPortfolioProduct accept the adapter."
+      },
+      "requiredProof": [
+        "Connect the canonical producer in each actual host construction path while retaining current authority, source, unit, period and case checks. Reviewer supplies no patch and remains non-author.",
+        "Publish the successor and run hosted change-scoped check plus a real host consumer test exercising initial exact calculation, cold read and idempotent retry through the composed services.",
+        "Retain omitted/bundled/confirmed training semantics, unavailable price/FX, current authority/source revocation, no duplicate persisted result and no automatic human choice/application.",
+        "Do not reuse W22 partial observations or WP13 fixture numerical results as successor host acceptance."
+      ],
+      "criteria": [
+        {
+          "id": "WP10.SUC.10",
+          "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+          "family": "success_criteria",
+          "task": "WP10"
+        },
+        {
+          "id": "WP10.T01.CHK.02",
+          "text": "Abrir cada função nova através da navegação real e observar leitura/escrita no domínio correto.",
+          "family": "checks",
+          "task": "WP10.T01"
+        },
+        {
+          "id": "WP10.T04.CHK.01",
+          "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
+          "family": "checks",
+          "task": "WP10.T04"
+        }
+      ],
+      "reportedToRoot": true,
+      "sourceFixObserved": false,
+      "hostedProofObserved": false
+    }
+  ],
+  "selectedBlobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "blobSha": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "sha256": "01b61b76c8487adf357a9b8d811c796d1cbc83b6628f09417b6ad7b1cd88734a",
+      "bytes": 12250,
+      "manifestExact": true,
+      "baseW25BlobSha": "4919ebc3367bb388974839382ff220a94667ad21",
+      "sameBaseAsManifestW22": true,
+      "newInFullW25Tree": false,
+      "testDeclarations": null,
+      "oldTestDeclarations": 0,
+      "omittedTestNames": [],
+      "skipOnlyTodo": [],
+      "timeouts": [],
+      "oldTimeouts": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "blobSha": "89ba60857babe8a5c80f409de39b7e0598695b96",
+      "sha256": "425d2f5b15b82030a877a16bdab2e2407edf0f5dbe8bbc574494cf8ddd6cd815",
+      "bytes": 8268,
+      "manifestExact": true,
+      "baseW25BlobSha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "sameBaseAsManifestW22": true,
+      "newInFullW25Tree": false,
+      "testDeclarations": null,
+      "oldTestDeclarations": 0,
+      "omittedTestNames": [],
+      "skipOnlyTodo": [],
+      "timeouts": [],
+      "oldTimeouts": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "blobSha": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "sha256": "7372cdf470657d9a851d3c9738b2092feda0a0ea791a715db276f694711a14d2",
+      "bytes": 20108,
+      "manifestExact": true,
+      "baseW25BlobSha": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+      "sameBaseAsManifestW22": true,
+      "newInFullW25Tree": false,
+      "testDeclarations": null,
+      "oldTestDeclarations": 0,
+      "omittedTestNames": [],
+      "skipOnlyTodo": [],
+      "timeouts": [],
+      "oldTimeouts": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "blobSha": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "sha256": "d76f45b8e1195a4e79ce8c88dd0fc9ee01de070b808c709b69a3ae1f2e403d14",
+      "bytes": 25064,
+      "manifestExact": true,
+      "baseW25BlobSha": "5b4579143250700a313744cc2240741f1bc15237",
+      "sameBaseAsManifestW22": true,
+      "newInFullW25Tree": false,
+      "testDeclarations": 3,
+      "oldTestDeclarations": 3,
+      "omittedTestNames": [],
+      "skipOnlyTodo": [],
+      "timeouts": [
+        "300000",
+        "300000",
+        "120000"
+      ],
+      "oldTimeouts": [
+        "300000",
+        "300000",
+        "120000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "blobSha": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "sha256": "f5c7d231cf86fbe33deaa9edb6bb12e17c2a8f865ecbdec16304897282892d81",
+      "bytes": 11478,
+      "manifestExact": true,
+      "baseW25BlobSha": null,
+      "sameBaseAsManifestW22": true,
+      "newInFullW25Tree": true,
+      "testDeclarations": 4,
+      "oldTestDeclarations": null,
+      "omittedTestNames": [],
+      "skipOnlyTodo": [],
+      "timeouts": [],
+      "oldTimeouts": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+      "blobSha": "674fae533af967f87e49a5a79d25ac1a6a925e3a",
+      "sha256": "389621a82c50f81b0e16c681aaef7d3c9aec091058da8068ba6c5ad9a1a5d88f",
+      "bytes": 12449,
+      "manifestExact": true,
+      "baseW25BlobSha": null,
+      "sameBaseAsManifestW22": true,
+      "newInFullW25Tree": true,
+      "testDeclarations": 4,
+      "oldTestDeclarations": null,
+      "omittedTestNames": [],
+      "skipOnlyTodo": [],
+      "timeouts": [],
+      "oldTimeouts": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+      "blobSha": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+      "sha256": "9cac87260bb159c4131e0357639d3294fe6c1a5dfd24a241e3aed24d2c63a15f",
+      "bytes": 4625,
+      "manifestExact": true,
+      "baseW25BlobSha": null,
+      "sameBaseAsManifestW22": true,
+      "newInFullW25Tree": true,
+      "testDeclarations": 1,
+      "oldTestDeclarations": null,
+      "omittedTestNames": [],
+      "skipOnlyTodo": [],
+      "timeouts": [
+        "60000"
+      ],
+      "oldTimeouts": []
+    }
+  ],
+  "directDependencies": {
+    "relativeImportReferences": 89,
+    "uniqueRelativeTargets": 40,
+    "unresolved": [],
+    "dependenciesChangedFromManifestW22ToActualW25": [],
+    "allHydratedDependencyHashesMatched": true,
+    "externalSpecifier": "bun:test",
+    "qualification": "Static textual import inventory and full-tree path/hash verification, not TypeScript checking, bundling or runtime import resolution."
+  },
+  "sourceConclusions": [
+    {
+      "topic": "Canonical binding proof retained",
+      "locations": [
+        "sensitivity-store.ts:29-52",
+        "criterion-rules.ts:166-184"
+      ],
+      "conclusion": "The final one binding read is after source/sample/result rereads. Its preserved canonical implementation reads binding/rule/result twice, invokes verifyBinding twice, checks exact equality and ends with host revalidation. No cached financial result replaces those proofs."
+    },
+    {
+      "topic": "Bound retry and orphan recovery",
+      "locations": [
+        "sensitivity-store.ts:56-111"
+      ],
+      "conclusion": "A found result must match captured request/case/content and the current rule proof. Only a current bound read takes the no-calculation retry branch. The unavailable binding path proceeds through real evaluation and validated binding; denied/stale/conflict outcomes are propagated. Operation identity, authority binding identity/content, kind and lease are checked after async boundaries."
+    },
+    {
+      "topic": "Stored threshold is only a candidate",
+      "locations": [
+        "verification.ts:96-183",
+        "threshold-proof.ts:17-56",
+        "planner/interval-proof.ts:10-35",
+        "planner/exact-threshold.ts:83-97"
+      ],
+      "conclusion": "An exact stored number is recertified under a current direct-USD monotone domain. Current structural baseline/scenario/metadata/operation/engine/parameter/bounds/unit/period/refs are correlated; current two adjacent IEEE witnesses must straddle the criterion, preserve fixed component digest and component order. The canonical domain restricts the parameter to a direct non-HR USD replacement without indirect defer writes; monotonicity is not inferred from three samples."
+    },
+    {
+      "topic": "References, digests and final awaits",
+      "locations": [
+        "verification.ts:97-107,143-176,180-183",
+        "threshold-proof.ts:26-56",
+        "portfolio-services.ts:64-66"
+      ],
+      "conclusion": "Stored threshold evidence must equal current producer refs including deterministic order, not merely be self-hashed. The full reconstructed sensitivity digest must equal stored.resultDigest. Source/baseline and units are reread; coverage qualification and source fences remain current; incoming inputs and authority are checked again after the final capture await. The actual host idempotency adapter performs revalidate; a physical fence alone is not treated as authorization."
+    },
+    {
+      "topic": "Financial completeness remains separately qualified",
+      "locations": [
+        "planner-sensitivity.ts:131-148",
+        "coverage-preview.ts:105-142",
+        "coverage-sensitivity-integration.test.ts:22-139"
+      ],
+      "conclusion": "Known-subtotal exactness does not resolve missing cost categories or apply a scenario. Coverage certificates retain current C10 classification/evidence guards. Tests retain omitted training as conditioned, all three training states, null totals on hypothetical samples, unknown price/FX and unchanged human choices/receipts."
+    }
+  ],
+  "testInventory": {
+    "existingModifiedFile": "coverage-sensitivity-integration.test.ts",
+    "oldDeclarations": 3,
+    "newDeclarationsSameFile": 3,
+    "newFileDeclarations": {
+      "persistence-recovery.test.ts": 4,
+      "sensitivity-retry-boundary.test.ts": 4,
+      "threshold-recertification.test.ts": 1
+    },
+    "omittedExistingTestNames": [],
+    "skipOnlyTodoDirectives": [],
+    "existingBudgetsMs": [
+      300000,
+      300000,
+      120000
+    ],
+    "existingBudgetIncrease": false,
+    "newThresholdUnitBudgetMs": 60000,
+    "qualification": "Static declaration counts, not test results. Recovery and retry boundary fixtures exercise orchestration; some callbacks intentionally substitute verification or mutable context. Structural-negative tests reuse captured numerical observations only for negative correlation. None is native/global or host financial acceptance. The integration file uses actual Planner/C08 producers but the actual WP10 host still needs its own wiring proof."
+  },
+  "excludedDowngrades": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "owner": "astra-finance/WP11",
+      "pr": 35,
+      "action": "PRESERVE_EXISTING_EXACT_PUBLISHED_BLOB",
+      "reason": "PR36 version is downrev relative to this integrated PR35 pin. No hunk synthesis or replacement permitted in this proposal.",
+      "actualW25BlobSha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "owner": "astra-finance/WP11",
+      "pr": 35,
+      "action": "PRESERVE_EXISTING_EXACT_PUBLISHED_BLOB",
+      "reason": "PR36 version is downrev relative to this integrated PR35 pin. No hunk synthesis or replacement permitted in this proposal.",
+      "actualW25BlobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "matches": true
+    }
+  ],
+  "actualActorPort": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+    "blobSha": "8389709232225424b5905638d0951d8cdbb71dd7",
+    "matchesRequired": true,
+    "inspection": "plannerSourceActor derives the actual principal roles and access from current Planner state; the proposed seven files do not replace this port."
+  },
+  "exclusions": {
+    "admitOnlyListedSeven": true,
+    "allOtherPr36ChangesExcluded": true,
+    "wp11DownrevNotSelected": true,
+    "noHunkSynthesis": true,
+    "rootMustVerifyFinalTreePreservation": true
+  },
+  "historicalEvidence": {
+    "label": "W22-D-portfolio-finance-partial",
+    "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "snapshotSha": "c00c167bdf368d89273d60ca29e5eb24c01dc577",
+    "runId": 43610668152,
+    "jobId": 132494810814,
+    "conclusion": "cancelled",
+    "completeBunSummaryObserved": false,
+    "observedCounts": {
+      "namedResults": 29,
+      "pass": 27,
+      "fail": 2,
+      "skip": 0,
+      "unhandledErrorEvents": 1
+    },
+    "selectedFiles": 18,
+    "observedFileHeaders": 9,
+    "rawLog": {
+      "path": "evidence/W22/D-job-132494810814.raw.txt",
+      "bytes": 97263,
+      "sha256": "98e1ca1414d36cccbe9a52f881dfc2f92c77c851ba830451647dae109b1654b5",
+      "encoding": "utf-8",
+      "exactToolDecodedContent": true,
+      "lfCount": 998,
+      "crlfCount": 0,
+      "endsWithLF": true
+    },
+    "qualification": "Cancelled and partial. Runtime counts and elapsed timings explain the proposed optimization only; they are not acceptance of PR36, W25 or a future W26. No cancellation cause or complete-suite total inferred."
+  },
+  "criteria": {
+    "canonicalPackSha256": "b34a53e66e33b88a13bcb30d17fb8b7a2a009f12e6a8922bc7ab7fedbf70d1e7",
+    "literalCount": 171,
+    "taskCount": 7,
+    "literalFamilies": {
+      "dod": 22,
+      "invariants": 24,
+      "quality_standards": 22,
+      "completeness_criteria": 24,
+      "success_criteria": 22,
+      "checks": 57
+    },
+    "literalDigestEncoding": "SHA256 of UTF-8 compact JSON [id,text,family,task] objects in canonical order",
+    "literalDigest": "736c37a7432744f8a71314ff50e84ce6d19dc260f9e5d7ed3903e3d0d77b8ef6",
+    "applicableRequirements": [
+      {
+        "id": "WP10.SUC.10",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+        "family": "success_criteria",
+        "task": "WP10"
+      },
+      {
+        "id": "WP10.T01.CHK.02",
+        "text": "Abrir cada função nova através da navegação real e observar leitura/escrita no domínio correto.",
+        "family": "checks",
+        "task": "WP10.T01"
+      },
+      {
+        "id": "WP10.T03.CMP.02",
+        "text": "Cobrir produto/UX, finanças/permissões/persistência e IA/Relay/integração com três revisores sem autoria nos arquivos julgados; cobrir substituição de revisor caso um assuma WP14.",
+        "family": "completeness_criteria",
+        "task": "WP10.T03"
+      },
+      {
+        "id": "WP10.T03.CHK.03",
+        "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada.",
+        "family": "checks",
+        "task": "WP10.T03"
+      },
+      {
+        "id": "WP10.T04.CHK.01",
+        "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
+        "family": "checks",
+        "task": "WP10.T04"
+      },
+      {
+        "id": "WP10.T04.CHK.41",
+        "text": "Oito requests mínimas, generated/typecheck e inventário do epic aparecem no recibo final; missing/empty/mismatched selection falha.",
+        "family": "checks",
+        "task": "WP10.T04"
+      }
+    ],
+    "acceptedByThisPreIntakeReview": 0,
+    "all171Preserved": true,
+    "qualification": "No canonical criterion was edited or reclassified by this review. Seven-file source admissibility is not completion of seven tasks or acceptance of any functional gate."
+  },
+  "archivedInputs": {
+    "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+    "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+    "foreignCopies": 128,
+    "readonlyInputs": 131,
+    "modifiedByReviewer": false,
+    "qualification": "Existing archive receipt remains unchanged; this focal review does not re-audit every archived foreign input."
+  },
+  "supportingArtifacts": [
+    {
+      "path": "reviews/R1/audit-W26-pr36.json",
+      "sha256": "990f95bab964f010faa90d4cbef027676b9d14694de5ec3fc256489d67e51428"
+    },
+    {
+      "path": "reviews/R1/remote-blobs-W26-pr36.json",
+      "sha256": "c7a485588092f1aab50ee3512e3b218c92a2a9bd147ceb61511b6cee21fc5dd7"
+    }
+  ],
+  "readInventory": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "463dafc3e1900099391cee63f83bc0f3148df03c",
+      "sha256": "796aa756ce3a2518f71f57b75cfc23cf096748a08c41736074b0012c484cada5",
+      "bytes": 10810,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+      "sha256": "9b7e36cc1ba84d075bda947151f7c3ca63c34ef6616596ec1c9107760e3c8b70",
+      "bytes": 17331,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+      "sha256": "b73b4bc448f80aea25c369fa02cb37b0c1ccb9093a01d8b4e77ee65e5bec8ea6",
+      "bytes": 10628,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "sha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217",
+      "bytes": 31605,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "sha256": "a85a427a345629af0be0f03095a8f21095c6228ab163105dab6a3258ee5987a4",
+      "bytes": 10472,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "sha256": "f6e8a733e688221146c2213b8b4e601cda41a2600ef65937006a26ddad6b3f28",
+      "bytes": 4817,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "1673c86995cf71b61e288d91492ae7b691934171",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+      "bytes": 19887,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "sha256": "dedee7a05f2fb00a7267b93fc7ba23052c5bd625cfd161ab6bce71f4f07d635e",
+      "bytes": 20097,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "sha256": "b4d5f22cc08da980addedbe25c72428f112162993a977a0e5674892ea67dedd8",
+      "bytes": 11948,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+      "sha256": "d7a3894d1f76bfa83351a5f76a212dc46120f028711267a6ffd5c7c59e3068c5",
+      "bytes": 19680,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "sha256": "e25c0f56ec3b9e8efe762e9bf372bb56b2a7d7d08b94cfaf66358033d8401a97",
+      "bytes": 25464,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "blobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "bytes": 8303,
+      "scope": "source inspection, relevant sections/deltas; not runtime execution"
+    }
+  ],
+  "remoteVerification": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "source": "GitHub MCP github_fetch_file",
+      "blobSha": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "toolBlobSha": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "toolBlobMatches": true,
+      "sha256": "01b61b76c8487adf357a9b8d811c796d1cbc83b6628f09417b6ad7b1cd88734a",
+      "bytes": 12250,
+      "exactLocalBytes": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "source": "GitHub MCP github_fetch_file",
+      "blobSha": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "toolBlobSha": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "toolBlobMatches": true,
+      "sha256": "7372cdf470657d9a851d3c9738b2092feda0a0ea791a715db276f694711a14d2",
+      "bytes": 20108,
+      "exactLocalBytes": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "source": "GitHub MCP github_fetch_file",
+      "blobSha": "89ba60857babe8a5c80f409de39b7e0598695b96",
+      "toolBlobSha": "89ba60857babe8a5c80f409de39b7e0598695b96",
+      "toolBlobMatches": true,
+      "sha256": "425d2f5b15b82030a877a16bdab2e2407edf0f5dbe8bbc574494cf8ddd6cd815",
+      "bytes": 8268,
+      "exactLocalBytes": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "source": "GitHub MCP github_fetch_file",
+      "blobSha": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "toolBlobSha": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "toolBlobMatches": true,
+      "sha256": "d76f45b8e1195a4e79ce8c88dd0fc9ee01de070b808c709b69a3ae1f2e403d14",
+      "bytes": 25064,
+      "exactLocalBytes": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "source": "GitHub MCP github_fetch_file",
+      "blobSha": "463dafc3e1900099391cee63f83bc0f3148df03c",
+      "toolBlobSha": "463dafc3e1900099391cee63f83bc0f3148df03c",
+      "toolBlobMatches": true,
+      "sha256": "796aa756ce3a2518f71f57b75cfc23cf096748a08c41736074b0012c484cada5",
+      "bytes": 10810,
+      "exactLocalBytes": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3d59829e5d9e438cbb443428a9479d7f63b5bf31/apps/cli/src/sucafina-product/portfolio-services.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sourceCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "source": "GitHub MCP github_fetch_file",
+      "blobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "toolBlobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "toolBlobMatches": true,
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "bytes": 8303,
+      "exactLocalBytes": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3d59829e5d9e438cbb443428a9479d7f63b5bf31/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+    }
+  ],
+  "requiredNextEvidence": [
+    "Compose only the seven exact source blobs and retain both protected PR35 fixtures and actual actor port; verify W26 full tree and effective pins.",
+    "Publish and freeze the successor with explicit W/S mapping; run hosted check and all affected full-file selections, including the nine new test declarations and both old five-minute integration tests, without budget widening or omission.",
+    "Resolve and test the own exactThreshold composition finding through the actual host consumer.",
+    "Obtain the three fresh non-author final reviews after candidate and hosted terminals exist. This intake report does not count as any final review.",
+    "Retain all native/resident/Task/knowledge/global blockers until their exact applicable evidence exists; no fixture or old run can clear them."
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "id": "W25-H-procurement-scope",
+  "kind": "test",
+  "product_sha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "product_tree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "snapshot_sha": "c4e212a3970be85fc639007a31e156e9ef5883b7",
+  "snapshot_tree": "dd968ebaa9b8712730aa6ac9c15d0ca7d2beb762",
+  "run_id": 43616586837,
+  "job_id": 132512863120,
+  "run_attempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "record_path": "evidence/W25/normalized/H-procurement-scope/terminal.json",
+  "record_sha256": "28e6391c00df7895cde8c14e72c51a32f3d4c308467709365771fd7c35ef6d93",
+  "files": [
+    {
+      "path": "evidence/W25/terminal-H-run.json",
+      "bytes": 14156,
+      "sha256": "41b43d559f87c4e657d11fc739ca87afe47efdf3e7851b54606bd6c57ff98ac1",
+      "git_blob_sha1": "c5a1fa4267ba3e34f46954fb1070eed5f3067ba4",
+      "name": "source-records/run.json"
+    },
+    {
+      "path": "evidence/W25/terminal-H-jobs.json",
+      "bytes": 4900,
+      "sha256": "5393adb99a992d6392eef2a5f8e81d4305673f37be5c60f56965494be22fb766",
+      "git_blob_sha1": "c5615a1e045b8a74d53b69ee0dffaecf09e450aa",
+      "name": "source-records/jobs.json"
+    },
+    {
+      "path": "evidence/W25/terminal-H-artifacts.json",
+      "bytes": 22,
+      "sha256": "fb09a9699b26ad536855bb4263ff01baa31a107d9af48b348e96cb4a9eb2b8d9",
+      "git_blob_sha1": "08944e0f51c515b2a160ffd22abef9ef99fda766",
+      "name": "source-records/artifacts.json"
+    },
+    {
+      "path": "evidence/W25/H-compare.json",
+      "bytes": 14260,
+      "sha256": "157de571cdf10ee8a0c4a1c14d0200e00159da4f1b49ebc76e7227ddd4fba593",
+      "git_blob_sha1": "2a7dc729903cc70b4d0685e0d0792ac0d5fab57e",
+      "name": "source-records/compare.json"
+    },
+    {
+      "path": "evidence/W25/initial-H-commit.json",
+      "bytes": 1343,
+      "sha256": "fd552f348ed549de4f00bac9780b08342fddef4e9cb832d71d03f519cfa422d7",
+      "git_blob_sha1": "a83ebdf1ebcc49d6fc3b54a6248779e273e99c0e",
+      "name": "source-records/commit.json"
+    },
+    {
+      "path": "evidence/W25/H-envelope.json",
+      "bytes": 424,
+      "sha256": "ebac23255a72bd0a8e125dd6123046984aeb951af5c52641b8139881480c4e64",
+      "git_blob_sha1": "8bddcbfdfd7659393d658905dc5cd3d616c52d01",
+      "name": "source-records/envelope.json"
+    },
+    {
+      "path": "evidence/W25/normalized/H-procurement-scope/test-observations.json",
+      "bytes": 22042,
+      "sha256": "67a20cec6dbcfaf9558f2ff43e4ddb668999c811b9be99daf5c08ca27ce86f5d",
+      "git_blob_sha1": "f53b7f5038edaccb5706b23ab19b5b621d11a8a3",
+      "name": "test-observations.json"
+    }
+  ],
+  "counts": {
+    "pass": 42,
+    "fail": 1,
+    "expects": 429,
+    "tests": 43,
+    "files": 3,
+    "durationSeconds": 239.74,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "qualification": "Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred."
+}

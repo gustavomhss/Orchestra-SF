@@ -1,0 +1,136 @@
+{
+  "schema": "wp10-independent-preflight-v1",
+  "reviewer": "R2",
+  "agent": "/root/independent_r2_w16",
+  "candidateSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "candidateTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+  "parentSha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "pr": 29,
+  "base": "sf2-stack",
+  "verdict": "PENDING_HOSTED_EVIDENCE",
+  "finalReview": false,
+  "observedAtUtc": "2026-11-14 14:15:00 UTC",
+  "independence": {
+    "productAuthorship": false,
+    "testAuthorship": false,
+    "productEdits": false,
+    "remoteMutation": false,
+    "localProductExecution": false,
+    "method": "Static source and diff reading, hash/JSON/tree inventory, read-only GitHub MCP. Only new R2 preflight artifacts written."
+  },
+  "summary": "No new actionable source defect found in the W21 delta. Both R2 W20 Portfolio type findings have minimal source corrections preserving guards and complete equality assertions. Closing the check diagnoses and judging the functional proofs requires exact W21 hosted terminals; final review is intentionally deferred.",
+  "findingRechecks": [
+    {
+      "id": "R2-W20-PORTFOLIO-TYPECHECK-01",
+      "status": "source-corrected-hosted-verification-pending",
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "blobSha": "39dc82d505931daf927b35230341ac99fdc7e09d",
+      "delta": "Only redundant failure.status comparison removed. Existing non-ok failure returned directly; provenance and final authority code unchanged."
+    },
+    {
+      "id": "R2-W20-PORTFOLIO-TYPECHECK-02",
+      "status": "source-corrected-hosted-verification-pending",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "blobSha": "2f8e2d6bebd81257437577d1cf50cf551374807c",
+      "delta": "Real combination.eligibility must be conditioned, with throw otherwise. Existing toMatchObject and complete originalCombination equality, body assertions, budgets and full HTTP/C08 flow preserved. No type cast or assertion removal."
+    }
+  ],
+  "otherDeltaObservations": [
+    "business-services adds a per-UI-invocation Procurement period scope: exact Request, parent/child intent, equal period, binding/headers/payload pins, final authorization and expiry, no overlapping context, cleanup in finally.",
+    "work-destinations calls the published individual.resolve API and grants period context only around actual canonical list/source reads; foreign source/record/incarnation/version remains checked.",
+    "New Procurement work-bridge counterproofs use actual domain execute/create/submit, rebuilt host and new collection; instrumentation delegates to actual readers. Positive/negative behavior remains unexecuted by R2 and requires hosted evidence.",
+    "Lifecycle test narrows real call.kind before human.finish. Native publication fixture adds real SessionStore and LocationServiceMap nodes. These source changes do not demonstrate governed native execution."
+  ],
+  "verifiedStatic": {
+    "hydratedFiles": 1341,
+    "matchedHydratedFiles": 1341,
+    "fullTreeBlobs": 16314,
+    "declaredAndActualDelta": 47,
+    "sourceAndTestPaths": 7,
+    "newReceiptPaths": 40,
+    "newForeignIntake": 0,
+    "foreignPins": 438,
+    "pinsUnchangedFromW20": true,
+    "pinMismatches": 0,
+    "deletedPaths": 0,
+    "ownershipViolations": 0,
+    "previousReceiptsPreserved": 228,
+    "canonicalCriteria": 171,
+    "literalTextsAndProofIdsPreserved": true,
+    "tasks": 7,
+    "remoteCandidateBlobs": 6,
+    "remoteBlobMismatches": 0,
+    "archivedW20R2ReportsByteExact": true,
+    "historicalW20ArtifactAndRawCopiesHashChecked": 12
+  },
+  "unchangedObligations": [
+    "All financial/BI producers, authority, navigation and egress source examined in W20 are identical except the two Portfolio type corrections; shared business-services changes are restricted to the new Procurement period helper/export.",
+    "No readMaterialChange is composed; Portfolio component materiality stays unknown with materiality-producer-unavailable. No credit for materiality acceptance.",
+    "Freeze10 remains37/38 with unchanged strict foreign manifest: host-context expected6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772, actual42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893.",
+    "Resident Review/Memory and BI end-to-end outcomes require W21 exact functional terminal; W19 historical failures are not closed by source narratives.",
+    "Native C07/global epic acceptance is not performed; three independent final reviewers still required."
+  ],
+  "ci": {
+    "checkObserved": [
+      {
+        "id": 43603685238,
+        "headSha": "b3ea71fa52fbf846a28644f09a961c96bee401d8",
+        "status": "in_progress",
+        "conclusion": null,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43603685238"
+      }
+    ],
+    "functional": {
+      "status": "six-terminal-package-not-yet-received",
+      "draftGroups": [
+        {
+          "id": "A",
+          "files": 29
+        },
+        {
+          "id": "B",
+          "files": 10
+        },
+        {
+          "id": "D",
+          "files": 16
+        },
+        {
+          "id": "R",
+          "files": 10
+        },
+        {
+          "id": "C",
+          "files": 29
+        },
+        {
+          "id": "E",
+          "files": 2
+        }
+      ],
+      "focusedFilesIncluded": [
+        "portfolio-promotion.test.ts",
+        "portfolio-reconciliation.test.ts",
+        "bi-advantage-selection.test.ts",
+        "bi-decision-navigation.test.ts",
+        "bi-lifecycle.test.ts",
+        "work-bridge.test.ts"
+      ],
+      "draftIsEvidence": false
+    },
+    "historicalW20": {
+      "runId": 43601767154,
+      "conclusion": "failure",
+      "creditToW21": false
+    }
+  },
+  "artifacts": [
+    "reviews/R2/preflight-W21.json",
+    "reviews/R2/preflight-W21.md",
+    "reviews/R2/source-inventory-W21-preflight.json",
+    "reviews/R2/intake-audit-W21-preflight.json",
+    "reviews/R2/remote-observation-W21-preflight.json",
+    "reviews/R2/artifact-hashes-W21-preflight.json"
+  ],
+  "next": "Wait for root's exact hosted check and all six CI terminal packages, then issue new review-W21.{json,md}; preserve this preflight and all W20 reports."
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "wp10-isolated-read-scope-audit-v1",
+  "at": "2026-11-14T16:45:38.662856+00:00",
+  "baseCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "baseTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "status": "STATIC_BUILDER_AUDIT_NOT_INDEPENDENT_REVIEW",
+  "writes": {
+    "isolatedOnly": true,
+    "productRepository": false,
+    "foreignSource": false,
+    "remote": false
+  },
+  "execution": {
+    "localProduct": false,
+    "imports": false,
+    "typecheck": false,
+    "tests": false,
+    "hostedCandidate": false
+  },
+  "materializationGuard": {
+    "byteExactComparedWithW25": true,
+    "sha256": "8653e83164f332facfcb0a1334185e5a2312735c7c0020947661b361b6ac7e04",
+    "historicalOriginalUnchanged": true,
+    "scopeQualifiedForCurrentActor": true,
+    "allRefFieldsPinned": true,
+    "noRefIdDeduplication": true
+  },
+  "preservedTests": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+    "baseCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+    "bytes": 10012,
+    "sha256": "ab79c13cad0e47e47d3980459550a42041900d135d6779d305adc2feb952a1fe",
+    "blobSha": "8c95f9e87d60075ae7dc0f61f5cbbd3f8f4bd0d4",
+    "unchangedInProductStaging": true,
+    "existingHostedCases": 4,
+    "hostedResultSource": "A25 parent observation: four cases pass; no transfer of acceptance to this candidate",
+    "literalBudgets": [
+      120000,
+      120000
+    ]
+  },
+  "newTests": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+    "names": [
+      "one real record scope performs both canonical BCS reads without a durable write",
+      "a missing current scope for the second real record refuses grouping before canonical work",
+      "changing the second complete record reference during canonical work closes the whole observation without retry"
+    ],
+    "literalBudgets": [
+      "120_000",
+      "120_000",
+      "120_000"
+    ],
+    "expectCalls": 24,
+    "actualComponents": [
+      "LocalStore",
+      "source persistence and source projector",
+      "product authority with real UI lease admission and validation",
+      "C08 namespace transaction and reads",
+      "business service / BCS context resolver",
+      "individual source issuer and reader"
+    ],
+    "fixtureLimits": "The primitive fixture owns its selection holder, derived from the actual admitted period and canonical source context. It does not claim mounted Memory acceptance; root historical-memory test supplies that separate integration proof. Positive authority is not mocked. Raw scope deletion is a deliberate negative storage probe."
+  },
+  "invariants": [
+    "The entire input array, including every field of every record ref, is digested before awaits.",
+    "Current materialization is checked for every ref; unsupported only before canonical work.",
+    "Request object, method, URL, all headers, binding object and digest, lease identity, selection object/digest/expiry and reader identity remain pinned.",
+    "UTC day, directory and bank key, real principal/roles and full context are freshly checked around each private C08 witness.",
+    "Both private witnesses include full C08 state, all three snapshots and source fences.",
+    "The canonical callback is awaited exactly once; results, including undefined, remain actual canonical values.",
+    "Any post-work unsupported/change/exception or nested writer yields changed with no retry and no returned value.",
+    "The one-ref wrapper alone falls back outside the root on pre-work unsupported; canonical undefined remains fresh-source fallthrough.",
+    "No source projection, historical proof, ACL or canonical output is cached by this helper.",
+    "Ordinary prepared-only case reads remain under the existing helper; root Memory integration opts in only after its full record-only closure."
+  ],
+  "limits": [
+    "No claim of faster runtime until hosted candidate measurement.",
+    "A25 evidence-scope passes establish baseline only, not this extracted implementation.",
+    "Cases involving other domains, implicit selectors, approval-stage ageDays, missing current metadata or missing C08 preferences take the ordinary canonical path before work.",
+    "Root Memory integration and existing external writer probes require their own hosted result."
+  ]
+}

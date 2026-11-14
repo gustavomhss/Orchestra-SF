@@ -1,0 +1,331 @@
+--- a/apps/cli/src/sucafina-product/memory-case-read-scope.ts
++++ b/apps/cli/src/sucafina-product/memory-case-read-scope.ts
+@@ -16,6 +16,8 @@
+ import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+ 
+ type Recall = ReturnType<typeof createSfCaseRecall>
++export type SfMemoryObservation = <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext,
++  work: (recall: Recall) => Promise<Value | undefined>) => Promise<Value | undefined>
+ type CaseRef = { id: string; incarnation: string }
+ type Selection = { period: Period; expiresAt: number }
+ type Proof = { ref: CaseRef; readDigest: string; fence: string; value: AuthorizedCaseProjection }
+@@ -26,7 +28,7 @@
+   memoryBusy: Set<string>; memories: Map<string, MemoryProof> }
+ type Fence = { kind: "sf-memory-case-fence"; digest: string; cases: Record<string, string> } | { kind: "unsupported" }
+ 
+-/** Reuse a completed case projection only inside one UI recall with unchanged, protected inputs. */
++/** Reuse completed case projections only inside one UI observation with unchanged, protected inputs. */
+ export function createSfMemoryCaseReadScope(input: {
+   host: DomainPortHost
+   state: SfProductStatePort
+@@ -36,8 +38,8 @@
+   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
+ }) {
+   const local = new AsyncLocalStorage<Scope>()
+-  const active = new WeakSet<TrustedDomainContext>()
+-  const current = (scope: Scope) => local.getStore() === scope && scope.open && !scope.invalid && active.has(scope.call) &&
++  const active = new WeakMap<TrustedDomainContext, Scope>()
++  const current = (scope: Scope) => local.getStore() === scope && scope.open && !scope.invalid && active.get(scope.call) === scope &&
+     scope.call.kind === "ui" && input.host.requestFor(scope.call) === scope.request && !scope.request.signal.aborted &&
+     requestIdentity(scope.request) === scope.requestDigest &&
+     digestSfValue([scope.call.kind, scope.call.binding]) === scope.binding && digestSfValue(scope.incoming) === scope.inputDigest &&
+@@ -162,34 +164,58 @@
+       return structuredClone(result)
+     } finally { scope.memoryBusy.delete(key) }
+   }
+-  const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext, work: () => ReturnType<Recall>): ReturnType<Recall> => {
++  const observation = async <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext,
++    work: (scope?: Scope) => Promise<Value | undefined>): Promise<Value | undefined> => {
+     if (call.kind !== "ui") return work()
+     const request = input.host.requestFor(call), selection = input.selection(call), reader = input.readerIdentity()
+-    if (!request || request.signal.aborted || active.has(call)) return { status: "unavailable" }
++    if (!request || request.signal.aborted || active.has(call)) return undefined
+     if (!selection || !reader) return work()
+     const scope: Scope = { call, request, requestDigest: requestIdentity(request), selection, selectionDigest: digestSfValue(selection), reader,
+       binding: digestSfValue([call.kind, call.binding]), incoming, inputDigest: digestSfValue(incoming),
+       open: true, invalid: false, busy: new Set(), proofs: new Map(), memoryBusy: new Set(), memories: new Map() }
+-    active.add(call)
++    active.set(call, scope)
+     try {
+       return await local.run(scope, async () => {
+-        if (!current(scope) || !await input.host.revalidate(call) || !current(scope)) return { status: "unavailable" }
+-        const result = await work()
+-        if (result.status !== "ok" || !current(scope)) return { status: "unavailable" }
++        if (!current(scope) || !await input.host.revalidate(call) || !current(scope)) return undefined
++        const result = await work(scope)
++        if (result === undefined || !current(scope)) return undefined
+         const proofs = [...scope.proofs.values()]
+         const memories = [...scope.memories.values()]
+         if (proofs.length || memories.length) {
+           const refs = [...new Map([...proofs, ...memories].map((proof) => [caseKey(proof.ref), proof.ref])).values()]
+           const final = await snapshot(scope, refs)
+           if (final?.kind !== "sf-memory-case-fence" || [...proofs, ...memories].some((proof) => proof.fence !== final.digest) ||
+-            proofs.some((proof) => final.cases[caseKey(proof.ref)] !== digestSfValue(proof.value.case)) || !current(scope)) return { status: "unavailable" }
+-        } else if (!await input.host.revalidate(call) || !current(scope)) return { status: "unavailable" }
++            proofs.some((proof) => final.cases[caseKey(proof.ref)] !== digestSfValue(proof.value.case)) || !current(scope)) return undefined
++        } else if (!await input.host.revalidate(call) || !current(scope)) return undefined
+         return structuredClone(result)
+       })
+-    } catch { return { status: "unavailable" } }
+-    finally { scope.open = false; scope.proofs.clear(); scope.memories.clear(); active.delete(call) }
+-  }
+-  return { read, memory, recall }
++    } catch { return undefined }
++    finally { scope.open = false; scope.proofs.clear(); scope.memories.clear(); if (active.get(call) === scope) active.delete(call) }
++  }
++  const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext, work: () => ReturnType<Recall>): ReturnType<Recall> => {
++    const result = await observation(incoming, call, async () => {
++      const result = await work()
++      return result.status === "ok" ? result : undefined
++    })
++    return result ?? { status: "unavailable" }
++  }
++  // Each producer/verifier pass creates a new scope; its two independent Atlas
++  // observations never share completed projections, memory results or fences.
++  const observe = <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext, canonical: Recall,
++    work: (recall: Recall) => Promise<Value | undefined>): Promise<Value | undefined> => observation(incoming, call, async (scope) => {
++    if (!scope) return work(canonical)
++    let claimed = false
++    const scopedRecall: Recall = async (value, currentCall) => {
++      // Only this callback enters the existing observation. The public recall
++      // cannot consume its admission, even before this one has started.
++      if (claimed || currentCall !== call || !current(scope) || digestSfValue(value) !== scope.inputDigest) return { status: "unavailable" }
++      claimed = true
++      const result = await canonical(value, currentCall)
++      return current(scope) && digestSfValue(value) === scope.inputDigest ? result : { status: "unavailable" }
++    }
++    return work(scopedRecall)
++  })
++  return { read, memory, recall, observe }
+ }
+ 
+ function caseKey(ref: CaseRef) { return JSON.stringify([ref.id, ref.incarnation]) }
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -50,6 +50,7 @@
+ import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
+ import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
+ import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
++import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
+ import { createSfSourceFenceReader } from "./source-fence-read.ts"
+ import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
+ import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
+@@ -163,6 +164,10 @@
+   const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
+     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
+   const cases = { ...canonicalCases, read: memoryCaseScope.read }
++  const withMemoryObservation: SfMemoryObservation = (request, call, work) => {
++    const canonical = recall.current
++    return canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
++  }
+   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
+   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
+     : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement" ? procurementConfirmation : undefined
+@@ -672,6 +677,7 @@
+   }) }
+   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
++    withMemoryObservation,
+     bindWorkBridge: (bridge: WorkBridge) => {
+       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")
+       workBridge.current = Object.freeze({ ...bridge })
+--- a/apps/cli/src/sucafina-product/analysis-memory-evidence.ts
++++ b/apps/cli/src/sucafina-product/analysis-memory-evidence.ts
+@@ -8,12 +8,22 @@
+ import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+ import { withoutObservationTimes } from "./analysis-verifier.ts"
+ import type { SfAnalysisDependencies, SfAnalysisProof, SfAnalysisRequest } from "./analysis-verifier.ts"
++import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
+ 
++export type SfMemoryObservationBinding = { withMemoryObservation?: SfMemoryObservation }
+ type MemoryDependencies = Pick<SfAnalysisDependencies, "cases" | "context" | "host"> & { caseRecall: ReturnType<typeof createSfCaseRecall> }
+ export type SfMemoryEvidence = Pick<BusinessEvidenceResolution, "state" | "ref" | "currentRef" | "authorizedProjection" | "differences" | "accessRevision">
+ export type SfMemoryPrompt = { result: CaseRecall; sources: readonly SfMemoryEvidence[] }
+ 
+ function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }
++
++/** One complete observation, including its selection reads; never spans both passes. */
++export function observeSfMemorySelection<Value>(dependencies: SfMemoryObservationBinding & Pick<MemoryDependencies, "caseRecall">, value: DecisionRecallInput,
++  call: TrustedDomainContext, work: (recall: MemoryDependencies["caseRecall"]) => Promise<Value | undefined>) {
++  return dependencies.withMemoryObservation
++    ? dependencies.withMemoryObservation({ caseRef: value.currentCase, limit: 50, scope: { query: value.query, recallScope: value.recallScope } }, call, work)
++    : work(dependencies.caseRecall)
++}
+ 
+ /** Preserve original evidence and the current comparison together; checkedAt is an observation, not proof identity. */
+ export function sfMemoryEvidence(source: BusinessEvidenceResolution): SfMemoryEvidence {
+--- a/apps/cli/src/sucafina-product/input-producer-memory.ts
++++ b/apps/cli/src/sucafina-product/input-producer-memory.ts
+@@ -3,13 +3,14 @@
+ import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
+ import type { SfAnalysisDependencies } from "./analysis-verifier.ts"
+ import type { SfInputProducer } from "./input-producer-intent.ts"
+-import { readSfMemorySelection, sfMemoryReadIdentity } from "./analysis-memory-evidence.ts"
++import { observeSfMemorySelection, readSfMemorySelection, sfMemoryReadIdentity } from "./analysis-memory-evidence.ts"
++import type { SfMemoryObservationBinding } from "./analysis-memory-evidence.ts"
+ 
+ function same(left: unknown, right: unknown) {
+   return digestSfValue(left) === digestSfValue(right)
+ }
+ 
+-export function createSfMemoryInputProducer(dependencies: SfAnalysisDependencies & { caseRecall: ReturnType<typeof createSfCaseRecall> }): SfInputProducer {
++export function createSfMemoryInputProducer(dependencies: SfAnalysisDependencies & SfMemoryObservationBinding & { caseRecall: ReturnType<typeof createSfCaseRecall> }): SfInputProducer {
+   return {
+     skillIds: ["sf-consultar-memoria-decisoria"],
+     prepare: async (selection, request, call) => {
+@@ -17,9 +18,9 @@
+       const decoded = decodeSfSkillInput("DecisionRecallInput", selection)
+       if (!decoded.ok || !decoded.value.query.trim() || decoded.value.query !== request.objective || !same(decoded.value.currentCase, request.caseRef)) return { status: "needs-input", reason: "invalid-analysis-input" }
+       const value = structuredClone(decoded.value)
+-      const first = await readSfMemorySelection(dependencies, value, call)
++      const first = await observeSfMemorySelection(dependencies, value, call, (caseRecall) => readSfMemorySelection({ ...dependencies, caseRecall }, value, call))
+       if (!first) return { status: "unavailable", reason: "analysis-source-unavailable" }
+-      const second = await readSfMemorySelection(dependencies, value, call)
++      const second = await observeSfMemorySelection(dependencies, value, call, (caseRecall) => readSfMemorySelection({ ...dependencies, caseRecall }, value, call))
+       if (!second || !same(sfMemoryReadIdentity(first), sfMemoryReadIdentity(second))) return { status: "unavailable", reason: "analysis-source-unavailable" }
+       const checked = decodeSfSkillInput("DecisionRecallInput", value)
+       return checked.ok ? { status: "ok", value: checked.value } : { status: "unavailable", reason: "analysis-input-producer-unavailable" }
+--- a/apps/cli/src/sucafina-product/analysis-verifier-memory.ts
++++ b/apps/cli/src/sucafina-product/analysis-verifier-memory.ts
+@@ -5,9 +5,10 @@
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
+ import type { SfAnalysisDependencies, SfAnalysisRequest, SfAnalysisVerifier } from "./analysis-verifier.ts"
+-import { readSfMemorySelection, sfMemoryEvidence, sfMemoryReadIdentity } from "./analysis-memory-evidence.ts"
++import { observeSfMemorySelection, readSfMemorySelection, sfMemoryEvidence, sfMemoryReadIdentity } from "./analysis-memory-evidence.ts"
++import type { SfMemoryObservationBinding } from "./analysis-memory-evidence.ts"
+ 
+-export function createSfDecisionMemoryVerifier(dependencies: SfAnalysisDependencies & {
++export function createSfDecisionMemoryVerifier(dependencies: SfAnalysisDependencies & SfMemoryObservationBinding & {
+   caseRecall: ReturnType<typeof createSfCaseRecall>
+   readRecallSelection: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<SfSkillInputMap["DecisionRecallInput"]>>
+ }): SfAnalysisVerifier {
+@@ -17,14 +18,14 @@
+       const decoded = decodeSfSkillInput("DecisionRecallInput", input)
+       if (!decoded.ok || !decoded.value.query.trim() || decoded.value.query !== request.objective || digestSfValue(decoded.value.currentCase) !== digestSfValue(request.caseRef)) return { status: "needs-input", reason: "invalid-analysis-input" }
+       const value = structuredClone(decoded.value)
+-      const read = async (currentCall: TrustedDomainContext) => {
++      const read = async (currentCall: TrustedDomainContext) => observeSfMemorySelection(dependencies, value, currentCall, async (caseRecall) => {
+         const selection = await dependencies.readRecallSelection(request.caseRef, currentCall)
+         if (selection.status !== "ok" || digestSfValue(selection.value) !== digestSfValue(value)) return undefined
+-        const recalled = await readSfMemorySelection(dependencies, value, currentCall)
++        const recalled = await readSfMemorySelection({ ...dependencies, caseRecall }, value, currentCall)
+         if (!recalled) return undefined
+         const again = await dependencies.readRecallSelection(request.caseRef, currentCall)
+         return again.status === "ok" && digestSfValue(again.value) === digestSfValue(selection.value) && await dependencies.host.revalidate(currentCall) ? recalled : undefined
+-      }
++      })
+       const proof = await read(call)
+       if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
+       const checked = await read(call)
+--- a/apps/cli/src/sucafina-product/analysis-host-services.ts
++++ b/apps/cli/src/sucafina-product/analysis-host-services.ts
+@@ -250,10 +250,11 @@
+     add(createSfReevaluationInputProducer(materiality), createSfCommitmentReevaluationVerifier(materiality))
+   } else absent(["sf-reavaliar-compromissos"], ["memory.materiality.selectedChanges"])
+   const caseRecall = bindings.caseRecall ?? business.caseRecall
+-  add(createSfMemoryInputProducer({ ...dependencies, caseRecall }), { skillIds: ["sf-consultar-memoria-decisoria"], verify: async (value, request, call) => {
++  const memory = { ...dependencies, caseRecall, ...(caseRecall === business.caseRecall ? { withMemoryObservation: business.withMemoryObservation } : {}) }
++  add(createSfMemoryInputProducer(memory), { skillIds: ["sf-consultar-memoria-decisoria"], verify: async (value, request, call) => {
+     const parsed = decodeSfSkillInput("DecisionRecallInput", value)
+     if (!parsed.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
+-    return createSfDecisionMemoryVerifier({ ...dependencies, caseRecall, readRecallSelection: readers.recallSelection(parsed.value) }).verify(value, request, call)
++    return createSfDecisionMemoryVerifier({ ...memory, readRecallSelection: readers.recallSelection(parsed.value) }).verify(value, request, call)
+   } })
+ 
+   const bound = createSfAnalysisServices({ dependencies, selected: input.selected, bindings: {}, selectionScope: scoped.selectionScope,
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
+@@ -63,7 +63,7 @@
+   const driver = await openLocalStore(path.join(directory, "store"))
+   const transactionAll = driver.transactionAll
+   if (!transactionAll) throw new Error("Real cross-surface store unavailable")
+-  const counters = { persistenceCalls: 0, c08Reads: 0, caseReads: 0, caseFences: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
++  const counters = { persistenceCalls: 0, c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
+   const measuredDriver: typeof driver = { ...driver,
+     transaction: (surface, work, options) => {
+       counters.persistenceCalls += 1
+@@ -80,7 +80,8 @@
+     finally { console.info("SF_MEMORY_READ_COUNTS", JSON.stringify({ phase: label,
+       ...Object.fromEntries(Object.entries(counters).map(([key, value]) => [key, value - before[key as keyof typeof before]])) })) }
+   })
+-  const interleave: { after?: { completed: number; remaining: number; work: () => Promise<void> }; observe?: { completed: number; fences: number } } = {}
++  const interleave: { before?: { started: number; remaining: number; work: () => Promise<void> };
++    after?: { completed: number; remaining: number; work: () => Promise<void> }; observe?: { completed: number; fences: number } } = {}
+   const clock = { at }
+   let business: ReturnType<typeof createSfBusinessServices> | undefined
+   deadline.own(() => rm(directory, { recursive: true, force: true }))
+@@ -128,6 +129,11 @@
+       const result = await readState(source, namespace, read)
+       if (result.status === "ok" && object(result.value).kind === "sf-memory-case-fence") {
+         counters.caseFences += 1
++        const before = interleave.before
++        if (before && counters.atlasCanonicalReads === before.started && --before.remaining === 0) {
++          interleave.before = undefined
++          await before.work()
++        }
+         if (interleave.observe && counters.atlasCanonicalCompleted > interleave.observe.completed) interleave.observe.fences += 1
+         const action = interleave.after
+         if (action && counters.atlasCanonicalCompleted > action.completed && --action.remaining === 0) {
+@@ -145,6 +151,8 @@
+       manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
+     const readCase = activeBusiness.cases.read
+     activeBusiness.cases.read = async (value, call) => { counters.caseReads += 1; return readCase(value, call) }
++    const readEvidenceContext = activeBusiness.context.context
++    activeBusiness.context.context = async (value, call) => { counters.evidenceContextReads += 1; return readEvidenceContext(value, call) }
+     const readMemory = atlas.memory.recall
+     atlas.memory.recall = async (value, call) => {
+       counters.atlasCanonicalReads += 1
+@@ -239,20 +247,50 @@
+       expect(source.currentRef?.refDigest).not.toBe(original.refDigest)
+       expect(source.differences).toContainEqual({ field: "originalAmount", before: 100, after: 150 })
+       const dependencies = { cases: activeBusiness.cases, planner: activeBusiness.planner, procurement: activeBusiness.procurement,
+-        context: activeBusiness.context, host: authority.host, caseRecall: activeBusiness.caseRecall }
++        context: activeBusiness.context, host: authority.host, caseRecall: activeBusiness.caseRecall, withMemoryObservation: activeBusiness.withMemoryObservation }
+       const producer = createSfMemoryInputProducer(dependencies)
+       const beforePrepare = { ...counters }
+-      expect(await measure("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value })
++      const observationInput = { caseRef, limit: 50, scope: { query: value.query, recallScope: value.recallScope } }
++      let observationEarlyOverlap = false, observationOverlap = false, overlappingWorkRan = false
++      interleave.before = { started: counters.atlasCanonicalReads, remaining: 2, work: async () => {
++        // The first case projection has completed its two C08 witnesses, but
++        // the intended recall has not started. Its capability cannot be stolen
++        // by a public call with the identical live context and arguments.
++        expect(counters.atlasCanonicalReads).toBe(beforePrepare.atlasCanonicalReads)
++        expect((await activeBusiness.caseRecall(observationInput, call)).status).toBe("unavailable")
++        observationEarlyOverlap = true
++      } }
++      interleave.after = { completed: counters.atlasCanonicalCompleted, remaining: 1, work: async () => {
++        expect(await activeBusiness.withMemoryObservation(observationInput, call, async () => {
++          overlappingWorkRan = true
++          return activeBusiness.cases.read({ caseRef: `case:${caseRef.id}:${caseRef.incarnation}` }, call)
++        })).toBeUndefined()
++        expect((await activeBusiness.caseRecall(observationInput, call)).status).toBe("unavailable")
++        observationOverlap = true
++      } }
++      try { expect(await measure("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value }) }
++      finally { interleave.before = undefined; interleave.after = undefined }
++      expect(observationEarlyOverlap).toBe(true)
++      expect(observationOverlap).toBe(true)
++      expect(overlappingWorkRan).toBe(false)
+       // The real rank starts with {id, incarnation} and reopens the same memory
+       // using its versioned envelope.caseRef at egress. Both remain one Atlas
+       // recall contract. Each of the producer's two independent observations
+       // must nevertheless complete its own canonical original/capture proof.
+       expect(counters.atlasCanonicalReads - beforePrepare.atlasCanonicalReads).toBe(2)
+       expect(counters.atlasCanonicalCompleted - beforePrepare.atlasCanonicalCompleted).toBe(2)
++      // Per independent observation: the first complete case producer performs
++      // its two evidence contexts; the selection performs its own source read.
++      // Repeated cases still reopen C08/authority without replaying that producer.
++      expect(counters.evidenceContextReads - beforePrepare.evidenceContextReads).toBe(6)
+       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
+       const verifier = createSfDecisionMemoryVerifier({ ...dependencies, readRecallSelection: readers.recallSelection(value) })
++      const beforeVerify = { ...counters }
+       const verified = await measure("memory.verify", () => verifier.verify(value, analysis, call))
+       if (verified.status !== "ok") throw new Error(verified.reason)
++      expect(counters.atlasCanonicalReads - beforeVerify.atlasCanonicalReads).toBe(2)
++      expect(counters.atlasCanonicalCompleted - beforeVerify.atlasCanonicalCompleted).toBe(2)
++      expect(counters.evidenceContextReads - beforeVerify.evidenceContextReads).toBe(6)
+       const proof = verified.value
+       expect(sfAnalysisSourcesAuthorized(proof, analysis, call)).toBe(true)
+       const prompt = proof.promptContext && "decisionRecall" in proof.promptContext ? proof.promptContext.decisionRecall : undefined

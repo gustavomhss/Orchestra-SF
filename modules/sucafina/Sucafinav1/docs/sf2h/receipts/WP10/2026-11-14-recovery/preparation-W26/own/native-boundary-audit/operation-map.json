@@ -1,0 +1,297 @@
+{
+  "schema": "wp10-native-boundary-map-v1",
+  "nativeOperationCount": 9,
+  "c07CallableCount": 5,
+  "nativeOperations": [
+    {
+      "operation": "resolvePlan",
+      "callables": [
+        "sf_routine_catalog"
+      ],
+      "publicAvailable": [
+        "RelayWorkflowBinding.catalog",
+        "AuthoringStore get/version/documents",
+        "SkillV2.get"
+      ],
+      "missing": [
+        "authenticated native plan revision bound to exact publication",
+        "ordered writeScope and workflowParameters",
+        "canonical full RoutineAdmittedInput inputDigest",
+        "principal/project/case/source binding"
+      ],
+      "internalEvidence": [
+        "GovernanceRecordsV2.readWorkflowRevision",
+        "WorkflowAdmissionV2.before"
+      ],
+      "ownerAction": "Maestro owner exposes authoritative plan reader/binding; WP09 agrees C07 plan mapping; WP10 composes that reader."
+    },
+    {
+      "operation": "resolveRecipe",
+      "callables": [
+        "sf_routine_prepare"
+      ],
+      "publicAvailable": [
+        "RelayWorkflowBinding.acquire/revalidate for a selected published document"
+      ],
+      "missing": [
+        "host-authorized recipe reference to exact plan revision and publication",
+        "canonical inputDigest and scope; no identity inferred from model reference"
+      ],
+      "internalEvidence": [
+        "WorkflowAdmissionV2.before"
+      ],
+      "ownerAction": "Same plan binding seam; WP10 can project only facts returned by it."
+    },
+    {
+      "operation": "prepare",
+      "callables": [
+        "sf_routine_prepare"
+      ],
+      "publicAvailable": [
+        "TaskGovernance.Interface hooks inside canonical Task",
+        "TaskTool registered tool",
+        "pure verifyGovernedTask/evaluateReply"
+      ],
+      "missing": [
+        "real approved plan/validation/authorization",
+        "native arm receipt for same parent placement",
+        "durable admitted record bound to SF input/principal/case/source refs",
+        "canonical governance entry invoked inside real Task chain"
+      ],
+      "internalEvidence": [
+        "MaestroGovernanceV2.make",
+        "GovernanceReservationV2.reserve",
+        "WorkflowAdmissionV2.before/admit"
+      ],
+      "ownerAction": "Owner publishes a typed host admission/receipt boundary retaining Task checks; WP10 must not call admit alone, create an arm event or mint an admitted result."
+    },
+    {
+      "operation": "readAdmission",
+      "callables": [
+        "sf_routine_run",
+        "decision consumers"
+      ],
+      "publicAvailable": [
+        "SessionStore reads",
+        "public schemas and pure approval verifier"
+      ],
+      "missing": [
+        "authenticated durable admissionRef/version to approved plan, arm, input and SF owner",
+        "current native reader, rather than an adapter-authored admission ledger"
+      ],
+      "internalEvidence": [
+        "GovernanceRecordsV2 authorization/validation/context readers",
+        "WorkflowRecordsV2.read"
+      ],
+      "ownerAction": "Expose native receipt reader and authoritative correlation contract; WP10 retains current source/ACL checks."
+    },
+    {
+      "operation": "readRun",
+      "callables": [
+        "sf_routine_status",
+        "sf_routine_result",
+        "routine discovery",
+        "analysis/decision readers"
+      ],
+      "publicAvailable": [
+        "SessionStore",
+        "RelayWorkflowSession.current for an already stored native Task binding"
+      ],
+      "missing": [
+        "C07 runRef to native admission/child binding",
+        "full immutable input and workflow facts required by SfRoutineNativeRecord",
+        "principal/project/case correlation"
+      ],
+      "internalEvidence": [
+        "WorkflowRecordsV2.read",
+        "MaestroWorkflowHostV2.current"
+      ],
+      "ownerAction": "Expose read-only native binding/receipt projection; generic Session presence is insufficient."
+    },
+    {
+      "operation": "start",
+      "callables": [
+        "sf_routine_run"
+      ],
+      "publicAvailable": [
+        "canonical Task tool through ToolRegistry settlement",
+        "TaskGovernance hooks"
+      ],
+      "missing": [
+        "genuine Tool.Context for an actual recorded task call with exact input",
+        "approved governed/authorizationID plus workflow/plan revision/arm",
+        "dispatch-time current SF authority binding",
+        "atomic retry correlation with admitted version/inputDigest"
+      ],
+      "internalEvidence": [
+        "TaskTool.requireParent",
+        "WorkflowAdmissionV2.before/admit",
+        "MaestroWorkflowHostV2.admit"
+      ],
+      "ownerAction": "Upstream supplies a supported authorized handoff into a real Task invocation; WP10 must not synthesize Tool.Context, emit Session/tool events or use Session.resume as Task."
+    },
+    {
+      "operation": "listRunRefs",
+      "callables": [
+        "Workbench routine discovery via sf_routine_status lease"
+      ],
+      "publicAvailable": [
+        "generic native Session/event read facilities"
+      ],
+      "missing": [
+        "owner-authorized C07 run index retaining exact admission mapping",
+        "current principal/project/source filtering; arbitrary session scan is not C07 discovery"
+      ],
+      "internalEvidence": [
+        "WorkflowRecordsV2 native records are not an SF index"
+      ],
+      "ownerAction": "Owner supplies index/correlation read contract; WP10 composes discoverRuns without fabricated entries."
+    },
+    {
+      "operation": "readExecution",
+      "callables": [
+        "sf_routine_result",
+        "decision result",
+        "native schedule lifecycle"
+      ],
+      "publicAvailable": [
+        "RelayWorkflowSession.current/reconcile for an existing native binding"
+      ],
+      "missing": [
+        "immutable terminal receipt revision/state for exact C07 run",
+        "completed resultRef and outputDigest emitted by completion",
+        "cancel/fail state and ownership correlated with admission"
+      ],
+      "internalEvidence": [
+        "MaestroWorkflowHostV2",
+        "WorkflowSettlementV2",
+        "WorkflowRecordsV2"
+      ],
+      "ownerAction": "Expose owner terminal receipt reader; currentStep/resume/provider text cannot be promoted to completed."
+    },
+    {
+      "operation": "readArtifact",
+      "callables": [
+        "sf_routine_result",
+        "openResult",
+        "review/decision consumers"
+      ],
+      "publicAvailable": [
+        "native Session output storage primitives; product createRoutineResultAccess validator"
+      ],
+      "missing": [
+        "immutable authorized output linked to actual terminal receipt",
+        "exact inputDigest/outputDigest and correlationId/principal/project/sourceRefs",
+        "current artifact/file access"
+      ],
+      "internalEvidence": [
+        "RoutineExecutionSnapshot outputDigest must come from completion",
+        "createRoutineResultAccess validates both native receipt and artifact"
+      ],
+      "ownerAction": "Owner supplies native result artifact/receipt projection; WP10 can adapt only that source, not a self-reported JSON run."
+    }
+  ],
+  "callables": [
+    {
+      "operation": "sf_routine_catalog",
+      "producer": "readRoutineCatalog",
+      "nativeOperations": [
+        "resolvePlan"
+      ],
+      "stateW25": "not advertised; internal publication available but runnable catalog needs actual plans"
+    },
+    {
+      "operation": "sf_routine_prepare",
+      "producer": "prepareRoutine",
+      "nativeOperations": [
+        "resolveRecipe",
+        "prepare"
+      ],
+      "stateW25": "not advertised; missing plan/admission adapter"
+    },
+    {
+      "operation": "sf_routine_run",
+      "producer": "runAdmittedRoutine",
+      "nativeOperations": [
+        "readAdmission",
+        "start"
+      ],
+      "stateW25": "not advertised; no genuine Task invocation handoff"
+    },
+    {
+      "operation": "sf_routine_status",
+      "producer": "readRoutineStatus",
+      "nativeOperations": [
+        "readRun"
+      ],
+      "stateW25": "not advertised; Workbench discovery also requires listRunRefs"
+    },
+    {
+      "operation": "sf_routine_result",
+      "producer": "readRoutineResult",
+      "nativeOperations": [
+        "readRun",
+        "readExecution",
+        "readArtifact"
+      ],
+      "stateW25": "not advertised; native completion/artifact chain missing"
+    }
+  ],
+  "consumers": [
+    {
+      "consumer": "publication read-only",
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "state": "implemented composition of public AuthoringStore and SkillV2; knowledge explicitly unavailable; no Task/admission/ledger writer"
+    },
+    {
+      "consumer": "UI/native/MCP descriptors",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "state": "routineServices instantiated without native; routine descriptors not appended; preserve this until native seam exists"
+    },
+    {
+      "consumer": "Workbench list/details",
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "state": "new UI lease for routine discovery; host provides routineRuns but missing native index means unavailable; detail dispatch cannot create absent descriptor"
+    },
+    {
+      "consumer": "analysis host",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "state": "routines object forwarded; forwarding is not native composition"
+    },
+    {
+      "consumer": "analysis run/read routine",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "state": "runSfAnalysisRoutine/readSfAnalysisRoutine require DecisionRoutineHost; no literal routineReconcile in inspected W25 or exact PR36 analysis-port/host"
+    },
+    {
+      "consumer": "decision result / reconciliation equivalent",
+      "path": "modules/sucafina/Sucafinav1/product/routines/decision.ts",
+      "state": "native binding + current case + admission + run + resultAccess re-read required; no body or ready status inferred from resultRef"
+    },
+    {
+      "consumer": "factual routine output",
+      "path": "modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+      "state": "real completed execution/output digest and canonical input digest required twice with source/artifact reauthorization"
+    },
+    {
+      "consumer": "review result",
+      "path": "modules/sucafina/Sucafinav1/product/routines/review-result.ts",
+      "state": "producer consumes openResult + current review/evidence gates; cannot be supplied with fabricated body"
+    },
+    {
+      "consumer": "meeting/executive AI composition",
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
+      "state": "factualRoutineResults/routinePreparation/admittedRun explicitly unavailable in own verifiers; meeting input producer rejects routineResultRefs"
+    },
+    {
+      "consumer": "native schedule",
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule-native.ts",
+      "state": "scheduler started is prompt admission only; readRoutine mapping plus readExecution and resultAccess required for completed output"
+    },
+    {
+      "consumer": "sf_watch_prepare (outside five C07 callables)",
+      "path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "state": "sixth factory descriptor; host injects Memory callback but does not append routine descriptors; callback presence is not advertised callable evidence"
+    }
+  ]
+}

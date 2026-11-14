@@ -1,0 +1,20 @@
+{
+  "selection": "whole file required",
+  "files": [
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+  ],
+  "testFilter": null,
+  "budgetsChanged": false,
+  "newProductTests": 0,
+  "expectedDiagnostics": [
+    "SF_PUBLICATION_LIFECYCLE with fixtureId and reusedRoot",
+    "SF_PUBLICATION_LIFECYCLE_FAILURE with precise phase and original error"
+  ],
+  "requirements": [
+    "all five existing cases complete, including real Session.create/skill/archive/unarchive/removal/lease revocation",
+    "retained-provider disposal assertions in fourth case remain effective while shared Core root stays alive",
+    "no closed SQLite handle or hidden teardown error"
+  ],
+  "nativeOrGlobalAcceptance": false,
+  "dispatched": false
+}

@@ -1,0 +1,72 @@
+{
+  "status": "proposed-deduplicate-with-root-W20-slices",
+  "dispatch": false,
+  "testNamePattern": null,
+  "canonicalTimeoutMs": 120000,
+  "omni": "strict",
+  "fullFiles": [
+    {
+      "package": "cli",
+      "path": "test/native-execution.test.ts",
+      "reason": "Own native admission failure callback plus all existing ticket/cancellation guards"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "reason": "New actual Request/C08 lifecycle and stale-observation counterproofs"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "reason": "Strict original selector and authority release unchanged"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "reason": "Original historical-source preservation and independent human cancellation remain"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "reason": "Lifecycle scope cannot acquire replay/native input authority"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "reason": "Exact PR36 AI6 regression at 8bb72c8cdeda149b000d91403c368642c3b53dec"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "reason": "Exact PR36 AI6 regression at 8bb72c8cdeda149b000d91403c368642c3b53dec"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "reason": "Exact PR36 AI6 regression at 8bb72c8cdeda149b000d91403c368642c3b53dec"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "reason": "Exact PR36 AI6 regression at 8bb72c8cdeda149b000d91403c368642c3b53dec"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "reason": "Exact PR36 AI6 regression at 8bb72c8cdeda149b000d91403c368642c3b53dec"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "reason": "Exact PR36 AI6 regression at 8bb72c8cdeda149b000d91403c368642c3b53dec"
+    },
+    {
+      "package": "sucafina",
+      "path": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "reason": "Exact PR36 AI6 regression at 8bb72c8cdeda149b000d91403c368642c3b53dec"
+    }
+  ],
+  "preserveExistingExplicitBudgets": true,
+  "historicalMemoryExplicitBudgetMs": 240000,
+  "verification": "No local product execution or hosted run performed by this builder"
+}

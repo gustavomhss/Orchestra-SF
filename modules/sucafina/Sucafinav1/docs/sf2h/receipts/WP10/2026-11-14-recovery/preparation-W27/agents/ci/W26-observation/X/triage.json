@@ -1,0 +1,225 @@
+{
+  "schema": "wp10-hosted-failure-triage-v1",
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "snapshotSha": "4650ebf5948747a49f04120070765aa6317e6fd8",
+  "runId": 43619479808,
+  "jobId": 132521664604,
+  "conclusion": "failure",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "expects": 3,
+    "tests": 1,
+    "files": 1,
+    "durationSeconds": 285.82,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+    "blobSha": "e526fffa28318367b9180b419509949c93abb273",
+    "owner": "WP10",
+    "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+  },
+  "observedFailure": {
+    "cause": "Cooperative 285000 ms deadline reached during actual host.evaluate-and-store. This log alone does not localize the expensive internal producer/adapter.",
+    "rawLogLines": [
+      859,
+      860,
+      861,
+      868,
+      871,
+      874,
+      875,
+      876,
+      877
+    ],
+    "phaseMs": 275640,
+    "elapsedMs": 285285,
+    "namedTestDurationMs": 285291.84,
+    "cooperativeBudgetMs": 285000,
+    "outerBudgetMs": 300000
+  },
+  "phases": [
+    {
+      "rawLogLine": 845,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.complete",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 846,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 1
+    },
+    {
+      "rawLogLine": 847,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 43,
+      "elapsedMs": 44,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 848,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.produce-scenarios",
+      "state": "started",
+      "elapsedMs": 102
+    },
+    {
+      "rawLogLine": 849,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.produce-scenarios",
+      "state": "returned",
+      "phaseMs": 1208,
+      "elapsedMs": 1309,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 850,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.issue-units",
+      "state": "started",
+      "elapsedMs": 1327
+    },
+    {
+      "rawLogLine": 851,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.issue-units",
+      "state": "returned",
+      "phaseMs": 7379,
+      "elapsedMs": 8706,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 852,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.register-human-rule",
+      "state": "started",
+      "elapsedMs": 8714
+    },
+    {
+      "rawLogLine": 853,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.register-human-rule",
+      "state": "returned",
+      "phaseMs": 917,
+      "elapsedMs": 9631,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 854,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.complete",
+      "state": "returned",
+      "phaseMs": 9640,
+      "elapsedMs": 9640,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 856,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "storage.before",
+      "state": "started",
+      "elapsedMs": 9640
+    },
+    {
+      "rawLogLine": 857,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "storage.before",
+      "state": "returned",
+      "phaseMs": 5,
+      "elapsedMs": 9645,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 859,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "host.evaluate-and-store",
+      "state": "started",
+      "elapsedMs": 9645
+    },
+    {
+      "rawLogLine": 860,
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "host.evaluate-and-store",
+      "state": "returned",
+      "phaseMs": 275640,
+      "elapsedMs": 285285,
+      "aborted": true
+    }
+  ],
+  "environmentObservations": [
+    {
+      "rawLogLine": 855,
+      "phase": "fixture.complete",
+      "environmentReads": 120,
+      "totalEnvironmentReads": 120
+    },
+    {
+      "rawLogLine": 858,
+      "phase": "storage.before",
+      "environmentReads": 0,
+      "totalEnvironmentReads": 120
+    },
+    {
+      "rawLogLine": 861,
+      "phase": "host.evaluate-and-store",
+      "environmentReads": 1934,
+      "totalEnvironmentReads": 2054
+    }
+  ],
+  "unitsQualification": "environmentReads count host environment API invocations, not physical SQLite connections, writes, commits or unique authority decisions.",
+  "unobservedAssertions": [
+    "sensitivity result and exact threshold",
+    "durable sensitivity state and untouched case",
+    "cold recomposed read and recertification",
+    "same-operation retry and stable storage",
+    "revoked authority denial"
+  ],
+  "cleanup": {
+    "jobId": 132523530424,
+    "conclusion": "success",
+    "deleteSnapshotBranchStep": "success"
+  },
+  "artifactCapture": {
+    "returned": [],
+    "qualification": "Actual GitHub artifacts API returned an empty list; no ZIP exists to capture."
+  },
+  "omni": {
+    "status": "not-applicable",
+    "declaringTests": 0,
+    "spawns": 0,
+    "delegated": 0,
+    "rawLogLine": 873,
+    "evidence": "focused: no declaring test ran; this run made no omni spawn and delegated none",
+    "nativeAcceptance": false
+  },
+  "parserCorrection": {
+    "base": {
+      "path": "normalize-hosted-observation.py",
+      "bytes": 12669,
+      "sha256": "a50456719fa331922a29be3447561339b844f39be72099eb7937b19aefb4e302",
+      "blobSha": "245fc9da0366097e612199be3ce30fdf71a1f9c2"
+    },
+    "successor": {
+      "path": "normalize-hosted-observation-singular.py",
+      "bytes": 12671,
+      "sha256": "ccbec075ac2be890aa9750aa2ac72981d1b49e7f44082f8072f932267f2f6fd7",
+      "blobSha": "fa6f34c853c5d46d31a564c4f494bd00a7ec4668"
+    },
+    "diff": "agents/ci/W26-observation/X/parser.diff",
+    "reason": "Complete Bun summary uses singular test/file. Exact plural-only grammar failed; successor accepts singular/plural and retains all counts, inventory, W/S/envelope, artifact and terminal checks. Earlier utility and normalized receipts remain unchanged."
+  },
+  "localProductExecution": false,
+  "remoteMutation": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReviewAcceptance": false
+}

@@ -1,0 +1,96 @@
+{
+  "baseProduct": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "baseTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "sourceTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+      "localPath": "publication/frozen-W22/repo/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "bytes": 6876,
+      "blobSha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+      "reason": "admit creates a fresh context and opaque lease in a WeakMap; validate consumes only that entry; finish deletes only its argument.",
+      "inspectedRanges": [
+        [
+          10,
+          21
+        ],
+        [
+          34,
+          75
+        ],
+        [
+          89,
+          92
+        ]
+      ],
+      "contentChangedByPackage": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "sourceTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+      "localPath": "publication/frozen-W22/repo/modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "bytes": 22358,
+      "blobSha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+      "reason": "The actual authenticator/grants produce the same authority binding for both allowed operations; accessRevision is derived from the complete configured grant, not the selected operation.",
+      "inspectedRanges": [
+        [
+          107,
+          117
+        ],
+        [
+          178,
+          194
+        ]
+      ],
+      "contentChangedByPackage": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "sourceTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+      "localPath": "publication/frozen-W22/repo/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68104,
+      "blobSha": "da80511814c86214a963fc721fda4a3a891df147",
+      "sha256": "52b0778b68b8c53218c6eea61a948e830fe745eed8c2b591c17b5ee3eba944da",
+      "reason": "procurementSelections.create requires the consumed sf_work_list intent with exact period digest. The retained period index uses authority fields and excludes requestId/expiry.",
+      "inspectedRanges": [
+        [
+          86,
+          90
+        ],
+        [
+          545,
+          563
+        ]
+      ],
+      "contentChangedByPackage": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "sourceTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+      "localPath": "publication/frozen-W22/repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "bytes": 5929,
+      "blobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "sha256": "be6322af3235a0cfa4ab8c7c3f9d45f2e48d0146d560efca6ed6a5815418e15d",
+      "reason": "Existing sf_work_list grant and actual UI review lease remain untouched.",
+      "inspectedRanges": [
+        [
+          37,
+          42
+        ],
+        [
+          54,
+          61
+        ]
+      ],
+      "contentChangedByPackage": false
+    }
+  ],
+  "allSourcesMatchPublishedW22": true,
+  "foreignIntake": false
+}

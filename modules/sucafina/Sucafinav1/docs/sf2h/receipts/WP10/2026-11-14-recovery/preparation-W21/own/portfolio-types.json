@@ -1,0 +1,22 @@
+{
+  "schema": "wp10-w21-portfolio-hosted-type-correction-v1",
+  "base": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "runId": 43601767154,
+  "jobId": 132467830629,
+  "reason": "Remove a redundant discriminant comparison already narrowed by Array.find; explicitly narrow the actual conditioned Portfolio result in the test while keeping its existing assertion and entire integration flow. No cast or assertion removal.",
+  "localProductExecution": false,
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "sha256": "95915f211069a281619deb74098b46329cafa75be8e94d098b232677bafad5be",
+      "blobSha": "39dc82d505931daf927b35230341ac99fdc7e09d",
+      "bytes": 15458
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "sha256": "2381567d75eb108c30187e1c0d7df5acd5fe7a3f3f3f35b12530ade7e62c822e",
+      "blobSha": "2f8e2d6bebd81257437577d1cf50cf551374807c",
+      "bytes": 17174
+    }
+  ]
+}

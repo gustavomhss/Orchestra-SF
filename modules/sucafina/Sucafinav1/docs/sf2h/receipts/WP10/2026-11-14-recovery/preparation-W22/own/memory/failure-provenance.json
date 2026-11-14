@@ -1,0 +1,160 @@
+{
+  "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "sourceTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+  "runId": 43604032487,
+  "jobId": 132474686748,
+  "snapshotCommit": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+  "conclusion": "failure",
+  "rawLog": {
+    "path": "evidence/W21/A-job-132474686748.raw.txt",
+    "bytes": 279522,
+    "sha256": "3f5e222d2a35c876ae84acbf3653351e9b9246fd190732cbf0c96930cadf167f",
+    "blobSha": "0edd0a5f6e78c7d8e35f9f0c8b77eb8a8da2b469"
+  },
+  "excerpt": {
+    "path": "agents/c17/W22-memory/W21-memory-excerpt.txt",
+    "bytes": 4193,
+    "sha256": "350ad0d370e535fcc2f9b69d1284aa9e7f8a374c873eefb0a33279bd7494f334",
+    "blobSha": "863d9b0c5cb674adbc0abf134710f699a328b3d1"
+  },
+  "counts": [
+    {
+      "phase": "memory.resolve-original",
+      "persistenceCalls": 175,
+      "c08Reads": 3,
+      "caseReads": 0,
+      "caseFences": 0,
+      "atlasCanonicalReads": 0,
+      "atlasCanonicalCompleted": 0
+    },
+    {
+      "phase": "memory.prepare",
+      "persistenceCalls": 24954,
+      "c08Reads": 738,
+      "caseReads": 24,
+      "caseFences": 36,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2
+    },
+    {
+      "phase": "memory.verify",
+      "persistenceCalls": 40050,
+      "c08Reads": 1042,
+      "caseReads": 33,
+      "caseFences": 36,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2
+    }
+  ],
+  "phases": [
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "started",
+      "elapsedMs": 4
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "returned",
+      "phaseMs": 264,
+      "elapsedMs": 269,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "started",
+      "elapsedMs": 269
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "returned",
+      "phaseMs": 315,
+      "elapsedMs": 583,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "started",
+      "elapsedMs": 980
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "returned",
+      "phaseMs": 114,
+      "elapsedMs": 1094,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "started",
+      "elapsedMs": 1094
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "returned",
+      "phaseMs": 2242,
+      "elapsedMs": 3336,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "started",
+      "elapsedMs": 3352
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "returned",
+      "phaseMs": 589,
+      "elapsedMs": 3941,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "started",
+      "elapsedMs": 3941
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "returned",
+      "phaseMs": 84840,
+      "elapsedMs": 88781,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "started",
+      "elapsedMs": 88782
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "returned",
+      "phaseMs": 136224,
+      "elapsedMs": 225007,
+      "aborted": true
+    }
+  ],
+  "failure": "historical-memory exceeded its 225000ms cooperative deadline",
+  "testElapsedMs": 225021.63,
+  "metricSemantics": {
+    "persistenceCalls": "Calls to driver.transaction/transactionAll API wrappers, including nested invocations; not physical SQLite commits.",
+    "c08Reads": "Calls to actual authority.state.read wrapper.",
+    "caseReads": "Calls to exposed business.cases.read, including completed-proof reuse; not canonical full-case replays.",
+    "caseFences": "Actual C08 callbacks returning sf-memory-case-fence.",
+    "atlasCanonicalReads": "Calls to actual atlas.memory.recall.",
+    "atlasCanonicalCompleted": "Those canonical Atlas calls returning ok."
+  },
+  "w22Evidence": false
+}

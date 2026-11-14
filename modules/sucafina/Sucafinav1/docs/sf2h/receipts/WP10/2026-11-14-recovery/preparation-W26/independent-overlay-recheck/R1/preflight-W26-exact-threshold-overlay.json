@@ -1,0 +1,210 @@
+{
+  "schema": "wp10-independent-focal-source-recheck-v1",
+  "reviewId": "R1-W26-exact-threshold-overlay",
+  "evidenceCutoff": "2026-11-14T16:54:22Z",
+  "finalForCandidate": false,
+  "countsAsFinalIndependentReview": false,
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "authoredTests": false,
+    "declaration": "Independent source review only. I did not edit product/tests, execute/import/build/typecheck product locally, use a browser, mutate remote refs or dispatch CI. Prior sealed review files were not changed."
+  },
+  "baseProductSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "baseTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "candidateSha": null,
+  "candidateTree": null,
+  "candidateBinding": "Sealed overlays only. A published final W26 candidate and hosted terminals have not been reviewed here.",
+  "findingRecheck": {
+    "id": "R1-W26-HOST-EXACT-THRESHOLD-01",
+    "previousStatus": "OPEN_IN_W25_BASE",
+    "status": "SOURCE_FIXED_IN_SEALED_OVERLAY_HOSTED_RECHECK_PENDING",
+    "functionalAcceptance": "HOLD",
+    "sourceConclusion": "Both own host construction sites now instantiate createPlannerExactThreshold using existing current units/preview and pass the same adapter to calculation and proof. The adapter carries binding.baselineRef and the same TrustedDomainContext; no fabricated threshold or authority substitute was added.",
+    "locations": [
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "blobSha": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+        "lines": "92-97,134-143",
+        "behavior": "standalone domain fallback wires exactThreshold into createPortfolioProofVerifier and createPortfolioProduct"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "blobSha": "881ce4672d9d0e641d1cc849663c0980c118774d",
+        "lines": "69-83,100-105",
+        "behavior": "primary host wires current canonical producer into proof and product; absent scenarios still leave the product unavailable"
+      }
+    ],
+    "newConfirmedDefects": [],
+    "priorIntakeUnchanged": {
+      "jsonSha256": "89e0601479837c4ffd1b031a611d2f57e2fed714dac01cf1fa3f82cce5d2c06a",
+      "mdSha256": "fff524a70d042d4bfbbf1e882474682f3e94f0b9785db61614a69ea62d067d04"
+    }
+  },
+  "sourceAndTestIdentity": {
+    "productFiles": [
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "before": {
+          "bytes": 17331,
+          "sha256": "9b7e36cc1ba84d075bda947151f7c3ca63c34ef6616596ec1c9107760e3c8b70",
+          "blobSha": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9"
+        },
+        "after": {
+          "bytes": 17822,
+          "sha256": "2b782fb131707f8f3aceb3bec37c84f2ccff7a2d6970456e9812d8f471acf01a",
+          "blobSha": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de"
+        },
+        "afterMatches": true,
+        "baseMatches": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "before": {
+          "bytes": 10810,
+          "sha256": "796aa756ce3a2518f71f57b75cfc23cf096748a08c41736074b0012c484cada5",
+          "blobSha": "463dafc3e1900099391cee63f83bc0f3148df03c"
+        },
+        "after": {
+          "bytes": 11364,
+          "sha256": "94427fe5eaae8f348e574bbade36fa34a386d5180c423139f4687078e0fa8342",
+          "blobSha": "881ce4672d9d0e641d1cc849663c0980c118774d"
+        },
+        "afterMatches": true,
+        "baseMatches": true
+      }
+    ],
+    "seals": [
+      {
+        "path": "agents/root/W26-exact-threshold-composition/seal.json",
+        "bytes": 2071,
+        "sha256": "a89f977502a3fafb64beeedd46b566857ca6b9742e4bdcd939e35708efb73267",
+        "blobSha": "8593112fcb64c7bb1b689d07e5940a4d9a783e67",
+        "entries": 8,
+        "errors": []
+      },
+      {
+        "path": "agents/criteria/W26-exact-threshold-host/seal.json",
+        "bytes": 1495,
+        "sha256": "5e9186b00a1ee14a049e3becc044a064165c384573211a7f833539679011c5f0",
+        "blobSha": "9bcf46e7080b6d5b825c851c7e89f9d3310846cb",
+        "entries": 6,
+        "errors": []
+      }
+    ],
+    "test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "bytes": 16088,
+      "sha256": "33faf5709c5465b99c6c18658eda6d80088af63dc6d3f596a08a8033caea0ee0",
+      "blobSha": "e526fffa28318367b9180b419509949c93abb273",
+      "declarations": 1,
+      "skipOnlyTodo": [],
+      "cooperativeBudgetMs": 285000,
+      "newBunBudgetMs": 300000
+    },
+    "relativeImports": [
+      {
+        "specifier": "../../../../product/contracts/canonical.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "source": "frozen-W25",
+        "exists": true,
+        "bytes": 3612,
+        "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+        "blobSha": "1769271386cdda1017c38023b0988ce2d64423d2"
+      },
+      {
+        "specifier": "../../../../product/contracts/decisions.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "source": "frozen-W25",
+        "exists": true,
+        "bytes": 7262,
+        "sha256": "d2929cd8cf8f67e697b2584684491346905657c69cfed2ab144d26a9a646deaf",
+        "blobSha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+      },
+      {
+        "specifier": "../../../../product/contracts/operations.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "source": "frozen-W25",
+        "exists": true,
+        "bytes": 50543,
+        "sha256": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+        "blobSha": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+      },
+      {
+        "specifier": "../../../../product/contracts/ports.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "source": "frozen-W25",
+        "exists": true,
+        "bytes": 9660,
+        "sha256": "4f7effda926f72b7c6a61b944e5e9a9acd6dce4a39d0780e735ab6efed3471b1",
+        "blobSha": "88b6efb4840b8731f707862a8baf14683526c7a9"
+      },
+      {
+        "specifier": "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts",
+        "target": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "source": "sealed-own-overlay",
+        "exists": true,
+        "bytes": 11364,
+        "sha256": "94427fe5eaae8f348e574bbade36fa34a386d5180c423139f4687078e0fa8342",
+        "blobSha": "881ce4672d9d0e641d1cc849663c0980c118774d"
+      },
+      {
+        "specifier": "./financial-composition-fixture.ts",
+        "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+        "source": "frozen-W25",
+        "exists": true,
+        "bytes": 5929,
+        "sha256": "be6322af3235a0cfa4ab8c7c3f9d45f2e48d0146d560efca6ed6a5815418e15d",
+        "blobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1"
+      },
+      {
+        "specifier": "./composition-test-deadline.ts",
+        "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "source": "frozen-W25",
+        "exists": true,
+        "bytes": 2313,
+        "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+        "blobSha": "3eb140557b597156baf52578d8981d332e52aef3"
+      }
+    ]
+  },
+  "testAssessment": {
+    "scope": "Real composed primary host product API over SQLite/C08 and admitted UI authority; source-level assertion assessment only.",
+    "setup": "Creates real Planner sources, simulates source-only scenarios through the canonical Planner and persists C08 results; fixtures explicitly seed the case and attach these actual results as alternatives. Human authority registers the sensitivity rule. Coverage is deliberately pending for training. Setup is not a promotion/choice proof.",
+    "canonicalExactPath": "The test supplies no exactThreshold, sensitivity evaluator or engine callback. createSfPortfolioServices supplies the producer; product.http.sensitivity runs actual initial calculation/binding. Assertions require exact evidence and a threshold outside the sampled parameters, between 320 inclusive and 321 exclusive, preserving IEEE plateau behavior.",
+    "persistedRead": "A second createSfPortfolioServices creates distinct product and verifier objects over the same store. Its first sensitivity operation is readSensitivity of the saved result; equality and real environment calls are required. Source inspection confirms that the proposed PR36 persisted reader invokes the canonical bound verifier.",
+    "retry": "Calls sensitivity again with the same admitted operation, Request, case and input. Requires the same result and an identical C08 cases observation including storageVersion, two origin scenarios, three sample scenarios and one sensitivity result.",
+    "revocation": "Enters a valid case scope and confirms case/Request before disabling the real fixture authenticator. Both read and retry must be denied without value while input and binding digests remain equal.",
+    "coverage": "The real coveragePreview is still present; absent selection returns unavailable, accepted by the canonical sensitivity path as a conditioned known-subtotal analysis. Assertions retain training/pending and known-subtotal disclosures. No complete-coverage claim.",
+    "budgets": "One new test has a 300000 ms Bun budget and 285000 ms cooperative deadline. No existing budget is edited. Performance sufficiency is unknown until hosted CI.",
+    "limitations": [
+      "product.http methods are called directly. The mounted createSfPortfolioHttp Request-to-Response handler, JSON/origin validation and its human transport admission are not exercised.",
+      "The standalone decision-domain-services fallback is source-inspected but not functionally exercised by this new test.",
+      "Recomposition is of services/verifier over the same open store and authority. It is neither store reopening nor process restart.",
+      "Revocation occurs before entering the requested product read/retry and can be refused by the outer authorized() gate. It does not prove revocation during the internal final await.",
+      "Environment call increments witness current host work but are not a direct count of exact producer replays or a performance acceptance.",
+      "No numerical fake is supplied, but coverage records and case membership/alternative association are declared fixture setup; complete C10 classification, human promotion, native/Task, resident runtime, MCP/browser and global gates are not established."
+    ]
+  },
+  "preservation": {
+    "canonicalCriteria": 171,
+    "canonicalTasks": 7,
+    "criteriaAcceptedByThisReview": 0,
+    "archivedForeignInputsChanged": false,
+    "priorReportsChanged": false,
+    "foreignProducerFilesEditedByReviewer": false,
+    "scope": "This addendum rechecks only two own wiring files and one own proposed test. The original seven-blob intake assessment remains separate and immutable."
+  },
+  "requiredNextEvidence": [
+    "Publish a final candidate containing the exact reviewed overlay/test bytes and PR36 cohort; verify candidate tree and effective pins.",
+    "Run hosted typecheck/check plus the full new test and the affected WP13 selections; retain failures and exact W/S/run identities.",
+    "Functional acceptance of the real host requires the positive exact calculation, recomposed persisted read, same-operation retry and revocation assertions to finish on that candidate.",
+    "Keep untested fallback, mounted HTTP transport, store/process restart, late-await revocation and native/global claims outside this focal evidence; use their own applicable proofs.",
+    "Request the three non-author final reviews only after the exact candidate and current hosted terminals are available."
+  ],
+  "supportingAudit": {
+    "path": "reviews/R1/audit-W26-exact-threshold-overlay.json",
+    "sha256": "205a14a8dbb2f7652bfdadc04b465339112785a200e19d62c07d6f9dac1f9a4c"
+  }
+}

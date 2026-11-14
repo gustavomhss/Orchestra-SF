@@ -1,0 +1,300 @@
+{
+  "semantics": "Calls to metered transaction APIs, not proven physical SQLite transactions or commits. Per-route counter sums transaction and transactionAll deltas. Timers may overlap.",
+  "scenarios": [
+    {
+      "sourceLine": 817,
+      "scenario": "H01",
+      "milliseconds": 1233,
+      "sqliteTransactions": 1218,
+      "sqliteAllTransactions": 12,
+      "sqliteMilliseconds": 1128,
+      "http": []
+    },
+    {
+      "sourceLine": 820,
+      "scenario": "H02",
+      "milliseconds": 50672,
+      "sqliteTransactions": 16693,
+      "sqliteAllTransactions": 52,
+      "sqliteMilliseconds": 49774,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 632,
+          "sqliteTransactions": 602
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 3086,
+          "sqliteTransactions": 1042
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 9734,
+          "sqliteTransactions": 3298
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 10385,
+          "sqliteTransactions": 3404
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 6988,
+          "sqliteTransactions": 2157
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 4,
+          "sqliteTransactions": 1
+        }
+      ]
+    },
+    {
+      "sourceLine": 824,
+      "scenario": "H03",
+      "milliseconds": 52273,
+      "sqliteTransactions": 11156,
+      "sqliteAllTransactions": 43,
+      "sqliteMilliseconds": 51654,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 640,
+          "sqliteTransactions": 602
+        },
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 3383,
+          "sqliteTransactions": 1092
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 16756,
+          "sqliteTransactions": 3298
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 17420,
+          "sqliteTransactions": 3404
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 514,
+          "sqliteTransactions": 92
+        }
+      ]
+    },
+    {
+      "sourceLine": 826,
+      "scenario": "H04",
+      "milliseconds": 791,
+      "sqliteTransactions": 768,
+      "sqliteAllTransactions": 7,
+      "sqliteMilliseconds": 744,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 618,
+          "sqliteTransactions": 602
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 3,
+          "sqliteTransactions": 1
+        }
+      ]
+    },
+    {
+      "sourceLine": 832,
+      "scenario": "H05",
+      "milliseconds": 21044,
+      "sqliteTransactions": 7444,
+      "sqliteAllTransactions": 32,
+      "sqliteMilliseconds": 20710,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 621,
+          "sqliteTransactions": 602
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 9926,
+          "sqliteTransactions": 3298
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 10349,
+          "sqliteTransactions": 3406
+        }
+      ]
+    },
+    {
+      "sourceLine": 850,
+      "scenario": "H06",
+      "milliseconds": 39203,
+      "sqliteTransactions": 13226,
+      "sqliteAllTransactions": 44,
+      "sqliteMilliseconds": 38491,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 636,
+          "sqliteTransactions": 602
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 9769,
+          "sqliteTransactions": 3298
+        },
+        {
+          "mode": "decision-apply",
+          "status": 503,
+          "milliseconds": 10060,
+          "sqliteTransactions": 3341
+        },
+        {
+          "mode": "decision-apply",
+          "status": 409,
+          "milliseconds": 5751,
+          "sqliteTransactions": 1824
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 5978,
+          "sqliteTransactions": 1883
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 6818,
+          "sqliteTransactions": 2144
+        }
+      ]
+    },
+    {
+      "sourceLine": 851,
+      "scenario": "H07",
+      "milliseconds": 16871,
+      "sqliteTransactions": 6127,
+      "sqliteAllTransactions": 27,
+      "sqliteMilliseconds": 16579,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 627,
+          "sqliteTransactions": 602
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 9795,
+          "sqliteTransactions": 3298
+        },
+        {
+          "mode": "decision-apply",
+          "status": 409,
+          "milliseconds": 3139,
+          "sqliteTransactions": 1039
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 3131,
+          "sqliteTransactions": 1039
+        }
+      ]
+    },
+    {
+      "sourceLine": 853,
+      "scenario": "H08",
+      "milliseconds": 19386,
+      "sqliteTransactions": 6921,
+      "sqliteAllTransactions": 27,
+      "sqliteMilliseconds": 19052,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 620,
+          "sqliteTransactions": 602
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 9776,
+          "sqliteTransactions": 3298
+        },
+        {
+          "mode": "decision-apply",
+          "status": 409,
+          "milliseconds": 8822,
+          "sqliteTransactions": 2875
+        }
+      ]
+    }
+  ]
+}

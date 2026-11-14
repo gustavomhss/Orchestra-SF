@@ -1,0 +1,133 @@
+{
+  "schema": "sf2.wp10.fixture-repair-W6.v1",
+  "builder": "/root/fixture_repair_w6",
+  "builderStatus": "CLOSED",
+  "baseProductSha": "7377e364e4870e832e49d99d0d2bdbde9eb63a5f",
+  "authoredPaths": [
+    {
+      "path": "apps/cli/src/sucafina-product/forecast-input-adapter.ts",
+      "sha256": "6694e8da26469de376ec19b4b0d5772638eba329a0fee36208d4b430ee4de09e",
+      "blobSha": "1541f4f44ae186585e73bd20d2abd9be200d7873",
+      "bytes": 3602,
+      "baseSha256": "6fcd5bc79f99a3ebc1c34fa2142193fecae34fcd0109f56910810d4a6c5cf1d4"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+      "sha256": "6b4bc59330a2dcb463fb70a56467263f9f3d733cafe6b92ede797505ea6b1c74",
+      "blobSha": "7b11cb99a4bf869bc022d30b648f12d33e296eed",
+      "bytes": 6343,
+      "baseSha256": "c9259ece47a49d1142c34cfc583911f4c6f3c6797a4f9cb672b8adc153f4bf18"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "sha256": "d7120c8637a838cd4adbcac04f597871f7088e40a958bc713c63822e6d161d92",
+      "blobSha": "d7f4c9fe124a4364020559916d3e696506869aba",
+      "bytes": 5520,
+      "baseSha256": "feba2bc5100999253f0a102e914fb0ce7a58521274951741eca930cd09d313b0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+      "sha256": "36a55ea1d8e60e775e3bfaa0a58970ce0f883de6639fc8a6a2280f54933cb612",
+      "blobSha": "1cbde7078d8638dd350a9a2db40c0fa7e1eaf8c5",
+      "bytes": 7571,
+      "baseSha256": "a4cf2a425b3f7bc8ef078ab229a39666ef85fdb9eb5f5262d1439ac542a39c80"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "sha256": "aa0087c0d6b27b5f2a4a38d14d24dd0a6ca31acb09d5ff301dd7254ee3862dd0",
+      "blobSha": "5c52659b20205b3c9a70487545dc041f79b8cec4",
+      "bytes": 10934,
+      "baseSha256": "a1fb6d2213cbdef24a40a98884b29b3e6c43906e93f8b8eb69486e6e31911af5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-destinations.test.ts",
+      "sha256": "48e8c1414319d8c59a498fb10860153f0abc6c1588a3426495ac8982e2f28d08",
+      "blobSha": "6ecd6b126a0a3108d7cc665aa73446fef98c350c",
+      "bytes": 4977,
+      "baseSha256": "28b140b46e21ea5ca5429bf88a62d9e087ac3a401a3dcef7a89906b8b879034c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "sha256": "b270c502a5c0f3caadd70868f5cde59c114b8e3efa476f376d98fe04c9052ff7",
+      "blobSha": "2e1e6766e07afdcac906fcf88fa49968afc27e21",
+      "bytes": 22365,
+      "baseSha256": "040569a7d8df43328c05f219c31d5faa5cd9f8c1072966711ff8854d1d7b0013"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "sha256": "4e63f9202e91a1d8288ac5ac38f3ad976eac6e7316ddb23af719c350f9f5a947",
+      "blobSha": "359a2312f0e34759494491cffabab6d34e460d30",
+      "bytes": 20639,
+      "baseSha256": "08592eafb335172ff870c074128ccbc5a63a6e9fef4d0550ef6c988a89892786"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "sha256": "b73326eea079e0fbfa93269119562a287e22771518cf5d9079c33227614da5f8",
+      "blobSha": "6e1656238b9344c0a5c4f87bfcd3f52878b920c7",
+      "bytes": 6789,
+      "baseSha256": null
+    }
+  ],
+  "hostedInput": {
+    "productSha": "09d942cc59af77197179f586fa727de5d62ac16b",
+    "runId": 43552376149,
+    "jobId": 132317504686,
+    "logSha256": "6f4b92e753492328aa0f850c1542ee342810b769a3440673f6366df61a703336",
+    "conclusion": "failure"
+  },
+  "findings": [
+    {
+      "failure": "Review preserve denied; source backlinks empty",
+      "cause": "financialCompositionFixture omitted business.initializeAtlas; business.context is intentionally unavailable until the real BCS composition is installed.",
+      "change": "Initialize the published own host BCS with no scanner in the shared fixture; assert fresh before mapping source URLs. No grant/authentication relaxation."
+    },
+    {
+      "failure": "invalid-or-empty-agenda",
+      "cause": "Dashboard discovery section includes title but dashboard ReviewAgendaItem exact schema forbids it. Both initial page and successor spread the producer shape unchanged.",
+      "change": "Own successor maps permitted fields explicitly; test uses exact dashboard agenda shape. Root owns analogous initial-page mapping in extended-http.ts."
+    },
+    {
+      "failure": "candidate-operation-required manifests needs-input",
+      "cause": "The Portfolio fixture attempted to evaluate an empty-operation baseline as a candidate; published Portfolio port requires an explicit candidate operation.",
+      "change": "Use real Planner replace operation line:2 with USD110 in February2026; producer calculation/persistence/ACL retained and incomplete coverage remains conditioned."
+    },
+    {
+      "failure": "forecast-selection-authority-unavailable",
+      "cause": "Own adapter called requestFor on unconsumed admission and then tried to consume via ui.validate a second time even though real forecast-http already consumed it.",
+      "change": "Require private matchesIntent and live authority; test rejects unconsumed admission, consumes once as HTTP does, and preserves changed/revoked-intent negatives."
+    },
+    {
+      "finding": "R1-UX-09",
+      "change": "Strengthen actual producer/HTTP participant-removal negative with active session, live existing lease and new valid admission; Review page/source/update all require403 with denied and no private value. Ordinary source edit leaves Review200 and stale backlink409."
+    },
+    {
+      "support": "R3 temporal fence test",
+      "change": "Shared optional clock object now drives both source projector and request environment, retaining default fixture.at snapshot and exposing clock."
+    }
+  ],
+  "validation": {
+    "staticDiffInspected": true,
+    "productTestsExecutedLocally": false,
+    "productBuildOrTypecheckExecutedLocally": false,
+    "foreignFilesAuthored": false,
+    "productAcceptance": false,
+    "pending": "Hosted surgical execution on the published successor; three independent reviewers must assess frozen successor. Builder does not close findings."
+  },
+  "browserRevocationProof": {
+    "status": "source-prepared-pending-hosted",
+    "pages": 2,
+    "browser": "Actual headless Chrome launched through installed Playwright",
+    "producer": "Existing real Review HTTP handler, real Portfolio/C08 authorization and compiled published browser entry",
+    "transport": "Playwright route adapter forwards exact returned status, headers and bytes; no status or projection is fabricated. Does not qualify TCP hosting.",
+    "negative": "Same active principal and valid host admissions; remove case participant; focus probe and source action each observe403, clear all private workspace content/bootstrap/buttons/links.",
+    "lateResponse": "Hold actual authorized source200 before removing participant; release after denied focus and DOM clearing; observe transport settlement and another browser task, then both workspaces remain empty.",
+    "bounds": "15s launch/navigation, 10s browser interaction and transport deadline, owned Chrome cleanup from published WP07 helper; product timeout120s unchanged.",
+    "readonlyDependency": {
+      "sourceCommit": "7377e364e4870e832e49d99d0d2bdbde9eb63a5f",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/chromium-cleanup.ts",
+      "blobSha": "26a07dfe8d5a5c1986535aea0c857bfd9faffda5",
+      "modified": false
+    },
+    "qualification": "No local browser/test execution, no installed/native/global acceptance; await exact published hosted result."
+  }
+}

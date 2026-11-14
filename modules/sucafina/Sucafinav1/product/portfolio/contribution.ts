@@ -12,6 +12,7 @@ import type { DecisionCasePort } from "../contracts/ports.ts"
 /** One port is shared by UI and capability dispatch; all authority remains host-provided. */
 export function createPortfolioContribution(input: {
   cases: DecisionCasePort
+  validateCatalogSources?: Parameters<typeof createPortfolioCatalog>[0]["validateSources"]
   enabledOperations: readonly ("sf_portfolio_evaluate" | "sf_sensitivity_evaluate")[]
   plannerHost: Omit<Parameters<typeof createPortfolioPlannerHost>[0], "resolveCandidate">
   createReceipt: Parameters<typeof createPortfolioCapabilities>[1]
@@ -25,7 +26,7 @@ export function createPortfolioContribution(input: {
   const capabilities = persistent && input.persistence ? createPersistentPortfolioCapabilities({ portfolio: port, persistent, sensitivity: persistentSensitivity, caseFor: input.persistence.caseFor, createReceipt: input.createReceipt }) : createPortfolioCapabilities(port, input.createReceipt).filter((descriptor) => descriptor.id !== "sf_portfolio_evaluate" && descriptor.id !== "sf_sensitivity_evaluate")
   return {
     port,
-    catalog: createPortfolioCatalog({ cases: input.cases, revalidate: input.plannerHost.revalidate }),
+    catalog: createPortfolioCatalog({ cases: input.cases, revalidate: input.plannerHost.revalidate, validateSources: input.validateCatalogSources }),
     persistent,
     persistentSensitivity,
     preview: async (request: Parameters<typeof port.evaluate>[0], context: Parameters<typeof port.evaluate>[1]) => {

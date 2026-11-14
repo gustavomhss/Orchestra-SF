@@ -40,11 +40,31 @@ test("preview does not authorize a contributor to edit a financial line", () => 
   expect(state).toEqual(before)
 })
 
+test("year amount and annual entry follow the stored line grant", () => {
+  const leader = { id: "leader", roles: ["domain leader"], canWrite: true }
+  const commands: Command[] = [
+    { page: "OPEX Detail", action: "annual-entry", id: "o", version: 0, values: { year: 2026, annual: 1200 } },
+    { page: "OPEX Detail", action: "year-amount", id: "o", version: 0, values: { year: 2026, amount: 100 } },
+    { page: "OPEX Detail", action: "annual-entry", id: "other", version: 0, values: { year: 2026, annual: 1200 } },
+    { page: "OPEX Detail", action: "year-amount", id: "other", version: 0, values: { year: 2026, amount: 100 } },
+  ]
+  const granted = initial()
+  granted.data.opexOwners = [{ id: "o", name: "Owner", budget: 1200 }, { id: "other", name: "Other", budget: 600 }]
+  granted.data.budgetLineIds = { leader: ["opexOwners:o"] }
+  const before = structuredClone(granted)
+  expect(simulateDashboardCommand(granted, { id: "contributor", roles: ["contributor"], canWrite: true }, commands[1]!, environment()).status).toBe("denied")
+  expect(simulateDashboardCommand(granted, leader, commands[0]!, environment()).status).toBe("preview")
+  expect(simulateDashboardCommand(granted, leader, commands[1]!, environment()).status).toBe("preview")
+  expect(simulateDashboardCommand(granted, leader, commands[2]!, environment()).status).toBe("denied")
+  expect(simulateDashboardCommand(granted, leader, commands[3]!, environment()).status).toBe("denied")
+  expect(granted).toEqual(before)
+})
+
 test("conflict preview does not expose fields omitted by the domain view", () => {
   const state: Snapshot = { data: { projects: [{ id: "p", name: "Project", status: "Planning", hiddenSecret: "not-for-consumer" }] }, versions: { "projects:p": { version: 2, by: "other" } }, sequences: {}, audit: [], notices: [] }
   const command: Command = { page: "All Projects", action: "save", id: "p", version: 1, values: { name: "Project" } }
   const result = simulateDashboardCommand(state, actor, command, environment())
-  expect(result).toMatchObject({ status: "conflict" })
+  expect(result).toMatchObject({ status: "conflict", stored: { id: "p", name: "Project" } })
   expect(JSON.stringify(result)).not.toContain("not-for-consumer")
 })
 

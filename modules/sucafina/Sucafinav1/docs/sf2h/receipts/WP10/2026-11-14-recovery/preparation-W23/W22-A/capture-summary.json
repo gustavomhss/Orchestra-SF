@@ -1,0 +1,558 @@
+{
+  "schema": "wp10-hosted-capture-summary-v1",
+  "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "snapshotSha": "902bb817cde2c8ccb2aba5f6d6b8765d70bd6663",
+  "runId": 43609220130,
+  "jobId": 132490362081,
+  "conclusion": "failure",
+  "normalizationComplete": true,
+  "normalizer": "normalize-hosted-observation.py",
+  "counts": {
+    "pass": 37,
+    "fail": 2,
+    "expects": 442,
+    "tests": 39,
+    "files": 6,
+    "durationSeconds": 366.2,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts": {
+      "pass": 4,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts": {
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [1b8b1fa7de19e945ef7cc1f8010a2108]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts); 2 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 2,
+    "delegated": 0,
+    "declaredTests": 1,
+    "declaringFile": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+  },
+  "cleanup": [
+    {
+      "id": 132492560014,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifactsApiReturned": [],
+  "artifactZip": null,
+  "rawByteExactToMcpContent": true,
+  "rawLineEndings": {
+    "LF": 1045,
+    "CRLF": 0
+  },
+  "memoryPhases": [
+    {
+      "rawLogLine": 955,
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "started",
+      "elapsedMs": 7
+    },
+    {
+      "rawLogLine": 956,
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "returned",
+      "phaseMs": 254,
+      "elapsedMs": 261,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 957,
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "started",
+      "elapsedMs": 261
+    },
+    {
+      "rawLogLine": 958,
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "returned",
+      "phaseMs": 266,
+      "elapsedMs": 527,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 959,
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "started",
+      "elapsedMs": 867
+    },
+    {
+      "rawLogLine": 960,
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "returned",
+      "phaseMs": 106,
+      "elapsedMs": 973,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 961,
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "started",
+      "elapsedMs": 973
+    },
+    {
+      "rawLogLine": 962,
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "returned",
+      "phaseMs": 1891,
+      "elapsedMs": 2864,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 963,
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "started",
+      "elapsedMs": 2880
+    },
+    {
+      "rawLogLine": 965,
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "returned",
+      "phaseMs": 481,
+      "elapsedMs": 3361,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 966,
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "started",
+      "elapsedMs": 3361
+    },
+    {
+      "rawLogLine": 968,
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "returned",
+      "phaseMs": 49666,
+      "elapsedMs": 53027,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 969,
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "started",
+      "elapsedMs": 53028
+    },
+    {
+      "rawLogLine": 971,
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "returned",
+      "phaseMs": 49716,
+      "elapsedMs": 102744,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 972,
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "started",
+      "elapsedMs": 102762
+    },
+    {
+      "rawLogLine": 974,
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "returned",
+      "phaseMs": 49338,
+      "elapsedMs": 152100,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 975,
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "started",
+      "elapsedMs": 152100
+    },
+    {
+      "rawLogLine": 977,
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "returned",
+      "phaseMs": 22726,
+      "elapsedMs": 174826,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 978,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "started",
+      "elapsedMs": 174835
+    },
+    {
+      "rawLogLine": 980,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "returned",
+      "phaseMs": 15439,
+      "elapsedMs": 190274,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 981,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "started",
+      "elapsedMs": 190295
+    },
+    {
+      "rawLogLine": 983,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "returned",
+      "phaseMs": 15688,
+      "elapsedMs": 205983,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 984,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "started",
+      "elapsedMs": 205999
+    },
+    {
+      "rawLogLine": 986,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "returned",
+      "phaseMs": 13702,
+      "elapsedMs": 219701,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 987,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "started",
+      "elapsedMs": 219709
+    },
+    {
+      "rawLogLine": 989,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "returned",
+      "phaseMs": 5297,
+      "elapsedMs": 225006,
+      "aborted": true
+    }
+  ],
+  "memoryReadCounters": [
+    {
+      "rawLogLine": 964,
+      "phase": "memory.resolve-original",
+      "persistenceCalls": 175,
+      "c08Reads": 3,
+      "caseReads": 0,
+      "caseFences": 0,
+      "evidenceContextReads": 0,
+      "atlasCanonicalReads": 0,
+      "atlasCanonicalCompleted": 0
+    },
+    {
+      "rawLogLine": 967,
+      "phase": "memory.prepare",
+      "persistenceCalls": 17818,
+      "c08Reads": 598,
+      "caseReads": 24,
+      "caseFences": 40,
+      "evidenceContextReads": 6,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2
+    },
+    {
+      "rawLogLine": 970,
+      "phase": "memory.verify",
+      "persistenceCalls": 17860,
+      "c08Reads": 610,
+      "caseReads": 36,
+      "caseFences": 52,
+      "evidenceContextReads": 6,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2
+    },
+    {
+      "rawLogLine": 973,
+      "phase": "memory.accept-output",
+      "persistenceCalls": 17860,
+      "c08Reads": 610,
+      "caseReads": 36,
+      "caseFences": 52,
+      "evidenceContextReads": 6,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2
+    },
+    {
+      "rawLogLine": 976,
+      "phase": "memory.exclude-history-and-isolate",
+      "persistenceCalls": 8188,
+      "c08Reads": 282,
+      "caseReads": 10,
+      "caseFences": 17,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1
+    },
+    {
+      "rawLogLine": 979,
+      "phase": "memory.fence-source",
+      "persistenceCalls": 5613,
+      "c08Reads": 172,
+      "caseReads": 6,
+      "caseFences": 9,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1
+    },
+    {
+      "rawLogLine": 982,
+      "phase": "memory.fence-capture",
+      "persistenceCalls": 5667,
+      "c08Reads": 175,
+      "caseReads": 6,
+      "caseFences": 10,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1
+    },
+    {
+      "rawLogLine": 985,
+      "phase": "memory.fence-principal",
+      "persistenceCalls": 4830,
+      "c08Reads": 141,
+      "caseReads": 6,
+      "caseFences": 9,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1
+    },
+    {
+      "rawLogLine": 988,
+      "phase": "memory.fence-clock",
+      "persistenceCalls": 1841,
+      "c08Reads": 48,
+      "caseReads": 4,
+      "caseFences": 6,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 0
+    }
+  ],
+  "failures": [
+    {
+      "status": "fail",
+      "name": "publication author comes from the real registered Core session and refuses archive, removal and lease revocation",
+      "durationMs": 397.67,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 924,
+      "kind": "named-test",
+      "context": [
+        "  removed: [],",
+        "}",
+        "[15:17:34.035] INFO (#5972): all LSPs are disabled",
+        "[15:17:34.047] INFO (#5706): booting location services {",
+        "  directory: \"/tmp/sf-installed-publication-do9QEy\",",
+        "  workspaceID: undefined,",
+        "}",
+        "(pass) installed publication refuses another project before a store read and revokes retained providers on disposal [421.04ms]",
+        "[15:17:34.251] WARN (#7713): Project plugins not loaded. Add \"/tmp/sf-installed-publication-UwQQee\" to trusted_projects in your user config to approve it.",
+        "[15:17:34.402] INFO (#7567): watcher backend {",
+        "  directory: \"/tmp/sf-installed-publication-UwQQee\",",
+        "  platform: \"linux\",",
+        "  backend: \"inotify\",",
+        "}",
+        "[15:17:34.403] INFO (#7716): project copy refresh started {",
+        "  projectID: \"global\",",
+        "}",
+        "[15:17:34.403] INFO (#7716): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[15:17:34.414] INFO (#7833): all LSPs are disabled",
+        "[15:17:34.427] INFO (#7567): booting location services {",
+        "  directory: \"/tmp/sf-installed-publication-UwQQee\",",
+        "  workspaceID: undefined,",
+        "}",
+        "error",
+        "{",
+        "  code: \"invalid-manifest\",",
+        "  reason: \"resident-source-already-registered\",",
+        "}",
+        "(fail) publication author comes from the real registered Core session and refuses archive, removal and lease revocation [397.67ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts:",
+        "(pass) Procurement work reads an uninitialized C08 without writing and invalidates its witness on the first real commit [2146.90ms]",
+        "(pass) Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period [2697.28ms]"
+      ]
+    },
+    {
+      "status": "fail",
+      "name": "historical decision recall binds original/current evidence and rejects changed proof or authority",
+      "durationMs": 225020.02,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "rawLogLine": 999,
+      "kind": "named-test",
+      "context": [
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.prepare\",\"persistenceCalls\":17818,\"c08Reads\":598,\"caseReads\":24,\"caseFences\":40,\"evidenceContextReads\":6,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.prepare\",\"state\":\"returned\",\"phaseMs\":49666,\"elapsedMs\":53027,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.verify\",\"state\":\"started\",\"elapsedMs\":53028}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.verify\",\"persistenceCalls\":17860,\"c08Reads\":610,\"caseReads\":36,\"caseFences\":52,\"evidenceContextReads\":6,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.verify\",\"state\":\"returned\",\"phaseMs\":49716,\"elapsedMs\":102744,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.accept-output\",\"state\":\"started\",\"elapsedMs\":102762}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.accept-output\",\"persistenceCalls\":17860,\"c08Reads\":610,\"caseReads\":36,\"caseFences\":52,\"evidenceContextReads\":6,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.accept-output\",\"state\":\"returned\",\"phaseMs\":49338,\"elapsedMs\":152100,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.exclude-history-and-isolate\",\"state\":\"started\",\"elapsedMs\":152100}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.exclude-history-and-isolate\",\"persistenceCalls\":8188,\"c08Reads\":282,\"caseReads\":10,\"caseFences\":17,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.exclude-history-and-isolate\",\"state\":\"returned\",\"phaseMs\":22726,\"elapsedMs\":174826,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-source\",\"state\":\"started\",\"elapsedMs\":174835}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-source\",\"persistenceCalls\":5613,\"c08Reads\":172,\"caseReads\":6,\"caseFences\":9,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-source\",\"state\":\"returned\",\"phaseMs\":15439,\"elapsedMs\":190274,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-capture\",\"state\":\"started\",\"elapsedMs\":190295}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-capture\",\"persistenceCalls\":5667,\"c08Reads\":175,\"caseReads\":6,\"caseFences\":10,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-capture\",\"state\":\"returned\",\"phaseMs\":15688,\"elapsedMs\":205983,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-principal\",\"state\":\"started\",\"elapsedMs\":205999}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-principal\",\"persistenceCalls\":4830,\"c08Reads\":141,\"caseReads\":6,\"caseFences\":9,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-principal\",\"state\":\"returned\",\"phaseMs\":13702,\"elapsedMs\":219701,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-clock\",\"state\":\"started\",\"elapsedMs\":219709}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-clock\",\"persistenceCalls\":1841,\"c08Reads\":48,\"caseReads\":4,\"caseFences\":6,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":0}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-clock\",\"state\":\"returned\",\"phaseMs\":5297,\"elapsedMs\":225006,\"aborted\":true}",
+        "1 | /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */",
+        "2 | export function compositionTestDeadline(name: string, budgetMs = 105_000) {",
+        "3 |   const started = performance.now()",
+        "4 |   const cancellation = new AbortController()",
+        "5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)",
+        "                                ^",
+        "error: historical-memory exceeded its 225000ms cooperative deadline",
+        "      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)",
+        "      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts:78:20",
+        "(fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225020.02ms]",
+        "",
+        "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts:",
+        "(pass) native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation [103.68ms]",
+        "(pass) the joint alternative reader samples real C08 once for both projections and repeats authorization on every call [142.23ms]"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "evidence/W22/terminal-A-run.json",
+      "bytes": 14176,
+      "sha256": "3ee114d9f20765cf21ddb78b38cb5c9604d2f15404f5ce01f2fe451947a69736"
+    },
+    {
+      "path": "evidence/W22/terminal-A-jobs.json",
+      "bytes": 5429,
+      "sha256": "9caaab9e382ba758d2994115899eef0c0e3fc0f49eb6ea57006cfff6a5774a96"
+    },
+    {
+      "path": "evidence/W22/terminal-A-artifacts.json",
+      "bytes": 161,
+      "sha256": "c3d575098a5138bf89dbf56b7529efa03609f2b319900cff0771df212f13b177"
+    },
+    {
+      "path": "evidence/W22/terminal-A-log-response.json",
+      "bytes": 94172,
+      "sha256": "b75ec5379f2c0539c8dec77e66480ff06271c59a3a155a581513bc6af725bc5a"
+    },
+    {
+      "path": "evidence/W22/A-job-132490362081.raw.txt",
+      "bytes": 89397,
+      "sha256": "020e0ed385b003b2bb73a080bdbefa99550c41e7fc03dcc8a8e43f69e04c02e0"
+    },
+    {
+      "path": "evidence/W22/observe-A.json",
+      "bytes": 613,
+      "sha256": "5bae49337f91494f22242883cd6c238c16e43cc168b8e43cefc06248b73b8f47"
+    },
+    {
+      "path": "evidence/W22/normalized/A-affected-consumers/terminal.json",
+      "bytes": 7993,
+      "sha256": "81be17a32cc8ec57de29f1c1f0c4c21eca2e719b8b0d1237bc95be6dc645201f"
+    },
+    {
+      "path": "evidence/W22/normalized/A-affected-consumers/test-observations.json",
+      "bytes": 22440,
+      "sha256": "c13abe70c43852814f0fc58e319962113cf69b8d70171d672b57ade50b765ae9"
+    },
+    {
+      "path": "evidence/W22/normalized/A-affected-consumers/entry.json",
+      "bytes": 3020,
+      "sha256": "30954540acbd6f8522154499b3c3061d06c2a239e191e4c974e05be0738facba"
+    }
+  ],
+  "localProductExecution": false,
+  "remoteMutations": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReview": false
+}

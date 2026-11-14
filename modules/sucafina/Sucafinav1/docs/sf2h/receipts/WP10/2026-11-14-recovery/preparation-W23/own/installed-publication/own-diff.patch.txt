@@ -1,0 +1,21 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts
+@@ -177,8 +177,17 @@
+     const runtime = { ...selected, skills: [{ ...selected.skills[0]!,
+       sourceDigest: new Bun.CryptoHasher("sha256").update(f.skillFile).digest("hex"),
+       instructionsDigest: new Bun.CryptoHasher("sha256").update(actual.content.trim()).digest("hex") }] }
++    // The shared fixture already registered the ordinary catalog source. A resident
++    // source must be a distinct managed root so its real reserved registration is unique.
++    const residentSource = path.join(f.directory, "resident-skills")
++    const residentSkill = path.join(residentSource, "sf-explicar-forecast", "SKILL.md")
++    yield* Effect.promise(async () => {
++      await mkdir(path.dirname(residentSkill), { recursive: true })
++      await writeFile(residentSkill, f.skillFile)
++    })
+     const sourceCapability = yield* registerSfResidentAgents({ agents: f.agents, skills: f.skills, selected: [runtime],
+-      source: { type: "directory", path: AbsolutePath.make(f.source) } })
++      source: { type: "directory", path: AbsolutePath.make(residentSource) } })
++    expect(yield* f.skills.get("sf-explicar-forecast")).toMatchObject({ location: residentSkill, content: actual.content })
+     const session = yield* f.sessions.create({ location: f.location, agent: AgentV2.ID.make(profile.id) })
+     yield* Effect.addFinalizer(() => f.sessions.remove(session.id).pipe(Effect.catch(() => Effect.void)))
+     const receipt = yield* loadSfSkill({ session: f.sessions, skills: f.skills, sourceCapability, selected: runtime, sessionID: session.id,

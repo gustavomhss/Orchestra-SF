@@ -1,0 +1,676 @@
+{
+  "schema": "wp10.independent-preflight.v1",
+  "review": "R1-W21-preflight",
+  "generatedAt": "2026-11-14T14:18:40.775581+00:00",
+  "candidateSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "candidateTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+  "parentSha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "pullRequest": 29,
+  "baseBranch": "sf2-stack",
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "independenceDeclaration": "Independent source/hash/remote-blob reviewer. No product/test authorship, local product execution or remote mutation. Builder/root review is not adopted as approval."
+  },
+  "state": "SEALED_PREFLIGHT_HOSTED_CHECK_OBSERVED_FUNCTIONAL_CI_PENDING",
+  "verdict": "HOLD_EVIDENCE_PENDING",
+  "isFinalReview": false,
+  "approval": false,
+  "functionalAcceptance": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "localProductExecution": false,
+  "sourceInventory": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "gitBlob": "520a71460ba69a9c8a07fd1b7db838ca13108c32",
+      "baseBlob": "89881259b635344d626ed5f90d60bfbd31488b79",
+      "sha256": "c5c2a68d0efe67e2bbb53963ec50fdfc5f00d61de8ad4c25351db639119d697d",
+      "bytes": 67787,
+      "reviewMode": "Entire W20→W21 delta read; current surrounding source/contract traced for Procurement scope and API."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "gitBlob": "39dc82d505931daf927b35230341ac99fdc7e09d",
+      "baseBlob": "c3866ce59cfe6211facad9f249c81caf55d54aba",
+      "sha256": "95915f211069a281619deb74098b46329cafa75be8e94d098b232677bafad5be",
+      "bytes": 15458,
+      "reviewMode": "Entire W20→W21 delta read; current surrounding source/contract traced for Procurement scope and API."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "gitBlob": "3ee3eea082dea99ab68f55013726967a34546ce8",
+      "baseBlob": "d05c992da009c31cc9c2f9827ad9d58c3807db77",
+      "sha256": "d91126137f5c77664148e6cf6066f030915c911cd079bc5ab7020d43b3f63e81",
+      "bytes": 15566,
+      "reviewMode": "Entire W20→W21 delta read; current surrounding source/contract traced for Procurement scope and API."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "gitBlob": "2250ef8a6ed3bdee2cb26d38ab5b7a2daa3301e9",
+      "baseBlob": "3638ab7673668dc85f3a4033cf930957ffb6e68b",
+      "sha256": "6a5d50e3dd2b074386b12d6cdce047c153191c1b5abd26abd969e99bd51f6926",
+      "bytes": 9327,
+      "reviewMode": "Entire W20→W21 delta read; current surrounding source/contract traced for Procurement scope and API."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "gitBlob": "2f8e2d6bebd81257437577d1cf50cf551374807c",
+      "baseBlob": "95e1afbe1026f5c5762d8c9764f61e846e0c175f",
+      "sha256": "2381567d75eb108c30187e1c0d7df5acd5fe7a3f3f3f35b12530ade7e62c822e",
+      "bytes": 17174,
+      "reviewMode": "Entire W20→W21 delta read; current surrounding source/contract traced for Procurement scope and API."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "gitBlob": "cd63b34552bc9d01712939407071e157c6e20abd",
+      "baseBlob": "cb92eb45d239048f53de6b6149bab3d2759e8ef2",
+      "sha256": "5e638e2f19f28f23ce6ce41ef4c92dfaba8740a2c3713a75787c864fbc29d0be",
+      "bytes": 33892,
+      "reviewMode": "Entire W20→W21 delta read; current surrounding source/contract traced for Procurement scope and API."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "gitBlob": "848f81ae5e9315295f84ffc6a63d3b09ff7016fc",
+      "baseBlob": "d858733f8212bb4ddb60e0dd93171bde0bded4b7",
+      "sha256": "8c6f4f73808679e1886fc65e385744780a3858707552fec6a2fde48924df31f7",
+      "bytes": 22589,
+      "reviewMode": "Entire W20→W21 delta read; current surrounding source/contract traced for Procurement scope and API."
+    }
+  ],
+  "unchangedPriorInventory": [
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "gitBlob": "dc398afaa299cb01587794ab8cee0391c1be8eb2",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "gitBlob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "gitBlob": "2ebb518403bc463dddd645f77af12cb877bce3e1",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "gitBlob": "1d9a8a9589f3884a083ac09cbc951d4cce0bbdca",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "gitBlob": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "gitBlob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "gitBlob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "gitBlob": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "gitBlob": "21e22bb8bb4813711e8b1f7851c0d10369200426",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-http.ts",
+      "gitBlob": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-services.ts",
+      "gitBlob": "85c3021dec21ab942a8fab04524d48295fd918f7",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "gitBlob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "gitBlob": "3c78f724a50c37757570e80ba18af950a9469132",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "gitBlob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "gitBlob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "gitBlob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "gitBlob": "95e7346201b9a7356b2372f5b3631611baec361b",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "gitBlob": "9c478de4213624daca55908e23d853b1d1db9eb1",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "gitBlob": "3caa43aae5fe77888b90483d13dc8f8735235b14",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-fixture.ts",
+      "gitBlob": "e5923470873762513850d88e54deeeb20922f043",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-fixture.ts",
+      "gitBlob": "50c7c59d4f945554b74701210365feec6d28963f",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "gitBlob": "493dd867e954addce6d3ebc70553333567235770",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "gitBlob": "80e3de58b1527c4c6e66a232f172d2566e336c90",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "AGENTS.md",
+      "gitBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "gitBlob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+      "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W20/root/reconciliation-guide-disposition.json",
+      "gitBlob": "413274a99ec1ecea0a9edb06d4fd0f11b2620dd5",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "gitBlob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "gitBlob": "1c371738c80789cfc6d0d52d482c9c09a3757b0b",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "gitBlob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+      "gitBlob": "8ef62f7ceb58b57647aab4761033452306f31f0d",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-memory.ts",
+      "gitBlob": "e7fbaa6f4480b2aff4625c7cd8b0f2da4b050f29",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+      "gitBlob": "19dec055c30691b8b7f4e8cc8ebf531a2608ba1a",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-resident-readers.ts",
+      "gitBlob": "d5b1a0cb4e4f78caffe18d3d7c468c8d68ff200f",
+      "reviewMode": "Unchanged exact blob, independent W20 source reasoning inherited; no CI transferred."
+    }
+  ],
+  "remoteBlobVerification": {
+    "path": "reviews/R1/remote-blobs-W21-preflight.json",
+    "candidateBlobs": 4,
+    "allContentAndBlobHashesMatch": true
+  },
+  "treeAndOwnership": {
+    "fullBlobs": 16314,
+    "hydratedFiles": 1341,
+    "hashMismatches": [],
+    "changes": 47,
+    "manifestCount": 47,
+    "manifestHashMismatches": [],
+    "missingManifest": [],
+    "extraManifest": [],
+    "deletions": [],
+    "partialHydrationIsNotDeletion": true,
+    "ownSourceChanges": 7,
+    "newReceipts": 40,
+    "ownershipViolations": [],
+    "pins": 438,
+    "uniquePinPaths": 438,
+    "pinMismatches": [],
+    "pinSetIdenticalToW20": true
+  },
+  "archivePreservation": {
+    "changedPriorReceipts": [],
+    "W20R1ReportHashes": {
+      "review-W20-source.json": "8af857c6acd85ede894452d46f534e9205034ca8a924f7bbba57a7f792ba036f",
+      "review-W20-source.md": "31f459eb34031ce6c76a19af914c4ddc28deae213c37f2b66081427e3319cc18"
+    },
+    "W20R1PublishedCopies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W21/W20-source-reviews/R1.json",
+        "sha256": "8af857c6acd85ede894452d46f534e9205034ca8a924f7bbba57a7f792ba036f",
+        "matchesOriginal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W21/W20-source-reviews/R1.md",
+        "sha256": "31f459eb34031ce6c76a19af914c4ddc28deae213c37f2b66081427e3319cc18",
+        "matchesOriginal": true
+      }
+    ]
+  },
+  "criteriaIntegrity": {
+    "path": "agents/criteria/final-package/draft-W21/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W21-draft/criteria-map.json",
+    "sha256": "5c6187c484f03a3fcf002dd0181bf28533672fb1ca0c20904b090f078a5debc2",
+    "canonicalCount": 171,
+    "taskCount": 7,
+    "literalMismatchIds": [],
+    "state": "DRAFT_W21_UNPUBLISHED_NO_CURRENT_EXECUTION",
+    "candidateSha": null,
+    "candidateTree": null,
+    "acceptance": {
+      "criteria_accepted": 0,
+      "tasks_accepted": 0,
+      "native": false,
+      "global": false,
+      "builder_auto_acceptance": false
+    },
+    "statusCounts": {
+      "NATIVE_OR_REAL_RUNTIME_PROOF_PENDING": 56,
+      "COMPOSITION_DRAFT_CURRENT_PROOF_UNBOUND": 47,
+      "BLOCKED_OWNER_DEPENDENCY": 7,
+      "GLOBAL_PROOF_DEFERRED_UNTIL_TOTAL_BUNDLE": 7,
+      "MANDATORY_OWN_REVIEW_FINDING_RECHECK_PENDING": 33,
+      "CURRENT_INDEPENDENT_REVIEW_AND_FINDING_RECHECK_PENDING": 13,
+      "ACCEPTED_C_AND_DELIVERY_ENVELOPE_PENDING": 8
+    },
+    "qualification": "All171 literal tuples/7tasks preserved in inspected draft; candidate SHA/tree are null there, so it is not a current candidate-bound acceptance map. No criteria/tasks accepted."
+  },
+  "freeze": {
+    "revision": 10,
+    "checked": 38,
+    "matched": 37,
+    "mismatches": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "expectedSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+        "actualSha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893"
+      }
+    ],
+    "status": "WP00_HOST_BINDING_PENDING_NOT_PASS"
+  },
+  "priorFindingRechecks": [
+    {
+      "id": "R1-W20-WORK-DESTINATION-01",
+      "status": "SOURCE_FIXED_TYPECHECK_CONFIRMED_FUNCTIONAL_PENDING",
+      "closed": false,
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "gitBlob": "3ee3eea082dea99ab68f55013726967a34546ce8",
+      "sourceDisposition": "Uses business.individual.resolve, the real exported individual source API. Target record/incarnation/version/period checks remain; consumer HTTP and destination verification retain current Request and source fences.",
+      "requiredEvidence": "Exact successor hosted typecheck and positive authorized Procurement destination plus source/access negatives.",
+      "typecheckEvidence": {
+        "runId": 43603685238,
+        "jobId": 132473623977,
+        "uniqueOwnDiagnostics": 0
+      }
+    },
+    {
+      "id": "R1-W20-WORK-PERIOD-02",
+      "status": "SOURCE_FIXED_TYPECHECK_CONFIRMED_FUNCTIONAL_PENDING",
+      "closed": false,
+      "paths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/work-destinations.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts"
+      ],
+      "sourceDisposition": "Invocation-local period is established for the outer work-list/destination/resolver and for the separate sf_request_read UI admission. Parent/child Request, payload, binding, exact period, source requestRef intent, lease and current authority are checked; overlap is refused and private selections are removed in finally. No ambient periods map mutation or new grant.",
+      "requiredEvidence": "Run new real-producer counterproofs in hosted CI: no ambient period before/after; fresh child has no inherited scope; positive destination/HTTP; period/actor/source changes; overlapping call; headers; throw; lease finish; current access revocation.",
+      "coverageLimit": "Explicit elapsed-time expiry at five minutes is implemented but no new clock-advance counterproof was found. The fixture rebuilds services over shared SQLite and issues a new ephemeral collection; it does not demonstrate a full process/installed-host restart.",
+      "typecheckEvidence": {
+        "runId": 43603685238,
+        "jobId": 132473623977,
+        "uniqueOwnDiagnostics": 0
+      }
+    },
+    {
+      "id": "R1-W20-RECONCILIATION-TYPE-03",
+      "status": "CLOSED_SCOPED_EXACT_W21_TYPECHECK",
+      "closed": true,
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "gitBlob": "39dc82d505931daf927b35230341ac99fdc7e09d",
+      "sourceDisposition": "Returns the already narrowed failure; no status suppression or change to source authorization or error propagation.",
+      "requiredEvidence": "Current hosted SF/CLI/WP10 consumer checks; actual reconciliation functionality remains independently pending.",
+      "closureEvidence": {
+        "runId": 43603685238,
+        "jobId": 132473623977,
+        "artifactId": 14116844807,
+        "qualification": "Only the reported type diagnostics are closed. Functional assertions have not been observed."
+      }
+    },
+    {
+      "id": "R1-W20-TEST-TYPES-04",
+      "status": "CLOSED_SCOPED_EXACT_W21_TYPECHECK",
+      "closed": true,
+      "sourceDisposition": "Lifecycle narrows actual UI before finish; Portfolio explicitly requires conditioned eligibility; installed-publication fixture adds real SessionStore and LocationServiceMap nodes to its AppNodeBuilder group. No casts, suppressed diagnostics or removed counterproofs in these deltas.",
+      "requiredEvidence": "Current typecheck must show all seven prior test diagnostics absent. Functional runs must actually execute the retained lifecycle, reconciliation and installed-publication assertions.",
+      "closureEvidence": {
+        "runId": 43603685238,
+        "jobId": 132473623977,
+        "artifactId": 14116844807,
+        "qualification": "Only the reported type diagnostics are closed. Functional assertions have not been observed."
+      }
+    }
+  ],
+  "newConfirmedSourceBlockers": [],
+  "newFindings": [],
+  "sourceReasoning": [
+    "The outer context must carry the explicit period before listPresentation resolves a Procurement collection; a child-only fix would not have repaired the source path. W21 scopes both stages and the final destination resolver.",
+    "The helper validates the original human collaboration.work.destination intent. The secondary context must be a different UI admission, use the same actual Request and principal/policy/access scope, and match sf_request_read for the exact requestRef. Its period must equal the exact work selection and parent scoped period.",
+    "The private pagePeriods entry is per context and has a five-minute expiry; the existing ambient periods map is not written. A sibling/new admission therefore cannot receive authority or period by sharing a Request or principal.",
+    "All awaited authorization boundaries recheck Request method/URL/headers, payload and binding. Both nested scopes clean up in finally, and UI finish remains in the secondary admission wrapper. Overlap on the same context is refused.",
+    "The counterproof first asserts canonical collection resolution and listPresentation fail on the fresh destination UI without a period. It then calls the actual composed destination, verifies real individual reads on separate admissions, checks cleanup, and invokes the real GET handler.",
+    "The Procurement fixture calls the actual domain create/submit/cancel producer and rebuilds business/authority services over the shared SQLite provider. A newly issued queue collection is used; no expired old collection is restored and no fake native acceptance is added.",
+    "Memory/C17/C12/lifecycle/publication production sources outside business/work/reconciliation are unchanged from W20. Their previous source findings and functional limitations remain; W21 fixes do not prove them."
+  ],
+  "ci": {
+    "check": {
+      "snapshotSha": "b3ea71fa52fbf846a28644f09a961c96bee401d8",
+      "snapshotTree": "e9b47338c0507423e53995e8d438c850370b291c",
+      "runId": 43603685238,
+      "jobId": 132473623977,
+      "status": "completed",
+      "conclusion": "failure",
+      "terminalObserved": true,
+      "productSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "productTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "diagnosticsByLog": {
+        "sucafina-typecheck.log": {
+          "ownCount": 0,
+          "foreignCount": 13,
+          "diagnostics": [
+            {
+              "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+              "line": 4,
+              "column": 10,
+              "code": "TS2305",
+              "message": "Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+              "line": 388,
+              "column": 65,
+              "code": "TS2322",
+              "message": "Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+              "line": 394,
+              "column": 40,
+              "code": "TS2741",
+              "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+              "line": 130,
+              "column": 47,
+              "code": "TS2339",
+              "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+              "line": 166,
+              "column": 47,
+              "code": "TS2339",
+              "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+              "line": 205,
+              "column": 45,
+              "code": "TS2339",
+              "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+              "line": 324,
+              "column": 37,
+              "code": "TS2554",
+              "message": "Expected 1 arguments, but got 2.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+              "line": 79,
+              "column": 42,
+              "code": "TS2741",
+              "message": "Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+              "line": 83,
+              "column": 42,
+              "code": "TS2741",
+              "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+              "line": 79,
+              "column": 42,
+              "code": "TS2741",
+              "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+              "line": 44,
+              "column": 42,
+              "code": "TS2741",
+              "message": "Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+              "line": 126,
+              "column": 40,
+              "code": "TS2741",
+              "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+              "own": false
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+              "line": 76,
+              "column": 42,
+              "code": "TS2741",
+              "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+              "own": false
+            }
+          ]
+        },
+        "cli-typecheck.log": {
+          "ownCount": 0,
+          "foreignCount": 0,
+          "diagnostics": []
+        },
+        "wp10-test-typecheck.log": {
+          "ownCount": 0,
+          "foreignCount": 0,
+          "diagnostics": []
+        }
+      },
+      "guardSummary": "guards: 78 rules, 1522 changed paths, 0 gate and 52 warn findings, 0 errors.",
+      "artifact": {
+        "id": 14116844807,
+        "path": "evidence/W21/check-artifact-14116844807.zip",
+        "bytes": 4226,
+        "sha256": "64d61c3528aac14651060ad51a40713817c14819888f5d835c2d13bd9aa74867",
+        "zipVerified": true,
+        "files": [
+          {
+            "file": "atlas-generated-check.log",
+            "sha256": "8040b8b602fe9bb0035e66ee567e05648e496a8edfd36495e4d79c65e84892fb",
+            "verified": true
+          },
+          {
+            "file": "atlas-generate.log",
+            "sha256": "0279c8a6959392e6cbdc8daf40011385f56fd4a7cbe09b5af76072e401a2b44f",
+            "verified": true
+          },
+          {
+            "file": "atlas-typecheck.log",
+            "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87",
+            "verified": true
+          },
+          {
+            "file": "atlas-generated-diff.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "verified": true
+          },
+          {
+            "file": "cli-typecheck.log",
+            "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87",
+            "verified": true
+          },
+          {
+            "file": "guards.log",
+            "sha256": "140af3933229cdcdec5a15d3728cc85f54af1d7132f89521d1ae26d79240b051",
+            "verified": true
+          },
+          {
+            "file": "merge-base.txt",
+            "sha256": "541c6844015c5a0839167f338dcca8932ce7eb70c1d79cdd891584a105bf9961",
+            "verified": true
+          },
+          {
+            "file": "revisions.txt",
+            "sha256": "64d4ae95fe851cb895aee4f679854b1464c0d9757f3f963800713a24b7db356a",
+            "verified": true
+          },
+          {
+            "file": "spawn-imports.log",
+            "sha256": "2f1d6a92e1086522cf10d06d2975b89ad366e8da25ca26b0ba67e00c77a50ce9",
+            "verified": true
+          },
+          {
+            "file": "sucafina-typecheck.log",
+            "sha256": "e397e2582c940023a496512ddac9a3be0fe5a481d3f981c44b7a12a7e6c642f4",
+            "verified": true
+          },
+          {
+            "file": "wp10-test-typecheck.log",
+            "sha256": "ad028ac630d212f71ae85efc93f29822c39adeb741bab228fff9298ab604f496",
+            "verified": true
+          }
+        ]
+      },
+      "revisions": [
+        "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+        "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+        "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      ],
+      "independentlyObservedViaMCP": true,
+      "remoteLog": {
+        "path": "evidence/W21/check-job-132473623977.raw.txt",
+        "bytes": 85371,
+        "sha256": "d18e8c5409b1beb0337455683531df5767557531e109a77df5a7776f88d185db",
+        "localBytesEqual": true
+      }
+    },
+    "envelopeOnlyDiff": [
+      ".astra-wp10-check.json"
+    ],
+    "envelopeIndependentlyComparedViaMCP": true,
+    "functionalResultsObserved": [],
+    "qualification": "Exact W21 check terminal observed:0own/13foreign; overall failure. A dispatched, no functional terminal observed. Six functional selections remain required before final review.",
+    "functionalA": {
+      "snapshotSha": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+      "dispatchedByParent": true,
+      "terminalObserved": false,
+      "compare": {
+        "repository_full_name": "gustavomhss/Orchestra-SF",
+        "base": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+        "head": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "total_commits": 1,
+        "too_large": null,
+        "base_commit": {
+          "sha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/532da498e08fa36fadbd3c01e3e7da00d869dd47",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/532da498e08fa36fadbd3c01e3e7da00d869dd47"
+        },
+        "merge_base_commit": {
+          "sha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/532da498e08fa36fadbd3c01e3e7da00d869dd47",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/532da498e08fa36fadbd3c01e3e7da00d869dd47"
+        },
+        "files": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "additions": 41,
+            "deletions": 0,
+            "changes": 41,
+            "previous_filename": null
+          }
+        ]
+      }
+    }
+  },
+  "requiredBeforeFinalReview": [
+    "Retain the verified W21 hosted check failure and its thirteen foreign diagnostics; exact own type findings are closed only to typecheck scope.",
+    "Receive all six current functional selections with exact run IDs, envelopes, selected files and terminal artifacts; no inference from source presence or fixtures.",
+    "Close each mandatory finding only to the demonstrated scope. Preserve foreign diagnostics, freeze mismatch and native/global dependencies precisely.",
+    "Bind the171literal criteria and7tasks to the current candidate/evidence; obtain three independent reviewers for the final exact candidate."
+  ],
+  "limits": [
+    "This is preflight-W21 only; review-W21.json final is deliberately absent.",
+    "No local tests, typecheck, build, browser or product process were executed.",
+    "Service reconstruction and direct HTTP handler execution in a proposed test are not observed installed-host/native/global acceptance.",
+    "The original W20source review and its published W21 copies remain byte-exact.",
+    "No product changes, prior reviews, foreign inputs or branches were modified by this reviewer."
+  ]
+}

@@ -1,0 +1,535 @@
+{
+  "schema": "wp10-w29-hosted-test-observation-v1",
+  "product": {
+    "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+    "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219"
+  },
+  "snapshot": {
+    "S": "d33cc53660250bde7bfb19a26401f4c722fe4875",
+    "tree": "822087bcda13bb0db7f2b4df21131b2c503f06c6",
+    "parents": [
+      "813806af6c2ce74b2a087139c544e90dd1adcbe4"
+    ],
+    "branch": "ci-run-linux-astra-wp10-813806af-01ada578-01",
+    "requestBlob": "96d7349d88fecf42c2a4451b6f10587c98984633",
+    "requestSha256": "01ada578d4cbe7738438b433f942d1d0608e93a644bd98aa5453afdbb110dc98",
+    "compareFiles": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "sha": "96d7349d88fecf42c2a4451b6f10587c98984633"
+      }
+    ]
+  },
+  "run": {
+    "id": 43628006308,
+    "head_sha": "d33cc53660250bde7bfb19a26401f4c722fe4875",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T18:41:30Z",
+    "updated_at": "2026-11-14T18:44:33Z",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628006308"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts",
+      "./Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "jobs": [
+    {
+      "id": 132548123768,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43628006308,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132548953183,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43628006308,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "result": {
+    "pass": 3,
+    "fail": 3,
+    "expects": 36,
+    "tests": 6,
+    "files": 4,
+    "bunSeconds": 42.39
+  },
+  "executedHeaders": [
+    "2026-11-14T18:43:40.9562743Z Sucafinav1/test/product/wp01/browser-startup.test.ts:",
+    "2026-11-14T18:43:49.8032095Z Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts:",
+    "2026-11-14T18:43:52.8041950Z Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts:",
+    "2026-11-14T18:44:22.9357851Z Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:"
+  ],
+  "requestOrder": "Explicit ./ paths; actual order matches startup → calculation-source-observation → forecast-submit → lifecycle.",
+  "environment": {
+    "omni": "strict",
+    "bun": "2026-11-14T18:43:40.9473407Z bun test v1.3.14 (0d9b296a)"
+  },
+  "omni": {
+    "nonce": "8d065236e1d7016a815410d941ea9b3e",
+    "status": "pass",
+    "declaredTests": 1,
+    "declaringFile": "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "spawns": 1,
+    "delegated": 0
+  },
+  "passes": [
+    "2026-11-14T18:43:49.8019156Z (pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [8575.94ms]",
+    "2026-11-14T18:43:52.6824983Z (pass) Planner source consolidation retains fresh authority and ABA fences with two source transactions [2646.52ms]",
+    "2026-11-14T18:43:52.8041291Z (pass) Planner prepared source observation refuses abort after the last source authorizer without durable change [122.13ms]"
+  ],
+  "failures": [
+    {
+      "name": "FIN-IND-004 real implicit forecast button prepares, starts, polls and displays the supplied result",
+      "file": "Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+      "kind": "test timeout",
+      "testMs": 30000.43,
+      "timeoutMs": 30000,
+      "observation": "Only browser lease1 acquisition appears before timeout; log does not identify which awaited operation stalled."
+    },
+    {
+      "name": "FIN-IND-004 real keyboard submit reports rejected preparation without starting an analysis",
+      "file": "Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+      "line": 88,
+      "kind": "pool acquisition refusal",
+      "testMs": 11.86,
+      "observation": "Concurrent WP01 browser leases are not allowed; prior test still holds the lease."
+    },
+    {
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "file": "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "kind": "pool invariant failure",
+      "testMs": 401.88,
+      "observation": "Pool has retained failure, active lease/context and unmatched acquisition/release counts; physical process close did complete."
+    }
+  ],
+  "browserFinalEvidence": {
+    "launches": 1,
+    "acquisitions": 1,
+    "releases": 0,
+    "pid": 4117,
+    "activeLease": true,
+    "contexts": 1,
+    "disconnected": true,
+    "driverClosed": true,
+    "processExited": true,
+    "nodeDriverPid": 4102,
+    "nodeExitCode": 0
+  },
+  "forecastFailureExcerpt": [
+    "2026-11-14T18:43:52.8041950Z Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts:",
+    "2026-11-14T18:43:52.9505815Z WP01 browser lease acquired {",
+    "2026-11-14T18:43:52.9518769Z   pid: 4117,",
+    "2026-11-14T18:43:52.9523081Z   lease: 1,",
+    "2026-11-14T18:43:52.9524160Z   acquisitions: 1,",
+    "2026-11-14T18:43:52.9524791Z }",
+    "2026-11-14T18:44:22.9233856Z (fail) FIN-IND-004 real implicit forecast button prepares, starts, polls and displays the supplied result [30000.43ms]",
+    "2026-11-14T18:44:22.9234871Z   ^ this test timed out after 30000ms.",
+    "2026-11-14T18:44:22.9351105Z 219 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */",
+    "2026-11-14T18:44:22.9351759Z 220 | export async function launchWp01Browser(): Promise<Browser> {",
+    "2026-11-14T18:44:22.9352320Z 221 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")",
+    "2026-11-14T18:44:22.9353289Z 222 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })",
+    "2026-11-14T18:44:22.9353876Z 223 |   if (pool.lease !== undefined) {",
+    "2026-11-14T18:44:22.9354259Z 224 |     const error = new Error(\"Concurrent WP01 browser leases are not allowed\")",
+    "2026-11-14T18:44:22.9354743Z                             ^",
+    "2026-11-14T18:44:22.9355070Z error: Concurrent WP01 browser leases are not allowed",
+    "2026-11-14T18:44:22.9355692Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:224:23)",
+    "2026-11-14T18:44:22.9356568Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts:88:27)",
+    "2026-11-14T18:44:22.9357350Z (fail) FIN-IND-004 real keyboard submit reports rejected preparation without starting an analysis [11.86ms]",
+    "2026-11-14T18:44:22.9357678Z ",
+    "2026-11-14T18:44:22.9357851Z Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:",
+    "2026-11-14T18:44:22.9383640Z WP01 browser final close starting {",
+    "2026-11-14T18:44:22.9384040Z   pid: 4117,",
+    "2026-11-14T18:44:22.9384308Z   connected: true,",
+    "2026-11-14T18:44:22.9384756Z }",
+    "2026-11-14T18:44:22.9862154Z WP01 browser disconnected {",
+    "2026-11-14T18:44:22.9862985Z   pid: 4117,",
+    "2026-11-14T18:44:22.9863947Z   expected: true,",
+    "2026-11-14T18:44:22.9864461Z }",
+    "2026-11-14T18:44:23.2156311Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"node-closed\",\"elapsedMs\":41987,\"driverPid\":4102}",
+    "2026-11-14T18:44:23.3356793Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"wp01-shared-pool\",\"phase\":\"app-process-exited\",\"elapsedMs\":42107,\"driverPid\":4102,\"exitCode\":0}",
+    "2026-11-14T18:44:23.3395146Z WP01 browser final close observed {",
+    "2026-11-14T18:44:23.3395528Z   pid: 4117,",
+    "2026-11-14T18:44:23.3395814Z   disconnected: true,",
+    "2026-11-14T18:44:23.3396096Z   connected: false,",
+    "2026-11-14T18:44:23.3396356Z   driverClosed: true,",
+    "2026-11-14T18:44:23.3396636Z   processExited: true,",
+    "2026-11-14T18:44:23.3396902Z }",
+    "2026-11-14T18:44:23.3397210Z WP01 browser lifecycle final evidence {",
+    "2026-11-14T18:44:23.3397554Z   launches: 1,",
+    "2026-11-14T18:44:23.3397780Z   acquisitions: 1,",
+    "2026-11-14T18:44:23.3398222Z 219 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */",
+    "2026-11-14T18:44:23.3398722Z 220 | export async function launchWp01Browser(): Promise<Browser> {",
+    "2026-11-14T18:44:23.3399251Z 221 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")",
+    "2026-11-14T18:44:23.3399896Z 222 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })",
+    "2026-11-14T18:44:23.3400353Z 223 |   if (pool.lease !== undefined) {",
+    "2026-11-14T18:44:23.3400754Z 224 |     const error = new Error(\"Concurrent WP01 browser leases are not allowed\")",
+    "2026-11-14T18:44:23.3401282Z                             ^",
+    "2026-11-14T18:44:23.3401693Z error: Concurrent WP01 browser leases are not allowed",
+    "2026-11-14T18:44:23.3402650Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:224:23)",
+    "2026-11-14T18:44:23.3403566Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts:88:27)",
+    "2026-11-14T18:44:23.3404124Z 280 |   const failures: unknown[] = []",
+    "2026-11-14T18:44:23.3404951Z 281 |   const activeLease = pool.lease !== undefined",
+    "2026-11-14T18:44:23.3405317Z 282 |   const contexts = pool.browser?.contexts().length ?? 0",
+    "2026-11-14T18:44:23.3405660Z 283 |   if (pool.failed) failures.push(pool.failure)",
+    "2026-11-14T18:44:23.3406169Z 284 |   if (pool.launches !== 1) failures.push(new Error(\"WP01 selection did not share exactly one Chromium launch\"))",
+    "2026-11-14T18:44:23.3406833Z 285 |   if (activeLease || pool.releasing) failures.push(new Error(\"WP01 browser lease remains active at finalization\"))",
+    "2026-11-14T18:44:23.3407281Z                                                              ^",
+    "2026-11-14T18:44:23.3407603Z error: WP01 browser lease remains active at finalization",
+    "2026-11-14T18:44:23.3408234Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:285:56)",
+    "2026-11-14T18:44:23.3409064Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)",
+    "2026-11-14T18:44:23.3409612Z 281 |   const activeLease = pool.lease !== undefined",
+    "2026-11-14T18:44:23.3409963Z 282 |   const contexts = pool.browser?.contexts().length ?? 0",
+    "2026-11-14T18:44:23.3410291Z 283 |   if (pool.failed) failures.push(pool.failure)",
+    "2026-11-14T18:44:23.3410786Z 284 |   if (pool.launches !== 1) failures.push(new Error(\"WP01 selection did not share exactly one Chromium launch\"))",
+    "2026-11-14T18:44:23.3411446Z 285 |   if (activeLease || pool.releasing) failures.push(new Error(\"WP01 browser lease remains active at finalization\"))",
+    "2026-11-14T18:44:23.3412051Z 286 |   if (contexts !== 0) failures.push(new Error(\"WP01 browser contexts remain at finalization\"))",
+    "2026-11-14T18:44:23.3412434Z                                               ^",
+    "2026-11-14T18:44:23.3412728Z error: WP01 browser contexts remain at finalization",
+    "2026-11-14T18:44:23.3413339Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:286:41)",
+    "2026-11-14T18:44:23.3414306Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)",
+    "2026-11-14T18:44:23.3415089Z 282 |   const contexts = pool.browser?.contexts().length ?? 0",
+    "2026-11-14T18:44:23.3415416Z 283 |   if (pool.failed) failures.push(pool.failure)",
+    "2026-11-14T18:44:23.3415914Z 284 |   if (pool.launches !== 1) failures.push(new Error(\"WP01 selection did not share exactly one Chromium launch\"))",
+    "2026-11-14T18:44:23.3416565Z 285 |   if (activeLease || pool.releasing) failures.push(new Error(\"WP01 browser lease remains active at finalization\"))",
+    "2026-11-14T18:44:23.3417155Z 286 |   if (contexts !== 0) failures.push(new Error(\"WP01 browser contexts remain at finalization\"))",
+    "2026-11-14T18:44:23.3417883Z 287 |   if (pool.acquisitions === 0 || pool.acquisitions !== pool.releases) failures.push(new Error(\"WP01 browser acquisition/release counts do not match\"))",
+    "2026-11-14T18:44:23.3418451Z                                                                                               ^",
+    "2026-11-14T18:44:23.3418817Z error: WP01 browser acquisition/release counts do not match",
+    "2026-11-14T18:44:23.3419435Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:287:89)",
+    "2026-11-14T18:44:23.3420284Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)",
+    "2026-11-14T18:44:23.3421030Z (fail) WP01 shares one Chromium across files, releases every lease, and proves final process exit [401.88ms]",
+    "2026-11-14T18:44:23.3421417Z   releases: 0,",
+    "2026-11-14T18:44:23.3421592Z   pid: 4117,",
+    "2026-11-14T18:44:23.3421759Z   activeLease: true,",
+    "2026-11-14T18:44:23.3421937Z   contexts: 1,",
+    "2026-11-14T18:44:23.3422111Z   disconnected: true,",
+    "2026-11-14T18:44:23.3422293Z   driverClosed: true,",
+    "2026-11-14T18:44:23.3422591Z   processExited: true,",
+    "2026-11-14T18:44:23.3422772Z }",
+    "2026-11-14T18:44:23.3422874Z ",
+    "2026-11-14T18:44:23.3422948Z  3 pass",
+    "2026-11-14T18:44:23.3423105Z  3 fail",
+    "2026-11-14T18:44:23.3423274Z  36 expect() calls",
+    "2026-11-14T18:44:23.3423490Z Ran 6 tests across 4 files. [42.39s]"
+  ],
+  "calculationObservations": [
+    {
+      "phase": "fallback",
+      "mode": "fallback",
+      "sourceTransactions": 4,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 2,
+      "preparedReads": 0,
+      "transactionMs": 3.2676099999971484,
+      "maximumTransactionMs": 1.000049999998737,
+      "beforeCallbackMs": 1.6674299999995128,
+      "callbackMs": 1.2474909999982629,
+      "notAdmitted": 0,
+      "status": "ok",
+      "elapsedMs": 8.000726000000213
+    },
+    {
+      "phase": "candidate-first",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 2.1034439999984897,
+      "maximumTransactionMs": 1.1495639999993728,
+      "beforeCallbackMs": 0.8978159999987838,
+      "callbackMs": 0.9978769999997894,
+      "notAdmitted": 0,
+      "status": "ok",
+      "elapsedMs": 6.168949000000794
+    },
+    {
+      "phase": "candidate-second",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 2.0351820000014413,
+      "maximumTransactionMs": 1.0989280000012513,
+      "beforeCallbackMs": 0.7760240000006888,
+      "callbackMs": 1.0543410000009317,
+      "notAdmitted": 0,
+      "status": "ok",
+      "elapsedMs": 5.6906529999996565
+    },
+    {
+      "phase": "candidate-source-aba",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 3,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 1.981880999999703,
+      "maximumTransactionMs": 1.0212909999991098,
+      "beforeCallbackMs": 0.8005499999981112,
+      "callbackMs": 0.9898240000020451,
+      "notAdmitted": 0,
+      "status": "stale",
+      "elapsedMs": 176.93583899999976
+    },
+    {
+      "phase": "candidate-egress-revoked",
+      "mode": "candidate",
+      "sourceTransactions": 2,
+      "authenticate": 6,
+      "revalidate": 4,
+      "legacyReads": 0,
+      "preparedReads": 2,
+      "transactionMs": 1.7776140000005398,
+      "maximumTransactionMs": 0.9015110000000277,
+      "beforeCallbackMs": 0.7289519999994809,
+      "callbackMs": 0.8615819999995438,
+      "notAdmitted": 0,
+      "status": "stale",
+      "elapsedMs": 5.502760999999737
+    },
+    {
+      "phase": "candidate-next-invocation-denied",
+      "mode": "candidate",
+      "sourceTransactions": 0,
+      "authenticate": 0,
+      "revalidate": 0,
+      "legacyReads": 0,
+      "preparedReads": 0,
+      "transactionMs": 0,
+      "maximumTransactionMs": 0,
+      "beforeCallbackMs": 0,
+      "callbackMs": 0,
+      "notAdmitted": 0,
+      "status": "denied",
+      "elapsedMs": 0.024908000001232722
+    },
+    {
+      "phase": "candidate-abort-at-authorizer-egress",
+      "mode": "candidate",
+      "sourceTransactions": 1,
+      "authenticate": 3,
+      "revalidate": 1,
+      "legacyReads": 0,
+      "preparedReads": 1,
+      "transactionMs": 1.107680999999502,
+      "maximumTransactionMs": 1.107680999999502,
+      "beforeCallbackMs": 0.3953330000003916,
+      "callbackMs": 0.5548519999993005,
+      "notAdmitted": 0,
+      "status": "denied",
+      "elapsedMs": 1.77768499999911
+    }
+  ],
+  "qualification": {
+    "calculation": "Both complete calculation cases passed, including explicit missing Request after invalidated admission, denied without counted revalidation, final durable-state assertion, and actual abort path. Structural 4→2 and fresh authority/source fences observed.",
+    "performance": "No whole exact-threshold journey or speedup acceptance is inferred from this focused structural test.",
+    "FIN004": "Selected browser proof remains FAIL/NOT_PROVEN; first timeout location is not discriminated by the current log. Later two failures follow retained pool lease. No assertion that product submit implementation itself is defective is made here.",
+    "C09": "Not selected in C29. Prior C28 W28 proof remains separately identified; no new C09 result is attributed to W29.",
+    "next": "Root may address the actual test/transport boundary using a new discriminant; no dispatcher/test run created by this monitoring task."
+  }
+}

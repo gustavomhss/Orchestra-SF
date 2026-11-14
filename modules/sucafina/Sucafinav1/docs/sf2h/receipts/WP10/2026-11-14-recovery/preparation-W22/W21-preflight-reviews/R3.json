@@ -1,0 +1,353 @@
+{
+  "schema": "wp10.independent-preflight.v1",
+  "kind": "SOURCE_PREFLIGHT_WITH_CURRENT_CHECK_NOT_FINAL_REVIEW",
+  "reviewer": {
+    "id": "R3",
+    "agent": "/root/independent_r3_w16",
+    "independence": "Não autor dos sete deltas ou de suas correções. Não editei produto, não executei testes/imports/build/typecheck/browser local, não disparei CI e não fiz mutações remotas. Escritas limitadas a reviews/R3.",
+    "productAuthorship": false,
+    "localProductExecution": false,
+    "remoteMutations": false
+  },
+  "observedAt": "2026-11-14T14:19:37.581384+00:00",
+  "candidateSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "candidateTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+  "parentSha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "verdict": "HOLD_PENDING_CURRENT_FUNCTIONAL_CI_AND_OWNER_GATES",
+  "finalReview": false,
+  "newConfirmedOwnBlockers": [],
+  "summary": "Os sete deltas foram lidos independentemente; as nove falhas próprias de tipo do W20 estão corrigidas no check W21. Não identifiquei novo bloqueio próprio concreto no delta. A ligação Procurement está corrigida na fonte, com escopo privado e contraprovas publicadas. O check ainda falha por 13 diagnósticos estrangeiros; freeze10 é37/38 e as seis seleções atuais permanecem pendentes.",
+  "sourceAssessment": [
+    {
+      "scope": "C07 fixture root providers",
+      "conclusion": "AppNodeBuilder inclui SessionStore.node e LocationServiceMap.node ao lado de installed/publication/SessionV2, usando providers reais. Nenhum cast, bypass de auth ou alteração do provider de produção foi introduzido.",
+      "limit": "Types agora passam; comportamento do fixture e native Task não são presumidos."
+    },
+    {
+      "scope": "UI lifecycle fixture",
+      "conclusion": "Antes de human.finish, a fixture exige call.kind===ui e falha explicitamente em admissão de espécie errada. finish continua aplicado ao contexto real original.",
+      "limit": "Produção de lifecycle/stale/cancel não mudou; runtime e contraprovas dependem do CI atual."
+    },
+    {
+      "scope": "Procurement per-call period",
+      "conclusion": "O helper recusa native, período inválido/diferente, sobreposição no mesmo call e child igual ao parent. Pin de Request exato, todos headers, method/URL, binding, payload, parent period e sf_request_read intent. Revalida human parent/host child antes/depois, retira o WeakMap em finally e não escreve periods(key).",
+      "limit": "É contexto para leitores canônicos, não novo grant. Os checks de fonte, período, recordId/incarnation/version, full witness e egress existentes permanecem."
+    },
+    {
+      "scope": "Work contraproofs",
+      "conclusion": "Novos casos criam/submetem Procurement pelo domínio real, usam C02 collection nova após reconstrução, comprovam ausência inicial/final de período ambiente, secondary admission encerrada, positivo HTTP e recusas por período/ator/fonte, overlap, header, throw, finish e ACL real. Instrumentação envolve os readers reais sem substituir suas decisões por true.",
+      "limit": "Fonte apenas. A fixture compõe business/authority/memory/http com autenticação de teste; não é aceite do host nativo completo ou de C17 instalado."
+    },
+    {
+      "scope": "Unchanged guards",
+      "conclusion": "19 arquivos relevantes de host, AI, C08, Memory, Review, runtime, routine and freeze têm o mesmo blob W20. Todas alterações de produto W21 estão entre os sete deltas listados.",
+      "limit": "Imutabilidade conserva revisão de fonte, não transfere qualquer PASS histórico."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R3-W20-TYPECHECK-01",
+      "status": "CLOSED_FOR_OWN_TYPE_DIAGNOSTICS_ON_W21_CHECK_ONLY",
+      "owner": "WP10",
+      "externalOwner": null,
+      "cause": "As nove posições próprias do W20 deixaram de produzir diagnóstico no check W21. Correções explicitam o discriminante UI, incluem providers reais, usam resolver publicado e evitam comparação redundante de união já estreitada.",
+      "evidence": [
+        "run 43603685238/job 132473623977",
+        "CLI and WP10 consumer typecheck success; Sucafina log has 13 foreign diagnostics and no own ones",
+        "metadata-W21-preflight.json#ci"
+      ],
+      "limits": "Encerramento restrito à compilação própria. O check inteiro continua failure e não há conclusão funcional das seis seleções."
+    },
+    {
+      "id": "R3-W20-WORK-PROCUREMENT-02",
+      "status": "SOURCE_CAUSE_ADDRESSED_CURRENT_FUNCTIONAL_CI_PENDING",
+      "owner": "WP10",
+      "externalOwner": null,
+      "cause": "individual.resolve substitui o método inexistente; escopo de período por call fornece contexto antes dos readers reais sem alimentar periods(key).",
+      "evidence": [
+        "business-services.ts:569-597",
+        "work-destinations.ts:90-106,122-134,184",
+        "work-bridge.test.ts: quatro novas contraprovas usando domínio/store/admission reais"
+      ],
+      "requiredClosure": "Observar o positivo Procurement pelo handler e negativos no W21 hospedado. O teste reconstrói os mesmos componentes de business/authority/http; não prova por si só toda a instalação C17/nativa."
+    },
+    {
+      "id": "R3-W20-PUBLISHED-DEPENDENCIES-03",
+      "status": "OPEN_CONFIRMED_CURRENT_HOSTED",
+      "owner": "WP10 integration follow-up",
+      "externalOwner": [
+        "WP04/procurement sourcing",
+        "WP06/import/native fixtures",
+        "WP08/collaboration fixtures",
+        "WP09/decision-answer fixture"
+      ],
+      "cause": "Treze erros estrangeiros permanecem no Sucafina typecheck. Pins estrangeiros são idênticos aos do W20.",
+      "evidence": [
+        "sucafina-typecheck.log no artefato 14116844807",
+        "metadata-W21-preflight.json#ci.diagnostics"
+      ],
+      "requiredClosure": "Obter e compor correções publicadas dos owners, registrando novo pin e reexecutando o gate; não editar branches alheias nem suprimir contratos."
+    },
+    {
+      "id": "R3-W20-FREEZE10-04",
+      "status": "OPEN_UNCHANGED_37_OF_38",
+      "owner": "WP10/S0 composition",
+      "externalOwner": "WP00/contracts owner",
+      "cause": "A divergência host-context esperada6a608e.../observada42839b... não mudou. O freeze10 e o host conservam os mesmos blobs do W20.",
+      "evidence": [
+        "metadata-W21-preflight.json#freeze"
+      ],
+      "requiredClosure": "Binding exato publicado e qualificado pelo owner/S0; nenhuma redução do teste estrito."
+    },
+    {
+      "id": "R3-W18-REVIEW-MOUNT-01",
+      "status": "SOURCE_RECHECK_UNCHANGED_CURRENT_HOSTED_PROOF_PENDING",
+      "owner": "WP10",
+      "externalOwner": null,
+      "cause": "Memory/Review/source-fence/lifecycle de produção são byte-idênticos aos inspecionados em W20. A contraprova residente ainda exige seu terminal W21; a prova não foi obtida por este preflight.",
+      "evidence": [
+        "metadata-W21-preflight.json#preservation.guardFiles",
+        "reviews/R3/review-W20-source.json"
+      ],
+      "requiredClosure": "Recheck funcional no W21 da montagem residente e negativos de C08/version/body/Request/lease, sem cache novo de readers externos."
+    },
+    {
+      "id": "R3-W20-NATIVE-AND-JOURNEYS-05",
+      "status": "OPEN_NATIVE_OWNER_AND_SIX_CURRENT_CI_PENDING",
+      "owner": "WP10/S0",
+      "externalOwner": [
+        "C07 governed Task/knowledge providers",
+        "native/MCP/runtime acceptance owners"
+      ],
+      "cause": "O ajuste da fixture C07 inclui os nodes reais, mas não cria Task governada ou knowledge. As seis seleções funcionais atuais ainda não têm terminais observados por R3; a jornada C17 completa segue sem aceite.",
+      "evidence": [
+        "routine-installed-publication.test.ts:261",
+        "produção routine-installed-publication.ts/host-context.ts byte-idêntica W20"
+      ],
+      "requiredClosure": "Receber seis terminais exatos, contraprovas reais e três pareceres independentes atuais. Não preencher aceite nativo/global a partir de fixture ou typecheck."
+    }
+  ],
+  "verification": {
+    "tree": {
+      "entries": 18890,
+      "blobs": 16314,
+      "subtrees": 2576,
+      "reconstructedRoot": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "mismatches": []
+    },
+    "delta": {
+      "counts": {
+        "modified": 7,
+        "added": 40
+      },
+      "total": 47,
+      "sourceAndTests": 7,
+      "receipts": 40,
+      "manifestMatches": true,
+      "remoteCompareMatches": true,
+      "manifestHashMismatches": [],
+      "ownershipViolations": []
+    },
+    "pins": {
+      "effective": 438,
+      "mismatches": [],
+      "unchangedFromW20": true
+    },
+    "hydrated": {
+      "count": 1341,
+      "mismatches": [],
+      "missingLocalNotDeletion": true
+    },
+    "preservation": {
+      "archivePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+      "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+      "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+      "foreignCopies": 128,
+      "readonlyInputs": 131,
+      "priorReceiptFiles": 228,
+      "changedPriorReceipts": [],
+      "R3W20PublishedCopyExact": {
+        "json": true,
+        "md": true
+      },
+      "guardFiles": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "gitBlob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+          "gitBlob": "1d9a8a9589f3884a083ac09cbc951d4cce0bbdca",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+          "gitBlob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-execution.ts",
+          "gitBlob": "8f3fe263667915146d4010db10a0fdb2679b8846",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+          "gitBlob": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+          "gitBlob": "21e22bb8bb4813711e8b1f7851c0d10369200426",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+          "gitBlob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/work-signals.ts",
+          "gitBlob": "b80bddf1a0ea4343362f1c18f291de6aaa6e475d",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/work-http.ts",
+          "gitBlob": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-resident-readers.ts",
+          "gitBlob": "d5b1a0cb4e4f78caffe18d3d7c468c8d68ff200f",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+          "gitBlob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "gitBlob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+          "gitBlob": "dc398afaa299cb01587794ab8cee0391c1be8eb2",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+          "gitBlob": "2ebb518403bc463dddd645f77af12cb877bce3e1",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+          "gitBlob": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+          "unchanged": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+          "gitBlob": "42439e65042399bb2597dc4e6e3ccb81c88f4d9b",
+          "unchanged": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+          "gitBlob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+          "unchanged": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+          "gitBlob": "3c78f724a50c37757570e80ba18af950a9469132",
+          "unchanged": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+          "gitBlob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+          "unchanged": true
+        }
+      ]
+    },
+    "criteria": {
+      "source": "agents/criteria/final-package/draft-W21/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W21-draft/criteria-map.json",
+      "count": 171,
+      "tasks": 7,
+      "literalMismatches": [],
+      "candidateFields": {
+        "state": "DRAFT_W21_UNPUBLISHED_NO_CURRENT_EXECUTION",
+        "candidate_sha": null,
+        "candidate_tree": null
+      },
+      "acceptance": {
+        "criteria_accepted": 0,
+        "tasks_accepted": 0,
+        "native": false,
+        "global": false,
+        "builder_auto_acceptance": false
+      },
+      "qualification": "W21 draft preserves literals; draft metadata is not independent acceptance or final evidence binding."
+    },
+    "freeze": {
+      "revision": 10,
+      "matched": 37,
+      "total": 38,
+      "mismatches": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "expected": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+          "actual": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+          "matched": false
+        }
+      ]
+    },
+    "remoteBlobSamples": 4,
+    "remoteAllMatch": true
+  },
+  "currentCheck": {
+    "W": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "S": "b3ea71fa52fbf846a28644f09a961c96bee401d8",
+    "runId": 43603685238,
+    "jobId": 132473623977,
+    "conclusion": "failure",
+    "ownDiagnostics": 0,
+    "foreignDiagnostics": 13,
+    "CLI": "success",
+    "WP10Consumers": "success",
+    "Sucafina": "failure",
+    "AtlasGeneration": "success",
+    "AtlasBoundary": "success",
+    "subprocessGuard": "success",
+    "productGuard": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 1522,
+      "gateFindings": 0,
+      "warnings": 52,
+      "errors": 0
+    },
+    "artifactId": 14116844807,
+    "artifactBytes": 4226,
+    "artifactSha256": "64d61c3528aac14651060ad51a40713817c14819888f5d835c2d13bd9aa74867",
+    "artifactFilesVerified": 11,
+    "envelopeDiffOnly": ".astra-wp10-check.json"
+  },
+  "sixCurrentFunctionalSuites": {
+    "status": "TERMINALS_NOT_OBSERVED",
+    "reportedAInitialSnapshot": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+    "qualification": "A dispatch is root report; not completion. No review-W21.json final created."
+  },
+  "acceptance": {
+    "criteriaAccepted": 0,
+    "tasksAccepted": 0,
+    "native": false,
+    "global": false,
+    "threeIndependentFinalApprovals": false
+  },
+  "evidenceFiles": [
+    "reviews/R3/metadata-W21-preflight.json",
+    "reviews/R3/inventory-W21-preflight.json",
+    "reviews/R3/remote-W21-preflight-raw.json",
+    "reviews/R3/check-job-W21.txt"
+  ],
+  "next": "Receber os seis terminais hospedados e seus artefatos exatos para revisão final independente no mesmo W21, ou reabrir delta de novo candidato publicado. Preservar este preflight e os relatórios W20."
+}

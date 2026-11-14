@@ -1,0 +1,22 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-fallback-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+    "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+    "Sucafinav1/test/product/wp05/projection.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

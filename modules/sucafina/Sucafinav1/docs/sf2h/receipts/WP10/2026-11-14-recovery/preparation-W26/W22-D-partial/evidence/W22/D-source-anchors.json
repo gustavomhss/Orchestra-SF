@@ -1,0 +1,2215 @@
+{
+  "role": "observer static triage preparation",
+  "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "selectedFiles": 18,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "own": true,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "339a7ba1b57f31ca985b6b1015e0242ac60e2eb3",
+      "sha256": "14ea3b9394648d9d5d43ef8af09b7874ae50144d854f53a9cbc161a3b8cd98fa",
+      "producerPin": null,
+      "triageOwner": "WP10",
+      "declarations": [
+        {
+          "line": 297,
+          "declaration": "test(\"canonical comparison drafts the exact human-selected second alternative and supports only the private replay context\", async () => {"
+        },
+        {
+          "line": 330,
+          "declaration": "test(\"comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection\", async () => {"
+        },
+        {
+          "line": 350,
+          "declaration": "test(\"a missing admission snapshot stays missing and request/input digests cannot reuse a capture\", async () => {"
+        },
+        {
+          "line": 375,
+          "declaration": "test(\"canonical comparison reuse reopens Planner authority and remains bound to input, full C08 state, UTC day and one invocation\", async () => {"
+        },
+        {
+          "line": 441,
+          "declaration": "test(\"canonical comparison scopes reject overlap, input replacement and authority lost during their final clock read\", async () => {"
+        },
+        {
+          "line": 510,
+          "declaration": "test(\"stored scenario proofs remain private to one comparison and recheck C08 and current case membership\", async () => {"
+        },
+        {
+          "line": 573,
+          "declaration": "test(\"annual 2026 canonical comparison drafts the exact human-selected second alternative and supports only the private replay context\", async () => {"
+        },
+        {
+          "line": 606,
+          "declaration": "test(\"annual 2026 comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection\", async () => {"
+        },
+        {
+          "line": 626,
+          "declaration": "test(\"annual 2026 a missing admission snapshot stays missing and request/input digests cannot reuse a capture\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 328,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 348,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 373,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 439,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 508,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 569,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 604,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 624,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 649,
+          "text": "}, 120_000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 71,
+          "text": "if (failures.length) throw new AggregateError(failures, \"Alternative-selection fixture cleanup or deadline failed\")"
+        },
+        {
+          "line": 195,
+          "text": "const source = ok(await phase(\"fixture.source\", () => business.plannerProduct.issueSource(\"v0\", read))).evidence"
+        },
+        {
+          "line": 196,
+          "text": "const forecast = ok(await phase(\"fixture.forecast\", () => business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: horizon, currency: \"USD\" }, read)))"
+        },
+        {
+          "line": 207,
+          "text": "ok(await phase(\"fixture.coverage\", () => business.withCase(coverageCall, initial, {}, () => domain.baselineCoverage.register(coverage, coverageCall))))"
+        },
+        {
+          "line": 212,
+          "text": "const result = ok(await phase(`fixture.scenario.${id}`, () => business.planner.simulateScenario(scenario, coverageCall)))"
+        },
+        {
+          "line": 225,
+          "text": "if (caseState.status !== \"ok\" || !caseState.value) throw new Error(\"Case fixture unavailable\")"
+        },
+        {
+          "line": 243,
+          "text": "const skillInput = ok(await phase(\"fixture.input\", () => business.withCase(preparing, caseRef, {}, () => producer.prepare(preparing, selectedAlternatives))))"
+        },
+        {
+          "line": 292,
+          "text": "try { await close() } catch (cleanupError) { throw new AggregateError([error, cleanupError], \"Alternative-selection fixture initialization failed\") }"
+        },
+        {
+          "line": 298,
+          "text": "const state = await fixture()"
+        },
+        {
+          "line": 331,
+          "text": "const state = await fixture()"
+        },
+        {
+          "line": 351,
+          "text": "const state = await fixture()"
+        },
+        {
+          "line": 376,
+          "text": "const state = await fixture()"
+        },
+        {
+          "line": 402,
+          "text": "await mutate((product) => { product.preferences[\"fixture:comparison-fence\"] = \"changed\" })"
+        },
+        {
+          "line": 407,
+          "text": "await mutate((product) => { product.cases[state.caseRef.id]!.criteria = [{ id: \"optional\", description: \"Fixture optional criterion\", required: false }] })"
+        },
+        {
+          "line": 442,
+          "text": "const state = await fixture()"
+        },
+        {
+          "line": 511,
+          "text": "const state = await fixture()"
+        },
+        {
+          "line": 539,
+          "text": "await mutate((product) => { product.preferences[\"fixture:scenario-fence\"] = \"changed\" })"
+        },
+        {
+          "line": 574,
+          "text": "const state = await fixture({ start: \"2026-01-01\", end: \"2026-12-31\" })"
+        },
+        {
+          "line": 607,
+          "text": "const state = await fixture({ start: \"2026-01-01\", end: \"2026-12-31\" })"
+        },
+        {
+          "line": 627,
+          "text": "const state = await fixture({ start: \"2026-01-01\", end: \"2026-12-31\" })"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/exact-threshold-fallback.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "45da583a0bc4a5a61db4cbafcb3156455455f1f9",
+      "sha256": "575ac56f82357dbc8b977dea7a52e52c10f75975d8e8e89b25975282df6ebee5",
+      "producerPin": {
+        "pr": 35,
+        "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/exact-threshold-fallback.test.ts",
+        "blobSha": "45da583a0bc4a5a61db4cbafcb3156455455f1f9",
+        "sha256": "575ac56f82357dbc8b977dea7a52e52c10f75975d8e8e89b25975282df6ebee5",
+        "owner": "WP03/WP05/WP11",
+        "reason": "Exact final owner delta: source-qualified domain projections, explicit BI origin choice, canonical calculation history/replay and causal tests. Coverage test replaces partial array match with complete category equality; no assertions dropped."
+      },
+      "triageOwner": "WP03",
+      "declarations": [
+        {
+          "line": 12,
+          "declaration": "test(\"the real Planner long IEEE plateau uses bisection and certifies one against nextUp one\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 67,
+          "text": "}, 60000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 9,
+          "text": "import { plannerSnapshot } from \"./planner-fixture.ts\""
+        },
+        {
+          "line": 10,
+          "text": "import { scenarioEngineFixture, scenarioMonth } from \"./scenario-engine-fixture.ts\""
+        },
+        {
+          "line": 21,
+          "text": "const fixture = await scenarioEngineFixture(initial)"
+        },
+        {
+          "line": 23,
+          "text": "const before = await fixture.readSnapshot()"
+        },
+        {
+          "line": 25,
+          "text": "const baseline = await fixture.planner.simulateScenario(observation, fixture.context)"
+        },
+        {
+          "line": 26,
+          "text": "const projection = await fixture.planner.compareForecast({ baseRef: fixture.source.refId, candidateRef: fixture.source.refId, currency: \"USD\", period: scenarioMonth }, fixture.context)"
+        },
+        {
+          "line": 33,
+          "text": "if (reference !== \"ieee-baseline\" || !await fixture.host.revalidate(context)) return { status: \"unavailable\", reason: \"IEEE baseline unavailable\" }"
+        },
+        {
+          "line": 47,
+          "text": "const solved = await createPlannerExactThreshold({ units, preview })(request, \"ieee-baseline\", fixture.context)"
+        },
+        {
+          "line": 58,
+          "text": "const at = await preview({ baselineRef: \"ieee-baseline\", scenario: { ...scenario, operations: [{ ...scenario.operations[0]!, amount: 1 }] } }, fixture.context)"
+        },
+        {
+          "line": 59,
+          "text": "const beyond = await preview({ baselineRef: \"ieee-baseline\", scenario: { ...scenario, operations: [{ ...scenario.operations[0]!, amount: adjacent }] } }, fixture.context)"
+        },
+        {
+          "line": 65,
+          "text": "expect(await fixture.readSnapshot()).toEqual(before)"
+        },
+        {
+          "line": 66,
+          "text": "} finally { await fixture.close() }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "f140786151f8c3fb77bb7743cc004ee0e51427f1",
+      "sha256": "80cb19fd1c3c2cce59eec19411067bc3630fe58174aac047a31dc1aca2ab1731",
+      "producerPin": {
+        "pr": 35,
+        "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+        "blobSha": "f140786151f8c3fb77bb7743cc004ee0e51427f1",
+        "sha256": "80cb19fd1c3c2cce59eec19411067bc3630fe58174aac047a31dc1aca2ab1731",
+        "owner": "WP03/WP05/WP11",
+        "reason": "Exact final owner delta: source-qualified domain projections, explicit BI origin choice, canonical calculation history/replay and causal tests. Coverage test replaces partial array match with complete category equality; no assertions dropped."
+      },
+      "triageOwner": "WP03",
+      "declarations": [
+        {
+          "line": 26,
+          "declaration": "test(\"runtime Overview table and SVG agree with C02 on missing actual, closed/open zero, FX and independent HR actual\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 65,
+          "text": "}, 180000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 5,
+          "text": "import { plannerAt, plannerFixture, plannerPeriod, plannerSnapshot } from \"./planner-fixture.ts\""
+        },
+        {
+          "line": 30,
+          "text": "const fixture = await plannerFixture(snapshot)"
+        },
+        {
+          "line": 32,
+          "text": "const context = await fixture.admit(\"sf-human:planner.read\", {}, \"finance\", true)"
+        },
+        {
+          "line": 33,
+          "text": "const source = await fixture.issueSource(\"v0\", context)"
+        },
+        {
+          "line": 35,
+          "text": "const compared = await fixture.planner.compareForecast({ baseRef: source.value.evidence.refId, candidateRef: source.value.evidence.refId, period: plannerPeriod, currency: \"USD\" }, context)"
+        },
+        {
+          "line": 37,
+          "text": "const before = await fixture.readSnapshot()"
+        },
+        {
+          "line": 61,
+          "text": "expect(await fixture.readSnapshot()).toEqual(before)"
+        },
+        {
+          "line": 62,
+          "text": "} finally { await fixture.close() }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "160df21d7dd44109c392cf213680629b6c26d450",
+      "sha256": "4e33961e339eeccce9c0f865dafc9a1676e22b6cc3bc2a9b098b32a936418cc9",
+      "producerPin": {
+        "pr": 35,
+        "sourceCommit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "blobSha": "160df21d7dd44109c392cf213680629b6c26d450",
+        "sha256": "4e33961e339eeccce9c0f865dafc9a1676e22b6cc3bc2a9b098b32a936418cc9",
+        "owner": "WP03/WP05/WP11",
+        "reason": "Exact final owner delta: source-qualified domain projections, explicit BI origin choice, canonical calculation history/replay and causal tests. Coverage test replaces partial array match with complete category equality; no assertions dropped."
+      },
+      "triageOwner": "WP11",
+      "declarations": [
+        {
+          "line": 19,
+          "declaration": "test(\"real Planner mutation and case receipt commit atomically across surfaces\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [],
+      "fixtureAndLatencyAnchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-composition.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "6ba00f85e5448d3b43f224aca5b9dfb93037ce9c",
+      "sha256": "099ac150c6cd5a10215598b0a5e3b594b31b52839c154e5509f6eceda5efdd90",
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-composition.test.ts",
+        "sourceCommit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blobSha": "6ba00f85e5448d3b43f224aca5b9dfb93037ce9c",
+        "sha256": "099ac150c6cd5a10215598b0a5e3b594b31b52839c154e5509f6eceda5efdd90",
+        "owner": "astra-intelligence/WP12-WP13-WP14",
+        "reason": "TS2322: narrowed ScenarioResult condicionado e cobertura derivada pelo classificador real sobre componentes Planner; mant\u00e9m todos os resultados num\u00e9ricos, omiss\u00e3o/pre\u00e7o de treinamento e asserts. Exige sensitivity-fixture exato.",
+        "pr": 36,
+        "dependency": false,
+        "bytes": 6617,
+        "baseW16BlobSha": "a0be2926e2456b6b66f5b1272749c4ae81143c09",
+        "currentBlobShaAtAudit": "a0be2926e2456b6b66f5b1272749c4ae81143c09",
+        "baselineRecoveryPath": null,
+        "noDownrev": true,
+        "admission": "consume-exact-as-complete-bundle"
+      },
+      "triageOwner": "WP13",
+      "declarations": [
+        {
+          "line": 12,
+          "declaration": "test(\"real portfolio composes shared-source operations once and retains omitted or priced training\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 71,
+          "text": "}, 120000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 8,
+          "text": "import { createWp13PortfolioFixture } from \"./sensitivity-fixture.ts\""
+        },
+        {
+          "line": 14,
+          "text": "const world = await createWp13PortfolioFixture({ renewal: training === undefined ? {} : { training } })"
+        },
+        {
+          "line": 28,
+          "text": "if (prior.status !== \"ok\" || !prior.value) throw new Error(\"fixture case unavailable\")"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "own": true,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "b9e8d3ff849327f31a6f6ccae78962376302deb5",
+      "sha256": "beb78a2c239b0dd3b27fe4f93ff960bceafcc32a8955c674d6c5a7a16ad14fde",
+      "producerPin": null,
+      "triageOwner": "WP10",
+      "declarations": [
+        {
+          "line": 140,
+          "declaration": "test(\"first HTTP promotion commits real coverage and a historical baseline supports a new choice in N+2\", async () => {"
+        },
+        {
+          "line": 211,
+          "declaration": "test(\"promotion refuses additional authority fields, changed admitted intent and revoked admission without storing a result\", async () => {"
+        },
+        {
+          "line": 271,
+          "declaration": "test(\"historical choice rejects removed membership, replaced incarnation, changed alternative digest and stale source\", async () => {"
+        },
+        {
+          "line": 312,
+          "declaration": "test(\"Portfolio coverage reopens real human selection and preserves incomplete costs across Request and source changes\", async () => {"
+        },
+        {
+          "line": 379,
+          "declaration": "test(\"Portfolio coverage refuses a revoked authentic UI admission before exposing authority data\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 209,
+          "text": "}, 300_000)"
+        },
+        {
+          "line": 228,
+          "text": "}, 120_000)"
+        },
+        {
+          "line": 269,
+          "text": "}, 180_000)"
+        },
+        {
+          "line": 310,
+          "text": "}, 300_000)"
+        },
+        {
+          "line": 376,
+          "text": "}, 300_000)"
+        },
+        {
+          "line": 392,
+          "text": "}, 120_000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 10,
+          "text": "import { financialCompositionFixture } from \"./financial-composition-fixture.ts\""
+        },
+        {
+          "line": 11,
+          "text": "import { compositionTestDeadline } from \"./composition-test-deadline.ts\""
+        },
+        {
+          "line": 33,
+          "text": "const fixture = await deadline.phase(\"fixture.initialize\", async () => {"
+        },
+        {
+          "line": 34,
+          "text": "const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })"
+        },
+        {
+          "line": 40,
+          "text": "await fixture.persistence.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 46,
+          "text": "await fixture.persistence.initializeSources(\"planner\")"
+        },
+        {
+          "line": 47,
+          "text": "const call = await fixture.read()"
+        },
+        {
+          "line": 48,
+          "text": "const prepared = await deadline.phase(\"fixture.sources\", async () => {"
+        },
+        {
+          "line": 68,
+          "text": "const seeded = await authority.state.transaction(fixture.request(\"seed-empty-case\"), { namespace: \"cases\", expectedStorageVersion: 0,"
+        },
+        {
+          "line": 75,
+          "text": "const human = ok(await authority.human.admit(fixture.request(operation), \"decisions.coverage\", coverage), \"Admit human coverage\")"
+        },
+        {
+          "line": 95,
+          "text": "const result = await authority.state.read(fixture.request(), \"cases\", (state) => ({ case: state.cases[initialRef.id],"
+        },
+        {
+          "line": 101,
+          "text": "const read = await fixture.read()"
+        },
+        {
+          "line": 108,
+          "text": "const human = ok(await authority.human.admit(fixture.request(\"register-cost-rule\"), \"decisions.criteria\", rule), \"Admit human criterion\")"
+        },
+        {
+          "line": 109,
+          "text": "try { return ok(await business.withCase(human, caseRef, {}, () => fixture.portfolio.rules.register(rule, human)), \"Register human criterion\") }"
+        },
+        {
+          "line": 114,
+          "text": "} catch (error) { await deadline.close(); throw error }"
+        },
+        {
+          "line": 133,
+          "text": "const comparison = ok(await state.scoped(candidate.caseRef, (call) => state.fixture.portfolio.compare({ caseRef: candidate.caseRef,"
+        },
+        {
+          "line": 141,
+          "text": "const state = await promotionFixture(\"portfolio-promotion-choice\", 285_000)"
+        },
+        {
+          "line": 173,
+          "text": "const exactRead = await state.scoped(candidate.caseRef, (call) => state.fixture.business.results.read({ kind: \"scenario\", resultRef: baselineRef }, call), \"read.exact-baseline\")"
+        },
+        {
+          "line": 175,
+          "text": "const historical = ok(await state.scoped(candidate.caseRef, (call) => state.fixture.business.results.readHistoricalScenario({ resultRef: baselineRef }, call), \"read.historical-baseline\"), \"Read authorized historical baseline\")"
+        },
+        {
+          "line": 179,
+          "text": "const comparison = ok(await state.scoped(candidate.caseRef, (call) => state.fixture.portfolio.compare({ caseRef: candidate.caseRef,"
+        },
+        {
+          "line": 212,
+          "text": "const state = await promotionFixture(\"portfolio-promotion-authority\", 105_000)"
+        },
+        {
+          "line": 218,
+          "text": "const human = ok(await authority.human.admit(state.fixture.request(\"exact-intent\"), \"decisions.promote-alternative\", request), \"Admit exact promotion\")"
+        },
+        {
+          "line": 227,
+          "text": "} finally { state.fixture.active.value = true; await state.close() }"
+        },
+        {
+          "line": 231,
+          "text": "const state = await promotionFixture(`portfolio-promotion-${change}-race`, 165_000)"
+        },
+        {
+          "line": 241,
+          "text": "if (change === \"source\") await state.fixture.persistence.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 264,
+          "text": "const fresh = await state.fixture.read()"
+        },
+        {
+          "line": 265,
+          "text": "try { expect((await state.fixture.business.context.resolve(state.sources[0]!, fresh)).state).not.toBe(\"fresh\") }"
+        },
+        {
+          "line": 268,
+          "text": "} finally { state.fixture.authority.state.transaction = original; state.fixture.active.value = true; await state.close() }"
+        },
+        {
+          "line": 272,
+          "text": "const state = await promotionFixture(\"portfolio-promotion-historical-negatives\", 285_000)"
+        },
+        {
+          "line": 296,
+          "text": "await state.fixture.persistence.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 301,
+          "text": "expect((await state.scoped(pair.candidate.caseRef, (call) => state.fixture.business.results.readHistoricalScenario({ resultRef: baselineRef }, call))).status).not.toBe(\"ok\")"
+        },
+        {
+          "line": 309,
+          "text": "} finally { state.fixture.active.value = true; await state.close() }"
+        },
+        {
+          "line": 313,
+          "text": "const state = await promotionFixture(\"portfolio-coverage-authority\", 285_000)"
+        },
+        {
+          "line": 329,
+          "text": "const human = ok(await authority.human.admit(state.fixture.request(\"select-coverage-pair\"), \"decisions.select-portfolio\", selection), \"Admit portfolio selection\")"
+        },
+        {
+          "line": 341,
+          "text": "const other = await state.fixture.read()"
+        },
+        {
+          "line": 362,
+          "text": "await state.fixture.persistence.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 375,
+          "text": "} finally { state.fixture.active.value = true; await state.close() }"
+        },
+        {
+          "line": 380,
+          "text": "const fixture = await financialCompositionFixture()"
+        },
+        {
+          "line": 381,
+          "text": "const call = await fixture.read()"
+        },
+        {
+          "line": 390,
+          "text": "expect(await fixture.authority.host.revalidate(call)).toBe(false)"
+        },
+        {
+          "line": 391,
+          "text": "} finally { fixture.authority.ui.finish(call); await fixture.dispose() }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "d50cefb50aa0b92637a7fd45e04fc5281beabf0d",
+      "sha256": "69ea19593270b6cb2b53f694e02c932bd8f2c38091e53c1ed48cb7f6ad87bf47",
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+        "sourceCommit": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+        "blobSha": "d50cefb50aa0b92637a7fd45e04fc5281beabf0d",
+        "sha256": "69ea19593270b6cb2b53f694e02c932bd8f2c38091e53c1ed48cb7f6ad87bf47",
+        "owner": "astra-collaboration/WP07-WP08-WP09",
+        "reason": "TS2540: altera estado do fixture em vez de escrever m\u00e9todo readonly; mant\u00e9m os dois witnesses de altera\u00e7\u00e3o de valor e acrescenta 10 contraprovas de substitui\u00e7\u00e3o de provider. Exige produtor schedule-native do mesmo pin.",
+        "pr": 33,
+        "dependency": false,
+        "bytes": 15639,
+        "baseW16BlobSha": "7602634e18a0bc4c9a9f5b2b9c8fd844f8ab8c76",
+        "currentBlobShaAtAudit": "7602634e18a0bc4c9a9f5b2b9c8fd844f8ab8c76",
+        "baselineRecoveryPath": null,
+        "noDownrev": true,
+        "admission": "consume-exact-as-complete-bundle"
+      },
+      "triageOwner": "WP09",
+      "declarations": [
+        {
+          "line": 115,
+          "declaration": "test(\"admitted plus resultRef remains blocked without execution or authenticated output readers\", async () => {"
+        },
+        {
+          "line": 126,
+          "declaration": "test.each([\"failed\", \"cancelled\"] as const)(\"native execution %s cannot become reviewable because a result reference exists\", async (terminal) => {"
+        },
+        {
+          "line": 133,
+          "declaration": "test(\"reviewable requires matching native completion and the authenticated immutable artifact\", async () => {"
+        },
+        {
+          "line": 141,
+          "declaration": "test(\"result authorization denial never returns schedule result metadata\", async () => {"
+        },
+        {
+          "line": 147,
+          "declaration": "test.each([\"runRef\", \"resultRef\", \"outputDigest\"] as const)(\"completion rejects a substituted %s before reading output\", async (field) => {"
+        },
+        {
+          "line": 154,
+          "declaration": "test(\"cancellation after the artifact read invalidates the earlier completion snapshot\", async () => {"
+        },
+        {
+          "line": 165,
+          "declaration": "test(\"a changed schedule revision during result recovery cannot return its older occurrence\", async () => {"
+        },
+        {
+          "line": 175,
+          "declaration": "test(\"a substituted owner binding during result recovery cannot expose the former owner's result\", async () => {"
+        },
+        {
+          "line": 185,
+          "declaration": "test.each([\"schedule-service\", \"schedule-get\", \"owner-resolver\", \"source-authority\", \"routine-reader\", \"execution-reader\", \"result-reader\", \"result-read-call\"] as const)(\"a replacement %s cannot release identical result bytes through the previous provider\", async (provider) => {"
+        },
+        {
+          "line": 232,
+          "declaration": "test(\"a provider replacement during initial authorization stops before result recovery\", async () => {"
+        },
+        {
+          "line": 242,
+          "declaration": "test(\"a provider replacement during final authorization cannot release an already recovered result\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 28,
+          "text": "import { createRoutineUiFixture } from \"./ui-authority-fixture.ts\""
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "f68bcdf3c5a7ffeeb10cd9ed11a577e63c40062e",
+      "sha256": "f80685dc9b0ec95cbe4942b7324d39afb591f04dbc74a17fa85c46b503e9cb46",
+      "producerPin": {
+        "pr": 36,
+        "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts",
+        "blobSha": "f68bcdf3c5a7ffeeb10cd9ed11a577e63c40062e",
+        "sha256": "f80685dc9b0ec95cbe4942b7324d39afb591f04dbc74a17fa85c46b503e9cb46",
+        "owner": "wp13",
+        "reason": "New real subtotal boundary 55000/15000, coverage conditioned, persistence/restart/replay, false-certificate and revocation counterproofs."
+      },
+      "triageOwner": "WP13",
+      "declarations": [
+        {
+          "line": 17,
+          "declaration": "test(\"C10 omitted training keeps an exact real 55000 subtotal boundary conditioned, including replay and restart\", async () => {"
+        },
+        {
+          "line": 83,
+          "declaration": "test(\"C10 priced training changes real subtotal 210000 to 250000 and the boundary to 15000\", async () => {"
+        },
+        {
+          "line": 108,
+          "declaration": "test(\"a false scalar certificate cannot replace real boundary evidence; sampled fallback remains conditioned\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 81,
+          "text": "}, 60000)"
+        },
+        {
+          "line": 106,
+          "text": "}, 60000)"
+        },
+        {
+          "line": 120,
+          "text": "}, 60000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 6,
+          "text": "import { createWp13SensitivityFixture } from \"./sensitivity-fixture.ts\""
+        },
+        {
+          "line": 12,
+          "text": "import { expectSpawn } from \"../../../../../../packages/core/test/fixture/omni-expect.ts\""
+        },
+        {
+          "line": 19,
+          "text": "const world = await createWp13SensitivityFixture({ renewal: {} })"
+        },
+        {
+          "line": 84,
+          "text": "const world = await createWp13SensitivityFixture({ renewal: { training: 40000 } })"
+        },
+        {
+          "line": 109,
+          "text": "const world = await createWp13SensitivityFixture({ renewal: {} })"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "5b4579143250700a313744cc2240741f1bc15237",
+      "sha256": "b0ddf6ac0b6c0de6e3dd83b3a8f8ef138f9c3d460d505172c0d57ef73be62efa",
+      "producerPin": {
+        "pr": 36,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "5b4579143250700a313744cc2240741f1bc15237",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8bb72c8cdeda149b000d91403c368642c3b53dec/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 22116,
+        "sha256": "b0ddf6ac0b6c0de6e3dd83b3a8f8ef138f9c3d460d505172c0d57ef73be62efa",
+        "candidateBlob": null,
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "5b4579143250700a313744cc2240741f1bc15237",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "triageOwner": "WP13",
+      "declarations": [
+        {
+          "line": 22,
+          "declaration": "test(\"WP13 persists and cold-reads real 55000/15000 sensitivity with omitted training conditioned and all three training states idempotent\", async () => {"
+        },
+        {
+          "line": 102,
+          "declaration": "test(\"WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary\", async () => {"
+        },
+        {
+          "line": 191,
+          "declaration": "test(\"WP13 withholds an exact bound for a real null price or missing FX before consulting an exact callback\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 100,
+          "text": "}, 300000)"
+        },
+        {
+          "line": 164,
+          "text": "}, 300000)"
+        },
+        {
+          "line": 213,
+          "text": "}, 120000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 19,
+          "text": "import { createPortfolioCoverageFixture } from \"./coverage-preview-fixture.ts\""
+        },
+        {
+          "line": 20,
+          "text": "import { createRenewalChoiceHistory } from \"../wp11/renewal-choice-fixture.ts\""
+        },
+        {
+          "line": 27,
+          "text": "const fixture = await createPortfolioCoverageFixture(training)"
+        },
+        {
+          "line": 30,
+          "text": "const services = await persistedServices(fixture, training)"
+        },
+        {
+          "line": 32,
+          "text": "const saved = await services.persistent.evaluateAndStore(fixture.sensitivityRequest, fixture.caseRef, fixture.context)"
+        },
+        {
+          "line": 40,
+          "text": "const units = await fixture.issuer.resolve(fixture.sensitivityRequest, fixture.context)"
+        },
+        {
+          "line": 53,
+          "text": "const preview = await fixture.preview({ baselineRef: fixture.baselineRef, scenario: fixture.withAmount(amount) }, fixture.context)"
+        },
+        {
+          "line": 61,
+          "text": "const sample = await services.results.read({ kind: \"scenario\", resultRef: point.resultRef }, fixture.context)"
+        },
+        {
+          "line": 69,
+          "text": "const stored = await services.results.read({ kind: \"sensitivity\", resultRef: saved.value.sensitivityResultRef }, fixture.context)"
+        },
+        {
+          "line": 70,
+          "text": "const binding = await services.bindings.read({ caseRef: fixture.caseRef, resultRef: saved.value.sensitivityResultRef }, fixture.context)"
+        },
+        {
+          "line": 73,
+          "text": "const before = await services.state.read(fixture.request, \"cases\", (state) => Object.keys(state.decisionResults ?? {}))"
+        },
+        {
+          "line": 74,
+          "text": "const reloaded = await persistedServices(fixture, training)"
+        },
+        {
+          "line": 77,
+          "text": "const replay = await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)"
+        },
+        {
+          "line": 81,
+          "text": "expect(await reloaded.verifier.verifySensitivity(binding.value, stored.value, fixture.context)).toBe(true)"
+        },
+        {
+          "line": 83,
+          "text": "const again = await reloaded.persistent.evaluateAndStore(fixture.sensitivityRequest, fixture.caseRef, fixture.context)"
+        },
+        {
+          "line": 87,
+          "text": "expect(await services.state.read(fixture.request, \"cases\", (state) => Object.keys(state.decisionResults ?? {}))).toEqual(before)"
+        },
+        {
+          "line": 90,
+          "text": "expect(await reloaded.verifier.verifySensitivity(binding.value, stored.value, fixture.context)).toBe(false)"
+        },
+        {
+          "line": 91,
+          "text": "expect((await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)).status).not.toBe(\"ok\")"
+        },
+        {
+          "line": 93,
+          "text": "const current = await fixture.state.read(fixture.request, \"cases\", (state) => state.cases[fixture.caseRef.id])"
+        },
+        {
+          "line": 98,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 107,
+          "text": "const prior = await priorEvaluate(before.sensitivityRequest, history.fixture.context)"
+        },
+        {
+          "line": 126,
+          "text": "const classifications = await history.state.read(history.fixture.request, \"preferences\", (state) => ({ selected: state.preferences[classificationKey(after.caseRef, after.scenario.baseRef)], baseline: state.preferences[classificationKey(after.caseRef, after.baselineScenario.baseRef)] }))"
+        },
+        {
+          "line": 137,
+          "text": "const current = await history.state.read(history.fixture.request, \"preferences\", (state) => ({ selected: state.preferences[classificationKey(after.caseRef, after.scenario.baseRef)], baseline: state.preferences[classificationKey(after.caseRef, after.baselineScenario.baseRef)] }))"
+        },
+        {
+          "line": 143,
+          "text": "const result = await evaluate(after.sensitivityRequest, history.fixture.context)"
+        },
+        {
+          "line": 148,
+          "text": "const binding = await after.issuer.resolve(after.sensitivityRequest, history.fixture.context)"
+        },
+        {
+          "line": 152,
+          "text": "const preview = await after.preview({ baselineRef: after.baselineRef, scenario: plannerSensitivityScenario(binding.value, \"implementation:11\", amount) }, history.fixture.context)"
+        },
+        {
+          "line": 169,
+          "text": "const state = createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes, createId: () => \"wp13-coverage-state\", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? identity : undefined })"
+        },
+        {
+          "line": 171,
+          "text": "const results = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase: async (decision, context) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && decision.participants.includes(context.binding.principalRef) && await fixture.host.revalidate(context), verifySources: async (_value, refs, context) => {"
+        },
+        {
+          "line": 172,
+          "text": "const evidence = await fixture.coverageEvidence(refs, context)"
+        },
+        {
+          "line": 179,
+          "text": "if (!transactionAll) throw new Error(\"The C08 fixture requires durable multi-surface transaction support\")"
+        },
+        {
+          "line": 181,
+          "text": "const readSourceFences = async (context: TrustedDomainContext) => await fixture.host.revalidate(context) ? transactionAll(async (snapshots) => ({ commit: false, value: sourceFences(snapshots) })) : undefined"
+        },
+        {
+          "line": 186,
+          "text": "const bindings = createCriterionResultBindings({ state, host: fixture.host, rules: fixture.rules, results, authorizeCase: async (decision, context) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && await fixture.host.revalidate(context), verifyBinding: (binding, _rule, result, context) => verifier.verifySensitivity(binding, result, context), verifySnapshot: (snapshot, binding, _rule, context) => verifier.verifySnapshot(snapshot, binding, context), operationIdentity: () => `wp13-certified-binding:${training}`, proposalCoverageWrites: writes, now: () => \"2026-11-13T00:00:00Z\" })"
+        },
+        {
+          "line": 193,
+          "text": "const fixture = await createPortfolioCoverageFixture(input.training, input.mode)"
+        },
+        {
+          "line": 197,
+          "text": "const result = await evaluate(fixture.sensitivityRequest, fixture.context)"
+        },
+        {
+          "line": 211,
+          "text": "} finally { await fixture.cleanup() }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "sha256": "0debd0ea4c286f116a791d5a952fcde89e6151058ce2e86c428fc4382333a730",
+      "producerPin": {
+        "pr": 36,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8bb72c8cdeda149b000d91403c368642c3b53dec/modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 8831,
+        "sha256": "0debd0ea4c286f116a791d5a952fcde89e6151058ce2e86c428fc4382333a730",
+        "candidateBlob": "b6ff1dd3b2f2cad15556521a9406ba6985dcb753",
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "triageOwner": "WP13",
+      "declarations": [
+        {
+          "line": 16,
+          "declaration": "test(\"portfolio distinguishes omitted training from sourced zero using WP11 coverage\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [],
+      "fixtureAndLatencyAnchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "sha256": "a0088fb0607598b1f47210aedbc1bfea240babbf380a60243c3f389f7371ed4b",
+      "producerPin": {
+        "pr": 36,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8bb72c8cdeda149b000d91403c368642c3b53dec/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 33398,
+        "sha256": "a0088fb0607598b1f47210aedbc1bfea240babbf380a60243c3f389f7371ed4b",
+        "candidateBlob": null,
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "triageOwner": "WP13",
+      "declarations": [
+        {
+          "line": 21,
+          "declaration": "test(\"reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing\", async () => {"
+        },
+        {
+          "line": 49,
+          "declaration": "test(\"reconciliation retains independent evidence and command revisions while binding effects and receipts\", async () => {"
+        },
+        {
+          "line": 89,
+          "declaration": "test(\"reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency\", async () => {"
+        },
+        {
+          "line": 114,
+          "declaration": "test(\"a global criterion change cannot attribute a different component's price to an unchanged component\", async () => {"
+        },
+        {
+          "line": 126,
+          "declaration": "test(\"reconciliation refuses a substituted historical selection even when its numbers match the choice\", async () => {"
+        },
+        {
+          "line": 135,
+          "declaration": "test(\"reconciliation refuses receipt substitution, revoked sources and a different current principal\", async () => {"
+        },
+        {
+          "line": 146,
+          "declaration": "test(\"reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress\", async () => {"
+        },
+        {
+          "line": 162,
+          "declaration": "test(\"reconciliation does not reinterpret another source or missing data as a material price signal\", async () => {"
+        },
+        {
+          "line": 175,
+          "declaration": "test(\"reconciliation refuses authority mutation after the final successful revalidation\", async () => {"
+        },
+        {
+          "line": 209,
+          "declaration": "test(\"HTTP reconciliation preserves the admitted selection when authorization mutates the caller request\", async () => {"
+        },
+        {
+          "line": 241,
+          "declaration": "test(\"HTTP reconciliation fences authority from ingress before the core captures it\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 25,
+          "text": "const first = await read(fixture.request, context)"
+        },
+        {
+          "line": 34,
+          "text": "expect(await read(fixture.request, context)).toEqual(first)"
+        },
+        {
+          "line": 38,
+          "text": "const resumed = await read({ ...fixture.request, caseRef: { id: current.id, incarnation: current.incarnation, version: current.version } }, context)"
+        },
+        {
+          "line": 55,
+          "text": "const initial = await read(fixture.request, context)"
+        },
+        {
+          "line": 65,
+          "text": "const completed = await read({ ...fixture.request, caseRef: { id: current.id, incarnation: current.incarnation, version: current.version } }, context)"
+        },
+        {
+          "line": 95,
+          "text": "const result = await createPortfolioReconciliation(fixture.input)(fixture.request, context)"
+        },
+        {
+          "line": 117,
+          "text": "const result = await createPortfolioReconciliation(fixture.input)(fixture.request, context)"
+        },
+        {
+          "line": 129,
+          "text": "expect(await createPortfolioReconciliation(fixture.input)(fixture.request, context)).toEqual({ status: \"conflict\", reason: \"portfolio-reconciliation-composition-mismatch\" })"
+        },
+        {
+          "line": 201,
+          "text": "const denied = await createPortfolioReconciliation(fixture.input)(fixture.request, trusted)"
+        },
+        {
+          "line": 232,
+          "text": "const result = await httpProduct(fixture.input).http.reconcile(incoming, structuredClone(context))"
+        },
+        {
+          "line": 264,
+          "text": "const denied = await httpProduct(fixture.input).http.reconcile(fixture.a, borrowed)"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "ce02051d09115665056d36382bde5f1dbd0d9238",
+      "sha256": "f6e287bf766f4525e1dda38f83adfdc2d10d8c4d9aa02ab06d98a5e3980e02e3",
+      "producerPin": {
+        "pr": 36,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "ce02051d09115665056d36382bde5f1dbd0d9238",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8bb72c8cdeda149b000d91403c368642c3b53dec/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 29300,
+        "sha256": "f6e287bf766f4525e1dda38f83adfdc2d10d8c4d9aa02ab06d98a5e3980e02e3",
+        "candidateBlob": null,
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "ce02051d09115665056d36382bde5f1dbd0d9238",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "triageOwner": "WP13",
+      "declarations": [
+        {
+          "line": 37,
+          "declaration": "test(\"a real 45000 to 70000 quote on the same source changes its portfolio condition while preserving the human choice and C08 composition\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 150,
+          "text": "}, 300000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 24,
+          "text": "import { wp05Horizon } from \"../wp05/engine-fixture.ts\""
+        },
+        {
+          "line": 25,
+          "text": "import { createRenewalChoiceHistory } from \"../wp11/renewal-choice-fixture.ts\""
+        },
+        {
+          "line": 45,
+          "text": "resolveCandidate: async (ref, context) => ref === candidate.ref && await fixture.host.revalidate(context) ? { status: \"ok\", value: candidate } : { status: \"denied\", reason: \"candidate-unavailable\" },"
+        },
+        {
+          "line": 57,
+          "text": "const evaluated = await port.evaluate(request, fixture.context)"
+        },
+        {
+          "line": 59,
+          "text": "const saved = await before.results.write({ kind: \"portfolio\", result: evaluated.value, caseRef: before.caseRef, requestDigest: digestSfValue(request), sourceRefs: evaluated.value.evidenceRefs, idempotencyKey: \"wp13-original-price-portfolio\" }, fixture.context)"
+        },
+        {
+          "line": 85,
+          "text": "const persistedComparison = await revision.results.read({ kind: \"comparison\", resultRef: revision.comparisonRef }, fixture.context)"
+        },
+        {
+          "line": 109,
+          "text": "const loaded = await revision.state.read(fixture.request, \"cases\", (state) => state.decisionResults?.[query.resultRef])"
+        },
+        {
+          "line": 123,
+          "text": "const reconciled = await read(input, fixture.context)"
+        },
+        {
+          "line": 144,
+          "text": "const storedAgain = await revision.state.read(fixture.request, \"cases\", (state) => state.decisionResults?.[stored.resultRef])"
+        },
+        {
+          "line": 147,
+          "text": "expect((await read(input, fixture.context)).status).not.toBe(\"ok\")"
+        },
+        {
+          "line": 160,
+          "text": "const source = await fixture.store.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 172,
+          "text": "const host: DomainPortHost = { ...fixture.host, environment: async () => ({ at: now(), id: () => \"wp13-current-price-read\", directory: [] }), revalidate: async (context) => !revoked.value && await fixture.host.revalidate(context) }"
+        },
+        {
+          "line": 177,
+          "text": "const projection = await fixture.store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: projectPlannerSource(snapshot, actor, ref.target.recordId) }))"
+        },
+        {
+          "line": 206,
+          "text": "const projected = await domainPlanner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, currency: \"USD\", period: wp05Horizon }, fixture.context)"
+        },
+        {
+          "line": 213,
+          "text": "const resolutions = await evidence.context({ refs }, fixture.context)"
+        },
+        {
+          "line": 220,
+          "text": "const state = createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes, createId: () => \"wp13-price-state\", resolveTarget: async () => ({ incarnation: current.incarnation }), authorize: async (request) => request === fixture.request && await host.revalidate(fixture.context) ? fixture.context.binding : undefined })"
+        },
+        {
+          "line": 226,
+          "text": "const result = await domainPlanner.simulateScenario(request, fixture.context)"
+        },
+        {
+          "line": 228,
+          "text": "const stored = await results.write({ kind: \"scenario\", result: result.value, caseRef: current, requestDigest: digestSfValue(request), sourceRefs: uniqueRefs([...result.value.sourceRefs, ...result.value.costCoverage.evaluatedSourceRefs]), idempotencyKey: `wp13-current-price:${ref.refDigest}` }, fixture.context)"
+        },
+        {
+          "line": 251,
+          "text": "const registered = await rules.register({ caseRef: current, criterionId: before.rule.criterionId, metricRef: before.rule.metricRef, operator: before.rule.operator, value: before.rule.value, unit: before.rule.unit, period: before.rule.period, evidenceRefs: basis.sourceRefs, expectedRuleVersion: before.rule.version }, fixture.context)"
+        },
+        {
+          "line": 255,
+          "text": "const compared = await planner.compareScenarios(comparisonRequest, fixture.context)"
+        },
+        {
+          "line": 257,
+          "text": "const comparisonStored = await results.write({ kind: \"comparison\", result: compared.value, caseRef: current, requestDigest: digestSfValue(comparisonRequest), sourceRefs: basis.sourceRefs, idempotencyKey: \"wp13-current-price-comparison\" }, fixture.context)"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "sha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf",
+      "producerPin": {
+        "pr": 35,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "sourceCommit": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+        "gitBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 8975,
+        "sha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf",
+        "candidateBlob": "a9bd9674d033d5a990dda651e01371cc024d4a52",
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "triageOwner": "WP11",
+      "declarations": [
+        {
+          "line": 10,
+          "declaration": "test(\"the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 99,
+          "text": "}, 180000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 8,
+          "text": "import { createRenewalChoiceHistory } from \"./renewal-choice-fixture.ts\""
+        },
+        {
+          "line": 18,
+          "text": "const thresholdBefore = await before.exact(before.sensitivityRequest, before.baselineRef, history.fixture.context)"
+        },
+        {
+          "line": 45,
+          "text": "const thresholdAfter = await after.exact(after.sensitivityRequest, after.baselineRef, history.fixture.context)"
+        },
+        {
+          "line": 61,
+          "text": "const structural = await createPlannerIntervalProof({ units: after.issuer, preview: after.preview })(after.sensitivityRequest, after.baselineRef, history.fixture.context)"
+        },
+        {
+          "line": 67,
+          "text": "const evidence = await after.evidence.context({ refs }, history.fixture.context)"
+        },
+        {
+          "line": 71,
+          "text": "const reopened = await openLocalStore(history.fixture.directory)"
+        },
+        {
+          "line": 74,
+          "text": "const persisted = await state.read(history.fixture.request, \"cases\", (value) => ({ decision: value.cases[after.caseRef.id], result: value.decisionResults?.[after.selectedRef] }))"
+        },
+        {
+          "line": 84,
+          "text": "expect(await history.fixture.host.revalidate(history.fixture.context)).toBe(false)"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "447ae83e4a49175f6751138d44d3221f364b0731",
+      "sha256": "8954fcb3f99e0d00fcf36fd23de0663eb3a804ab8044c1067ca490698cd7b87f",
+      "producerPin": {
+        "pr": 35,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "sourceCommit": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+        "gitBlob": "447ae83e4a49175f6751138d44d3221f364b0731",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 20581,
+        "sha256": "8954fcb3f99e0d00fcf36fd23de0663eb3a804ab8044c1067ca490698cd7b87f",
+        "candidateBlob": null,
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "447ae83e4a49175f6751138d44d3221f364b0731",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "triageOwner": "WP11",
+      "declarations": [
+        {
+          "line": 29,
+          "declaration": "test(\"hot-topic draft commits against its actual Dashboard snapshot and preserves official records\", async () => {"
+        },
+        {
+          "line": 102,
+          "declaration": "test(\"hot-topic read refuses an old draft replaced during its last source callback\", async () => {"
+        },
+        {
+          "line": 137,
+          "declaration": "test(\"hot-topic list refuses a draft replaced during its last case authorization callback\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 19,
+          "text": "import { plannerAt, plannerFixture } from \"../wp03/planner-fixture.ts\""
+        },
+        {
+          "line": 30,
+          "text": "const fixture = await hotTopicFixture()"
+        },
+        {
+          "line": 32,
+          "text": "const original = await fixture.readState()"
+        },
+        {
+          "line": 33,
+          "text": "const official = await fixture.official()"
+        },
+        {
+          "line": 34,
+          "text": "expect(await fixture.drafts.register(fixture.request, fixture.readContext)).toEqual({ status: \"denied\", reason: \"hot-topic-draft-access-unavailable\" })"
+        },
+        {
+          "line": 35,
+          "text": "expect(await fixture.readState()).toEqual(original)"
+        },
+        {
+          "line": 36,
+          "text": "const context = await fixture.admit(\"decisions.draft-hot-topic\", fixture.request, \"draft-first\")"
+        },
+        {
+          "line": 37,
+          "text": "const registered = await fixture.drafts.register(fixture.request, context)"
+        },
+        {
+          "line": 41,
+          "text": "const current = await fixture.drafts.readCurrent({ caseRef, draftRef: registered.value.draftRef }, fixture.readContext)"
+        },
+        {
+          "line": 43,
+          "text": "expect(await fixture.drafts.list({ caseRef }, fixture.readContext)).toEqual({ status: \"ok\", value: [{ draftRef: registered.value.draftRef, label: fixture.request.fields.action, version: 1, target: fixture.request.target }] })"
+        },
+        {
+          "line": 44,
+          "text": "const saved = await fixture.readState()"
+        },
+        {
+          "line": 52,
+          "text": "expect(await fixture.drafts.register(fixture.request, context)).toEqual(registered)"
+        },
+        {
+          "line": 53,
+          "text": "expect(await fixture.readState()).toEqual(saved)"
+        },
+        {
+          "line": 55,
+          "text": "expect(await fixture.official()).toEqual(official)"
+        },
+        {
+          "line": 56,
+          "text": "} finally { await fixture.close() }"
+        },
+        {
+          "line": 60,
+          "text": "const fixture = await hotTopicFixture()"
+        },
+        {
+          "line": 62,
+          "text": "const original = await fixture.readState()"
+        },
+        {
+          "line": 63,
+          "text": "const official = await fixture.official()"
+        },
+        {
+          "line": 65,
+          "text": "const context = await fixture.admit(\"decisions.draft-hot-topic\", fixture.request, `draft-race-${race}`)"
+        },
+        {
+          "line": 69,
+          "text": "const applied = await fixture.persistence.transaction(\"dashboard\", async (snapshot) => {"
+        },
+        {
+          "line": 77,
+          "text": "await fixture.editCase()"
+        },
+        {
+          "line": 79,
+          "text": "const result = await fixture.drafts.register(fixture.request, context)"
+        },
+        {
+          "line": 83,
+          "text": "const after = await fixture.readState()"
+        },
+        {
+          "line": 94,
+          "text": "const changed = await fixture.official()"
+        },
+        {
+          "line": 98,
+          "text": "} else expect(await fixture.official()).toEqual(official)"
+        },
+        {
+          "line": 99,
+          "text": "} finally { await fixture.close() }"
+        },
+        {
+          "line": 103,
+          "text": "const fixture = await hotTopicFixture()"
+        },
+        {
+          "line": 105,
+          "text": "const context = await fixture.admit(\"decisions.draft-hot-topic\", fixture.request, \"draft-original\")"
+        },
+        {
+          "line": 106,
+          "text": "const registered = await fixture.drafts.register(fixture.request, context)"
+        },
+        {
+          "line": 108,
+          "text": "const before = await fixture.readState()"
+        },
+        {
+          "line": 109,
+          "text": "const official = await fixture.official()"
+        },
+        {
+          "line": 111,
+          "text": "const updateContext = await fixture.admit(\"decisions.draft-hot-topic\", update, \"draft-update\")"
+        },
+        {
+          "line": 116,
+          "text": "const revised = await fixture.drafts.register(update, updateContext)"
+        },
+        {
+          "line": 120,
+          "text": "const read = await fixture.drafts.readCurrent({ caseRef, draftRef: registered.value.draftRef }, fixture.readContext)"
+        },
+        {
+          "line": 124,
+          "text": "expect(await fixture.drafts.readCurrent({ caseRef, draftRef: observed.replacement.draftRef }, fixture.readContext)).toMatchObject({ status: \"ok\", value: { version: 2, fields: update.fields } })"
+        },
+        {
+          "line": 125,
+          "text": "expect(await fixture.drafts.readCurrent({ caseRef, draftRef: registered.value.draftRef }, fixture.readContext)).toEqual({ status: \"stale\", reason: \"hot-topic-draft-changed\" })"
+        },
+        {
+          "line": 126,
+          "text": "const after = await fixture.readState()"
+        },
+        {
+          "line": 133,
+          "text": "expect(await fixture.official()).toEqual(official)"
+        },
+        {
+          "line": 134,
+          "text": "} finally { await fixture.close() }"
+        },
+        {
+          "line": 138,
+          "text": "const fixture = await hotTopicFixture()"
+        },
+        {
+          "line": 140,
+          "text": "const context = await fixture.admit(\"decisions.draft-hot-topic\", fixture.request, \"list-original\")"
+        },
+        {
+          "line": 141,
+          "text": "const registered = await fixture.drafts.register(fixture.request, context)"
+        },
+        {
+          "line": 143,
+          "text": "const before = await fixture.readState()"
+        },
+        {
+          "line": 144,
+          "text": "const official = await fixture.official()"
+        },
+        {
+          "line": 146,
+          "text": "const updateContext = await fixture.admit(\"decisions.draft-hot-topic\", update, \"list-update\")"
+        },
+        {
+          "line": 151,
+          "text": "const revised = await fixture.drafts.register(update, updateContext)"
+        },
+        {
+          "line": 155,
+          "text": "const listed = await fixture.drafts.list({ caseRef }, fixture.readContext)"
+        },
+        {
+          "line": 159,
+          "text": "expect(await fixture.drafts.list({ caseRef }, fixture.readContext)).toEqual({ status: \"ok\", value: [{ draftRef: observed.replacement.draftRef, label: update.fields.action, version: 2, target: fixture.request.target }] })"
+        },
+        {
+          "line": 160,
+          "text": "const after = await fixture.readState()"
+        },
+        {
+          "line": 167,
+          "text": "expect(await fixture.official()).toEqual(official)"
+        },
+        {
+          "line": 168,
+          "text": "} finally { await fixture.close() }"
+        },
+        {
+          "line": 172,
+          "text": "const fixture = await plannerFixture()"
+        },
+        {
+          "line": 174,
+          "text": "for (const surface of [\"dashboard\", \"procurement\"] as const) await fixture.persistence.initializeSources(surface)"
+        },
+        {
+          "line": 175,
+          "text": "await fixture.persistence.transaction(\"dashboard\", async (snapshot) => {"
+        },
+        {
+          "line": 244,
+          "text": "const dashboard = await fixture.persistence.transaction(\"dashboard\", async (snapshot) => ({ commit: false, value: { data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== \"__sfProductV1\")), audit: snapshot.audit, versions: snapshot.versions, sequences: snapshot.sequences, notices: snapshot.notices } }))"
+        },
+        {
+          "line": 245,
+          "text": "return { dashboard: structuredClone(dashboard), planner: await fixture.readSnapshot() }"
+        },
+        {
+          "line": 247,
+          "text": "return { access: fixture.access, admit, controls, drafts, editCase, official, persistence: fixture.persistence, readContext, readState, request, close: async () => { contexts.forEach(human.finish); await fixture.close() } }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "sha256": "e8ab9f17cb78bf127e2091ada9b70bdc931d22e410f95f5cccb11c5fb17e3c70",
+      "producerPin": {
+        "pr": 35,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "sourceCommit": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+        "gitBlob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 22853,
+        "sha256": "e8ab9f17cb78bf127e2091ada9b70bdc931d22e410f95f5cccb11c5fb17e3c70",
+        "candidateBlob": null,
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "triageOwner": "WP11",
+      "declarations": [],
+      "budgetDeclarations": [
+        {
+          "line": 86,
+          "text": "}, 60_000)"
+        },
+        {
+          "line": 123,
+          "text": "}, 60_000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 24,
+          "text": "import { plannerAt, plannerFixture, plannerPeriod, plannerSnapshot } from \"../wp03/planner-fixture.ts\""
+        },
+        {
+          "line": 37,
+          "text": "const fixture = await coverageFixture()"
+        },
+        {
+          "line": 39,
+          "text": "const official = await fixture.official()"
+        },
+        {
+          "line": 41,
+          "text": "const before = await fixture.readState()"
+        },
+        {
+          "line": 44,
+          "text": "const baseline = await fixture.baseline.resolveForecastCoverage(source.refId, fixture.readContext)"
+        },
+        {
+          "line": 45,
+          "text": "const observation = await fixture.planner.simulateScenario({ baseRef: source.refId, operations: [], assumptions: [] }, fixture.readContext)"
+        },
+        {
+          "line": 52,
+          "text": "const request = await fixture.request(index, [])"
+        },
+        {
+          "line": 53,
+          "text": "const context = await fixture.admit(\"decisions.promote-alternative\", request, `promote-${index}`)"
+        },
+        {
+          "line": 55,
+          "text": "const promoted = await fixture.mutations.addAlternative(request, context)"
+        },
+        {
+          "line": 59,
+          "text": "const after = await fixture.readState()"
+        },
+        {
+          "line": 67,
+          "text": "expect(await fixture.mutations.addAlternative(request, context)).toEqual(promoted)"
+        },
+        {
+          "line": 69,
+          "text": "expect(await fixture.readState()).toEqual(after)"
+        },
+        {
+          "line": 71,
+          "text": "const request = await fixture.request(1, [{ kind: \"replace\", targetRef: \"line:1\", amount: 42, currency: \"USD\", period: { start: \"2027-01-01\", end: \"2027-01-31\" } }])"
+        },
+        {
+          "line": 72,
+          "text": "const context = await fixture.admit(\"decisions.promote-alternative\", request, \"promote-changed\")"
+        },
+        {
+          "line": 74,
+          "text": "const promoted = await fixture.mutations.addAlternative(request, context)"
+        },
+        {
+          "line": 77,
+          "text": "const decision = (await fixture.readState()).cases[caseRef.id]!"
+        },
+        {
+          "line": 84,
+          "text": "expect(await fixture.official()).toEqual(official)"
+        },
+        {
+          "line": 85,
+          "text": "} finally { await fixture.close() }"
+        },
+        {
+          "line": 89,
+          "text": "const fixture = await coverageFixture()"
+        },
+        {
+          "line": 91,
+          "text": "const before = await fixture.readState()"
+        },
+        {
+          "line": 92,
+          "text": "const official = await fixture.official()"
+        },
+        {
+          "line": 93,
+          "text": "const request = await fixture.request(1, [])"
+        },
+        {
+          "line": 94,
+          "text": "const context = await fixture.admit(\"decisions.promote-alternative\", request, `reject-${fault}`)"
+        },
+        {
+          "line": 96,
+          "text": "const rejected = await fixture.mutations.addAlternative(request, context)"
+        },
+        {
+          "line": 105,
+          "text": "const after = await fixture.readState()"
+        },
+        {
+          "line": 117,
+          "text": "const changed = await fixture.official()"
+        },
+        {
+          "line": 121,
+          "text": "} else expect(await fixture.official()).toEqual(official)"
+        },
+        {
+          "line": 122,
+          "text": "} finally { await fixture.close() }"
+        },
+        {
+          "line": 130,
+          "text": "const fixture = await plannerFixture(initial)"
+        },
+        {
+          "line": 132,
+          "text": "for (const surface of [\"dashboard\", \"procurement\"] as const) await fixture.persistence.initializeSources(surface)"
+        },
+        {
+          "line": 217,
+          "text": "if (controls.fault === \"source-change\") await fixture.persistence.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 245,
+          "text": "const official = async () => { const snapshot = await fixture.readSnapshot(); return structuredClone({ versions: snapshot.data.versions, officials: snapshot.data.officials, audit: snapshot.audit, revisions: snapshot.versions }) }"
+        },
+        {
+          "line": 246,
+          "text": "return { access: fixture.access, admit, baseline, basis, controls, mutations, official, planner: product.planner, readContext, readState, refs, request, close: async () => { contexts.forEach(human.finish); await fixture.close() } }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "own": true,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "2f8e2d6bebd81257437577d1cf50cf551374807c",
+      "sha256": "2381567d75eb108c30187e1c0d7df5acd5fe7a3f3f3f35b12530ade7e62c822e",
+      "producerPin": null,
+      "triageOwner": "WP10",
+      "declarations": [
+        {
+          "line": 29,
+          "declaration": "test(\"real Portfolio HTTP reconciliation preserves the original C08 choice and refuses forged, revoked and replaced origins\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [
+        {
+          "line": 215,
+          "text": "}, 360_000)"
+        }
+      ],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 13,
+          "text": "import { financialCompositionFixture } from \"./financial-composition-fixture.ts\""
+        },
+        {
+          "line": 14,
+          "text": "import { compositionTestDeadline } from \"./composition-test-deadline.ts\""
+        },
+        {
+          "line": 32,
+          "text": "const fixture = await deadline.phase(\"fixture.initialize\", async () => {"
+        },
+        {
+          "line": 33,
+          "text": "const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check(),"
+        },
+        {
+          "line": 47,
+          "text": "const sources = await deadline.phase(\"fixture.actual-source-components\", async () => {"
+        },
+        {
+          "line": 48,
+          "text": "const call = await fixture.read()"
+        },
+        {
+          "line": 69,
+          "text": "ok(await authority.state.transaction(fixture.request(\"empty-reconciliation-case\"), { namespace: \"cases\", expectedStorageVersion: 0,"
+        },
+        {
+          "line": 76,
+          "text": "const call = await fixture.read()"
+        },
+        {
+          "line": 86,
+          "text": "coverage.push(await deadline.phase(`coverage.${index}`, async () => {"
+        },
+        {
+          "line": 87,
+          "text": "const call = ok(await authority.human.admit(fixture.request(`coverage-${index}`), \"decisions.coverage\", request), \"Admit coverage\")"
+        },
+        {
+          "line": 94,
+          "text": "const response = await http(new Request(`https://example.test/product/planner?sf=${mode}`, { method: \"POST\", signal: deadline.signal,"
+        },
+        {
+          "line": 100,
+          "text": "const found = ok(await authority.state.read(fixture.request(), \"cases\", (state) => ({ decision: state.cases[initialRef.id],"
+        },
+        {
+          "line": 117,
+          "text": "await deadline.phase(\"criterion-and-selection\", async () => {"
+        },
+        {
+          "line": 120,
+          "text": "const human = ok(await authority.human.admit(fixture.request(\"rule\"), \"decisions.criteria\", rule), \"Admit criterion\")"
+        },
+        {
+          "line": 124,
+          "text": "const selected = ok(await authority.human.admit(fixture.request(\"selection\"), \"decisions.select-portfolio\", request), \"Admit selection\")"
+        },
+        {
+          "line": 146,
+          "text": "const fresh = await deadline.phase(\"origin.current\", () => scoped(candidate.caseRef, (call) => portfolio.reconciliation.readPortfolio({ caseRef: candidate.caseRef,"
+        },
+        {
+          "line": 178,
+          "text": "const page = await deadline.phase(\"http.readonly-page\", () => http(new Request(pageUrl, { signal: deadline.signal }), \"planner\"))"
+        },
+        {
+          "line": 192,
+          "text": "expect((await http(new Request(pageUrl, { signal: deadline.signal }), \"planner\"))?.status).toBe(403)"
+        },
+        {
+          "line": 214,
+          "text": "} finally { await deadline.close() }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "blobSha": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+        "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "bytes": 11611,
+        "pr": 35,
+        "owner": "astra-finance / WP03-WP05-WP11",
+        "beforeBlobSha": null,
+        "admission": "exact-published-renewal-closure",
+        "reason": "Canonical actor extraction plus the real source/case verifier and renewal fixture; whole source-admission and case-read-scope counterproofs qualify the published change in W22 D. Separate CurrentChoicePreview cohort is held; no prior hosted result is transferred."
+      },
+      "triageOwner": "WP11",
+      "declarations": [
+        {
+          "line": 30,
+          "declaration": "test(\"empty-source admission observes two authenticated projections and refuses a static reference after a real Planner edit\", async () => {"
+        },
+        {
+          "line": 102,
+          "declaration": "test(\"empty-source admission refuses authority revoked by its final authentication callback\", async () => {"
+        },
+        {
+          "line": 128,
+          "declaration": "test(\"empty-source admission refuses mismatched scope, projection fields, digest and source period\", async () => {"
+        },
+        {
+          "line": 158,
+          "declaration": "test(\"nonempty operations retain the canonical target verifier and never write the real source\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 8,
+          "text": "import { createRenewalSourceFixture } from \"./renewal-source-fixture.ts\""
+        },
+        {
+          "line": 19,
+          "text": "const changed = await fixture.store.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 31,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 45,
+          "text": "const originalReference = await fixture.sources.resolveForecastSource(request.baseRef, fixture.context)"
+        },
+        {
+          "line": 46,
+          "text": "expect(await verify(request, fixture.context)).toBe(true)"
+        },
+        {
+          "line": 49,
+          "text": "expect(await verify({ baseRef: request.baseRef, assumptions: [] } as unknown as ScenarioRequest, fixture.context)).toBe(false)"
+        },
+        {
+          "line": 50,
+          "text": "expect(await changeRenewalSource(fixture)).toBe(true)"
+        },
+        {
+          "line": 51,
+          "text": "expect(await fixture.sources.resolveForecastSource(request.baseRef, fixture.context)).toEqual(originalReference)"
+        },
+        {
+          "line": 52,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(true)"
+        },
+        {
+          "line": 53,
+          "text": "expect(await verify(request, fixture.context)).toBe(false)"
+        },
+        {
+          "line": 54,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 59,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 65,
+          "text": "const observed = await fixture.sources.resolveForecastSource(...args)"
+        },
+        {
+          "line": 66,
+          "text": "if (race === \"second-source-resolve\" && controls.source === 2) controls.sourceCommitted = await changeRenewalSource(fixture)"
+        },
+        {
+          "line": 75,
+          "text": "if (race === \"last-revalidate-source-change\") controls.sourceCommitted = await changeRenewalSource(fixture)"
+        },
+        {
+          "line": 81,
+          "text": "expect(await createRenewalOperationVerifier(host, sources)(sourceOnlyRequest(fixture), fixture.context)).toBe(false)"
+        },
+        {
+          "line": 89,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(false)"
+        },
+        {
+          "line": 96,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(true)"
+        },
+        {
+          "line": 98,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 103,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 109,
+          "text": "const observed = await fixture.host.authenticate(...args)"
+        },
+        {
+          "line": 120,
+          "text": "expect(await createRenewalOperationVerifier(host, fixture.sources)(sourceOnlyRequest(fixture), fixture.context)).toBe(false)"
+        },
+        {
+          "line": 124,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(false)"
+        },
+        {
+          "line": 125,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 129,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 131,
+          "text": "const source = await fixture.sources.resolveForecastSource(fixture.baselineScenario.baseRef, fixture.context)"
+        },
+        {
+          "line": 132,
+          "text": "if (source.status !== \"ok\") throw new Error(\"Canonical fixture source unavailable\")"
+        },
+        {
+          "line": 150,
+          "text": "const admitted = await createRenewalOperationVerifier(fixture.host, sources)(sourceOnlyRequest(fixture), fixture.context)"
+        },
+        {
+          "line": 153,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(true)"
+        },
+        {
+          "line": 154,
+          "text": "expect(await createRenewalOperationVerifier(fixture.host, fixture.sources)(sourceOnlyRequest(fixture), fixture.context)).toBe(true)"
+        },
+        {
+          "line": 155,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 159,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 161,
+          "text": "const before = await fixture.store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))"
+        },
+        {
+          "line": 171,
+          "text": "expect(await verify(fixture.scenario, fixture.context)).toBe(true)"
+        },
+        {
+          "line": 175,
+          "text": "expect(await verify(invalid, fixture.context)).toBe(false)"
+        },
+        {
+          "line": 176,
+          "text": "const after = await fixture.store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))"
+        },
+        {
+          "line": 178,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(true)"
+        },
+        {
+          "line": 179,
+          "text": "} finally { await fixture.cleanup() }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "own": false,
+      "candidateCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "candidateBlobSha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+        "blobSha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+        "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+        "bytes": 6024,
+        "pr": 35,
+        "owner": "astra-finance / WP03-WP05-WP11",
+        "beforeBlobSha": null,
+        "admission": "exact-published-renewal-closure",
+        "reason": "Canonical actor extraction plus the real source/case verifier and renewal fixture; whole source-admission and case-read-scope counterproofs qualify the published change in W22 D. Separate CurrentChoicePreview cohort is held; no prior hosted result is transferred."
+      },
+      "triageOwner": "WP11",
+      "declarations": [
+        {
+          "line": 9,
+          "declaration": "test(\"case operation admission observes all alternatives in a read-only scope without changing durable state\", async () => {"
+        },
+        {
+          "line": 23,
+          "declaration": "test(\"case operation admission refuses a nested source write even when the source callback swallows its rejection\", async () => {"
+        },
+        {
+          "line": 54,
+          "declaration": "test(\"a later case operation admission observes a committed source change instead of reusing the prior scope\", async () => {"
+        },
+        {
+          "line": 72,
+          "declaration": "test(\"case operation admission refuses authority revoked by an awaited source callback\", async () => {"
+        }
+      ],
+      "budgetDeclarations": [],
+      "fixtureAndLatencyAnchors": [
+        {
+          "line": 5,
+          "text": "import { createRenewalSourceFixture } from \"./renewal-source-fixture.ts\""
+        },
+        {
+          "line": 10,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 12,
+          "text": "if (!fixture.store.transactionAll) throw new Error(\"Real cross-surface snapshot transaction unavailable\")"
+        },
+        {
+          "line": 13,
+          "text": "const before = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))"
+        },
+        {
+          "line": 15,
+          "text": "expect(await verify(fixture.decision, fixture.context)).toBe(true)"
+        },
+        {
+          "line": 17,
+          "text": "expect(await verify(sourceOnly, fixture.context)).toBe(true)"
+        },
+        {
+          "line": 18,
+          "text": "const after = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))"
+        },
+        {
+          "line": 20,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 24,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 26,
+          "text": "if (!fixture.store.transactionAll) throw new Error(\"Real cross-surface snapshot transaction unavailable\")"
+        },
+        {
+          "line": 27,
+          "text": "const before = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))"
+        },
+        {
+          "line": 30,
+          "text": "const observed = await fixture.sources.resolveForecastSource(reference, context)"
+        },
+        {
+          "line": 34,
+          "text": "await fixture.store.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 43,
+          "text": "expect(await createRenewalCaseOperationVerifier(fixture.host, sources)(sourceOnly, fixture.context)).toBe(false)"
+        },
+        {
+          "line": 48,
+          "text": "const after = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))"
+        },
+        {
+          "line": 50,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(true)"
+        },
+        {
+          "line": 51,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 55,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 59,
+          "text": "expect(await verify(sourceOnly, fixture.context)).toBe(true)"
+        },
+        {
+          "line": 60,
+          "text": "const original = await fixture.sources.resolveForecastSource(fixture.baselineScenario.baseRef, fixture.context)"
+        },
+        {
+          "line": 61,
+          "text": "const changed = await fixture.store.transaction(\"planner\", async (snapshot) => {"
+        },
+        {
+          "line": 66,
+          "text": "expect(await fixture.sources.resolveForecastSource(fixture.baselineScenario.baseRef, fixture.context)).toEqual(original)"
+        },
+        {
+          "line": 67,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(true)"
+        },
+        {
+          "line": 68,
+          "text": "expect(await verify(sourceOnly, fixture.context)).toBe(false)"
+        },
+        {
+          "line": 69,
+          "text": "} finally { await fixture.cleanup() }"
+        },
+        {
+          "line": 73,
+          "text": "const fixture = await createRenewalSourceFixture(\"omitted\")"
+        },
+        {
+          "line": 77,
+          "text": "const observed = await fixture.sources.resolveForecastSource(reference, context)"
+        },
+        {
+          "line": 82,
+          "text": "expect(await createRenewalCaseOperationVerifier(fixture.host, sources)(fixture.decision, fixture.context)).toBe(false)"
+        },
+        {
+          "line": 85,
+          "text": "expect(await fixture.host.revalidate(fixture.context)).toBe(false)"
+        },
+        {
+          "line": 86,
+          "text": "} finally { await fixture.cleanup() }"
+        }
+      ]
+    }
+  ],
+  "qualification": "Textual declarations only; parameterized execution counts and outcomes are unknown until terminal logs."
+}

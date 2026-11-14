@@ -1,0 +1,182 @@
+{
+  "schema": "wp10-calculation-owner-intake-static-review-v1",
+  "reviewStatus": "RECOMMEND_INTAKE_PENDING_HOSTED_GATES",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pullRequest": 59,
+    "branch": "diagnose-calculation",
+    "head": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+    "tree": "f1ef898362d27d16f53aebfc278eee6d6ff9d73d",
+    "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/diagnostics/calculation/proposed/0001-wp10-source-observation.patch.txt",
+    "patchBlob": "343a58d44ec0fda7f5f981dec5dd11bb1614967e"
+  },
+  "reviewedProduct": {
+    "W": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+    "tree": "6b889a436fafe019580801edba3015d90fa75dfd",
+    "note": "Re-read current product head and both preimages immediately before owner intake. No remote mutation performed."
+  },
+  "files": [
+    {
+      "local": "source-lifecycle.ts",
+      "destination": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "preimageBlob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "postimageBlob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "sha256": "0936904cb37246dfa9df990580a87ac1398a5bc31c725e5ec2e136a2ab1ae915",
+      "bytes": 15333,
+      "mode": "100644",
+      "construction": "Exact application of received proposal; no additional product edits."
+    },
+    {
+      "local": "planner-sources.ts",
+      "destination": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "preimageBlob": "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+      "postimageBlob": "02d75207b2978cc5c05368cc7e3517efeb3ce3ce",
+      "sha256": "cb11419636ac5cbb8177ee57d9b0150b326fbe42d5bdadc30181494b40a4e0ff",
+      "bytes": 6964,
+      "mode": "100644",
+      "construction": "Exact application of received proposal; no additional product edits."
+    },
+    {
+      "local": "calculation-source-observation.test.ts",
+      "destination": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts",
+      "sourcePath": "modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts",
+      "sourceBlob": "2bf73c9b16a502ba9b858227697d0b509e3a7d60",
+      "postimageBlob": "7ae920af654ccf3f2b796ad1b4aac87d822c0334",
+      "sha256": "2fcd9f0bf7fbee2c73621293654ae2acb9e8fb86e8c3465c975f8ae80a364752",
+      "bytes": 12421,
+      "mode": "100644",
+      "construction": "Copy to owned WP10 integration namespace; only fixture import changes from ../../wp10/integration/financial-composition-fixture.ts to ./financial-composition-fixture.ts. Same directory depth leaves all ../../../../ runtime/product/src imports unchanged. All tests/assertions/hooks/budgets/comments retained."
+    }
+  ],
+  "exactHunkMatches": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "oldStart": 7,
+      "oldCount": 6,
+      "newStart": 7,
+      "newCount": 12,
+      "exactMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "oldStart": 33,
+      "oldCount": 6,
+      "newStart": 39,
+      "newCount": 21,
+      "exactMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "oldStart": 67,
+      "oldCount": 21,
+      "newStart": 88,
+      "newCount": 16,
+      "exactMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "oldStart": 1,
+      "oldCount": 6,
+      "newStart": 1,
+      "newCount": 6,
+      "exactMatch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "oldStart": 45,
+      "oldCount": 25,
+      "newStart": 45,
+      "newCount": 42,
+      "exactMatch": true
+    }
+  ],
+  "staticChecks": {
+    "sourceKernel": "Original readScopedSource callback body equals extracted readScopedSnapshot body exactly except two-space indentation.",
+    "immutableTail": "planner-sources.ts from first outer current=await read() through safeDecode remains byte-identical.",
+    "importsAndClosures": "TransactionOptions already imported and exported in runtime/contract.ts; Snapshot added to existing type import; helper closes over input/observe; prepared arrow method does not depend on this.",
+    "sameDriver": "Current authority.host.persistence is its input.persistence; createSfBusinessServices passes its input.persistence as scopedSources to createPlannerProduct. Real fixture constructs both over same SQLite driver and authoritative closure.",
+    "callbackIsolation": "requireSourceIdentities precedes prepare(structuredClone(snapshot)); prepare cannot mutate held source snapshot through its snapshot argument; existing observe digest guard and double authorizer remain.",
+    "sourceObservations": "Independent current and again invokes read() separately; no cross-call cache or remembered result is introduced.",
+    "currentAuthority": "Normal success keeps initial external revalidate, post-current revalidate, post-again revalidate and final revalidate; each stage has describe authentication and two observe authorizers.",
+    "sourceIdentity": "Scope principal/accessRevision/policyVersion, physical source identity, sourceIncarnation, scoped incarnation/version/digest, A→B→A synchronization, projection and evidence construction preserved.",
+    "egress": "All post-read identity, evidence, equality, final authority and return logic preserved.",
+    "legacy": "Absence of optional prepared method uses original describe transaction then original readScopedSource, maintaining 4 source envelopes per successful resolver.",
+    "abort": "Prepared path forwards Request.signal to existing real driver. Root driver checks signal after callback and before commit; nested reader checks scope/signal after callback. Abort after third authenticate therefore stops before external post-read revalidation.",
+    "typesLimit": "Static import/signature compatibility inspected; no TypeScript compiler, test runner, request validator, guard or build executed locally."
+  },
+  "proposedTests": {
+    "own": {
+      "request": "01-source-observation.json",
+      "requestBlob": "b0451c09772799615b6965f2fb5959711cbc3873",
+      "requestSha256": "c8a1d9e5558833aaafe3ab2a4bec168bae47a4e82c33aec2640dc9269a057164",
+      "tests": 2,
+      "oracles": [
+        "Real issued source equals fallback and prepared results/digests",
+        "4 fallback vs2 prepared source transactions,6 auth and4 revalidate retained",
+        "Same instance/context rereads freshly; durable state equal",
+        "Real80→81→80 writes cause stale old reference and larger version on reissue",
+        "Revocation at final external revalidation returns stale without value, subsequent call denied before source opens",
+        "Abort after third direct authenticate returns denied without value with1transaction/3auth/1revalidate and unchanged durable state"
+      ]
+    },
+    "fences": {
+      "request": "02-source-fences.json",
+      "requestBlob": "4b4912bf7d277d7a5e0dcbdb3f31e6ff2535cdb0",
+      "requestSha256": "62107f250d4b8248cac57bbf048726564a6ddb771bc7a7a58793017e2a5566d8",
+      "files": [
+        {
+          "path": "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+          "blob": "4011deabcd21a4168df96688c23398a3c1697c87",
+          "testDeclarations": 5
+        },
+        {
+          "path": "Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts",
+          "blob": "2c9b74d38ba911f04b7b04ee0d9b6a37579bc2e4",
+          "testDeclarations": 2
+        },
+        {
+          "path": "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+          "blob": "95e7346201b9a7356b2372f5b3631611baec361b",
+          "testDeclarations": 3
+        }
+      ]
+    },
+    "later": "Only after the short structural gate and three full fence files pass on applied W: existing full portfolio-exact-threshold, retained W27 trace, unchanged285000ms deadline/300000ms test timeout; then the diagnostic financial-preservation selection. No unchanged X replay.",
+    "typecheck": "Existing hosted check includes WP10/**/*.ts through current tsconfig, so the moved file participates; compiler/guards on applied W remain NOT_RUN."
+  },
+  "residualRisks": [
+    "Consolidated transaction contains preparation plus observation; maximum occupancy/fairness and net gain remain unmeasured.",
+    "Existing full sensitivity path retains five binding verifications; X27 reached only the first.4→2 counts do not prove full journey meets unchanged budget.",
+    "New abort case starts from already-issued/materialized scope and is not first-materialization or queue-cancellation proof.",
+    "Prepared callback snapshot isolation is explicit in code; the two copied cases exercise canonical preparation rather than malicious prepare callback mutation.",
+    "The fast path assumes canonical source persistence and authority share the installation driver; verified for current composition, not asserted for arbitrary fabricated ports."
+  ],
+  "validation": {
+    "productTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "requestValidator": "NOT_RUN",
+    "remoteChanges": 0,
+    "newRuns": 0,
+    "localProductExecutions": 0,
+    "staticTextAndHashes": "DONE"
+  },
+  "currentExistingRun": {
+    "id": 43624794783,
+    "S": "7ddf90ea85adbfc15c9ce2e6f4acc54a5f74e906",
+    "status": "completed",
+    "conclusion": "failure",
+    "testJob": 132538121932,
+    "cleanupJob": 132543694722,
+    "cleanupConclusion": "success",
+    "pass": 34,
+    "fail": 13,
+    "expects": 839,
+    "tests": 47,
+    "files": 10,
+    "bunSeconds": 1052.08,
+    "artifactCount": 0,
+    "receipt": "../wp10-diagnostics-ci/R27-terminal.json"
+  },
+  "acceptance": "Static owner intake review only. Does not establish FIN002 proof, calculation performance, whole WP10 acceptance, merge or GLOBAL_RELEASE."
+}

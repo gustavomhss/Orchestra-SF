@@ -1,0 +1,91 @@
+{
+  "schema": "wp10.unbound-data-draft-verification.v1",
+  "revision": "W26-v2",
+  "config": {
+    "path": "agents/criteria/final-package/parameters.draft-W26-v2-final.json",
+    "bytes": 959550,
+    "sha256": "ea9110990f0753ab1e79aec943f6dcc27cc85a238e8aa9dd9690028bca836600",
+    "git_blob_sha1": "c8c6773322f6da51c219d2c5029963cf1f8d3565"
+  },
+  "generator": {
+    "path": "agents/criteria/final-package/prepare_w26_v2_parameters.py",
+    "bytes": 33000,
+    "sha256": "476d8f4849aab03c6f383958d51c005c44d05ba084010850535c3ca01b2527d2",
+    "git_blob_sha1": "af92d363224d32c92112a90585bb16810bd397fa"
+  },
+  "operator_readme": {
+    "path": "agents/criteria/final-package/README-W26-v2-draft.md",
+    "bytes": 11588,
+    "sha256": "72548d4255a827587f58020e67577e3e3843dc3aea06363cb9c3b28681b460d5",
+    "git_blob_sha1": "7c6e89815fd19bfa8617bc2bf420c9eefe5ba5ea"
+  },
+  "prior_config": {
+    "path": "agents/criteria/final-package/parameters.draft-W26-v1.json",
+    "bytes": 899540,
+    "sha256": "76a11e664fcbf59b115af5c618beafba663c6d310fe151caf719f37ce26713ba",
+    "git_blob_sha1": "dac2baa63da3a05c38289a3542268200bd238b9b"
+  },
+  "prior_seal": {
+    "path": "agents/criteria/final-package/DELIVERY-W26-v1-draft.json",
+    "bytes": 4981,
+    "sha256": "1c9de3551f4218f9fcd7d4f60498f6c8c9dc4093b3afeb071c0e8b97809da69f",
+    "git_blob_sha1": "9e52c35aca85987c9bbd0520411dc43a61a44dd1"
+  },
+  "literal_criteria": 171,
+  "literal_tasks": 7,
+  "same_obligation_ids": 80,
+  "canonical_tuple_sha256": "d0718b919cd66355045c740809bcba074778b003cd1e9d33c215849a5d6b3a26",
+  "package_files": 950,
+  "package_index": {
+    "path": "agents/criteria/final-package/draft-W26-v2-final/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W26-v2-draft/review-bundle-index.json",
+    "bytes": 841550,
+    "sha256": "8352964dea2312c6489c07ae44b05c41f4c3479f4329ad6cdb5f1d5b11ae3399",
+    "git_blob_sha1": "11b83ebb50371c21d15d0955877f7a3d3de8f578"
+  },
+  "copied_byte_exact_records": 891,
+  "base64_lossless_envelopes": 20,
+  "reconstructed_original_bytes": 4392603,
+  "source_relationships_unbound": 382,
+  "all_pinned_input_hashes_verified": true,
+  "all_package_hashes_verified": true,
+  "all_copy_originals_compared": true,
+  "all_lossless_envelopes_decoded": true,
+  "json_md_txt_100644_only": true,
+  "archive_counts": {
+    "foreign_copies": 128,
+    "readonly_inputs": 131
+  },
+  "historical_ci_records": 21,
+  "historical_reviews": 25,
+  "observed_ci_pending_binding": [
+    "W26-check",
+    "W26-A-authority-lifecycle"
+  ],
+  "formal_current_ci": 0,
+  "final_reviews": 0,
+  "FINAL_W": null,
+  "FINAL_D": null,
+  "criteria_accepted": 0,
+  "tasks_accepted": 0,
+  "native_accepted": false,
+  "global_accepted": false,
+  "shared_utilities": [
+    {
+      "path": "agents/criteria/final-package/build_final.py",
+      "bytes": 54718,
+      "sha256": "834509b54245f8d320a657cdac6b50395033bd7f50784ea51f14f9381228faba",
+      "git_blob_sha1": "27300432907be461f63edfef763fa881bf5758b6"
+    },
+    {
+      "path": "agents/criteria/final-package/bind_successor_parameters.py",
+      "bytes": 17826,
+      "sha256": "7c3b8b8f501574d4b973be6559c01d125897c4f4a56cafe5c9045a3562823c1b",
+      "git_blob_sha1": "01a44600ba6f7c8d4f7e361557991552c0c2acd3"
+    }
+  ],
+  "rendered_current_obligations_verified": true,
+  "generic_unbound_builder_labels_explained_in_operator_readme": true,
+  "no_product_execution": true,
+  "no_remote_mutation": true,
+  "role": "data-builder-not-independent-review"
+}

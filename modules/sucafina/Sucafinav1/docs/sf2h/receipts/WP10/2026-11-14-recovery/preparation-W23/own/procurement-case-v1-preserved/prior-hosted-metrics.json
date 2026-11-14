@@ -1,0 +1,199 @@
+{
+  "schema": "wp10.builder.prior-hosted-metrics.v1",
+  "source": {
+    "productSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "productTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+    "snapshotSha": "6cc1999f0614f6002f2d1bfc72be2edd82ae7594",
+    "snapshotTree": "30cfb4ce128f7c8fd4f53220e66e801f1778ca1e",
+    "runId": 43605495862,
+    "jobId": 132479126824,
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "counts": {
+      "pass": 49,
+      "fail": 30,
+      "errors": 1,
+      "expects": 713,
+      "tests": 79,
+      "files": 10,
+      "durationSeconds": 2206.17,
+      "skip": 0,
+      "errorsAreAdditionalTestCases": false
+    }
+  },
+  "rawLog": {
+    "path": "evidence/W21/B-job-132479126824.raw.txt",
+    "bytes": 188901,
+    "sha256": "37c9dad034c51ee8c0fc1ccf84639468f5d035df26f484c1272efecc7fdf14da",
+    "git_blob_sha1": "505dacaf25e4624a902254c1d3090e17627d2f65",
+    "characters": 188899,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "metrics": [
+    {
+      "scenario": "H02",
+      "milliseconds": 47466,
+      "sqliteTransactions": 13451,
+      "sqliteAllTransactions": 52,
+      "sqliteMilliseconds": 46557,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 531,
+          "sqliteTransactions": 416
+        },
+        {
+          "mode": "decision-apply",
+          "status": 400,
+          "milliseconds": 0,
+          "sqliteTransactions": 0
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 2444,
+          "sqliteTransactions": 660
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 7734,
+          "sqliteTransactions": 2152
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 8285,
+          "sqliteTransactions": 2258
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 7773,
+          "sqliteTransactions": 2157
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 5,
+          "sqliteTransactions": 1
+        }
+      ]
+    },
+    {
+      "scenario": "H03",
+      "milliseconds": 47755,
+      "sqliteTransactions": 8296,
+      "sqliteAllTransactions": 43,
+      "sqliteMilliseconds": 47016,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 507,
+          "sqliteTransactions": 416
+        },
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 2720,
+          "sqliteTransactions": 710
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 13287,
+          "sqliteTransactions": 2152
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 14346,
+          "sqliteTransactions": 2258
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 635,
+          "sqliteTransactions": 92
+        }
+      ]
+    },
+    {
+      "scenario": "H05",
+      "milliseconds": 16942,
+      "sqliteTransactions": 4966,
+      "sqliteAllTransactions": 32,
+      "sqliteMilliseconds": 16570,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 534,
+          "sqliteTransactions": 416
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 7928,
+          "sqliteTransactions": 2152
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 8312,
+          "sqliteTransactions": 2260
+        }
+      ]
+    },
+    {
+      "scenario": "H06",
+      "milliseconds": 38147,
+      "sqliteTransactions": 10764,
+      "sqliteAllTransactions": 44,
+      "sqliteMilliseconds": 37368,
+      "http": [
+        {
+          "mode": "decision-prepare-changes",
+          "status": 200,
+          "milliseconds": 531,
+          "sqliteTransactions": 416
+        },
+        {
+          "mode": "decision-review",
+          "status": 200,
+          "milliseconds": 7707,
+          "sqliteTransactions": 2152
+        },
+        {
+          "mode": "decision-apply",
+          "status": 503,
+          "milliseconds": 7869,
+          "sqliteTransactions": 2195
+        },
+        {
+          "mode": "decision-apply",
+          "status": 409,
+          "milliseconds": 6686,
+          "sqliteTransactions": 1832
+        },
+        {
+          "mode": "decision-apply",
+          "status": 200,
+          "milliseconds": 7014,
+          "sqliteTransactions": 1891
+        },
+        {
+          "mode": "decision-apply",
+          "status": 403,
+          "milliseconds": 8127,
+          "sqliteTransactions": 2144
+        }
+      ]
+    }
+  ],
+  "qualification": "These are observed W21 B values, not W23 measurements. sqliteTransactions/sqliteAllTransactions are producer instrumentation labels; no conversion to physical commits is claimed. H05 additionally observes expected409/received200."
+}

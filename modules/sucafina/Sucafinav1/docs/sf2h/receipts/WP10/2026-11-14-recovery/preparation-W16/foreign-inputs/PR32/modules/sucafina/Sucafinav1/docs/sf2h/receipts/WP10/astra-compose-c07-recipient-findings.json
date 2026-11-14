@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h-wp10-finding-v1",
+  "scope": "C07 historical completed-result consumer and recipient authority",
+  "productHead": "4306b310e4d6dac77f9beab461adad4e8e924849",
+  "productTree": "b786e0cee23f13c11542cea32db38ef532071576",
+  "status": "OPEN_DEPENDENCIES_STATIC_AUDIT",
+  "checks": {
+    "kind": "source-read-only",
+    "productTestsRun": false,
+    "nativeProof": false,
+    "independentFinalReview": false
+  },
+  "sources": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "611831c32ddbf58296b33e1930806185564189b9"
+    },
+    {
+      "path": "packages/core/src/relay-workflow-binding.ts",
+      "blob": "7149e276e0c214d70c2dafad90dadff5d2c21059"
+    }
+  ],
+  "upstreamFindings": [
+    "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6874883202",
+    "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6874858946",
+    "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6875055008"
+  ],
+  "findings": [
+    {
+      "id": "WP10-C07-HISTORICAL-CONSUMER",
+      "owners": [
+        "WP10 composition",
+        "WP09 C07 producer",
+        "C17 source producers"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/routine-services.ts",
+        "apps/cli/src/sucafina-product/routine-inputs.ts",
+        "modules/sucafina/Sucafinav1/product/routines/result-access.ts"
+      ],
+      "observed": "validateRecord is shared by admission, start and result reads; it requires exact current case version, resolveInputs with fresh-only C17 resolution, current source equality, and executable publication revalidation. Completed artifacts with valid immutable terminal receipts therefore cannot be reopened after a legitimate source/case version advance.",
+      "publicationCorrection": "RelayWorkflowBinding.revalidate reacquires expected.publication as a pinned immutable version. A later draft or republication alone does not replace or reject that pin. Unpublish/archive and skill/materialization/knowledge changes can reject it. Removing revalidate on the premise that it always follows the latest version is incorrect.",
+      "missingEvidence": "The native adapter is not installed in host-context. SfRoutineNativeRecord retains opaque inputRefs and SourceRef[], but no authoritative original BusinessEvidenceRef[] mapping. Current case evidence cannot reconstruct evidence removed or advanced since admission. C07 output currently has no explicit fresh/historical/currentRef/differences envelope.",
+      "boundedSeam": "Keep prepareAdmission/readAdmission/start strict. A separate completed-result read must consume the actual immutable native admission, original C17 refs, exact run/result/input/output/terminal revision tuple, physical case/source continuity and current caller/source ACL. Revalidate before and after artifact read. Return original pins plus explicit historical status/currentRef/differences through an owner-approved C07/C06 envelope; never relabel original output as fresh or rewrite its digest.",
+      "proofRequirements": [
+        "real governed admission/start/terminal receipt and artifact digest",
+        "completed historical result opens after case/source version advance with original pins and explicit stale display",
+        "prepare/start remain stale after the same advance",
+        "physical replacement, revoked ACL, cancellation, changed terminal receipt, provider replacement and output corruption deny without payload",
+        "sf_routine_result authorization is reacquired on each open/preserve; sf_review_prepare is not reused"
+      ],
+      "disposition": "No source relaxation or native-provider stub supplied. Consumer implementation remains blocked on producer retention/proof and approved historical envelope. Current C17 historical staging is not treated as published evidence for this pin."
+    },
+    {
+      "id": "WP10-COLLABORATION-RECIPIENT-AUTHORITY",
+      "owners": [
+        "WP10 host composition",
+        "WP07/WP08 collaboration",
+        "existing authoritative identity/access provider owner"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/host.ts"
+      ],
+      "observed": "createCollaborationHost receives issueForActor/prepareReissueScope but no recipientAuthority. Cross-recipient writes fail closed. Directory membership and data.access[id] only locate a person; caller authentication does not establish the selected person's permissions.",
+      "boundedSeam": "Inject an existing trusted host-private CollaborationRecipientAuthority through createSfBusinessServices into createCollaborationHost only when a real authoritative provider exists. authorize must resolve recipient access to every exact evidence field/period using current domain authority without forging a Request. checkAtCommit must synchronously check the matching host-private lease and current revocation/generation while the transaction owner checks current C08 source and caller fences; no nested I/O transaction or cached boolean.",
+      "leaseBinding": [
+        "installation/project/policy",
+        "current caller Request and binding",
+        "exact recipient identity",
+        "all evidence digests/fields/periods/incarnations",
+        "current recipient membership/ACL revision",
+        "provider generation and cancellation"
+      ],
+      "proofRequirements": [
+        "real two-user positive cycle with current exact recipient access",
+        "same-project unauthorized recipient denied",
+        "field/period narrowing, membership/ACL revocation and provider replacement between authorize and commit deny atomically",
+        "different caller, recipient, project, evidence, physical incarnation or concurrent invocation cannot borrow a lease",
+        "failed commit authority leaves no relation/thread/handoff write"
+      ],
+      "disposition": "No authoritative arbitrary-recipient identity/permission producer exists in the inspected host APIs. No grant, synthetic recipient Request, role-name inference or placeholder authority is introduced. Missing injection alone is insufficient to implement the behavior safely."
+    }
+  ],
+  "nextAction": "Owners supply the original native C07 evidence/terminal producer and recipient-authority proof boundary; WP10 then composes the explicit consumers and surgical regression checks. Existing cross-recipient and missing-native fail-closed behavior remains."
+}

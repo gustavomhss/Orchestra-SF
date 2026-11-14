@@ -1,0 +1,218 @@
+{
+  "schema": "wp10-independent-preflight-v1",
+  "reviewer": "R2",
+  "agent": "/root/independent_r2_w16",
+  "candidateSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "candidateTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "parentSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "pr": 29,
+  "base": "sf2-stack",
+  "verdict": "HOLD",
+  "phase": "source-and-hosted-check-preflight",
+  "finalForCandidate": false,
+  "evidenceCutoffUtc": "2026-11-14 15:17:15 UTC",
+  "independence": {
+    "productAuthorship": false,
+    "testAuthorship": false,
+    "productEdits": false,
+    "remoteMutation": false,
+    "localProductExecution": false,
+    "method": "Static frozen-source/diff/JSON/tree/hash reads and read-only GitHub MCP; only new R2 review artifacts written.",
+    "builderNarrativeAcceptedAsProof": false
+  },
+  "summary": "Publication, ownership and the exact Finance intake are coherent. No new actionable own financial-source defect found in this preflight. Exact W22 check has0 own and13 foreign diagnostics; package check remains failed. W22 A is in progress, other functional evidence is pending. W21 results remain historical. This is not final acceptance.",
+  "verifiedStatic": {
+    "hydratedFiles": 1408,
+    "matchingHydratedFiles": 1408,
+    "fullTreeBlobs": 16381,
+    "deltaPaths": 80,
+    "ownSourceAndTest": 10,
+    "publishedForeign": 5,
+    "newReceipts": 65,
+    "foreignPins": 440,
+    "pinMismatches": 0,
+    "newPinPaths": 2,
+    "updatedPinPaths": 3,
+    "removedPinPaths": 0,
+    "deletedPaths": 0,
+    "ownershipViolations": 0,
+    "priorReceiptsPreserved": 268,
+    "canonicalCriteria": 171,
+    "literalCriteriaAndProofIdsPreserved": true,
+    "tasks": 7,
+    "foreignArchiveIndexCount": 128,
+    "readonlyInputIndexCount": 131,
+    "individualOriginalForeignFilesRefetched": false,
+    "remoteCandidateAndUpstreamBlobChecks": 10,
+    "relativeImportsChecked": 68,
+    "missingRelativeImports": 0,
+    "archivedR2W21ReportsByteExact": true,
+    "priorR2W20AndW21ArtifactsUnchanged": true
+  },
+  "financeIntake": {
+    "id": 24,
+    "sourcePr": 35,
+    "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "admittedPaths": [
+      "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts"
+    ],
+    "allExactPublishedBlobs": true,
+    "observations": [
+      "Production delta only extracts plannerSourceActor from the previous inline actor mapping with the same principal/local rejection, role filter, canWrite, assigned and domains behavior. No monetary calculation changed in this producer diff.",
+      "Fixture source-only admission validates exact evidence digest/scope/year/fields and two actor-filtered projections from real snapshots. A real source CAS or lease change is refused. It returns admission, not a fabricated financial output or C10 proof.",
+      "Nonempty operations retain the canonical verifier. Per-case grouping awaits all sibling verification and keeps final asynchronous authority checking inside the protected read-only transaction; a swallowed nested write still poisons that transaction.",
+      "Renewal fixture retains C10 for persisted results, comparison, criteria and preview; only source DomainProjection uses sourcePlanner. New source-admission and case-scope whole files are present in the18-file D plan.",
+      "These fixture and source observations are not native/global acceptance or executed W22 test results."
+    ]
+  },
+  "heldCurrentChoice": {
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts"
+    ],
+    "notAdmitted": true,
+    "existingProducerBlobPreserved": "d19f735539df9b9b4fa637367f58fa0c0b674562",
+    "threeNewFilesAbsentFromFullTree": true,
+    "reason": "W22-OWNER-CURRENT-CHOICE-FINAL-LEASE-01 is statically corroborated: the proposed producer returns after a final awaited C08 case read without rechecking the private UI lease/Request identity; its test folds ui.revalidate into C08 authorization, unlike composed product-authority. This is an owner review hypothesis, not a hosted failure. The proposed four-path cohort is correctly held.",
+    "proposedBlob": "38f82f4b931682e255a18d52856e192f2ee43390",
+    "oldProducerAcceptedByThisReview": false
+  },
+  "findingRechecks": [
+    {
+      "id": "R2-W20-PORTFOLIO-TYPECHECK-01",
+      "status": "closed-typecheck-only",
+      "evidence": "Source correction preserved from W21; W21 and exact W22 CLI/WP10 checks have no own diagnostics. Portfolio functional assertions still require their current candidate execution."
+    },
+    {
+      "id": "R2-W20-PORTFOLIO-TYPECHECK-02",
+      "status": "closed-typecheck-only",
+      "evidence": "Real conditioned discriminant guard and complete equality assertions preserved. Exact W22 test-consumer typecheck succeeds; no Portfolio runtime success inferred."
+    }
+  ],
+  "newMandatoryOwnFindings": [],
+  "remainingBoundaries": [
+    "Portfolio materiality still has no composed readMaterialChange; unknown remains explicit. No financial materiality completion claimed.",
+    "BI selection/navigation and Portfolio composition remain identical to the previously examined source outside the exact Planner helper extraction; their full behavior still needs W22 hosted results.",
+    "Freeze10 remains37/38 with strict foreign manifest unchanged; host-context expected6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772 actual42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893.",
+    "Memory/C07/work-destination new implementations are inventoried; their deep causal review belongs to the other independent review scopes and their actual CI, not this publication/Finance preflight.",
+    "Native C07, global epic and three independent final reports are not accepted."
+  ],
+  "ci": {
+    "currentCheck": {
+      "runId": 43608694246,
+      "jobId": 132488747839,
+      "snapshotSha": "e8f68f3c1016f45a39b8111786ca8704e7f0e85f",
+      "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "status": "completed",
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 13,
+      "successfulSteps": [
+        "Typecheck CLI consumers",
+        "Typecheck WP10 test consumers",
+        "Verify canonical Atlas generation",
+        "Typecheck Atlas boundary",
+        "Guard subprocess imports",
+        "Guard product against origin/dev"
+      ],
+      "failedSteps": [
+        "Typecheck Sucafina"
+      ],
+      "artifactId": 14119118933,
+      "zipSha256": "ef685cf268e3dbfeea07b81fb5436e3de7116680acdca62af6f474eea8cdea4d",
+      "zipAnd11MembersVerified": true
+    },
+    "currentA": [
+      {
+        "id": 43609220130,
+        "headSha": "902bb817cde2c8ccb2aba5f6d6b8765d70bd6663",
+        "status": "in_progress",
+        "conclusion": null,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43609220130"
+      }
+    ],
+    "plannedGroups": [
+      {
+        "id": "A",
+        "files": 6
+      },
+      {
+        "id": "D",
+        "files": 18
+      },
+      {
+        "id": "R",
+        "files": 10
+      },
+      {
+        "id": "C",
+        "files": 29
+      },
+      {
+        "id": "E",
+        "files": 2
+      }
+    ],
+    "plannedWholeFiles": 65,
+    "planIsExecution": false,
+    "historicalW21": [
+      {
+        "label": "check",
+        "runId": 43603685238,
+        "jobId": 132473623977,
+        "snapshotSha": "b3ea71fa52fbf846a28644f09a961c96bee401d8",
+        "conclusion": "failure",
+        "ownDiagnostics": 0,
+        "foreignDiagnostics": 13,
+        "artifactId": 14116844807,
+        "zipSha256": "64d61c3528aac14651060ad51a40713817c14819888f5d835c2d13bd9aa74867",
+        "sourceFilesAndZipHashesVerified": true
+      },
+      {
+        "label": "A",
+        "runId": 43604032487,
+        "jobId": 132474686748,
+        "snapshotSha": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+        "conclusion": "failure",
+        "passed": 188,
+        "failed": 11,
+        "errors": 0,
+        "tests": 199,
+        "files": 29,
+        "artifactId": 14117961376,
+        "zipSha256": "42e8c693f1737b0893b0bd14142f8e7489d91bf6c440bc918cf995fe31eabbf1",
+        "sourceFilesAndZipHashesVerified": true
+      },
+      {
+        "label": "B",
+        "runId": 43605495862,
+        "jobId": 132479126824,
+        "snapshotSha": "6cc1999f0614f6002f2d1bfc72be2edd82ae7594",
+        "conclusion": "failure",
+        "passed": 49,
+        "failed": 30,
+        "additionalErrors": 1,
+        "tests": 79,
+        "files": 10,
+        "rawSha256": "37c9dad034c51ee8c0fc1ccf84639468f5d035df26f484c1272efecc7fdf14da",
+        "verification": "MCP terminal metadata and raw summary independently read; no cause adjudication in this preflight."
+      }
+    ],
+    "creditFromW21ToW22": false
+  },
+  "artifacts": [
+    "reviews/R2/preflight-W22.json",
+    "reviews/R2/preflight-W22.md",
+    "reviews/R2/source-inventory-W22-preflight.json",
+    "reviews/R2/intake-audit-W22-preflight.json",
+    "reviews/R2/remote-observation-W22-preflight.json",
+    "reviews/R2/artifact-hashes-W22-preflight.json"
+  ],
+  "next": "Preserve this preflight. Final independent review only after the requested exact terminal packages for the final successor and review of any corrections."
+}

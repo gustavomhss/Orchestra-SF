@@ -1,0 +1,293 @@
+{
+  "schema": "wp10.normalized-hosted-ci.v3",
+  "label": "W17-D",
+  "productSha": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+  "productTree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+  "snapshotSha": "1ca84657e5e7afe7f46c53be03aed73f50e33df6",
+  "snapshotTree": "b50a9d4277c23a24328838fc0d2ab13cbd80c6f8",
+  "runId": 43588533216,
+  "jobId": 132428117448,
+  "runAttempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43588533216",
+  "runStartedAt": "2026-11-14T11:07:45Z",
+  "runUpdatedAt": "2026-11-14T11:15:20Z",
+  "envelopeOnlyDiff": [
+    {
+      "filename": ".ci-run.json",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    }
+  ],
+  "request": {
+    "path": "agents/criteria/final-package/normalized/terminals-W16-W17/remote/envelope-W17-D.json",
+    "bytes": 441,
+    "sha256": "a49c943222e831838d6ec354c9530e25252e193a8d46725f40bb8ed1ae8350d2",
+    "git_blob_sha1": "59aed3f786861a32b5696191ce82576e52f4638c"
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout repository",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Assert Linux ARM64",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 3
+    },
+    {
+      "name": "Assert macOS arm64",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 4
+    },
+    {
+      "name": "Setup request validator Node",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Read request",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Fetch source history for Script fixtures",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 7
+    },
+    {
+      "name": "Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "ripgrep",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Setup Playwright Node",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 10
+    },
+    {
+      "name": "Install Chromium",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 11
+    },
+    {
+      "name": "Linux sandbox dependencies",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 12
+    },
+    {
+      "name": "Setup Python",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 13
+    },
+    {
+      "name": "Install Python test dependencies",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 14
+    },
+    {
+      "name": "Configure git identity",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    },
+    {
+      "name": "Export requested environment",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "omni binaries",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Rust toolchain (rust-toolchain.toml)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 18
+    },
+    {
+      "name": "Omni control nonce",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    },
+    {
+      "name": "Run tests",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 20
+    },
+    {
+      "name": "Upload Lean dashboard previews (extension)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 21
+    },
+    {
+      "name": "Upload Playwright evidence",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 22
+    },
+    {
+      "name": "Post Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 42
+    },
+    {
+      "name": "Post Setup request validator Node",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 43
+    },
+    {
+      "name": "Post Checkout repository",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 44
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 45
+    }
+  ],
+  "cleanupJobs": [
+    {
+      "id": 132429934662,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43588533216,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "returnedArtifacts": [],
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "builderIndependentAcceptance": false,
+  "kind": "test",
+  "counts": {
+    "pass": 51,
+    "fail": 4,
+    "expects": 333,
+    "tests": 55,
+    "files": 4,
+    "durationSeconds": 353.13,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts": {
+      "pass": 0,
+      "fail": 3,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp09/schedule-native.test.ts": {
+      "pass": 22,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts": {
+      "pass": 12,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/run-store.test.ts": {
+      "pass": 17,
+      "fail": 0,
+      "skip": 0
+    },
+    "script/test-omni-control.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    }
+  },
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp12/run-store.test.ts",
+    "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+    "Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts"
+  ],
+  "omniPositiveControl": {
+    "status": "failure",
+    "declaredTests": 1,
+    "declaringFile": "Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts",
+    "observedLine": "error: omni positive control [54fca7d60d74908d5b7ce5b6f1c8e5a7]: FAIL (declared: 1 test(s) in Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts). Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts: 1 of 1 declaring test(s) made no omni spawn of their own.",
+    "isNativeProviderInference": false,
+    "spawns": 0,
+    "delegated": null,
+    "qualification": "Declared test made no own Omni spawn. No delegated count is printed; do not invent one. The unnamed hook is separate from run-store tests."
+  },
+  "log": {
+    "path": "evidence/W17/test-D-job-132428117448.raw.txt",
+    "bytes": 80915,
+    "sha256": "d6d7086eb0af8387f46d250ef8246b6f4592e263f9d21e463e4788f01f24b975",
+    "git_blob_sha1": "32e837358606e6fdc38a107fddf9b78232dc893c",
+    "characters": 80913,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "artifact": null,
+  "terminalResultObserved": true,
+  "scopeQualification": "All individual passes and failures belong to this failed historical run. Errors between tests are not two extra collected tests. Neither native/global acceptance nor delivery-D acceptance is implied.",
+  "selectionDIsNotDeliveryEnvelopeD": true,
+  "artifactAbsenceQualification": "Latest-attempt GitHub artifacts API returned an empty list; no artifact receipt is invented."
+}

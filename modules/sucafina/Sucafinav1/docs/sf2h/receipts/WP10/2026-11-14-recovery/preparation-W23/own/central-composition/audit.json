@@ -1,0 +1,38 @@
+{
+  "schema": "wp10-w23-central-composition-v1",
+  "baseProduct": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "path": "apps/cli/src/sucafina-product/business-services.ts",
+  "before": {
+    "bytes": 68104,
+    "blobSha": "da80511814c86214a963fc721fda4a3a891df147",
+    "sha256": "52b0778b68b8c53218c6eea61a948e830fe745eed8c2b591c17b5ee3eba944da"
+  },
+  "after": {
+    "bytes": 68867,
+    "blobSha": "c851f877970b18927bb2bcab96de5699fd8eaada",
+    "sha256": "d7bc9a6ddacb5bb188494cfd4ceff1b475556ebafb50c5c06af2d287010b4573"
+  },
+  "builderPatches": [
+    {
+      "path": "agents/c17/W23-procurement-read-scope-v2/business-services.patch",
+      "bytes": 1716,
+      "blobSha": "f75341e1b25437bd027c57db2bbd20562d26b61f",
+      "sha256": "ca37f36eddefdaef794c670d6591a34712b3e31946b9c53b0740f4633820cf24"
+    },
+    {
+      "path": "agents/ci/W23-memory-evidence-read-scope/business-integration.patch",
+      "bytes": 2541,
+      "blobSha": "6b62ab34bb9c0e4c109ecc817e8f6bdda637df97",
+      "sha256": "f95a6f1acd0ea9d212874cbdf1eb71ba9102cbdc04adfb05c191041ea3dcf34e"
+    }
+  ],
+  "changes": [
+    "Compose exact fresh planned Procurement case reader below existing Memory wrapper.",
+    "Compose one canonical Procurement evidence resolver in actual readonly scope, with real contextFor/selection/authority and exact current resolver function identity.",
+    "Retain C06 branch, runtime publication, calculation composition and other host services."
+  ],
+  "localProductExecution": false,
+  "foreignEdits": false,
+  "nativeOrGlobalAcceptance": false,
+  "hostedCandidateResult": null
+}

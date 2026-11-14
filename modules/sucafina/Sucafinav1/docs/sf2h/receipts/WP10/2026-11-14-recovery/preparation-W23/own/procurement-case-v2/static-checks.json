@@ -1,0 +1,187 @@
+{
+  "schema": "wp10.builder.static-source-checks.v2",
+  "parentV1DeclaredHashesMatch": true,
+  "parentV1TestBodiesAssertionsBudgetsByteExactAfterRemovingV2Additions": true,
+  "additionalTests": 3,
+  "newWholeFileTests": 16,
+  "relativeImports": [
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "exists": true
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "specifier": "./scenario-procurement-proof-scope.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../runtime/local-store.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../runtime/contract.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../runtime/procurement.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../src/initial-settings.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/contracts/canonical.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/contracts/decisions.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/contracts/sf-execution.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/contracts/state.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/integration/product-authority.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/integration/product-authority.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/integration/source-lifecycle.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/integration/source-projections.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/integration/source-inventory.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/decisions/case-port.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/decisions/choice.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../product/procurement/source-projection.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../../../../apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "../../../../../../../apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "exists": true
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "specifier": "./composition-test-deadline.ts",
+      "exists": true
+    }
+  ],
+  "helperChange": "Only the post-state.read pre-eligibility branch changes: pin current; if C08 non-ok or no selected case, real host revalidate+current before unsupported.",
+  "canonicalOutcomeNotCopied": true,
+  "oneCanonicalInvocationOnUnsupportedPath": "Real input.read invoked only after owned transaction has returned; existing canonical body is never retried.",
+  "requestChangeNoFallback": "New real missing-case preflight header mutation test expects changed and canonical=0; current UI authority remains valid.",
+  "existingAfterCanonicalGuardsUnchanged": true,
+  "centralPatchByteExactV1": true,
+  "existingParentW23ScenarioFixtureNotEdited": true,
+  "whitespaceInspection": "git diff --no-index --check reported no whitespace diagnostics on both updated files.",
+  "localTests": false,
+  "localTypecheck": false,
+  "localBuild": false,
+  "localProductImport": false,
+  "nativeOrGlobalAcceptance": false
+}
