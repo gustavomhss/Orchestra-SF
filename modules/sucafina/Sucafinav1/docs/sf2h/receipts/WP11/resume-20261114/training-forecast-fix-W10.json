@@ -1,0 +1,97 @@
+{
+  "schema": "wp11-own-fixture-forecast-declaration-fix-v1",
+  "status": "FROZEN_STATIC_REVIEW_NO_BLOCKER_HOSTED_VALIDATION_PENDING",
+  "preparedAtUtc": "2026-11-14T11:36:18.818253+00:00",
+  "baseProductSha": "65509f0b8c435b88fb0ec9949299571f011d2347",
+  "baseProductTree": "47d4e0833764aebe49a5a6b7ee8a6d937a4193c3",
+  "authorScope": "WP11 own test fixture and its discriminating test only; no foreign producer or product source edited.",
+  "observedFailure": {
+    "runId": 43589978549,
+    "jobId": 132432435851,
+    "cleanupJobId": 132433382894,
+    "cleanupConclusion": "success",
+    "snapshotSha": "34341e97493f73d7a872b2b5a281617e82f0f152",
+    "requestBlob": "569d2e9770ca2e26c0b4c9cec3186ee9fae857d1",
+    "summary": {
+      "pass": 9,
+      "fail": 1,
+      "tests": 10,
+      "files": 2,
+      "durationSeconds": 139.61
+    },
+    "testFile": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+    "testBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+    "durationMs": 115011.39,
+    "failureKind": "ASSERTION_NOT_TIMEOUT",
+    "lastPhase": "training-revised",
+    "lastPhaseElapsedMs": 115002,
+    "actual": {
+      "knownSubtotal": 250000,
+      "total": null,
+      "comparisonStatus": "conditioned",
+      "coverageState": "complete",
+      "estimatedTrainingMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12
+      ]
+    },
+    "reason": "cost-coverage-unresolved-or-source-mismatch",
+    "log": "ci-analysis/wp11-W9-H3-tests.log",
+    "logSha256": "5e9bb05a190c2d0f77a6b9dfe59b5d1c9cd428b455657b203f76d140221b4682"
+  },
+  "diagnostico": "A linha nova de treinamento era gravada com annual:0 e somente f10:40000. Annual representa orçamento e não confirma os onze forecasts restantes. O domínio emitiu corretamente componentes estimated e o produtor recusou total completo, mesmo com cobertura de categorias completa.",
+  "intencaoDaFonte": "Esta cotação anual sintética cobra40000 somente em novembro e confirma explicitamente forecast0 nos demais onze meses. Os doze f0..f11 são agora entradas do comando real Planner OPEX/save, com CAS e cópia de versão existentes.",
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "beforeW9Blob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "candidateBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "sha256": "0485d078d1920a333287f4621882c8370cb6cc42b7901a49013c396120735321",
+      "bytes": 16513
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "beforeW9Blob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "candidateBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "sha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf",
+      "bytes": 8975
+    }
+  ],
+  "discriminatingAssertions": [
+    "Exactly12 training components",
+    "Exactly11 components with amount0 and evidenceState confirmed",
+    "training:11 has amount40000/USD/confirmed",
+    "Existing total250000/comparison complete and all-component confirmation asserts remain"
+  ],
+  "preserved": [
+    "Canonical Planner domain copy/save and CAS",
+    "Original source digest equality",
+    "No producer or C10 qualifier change",
+    "Three original replace operations",
+    "All prior financial, criterion, history, retry and collaborator restart assertions",
+    "180000ms test timeout and fixture wall-clock guard",
+    "Implementation quote branch"
+  ],
+  "independentStaticReview": {
+    "reviewer": "ci_reconciliation",
+    "path": "ci-analysis/independent-review-W10.json",
+    "sha256": "5abd393a9b52c92856b4f33bcb9da542832d3485f0b67c5714cdd1cac005ea2c",
+    "status": "NO_STATIC_BLOCKER_FOUND"
+  },
+  "limits": [
+    "No product tests or typecheck ran locally.",
+    "Static review is not a PASS; root must publish and run hosted selection.",
+    "The fixture source identity and category declarations remain synthetic inputs; this fix does not prove human confirmation, GNATIVE or an installed consumer.",
+    "H3 did not reach threshold-after15000, interval proof, original-history checks after line36, or store/UI restart; those remain unqualified."
+  ],
+  "publication": "NOT_PUBLISHED_BY_THIS_AGENT; root owns publication"
+}
