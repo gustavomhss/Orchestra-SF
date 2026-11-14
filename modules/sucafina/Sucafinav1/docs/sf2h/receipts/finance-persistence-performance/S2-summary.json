@@ -1,0 +1,82 @@
+{
+  "schema": "finance-persistence-long-intermediate-summary-v1",
+  "selection": "S2",
+  "W": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+  "Wtree": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4",
+  "S": "87dc2789bfb746902f779f47a0ec9ab19e42d0f6",
+  "Stree": "b29f99ccb43d2fa0702835747e95fc6f64585393",
+  "runId": 43645018624,
+  "jobId": 132600738071,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43645018624",
+  "conclusion": "failure",
+  "tests": {
+    "pass": 43,
+    "fail": 1,
+    "filtered": 4,
+    "assertions": 368,
+    "totalSeconds": 472.35,
+    "journeyMs": 180019.5,
+    "fixtureGuardMs": 180012
+  },
+  "requestBlob": "8dffaaa4f504376c952f9d927ee0cbde76c9fc6e",
+  "originalJourneyBlob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+  "confirmedExact": {
+    "startMs": 95937,
+    "durationMs": 26266,
+    "status": "ok"
+  },
+  "activeAtFailure": "second confirmed.coverage.verify within confirmed.evaluate",
+  "checkpoints": [
+    {
+      "elapsedMs": 29124,
+      "event": "checkpoint",
+      "label": "omitted.assertions-complete",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 3
+      },
+      "knownSubtotal": 210000,
+      "threshold": 55000.000000000015,
+      "comparisonStatus": "conditioned"
+    },
+    {
+      "elapsedMs": 35813,
+      "event": "checkpoint",
+      "label": "choice.persisted",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 4
+      },
+      "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+    },
+    {
+      "elapsedMs": 57349,
+      "event": "checkpoint",
+      "label": "confirmed.assertions-complete",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 6
+      },
+      "total": 250000,
+      "advantage": -10000,
+      "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+    }
+  ],
+  "notReached": [
+    "confirmed.threshold-assertions-complete",
+    "witness.15000.assertions-complete",
+    "witness.15001.assertions-complete",
+    "history.assertions-complete",
+    "choice.replay-assertions-complete",
+    "persistence.restart-and-revocation-assertions-complete"
+  ],
+  "finding": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "unchangedBudgets": {
+    "fixture": 180000,
+    "bunTest": 300000
+  },
+  "nextAction": "Measure root/nested surfaces on a real confirmed Finance subflow before any second product change or long rerun; a staged-clone microprofile alone is not causal evidence."
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "finance-persistence-preimage-control-v1",
+  "selection": "B1",
+  "W": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+  "Wtree": "22d3dfc65ac1b559680aafe67a09289c46b58be2",
+  "S": "36f5f7f5f44b848990d247f846bde4e49e496111",
+  "Stree": "c47a7137f4c20bc282121bfc496fbc0a160ddf85",
+  "runId": 43644706454,
+  "jobId": 132599773810,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644706454",
+  "conclusion": "failure",
+  "tests": {
+    "pass": 0,
+    "fail": 1,
+    "filtered": 35,
+    "assertions": 3,
+    "files": 1,
+    "testMs": 20.14,
+    "totalMs": 207
+  },
+  "purpose": "Resolve the concrete S1 legacy assertion failure by running only that exact unchanged test on the pre-optimization product.",
+  "source": {
+    "localStoreBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+    "contractBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+    "testBlob": "e1dbb391c53a56c3261554383356eb1c64ea77af"
+  },
+  "classification": "INHERITED_REPRODUCED_ON_PREIMAGE",
+  "failure": {
+    "name": "surface namespaces isolate identical blob keys and snapshots",
+    "line": 276,
+    "receivedExtra": {
+      "sfBlobGenerations": {
+        "document": 1
+      }
+    }
+  },
+  "interpretation": "Both W0 and W1 preserve already-existing private blob generations; the existing exact expected snapshot omits this field. Do not strip metadata or edit the oracle to obtain green.",
+  "omni": {
+    "nonce": "4ad193e3f1e5714fff8b6d5d187abdfd",
+    "verdict": "not applicable",
+    "nativeProof": false
+  },
+  "allJobsTerminal": true,
+  "noProductOrTestEdits": true
+}
