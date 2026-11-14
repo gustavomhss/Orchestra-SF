@@ -3,18 +3,18 @@
   "mission": 39,
   "finding": "M27-C05-FIRST-AGENDA",
   "owner": "session36",
-  "source_ref": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+  "source_ref": "7b13bec80d33c0c3a07190dc9df86069479979db",
   "status": "PROPOSED_NOT_APPLIED",
   "files": [
     {
       "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
-      "preimage_blob": "c332c865c9241df073553b1ddc8dfcb6af65399a",
-      "postimage_blob": "e7f96d297db6c3899d321110aef3cc73fbca7466",
-      "preimage_sha256": "982ad17ea29759b3c75141f1d2ef4f16ab7ec84bd1849be0d5ccf85feeacf6a5",
-      "postimage_sha256": "c9103b70dcc7f84e152ea7c60bc44f853266f4c218421dd81eeec4156b327279",
+      "preimage_blob": "5084806ef5e7a8373dd753ba4acb7d463d9f8132",
+      "postimage_blob": "1e32418941128da350ce00a528e759d5dcc6d111",
+      "preimage_sha256": "d74ab1b66b60d39bd661ecd1c8851c130ad5a760824290342e11d6a093cbb851",
+      "postimage_sha256": "487b9466eb3796e37ee6b4ec58c9644a6b2e44c0e2239afa2ec3058e2587821f",
       "preimage": "preimages/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
       "postimage": "postimages/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
-      "materialization_extra_lf_removed": true
+      "materialization_extra_lf_removed": false
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
@@ -31,8 +31,46 @@
     "Compare every preimage blob before applying; if any differs, reconcile explicitly with that owner.",
     "These complete images are inert .txt receipts; no shared target is modified on review-agenda.",
     "Apply the complete patch and compare every resulting postimage; do not assemble a partial snippet.",
+    "Consume session36's own complete reconciled closure, including the pinned read-reconciliation helper, before applying this mission39 patch; this receipt does not copy the branch or supply that helper.",
     "Do not dispatch Reports nominal until session33 and session36 consume all required shared wiring."
   ],
-  "patch_sha256": "8ecae99a13de1979feef76f781453d417308f621439a13ac308ed783ef59af07",
-  "static_patch_integrity": "PASS: git apply --check and exact postimage blob comparison in disposable materialization; no product code executed"
+  "source36_dependencies": [
+    {
+      "owner": "session36",
+      "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+      "source_ref": "7b13bec80d33c0c3a07190dc9df86069479979db",
+      "blob": "b145caac8a47e029aded4418253488d250d680e1",
+      "consumption": "Required from session36's own complete closure before applying mission39; not copied or newly provided here."
+    }
+  ],
+  "source36_terminal_state": {
+    "original_handoff_status": "TERMINAL_BLOCKED_SHARED_ROUTER",
+    "published_changes_preserved_at": "7b13bec80d33c0c3a07190dc9df86069479979db",
+    "hold42": "NOT_WAIVED_BY_THIS_RECONCILIATION",
+    "scope": "Metadata reconciliation preserves the published session36 changes; it does not resolve the shared router blocker, waive HOLD42 or authorize copying the whole branch."
+  },
+  "patch_sha256": "fc76d71ad25f3eb11b7a7e64efa9862439860bc0d3cc3f7c49c55b05bd00e7c1",
+  "static_patch_integrity": "PASS: exact immutable preimage blobs, git apply --check, applied byte-for-byte postimages and postimage blobs, reverse --check in disposable materialization; no product code executed",
+  "reconciliation": {
+    "previous_source_ref": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+    "source_ref": "7b13bec80d33c0c3a07190dc9df86069479979db",
+    "previous_reports_spec_blob": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+    "reports_spec_blob": "5084806ef5e7a8373dd753ba4acb7d463d9f8132",
+    "production_state_blob_unchanged": "a32cac26786e4ace96490f719677370e42f87958",
+    "upstream_changes_preserved": [
+      "Import reconcilePrivateDraftsAfterReadLoss from the session36 read-reconciliation helper.",
+      "Describe the explicitly manifested composed candidate in the nominal-suite comment.",
+      "RPT-02 retains question, reply and edit drafts through repeated authorized read loss without sending.",
+      "RPT-02 recovers a second explicit committed edit after response loss using its exact original intent.",
+      "RPT-02 reloads both thread and review, asserts one recovered message, unchanged review and no additional edit, and reads both original historical versions."
+    ],
+    "mission39_reports_delta": [
+      "Keep the existing prepareFirstAgenda import proposal.",
+      "Replace only the RPT-01 preparation step with prepareFirstAgenda; retain every later RPT-01 assertion and all RPT-02/03/04 content.",
+      "Retain the existing production-state source-seed proposal byte-for-byte."
+    ],
+    "shared_target_paths_edited": false,
+    "product_tests": "NOT_RUN",
+    "dispatches": "NONE"
+  }
 }

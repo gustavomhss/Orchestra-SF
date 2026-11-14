@@ -2,7 +2,7 @@
   "schema": "review-first-agenda-criteria/v1",
   "finding": "M27-C05-FIRST-AGENDA",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
-  "status": "IMPLEMENTED_AWAITING_ACTIONS",
+  "status": "SOURCE_FOCUSED_PASS; COMPOSITION_AND_REMAINING_GATES_NOT_QUALIFIED",
   "criterion_count": 86,
   "proof_bindings": [
     {
@@ -190,7 +190,19 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "A pauta seleciona e ordena referências autorizadas com contagens e períodos apresentados antes da geração.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "CORE_SELECTION_PREVIEW_COMPONENTS_OBSERVED",
+        "remaining": [
+          "No DOCX/PPTX generation is invoked in this own selection; evidence is the complete authorized preview before preserve.",
+          "Installed entry/host/router journey remains separate."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.DOD.02",
@@ -201,7 +213,19 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "A prévia expõe as seções efetivamente incluídas e distingue comentário de pauta de dado calculado.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "PARTIAL; COMMENT_DISTINCTION_NOT_COVERED",
+        "remaining": [
+          "No selected item carries agendaNote; the test does not demonstrate commentary visually distinguished from calculated data.",
+          "No captured human comments are provided; collaboration reads in the fixture are unavailable."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.INV.01",
@@ -212,7 +236,19 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Selecionar, reordenar ou retirar um item da pauta não modifica sua origem.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "CORE_DOMAIN_INVARIANT_OBSERVED_IN_ISOLATED_SCOPE",
+        "remaining": [
+          "Business-origin invariance is proved for these fixture-backed selection actions; canonical read audits and newly issued scope metadata are deliberately distinguished from origin edits.",
+          "Installed cross-surface actions and all other topics are not covered."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.INV.02",
@@ -223,7 +259,19 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "A seleção não amplia acesso nem deduz relações entre registros de nomes semelhantes.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "PARTIAL; ACCESS_OBSERVED_SAME_NAME_RELATIONS_NOT_COVERED",
+        "remaining": [
+          "The base fixture contains two suppliers named Same Vendor and a similarly named contract, but this test does not select them to assert distinct identities/no inferred relationship.",
+          "Absence of Same Vendor after Procurement denial is an access assertion, not a same-name relationship oracle."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.QLT.01",
@@ -234,7 +282,19 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Uma mudança de seleção atualiza contagens e ordem sem descartar comentários dos itens mantidos.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "PARTIAL; COUNTS_ORDER_OBSERVED_COMMENTS_NOT_COVERED",
+        "remaining": [
+          "No agendaNote, retained item comment or thread annotation is seeded; retention of comments after remove/reorder/refresh is not exercised.",
+          "Preserving private selection after recoverable failure is observed, but it does not substitute for retained-comment assertions."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.QLT.02",
@@ -245,7 +305,19 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Período e origem acompanham o tópico até a representação consumida pelos próximos passos.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "PARTIAL; PREVIEW_C05_REOPEN_AND_MEETING_OBSERVED_EXPORT_NOT_COVERED",
+        "remaining": [
+          "W7 and W8 observed exact preserved HTTP body equality during meeting open, browser reload and three topic changes, including all section/context periods and source references. The final two topic screens are not separately traversed.",
+          "Exporter consumption and installed source navigation are not executed."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.CMP.01",
@@ -256,7 +328,20 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Há comportamento definido para seleção vazia, tópico desconhecido, referência removida e seção sem dados.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "PARTIAL; EMPTY_SELECTION_AND_EMPTY_SECTION_OBSERVED_UNKNOWN_AND_REMOVED_ORIGIN_NOT_COVERED",
+        "remaining": [
+          "Unknown topic is not submitted. A forged known-topic selectionRef is a different negative.",
+          "No physical source record/reference is deleted after selection or preservation. Removing a selected record from the agenda leaves its origin intact and is not a source-removal oracle.",
+          "Initial empty selection is covered; removing every selected topic back to empty is not separately asserted."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.CMP.02",
@@ -267,7 +352,21 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Os tópicos existentes do Dashboard e as projeções contratadas de Planner/Procurement podem ser selecionados sem refazer seus motores.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "PARTIAL; REPRESENTATIVE_THREE_DOMAIN_CONSUMPTION_OBSERVED",
+        "remaining": [
+          "The own proof selects a representative subset, not every existing Dashboard topic.",
+          "Planner single-side forecasts are covered; a distinct baseline/candidate comparison pair is not selected here.",
+          "Procurement request selection is covered; supplier/contract selection is not.",
+          "Reuse of existing ports is statically visible in the fixture/service; no full-engine or all-projections acceptance is inferred."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.SUC.01",
@@ -278,7 +377,18 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "O usuário confirma exatamente quais registros e períodos entrarão no material antes de preservá-lo.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "CORE_EXPLICIT_CONFIRMATION_COMPONENTS_OBSERVED",
+        "remaining": [
+          "This is real production browser controls against fixture-backed real handlers; installed persona/host admission and document generation are not proved."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.SUC.02",
@@ -289,7 +399,20 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "A ordenação escolhida é a mesma recebida pela meeting view e pelos exportadores.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "PARTIAL; C05_ORDER_AND_MEETING_ORDER_OBSERVED_EXPORT_NOT_COVERED",
+        "remaining": [
+          "W7 and W8 observed Hot Topics then Budget, Projects and Forecast in browser order and exact whole saved C05 on open/reload/three Next actions. Request and IT Operations screens are not separately traversed.",
+          "Neither exporter is called. The proposed Reports RPT-01 patch remains an unexecuted consumer proposal.",
+          "W7 still failed later on post-capture Dashboard discovery. W8 does not rerun that specific post-capture discovery path; its pass does not resolve the observation."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.CHK.01",
@@ -300,7 +423,18 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Selecionar Budget, Projects e Hot Topics, reordená-los e remover um registro: a prévia deve conter exatamente a seleção remanescente, sem recriar ou editar os registros de origem.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "NOMINAL_CHECK_COMPONENTS_OBSERVED_IN_W6_W7_AND_W8",
+        "remaining": [
+          "Observed only in the bounded isolated module/browser proof; no installed Reports acceptance is claimed."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.CHK.02",
@@ -311,7 +445,20 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Selecionar Talent Review com ator sem essa capacidade: a pauta não deve incluir valores, notas, contagens privadas ou rótulos obtidos de conteúdo restrito.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "UNAUTHORIZED_TALENT_CHECK_AND_W8_FRESH_PURGE_OBSERVED; INSTALLED_BOUNDARY_NOT_COVERED",
+        "remaining": [
+          "The exact unauthorized-Talent selection negative passed in W6, W7 and W8 test2. W6/W7 combined first tests did not reach the later browser purge; W8 test3 passed that purge in a fresh first-use fixture.",
+          "W8 test3 passed the real authorized Talent200 preview, delayed authorized200 catalog, purge and zero-capture assertions. W8 test1 separately passed historical403 and exact durable C05 equality after revocation.",
+          "Native/MCP parity, automatic installed-host authentication/revocation detection and export revocation are not covered by this criterion mapping. The failed W7 post-capture catalog request remains OBSERVED_NOT_RESOLVED."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T01.CHK.03",
@@ -322,7 +469,19 @@
       ],
       "status": "NOT_RUN",
       "criterion_text": "Misturar seção anual, operação mensal e uma coleção vazia: cada seção mantém sua competência e o vazio é explícito, sem um ano global falsamente uniformizador.",
-      "mission39_status": "PENDING_FOCUSED_RUN"
+      "mission39_status": "OBSERVED_FOCUSED_COMPONENTS; NORMATIVE_ACCEPTANCE_NOT_CLAIMED",
+      "mission39_evidence": {
+        "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+        "tests": 3,
+        "covered": "MIXED_PERIOD_AND_EXPLICIT_EMPTY_COMPONENTS_OBSERVED",
+        "remaining": [
+          "The January IT Operations section is itself the empty collection. A nonempty monthly Ops section alongside a different empty collection is not separately exercised in this own fixture.",
+          "The proposed Reports source corpus provides nonempty January Ops plus empty Hot Topics, but installed Reports is NOT_RUN here."
+        ],
+        "limits": "Isolated real-producer fixture; source PASS does not qualify the installed bundle or every criterion component."
+      }
     },
     {
       "criterion_id": "WP07.T02.DOD.01",
@@ -971,7 +1130,12 @@
       "Talent/source denial, forged selector, injected principal query and late response after revoke disclose no private content"
     ],
     "file": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
-    "tests": 2
+    "tests": 3,
+    "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+    "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+    "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+    "partition": "First multi-domain capture/reload plus revoked historical read; unchanged per-source negative; independent fresh Talent purge and late-response negative.",
+    "open_limit": "DISCOVERY-AFTER-CAPTURE-LIMIT.json"
   },
   "installed_reports": {
     "status": "PROPOSED_NOT_RUN",
@@ -985,5 +1149,123 @@
     "Focused isolated module/browser proof is not installed host/router proof.",
     "All 86 bindings retained; this delivery does not mark whole WP07, AM01-AM06 or the final eight selections DONE.",
     "Typecheck and guards need an authorized bounded dispatcher accepting the composed candidate; see CI-CHECK-LIMITATIONS.json."
-  ]
+  ],
+  "coverage_gaps": [
+    {
+      "id": "G-AGENDA-NOTE",
+      "bindings": [
+        "WP07.T01.DOD.02",
+        "WP07.T01.QLT.01"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "No agendaNote/human comment is supplied, so no distinct-rendering or retained-comment oracle runs."
+    },
+    {
+      "id": "G-UNKNOWN-TOPIC",
+      "bindings": [
+        "WP07.T01.CMP.01"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "Forged known-topic selector is tested; unknown topic is not."
+    },
+    {
+      "id": "G-REMOVED-ORIGIN",
+      "bindings": [
+        "WP07.T01.CMP.01"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "UI removal preserves source rows. No source deletion/removal/incarnation replacement is performed."
+    },
+    {
+      "id": "G-SAME-NAME-RELATION",
+      "bindings": [
+        "WP07.T01.INV.02"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "Same-name fixtures exist, but non-inference between those records is not asserted."
+    },
+    {
+      "id": "G-ALL-PROJECTIONS",
+      "bindings": [
+        "WP07.T01.CMP.02"
+      ],
+      "status": "PARTIAL_REPRESENTATIVE_COVERAGE",
+      "detail": "Dashboard subset, one-sided Planner forecast and Procurement request only; no full16 topic/supplier/contract/comparison-pair acceptance."
+    },
+    {
+      "id": "G-MEETING-RELOAD",
+      "bindings": [
+        "WP07.T01.QLT.02",
+        "WP07.T01.SUC.02"
+      ],
+      "status": "OBSERVED_PASS_FOCUSED_WITH_BOUNDED_DISPLAY_SCOPE",
+      "detail": "W7 and W8 passed meeting open, browser reload and three Next actions, with real HTTP200/exact C05 equality and captured120 rather than current130. Only the first four of six topic screens were traversed. This component success does not resolve W7's later catalog failure or prove exports."
+    },
+    {
+      "id": "G-LATE-REVOCATION",
+      "bindings": [
+        "WP07.T01.CHK.02",
+        "WP07.T01.INV.02"
+      ],
+      "status": "OBSERVED_PASS_FOCUSED_IN_W8; INSTALLED_DETECTION_NOT_COVERED",
+      "detail": "W8 test3 passed with a fresh producer/SQLite fixture: real Talent200 preview, private-content purge and rejection of an authorized late200 catalog, zero preserve requests and zero reviews. Test1 separately passed revoked historical403 and exact durable C05 equality. Neither reexecutes the failed post-capture Dashboard discovery path or proves automatic installed-host revocation detection."
+    },
+    {
+      "id": "G-EXPORT",
+      "bindings": [
+        "WP07.T01.DOD.01",
+        "WP07.T01.QLT.02",
+        "WP07.T01.SUC.02"
+      ],
+      "status": "NOT_RUN_BY_THIS_SELECTION",
+      "detail": "No sf_report_prepare, DOCX or PPTX export/download/OOXML checks run in these three tests. Retain Reports owner/recipe and its 25-project/long-note 1320→1400 oracles."
+    },
+    {
+      "id": "G-INSTALLED",
+      "bindings": [
+        "WP07.T01.DOD.01",
+        "WP07.T01.DOD.02",
+        "WP07.T01.INV.01",
+        "WP07.T01.INV.02",
+        "WP07.T01.QLT.01",
+        "WP07.T01.QLT.02",
+        "WP07.T01.CMP.01",
+        "WP07.T01.CMP.02",
+        "WP07.T01.SUC.01",
+        "WP07.T01.SUC.02",
+        "WP07.T01.CHK.01",
+        "WP07.T01.CHK.02",
+        "WP07.T01.CHK.03"
+      ],
+      "status": "PROPOSED_NOT_RUN",
+      "detail": "example.test route transport calls real production handlers using explicit fixture identity and SQLite. It does not start or test the real CLI installation/router/session provider or consume the shared patches."
+    },
+    {
+      "id": "DISCOVERY-AFTER-CAPTURE-LIMIT",
+      "bindings": [
+        "WP07.T01.CMP.02",
+        "WP07.T01.INV.02",
+        "WP07.T01.CHK.02"
+      ],
+      "status": "OBSERVED_NOT_RESOLVED",
+      "source_W": "cb092403e7234a4b6294cfa6819448d1a3917d0c",
+      "request_S": "7ef9ad32d113273297341bbd8f5607ca443796b6",
+      "run": 43653855014,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653855014",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/DISCOVERY-AFTER-CAPTURE-LIMIT.json",
+      "log_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/actions/07-43653855014.log",
+      "detail": "After saving a six-section C05, current Planner drift, SQLite reopen and successful meeting/reload/navigation, a new Dashboard catalog request produced no observed response within30000ms. W7 failed at prior source call line268 after232105.51ms; test2 passed. W8 retains the first-use and capture/meeting oracles and isolates a fresh first-use privacy proof, but does not retry this same post-capture catalog sequence.",
+      "not_established": [
+        "Eventual response/status/completion time of that request",
+        "Underlying cause, deadlock, authorization defect or leak",
+        "A performance fix or resolution from the fresh W8 fixture",
+        "Acceptance of the composed installed bundle"
+      ],
+      "timeouts_raised": false,
+      "sleeps_added": false,
+      "resolution_inferred_from_partition": false,
+      "owner_followup": "session33 must reconcile the exact composed runtime/source closure before claiming this post-capture case or bundle acceptance."
+    }
+  ],
+  "related_C05_evidence": "Exact immutable body, own source refs/periods/counts, lost-response retry, SQLite and meeting reload, historical denial after revoke are observed within the first focused test. No whole WP07.T02 closure is asserted."
 }

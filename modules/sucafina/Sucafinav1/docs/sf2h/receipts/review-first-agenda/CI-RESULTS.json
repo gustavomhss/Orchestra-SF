@@ -1,0 +1,390 @@
+{
+  "schema": "m39-actions-results-v1",
+  "source_status": "PASS_FOCUSED_FIRST_USE",
+  "recorded_at": "2026-11-14 23:53:51 UTC",
+  "selected_file": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+  "final_selected_tests": 3,
+  "final": {
+    "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+    "Wtree": "67a162ef4324647580e88a6140c833b3f9ca8603",
+    "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+    "Stree": "c006a7731d1f985703e57777e10a7e934e640f8c",
+    "branch": "ci-run-linux-astra-wp07-41e80edb-04335bcb-m39-08",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+      ],
+      "env": {}
+    },
+    "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+    "requestOnlySnapshot": true,
+    "selectedTests": 3,
+    "preflightAt": "2026-11-14 23:47:19 UTC",
+    "otherRunObserved": {
+      "id": 43654219902,
+      "WP": "WP11"
+    },
+    "runId": 43654981768,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+    "jobId": 132631416268,
+    "conclusion": "success",
+    "tests": {
+      "pass": 3,
+      "fail": 0,
+      "expectCalls": 136,
+      "durationSeconds": 203.91
+    },
+    "testResults": [
+      {
+        "name": "first agenda uses three real domains, preserves edits through drift and reload, and denies revoked historical reads",
+        "status": "pass",
+        "durationMs": 172970.46
+      },
+      {
+        "name": "discovery is per source, denies forged and private selectors, and keeps independent Procurement periods",
+        "status": "pass",
+        "durationMs": 23462.98
+      },
+      {
+        "name": "first-use Talent preview is purged on revocation and rejects a late authorized catalog without any capture",
+        "status": "pass",
+        "durationMs": 6992.4
+      }
+    ],
+    "nonce": "39e3621b53b4d953c4021cd807f9bb25",
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "failure": null,
+    "logExcerpt": "actions/08-43654981768.log",
+    "dedupeKeySha256": "7143f940ffe428bd1928fcaf160d5b65b56c23bf22820a046b59b87f7353b935",
+    "logExcerptSha256": "60e464da986d0cdf216c04a02592e49343d0460722737734c561bfefea0a98a9"
+  },
+  "attempts": [
+    {
+      "W": "15787c499bfcb9e0eb41e864a99aeca97af43c07",
+      "Wtree": "239bf8e4f43f4ebe8aa04f505b086664c8985d39",
+      "S": "13056068abb0727b19f04209e10e69bc71661611",
+      "Stree": "9d917400bac1e068b62ad10410164f71d6839723",
+      "branch": "ci-run-linux-astra-wp07-15787c49-04335bcb-m39-01",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "runId": 43649352799,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649352799",
+      "jobId": 132614130346,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 1,
+        "fail": 1
+      },
+      "nonce": "4e7284b59bf275f61090d10076b65bb0",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": "GET returned 403 because requestFor was checked before one-shot validate; a second validate at egress would also reject. Corrected in W2 using validate once and matchesIntent for egress.",
+      "requestOnlySnapshot": true,
+      "logExcerpt": "actions/01-43649352799.log",
+      "dedupeKeySha256": "be78374e1d2a03668a10bf9c912f58658854ccfa8da83c759a9fe815f4953c66",
+      "logExcerptSha256": "5d7bf2ef7914f0e1849c7301f74c988659b5bf84867332d30657599128679823"
+    },
+    {
+      "W": "97dd4d7a7097cad88170469379e7f190eb147c15",
+      "Wtree": "34352b456e2e2b7bd2f75f6ce8039fa798555fd6",
+      "S": "961bfece9330298ab8d62d36143e05f1f7e5ae55",
+      "Stree": "5c52e8573f415852c52ad8e461d5ce0751585534",
+      "branch": "ci-run-linux-astra-wp07-97dd4d7a-04335bcb-m39-02",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "runId": 43649823660,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649823660",
+      "jobId": 132615567520,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 1,
+        "fail": 1
+      },
+      "nonce": "b04a4a10893e8dbf0a91921246e66bb1",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": "getByLabel('Domain', exact:true) did not match the wrapped select label after the first preview and exact record removal. Existing label includes nested option text; explicit control label proposed.",
+      "requestOnlySnapshot": true,
+      "logExcerpt": "actions/02-43649823660.log",
+      "dedupeKeySha256": "4f19865ec6b52767b743b6bc46704c4a0df343a0ece78e1900b24773a7e52f4a",
+      "logExcerptSha256": "32eec7cef8aed67119562e0ef12d0b0163676c5bec82641d9eac8dcdf4bcc0e1",
+      "resolution": "Fixed in W3: explicit aria-label on each discovery control retains exact accessible names without nested option text."
+    },
+    {
+      "W": "21da1ab4a6208925fe7677595b38b595cabf67f5",
+      "Wtree": "ea3d7c037751d43f20373d0327b6ef316cd4e6b2",
+      "S": "2108012e41071a7f5a030d99a50b572ee715a0bc",
+      "Stree": "850ecdfeabf655a4fdf1208d8021d91c4c60b8b2",
+      "branch": "ci-run-linux-astra-wp07-21da1ab4-04335bcb-m39-03",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "runId": 43650319287,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650319287",
+      "jobId": 132617093718,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 1,
+        "fail": 1
+      },
+      "nonce": "58ad29884218ffd5a3a7b683b8730342",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": "Test expected null for the canonical Talent read-audit payload. Real producer emitted the explicit {member,read:true} read marker; business-domain state comparison remains required.",
+      "requestOnlySnapshot": true,
+      "logExcerpt": "actions/03-43650319287.log",
+      "dedupeKeySha256": "c7069b9bec4e76768b095dd55b2ce4b0c36401701fb604f5a342342998154f68",
+      "logExcerptSha256": "eb139b62dbc7a94043279fc8a0caee2cd3bb8e5f56ed829fdfeec50eaba064b5",
+      "resolution": "Resolved in W5 with an exhaustive closed oracle for the two canonical producer forms, preserving the complete original audit prefix and business-state assertions."
+    },
+    {
+      "W": "72ca1721516040e360aae0db5c8e9c711bca85db",
+      "Wtree": "029f6122dca821c4cb8261d8e0a0a7de9dbb40a5",
+      "S": "8a59e935e83dbbb29f182a1d0607ed54ce3181a8",
+      "Stree": "bf335650c2384ca4b41067dfe45042a92549f17f",
+      "branch": "ci-run-linux-astra-wp07-72ca1721-04335bcb-m39-04",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "runId": 43650994005,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650994005",
+      "jobId": 132619200613,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 1,
+        "fail": 1
+      },
+      "nonce": "e2553e44e856e8a25ebf5f543928b566",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": "Full preview assertions passed; a single People read-marker oracle rejected Budget's canonical null member-read record.",
+      "requestOnlySnapshot": true,
+      "logExcerpt": "actions/04-43650994005.log",
+      "dedupeKeySha256": "21a52827577a045ff211fd726756e2f2341dd56300eee6025ccf50b2c0fb8595",
+      "logExcerptSha256": "d20277cd2512afdfb23292042f3a92512b0bac8e21ab25f57adad6c8f2ea0189",
+      "resolution": "Resolved in W5: Budget.view emits became:null, while People.readMembers emits became:{member,read:true}; both exact canonical records are required. The masking hypothesis was discarded."
+    },
+    {
+      "W": "7c54573f279b197190b14487da256ddf0778f0b5",
+      "Wtree": "35884fac7fdb2fd5e18528a2e3d20104874493eb",
+      "S": "3d40a1edf534b431fe6e97ca46e3be64a6dbaf3b",
+      "Stree": "97b239d666355f25e56b2eb47f020cc74cf4b864",
+      "branch": "ci-run-linux-astra-wp07-7c54573f-04335bcb-m39-05",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "runId": 43651791685,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43651791685",
+      "jobId": 132621668682,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 1,
+        "fail": 1
+      },
+      "nonce": "bd504a4d3aae8245376a859ba0fe83d7",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": "Complete preview and source-state invariance passed, as did stale refusal and explicit Refresh to 120 USD. Final preserve returned denied; C05 source/evidence authorization under investigation.",
+      "requestOnlySnapshot": true,
+      "logExcerpt": "actions/05-43651791685.log",
+      "dedupeKeySha256": "0fa01dd729159955517d043869ee66ee019957558bab747a0d6fd4e838ad4e36",
+      "logExcerptSha256": "5e8e779cbc39c9b030df56ce0bade8f876bf0bf252fbdafa5515d1429700c190",
+      "resolution": "Fixed in W6 by initializing the real C17 evidence context in the fixture; no product authorization or receipt gate was relaxed."
+    },
+    {
+      "W": "8a53d820d2b5553d98901819a23f31fea4a5d43b",
+      "Wtree": "ee1663dcdc2d33ae7a03a4c405047c032dc93982",
+      "S": "e0bf9a7f7202f5f321045004a153f140abf61641",
+      "Stree": "dd7821d1cb45d298f240911e3ae543b9b86934e9",
+      "branch": "ci-run-linux-astra-wp07-8a53d820-04335bcb-m39-06",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "requestOnlySnapshot": true,
+      "preflightAt": "2026-11-14 23:24:23 UTC",
+      "runId": 43653108315,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653108315",
+      "jobId": 132625682555,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 1,
+        "fail": 1,
+        "expectCalls": 106
+      },
+      "nonce": "6f5c0a926c4fe3eb292dea4ae6310eb6",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": "Preserve 200/ok, lost-body exact retry, first C05 source/period/count checks, source mutation and SQLite reopen exact equality passed. The first meeting heading assertion ran before the authorized HTTP read completed.",
+      "logExcerpt": "actions/06-43653108315.log",
+      "dedupeKeySha256": "b38414d27b48b0ae50012cf26ddf0564f90e61569799521998afb2416debc241",
+      "logExcerptSha256": "e19f2458a35fa9a207d035a97cf5539ade2c89919546dea83cb392885974962b",
+      "resolution": "W7 added exact review-read response/body synchronization before Open meeting, reload and each Next topic; those assertions passed in W7 and final W8."
+    },
+    {
+      "W": "cb092403e7234a4b6294cfa6819448d1a3917d0c",
+      "Wtree": "1709529a1bb8e2cfc4fe01c9d6026668aa7669b9",
+      "S": "7ef9ad32d113273297341bbd8f5607ca443796b6",
+      "Stree": "b58eaa0091623b1425556604d272687534a91007",
+      "branch": "ci-run-linux-astra-wp07-cb092403-04335bcb-m39-07",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "requestOnlySnapshot": true,
+      "preflightAt": "2026-11-14 23:33:05 UTC",
+      "otherRunsVerified": [
+        "WP11",
+        "WP13"
+      ],
+      "runId": 43653855014,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653855014",
+      "jobId": 132627969095,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 1,
+        "fail": 1,
+        "expectCalls": 116
+      },
+      "nonce": "ae5124b81ca3df1310a8afa7f8fbd212",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": "Exact first capture, lost-body retry, SQLite reopen, browser Open meeting/reload and three Next topic reads all passed. A later new Dashboard catalog request after the large capture did not respond within the existing 30 second wait (first test 232105.51ms); no timeout increased. Kept as a C9 performance limit, not claimed fixed.",
+      "logExcerpt": "actions/07-43653855014.log",
+      "dedupeKeySha256": "d298177296dfc359f4e0cb9d94bd7c868894cfc228368d86c4e5eb786c570e3d",
+      "logExcerptSha256": "57d4cfcfbbc975285ae4cfa4fd5b8a0f6f8c37dcfd8803a9305ef3f19755e193",
+      "resolution": "Remains OBSERVED_NOT_RESOLVED. W8 separates the fresh-preparation privacy proof and retains the complete positive/historical-denial proof; it does not rerun or close the post-large-capture discovery case."
+    },
+    {
+      "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+      "Wtree": "67a162ef4324647580e88a6140c833b3f9ca8603",
+      "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+      "Stree": "c006a7731d1f985703e57777e10a7e934e640f8c",
+      "branch": "ci-run-linux-astra-wp07-41e80edb-04335bcb-m39-08",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+        ],
+        "env": {}
+      },
+      "requestHash": "04335bcb632917ffeff47591557a9122d9cde90239a5f6a9a028b8122cc08fc4",
+      "requestOnlySnapshot": true,
+      "selectedTests": 3,
+      "preflightAt": "2026-11-14 23:47:19 UTC",
+      "otherRunObserved": {
+        "id": 43654219902,
+        "WP": "WP11"
+      },
+      "runId": 43654981768,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+      "jobId": 132631416268,
+      "conclusion": "success",
+      "tests": {
+        "pass": 3,
+        "fail": 0,
+        "expectCalls": 136,
+        "durationSeconds": 203.91
+      },
+      "testResults": [
+        {
+          "name": "first agenda uses three real domains, preserves edits through drift and reload, and denies revoked historical reads",
+          "status": "pass",
+          "durationMs": 172970.46
+        },
+        {
+          "name": "discovery is per source, denies forged and private selectors, and keeps independent Procurement periods",
+          "status": "pass",
+          "durationMs": 23462.98
+        },
+        {
+          "name": "first-use Talent preview is purged on revocation and rejects a late authorized catalog without any capture",
+          "status": "pass",
+          "durationMs": 6992.4
+        }
+      ],
+      "nonce": "39e3621b53b4d953c4021cd807f9bb25",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "failure": null,
+      "logExcerpt": "actions/08-43654981768.log",
+      "dedupeKeySha256": "7143f940ffe428bd1928fcaf160d5b65b56c23bf22820a046b59b87f7353b935",
+      "logExcerptSha256": "60e464da986d0cdf216c04a02592e49343d0460722737734c561bfefea0a98a9"
+    }
+  ],
+  "immutable_ci_inputs": {
+    ".github/workflows/test-ci.yml": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "script/test-ci.ts": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "script/test-ci-request.ts": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "script/test-ci-location.ts": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+    "script/module-registry.json": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+    "modules/sucafina/package.json": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+    "modules/sucafina/bunfig.toml": "7000633db2c4f11e3f1aff351cd28c0df9affeca"
+  },
+  "request_blob": "cc4377442bbb120bb40674c18b136cbf5aaed661",
+  "dedupe": "Every attempt changed W and its test/fixture or implementation inputs. Exact prior runs were retained; no unchanged candidate was rerun. In-flight WP07 states were checked before each trigger; the final preflight observed only an unrelated WP11 run.",
+  "snapshot_boundary": "Every S is a child of W with only .ci-run.json changed; root tree comparisons verified that invariant. Product branch refs moved by CAS with force=false.",
+  "runtime": {
+    "observed_bun": "1.3.14",
+    "job": "test (ubuntu-24.04)",
+    "browser": "Chrome channel, headless",
+    "chrome_version": "NOT_RECORDED"
+  },
+  "omni": "Exactly one matching 32-hex nonce/verdict line per run. All verdicts were not applicable (focused: no declaring test ran); no native/Omni capability proof is claimed.",
+  "typecheck": "NOT_RUN: no authorized bounded dispatcher for this candidate within the mission write paths; owner36 check ref was not moved.",
+  "guards": "NOT_RUN for the same dispatcher boundary; no local checks or test-based bypass.",
+  "reports_nominal": "PROPOSED_NOT_RUN; retain CI-UI-REPORTS, no ninth final selection.",
+  "open_runtime_observation": "DISCOVERY-AFTER-CAPTURE-LIMIT.json remains OBSERVED_NOT_RESOLVED. Fresh-first-use PASS does not close the post-large-capture timeout.",
+  "local_product_execution": "NONE",
+  "bundle_status": "NOT_COMPOSED_NOT_QUALIFIED",
+  "final_artifacts": {
+    "artifacts": [],
+    "inspection": "Actions run artifacts endpoint returned an empty list; no screenshot/trace artifact or native witness is claimed."
+  }
+}

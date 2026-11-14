@@ -1,5 +1,5 @@
 diff --git a/packages/app-shell/e2e/sucafina/reports.spec.ts b/packages/app-shell/e2e/sucafina/reports.spec.ts
-index c332c86..e7f96d2 100644
+index 5084806..1e32418 100644
 --- a/packages/app-shell/e2e/sucafina/reports.spec.ts
 +++ b/packages/app-shell/e2e/sucafina/reports.spec.ts
 @@ -1,5 +1,6 @@
@@ -9,7 +9,7 @@ index c332c86..e7f96d2 100644
  import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
  import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
  import { confirmHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed } from "./reports-support/human-answer-flow.ts"
-@@ -20,7 +21,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
+@@ -21,7 +22,7 @@
  
    reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
      const { app, corpus } = reports
@@ -22,7 +22,7 @@ diff --git a/packages/app-shell/e2e/sucafina/reports-support/production-state.ts
 index a32cac2..7697e04 100644
 --- a/packages/app-shell/e2e/sucafina/reports-support/production-state.ts
 +++ b/packages/app-shell/e2e/sucafina/reports-support/production-state.ts
-@@ -2,6 +2,7 @@ import path from "node:path"
+@@ -2,6 +2,7 @@
  import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
  import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
  import { reportsCorpus } from "./corpus.ts"
@@ -30,7 +30,7 @@ index a32cac2..7697e04 100644
  
  // Invoked under Bun by the owned setup process, only before the real CLI starts.
  // The installed source lifecycle, domain projections and authorization are not replaced.
-@@ -25,6 +26,7 @@ try {
+@@ -25,6 +26,7 @@
      ].map((key) => [key, { version: 1, by: principal }]))
      return { commit: true, value: undefined }
    })

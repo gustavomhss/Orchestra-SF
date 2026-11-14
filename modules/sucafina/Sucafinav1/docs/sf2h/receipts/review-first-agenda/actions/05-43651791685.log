@@ -1,0 +1,53 @@
+Source: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43651791685
+Job: 132621668682
+W: 7c54573f279b197190b14487da256ddf0778f0b5
+S: 3d40a1edf534b431fe6e97ca46e3be64a6dbaf3b
+Excerpt: selected test file through Bun summary; timestamps preserved, ANSI colors removed.
+
+2026-11-14T23:10:55.0168879Z Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:
+2026-11-14T23:11:27.5144951Z WP07 browser: Chrome closed; owned group has no live members and transport is disconnected {
+2026-11-14T23:11:27.5148343Z   pendingCloseRPCs: [],
+2026-11-14T23:11:27.5149202Z }
+2026-11-14T23:11:27.5168706Z 192 |     await playwright.expect(forecast.getByRole("row").filter({ has: page.getByRole("cell", { name: "license:1:forecast", exact: true }) }).getByRole("cell", { name: "120 USD", exact: true })).toBeVisible()
+2026-11-14T23:11:27.5170059Z 193 |     await playwright.expect(projects).toContainText("1 selected records")
+2026-11-14T23:11:27.5170835Z 194 |     const attemptsBeforePreserve = transport.preserveCommands.length
+2026-11-14T23:11:27.5171738Z 195 |     transport.loseNextPreserveBody = true
+2026-11-14T23:11:27.5172260Z 196 |     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
+2026-11-14T23:11:27.5172858Z 197 |     await playwright.expect(view.getByRole("status")).toContainText("review-preserve-unavailable")
+2026-11-14T23:11:27.5173288Z                                                             ^
+2026-11-14T23:11:27.5173618Z error: expect(locator).toContainText(expected) failed
+2026-11-14T23:11:27.5173811Z 
+2026-11-14T23:11:27.5174047Z Locator: locator('section[aria-label="Prepare review"]').getByRole('status')
+2026-11-14T23:11:27.5174622Z Expected substring: "review-preserve-unavailable"
+2026-11-14T23:11:27.5175230Z Received string:    "Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation."
+2026-11-14T23:11:27.5175674Z Timeout: 5000ms
+2026-11-14T23:11:27.5175790Z 
+2026-11-14T23:11:27.5175861Z Call log:
+2026-11-14T23:11:27.5176087Z   - Expect "to.have.text" with timeout 5000ms
+2026-11-14T23:11:27.5176485Z   - waiting for locator('section[aria-label="Prepare review"]').getByRole('status')
+2026-11-14T23:11:27.5177740Z     9 × locator resolved to <p role="status" aria-live="polite">Access is no longer available. Private content an…</p>
+2026-11-14T23:11:27.5178466Z       - unexpected value "Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation."
+2026-11-14T23:11:27.5178851Z 
+2026-11-14T23:11:27.5178929Z  matcherResult: {
+2026-11-14T23:11:27.5179128Z   name: "toContainText",
+2026-11-14T23:11:27.5179363Z   expected: "review-preserve-unavailable",
+2026-11-14T23:11:27.5182277Z   message: "expect(locator).toContainText(expected) failed\n\nLocator: locator('section[aria-label=\"Prepare review\"]').getByRole('status')\nExpected substring: \"review-preserve-unavailable\"\nReceived string:    \"Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation.\"\nTimeout: 5000ms\n\nCall log:\n  - Expect \"to.have.text\" with timeout 5000ms\n  - waiting for locator('section[aria-label=\"Prepare review\"]').getByRole('status')\n    9 × locator resolved to <p role=\"status\" aria-live=\"polite\">Access is no longer available. Private content an…</p>\n      - unexpected value \"Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation.\"\n",
+2026-11-14T23:11:27.5184532Z   pass: false,
+2026-11-14T23:11:27.5184980Z   actual: "Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation.",
+2026-11-14T23:11:27.5185711Z   log: [ "  - Expect \"to.have.text\" with timeout 5000ms", "  - waiting for locator('section[aria-label=\"Prepare review\"]').getByRole('status')",
+2026-11-14T23:11:27.5186496Z     "    9 × locator resolved to <p role=\"status\" aria-live=\"polite\">Access is no longer available. Private content an…</p>",
+2026-11-14T23:11:27.5187197Z     "      - unexpected value \"Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation.\""
+2026-11-14T23:11:27.5187650Z   ],
+2026-11-14T23:11:27.5187812Z   timeout: 5000,
+2026-11-14T23:11:27.5187981Z },
+2026-11-14T23:11:27.5188060Z 
+2026-11-14T23:11:27.5188513Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:197:55)
+2026-11-14T23:11:27.5194658Z (fail) first agenda uses three real domains, preserves edits through drift and reload, and fences a late response after revocation [32088.45ms]
+2026-11-14T23:11:47.2700613Z (pass) discovery is per source, denies forged and private selectors, and keeps independent Procurement periods [19750.53ms]
+2026-11-14T23:11:47.2704354Z 
+2026-11-14T23:11:47.2705373Z omni positive control [bd504a4d3aae8245376a859ba0fe83d7]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T23:11:47.2706636Z  1 pass
+2026-11-14T23:11:47.2706872Z  1 fail
+2026-11-14T23:11:47.2707114Z  90 expect() calls
+2026-11-14T23:11:47.2707440Z Ran 2 tests across 1 file. [52.27s]
+

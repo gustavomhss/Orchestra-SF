@@ -1,29 +1,47 @@
-# Mission39 — primeira pauta com vários tópicos e domínios
+# Missão39 — primeira pauta com vários tópicos e domínios
 
-Finding: **M27-C05-FIRST-AGENDA**. Branch própria `review-agenda`, a partir do C9 imutável `c1bd1c91b0e0d32db3074408e815e36107384073`. PR única para `sf2-stack`.
+**Implementação comitada em `review-agenda`, PR única [#68](https://github.com/gustavomhss/Orchestra-SF/pull/68) para `sf2-stack`. Prova cirúrgica de primeiro uso: 3 PASS / 0 FAIL em [Actions](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768). Integração instalada e gates restantes não estão qualificados.**
 
-## Entrega
+Base C9: `c1bd1c91b0e0d32db3074408e815e36107384073`. W testado: `41e80edb7a78ad77ffad66f1c7c1da336e4247e1`. S de request: `2027505c925a9a6dbac950c26fb1ab149140c760`. O commit terminal acrescenta somente recibos/propostas inertes; os nove arquivos executáveis conservam os blobs do [SOURCE-MANIFEST](SOURCE-MANIFEST.json).
 
-O novo catálogo usa os produtores existentes de Dashboard, Planner/Forecast e Procurement sob a autoridade corrente. A workspace permite descoberta por domínio e período, inclusão explícita, remoção, ordenação e prévia completa antes da captura C05. Cada item mantém sua referência e competência. Uma mudança de origem retém as escolhas e exige Refresh, nova prévia e confirmação humana. Uma revogação limpa seletores, notas e conteúdo privado, encerra a instância e invalida respostas assíncronas pendentes.
+## Capacidade entregue
 
-`discover` e `discoveryPeriod` são entradas opcionais. Os callers atuais conservam a assinatura e as portas de preparação/preservação existentes. O retry de preservação fixa o mesmo payload e a mesma identidade da tentativa incerta. O serviço de Procurement usa o período protegido de cada seletor, inclusive no adaptador de evidência da leitura histórica.
+O catálogo reutiliza Dashboard, Planner/Forecast e Procurement sob permissões de cada fonte. O usuário escolhe domínio e período, descobre as opções autorizadas e adiciona cada tópico explicitamente. Pode remover e ordenar tópicos, remover o registro exato e conferir todos os valores, contagens, períodos e referências antes de preservar a primeira revisão. Nenhuma revisão antiga ou referência colada é necessária.
 
-## Integração entregue à sessão33
+Os períodos pertencem aos itens. Uma mudança de origem mantém as escolhas e exige Refresh, nova prévia e confirmação. O C05 histórico permanece imutável. Uma resposta de preservação perdida exige retry explícito do mesmo payload/chave; não cria outra captura. Revogação limpa conteúdo privado, seleção e notas, encerra a instância e invalida resultados assíncronos pendentes.
 
-`integration-session33/complete.patch` contém o diff completo de quatro arquivos compartilhados: `review-services.ts`, `extended-business-services.ts`, `extended-http.ts` e `extended-browser.ts`. O catálogo GET precisa ser interceptado antes do handler POST de reviews. O serviço de agenda precisa ser injetado na preparação e na resolução histórica de evidência. O browser injeta a descoberta com a guarda existente e mantém o período inicial.
+`discover` e `discoveryPeriod` são opcionais; callers existentes mantêm as entradas anteriores. Procurement usa o período protegido de cada seletor também na resolução de evidência histórica.
 
-O manifesto fixa o blob de cada preimage e postimage. As imagens completas estão em `.ts.txt`, para permanecerem inertes e não entrarem no typecheck. Conferir todos os preimages antes de aplicar; qualquer divergência exige reconciliação explícita com o proprietário. A aplicação do patch foi conferida em materialização descartável, e todos os resultados coincidem byte a byte com os postimages. Isso é verificação de integridade do patch, não execução do produto.
+## Evidência observada
 
-## Cobertura proposta à sessão36
+1. Pauta sem predecessor: Budget, Projects, Hot Topics, Forecast e Procurement, mais IT Operations de janeiro vazio; inclusão, remoção de tópico e registro exato, ordenação, prévia integral e fontes de negócio preservadas. Auditorias canônicas de leitura e novos scopes autorizados são discriminados dos dados operacionais.
+2. Drift do Forecast: recusa de preservar a seleção antiga; Refresh e reprévia explícitos para 120. Preservação, perda controlada do body depois do commit, retry com mesma chave/payload/id e uma única captura. Após a origem passar para 130, SQLite e reunião/reload/navegação continuam exibindo 120 e total anual 1440, com o mesmo corpo C05. A leitura histórica após revogação retorna 403 e o corpo persistido continua exatamente igual.
+3. Negativas por fonte: Talent e seletores privados/forjados/copiados, query com identidade injetada e Procurement revogado; outras fontes permanecem sob suas próprias permissões. O mesmo pedido Procurement conserva competências independentes.
+4. Preparação nova de Talent: prévia privada real, resposta Planner autorizada 200 retida no transporte, revogação e liberação tardia. Conteúdo e controles permanecem apagados; zero requests de preservação e zero capturas.
 
-`reports-session36/complete.patch` é uma proposta contra `73b716b89d84dfba10070cf4a9369ca9c9e75159`. Ela conecta o helper novo à jornada RPT-01 e inicializa somente fontes de negócio. Os arquivos reais `reports.spec.ts` e `reports-support/production-state.ts` não são modificados nesta branch. RPT-02 a RPT-04, 25 projetos, nota longa, exportações, reload e 1320 → 1400 permanecem no postimage. Usa-se a seleção final `CI-UI-REPORTS` existente; não há nona seleção.
+Os três testes estão no mesmo arquivo cirúrgico. São produtores, autoridade, C17, SQLite, C05/C08, handlers HTTP e componentes browser reais com corpus/autenticação explícitos de fixture. O browser recebe um mount mínimo e o transporte encaminha para os handlers; não se abre servidor nem se reproduz HTML de produto. Isso não substitui o host instalado.
 
-## Validação e limites
+[CI-RESULTS.json](CI-RESULTS.json) conserva os oito candidatos/runs, árvores W/S, requests, dedupe, logs, falhas anteriores e nonce/verdict. Todos os testes foram em Actions. Omni foi `not applicable`; nenhum crédito nativo foi inferido.
 
-A seleção cirúrgica é `Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts`, no runner Bun do GitHub Actions: dois testes com SQLite, produtores, autoridade, handlers HTTP e UI reais. A montagem de browser é mínima e o transporte interceptado chama os handlers; ela não abre servidor nem substitui os componentes de produção. Isso não qualifica sozinho o router instalado.
+## Limite observado que permanece aberto
 
-O manifesto `CRITERIA.json` preserva as 86 bindings S3-A, identifica as provas focadas e mantém o restante sem reivindicação de fechamento. O resultado de Actions, W/S, dedupe, árvore, nonce e verdict serão anexados após a execução. `CI-CHECK-LIMITATIONS.json` registra que C9 não expõe um dispatcher cirúrgico de typecheck/guards com ref alternativo, e que o dispatcher da sessão36 pertence a `astra-check-wp07`. Não se criou workflow, não se moveu aquela branch e não se executou check local.
+Em W7, depois da grande captura e da navegação completa, uma nova descoberta Dashboard não teve resposta observada dentro dos 30s existentes. A causa e a conclusão eventual do request não foram determinadas. A prova de privacidade foi separada em uma fixture de primeiro uso; os oráculos foram mantidos e reforçados. **Isso não corrige nem fecha o timeout pós-captura.** A sessão33 recebe [DISCOVERY-AFTER-CAPTURE-LIMIT.json](DISCOVERY-AFTER-CAPTURE-LIMIT.json) para reconciliar o caso no runtime composto, sem aumentar timeouts.
 
-A expectativa antiga de manter controles após revogação no teste monolítico WP07 é incompatível com a limpeza exigida por esta missão; ela está registrada em `test/product/review-first-agenda/legacy-regression-proposal.json`, sem alteração ou enfraquecimento do teste antigo. O novo teste exige limpeza integral e rejeita retorno tardio. A perda de resposta e o retry idempotente são exercitados pelo teste cirúrgico próprio.
+## Patches consumíveis
 
-O handoff terminal será acrescentado com os SHAs e os resultados observados. O bundle somente estará funcional no host instalado depois do consumo explícito dos patches compartilhados pela sessão33 e da proposta de cobertura pela sessão36.
+| Consumidor | Bundle completo | Alvos e estado |
+|---|---|---|
+| Sessão33 | [integration-session33](integration-session33/manifest.json) / [complete.patch](integration-session33/complete.patch) | `review-services.ts`, `extended-business-services.ts`, `extended-http.ts`, `extended-browser.ts`; quatro preimages C9 confirmados também em `ee1a3ea147ab7d7f4f6b231217e623456e294c84`. Não aplicados aos paths reais nesta branch. |
+| Sessão36 | [reports-session36](reports-session36/manifest.json) / [complete.patch](reports-session36/complete.patch) | RPT-01 e seed de fontes em dois arquivos; reconciliado com `7b13bec80d33c0c3a07190dc9df86069479979db`. Preserva as mudanças recentes de recuperação de rascunhos e a dependência `read-reconciliation.ts`. `CI-UI-REPORTS` existente, nenhuma nona seleção final. |
+
+Ambos contêm diff completo, imagens integrais inertes `.ts.txt`, blobs e SHA256. A aplicação em materialização descartável foi conferida com `git apply --check` e igualdade exata dos postimages, sem executar produto. Conferir novamente cada preimage antes do consumo; reconciliar qualquer divergência com o owner. Nenhum arquivo real de discussão/browser compartilhado ou `reports.spec.ts` foi editado.
+
+## Critérios e gates
+
+[CRITERIA.json](CRITERIA.json) preserva os 86 IDs, textos e proof bindings S3-A e registra a evidência focada dos 13 bindings de T01. Os componentes sem prova continuam explícitos: notas/comentários, tópico desconhecido, exclusão física da origem, todos os tópicos/projeções, exportação e jornada instalada. A seção mensal vazia prova competência própria e vazio explícito; não prova uma operação mensal não vazia com outra coleção vazia.
+
+Typechecks dos três packages e guards estão **NOT_RUN**. C9 não oferece dispatcher limitado com ref alternativo para esta entrega; a lane de checks da sessão36 não foi movida, e não se criou workflow fora dos paths autorizados. [CI-CHECK-LIMITATIONS.json](CI-CHECK-LIMITATIONS.json) explicita essa fronteira. Reports nominal também está **NOT_RUN** por esta missão; o handoff original 36 e o HOLD42 anterior não são dispensados pela nova proposta.
+
+As hipóteses estáticas de auditoria/fence não se reproduziram no fluxo de seis seções; [READ-AUDIT-INVESTIGATION.json](READ-AUDIT-INVESTIGATION.json) separa a observação do risco não confirmado. Nenhuma guarda foi desligada ou alterada.
+
+O [handoff terminal](HANDOFF.json) libera a implementação à sessão33. Source PASS não é bundle PASS. AM01–AM06, oito seleções finais, três revisões independentes, C-G7 e D-G8 continuam com S0. Sem merge em dev, deploy, Azure, credenciais, engines, restart, testes ou servidores locais.

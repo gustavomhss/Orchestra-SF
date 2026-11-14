@@ -1,0 +1,2584 @@
+{
+  "schema": "orchestra-sf.mission39.wp07-t01-component-mapping.v1",
+  "finding": "M27-C05-FIRST-AGENDA",
+  "prepared_by": "agenda_proof",
+  "purpose": "Map exactly 13 WP07.T01 proof bindings to the complete frozen W8 source (three tests), observed focused W8 results, earlier W6/W7 component evidence and explicit gaps. Preserve normative statuses and the unresolved W7 post-capture catalog observation; no global WP07, all86 or installed Reports completion is inferred.",
+  "status": "W8_OBSERVED_PASS_FOCUSED; NORMATIVE_GAPS_PRESERVED; DISCOVERY_AFTER_CAPTURE_OBSERVED_NOT_RESOLVED",
+  "normative": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "pack": "review39/planning/S3-A.json",
+    "source_criteria_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/CRITERIA.json",
+    "source_criteria_sha256": "c68da3dc5ca1758989dfee7ce6db6adfa277995813f87e11fa66b926bb0251df",
+    "source_receipt_status": "IMPLEMENTED_AWAITING_ACTIONS",
+    "binding_count_mapped": 13,
+    "binding_count_preserved_total": 86,
+    "other_bindings_not_reclassified": 73,
+    "proof_package": "E08",
+    "criterion_status": "All13 source status values remain NOT_RUN, and source mission39_status values remain PENDING_FOCUSED_RUN. Component observations below are additive evidence, not normative completion.",
+    "original_criteria_modified": false,
+    "global_WP07_done": false,
+    "all86_done": false,
+    "AMs_done": false,
+    "final_eight_selections_done": false,
+    "focused_proof_count_note": "The unchanged source CRITERIA.json still records two tests. This additive scratch mapping describes the frozen W8 selection of three tests; the normative source receipt is not edited."
+  },
+  "source_identity": {
+    "test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+      "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+      "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+      "sha256": "ef9c3e7a6db7dcef579c98121658e43af7779dbb411b94210009d64c843200d3",
+      "bytes": 33369,
+      "lines": 425,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/41e80edb7a78ad77ffad66f1c7c1da336e4247e1/modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+      "read": "Complete frozen W8 test source, all three tests, read in full."
+    },
+    "fixture": {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/fixture.ts",
+      "sha256": "9e4b280cb9b0d3d8a98a58906393092c4168406dc4706d73f9dc3f459dc8a7ba",
+      "read": "Complete current W8 fixture read in full, including read-only exact storedReview accessor.",
+      "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+      "git_blob": "98003837dd9b8f564e577130170f217eae6727d9"
+    },
+    "browser_entry": {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/browser-entry.ts",
+      "sha256": "803d5262969b88f18930d832915bc4fc545cc06eb7bfd201a8da2d46f13990ce",
+      "read": "Previously read in full; identical SHA256 rechecked against frozen W8 source manifest.",
+      "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+      "git_blob": "fe224fae69ddf4288580bac1a20eede1082794ab"
+    },
+    "line_numbers": "All assertion anchors below refer only to the exact frozen W8 test blob and 1-based lines above. Earlier W6/W7 failure lines identify their own prior sources and logs; they are not current W8 line anchors.",
+    "runtime_boundary": "Bun+Playwright in Actions, production browser modules and HTTP handlers, canonical producers, real SQLite/C05/C08; explicit synthetic authentication and source corpus, no preseeded agenda/review. Fixture grants and Atlas metadata are not native/installed evidence."
+  },
+  "runs": {
+    "W6": {
+      "run": 43653108315,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653108315",
+      "aggregate": {
+        "passed_tests": 1,
+        "failed_tests": 1,
+        "bun_expects": 106,
+        "conclusion": "FAILURE"
+      },
+      "evidence_provenance": "Root's observed Actions log provided in this task; no additional dispatch or independent execution by this mapper.",
+      "test1": {
+        "name": "first agenda uses three real domains, preserves edits through drift and reload, and fences a late response after revocation",
+        "status": "FAILURE_AFTER_PARTIAL_ASSERTION_PROGRESS",
+        "observed_through": "Exact C05 after source130 and real SQLite reopen; previous explicit selection/removal/preview/drift/preserve/lost-body/idempotency/ref-period-count assertions reached successfully.",
+        "failure": "First browser meeting heading after Open meeting, around W6 source line244.",
+        "not_credited": [
+          "Browser meeting display/reload/topic navigation",
+          "Late browser response after revocation",
+          "Overall test1 PASS"
+        ]
+      },
+      "test2": {
+        "name": "discovery is per source, denies forged and private selectors, and keeps independent Procurement periods",
+        "status": "PASS",
+        "duration_ms": 23975.12,
+        "root_reported_log": "(pass) discovery is per source, denies forged and private selectors, and keeps independent Procurement periods [23975.12ms]",
+        "scope": "Source-specific catalog/selector privacy, forged/copy/injection denial, independent Procurement periods. No installed or exporter proof."
+      }
+    },
+    "W7": {
+      "run": 43653855014,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653855014",
+      "status": "COMPLETED_FAILURE_WITH_BOUNDED_COMPONENT_PROGRESS",
+      "selected_tests": 2,
+      "source_W": "cb092403e7234a4b6294cfa6819448d1a3917d0c",
+      "request_S": "7ef9ad32d113273297341bbd8f5607ca443796b6",
+      "aggregate": {
+        "passed_tests": 1,
+        "failed_tests": 1,
+        "bun_expects": 116,
+        "conclusion": "FAILURE"
+      },
+      "evidence_provenance": "Parent supplied observed component progress; this mapper additionally read the complete retained selected-test log excerpt and DISCOVERY-AFTER-CAPTURE-LIMIT.json. No additional execution or dispatch.",
+      "log_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/actions/07-43653855014.log",
+      "test1": {
+        "name": "first agenda uses three real domains, preserves edits through drift and reload, and fences a late response after revocation",
+        "status": "FAILURE_AFTER_PARTIAL_ASSERTION_PROGRESS",
+        "duration_ms": 232105.51,
+        "observed_through": "All first-agenda selection/removal/order/period/source invariance/drift/preserve/lost-body/retry/C05/SQLite assertions, then meeting open, browser reload and three Next-topic actions. Every corresponding review-read result equals the saved C05; displayed Forecast remains 120 and not current-source 130.",
+        "failure": "A subsequent new Dashboard catalog request after the saved six-section C05 had no response observed within the existing 30000ms wait at prior source call line 268 (wait created at prior line 77).",
+        "limitation_id": "DISCOVERY-AFTER-CAPTURE-LIMIT",
+        "limitation_status": "OBSERVED_NOT_RESOLVED",
+        "not_credited": [
+          "Overall test1 PASS",
+          "Private Talent preview in the later post-capture preparation",
+          "Later UI purge and held catalog response after revocation",
+          "Historical read denial after that unexecuted late phase",
+          "Resolution or root cause of the post-capture discovery failure"
+        ]
+      },
+      "test2": {
+        "name": "discovery is per source, denies forged and private selectors, and keeps independent Procurement periods",
+        "status": "PASS",
+        "duration_ms": 23986.32,
+        "root_reported_log": "(pass) discovery is per source, denies forged and private selectors, and keeps independent Procurement periods [23986.32ms]",
+        "scope": "Source-specific catalog/selector privacy, forged/copied/injected-query denial and independent Procurement periods. No installed or exporter proof."
+      }
+    },
+    "W8": {
+      "run": 43654981768,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+      "status": "OBSERVED_PASS_FOCUSED",
+      "selected_tests": 3,
+      "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+      "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+      "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+      "conclusion": "SUCCESS",
+      "test_results": [
+        {
+          "ordinal": 1,
+          "name": "first agenda uses three real domains, preserves edits through drift and reload, and denies revoked historical reads",
+          "status": "PASS",
+          "duration_ms": 172970.46
+        },
+        {
+          "ordinal": 2,
+          "name": "discovery is per source, denies forged and private selectors, and keeps independent Procurement periods",
+          "status": "PASS",
+          "duration_ms": 23462.98
+        },
+        {
+          "ordinal": 3,
+          "name": "first-use Talent preview is purged on revocation and rejects a late authorized catalog without any capture",
+          "status": "PASS",
+          "duration_ms": 6992.4
+        }
+      ],
+      "test_inventory": [
+        {
+          "ordinal": 1,
+          "name": "first agenda uses three real domains, preserves edits through drift and reload, and denies revoked historical reads",
+          "source_lines": [
+            19,
+            275
+          ],
+          "timeout_ms": 240000,
+          "status": "PASS",
+          "duration_ms": 172970.46
+        },
+        {
+          "ordinal": 2,
+          "name": "discovery is per source, denies forged and private selectors, and keeps independent Procurement periods",
+          "source_lines": [
+            277,
+            333
+          ],
+          "timeout_ms": 180000,
+          "status": "PASS",
+          "duration_ms": 23462.98
+        },
+        {
+          "ordinal": 3,
+          "name": "first-use Talent preview is purged on revocation and rejects a late authorized catalog without any capture",
+          "source_lines": [
+            335,
+            425
+          ],
+          "timeout_ms": 120000,
+          "status": "PASS",
+          "duration_ms": 6992.4
+        }
+      ],
+      "partition": {
+        "first_test": "Retains first-use multi-domain selection, complete preview, source invariance, drift, preserve/lost-body/retry, exact C05, SQLite reopen, meeting/reload/navigation and captured120/current130 assertions. It now ends with revoked historical HTTP403, no private request text, one stored review and exact complete stored C05 equality.",
+        "second_test": "Textually identical to the previously reviewed source for the whole independent per-source negative test, including its 180000ms test timeout.",
+        "second_test_text_equal_to_previously_reviewed_source": true,
+        "third_test": "Fresh real-producer fixture with zero prior reviews; explicitly observes real HTTP200 catalog and private Talent preview, holds an authorized HTTP200 Planner catalog response, revokes access and delivers the late response after the purge. Requires zero preserve requests and zero stored reviews throughout.",
+        "test_timeouts_increased": false,
+        "response_wait_timeout_increased": false,
+        "sleeps_added": false,
+        "oracles": "Prior selection/capture/reload and purge/late-response oracles are retained across the partition, with additional exact durable-body and fresh-zero-capture assertions. This does not rerun or resolve the failed post-capture Dashboard discovery sequence.",
+        "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT remains OBSERVED_NOT_RESOLVED, irrespective of a later fresh-fixture test result.",
+        "assertion_refinement": "The prior isolated expect(response.status).toBe(200) is retained in a stronger combined assertion requiring {http:200,result:{status:'ok'}} and an actual Forecast candidate option before releasing the held real response."
+      },
+      "job": 132631416268,
+      "aggregate": {
+        "passed_tests": 3,
+        "failed_tests": 0,
+        "bun_expects": 136,
+        "duration_seconds": 203.91,
+        "conclusion": "SUCCESS"
+      },
+      "evidence_provenance": "Parent observed the completed Actions run/job through GitHub MCP and supplied the exact results. This mapper executed no tests, dispatched no run and made no remote mutation.",
+      "nonce": "39e3621b53b4d953c4021cd807f9bb25",
+      "omni_positive_control": {
+        "verdict": "not applicable (focused: no declaring test ran)",
+        "scope": "This focused run is not omni spawn/runtime evidence."
+      },
+      "result_scope": "Three exact selected tests passed on the frozen W8/S8. The pass covers their asserted isolated browser/module/real-handler/SQLite behavior, not untested normative components, installed Reports, exporters or the failed W7 post-capture discovery path."
+    }
+  },
+  "components": {
+    "first_use_and_explicit_choice": {
+      "description": "No saved review exists initially. Discovery adds nothing; UI Add clicks select topics and the final C05 has no previousReviewRef.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            31,
+            82,
+            172,
+            180
+          ],
+          "text": "expect(await f.storedReviews()).toEqual([])"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            77
+          ],
+          "text": "getByRole(\"button\", { name: \"Load selection\", exact: true })).toBeDisabled()"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            81
+          ],
+          "text": "getByRole(\"listitem\")).toHaveCount(0)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            84
+          ],
+          "text": "name: `Add ${label}`"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            215
+          ],
+          "text": "expect(saved.previousReviewRef).toBeUndefined()"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "selection_order_and_record_removal": {
+      "description": "Explicitly removes OPEX Detail, moves Forecast then Hot Topics, identifies the two real Project records, removes project, and retains only project-second with budget330.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            86
+          ],
+          "text": "Remove selected OPEX Detail"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            87
+          ],
+          "text": "Move selected Forecast · Agenda candidate up"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            101
+          ],
+          "text": "expect(identifiedProjects.map"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            104
+          ],
+          "text": "name: `Remove record ${removedProject.reference}`"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            106
+          ],
+          "text": "toEqual([retainedProject.reference])"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            107
+          ],
+          "text": "projects[id:project-second].budget"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            108
+          ],
+          "text": "projects[id:project].budget"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            109
+          ],
+          "text": "Move Hot Topics up"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            122,
+            182
+          ],
+          "text": "expect(headings).toHaveText(ordered)"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "complete_preview": {
+      "description": "Every selected section displays title, own period, record count, section ref, source identity/version/incarnation, values/units/periods, record-removal controls and components/evidence/missing entries.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            131
+          ],
+          "text": "for (const section of mixed.sections)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            134
+          ],
+          "text": "toHaveText(section.projection.values.flatMap"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            139
+          ],
+          "text": "Section reference: ${section.id}"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            141
+          ],
+          "text": "Source: ${source.surface}"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            143
+          ],
+          "text": "records.map((reference)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            144
+          ],
+          "text": "Components, evidence and limitations"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            133,
+            183
+          ],
+          "text": "selected source values"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [
+        "Most preview assertions compare the rendered production projection with the producer response; independent numeric anchors include retained Project budget330 and refreshed Forecast120/annual1440.",
+        "No agendaNote or captured human comment is supplied."
+      ],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "domain_origin_unchanged": {
+      "description": "Before/after selection snapshots preserve business data, versions, sequences, physical identities and pre-existing scopes. Only canonical member-read audits and newly issued scope metadata are allowed.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            153
+          ],
+          "text": "expect(afterSelection.dashboard.audit.slice"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            163
+          ],
+          "text": "expect(reads).toContainEqual(aggregateRead)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            164
+          ],
+          "text": "expect(reads).toContainEqual(memberRead)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            165
+          ],
+          "text": "for (const entry of reads)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            166
+          ],
+          "text": "expectUnchangedDomainState(before"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [
+        "expectUnchangedDomainState ignores only the sfSources top-level object, then separately requires schemaVersion and physical records equality and equality of every original scope.",
+        "The test explicitly proves the original audit prefix and every appended audit is one of two exact canonical read forms; it does not claim byte-identical snapshots.",
+        "The check covers select/reorder/removal before deliberate source drift; it is not a physical source-deletion scenario."
+      ],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "mixed_periods_and_empty_section": {
+      "description": "Five annual sections and a January IT Operations section retain their periods. IT Operations is explicitly empty; the final C05 counts are [1,2,1,1,1,0].",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            115
+          ],
+          "text": "getByLabel(\"Period end\", { exact: true }).fill(\"2026-01-31\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            118
+          ],
+          "text": "Add IT Operations"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            124
+          ],
+          "text": "2026-01-01 – 2026-01-31 · 0 selected records"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            125
+          ],
+          "text": "No selected records in this section."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            128
+          ],
+          "text": "expect(mixed.sections.map((section) => section.period))"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            217
+          ],
+          "text": "expect(saved.sections.map((section) => section.count))"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [
+        "The monthly operation and empty-collection edge are combined in the same IT Operations section. This proof does not supply nonempty monthly Ops values plus a distinct empty Hot Topics collection. The proposed installed Reports extension has that additional fixture, but has not run here."
+      ],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "three_domain_producer_consumption": {
+      "description": "The browser explicitly selects Dashboard topics, Planner candidate forecast and a Procurement request. Preview source surfaces are exactly dashboard/planner/procurement.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            78
+          ],
+          "text": "const initialTopics ="
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            130
+          ],
+          "text": "new Set(mixed.sections.flatMap"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            94,
+            110,
+            183,
+            227
+          ],
+          "text": "Forecast · Agenda candidate · candidate"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            78,
+            91,
+            94,
+            110
+          ],
+          "text": "Request · Independent purchase"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [
+        "Representative production paths only: no assertion exhausts all16 Dashboard catalog topics.",
+        "The own fixture selects single-side Forecast candidates, not the separate baseline/candidate comparison option.",
+        "Procurement supplier and contract options are not selected into the saved agenda in this three-test W8 selection."
+      ],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "drift_requires_repreview": {
+      "description": "A source change to120 rejects preserve as stale, stores no review, hides old tables, retains six topics, and requires explicit Discover/Refresh/Load before preserving the updated preview.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            168
+          ],
+          "text": "await f.changeCandidate()"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            170
+          ],
+          "text": "toContainText(\"forecast-source-unavailable\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            171
+          ],
+          "text": "expect(transport.preserve.at(-1)?.status).toBe(\"stale\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            179
+          ],
+          "text": "Refresh Forecast · Agenda candidate"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            184
+          ],
+          "text": "name: \"120 USD\""
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            105,
+            185
+          ],
+          "text": "await playwright.expect(projects).toContainText(\"1 selected records\")"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "exact_preserve_confirmation": {
+      "description": "An explicit preserve captures the ordered remaining sections. C05 preserves exact section IDs, selected counts, per-section/context periods and source refs from the final preview.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            198
+          ],
+          "text": "expect({ http: preserveResponse.status(), result: preserved })"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            216
+          ],
+          "text": "expect(saved.sections.map((section) => section.title))"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            218
+          ],
+          "text": "expect(saved.sections.map((section) => section.period))"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            221
+          ],
+          "text": "contextPeriod: (section.content as DomainProjection).context.period"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            221
+          ],
+          "text": "sourceRefs: section.sourceRefs"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            222,
+            224
+          ],
+          "text": "contextSourceRefs:"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [
+        "This is production module/HTTP/SQLite evidence under fixture identity, not an installed CLI/host/router journey or exported-document proof."
+      ],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "lost_body_idempotent_retry": {
+      "description": "After the real handler commits, only the response body is corrupted. UI hides captured values but retains selection; explicit retry repeats the identical idempotency key/body and returns the same single C05.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            187
+          ],
+          "text": "transport.loseNextPreserveBody = true"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            199
+          ],
+          "text": "toContainText(\"review-preserve-unavailable\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            206
+          ],
+          "text": "Retry preserving this review"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            212
+          ],
+          "text": "expect(retryCommand).toEqual(originalCommand)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            213
+          ],
+          "text": "expect(saved).toEqual(committedBeforeRetry)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            226
+          ],
+          "text": "expect(await f.storedReviews()).toEqual([saved.id])"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "immutable_sqlite_reopen": {
+      "description": "The captured Forecast value is120 and component total1440. Current source changes to130; closing and reopening real SQLite returns the exact saved C05 object.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            228
+          ],
+          "text": "captured.values.find((value) => value.id === \"license:1:forecast\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            229
+          ],
+          "text": "captured.components.reduce"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            230
+          ],
+          "text": "await f.changeCandidate(130)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            231
+          ],
+          "text": "await f.reopen()"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            233
+          ],
+          "text": "expect(reloaded).toEqual(saved)"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_FIRST_TEST_ASSERTIONS_BEFORE_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [
+        "W6 reached exact C05 after real SQLite reopen but failed at the next first browser meeting heading. W7 additionally observed browser open/reload/navigation. The frozen W8 first test passed both persistence and browser meeting/reload assertions.",
+        "The canonical Reports 1320→1400 export oracle is separate and not replaced by this own 120→130/1440 proof."
+      ],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 19,
+        "end": 233
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "meeting_order_and_browser_reload": {
+      "description": "Current test awaits real review-read responses and exact saved C05 equality for open/reload/topic changes, asserts Hot Topics first, then Budget, Projects and Forecast, and captured120 rather than current130.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            234
+          ],
+          "text": "const readMeeting = async"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            247
+          ],
+          "text": "expect(available(result)).toEqual(saved)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            249
+          ],
+          "text": "await readMeeting(\"open\""
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            252
+          ],
+          "text": "await readMeeting(\"reload\""
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            255
+          ],
+          "text": "await readMeeting(`topic-${index + 1}`"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            256
+          ],
+          "text": "name: ordered[index + 1]!"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            259
+          ],
+          "text": "/^license:1:forecast: 120 USD"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            260
+          ],
+          "text": "/^license:1:forecast: 130 USD"
+        }
+      ],
+      "W6": {
+        "status": "AUTHORED_NOT_REACHED_IN_W6_FIRST_TEST"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_FIRST_TEST_ASSERTIONS_BEFORE_LATER_DISCOVERY_FAILURE",
+        "run": 43653855014
+      },
+      "limits": [
+        "W6 stopped at the earlier first meeting heading assertion; no browser reload or topic-navigation success is credited to W6.",
+        "W7 and W8 observed the first four displayed topics: Hot Topics, Budget, Projects and Forecast. Exact HTTP body equality includes all six ordered sections; the final Request and IT Operations topic screens are not separately traversed.",
+        "No exporter is invoked. Successful focused meeting assertions do not establish installed-host or exported-document acceptance."
+      ],
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 234,
+        "end": 261
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "late_response_revocation": {
+      "description": "In W8 test3, a real authorized HTTP200 Planner catalog containing Agenda candidate is held by transport. Access is revoked and the canonical UI event dispatched; private Talent content and selection clear before the authorized response is released. After awaiting the actual discovery completion, no table/button/list, candidate label or private marker returns; no preserve request or C05 was created.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            401
+          ],
+          "text": "const pending = { captured: deferred<void>()"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            366
+          ],
+          "text": "expect({ http: response.status, result })"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            367
+          ],
+          "text": "expect(available(result).options.map((option) => option.label)).toContain(\"Forecast · Agenda candidate\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            404
+          ],
+          "text": "await pending.captured.promise"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            405
+          ],
+          "text": "f.gate.active = false"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            406
+          ],
+          "text": "sf-access-revoked"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            407
+          ],
+          "text": "Private content and the selection were cleared"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            409
+          ],
+          "text": "pending.release.complete()"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            410
+          ],
+          "text": "firstAgendaDiscovery"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            411
+          ],
+          "text": "getByRole(\"table\")).toHaveCount(0)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            412
+          ],
+          "text": "getByRole(\"button\")).toHaveCount(0)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            413
+          ],
+          "text": "getByRole(\"list\")).toHaveCount(0)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            414
+          ],
+          "text": "not.toContainText(\"Agenda candidate\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            408,
+            415
+          ],
+          "text": "not.toContainText(\"PRIVATE_AGENDA_TALENT\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            416
+          ],
+          "text": "expect(transport.preserveRequests).toBe(0)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            347,
+            396,
+            417
+          ],
+          "text": "expect(await f.storedReviews()).toEqual([])"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            418
+          ],
+          "text": "expect(failures).toEqual([])"
+        }
+      ],
+      "W6": {
+        "status": "NOT_REACHED_IN_PRIOR_COMBINED_TEST_AFTER_MEETING_FAILURE"
+      },
+      "W7": {
+        "status": "NOT_REACHED_IN_PRIOR_COMBINED_TEST_AFTER_POST_CAPTURE_CATALOG_FAILURE",
+        "run": 43653855014,
+        "limitation_id": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      },
+      "test_ordinal": 3,
+      "source_phase_lines": {
+        "start": 335,
+        "end": 425
+      },
+      "limits": [
+        "Observed PASS in W8 test3 under a fresh first-use fixture. W6/W7 did not reach their older combined late-revocation phase.",
+        "Fixture revocation and explicit UI event exercise production consumer purge/generation fencing; they do not prove automatic installed-host revocation detection.",
+        "This fresh fixture has no saved C05 and cannot establish resolution of the failed W7 post-capture Dashboard discovery sequence."
+      ]
+    },
+    "source_acl_and_private_selector_denial": {
+      "description": "Viewer discovery omits Talent/Headcount/Team Structure and private markers. A copied prior Talent selector and forged selector are denied without private marker/count leakage. Procurement denial omits request/supplier content while Dashboard and Planner remain available.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            303
+          ],
+          "text": "f.control.memberships = [\"viewers\"]"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            306
+          ],
+          "text": "[\"talent-review\", \"headcount\", \"team-structure\"]"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            307
+          ],
+          "text": "expect(JSON.stringify(restricted)).not.toContain(\"Talent Review\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            310
+          ],
+          "text": "expect(copiedPrivate.status).toBe(\"denied\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            312
+          ],
+          "text": "expect(JSON.stringify(copiedPrivate)).not.toContain(\"recordCount\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            314
+          ],
+          "text": "expect(forged).toEqual"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            318
+          ],
+          "text": "f.gate.procurement = false"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            326
+          ],
+          "text": "expect(copiedRequest.status).toBe(\"denied\")"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_SECOND_TEST_PASS"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_SECOND_TEST_PASS",
+        "run": 43653855014
+      },
+      "limits": [
+        "Talent fixture includes name/title/notes sharing PRIVATE_AGENDA_TALENT; their absence and a denied response containing no recordCount are asserted.",
+        "W6, W7 and W8 test2 passed these module/HTTP authority negatives. W8 test3 separately passed browser purge and rejection of the late response under explicit fixture revocation."
+      ],
+      "test_ordinal": 2,
+      "source_phase_lines": {
+        "start": 277,
+        "end": 333
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "independent_procurement_periods": {
+      "description": "The same authorized Procurement request can appear under annual and January periods, with matching projection periods and distinct scoped source incarnations.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            295
+          ],
+          "text": "const monthlyRequest ="
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            299
+          ],
+          "text": "expect(mixed.sections.map((section) => section.projection.context.period))"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            301
+          ],
+          "text": "mixed.sections[0]?.projection.context.sourceRefs[0]?.incarnation"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_SECOND_TEST_PASS"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_SECOND_TEST_PASS",
+        "run": 43653855014
+      },
+      "limits": [],
+      "test_ordinal": 2,
+      "source_phase_lines": {
+        "start": 277,
+        "end": 333
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "query_identity_injection_denied": {
+      "description": "A principalRef query injection is rejected with HTTP400/invalid-agenda-query; the negative test stores no review.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            328
+          ],
+          "text": "principalRef=person"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            329
+          ],
+          "text": "expect(injected.status).toBe(400)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            330
+          ],
+          "text": "expect(await injected.json()).toEqual"
+        }
+      ],
+      "W6": {
+        "status": "OBSERVED_W6_SECOND_TEST_PASS"
+      },
+      "W7": {
+        "status": "OBSERVED_W7_SECOND_TEST_PASS",
+        "run": 43653855014
+      },
+      "limits": [],
+      "test_ordinal": 2,
+      "source_phase_lines": {
+        "start": 277,
+        "end": 333
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      }
+    },
+    "fresh_private_talent_preview": {
+      "description": "W8 test3 starts with zero reviews and zero selected topics, discovers Talent through a real authorized HTTP200 Dashboard catalog, explicitly adds and previews it through real HTTP200 handlers, and verifies one section, one selected record, one record reference, Dashboard source identity and the private name marker before revocation.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            347,
+            396,
+            417
+          ],
+          "text": "expect(await f.storedReviews()).toEqual([])"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            376
+          ],
+          "text": "getByRole(\"list\", { name: \"Selected agenda\", exact: true }).getByRole(\"listitem\")).toHaveCount(0)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            382
+          ],
+          "text": "expect({ http: catalogResponse.status(), result: catalog })"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            383
+          ],
+          "text": "expect(available(catalog).options.map((option) => option.label)).toContain(\"Talent Review\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            384
+          ],
+          "text": "name: \"Add Talent Review\""
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            389
+          ],
+          "text": "expect({ http: previewResponse.status(), result: preview })"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            391
+          ],
+          "text": "expect(privatePreview.sections).toHaveLength(1)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            392
+          ],
+          "text": "expect(privatePreview.sections[0]?.recordCount).toBe(1)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            393
+          ],
+          "text": "expect(privatePreview.sectionRecordRefs[0]?.recordRefs).toHaveLength(1)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            394
+          ],
+          "text": "new Set(privatePreview.sections.flatMap"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            395
+          ],
+          "text": "toContainText(\"PRIVATE_AGENDA_TALENT_NAME\")"
+        }
+      ],
+      "W6": {
+        "status": "NOT_REACHED_IN_PRIOR_COMBINED_TEST"
+      },
+      "W7": {
+        "status": "NOT_REACHED_AFTER_POST_CAPTURE_CATALOG_FAILURE",
+        "run": 43653855014
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      },
+      "test_ordinal": 3,
+      "source_phase_lines": {
+        "start": 335,
+        "end": 425
+      },
+      "limits": [
+        "A positive authorized private preview is a precondition for the later purge test; it does not replace unauthorized-Talent assertions in test2.",
+        "Observed PASS in W8 test3. Only the name marker is positively asserted in the DOM; the negative marker checks cover the shared private name/title/note prefix."
+      ]
+    },
+    "historical_read_revocation_keeps_capture": {
+      "description": "After W8 test1's successful capture/SQLite reopen/meeting sequence, access is revoked. Historical GET must return403 without private Procurement title, while storage still contains exactly one saved review whose complete body equals the original captured C05.",
+      "assertions": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            263
+          ],
+          "text": "f.gate.active = false"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            264
+          ],
+          "text": "const denied = await f.request(\"review-read\""
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            265
+          ],
+          "text": "expect(denied.status).toBe(403)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            266
+          ],
+          "text": "expect(await denied.text()).not.toContain(\"Independent purchase\")"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            267
+          ],
+          "text": "expect(await f.storedReviews()).toEqual([saved.id])"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            268
+          ],
+          "text": "expect(await f.storedReview(saved.id)).toEqual(saved)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "git_blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "lines": [
+            269
+          ],
+          "text": "expect(failures).toEqual([])"
+        }
+      ],
+      "W6": {
+        "status": "NOT_REACHED_IN_PRIOR_COMBINED_TEST"
+      },
+      "W7": {
+        "status": "NOT_REACHED_IN_PRIOR_COMBINED_TEST",
+        "run": 43653855014
+      },
+      "W8": {
+        "status": "OBSERVED_PASS_FOCUSED",
+        "run": 43654981768,
+        "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+        "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+        "job": 132631416268
+      },
+      "test_ordinal": 1,
+      "source_phase_lines": {
+        "start": 262,
+        "end": 275
+      },
+      "limits": [
+        "Observed PASS in W8 test1. This is distinct from test3's browser event/late-response purge and does not reattempt post-capture discovery.",
+        "storedReview is a read-only SQLite transaction returning a structured clone; the expected value comes from the original successful preserve result."
+      ]
+    }
+  },
+  "bindings": [
+    {
+      "criterion_id": "WP07.T01.DOD.01",
+      "entity_id": "WP07.T01",
+      "family": "dod",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "A pauta seleciona e ordena referências autorizadas com contagens e períodos apresentados antes da geração.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "CORE_SELECTION_PREVIEW_COMPONENTS_OBSERVED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "first_use_and_explicit_choice",
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "mixed_periods_and_empty_section",
+          "source_acl_and_private_selector_denial"
+        ],
+        "uncovered_or_limited": [
+          "No DOCX/PPTX generation is invoked in this own selection; evidence is the complete authorized preview before preserve.",
+          "Installed entry/host/router journey remains separate."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "first_use_and_explicit_choice",
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "mixed_periods_and_empty_section",
+          "source_acl_and_private_selector_denial"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "first_use_and_explicit_choice",
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "mixed_periods_and_empty_section",
+          "source_acl_and_private_selector_denial"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.DOD.02",
+      "entity_id": "WP07.T01",
+      "family": "dod",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "A prévia expõe as seções efetivamente incluídas e distingue comentário de pauta de dado calculado.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "PARTIAL; COMMENT_DISTINCTION_NOT_COVERED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "complete_preview",
+          "selection_order_and_record_removal"
+        ],
+        "uncovered_or_limited": [
+          "No selected item carries agendaNote; the test does not demonstrate commentary visually distinguished from calculated data.",
+          "No captured human comments are provided; collaboration reads in the fixture are unavailable."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "complete_preview",
+          "selection_order_and_record_removal"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "complete_preview",
+          "selection_order_and_record_removal"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.INV.01",
+      "entity_id": "WP07.T01",
+      "family": "invariants",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Selecionar, reordenar ou retirar um item da pauta não modifica sua origem.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "CORE_DOMAIN_INVARIANT_OBSERVED_IN_ISOLATED_SCOPE",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "selection_order_and_record_removal",
+          "domain_origin_unchanged"
+        ],
+        "uncovered_or_limited": [
+          "Business-origin invariance is proved for these fixture-backed selection actions; canonical read audits and newly issued scope metadata are deliberately distinguished from origin edits.",
+          "Installed cross-surface actions and all other topics are not covered."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "selection_order_and_record_removal",
+          "domain_origin_unchanged"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "selection_order_and_record_removal",
+          "domain_origin_unchanged"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.INV.02",
+      "entity_id": "WP07.T01",
+      "family": "invariants",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "A seleção não amplia acesso nem deduz relações entre registros de nomes semelhantes.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "PARTIAL; ACCESS_OBSERVED_SAME_NAME_RELATIONS_NOT_COVERED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "source_acl_and_private_selector_denial",
+          "query_identity_injection_denied"
+        ],
+        "uncovered_or_limited": [
+          "The base fixture contains two suppliers named Same Vendor and a similarly named contract, but this test does not select them to assert distinct identities/no inferred relationship.",
+          "Absence of Same Vendor after Procurement denial is an access assertion, not a same-name relationship oracle."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "source_acl_and_private_selector_denial",
+          "query_identity_injection_denied"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "source_acl_and_private_selector_denial",
+          "query_identity_injection_denied",
+          "fresh_private_talent_preview",
+          "late_response_revocation",
+          "historical_read_revocation_keeps_capture"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.QLT.01",
+      "entity_id": "WP07.T01",
+      "family": "quality_standards",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Uma mudança de seleção atualiza contagens e ordem sem descartar comentários dos itens mantidos.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "PARTIAL; COUNTS_ORDER_OBSERVED_COMMENTS_NOT_COVERED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "drift_requires_repreview"
+        ],
+        "uncovered_or_limited": [
+          "No agendaNote, retained item comment or thread annotation is seeded; retention of comments after remove/reorder/refresh is not exercised.",
+          "Preserving private selection after recoverable failure is observed, but it does not substitute for retained-comment assertions."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "drift_requires_repreview"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "drift_requires_repreview"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.QLT.02",
+      "entity_id": "WP07.T01",
+      "family": "quality_standards",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Período e origem acompanham o tópico até a representação consumida pelos próximos passos.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "PARTIAL; PREVIEW_C05_REOPEN_AND_MEETING_OBSERVED_EXPORT_NOT_COVERED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "complete_preview",
+          "mixed_periods_and_empty_section",
+          "independent_procurement_periods",
+          "exact_preserve_confirmation",
+          "immutable_sqlite_reopen"
+        ],
+        "uncovered_or_limited": [
+          "W7 and W8 observed exact preserved HTTP body equality during meeting open, browser reload and three topic changes, including all section/context periods and source references. The final two topic screens are not separately traversed.",
+          "Exporter consumption and installed source navigation are not executed."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "complete_preview",
+          "mixed_periods_and_empty_section",
+          "independent_procurement_periods",
+          "exact_preserve_confirmation",
+          "immutable_sqlite_reopen",
+          "meeting_order_and_browser_reload"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "complete_preview",
+          "mixed_periods_and_empty_section",
+          "independent_procurement_periods",
+          "exact_preserve_confirmation",
+          "immutable_sqlite_reopen",
+          "meeting_order_and_browser_reload"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.CMP.01",
+      "entity_id": "WP07.T01",
+      "family": "completeness_criteria",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Há comportamento definido para seleção vazia, tópico desconhecido, referência removida e seção sem dados.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "PARTIAL; EMPTY_SELECTION_AND_EMPTY_SECTION_OBSERVED_UNKNOWN_AND_REMOVED_ORIGIN_NOT_COVERED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "first_use_and_explicit_choice",
+          "mixed_periods_and_empty_section"
+        ],
+        "uncovered_or_limited": [
+          "Unknown topic is not submitted. A forged known-topic selectionRef is a different negative.",
+          "No physical source record/reference is deleted after selection or preservation. Removing a selected record from the agenda leaves its origin intact and is not a source-removal oracle.",
+          "Initial empty selection is covered; removing every selected topic back to empty is not separately asserted."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "first_use_and_explicit_choice",
+          "mixed_periods_and_empty_section"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "first_use_and_explicit_choice",
+          "mixed_periods_and_empty_section"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.CMP.02",
+      "entity_id": "WP07.T01",
+      "family": "completeness_criteria",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Os tópicos existentes do Dashboard e as projeções contratadas de Planner/Procurement podem ser selecionados sem refazer seus motores.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "PARTIAL; REPRESENTATIVE_THREE_DOMAIN_CONSUMPTION_OBSERVED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "three_domain_producer_consumption",
+          "independent_procurement_periods"
+        ],
+        "uncovered_or_limited": [
+          "The own proof selects a representative subset, not every existing Dashboard topic.",
+          "Planner single-side forecasts are covered; a distinct baseline/candidate comparison pair is not selected here.",
+          "Procurement request selection is covered; supplier/contract selection is not.",
+          "Reuse of existing ports is statically visible in the fixture/service; no full-engine or all-projections acceptance is inferred."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "three_domain_producer_consumption",
+          "independent_procurement_periods"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "three_domain_producer_consumption",
+          "independent_procurement_periods"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.SUC.01",
+      "entity_id": "WP07.T01",
+      "family": "success_criteria",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "O usuário confirma exatamente quais registros e períodos entrarão no material antes de preservá-lo.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "CORE_EXPLICIT_CONFIRMATION_COMPONENTS_OBSERVED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "first_use_and_explicit_choice",
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "drift_requires_repreview",
+          "exact_preserve_confirmation",
+          "lost_body_idempotent_retry"
+        ],
+        "uncovered_or_limited": [
+          "This is real production browser controls against fixture-backed real handlers; installed persona/host admission and document generation are not proved."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "first_use_and_explicit_choice",
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "drift_requires_repreview",
+          "exact_preserve_confirmation",
+          "lost_body_idempotent_retry"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "first_use_and_explicit_choice",
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "drift_requires_repreview",
+          "exact_preserve_confirmation",
+          "lost_body_idempotent_retry"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.SUC.02",
+      "entity_id": "WP07.T01",
+      "family": "success_criteria",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "A ordenação escolhida é a mesma recebida pela meeting view e pelos exportadores.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "PARTIAL; C05_ORDER_AND_MEETING_ORDER_OBSERVED_EXPORT_NOT_COVERED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "exact_preserve_confirmation",
+          "immutable_sqlite_reopen"
+        ],
+        "uncovered_or_limited": [
+          "W7 and W8 observed Hot Topics then Budget, Projects and Forecast in browser order and exact whole saved C05 on open/reload/three Next actions. Request and IT Operations screens are not separately traversed.",
+          "Neither exporter is called. The proposed Reports RPT-01 patch remains an unexecuted consumer proposal.",
+          "W7 still failed later on post-capture Dashboard discovery. W8 does not rerun that specific post-capture discovery path; its pass does not resolve the observation."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "exact_preserve_confirmation",
+          "immutable_sqlite_reopen",
+          "meeting_order_and_browser_reload"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "exact_preserve_confirmation",
+          "immutable_sqlite_reopen",
+          "meeting_order_and_browser_reload"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.CHK.01",
+      "entity_id": "WP07.T01",
+      "family": "check",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Selecionar Budget, Projects e Hot Topics, reordená-los e remover um registro: a prévia deve conter exatamente a seleção remanescente, sem recriar ou editar os registros de origem.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "NOMINAL_CHECK_COMPONENTS_OBSERVED_IN_W6_W7_AND_W8",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "domain_origin_unchanged"
+        ],
+        "uncovered_or_limited": [
+          "Observed only in the bounded isolated module/browser proof; no installed Reports acceptance is claimed."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "domain_origin_unchanged"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "selection_order_and_record_removal",
+          "complete_preview",
+          "domain_origin_unchanged"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.CHK.02",
+      "entity_id": "WP07.T01",
+      "family": "check",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Selecionar Talent Review com ator sem essa capacidade: a pauta não deve incluir valores, notas, contagens privadas ou rótulos obtidos de conteúdo restrito.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "UNAUTHORIZED_TALENT_CHECK_AND_W8_FRESH_PURGE_OBSERVED; INSTALLED_BOUNDARY_NOT_COVERED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "source_acl_and_private_selector_denial"
+        ],
+        "uncovered_or_limited": [
+          "The exact unauthorized-Talent selection negative passed in W6, W7 and W8 test2. W6/W7 combined first tests did not reach the later browser purge; W8 test3 passed that purge in a fresh first-use fixture.",
+          "W8 test3 passed the real authorized Talent200 preview, delayed authorized200 catalog, purge and zero-capture assertions. W8 test1 separately passed historical403 and exact durable C05 equality after revocation.",
+          "Native/MCP parity, automatic installed-host authentication/revocation detection and export revocation are not covered by this criterion mapping. The failed W7 post-capture catalog request remains OBSERVED_NOT_RESOLVED."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "source_acl_and_private_selector_denial"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "source_acl_and_private_selector_denial",
+          "fresh_private_talent_preview",
+          "late_response_revocation",
+          "historical_read_revocation_keeps_capture"
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T01.CHK.03",
+      "entity_id": "WP07.T01",
+      "family": "check",
+      "proof_packages": [
+        "E08"
+      ],
+      "status": "NOT_RUN",
+      "criterion_text": "Misturar seção anual, operação mensal e uma coleção vazia: cada seção mantém sua competência e o vazio é explícito, sem um ano global falsamente uniformizador.",
+      "mission39_status": "PENDING_FOCUSED_RUN",
+      "normative_status_preserved": true,
+      "assessment": {
+        "scope_coverage": "MIXED_PERIOD_AND_EXPLICIT_EMPTY_COMPONENTS_OBSERVED",
+        "criterion_done": false,
+        "criterion_acceptance": "NOT_CLAIMED",
+        "observed_W6_component_ids": [
+          "mixed_periods_and_empty_section",
+          "independent_procurement_periods",
+          "exact_preserve_confirmation"
+        ],
+        "uncovered_or_limited": [
+          "The January IT Operations section is itself the empty collection. A nonempty monthly Ops section alongside a different empty collection is not separately exercised in this own fixture.",
+          "The proposed Reports source corpus provides nonempty January Ops plus empty Hot Topics, but installed Reports is NOT_RUN here."
+        ],
+        "W7": {
+          "status": "BOUNDED_COMPONENT_EVIDENCE_FROM_COMPLETED_FAILURE",
+          "run": 43653855014,
+          "aggregate_conclusion": "FAILURE",
+          "criterion_result": "NOT_CLAIMED",
+          "open_limitation": "DISCOVERY-AFTER-CAPTURE-LIMIT"
+        },
+        "scope": "No whole WP07, all86, installed Reports, AM or final-selection acceptance.",
+        "observed_W7_component_ids": [
+          "mixed_periods_and_empty_section",
+          "independent_procurement_periods",
+          "exact_preserve_confirmation"
+        ],
+        "W8": {
+          "status": "OBSERVED_PASS_FOCUSED",
+          "run": 43654981768,
+          "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+          "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+          "job": 132631416268,
+          "criterion_result": "NOT_CLAIMED"
+        },
+        "observed_W8_component_ids": [
+          "mixed_periods_and_empty_section",
+          "independent_procurement_periods",
+          "exact_preserve_confirmation"
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "id": "G-AGENDA-NOTE",
+      "bindings": [
+        "WP07.T01.DOD.02",
+        "WP07.T01.QLT.01"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "No agendaNote/human comment is supplied, so no distinct-rendering or retained-comment oracle runs."
+    },
+    {
+      "id": "G-UNKNOWN-TOPIC",
+      "bindings": [
+        "WP07.T01.CMP.01"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "Forged known-topic selector is tested; unknown topic is not."
+    },
+    {
+      "id": "G-REMOVED-ORIGIN",
+      "bindings": [
+        "WP07.T01.CMP.01"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "UI removal preserves source rows. No source deletion/removal/incarnation replacement is performed."
+    },
+    {
+      "id": "G-SAME-NAME-RELATION",
+      "bindings": [
+        "WP07.T01.INV.02"
+      ],
+      "status": "NOT_COVERED_BY_AUTHORED_SELECTION",
+      "detail": "Same-name fixtures exist, but non-inference between those records is not asserted."
+    },
+    {
+      "id": "G-ALL-PROJECTIONS",
+      "bindings": [
+        "WP07.T01.CMP.02"
+      ],
+      "status": "PARTIAL_REPRESENTATIVE_COVERAGE",
+      "detail": "Dashboard subset, one-sided Planner forecast and Procurement request only; no full16 topic/supplier/contract/comparison-pair acceptance."
+    },
+    {
+      "id": "G-MEETING-RELOAD",
+      "bindings": [
+        "WP07.T01.QLT.02",
+        "WP07.T01.SUC.02"
+      ],
+      "status": "OBSERVED_PASS_FOCUSED_WITH_BOUNDED_DISPLAY_SCOPE",
+      "detail": "W7 and W8 passed meeting open, browser reload and three Next actions, with real HTTP200/exact C05 equality and captured120 rather than current130. Only the first four of six topic screens were traversed. This component success does not resolve W7's later catalog failure or prove exports."
+    },
+    {
+      "id": "G-LATE-REVOCATION",
+      "bindings": [
+        "WP07.T01.CHK.02",
+        "WP07.T01.INV.02"
+      ],
+      "status": "OBSERVED_PASS_FOCUSED_IN_W8; INSTALLED_DETECTION_NOT_COVERED",
+      "detail": "W8 test3 passed with a fresh producer/SQLite fixture: real Talent200 preview, private-content purge and rejection of an authorized late200 catalog, zero preserve requests and zero reviews. Test1 separately passed revoked historical403 and exact durable C05 equality. Neither reexecutes the failed post-capture Dashboard discovery path or proves automatic installed-host revocation detection."
+    },
+    {
+      "id": "G-EXPORT",
+      "bindings": [
+        "WP07.T01.DOD.01",
+        "WP07.T01.QLT.02",
+        "WP07.T01.SUC.02"
+      ],
+      "status": "NOT_RUN_BY_THIS_SELECTION",
+      "detail": "No sf_report_prepare, DOCX or PPTX export/download/OOXML checks run in these three tests. Retain Reports owner/recipe and its 25-project/long-note 1320→1400 oracles."
+    },
+    {
+      "id": "G-INSTALLED",
+      "bindings": [
+        "WP07.T01.DOD.01",
+        "WP07.T01.DOD.02",
+        "WP07.T01.INV.01",
+        "WP07.T01.INV.02",
+        "WP07.T01.QLT.01",
+        "WP07.T01.QLT.02",
+        "WP07.T01.CMP.01",
+        "WP07.T01.CMP.02",
+        "WP07.T01.SUC.01",
+        "WP07.T01.SUC.02",
+        "WP07.T01.CHK.01",
+        "WP07.T01.CHK.02",
+        "WP07.T01.CHK.03"
+      ],
+      "status": "PROPOSED_NOT_RUN",
+      "detail": "example.test route transport calls real production handlers using explicit fixture identity and SQLite. It does not start or test the real CLI installation/router/session provider or consume the shared patches."
+    },
+    {
+      "id": "DISCOVERY-AFTER-CAPTURE-LIMIT",
+      "bindings": [
+        "WP07.T01.CMP.02",
+        "WP07.T01.INV.02",
+        "WP07.T01.CHK.02"
+      ],
+      "status": "OBSERVED_NOT_RESOLVED",
+      "source_W": "cb092403e7234a4b6294cfa6819448d1a3917d0c",
+      "request_S": "7ef9ad32d113273297341bbd8f5607ca443796b6",
+      "run": 43653855014,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653855014",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/DISCOVERY-AFTER-CAPTURE-LIMIT.json",
+      "log_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/actions/07-43653855014.log",
+      "detail": "After saving a six-section C05, current Planner drift, SQLite reopen and successful meeting/reload/navigation, a new Dashboard catalog request produced no observed response within30000ms. W7 failed at prior source call line268 after232105.51ms; test2 passed. W8 retains the first-use and capture/meeting oracles and isolates a fresh first-use privacy proof, but does not retry this same post-capture catalog sequence.",
+      "not_established": [
+        "Eventual response/status/completion time of that request",
+        "Underlying cause, deadlock, authorization defect or leak",
+        "A performance fix or resolution from the fresh W8 fixture",
+        "Acceptance of the composed installed bundle"
+      ],
+      "timeouts_raised": false,
+      "sleeps_added": false,
+      "resolution_inferred_from_partition": false,
+      "owner_followup": "session33 must reconcile the exact composed runtime/source closure before claiming this post-capture case or bundle acceptance."
+    }
+  ],
+  "installed_reports": {
+    "status": "PROPOSED_NOT_RUN",
+    "recipe": "CI-UI-REPORTS",
+    "spec": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+    "owner": "session36",
+    "patch": "reports-session36/complete.patch",
+    "no_new_final_selection": true,
+    "mission39_own_tests_substitute": false,
+    "source_reconciliation": {
+      "source_ref": "7b13bec80d33c0c3a07190dc9df86069479979db",
+      "reported_by": "agenda_backend; not independently applied or executed by this mapper",
+      "spec_preimage_blob": "5084806ef5e7a8373dd753ba4acb7d463d9f8132",
+      "spec_postimage_blob": "1e32418941128da350ce00a528e759d5dcc6d111",
+      "complete_patch_sha256": "fc76d71ad25f3eb11b7a7e64efa9862439860bc0d3cc3f7c49c55b05bd00e7c1",
+      "scope": "Reconciles the existing helper import and RPT-01 call only; owner36's current RPT-02 draft/recovery assertions remain intact. This mapper does not edit that proposal.",
+      "status": "INERT_PROPOSAL_NOT_RUN"
+    },
+    "oracles_not_claimed_here": [
+      "25 real projects in generated DOCX/PPTX",
+      "REPORTS_LONG_NOTE_END in exports",
+      "1320 captured versus1400 current origin",
+      "Installed source navigation",
+      "Installed auth/session revocation",
+      "All86 canonical bindings"
+    ]
+  },
+  "reclassification_guard": {
+    "audit_fence": "Static hypothesis not reproduced by W6 preservation/reopen; no new P1, audit patch or expanded scope is justified by this mapping.",
+    "HOLD42": "The prior PR27eea139 discussion HOLD remains a separately recorded dependency observation; a later PR27 source reconciliation is not treated here as verified release or runtime acceptance."
+  },
+  "actions": {
+    "local_product_execution": 0,
+    "tests_executed_by_mapper": 0,
+    "remote_mutations": 0,
+    "workflow_dispatches": 0,
+    "product_files_modified": 0,
+    "only_output": "review39/proof/CRITERIA-MAPPING.json"
+  }
+}
+

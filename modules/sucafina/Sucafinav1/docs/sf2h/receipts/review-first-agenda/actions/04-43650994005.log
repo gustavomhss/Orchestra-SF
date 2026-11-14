@@ -1,0 +1,44 @@
+Source: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650994005
+Job: 132619200613
+W: 72ca1721516040e360aae0db5c8e9c711bca85db
+S: 8a59e935e83dbbb29f182a1d0607ed54ce3181a8
+Excerpt: selected test file through Bun summary; timestamps preserved, ANSI colors removed.
+
+2026-11-14T23:02:11.0426067Z Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:
+2026-11-14T23:02:35.5248165Z WP07 browser: Chrome closed; owned group has no live members and transport is disconnected {
+2026-11-14T23:02:35.5248555Z   pendingCloseRPCs: [],
+2026-11-14T23:02:35.5248743Z }
+2026-11-14T23:02:35.5252550Z 161 |     expect(afterSelection.dashboard.audit.slice(0, before.dashboard.audit.length)).toEqual(before.dashboard.audit)
+2026-11-14T23:02:35.5254889Z 162 |     // C9 runtime/dashboard-people.ts:161–180, blob de499e6d34af826add34bee4125bcfba4e57ddb8, emits this exact read event.
+2026-11-14T23:02:35.5255883Z 163 |     // C9 product/dashboard/port.ts:161–176, blob b5acfaf9b03c4e03a60c375248cf2ecbd1f32811, normalizes its timestamp and commits the audit.
+2026-11-14T23:02:35.5256572Z 164 |     const reads = afterSelection.dashboard.audit.slice(before.dashboard.audit.length)
+2026-11-14T23:02:35.5257308Z 165 |     expect(reads.length).toBeGreaterThan(0)
+2026-11-14T23:02:35.5258063Z 166 |     for (const entry of reads) expect(entry).toEqual({ who: "person", at: "2026-11-13T00:00:00.000Z", record: "members:private-member", was: null,
+2026-11-14T23:02:35.5258498Z                                                    ^
+2026-11-14T23:02:35.5258760Z error: expect(received).toEqual(expected)
+2026-11-14T23:02:35.5258912Z 
+2026-11-14T23:02:35.5258983Z   {
+2026-11-14T23:02:35.5259208Z     "at": "2026-11-13T00:00:00.000Z",
+2026-11-14T23:02:35.5259447Z -   "became": {
+2026-11-14T23:02:35.5259682Z -     "member": "private-member",
+2026-11-14T23:02:35.5259885Z -     "read": true,
+2026-11-14T23:02:35.5260045Z -   },
+2026-11-14T23:02:35.5260199Z +   "became": null,
+2026-11-14T23:02:35.5260398Z     "record": "members:private-member",
+2026-11-14T23:02:35.5260595Z     "was": null,
+2026-11-14T23:02:35.5260756Z     "who": "person",
+2026-11-14T23:02:35.5260918Z   }
+2026-11-14T23:02:35.5261002Z 
+2026-11-14T23:02:35.5261071Z - Expected  - 4
+2026-11-14T23:02:35.5261234Z + Received  + 1
+2026-11-14T23:02:35.5261329Z 
+2026-11-14T23:02:35.5261737Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:166:46)
+2026-11-14T23:02:35.5262643Z (fail) first agenda uses three real domains, preserves edits through drift and reload, and fences a late response after revocation [24119.94ms]
+2026-11-14T23:02:51.6388091Z (pass) discovery is per source, denies forged and private selectors, and keeps independent Procurement periods [16112.68ms]
+2026-11-14T23:02:51.6391242Z 
+2026-11-14T23:02:51.6392097Z omni positive control [e2553e44e856e8a25ebf5f543928b566]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T23:02:51.6392657Z  1 pass
+2026-11-14T23:02:51.6392808Z  1 fail
+2026-11-14T23:02:51.6392974Z  49 expect() calls
+2026-11-14T23:02:51.6393182Z Ran 2 tests across 1 file. [40.62s]
+
