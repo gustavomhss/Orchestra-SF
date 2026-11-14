@@ -159,12 +159,18 @@ test("first agenda uses three real domains, preserves edits through drift and re
     }
     const afterSelection = await f.snapshots()
     expect(afterSelection.dashboard.audit.slice(0, before.dashboard.audit.length)).toEqual(before.dashboard.audit)
-    // C9 runtime/dashboard-people.ts:161–180, blob de499e6d34af826add34bee4125bcfba4e57ddb8, emits this exact read event.
+    // Discovery catalogs both Budget and People pages, whose read-only producers emit two exact audit forms:
+    // C9 runtime/dashboard-budget.ts:67–79, blob b64f2f49b42aea2f2d74d6c1da18a3bce4873365, records aggregate access with became:null.
+    // C9 runtime/dashboard-people.ts:161–180, blob de499e6d34af826add34bee4125bcfba4e57ddb8, records an individual member-read marker.
     // C9 product/dashboard/port.ts:161–176, blob b5acfaf9b03c4e03a60c375248cf2ecbd1f32811, normalizes its timestamp and commits the audit.
     const reads = afterSelection.dashboard.audit.slice(before.dashboard.audit.length)
+    const aggregateRead = { who: "person", at: "2026-11-13T00:00:00.000Z", record: "members:private-member", was: null, became: null }
+    const memberRead = { who: "person", at: "2026-11-13T00:00:00.000Z", record: "members:private-member", was: null,
+      became: { read: true, member: "private-member" } }
     expect(reads.length).toBeGreaterThan(0)
-    for (const entry of reads) expect(entry).toEqual({ who: "person", at: "2026-11-13T00:00:00.000Z", record: "members:private-member", was: null,
-      became: { read: true, member: "private-member" } })
+    expect(reads).toContainEqual(aggregateRead)
+    expect(reads).toContainEqual(memberRead)
+    for (const entry of reads) expect(entry).toEqual(entry.became === null ? aggregateRead : memberRead)
     expectUnchangedDomainState(before, { ...afterSelection, dashboard: { ...afterSelection.dashboard, audit: before.dashboard.audit } })
 
     await f.changeCandidate()
