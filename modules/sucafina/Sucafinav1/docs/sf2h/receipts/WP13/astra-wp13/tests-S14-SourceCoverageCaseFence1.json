@@ -1,0 +1,750 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S14-SourceCoverageCaseFence1",
+  "productSha": "02e77add3701570c228b11d971b51c4dd70af552",
+  "productTree": "c3ee3042a28b83e182e88ae4941684802c81bebb",
+  "snapshotSha": "3584c5aa16f65d2662ee2d011f7a1106f04a446b",
+  "snapshotTree": "308c22b20edd77ac08d300c5203e4f8680a2f846",
+  "branch": "ci-run-linux-astra-wp13-02e77add-9b4ffb1f-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "7b7936e4ac8bf5b9cedc099d8c22e1c3a379aca8"
+  },
+  "runId": 43602408137,
+  "jobId": 132469800764,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 132469800764,
+      "run_id": 43602408137,
+      "workflow_name": "test-ci",
+      "head_branch": "ci-run-linux-astra-wp13-02e77add-9b4ffb1f-1",
+      "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVsSYps8AAAAe19C_PA",
+      "head_sha": "3584c5aa16f65d2662ee2d011f7a1106f04a446b",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132469800764",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43602408137/job/132469800764",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-14T13:58:21Z",
+      "started_at": "2026-11-14T13:58:22Z",
+      "completed_at": "2026-11-14T14:05:23Z",
+      "name": "test (ubuntu-24.04)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T13:58:23Z",
+          "completed_at": "2026-11-14T13:58:23Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T13:58:23Z",
+          "completed_at": "2026-11-14T13:58:28Z"
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3,
+          "started_at": "2026-11-14T13:58:28Z",
+          "completed_at": "2026-11-14T13:58:28Z"
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-14T13:58:28Z",
+          "completed_at": "2026-11-14T13:58:28Z"
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-14T13:58:28Z",
+          "completed_at": "2026-11-14T13:58:32Z"
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-14T13:58:32Z",
+          "completed_at": "2026-11-14T13:58:33Z"
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-14T13:58:33Z",
+          "completed_at": "2026-11-14T13:58:33Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-14T13:58:33Z",
+          "completed_at": "2026-11-14T13:59:09Z"
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-14T13:59:09Z",
+          "completed_at": "2026-11-14T13:59:09Z"
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-14T13:59:09Z",
+          "completed_at": "2026-11-14T13:59:09Z"
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-14T13:59:09Z",
+          "completed_at": "2026-11-14T13:59:09Z"
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-14T13:59:09Z",
+          "completed_at": "2026-11-14T13:59:18Z"
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-14T13:59:18Z",
+          "completed_at": "2026-11-14T13:59:18Z"
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-14T13:59:18Z",
+          "completed_at": "2026-11-14T13:59:18Z"
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-14T13:59:18Z",
+          "completed_at": "2026-11-14T13:59:18Z"
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-14T13:59:18Z",
+          "completed_at": "2026-11-14T13:59:18Z"
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-14T13:59:18Z",
+          "completed_at": "2026-11-14T13:59:39Z"
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-14T13:59:39Z",
+          "completed_at": "2026-11-14T13:59:39Z"
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-14T13:59:39Z",
+          "completed_at": "2026-11-14T13:59:39Z"
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20,
+          "started_at": "2026-11-14T13:59:39Z",
+          "completed_at": "2026-11-14T14:05:21Z"
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-14T14:05:21Z",
+          "completed_at": "2026-11-14T14:05:21Z"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-14T14:05:21Z",
+          "completed_at": "2026-11-14T14:05:21Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42,
+          "started_at": "2026-11-14T14:05:21Z",
+          "completed_at": "2026-11-14T14:05:21Z"
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-14T14:05:21Z",
+          "completed_at": "2026-11-14T14:05:21Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-11-14T14:05:21Z",
+          "completed_at": "2026-11-14T14:05:21Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-11-14T14:05:21Z",
+          "completed_at": "2026-11-14T14:05:21Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132469800764",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000058609,
+      "runner_name": "GitHub Actions 1000058609",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 132471638275,
+      "run_id": 43602408137,
+      "workflow_name": "test-ci",
+      "head_branch": "ci-run-linux-astra-wp13-02e77add-9b4ffb1f-1",
+      "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVsSYps8AAAAe1-zJAw",
+      "head_sha": "3584c5aa16f65d2662ee2d011f7a1106f04a446b",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132471638275",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43602408137/job/132471638275",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-14T14:05:23Z",
+      "started_at": "2026-11-14T14:05:25Z",
+      "completed_at": "2026-11-14T14:05:30Z",
+      "name": "cleanup",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T14:05:25Z",
+          "completed_at": "2026-11-14T14:05:25Z"
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T14:05:25Z",
+          "completed_at": "2026-11-14T14:05:29Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-14T14:05:29Z",
+          "completed_at": "2026-11-14T14:05:29Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132471638275",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000058611,
+      "runner_name": "GitHub Actions 1000058611",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ],
+  "run": {
+    "id": 43602408137,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKJufyyQ",
+    "head_branch": "ci-run-linux-astra-wp13-02e77add-9b4ffb1f-1",
+    "head_sha": "3584c5aa16f65d2662ee2d011f7a1106f04a446b",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "test(sucafina): validate WP13 source coverage and scoped admission",
+    "run_number": 509,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 416464764,
+    "check_suite_id": 118060231846,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbfPAspg",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43602408137",
+    "pull_requests": [],
+    "created_at": "2026-11-14T13:58:20Z",
+    "updated_at": "2026-11-14T14:05:30Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T13:58:20Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118060231846",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43602408137/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "3584c5aa16f65d2662ee2d011f7a1106f04a446b",
+      "tree_id": "308c22b20edd77ac08d300c5203e4f8680a2f846",
+      "message": "test(sucafina): validate WP13 source coverage and scoped admission",
+      "timestamp": "2026-11-14T13:58:17Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "Sucafinav1/test/product/wp03/port.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "9b4ffb1f31ac881757e0d8e25f2cdad84c6b5ef00fe0cb03d73dd33fc85db055",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "sha": "67b8b179a3fba332933d8ad00820df82b7ab258e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "sha": "a2cf45f6c343c384c37a36e0c36437e379178b43"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "sha": "4a5780b82989b9e8c3437bb3758779d7cfb76733"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "sha": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "sha": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "sha": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "sha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2"
+    }
+  ],
+  "log": {
+    "sha256": "3b26818ff72f936f0b4bd402aab9d6c3f55284c992e6aef94c5c3c9fe8a934cf",
+    "bytes": 77271
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 23,
+    "failed": 2,
+    "summary": "Ran 25 tests across 7 files. [342.03s]",
+    "expectCalls": 299
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp03/port.test.ts": [
+      {
+        "status": "pass",
+        "name": "headcount projection follows domain visibility and increase preview is disposable",
+        "milliseconds": 11.71
+      },
+      {
+        "status": "fail",
+        "name": "forecast port compares the real engine, and detects source changes",
+        "milliseconds": 9.93
+      }
+    ],
+    "Sucafinav1/test/product/wp03/source-scenario.test.ts": [
+      {
+        "status": "pass",
+        "name": "source-only scenario publishes the covered confirmed total and replays through persistence and C17 without applying a choice",
+        "milliseconds": 49410.22
+      },
+      {
+        "status": "pass",
+        "name": "source-only zero stays confirmed while omitted coverage and null never become a complete total",
+        "milliseconds": 63836.99
+      },
+      {
+        "status": "pass",
+        "name": "a source-only observation refuses a coverage change after the real comparison recheck",
+        "milliseconds": 47555.84
+      }
+    ],
+    "Sucafinav1/test/product/wp03/scenario-qualification.test.ts": [
+      {
+        "status": "pass",
+        "name": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+        "milliseconds": 270.24
+      },
+      {
+        "status": "pass",
+        "name": "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+        "milliseconds": 236.92
+      },
+      {
+        "status": "pass",
+        "name": "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+        "milliseconds": 53.39
+      },
+      {
+        "status": "pass",
+        "name": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+        "milliseconds": 56.49
+      },
+      {
+        "status": "pass",
+        "name": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+        "milliseconds": 101.94
+      },
+      {
+        "status": "pass",
+        "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+        "milliseconds": 24.79
+      }
+    ],
+    "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts": [
+      {
+        "status": "pass",
+        "name": "case operation admission observes all alternatives in a read-only scope without changing durable state",
+        "milliseconds": 52.17
+      },
+      {
+        "status": "pass",
+        "name": "case operation admission refuses a nested source write even when the source callback swallows its rejection",
+        "milliseconds": 23.94
+      },
+      {
+        "status": "pass",
+        "name": "a later case operation admission observes a committed source change instead of reusing the prior scope",
+        "milliseconds": 24.7
+      },
+      {
+        "status": "pass",
+        "name": "case operation admission refuses authority revoked by an awaited source callback",
+        "milliseconds": 20.58
+      }
+    ],
+    "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts": [
+      {
+        "status": "pass",
+        "name": "empty-source admission observes two authenticated projections and refuses a static reference after a real Planner edit",
+        "milliseconds": 24.41
+      },
+      {
+        "status": "pass",
+        "name": "empty-source admission refuses second-source-resolve before its final projection",
+        "milliseconds": 22.44
+      },
+      {
+        "status": "pass",
+        "name": "empty-source admission refuses last-revalidate-source-change before its final projection",
+        "milliseconds": 21.76
+      },
+      {
+        "status": "pass",
+        "name": "empty-source admission refuses last-revalidate-revocation before its final projection",
+        "milliseconds": 19.11
+      },
+      {
+        "status": "pass",
+        "name": "empty-source admission refuses authority revoked by its final authentication callback",
+        "milliseconds": 20.37
+      },
+      {
+        "status": "pass",
+        "name": "empty-source admission refuses mismatched scope, projection fields, digest and source period",
+        "milliseconds": 22.95
+      },
+      {
+        "status": "pass",
+        "name": "nonempty operations retain the canonical target verifier and never write the real source",
+        "milliseconds": 36.28
+      }
+    ],
+    "Sucafinav1/test/product/wp11/case-read-fence.test.ts": [
+      {
+        "status": "pass",
+        "name": "case read suppresses its projection when membership changes during the final host revalidation",
+        "milliseconds": 9.93
+      },
+      {
+        "status": "pass",
+        "name": "case read suppresses its projection when same-version content changes during the final host revalidation",
+        "milliseconds": 7.96
+      }
+    ],
+    "Sucafinav1/test/product/wp13/source-scenario.test.ts": [
+      {
+        "status": "fail",
+        "name": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+        "milliseconds": 180007.28
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": false,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "Sucafinav1/test/product/wp11/case-read-fence.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

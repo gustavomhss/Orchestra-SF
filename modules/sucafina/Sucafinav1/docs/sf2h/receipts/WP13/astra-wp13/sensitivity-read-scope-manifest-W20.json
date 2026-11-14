@@ -1,0 +1,126 @@
+{
+  "schema": "wp13-W20-owned-readscope-manifest-v1",
+  "status": "OWN_CODE_FROZEN_FOR_INDEPENDENT_STATIC_REVIEW_NOT_EXECUTED_NOT_PUBLISHED",
+  "preparedAt": "2026-11-14T14:08:08.588032+00:00",
+  "author": "/root/wp13_findings",
+  "intendedParentProduct": {
+    "head": "02e77add3701570c228b11d971b51c4dd70af552",
+    "tree": "c3ee3042a28b83e182e88ae4941684802c81bebb",
+    "increment": "W19",
+    "source": "root publication message; no remote operation by this task"
+  },
+  "changedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "owner": "WP13",
+      "action": "MODIFY",
+      "blob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+      "sha256": "1c8cebd12d0970ad9364c9854553dd9f9d2961f4fefb13849d9e8180fd47e9fe",
+      "bytes": 22535,
+      "before": {
+        "path": "reference/wp13-W20-before/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "blob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+        "sha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320",
+        "bytes": 17055
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "owner": "WP13",
+      "action": "MODIFY",
+      "blob": "4195ec55c7d9cdfe5e308d192414562bb998d7c0",
+      "sha256": "59ea8ee443f0380d60c3ccfed602b5ff13c8d911b942ec20902e65fc137c52cd",
+      "bytes": 17731,
+      "before": {
+        "path": "reference/wp13-W20-before/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "blob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+        "sha256": "5c09acc087257862eb16920c893645b75d54aded4a8f73a5d5cbf8416ac1a594",
+        "bytes": 23011
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "owner": "WP13",
+      "action": "ADD",
+      "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "sha256": "4e75e71ebf5d350a419902be587de516b63a8b6f5807e296d37af2c40d7779c1",
+      "bytes": 6465,
+      "before": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "owner": "WP13",
+      "action": "ADD",
+      "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "sha256": "1147cc8e18f91dd008d2c78e24ca83ec453f7ad9f94157a7951f3dd8c3635636",
+      "bytes": 10716,
+      "before": null
+    }
+  ],
+  "counts": {
+    "ownProductModified": 1,
+    "ownTestModified": 1,
+    "ownHelperAdded": 1,
+    "ownTestAdded": 1,
+    "foreignEdited": 0,
+    "existingIntegrationCases": 6,
+    "newCounterexampleCases": 4
+  },
+  "diff": {
+    "path": "reference/wp13-W20-own-readscope.diff.txt",
+    "blob": "16c05f491c1eb405b6586b629c6e00d87746a493",
+    "sha256": "6f0b8d0635721924bc8c27fd2a82cf8f6d13a747745e2a72a850dd87ca70df7a",
+    "bytes": 34375
+  },
+  "staticTextChecks": {
+    "existingIntegrationBodiesAndEndpointHelperByteEquivalentText": true,
+    "integrationBodyUtf8Sha256": "0cb799583d62330776edb9e5d090af9733a9a182fd2c16df69273c783b42b765",
+    "existingExpectationExpressionsPreserved": 64,
+    "existingBudgetsMsByExpandedCase": [
+      300000,
+      300000,
+      300000,
+      180000,
+      180000,
+      300000
+    ],
+    "newExpectationExpressions": 38,
+    "newBudgetsMs": [
+      120000,
+      120000,
+      120000,
+      120000
+    ],
+    "sensitivityReplayBodyEquivalentAfterOnlyNameAndStageArgumentNormalization": true,
+    "defaultPathCallsOriginalReplayWithoutScope": true,
+    "aliasedImportsInChangedFiles": false,
+    "meaning": "Text/hash inspection only; not typecheck, tests, guards or runtime proof"
+  },
+  "execution": {
+    "localProductExecution": false,
+    "tests": false,
+    "typecheck": false,
+    "guards": false,
+    "CI": false,
+    "remoteReads": false,
+    "remoteWrites": false
+  },
+  "unchangedProtectedAreas": [
+    "approved plan",
+    "engines",
+    "runtime",
+    "public contracts",
+    "other owner sources",
+    "CI configuration",
+    "findings",
+    "ledger",
+    "criterion/consumer maps",
+    "assembler"
+  ],
+  "feasibility": {
+    "path": "reference/wp13-owned-readscope-feasibility-W18.json",
+    "blob": "6599fa9afef0ce8e6ce054150bf385eb20cc673a",
+    "sha256": "de4dfca9dd47780e07a8c2f173893aaf74d561a384f686af4bb1a20e652c74ff",
+    "bytes": 22038
+  }
+}

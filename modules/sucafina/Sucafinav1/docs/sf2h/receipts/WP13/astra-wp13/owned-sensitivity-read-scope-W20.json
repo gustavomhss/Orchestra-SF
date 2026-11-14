@@ -1,0 +1,91 @@
+{
+  "schema": "wp13-owned-sensitivity-read-scope-v1",
+  "increment": "W20",
+  "status": "IMPLEMENTED_REVIEWED_HOSTED_PROOF_PENDING",
+  "parentProduct": {
+    "head": "02e77add3701570c228b11d971b51c4dd70af552",
+    "tree": "c3ee3042a28b83e182e88ae4941684802c81bebb",
+    "increment": "W19",
+    "source": "root publication message; no remote operation by this task"
+  },
+  "code": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "owner": "WP13",
+      "action": "MODIFY",
+      "blob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+      "sha256": "1c8cebd12d0970ad9364c9854553dd9f9d2961f4fefb13849d9e8180fd47e9fe",
+      "bytes": 22535,
+      "before": {
+        "path": "reference/wp13-W20-before/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "blob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+        "sha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320",
+        "bytes": 17055
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "owner": "WP13",
+      "action": "MODIFY",
+      "blob": "4195ec55c7d9cdfe5e308d192414562bb998d7c0",
+      "sha256": "59ea8ee443f0380d60c3ccfed602b5ff13c8d911b942ec20902e65fc137c52cd",
+      "bytes": 17731,
+      "before": {
+        "path": "reference/wp13-W20-before/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "blob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+        "sha256": "5c09acc087257862eb16920c893645b75d54aded4a8f73a5d5cbf8416ac1a594",
+        "bytes": 23011
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "owner": "WP13",
+      "action": "ADD",
+      "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "sha256": "4e75e71ebf5d350a419902be587de516b63a8b6f5807e296d37af2c40d7779c1",
+      "bytes": 6465,
+      "before": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "owner": "WP13",
+      "action": "ADD",
+      "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "sha256": "1147cc8e18f91dd008d2c78e24ca83ec453f7ad9f94157a7951f3dd8c3635636",
+      "bytes": 10716,
+      "before": null
+    }
+  ],
+  "acceptedHistoricalTests": {
+    "completeFiles": 36,
+    "cases": 167,
+    "aggregatePasses": 4,
+    "rule": "Exact original product/snapshot pins, never relabeled as W20 proof"
+  },
+  "change": "Optional private per-invocation LocalStore root for full sensitivity replay; stage source grant inside scope, publish only after root acceptance; reject inherited roots, mutation, revocation and poisoned nested writes. No numerical replay or authorization callback is cached or skipped.",
+  "sixIntegrationBodiesUnchanged": true,
+  "allBudgetsPreserved": true,
+  "newContraproofCases": 4,
+  "plannedHostedSelection": [
+    "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+    "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+  ],
+  "s12": "Terminal2pass4fail; zero complete files. Retained at original W16 snapshot.",
+  "s14": "Terminal23pass2fail; five complete files22cases. Baseline oracle mismatch and own180s source-scenario timeout remain separate open findings.",
+  "independentReview": {
+    "path": "sensitivity-read-scope-independent-W20.json",
+    "sha256": "6e16e81965ba2cfc8bc2d7a7347da0c5739bc508d14ce8e9a994ebcedcacf02b"
+  },
+  "limits": [
+    "Performance not yet measured.",
+    "Explicit trusted composition must use same audited LocalStore for every relevant reader.",
+    "Scope may hold writer admission; no operational latency claim.",
+    "Remote provider/ACL atomicity not implied.",
+    "Same-key overlap has code review only.",
+    "WP10 installed adoption remains a separate NOT_APPLIED delta.",
+    "Own source-scenario deadline is not fixed by this sensitivity-only change."
+  ],
+  "localProductExecution": false,
+  "foreignEdits": 0,
+  "ready": false
+}
