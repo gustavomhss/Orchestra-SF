@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.finance-journey.selection.v1",
+  "finding": "FIN-IND-005",
+  "attempt": 1,
+  "state": "PREPARED_NOT_RUN",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-journey",
+  "target": "finance-resume",
+  "product_base": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+  "product_base_tree": "2d1ecef2ebc5aeca3fd312397bdf709f53d42582",
+  "mission_commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+  "pack_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "criteria": [
+    "WP11.T02.CHK.21",
+    "WP11.T03.CHK.20",
+    "WP13.T02.CHK.20",
+    "WP13.T03.CHK.20",
+    "C10",
+    "CAMP.QLT.06",
+    "CAMP.CMP.04"
+  ],
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-fixes/finance-journey/journey-phase.test.ts",
+      "--timeout",
+      "300000"
+    ],
+    "env": {}
+  },
+  "fixture_budget_ms": 180000,
+  "outer_case_budget_ms": 300000,
+  "hypothesis": "Confirmed sensitivity repeats complete coverage-authority/unit resolution before its first sample write. Span boundaries discriminate resolve, initial revalidation, structural interval proof, final revalidation, sample qualification and exact-threshold search.",
+  "diagnostic_change": "Timing wrappers call the unchanged actual producer functions. No caching, arithmetic replacement, new domain reads from the observer, timeout increase or omitted original assertions.",
+  "original": {
+    "run": 43620619049,
+    "job": 132525249982,
+    "snapshot": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+    "last_checkpoint_ms": 115913,
+    "deadline_ms": 180003,
+    "expects": 10,
+    "conclusion": "failure",
+    "interrupted_call": "confirmed coverage authority isStillValid -> issuer.revalidate; checkpoint label remained prepare:transition-confirmed:complete"
+  },
+  "dependencies": [
+    {
+      "branch": "diagnose-calculation",
+      "head": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "prs": [],
+      "observed_delta": "none published",
+      "do_not_duplicate": "WP10 host.evaluate-and-store"
+    },
+    {
+      "branch": "diagnose-memory",
+      "head": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "prs": [],
+      "observed_delta": "none published",
+      "do_not_duplicate": "Memory same-request-new-proof"
+    }
+  ],
+  "limits": [
+    "Synthetic source grants, classifications and selection are retained from the existing fixture; no native model/agent/MCP evidence is claimed.",
+    "The full WP13.T02 portfolio-feasibility consumer and UI/BI/native parity are not this selection.",
+    "Replay and real restart remain assertions in the tail; their presence is not evidence that they were reached.",
+    "No runtime producer is modified. An owner proposal will be archived as NOT_APPLIED if warranted."
+  ],
+  "checks": {
+    "product_tests": "NOT_RUN_YET",
+    "local_product_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  }
+}
+
