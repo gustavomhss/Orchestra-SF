@@ -20,6 +20,12 @@ export type SfRoutineNativeGovernanceRecords = {
   readonly readPlan: (planRevisionId: string) => Promise<NativePlan | undefined>
 }
 
+/** Observes the existing native invocation; it cannot replace its settlement or grant permissions. */
+export type SfRoutineNativeOwnerHook = {
+  readonly run: <A, E, R>(invocation: ToolSafety.Invocation, effect: Effect.Effect<A, E, R>) =>
+    Effect.Effect<A, E | ToolSafety.Denied, R>
+}
+
 export type SfRoutineNativeAuthorityLease = {
   /** Revalidates the actual Request, owner, case, sources and current provider generation. */
   readonly current: () => Promise<boolean>
@@ -48,6 +54,7 @@ type Checked = {
  */
 export function createSfRoutineNativeGovernance(input: {
   readonly records: () => SfRoutineNativeGovernanceRecords | undefined
+  readonly ownerHook?: () => SfRoutineNativeOwnerHook | undefined
 }) {
   const leases = new Map<string, Lease>()
   const installations = new WeakMap<TaskGovernance.Interface, SfRoutineNativeGovernanceInstallation>()
@@ -180,17 +187,22 @@ export function createSfRoutineNativeGovernance(input: {
           yield* original.before(invocation)
           if (checked) yield* revalidate(checked)
         }),
-        run: (invocation, effect, observe, outcome) => Effect.gen(function* () {
-          const checked = yield* check(invocation)
-          if (!checked) return yield* original.run(invocation, effect, observe, outcome)
-          // The inner fence runs after the original before hooks/approvals, immediately before native settlement.
+        run: (invocation, effect, observe, outcome) => Effect.suspend(() => {
           const guarded = Effect.gen(function* () {
-            yield* revalidate(checked)
-            const value = yield* effect
-            yield* revalidate(checked)
-            return value
+            const checked = yield* check(invocation)
+            if (!checked) return yield* original.run(invocation, effect, observe, outcome)
+            // Keep native approval/permission and check again immediately before and after settlement.
+            const settlement = Effect.gen(function* () {
+              yield* revalidate(checked)
+              const value = yield* effect
+              yield* revalidate(checked)
+              return value
+            })
+            return yield* original.run(invocation, settlement, observe, outcome)
           })
-          return yield* original.run(invocation, guarded, observe, outcome)
+          // acquire runs inside native settlement and is too late to establish this authority fence.
+          const hook = input.ownerHook?.()
+          return hook ? hook.run(invocation, guarded) : guarded
         }),
         session: (event) => Effect.gen(function* () {
           if (event.operation !== "prompt") return yield* original.session(event)
@@ -279,3 +291,4 @@ function safetyDenied(error: ToolFailure) {
 function relayDenied(error: ToolFailure) {
   return new RelayWorkflowBinding.Held({ reason: error.message })
 }
+

@@ -7,6 +7,7 @@ import { EventV2 } from "@orchestra/core/event"
 import type { Host } from "@orchestra/core/host"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
+import { PermissionV2 } from "@orchestra/core/permission"
 import { Relay } from "@orchestra/core/relay"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionStore } from "@orchestra/core/session/store"
@@ -30,6 +31,7 @@ export type SfRoutineNativeRuntimeResources = {
   readonly database: Database.Interface
   readonly store: SessionStore.Interface
   readonly agents: AgentV2.Interface
+  readonly permission: PermissionV2.Interface
   readonly governance: TaskGovernance.Interface
   readonly safety: ToolSafety.Interface
   readonly registry: ToolRegistry.Interface
@@ -111,6 +113,7 @@ export function createSfRoutineNativeRuntime(input: {
       database: capture.database,
       store: capture.store,
       agents: capture.agents,
+      permission: capture.permission,
       governance: capture.governance,
       safety: capture.safety,
       registry: capture.registry,
@@ -135,12 +138,13 @@ export function createSfRoutineNativeRuntime(input: {
 
   const node = makeLocationNode({
     name: "sucafina/routine-native-runtime",
-    deps: [Database.node, SessionStore.node, AgentV2.node, TaskGovernance.node, ToolSafety.node, ToolRegistry.node,
+    deps: [Database.node, SessionStore.node, AgentV2.node, PermissionV2.node, TaskGovernance.node, ToolSafety.node, ToolRegistry.node,
       Relay.node, Location.node, EventV2.node, Config.node, TaskTool.node, existingExecution, existingLocations],
     layer: Layer.effectDiscard(Effect.gen(function* () {
       const database = yield* Database.Service
       const store = yield* SessionStore.Service
       const agents = yield* AgentV2.Service
+      const permission = yield* PermissionV2.Service
       const governance = yield* TaskGovernance.Service
       const safety = yield* ToolSafety.Service
       const registry = yield* ToolRegistry.Service
@@ -151,7 +155,7 @@ export function createSfRoutineNativeRuntime(input: {
       const execution = yield* SessionExecution.Service
       const locations = yield* LocationServiceMap.Service
       const capture: NativeCapture = {
-        database, store, agents, governance, safety, registry, relay, location, events, config, execution, locations,
+        database, store, agents, permission, governance, safety, registry, relay, location, events, config, execution, locations,
         taskRegistration: registry.currentRegistrationIdentity(TaskTool.name),
         governanceInstallation: input.governance.installation(governance),
         views: new WeakMap(), active: true, release: undefined,
@@ -217,3 +221,4 @@ function captureExisting<I, A extends object>(service: Context.Key<I, A>) {
 
 const existingExecution = captureExisting(SessionExecution.Service)
 const existingLocations = captureExisting(LocationServiceMap.Service)
+
