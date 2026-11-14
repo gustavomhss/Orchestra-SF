@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "integration-conflict-fixes",
+  "session_number": 16,
+  "actor_pack": "S0-B",
+  "lease_epoch": 1,
+  "state": "ACK_ACCEPTED_READING",
+  "observed_at_utc": "2026-11-14 19:43:30 UTC",
+  "branch": "sf2-seam-fixes",
+  "base_branch": "sf2-control",
+  "expected_parent": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "mission_commit": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "host_agent": "/root",
+  "native_session_id": null,
+  "effective_model": "NOT_INDEPENDENTLY_VERIFIED",
+  "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/",
+  "authority": "Proposals/evidence only; session 14 remains sole product writer on sf2-stack",
+  "product_status": "READ_ONLY",
+  "application_status": "PROPOSED_NOT_APPLIED",
+  "validation": {
+    "tests": "NOT_RUN_PROHIBITED",
+    "ci_dispatch": "NOT_RUN_PROHIBITED",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "allowed": "static source/preimage/dependency inspection only"
+  },
+  "observed_inputs": [
+    {
+      "branch": "astra-wp10",
+      "commit": "f511f30b73289c2f21c843254569d31c02eb9608"
+    },
+    {
+      "branch": "finance-resume",
+      "commit": "454b97daf614176507711df889bd45743467f7af"
+    },
+    {
+      "branch": "astra-operations",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324"
+    },
+    {
+      "branch": "collab-resume",
+      "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5"
+    },
+    {
+      "branch": "interface-resume",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943"
+    },
+    {
+      "branch": "ui-work",
+      "commit": "359ab99db8aaec23e885b492876bc0a3df3d0a33"
+    },
+    {
+      "branch": "ui-review",
+      "commit": "765a9a5b86c21791ed59152098971b2dfbe8398e"
+    }
+  ],
+  "observed_product_target": {
+    "branch": "sf2-stack",
+    "commit": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+  },
+  "do_not_duplicate": [
+    "session10 ACK UI",
+    "session11 exports",
+    "session12 forecast",
+    "session13 Memory integrity",
+    "Finance performance",
+    "E2Es",
+    "native proofs",
+    "CI",
+    "traceability",
+    "independent reviewers"
+  ],
+  "handoff": "Publish exact consumable patches as each becomes ready. No source ref mutation, merge, full branch intake, native agent, Goal, watchdog, or external message."
+}
