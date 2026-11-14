@@ -1,12 +1,14 @@
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { object } from "../../../runtime/contract.ts"
+import type { Persistence } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { plannerScenarioDigest } from "../../../product/planner/preview-comparison.ts"
+import { createProcurementScenarioProducer } from "../../../product/procurement/scenario-producer.ts"
 import { createScenarioFixture, scenarioAt, scenarioPeriod } from "./fixture.ts"
 
 test("read-only producer computes the exact hypothetical amount and derives every missing C10 category", async () => {
@@ -14,6 +16,7 @@ test("read-only producer computes the exact hypothetical amount and derives ever
   try {
     const request = proposal(fixture.sourceRef)
     const before = await fixture.snapshot()
+    const writes = fixture.writes.length
     const baseline = await fixture.producer.preview({ ...request, operations: [] }, fixture.context)
     const preview = await fixture.producer.preview(request, fixture.context)
     if (baseline.status !== "ok" || preview.status !== "ok") throw new Error("Real Procurement preview unavailable")
@@ -31,6 +34,15 @@ test("read-only producer computes the exact hypothetical amount and derives ever
     expect(await fixture.producer.resolveForecastCoverage(preview.value.coverageRef, fixture.context)).toEqual({ status: "ok", value: { coverageRef: preview.value.coverageRef, basis: preview.value.basis, assessment: preview.value.assessment } })
     expect(await fixture.producer.simulateScenario(request, fixture.context)).toEqual({ status: "ok", value: preview.value.scenario })
     expect(await fixture.snapshot()).toEqual(before)
+    expect(fixture.writes).toHaveLength(writes)
+
+    const callerOwned = proposal(fixture.sourceRef)
+    const retained = fixture.producer.preview(callerOwned, fixture.context)
+    callerOwned.operations[0]!.amount = 900
+    callerOwned.assumptions[0]!.value = "changed-after-the-first-await"
+    expect(await retained).toEqual(preview)
+    expect(await fixture.snapshot()).toEqual(before)
+    expect(fixture.writes).toHaveLength(writes)
 
     const changed = { ...request, operations: [{ ...request.operations[0]!, amount: 160 }] }
     const other = await fixture.producer.preview(changed, fixture.context)
@@ -39,6 +51,7 @@ test("read-only producer computes the exact hypothetical amount and derives ever
     expect(other.value.coverageRef).not.toBe(preview.value.coverageRef)
     expect(preview.value.scenario.knownSubtotal).toBe(140)
     expect(await fixture.snapshot()).toEqual(before)
+    expect(fixture.writes).toHaveLength(writes)
   } finally { await fixture.dispose() }
 })
 
@@ -62,9 +75,11 @@ test("typed Procurement preview rejects target, amount, currency, period and uns
       { ...request, assumptions: [{ id: "unsourced-cost", value: 0, evidenceRefs: [], state: "hypothetical" }] },
     ]
     const before = await fixture.snapshot()
+    const writes = fixture.writes.length
     for (const value of invalid) {
       expect((await fixture.producer.preview(value, fixture.context)).status).not.toBe("ok")
       expect(await fixture.snapshot()).toEqual(before)
+      expect(fixture.writes).toHaveLength(writes)
     }
   } finally { await fixture.dispose() }
 })
@@ -74,6 +89,7 @@ test("missing source cost remains unavailable and a recorded zero remains distin
   try {
     const request = proposal(missing.sourceRef)
     const before = await missing.snapshot()
+    const writes = missing.writes.length
     const baseline = await missing.producer.preview({ ...request, operations: [] }, missing.context)
     if (baseline.status !== "ok") throw new Error("Absent source cost must remain inspectable")
     expect(baseline.value.scenario.knownSubtotal).toBeNull()
@@ -82,6 +98,7 @@ test("missing source cost remains unavailable and a recorded zero remains distin
     expect(baseline.value.scenario.components.every((component) => component.amount === null)).toBe(true)
     expect(await missing.producer.preview(request, missing.context)).toEqual({ status: "needs-input", reason: "procurement-source-cost-unavailable" })
     expect(await missing.snapshot()).toEqual(before)
+    expect(missing.writes).toHaveLength(writes)
   } finally { await missing.dispose() }
   const zero = await createScenarioFixture({ amount: 0 })
   try {
@@ -128,6 +145,61 @@ test("preview revalidates principal, source version, revocation and replacement 
     const replaced = await fixture.snapshot()
     expect((await fixture.producer.preview(request, admission.context)).status).not.toBe("ok")
     expect(await fixture.snapshot()).toEqual(replaced)
+  } finally { await fixture.dispose() }
+})
+
+test("a delete, replacement and restoration race invalidates preview without reissuing or writing sources", async () => {
+  const fixture = await createScenarioFixture()
+  try {
+    const before = await fixture.snapshot()
+    const initialWrites = fixture.writes.length
+    const row = structuredClone(object(object(before.data.store).requests)[fixture.requestId])
+    const gate = { pending: true, enter: () => {}, release: () => {} }
+    const entered = new Promise<void>((resolve) => { gate.enter = resolve })
+    const released = new Promise<void>((resolve) => { gate.release = resolve })
+    // The real transaction has completed and released its SQLite lock before
+    // pausing. Only the fixture's explicit concurrent commands can write.
+    const intercepted: Persistence = { transaction: async (surface, work, options) => {
+      const result = await fixture.persistence.transaction(surface, work, options)
+      if (surface === "procurement" && gate.pending) { gate.pending = false; gate.enter(); await released }
+      return result
+    } }
+    const producer = createProcurementScenarioProducer({ host: { ...fixture.host, persistence: intercepted }, sources: fixture.sources })
+    const pending = producer.preview(proposal(fixture.sourceRef), fixture.context)
+    const concurrent = { snapshot: before, writes: initialWrites }
+    try {
+      await Promise.race([entered, pending.then(() => { throw new Error("Preview returned before the read boundary") })])
+      expect(await fixture.snapshot()).toEqual(before)
+      expect(fixture.writes).toHaveLength(initialWrites)
+      expect((await fixture.execute(fixture.requester, { page: "Requests", action: "delete", id: fixture.requestId, version: before.versions[`requests:${fixture.requestId}`]!.version, values: {} })).ok).toBe(true)
+      // A synthetic imported replacement reuses the physical ID, then restores
+      // the original business bytes. The lifecycle must still retain its new
+      // incarnation; content restoration cannot revive the old issued scope.
+      await fixture.persistence.transaction("procurement", async (snapshot) => {
+        const replacement = structuredClone(object(row))
+        const request = object(replacement.request)
+        replacement.request = { ...request, pr: { ...object(request.pr), estAmount: 120 } }
+        object(object(snapshot.data.store).requests)[fixture.requestId] = replacement
+        return { commit: true, value: undefined }
+      })
+      await fixture.persistence.transaction("procurement", async (snapshot) => {
+        object(object(snapshot.data.store).requests)[fixture.requestId] = structuredClone(row)
+        return { commit: true, value: undefined }
+      })
+      concurrent.snapshot = await fixture.snapshot()
+      concurrent.writes = fixture.writes.length
+      expect(concurrent.writes).toBe(initialWrites + 3)
+      expect(object(object(concurrent.snapshot.data.store).requests)[fixture.requestId]).toEqual(row)
+    } finally {
+      gate.release()
+      await pending
+    }
+    expect((await pending).status).toBe("stale")
+    expect(await fixture.snapshot()).toEqual(concurrent.snapshot)
+    expect(fixture.writes).toHaveLength(concurrent.writes)
+    const replacement = await fixture.sources.issue("procurement-request", fixture.requestId, fixture.context)
+    if (replacement.status !== "ok") throw new Error("Replacement source unavailable after the read")
+    expect(replacement.value).not.toBe(fixture.sourceRef)
   } finally { await fixture.dispose() }
 })
 

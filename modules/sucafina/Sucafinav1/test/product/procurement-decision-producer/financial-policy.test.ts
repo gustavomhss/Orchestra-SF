@@ -14,6 +14,8 @@ const environment = { at, id: () => "synthetic-id", directory: [] }
 test("canonical approval reviews the exact proposed amount and ends outside the prepared PR-save stage", () => {
   const fixture = createRequisition()
   const initial = structuredClone(fixture.snapshot)
+  expect(procurementPreparationIssue(fixture.snapshot, fixture.command("save", { pr: { estAmount: 100 } }))).toBe("requisition-already-matches")
+  expect(procurementPreparationIssue(fixture.snapshot, fixture.command("save", { pr: { estAmount: 140 } }))).toBe("financial-approval-command-unavailable")
   expect(fixture.run(holder, "approve").ok).toBe(false)
   expect(fixture.snapshot).toEqual(initial)
 

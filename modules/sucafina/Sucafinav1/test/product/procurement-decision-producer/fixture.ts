@@ -5,7 +5,7 @@ import { join } from "node:path"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { domain } from "../../../runtime/procurement.ts"
 import { object } from "../../../runtime/contract.ts"
-import type { Actor, Command } from "../../../runtime/contract.ts"
+import type { Actor, Command, Persistence } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -24,7 +24,13 @@ export async function createScenarioFixture(input: { amount?: number | null; dir
   const directory = input.directory ?? await mkdtemp(join(await realpath(tmpdir()), "sf-procurement-scenario-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
-  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, projectScope: projectProcurementScope, enumerate: enumerateSfSources })
+  const writes: string[] = []
+  const tracked: Persistence = { transaction: (surface, work, options) => store.transaction(surface, async (snapshot) => {
+    const result = await work(snapshot)
+    if (result.commit) writes.push(surface)
+    return result
+  }, options) }
+  const persistence = createSfSourcePersistence({ persistence: tracked, createId: randomUUID, projectScope: projectProcurementScope, enumerate: enumerateSfSources })
   const access = { allowed: true }
   const clock = { at: scenarioAt }
   const principal = (request: Request) => {
@@ -76,7 +82,7 @@ export async function createScenarioFixture(input: { amount?: number | null; dir
   const resolved = await sources.resolveForPreparation(source.value, admitted.context)
   if (resolved.status !== "ok") throw new Error("Synthetic source resolution failed")
   return {
-    directory, store, persistence, host, sources, access, clock, admit, execute, requester, requestId,
+    directory, store, persistence, host, sources, ui, access, clock, writes, admit, execute, requester, requestId,
     request: admitted.request, context: admitted.context, sourceRef: source.value, evidence: resolved.value.evidence,
     producer: createProcurementScenarioProducer({ host, sources }),
     snapshot: () => persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) })),

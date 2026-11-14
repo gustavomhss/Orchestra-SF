@@ -8,9 +8,11 @@ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createProcurementSourceResolver } from "./sources.ts"
 import { procurementPreparationIssue } from "./prepared.ts"
+import { createProcurementReadonlySourceResolver } from "./scenario-producer.ts"
 
 /** A scenario choice cannot turn a draft edit into a financially approved command. */
 export function createProcurementScenarioPreparation(input: { host: DomainPortHost; sources: ReturnType<typeof createProcurementSourceResolver> }) {
+  const sourceReader = createProcurementReadonlySourceResolver({ host: input.host })
   return async (requestSelection: { operation: ScenarioOperation; choice: ChoiceRecord; operationId: string; idempotencyKey: string }, binding: TrustedDomainContext): Promise<PortResult<{ command: PreparedCommand; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; preview: ChoiceRecord["result"] }>> => {
     const selection = structuredClone(requestSelection)
     const operation = selection.operation
@@ -18,7 +20,7 @@ export function createProcurementScenarioPreparation(input: { host: DomainPortHo
     if (!selection.choice.scenario.operations.some((candidate) => digestSfValue(candidate) === digestSfValue(operation))) return { status: "denied", reason: "operation-not-in-choice" }
     const request = input.host.requestFor(binding)
     if (!request || !await input.host.revalidate(binding)) return { status: "denied", reason: "current-authority-unavailable" }
-    const source = await input.sources.resolveForPreparation(operation.targetRef, binding)
+    const source = await sourceReader.resolveSource(operation.targetRef, binding)
     if (source.status !== "ok") return source
     const evidence = source.value.evidence
     const context = source.value.context
@@ -39,7 +41,7 @@ export function createProcurementScenarioPreparation(input: { host: DomainPortHo
       // this unwritten proposal exists. Preserve that policy boundary.
       return { commit: false, value: { status: "needs-input", reason: "financial-approval-command-unavailable" } }
     }, { signal: request.signal })
-    const current = await input.sources.resolveForPreparation(operation.targetRef, binding)
+    const current = await sourceReader.resolveSource(operation.targetRef, binding)
     if (current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(source.value) || !await input.host.revalidate(binding)) return { status: "stale", reason: "requisition-source-changed" }
     return result
   }
