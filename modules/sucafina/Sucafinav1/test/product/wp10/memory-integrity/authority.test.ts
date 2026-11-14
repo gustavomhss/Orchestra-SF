@@ -24,81 +24,125 @@ test("Memory integrity retains the original Request despite replacement of const
   }, "retained-request")
 }, 120_000)
 
-test("Memory integrity rejects record mutation after the real Atlas reader awaited", async () => {
+test("Memory integrity rejects record mutation after the real Atlas capture reader awaited", async () => {
   expectSpawn(import.meta.path)
   await withMemoryIntegrityFixture(async (f) => {
     const call = await f.admit()
-    const recall = f.business.context.recall
-    let reached = false
+    const context = f.business.context.context
+    const readCapture = f.atlas.memory.readOriginalCapture
+    const witness = { armed: false, reached: false }
     try {
       expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("ok")
-      f.business.context.recall = async (selection, trusted) => {
-        const result = await recall(selection, trusted)
-        if (f.driver.currentSnapshots?.() && !reached) {
-          expect(result).toHaveLength(1)
-          reached = true
+      f.business.context.context = async (selection, trusted) => {
+        witness.armed = false
+        const sources = await context(selection, trusted)
+        witness.armed = !!f.driver.currentSnapshots?.()
+        return sources
+      }
+      f.atlas.memory.readOriginalCapture = async (caseRef, digest, trusted) => {
+        const captured = await readCapture(caseRef, digest, trusted)
+        if (witness.armed && f.driver.currentSnapshots?.() && !witness.reached && digest === f.original.refDigest) {
+          expect(captured?.ref).toEqual(f.original)
+          witness.reached = true
           f.record.policyVersion = "replaced-during-await"
         }
-        return result
+        return captured
       }
       expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("denied")
-      expect(reached).toBe(true)
-    } finally { f.business.context.recall = recall; f.authority.human.finish(call) }
+      expect(witness.reached).toBe(true)
+    } finally {
+      f.business.context.context = context
+      f.atlas.memory.readOriginalCapture = readCapture
+      f.authority.human.finish(call)
+    }
   }, "record-during-await")
 }, 120_000)
 
-test("Memory integrity rejects an in-place source change after the real Atlas reader awaited", async () => {
+test("Memory integrity rejects an in-place source change after the real Atlas capture reader awaited", async () => {
   expectSpawn(import.meta.path)
   await withMemoryIntegrityFixture(async (f) => {
     const call = await f.admit()
-    const recall = f.business.context.recall
-    let reached = false
+    const context = f.business.context.context
+    const readCapture = f.atlas.memory.readOriginalCapture
+    const witness = { armed: false, reached: false }
     try {
       expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("ok")
       const before = await f.readAtlas()
       if (!f.persistence.transactionAll) throw new Error("Real C08 scope unavailable")
       const checked = await f.persistence.transactionAll(async (snapshots) => {
-        f.business.context.recall = async (selection, trusted) => {
-          const result = await recall(selection, trusted)
-          if (f.driver.currentSnapshots?.() && !reached) {
-            expect(result).toHaveLength(1)
-            reached = true
+        f.business.context.context = async (selection, trusted) => {
+          witness.armed = false
+          const sources = await context(selection, trusted)
+          witness.armed = !!f.driver.currentSnapshots?.()
+          return sources
+        }
+        f.atlas.memory.readOriginalCapture = async (caseRef, digest, trusted) => {
+          const captured = await readCapture(caseRef, digest, trusted)
+          if (witness.armed && f.driver.currentSnapshots?.() && !witness.reached && digest === f.original.refDigest) {
+            expect(captured?.ref).toEqual(f.original)
+            witness.reached = true
             // Fault the actual open C08 snapshot, not the cloned reader view.
             const request = object(object(object(snapshots.procurement.data.store).requests)["PR-1"])
             object(object(request.request).pr).estAmount = 190
           }
-          return result
+          return captured
         }
         return { commit: false, value: await f.stale.preflight(f.record, call, f.output) }
       })
       expect(checked.status).toBe("denied")
-      expect(reached).toBe(true)
+      expect(witness.reached).toBe(true)
       expect(await f.readAtlas()).toEqual(before)
-    } finally { f.business.context.recall = recall; f.authority.human.finish(call) }
+    } finally {
+      f.business.context.context = context
+      f.atlas.memory.readOriginalCapture = readCapture
+      f.authority.human.finish(call)
+    }
   }, "source-during-await")
 }, 120_000)
 
-test("Memory integrity respects principal revocation after the last real memory read", async () => {
+test("Memory integrity respects principal revocation after the last real capture read", async () => {
   expectSpawn(import.meta.path)
   await withMemoryIntegrityFixture(async (f) => {
     const call = await f.admit()
-    const recall = f.business.context.recall
-    let reached = false
+    const context = f.business.context.context
+    const readCapture = f.atlas.memory.readOriginalCapture
+    const witness = { armed: false, reads: 0, target: 0, reached: false }
     try {
       expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("ok")
-      f.business.context.recall = async (selection, trusted) => {
-        const result = await recall(selection, trusted)
-        if (f.driver.currentSnapshots?.() && !reached) {
-          expect(result).toHaveLength(1)
-          reached = true
-          f.access.allowed = false
-        }
-        return result
+      f.business.context.context = async (selection, trusted) => {
+        witness.armed = false
+        const sources = await context(selection, trusted)
+        witness.armed = !!f.driver.currentSnapshots?.()
+        return sources
       }
+      f.atlas.memory.readOriginalCapture = async (caseRef, digest, trusted) => {
+        const captured = await readCapture(caseRef, digest, trusted)
+        if (witness.armed && f.driver.currentSnapshots?.()) {
+          expect(captured?.ref.refDigest).toBe(digest)
+          witness.reads += 1
+          if (witness.target > 0 && witness.reads === witness.target) {
+            expect(f.authority.host.requestFor(trusted)).toBe(f.staleRequest)
+            witness.reached = true
+            f.access.allowed = false
+          }
+        }
+        return captured
+      }
+      // Calibrate all protected capture reads in the real integrity proof,
+      // including additional references/continuity reads. No reader is replaced.
+      expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("ok")
+      expect(witness.reads).toBeGreaterThan(0)
+      witness.target = witness.reads
+      witness.reads = 0
       expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("denied")
-      expect(reached).toBe(true)
+      expect(witness.reached).toBe(true)
+      expect(witness.reads).toBe(witness.target)
       expect((await f.stale.preflight(f.record, call, f.output)).status).toBe("denied")
-    } finally { f.business.context.recall = recall; f.authority.human.finish(call) }
+    } finally {
+      f.business.context.context = context
+      f.atlas.memory.readOriginalCapture = readCapture
+      f.authority.human.finish(call)
+    }
   }, "revoked-after-read")
 }, 120_000)
 
@@ -134,3 +178,4 @@ test("Memory integrity rejects headers changed after the final real revalidation
     } finally { f.authority.host.revalidate = revalidate; f.authority.human.finish(call) }
   }, "headers-after-final-revalidate")
 }, 120_000)
+

@@ -1,4 +1,5 @@
 import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+import { readSfMemoryCaptureIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -17,7 +18,7 @@ import type { createSfAnalysisLifecycleContext } from "./analysis-run-context.ts
 export function createSfStaleAnalysisAccess(input: {
   authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "human">
   persistence: Pick<Persistence, "transactionAll" | "currentSnapshots">
-  context: Pick<BusinessContextService, "context"> & Partial<Pick<BusinessContextService, "recall">>
+  context: Pick<BusinessContextService, "context">
   request: Request
   start: unknown
   proof: { runRef: string; caseRef: SfNativeRunRecord["caseRef"]; contextFingerprint: string; evidenceRefs: readonly BusinessEvidenceRef[] }
@@ -68,16 +69,14 @@ export function createSfStaleAnalysisAccess(input: {
           : source.state !== "historical" || !Array.isArray(source.differences)))) return denied()
       const sourceIdentity = digestSfValue(sources)
       if (memory) {
-        if (!input.context.recall || !memory.ok || digestSfValue(memory.value.currentCase) !== digestSfValue(proof.caseRef) ||
-          memory.value.query !== object(object(start).request).objective) return denied()
-        // C12 can authorize a historical source independently of its Atlas capture.
-        // Reopen the real Atlas reader for every selected case under this C08 lock.
-        // No persisted fingerprint or previous recall is an authorization grant.
-        try {
-          const recalled = await input.context.recall({ caseRefs: structuredClone(memory.value.recallScope.cases), query: memory.value.query }, call)
-          const captured = recalled.flatMap((record) => [...record.envelope.evidenceRefs, ...record.envelope.dependencies])
-          if (refs.some((ref) => !captured.some((capture) => digestSfValue(capture) === digestSfValue(ref)))) return denied()
-        } catch { return denied() }
+        // Source authorization does not validate its persisted Atlas capture.
+        // Consume the real reader attached to this exact BCS observation under
+        // C08; each invocation reads again, without retaining an access grant.
+        if (!memory.ok || digestSfValue(memory.value.currentCase) !== digestSfValue(proof.caseRef) ||
+          memory.value.query !== object(object(start).request).objective ||
+          !await readSfMemoryCaptureIntegrity(sources, {
+            caseRefs: structuredClone(memory.value.recallScope.cases), query: memory.value.query,
+          }, call)) return denied()
       }
       // Pin bytes before the awaits: currentSnapshots can return the same mutable
       // object, and Request identity alone does not pin its authorization headers.

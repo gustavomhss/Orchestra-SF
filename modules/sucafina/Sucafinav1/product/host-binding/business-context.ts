@@ -1,8 +1,12 @@
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
-import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
 import { createSfAtlasMemory } from "./atlas-memory.ts"
+import { createSfAtlasDurableMemory } from "./atlas-store.ts"
+import { deriveSfMemoryOwner } from "../decision-memory/atlas-projection.ts"
+import { encodeCaseRef } from "../decisions/case-port.ts"
+import type { MemoryRecord } from "@orchestra/atlas-boundary/business-memory-ports"
 import { createSfAtlasScanner } from "./atlas-scanner.ts"
 import { createSfEvidenceCapabilities } from "./capabilities.ts"
 import type { DomainPortHost, DecisionCasePort, DashboardPort, PlannerPort, PlannerSourceHost, ProcurementPort } from "../contracts/ports.ts"
@@ -18,6 +22,25 @@ import { sfPlannerProjectionSelector } from "../integration/source-projections.t
 import { sfPlannerSourceSelector } from "../integration/planner-sources.ts"
 import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
 import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
+
+type CaptureSelection = Parameters<BusinessContextService["recall"]>[0]
+type CaptureObservation = {
+  call: TrustedDomainContext
+  read: (selection: CaptureSelection) => Promise<boolean>
+}
+const captureObservations = new WeakMap<readonly BusinessEvidenceResolution[], CaptureObservation>()
+
+/** Only an array returned by the real Atlas-backed context carries this route.
+ * The route performs new protected reads; it never retains a grant or result. */
+export async function readSfMemoryCaptureIntegrity(
+  sources: readonly BusinessEvidenceResolution[], selection: CaptureSelection,
+  call: TrustedDomainContext,
+): Promise<boolean> {
+  const observation = captureObservations.get(sources)
+  captureObservations.delete(sources)
+  if (!observation || observation.call !== call) return false
+  try { return await observation.read(selection) } catch { return false }
+}
 
 /** Bound repeated source reauthorization without caching an authorization across reads. */
 function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
@@ -396,6 +419,147 @@ export function createSfAtlasBusiness(input: {
   const canonicalMemory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
   const memory = { ...canonicalMemory, recall: (ref: { id: string; incarnation: string }, call: TrustedDomainContext) =>
     recallScope ? recallScope.recall(ref, call, () => canonicalMemory.recall(ref, call)) : canonicalMemory.recall(ref, call) }
+  const readContext = context.context
+  context.context = async (selection, call) => {
+    const request = input.host.requestFor(call)
+    const binding = digestSfValue([call.kind, call.binding])
+    const headers = request && digestSfValue([...request.headers.entries()])
+    const sources = await readContext(selection, call)
+    const sourceIdentity = digestSfValue(sources)
+    if (request) captureObservations.set(sources, { call, read: async (requested) => {
+      const selected = structuredClone(requested)
+      const selectionIdentity = digestSfValue(selected)
+      const snapshots = input.host.persistence.currentSnapshots?.()
+      const snapshotIdentity = digestSfValue(snapshots)
+      const extras: { values: readonly BusinessEvidenceResolution[]; identity: string }[] = []
+      const captures: { value: ProtectedEvidenceCapture; identity: string }[] = []
+      const stable = () => !!snapshots && !request.signal.aborted &&
+        input.host.requestFor(call) === request &&
+        binding === digestSfValue([call.kind, call.binding]) &&
+        headers === digestSfValue([...request.headers.entries()]) &&
+        selectionIdentity === digestSfValue(requested) && selectionIdentity === digestSfValue(selected) &&
+        sourceIdentity === digestSfValue(sources) &&
+        snapshotIdentity === digestSfValue(input.host.persistence.currentSnapshots?.()) &&
+        extras.every((extra) => extra.identity === digestSfValue(extra.values)) &&
+        captures.every((capture) => capture.identity === digestSfValue(capture.value))
+      if (!stable() || !await input.host.revalidate(call) || !stable()) return false
+
+      const captured: BusinessEvidenceRef[] = []
+      const observedCases: { ref: CaptureSelection["caseRefs"][number]; identity: string }[] = []
+      // Do not drop failed cases or accept a good case in place of a bad one.
+      for (const caseRef of selected.caseRefs) {
+        const fallback = async (): Promise<BusinessEvidenceRef[] | undefined> => {
+          const recalled = await memory.recall(caseRef, call)
+          if (recalled.status !== "ok") return undefined
+          const records = recalled.records.map((record) => ({
+            caseRef: record.envelope.caseRef,
+            refs: [...record.envelope.evidenceRefs, ...record.envelope.dependencies],
+          }))
+          if (records.some((record) => !record.refs.length || !evidenceWithinBudget(record.refs) || !record.caseRef ||
+            record.caseRef.id !== caseRef.id || record.caseRef.incarnation !== caseRef.incarnation)) return undefined
+          return records.flatMap((record) => record.refs)
+        }
+        // Authorize the complete current case, including references and scenario
+        // operations outside this envelope. Reopen that authority before egress.
+        const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+        if (current.status !== "ok") return false
+        const caseIdentity = digestSfValue(current.value.case)
+        const owner = deriveSfMemoryOwner(current.value.context, current.value.case)
+        if (!owner) return false
+
+        // Metadata selects which canonical reader is sufficient. It never grants
+        // access and never inspects/recomputes an original capture's digest.
+        const outbox = await input.state.read(request, "outbox", (state) => ({
+          version: state.versions.outbox,
+          pending: Object.values(state.outbox).some((item) => item.state === "pending" &&
+            item.eventRef.target.caseId === caseRef.id && item.eventRef.target.caseIncarnation === caseRef.incarnation),
+        }))
+        if (outbox.status !== "ok" || outbox.value.pending) return false
+        const topology = await input.state.read(request, "atlas", (state) => {
+          const value = object(state.atlas[owner])
+          return { events: value.events, envelopes: value.envelopes }
+        })
+        if (topology.status !== "ok") return false
+
+        const simple = () => {
+          const partition = topology.value
+          if (current.value.case.incarnation !== caseRef.incarnation ||
+            !Array.isArray(partition.events) || partition.events.length !== 1 ||
+            !partition.envelopes || typeof partition.envelopes !== "object" || Array.isArray(partition.envelopes) ||
+            Object.keys(partition.envelopes).length !== 1) return undefined
+          // Reuse the canonical fold; no second parser or memory validator.
+          const folded = createSfAtlasDurableMemory({ events: partition.events as Parameters<typeof createSfAtlasDurableMemory>[0]["events"] }).read()
+          if (folded.rejected || folded.log.size !== 1) return undefined
+          const only = [...folded.log][0]
+          if (!only) return undefined
+          const [id, event] = only
+          const envelope = (partition.envelopes as Record<string, BusinessMemoryEnvelope>)[id]
+          const record = event.payload as MemoryRecord
+          const boundCase = envelope?.caseRef
+          if (!envelope || envelope.eventId !== id || !boundCase ||
+            envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" ||
+            boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation ||
+            boundCase.version > current.value.case.version || !Array.isArray(envelope.evidenceRefs) ||
+            !Array.isArray(envelope.dependencies) || !("taskId" in record.entry) ||
+            typeof record.entry.ref !== "string" || !record.entry.ref.trim()) return undefined
+          const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
+          if (!originals.length || !evidenceWithinBudget(originals)) return undefined
+          try {
+            const maps = sfEvidenceSourceMaps(originals)
+            if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) ||
+              digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return undefined
+          } catch { return undefined }
+          // Every descendant must also have an explicit envelope/dependency link:
+          // readOriginalCapture intentionally authorizes only those direct links.
+          const expanded = (ref: BusinessEvidenceRef): BusinessEvidenceRef[] => [ref,
+            ...(ref.kind === "case-event" ? ref.target.evidenceRefs : ref.kind === "calculation" ? ref.target.sourceRefs : []).flatMap(expanded)]
+          const refs = [...new Map(originals.flatMap(expanded).map((ref) => [digestSfValue(ref), ref])).values()]
+          if (refs.some((ref) => !originals.some((original) => digestSfValue(original) === digestSfValue(ref)))) return undefined
+          return { originals, refs }
+        }
+        const candidate = simple()
+        if (!candidate) {
+          // Empty, multi-envelope, invalid or unfamiliar topology is decided by
+          // the existing complete reader. It is not silently treated as empty.
+          const all = await fallback()
+          if (!all) return false
+          captured.push(...all)
+          continue
+        }
+
+        const known = new Map(sources.map((source) => [digestSfValue(source.ref), source]))
+        const missing = candidate.refs.filter((ref) => !known.has(digestSfValue(ref)))
+        if (missing.length) {
+          const values = await readContext({ refs: structuredClone(missing) }, call)
+          if (values.length !== missing.length) return false
+          extras.push({ values, identity: digestSfValue(values) })
+          values.forEach((value, index) => { if (digestSfValue(value.ref) === digestSfValue(missing[index])) known.set(digestSfValue(value.ref), value) })
+        }
+        for (const ref of candidate.refs) {
+          const source = known.get(digestSfValue(ref))
+          const capture = await memory.readOriginalCapture(caseRef, ref.refDigest, call)
+          if (capture) captures.push({ value: capture, identity: digestSfValue(capture) })
+          if (!source || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) ||
+            (source.state !== "fresh" && source.state !== "historical") ||
+            source.accessRevision !== call.binding.accessRevision || !source.currentRef || !source.authorizedProjection ||
+            (source.state === "historical" && (source.differences === undefined ||
+              digestSfValue(source.authorizedProjection) !== digestSfValue(capture.projection))) ||
+            !await router.proveContinuity(ref, source.currentRef, call)) return false
+        }
+        observedCases.push({ ref: caseRef, identity: caseIdentity })
+        captured.push(...candidate.originals)
+      }
+      // Reopen case-wide ACLs after the final capture/continuity await, including
+      // references outside the envelope whose grants can change independently.
+      for (const observed of observedCases) {
+        const finalCase = await input.cases.read({ caseRef: encodeCaseRef(observed.ref) }, call)
+        if (finalCase.status !== "ok" || digestSfValue(finalCase.value.case) !== observed.identity) return false
+      }
+      if (sources.some((source) => !captured.some((ref) => digestSfValue(ref) === digestSfValue(source.ref)))) return false
+      return await input.host.revalidate(call) && stable()
+    } })
+    return sources
+  }
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
   return { context, memory, capabilities, proveContinuity: router.proveContinuity }
 }
