@@ -21,6 +21,9 @@ test("C08 preserved domain values survive an ordinary edit, while revocation, re
     const project = async () => {
       const issued = await business.dashboardRecords.issue(selection, call)
       if (issued.status !== "ok") throw new Error(`Record issue failed: ${issued.reason}`)
+      const evidence = await business.context.resolve(issued.value, call)
+      expect(evidence).toMatchObject({ state: "fresh", ref: issued.value, currentRef: issued.value })
+      expect(evidence.authorizedProjection).toBeDefined()
       const result = await business.dashboardRecords.read(issued.value.refId, call)
       if (result.status !== "ok") throw new Error(`Record read failed: ${result.reason}`)
       return result.value

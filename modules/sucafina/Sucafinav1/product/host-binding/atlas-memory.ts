@@ -13,6 +13,7 @@ import { rankSfRecalledCasesAuthorized } from "../decision-memory/recall.ts"
 import type { AuthorizedMemoryProjection, RecallFeatures, RecallScope } from "../decision-memory/recall.ts"
 import { createSfAtlasDurableMemory } from "./atlas-store.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
+import { mapSfEvidenceInOrder } from "./evidence-order.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
@@ -84,7 +85,7 @@ export function createSfAtlasMemory(input: {
       const mapped = mapSfAtlasEntry({ kind: "task", projection: found.value, eventId: ref.target.eventId, bundleRef: ref })
       if (mapped.status !== "mapped") return unavailable("projection-unavailable")
       const dependencies = ref.target.evidenceRefs.flatMap(expandEvidence)
-      const resolutions = await Promise.all(dependencies.map((dependency) => input.evidence.resolve(dependency, call)))
+      const resolutions = await mapSfEvidenceInOrder(dependencies, (dependency) => input.evidence.resolve(dependency, call))
       if (!dependencies.length || resolutions.some((resolution) => resolution.state !== "fresh" || !resolution.authorizedProjection || resolution.accessRevision !== call.binding.accessRevision) || !await input.host.revalidate(call)) return unavailable("source-unavailable")
       const maps = sfEvidenceSourceMaps(mapped.projection.evidenceRefs)
       const digest = digestSfValue({ ref, projection: mapped.projection, maps })
@@ -174,7 +175,7 @@ export function createSfAtlasMemory(input: {
           if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return { status: "unavailable" as const }
         } catch { return { status: "unavailable" as const } }
         const refs = [...new Map(originals.flatMap(expandEvidence).map((ref) => [ref.refDigest, ref])).values()]
-        const resolutions = await Promise.all(refs.map((ref) => input.evidence.resolve(ref, call)))
+        const resolutions = await mapSfEvidenceInOrder(refs, (ref) => input.evidence.resolve(ref, call))
         for (const [index, resolution] of resolutions.entries()) {
           const ref = refs[index]!
           const capture = partition.originals[ref.refDigest]

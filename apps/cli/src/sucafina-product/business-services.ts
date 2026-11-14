@@ -13,6 +13,7 @@ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafina
 import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DecisionCase, DocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { mapSfEvidenceInOrder } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { SfDocumentReader } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import { createSfDocumentScenarios } from "../../../../modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts"
@@ -179,68 +180,102 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
     proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
   type CaseRef = { id: string; incarnation: string; version: number }
-  const caseBindings = new WeakMap<TrustedDomainContext, CaseRef>()
+  type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number }
+  const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
+  const callBindingDigest = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
+  const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
+    host.requestFor(call) === request && !request.signal.aborted && callBindingDigest(call) === bindingDigest
+  const releaseCaseScope = (call: TrustedDomainContext, scope: CaseScope) => {
+    scope.retainers--
+    if (scope.retainers === 0 && caseBindings.get(call) === scope) caseBindings.delete(call)
+  }
   // Private selector for producers which must not recursively call cases.read.
   // It proves current C08 membership and identity; each producer still authorizes its sources.
   const selectedCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
-    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)
+    const scope = caseBindings.get(call)
+    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : scope?.selected
     const request = host.requestFor(call)
-    if (!selected || !request || !await host.revalidate(call)) return { status: "unavailable", reason: "case-selection-unavailable" }
+    const binding = callBindingDigest(call)
+    if (!selected || !request || (call.kind === "ui" && (!scope || scope.request !== request || scope.bindingDigest !== binding)) ||
+      !await host.revalidate(call) || !currentCaseAuthority(call, request, binding)) return { status: "unavailable", reason: "case-selection-unavailable" }
     const captured = structuredClone(selected)
-    const binding = digestSfValue([call.kind, call.binding])
     const current = await input.authority.state.read(request, "cases", (state, actor) => {
       const value = state.cases[captured.id]
       return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
         actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
         ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
     })
-    const again = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)
+    const valid = await host.revalidate(call)
+    const again = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
     return current.status === "ok" && current.value && digestSfValue(current.value) === digestSfValue(captured) && digestSfValue(again) === digestSfValue(captured) &&
-      binding === digestSfValue([call.kind, call.binding]) && await host.revalidate(call)
+      valid && currentCaseAuthority(call, request, binding) && (call.kind === "native" || caseBindings.get(call) === scope)
       ? { status: "ok", value: captured } : { status: "unavailable", reason: "case-selection-unavailable" }
   }
   const resolveCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
-    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)
+    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
     if (!selected) return { status: "unavailable", reason: "case-selection-unavailable" }
     const current = await cases.read({ caseRef: encodeCaseRef(selected) }, call)
     return current.status === "ok" && current.value.case.version === selected.version && await host.revalidate(call)
       ? { status: "ok", value: structuredClone(selected) } : { status: "unavailable", reason: "case-selection-unavailable" }
   }
   const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
-    if (call.kind !== "ui" || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
-    const current = await cases.read({ caseRef: encodeCaseRef(selected) }, call)
-    if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < selected.version : current.value.case.version !== selected.version) || !await host.revalidate(call)) return { status: "denied", reason: "case-selection-unavailable" }
-    caseBindings.set(call, structuredClone(selected))
-    try { return await action() } finally { caseBindings.delete(call) }
+    const request = host.requestFor(call)
+    const binding = callBindingDigest(call)
+    const captured = structuredClone(selected)
+    if (call.kind !== "ui" || !request || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
+    const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+    if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version) ||
+      !await host.revalidate(call) || !currentCaseAuthority(call, request, binding) || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
+    const scope: CaseScope = { selected: captured, request, bindingDigest: binding, retainers: 1 }
+    caseBindings.set(call, scope)
+    try { return await action() } finally { releaseCaseScope(call, scope) }
   }
   // This private entry receives a case only from the authenticated calculation
   // request/result stores. Avoid cases.read: that projection can itself cite the
   // calculation currently being resolved by the BCS.
   const withCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const source = host.requestFor(call)
-    if (!source || source.signal.aborted || !await host.revalidate(call)) return { status: "denied", reason: "calculation-case-authority-unavailable" }
-    const held = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)
-    if (held) {
-      if (digestSfValue(held) !== digestSfValue(selected)) return { status: "denied", reason: "calculation-case-scope-mismatch" }
+    const binding = callBindingDigest(call)
+    const captured = structuredClone(selected)
+    const selectedDigest = digestSfValue(captured)
+    if (!source || !await host.revalidate(call) || !currentCaseAuthority(call, source, binding)) return { status: "denied", reason: "calculation-case-authority-unavailable" }
+    let scope: CaseScope | undefined
+    if (call.kind === "native") {
+      const held = { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion }
+      if (digestSfValue(held) !== selectedDigest) return { status: "denied", reason: "calculation-case-scope-mismatch" }
+    } else {
+      scope = caseBindings.get(call)
+      if (!scope) {
+        const current = await input.authority.state.read(source, "cases", (stored, actor) => {
+          const value = stored.cases[captured.id]
+          return !!value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
+            actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
+        })
+        if (current.status !== "ok" || current.value !== true || !await host.revalidate(call) || !currentCaseAuthority(call, source, binding))
+          return { status: "denied", reason: "calculation-case-authority-unavailable" }
+        // Another replay may have installed a scope while C08/authority awaited.
+        // Join that exact owner synchronously; never replace an in-flight scope.
+        scope = caseBindings.get(call)
+      }
+      if (scope) {
+        if (scope.request !== source || scope.bindingDigest !== binding || digestSfValue(scope.selected) !== selectedDigest)
+          return { status: "denied", reason: "calculation-case-scope-mismatch" }
+        scope.retainers++
+      } else {
+        scope = { selected: captured, request: source, bindingDigest: binding, retainers: 1 }
+        caseBindings.set(call, scope)
+      }
+    }
+    try {
       const current = await selectedCase(call)
       if (current.status !== "ok") return current
+      if (digestSfValue(current.value) !== selectedDigest || !currentCaseAuthority(call, source, binding) || (scope && caseBindings.get(call) !== scope))
+        return { status: "denied", reason: "calculation-case-authority-changed" }
       const result = await work()
       const checked = await selectedCase(call)
-      return checked.status === "ok" && !source.signal.aborted ? result : { status: "denied", reason: "calculation-case-authority-changed" }
-    }
-    if (call.kind !== "ui") return { status: "denied", reason: "calculation-case-scope-missing" }
-    const current = await input.authority.state.read(source, "cases", (stored, actor) => {
-      const value = stored.cases[selected.id]
-      return !!value && value.incarnation === selected.incarnation && value.version === selected.version && value.participants.includes(actor.principalRef) &&
-        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
-    })
-    if (current.status !== "ok" || current.value !== true || source.signal.aborted || !await host.revalidate(call)) return { status: "denied", reason: "calculation-case-authority-unavailable" }
-    caseBindings.set(call, structuredClone(selected))
-    try {
-      const result = await work()
-      const checked = await selectedCase(call)
-      return checked.status === "ok" && !source.signal.aborted ? result : { status: "denied", reason: "calculation-case-authority-changed" }
-    } finally { caseBindings.delete(call) }
+      return checked.status === "ok" && digestSfValue(checked.value) === selectedDigest && currentCaseAuthority(call, source, binding) && (!scope || caseBindings.get(call) === scope)
+        ? result : { status: "denied", reason: "calculation-case-authority-changed" }
+    } finally { if (scope) releaseCaseScope(call, scope) }
   }
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
     verifySources: async (_value, refs, call) => {
@@ -341,7 +376,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
           outbox: Object.values(state.outbox).some((entry) => entry.eventRef.refDigest === digest && entry.eventRef.target.caseId === value.id && entry.eventRef.target.caseIncarnation === value.incarnation) }))
       })
       if (source.status !== "ok" || source.value.length > 500) return undefined
-      const checked = await Promise.all(source.value.map(async (entry) => ({ ...entry, result: await cases.read({ caseRef: encodeCaseRef(entry.ref) }, call) })))
+      const checked = await mapSfEvidenceInOrder(source.value, async (entry) => ({ ...entry, result: await cases.read({ caseRef: encodeCaseRef(entry.ref) }, call) }))
       const matches = checked.filter((entry) => entry.result.status === "ok" && (entry.outbox || entry.result.value.evidenceRefs.some((ref) => ref.refDigest === digest)))
       return matches.length && await host.revalidate(call) ? matches.map((entry) => entry.ref) : undefined
     }
@@ -370,13 +405,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
           return refs.filter((ref, index) => refs.findIndex((candidate) => candidate.refDigest === ref.refDigest) === index)
         },
         recallSelections: async (request, call) => {
-          const found = await Promise.all(request.selectionRefs.map((caseRef) => cases.read({ caseRef }, call)))
+          const found = await mapSfEvidenceInOrder(request.selectionRefs, (caseRef) => cases.read({ caseRef }, call))
           if (!found.length || found.some((item) => item.status !== "ok")) return undefined
           const values = found.flatMap((item) => item.status === "ok" ? [item.value] : [])
           if (values.some((value) => digestSfValue(value.case.horizon) !== digestSfValue(request.period))) return undefined
           const features = values[0] && await featuresForCase(values[0], call)
           if (!features) return undefined
-          const comparisons = await Promise.all(values.map((value) => featuresForCase(value, call)))
+          const comparisons = await mapSfEvidenceInOrder(values, (value) => featuresForCase(value, call))
           if (comparisons.some((value) => !value || value.decisionType !== features.decisionType || value.horizon !== features.horizon)) return undefined
           return { caseRefs: values.map((value) => ({ id: value.case.id, incarnation: value.case.incarnation })), features }
         },

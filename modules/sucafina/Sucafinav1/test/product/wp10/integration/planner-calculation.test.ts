@@ -41,7 +41,7 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
   const control = { active: true, coverageReads: 0 }
-  const interleave: { environment?: () => Promise<void> } = {}
+  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void> } = {}
   let store = await openLocalStore(storeDirectory)
   const timer = setTimeout(() => cancellation.abort(deadlineError), Math.max(0, deadline - performance.now()))
   try {
@@ -89,6 +89,9 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
       business.bindForecastCoverage(async (reference, call) => {
         control.coverageReads++
+        const waiting = interleave.coverage
+        delete interleave.coverage
+        await waiting?.()
         const source = await business.plannerSources.resolveForecastSource(reference, call)
         if (source.status !== "ok") return source
         return { status: "ok", value: { coverageRef: "fixture:explicit-pending-coverage", basis: { id: "fixture-basis", version: 1,
@@ -146,11 +149,19 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       })
       expect(resolved).toMatchObject({ status: "ok", result: { state: "fresh", currentRef: calculation } })
       await first.ui("sf_evidence_get", payload, async (call) => {
-        // Both branches use the same real admission, persisted request/result
-        // and Planner replay. Neither branch may consume another's case scope.
-        const simultaneous = await Promise.all([first.business.context.resolve(calculation, call), first.business.context.resolve(calculation, call)])
-        expect(simultaneous.map((item) => item.state)).toEqual(["fresh", "fresh"])
-        expect(simultaneous.map((item) => item.currentRef)).toEqual([calculation, calculation])
+        // Repeated selectors in one authorization pass use the actual BCS.
+        // Independent overlapping same-run replays remain prohibited by the producer.
+        const repeated = await first.business.context.context({ refs: [calculation, calculation] }, call)
+        expect(repeated.map((item) => item.state)).toEqual(["fresh", "fresh"])
+        expect(repeated.map((item) => item.currentRef)).toEqual([calculation, calculation])
+        let reentered = false
+        interleave.coverage = async () => {
+          reentered = true
+          expect(await first.business.calculations.issue(calculation.target.runId, call))
+            .toEqual({ status: "unavailable", reason: "calculation-replay-cycle" })
+        }
+        expect((await first.business.calculations.issue(calculation.target.runId, call)).status).toBe("ok")
+        expect(reentered).toBe(true)
         const found = await first.business.context.resolve(calculation, call)
         if (!found.authorizedProjection || !("context" in found.authorizedProjection)) throw new Error("Authorized calculation projection missing")
         expect(found.authorizedProjection.components).toEqual(produced.value.result.components)
@@ -169,7 +180,7 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
         expect((await first.business.context.context({ refs: Array.from({ length: 513 }, () => calculation) }, call)).every((item) => item.state === "unavailable")).toBe(true)
         expect(control.coverageReads).toBe(reads)
       })
-      phase("parallel-read-and-negative-proofs")
+      phase("ordered-read-and-real-cycle-negative-proofs")
       const event: CaseLedgerEvent = { id: "calculation-event", caseRef, kind: "analysis-accepted", principalRef: "person", at,
         consideredActions: ["retain-original"], factualGaps: ["fixture-training-unresolved"], lifecycleState: "investigating", rationale: "Exercise authorized calculation memory",
         evidenceRefs: [calculation], outputDigest: "c".repeat(64) }
@@ -203,22 +214,31 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
         expect((await reopened.business.context.resolve(calculation, call)).state).toBe("fresh")
         expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)
         expect(await reopened.atlas.memory.readOriginal(caseRef, calculation.refDigest, call)).toEqual(calculation)
+        // The event resolves this calculation as an ancestor. Direct and
+        // repeated selectors must not overlap that same producer replay.
+        const refs = [eventRef, calculation, calculation]
+        const resolved = await reopened.business.context.context({ refs }, call)
+        expect(resolved).toHaveLength(refs.length)
+        for (const [index, result] of resolved.entries()) {
+          expect(result).toMatchObject({ state: "fresh", ref: refs[index], currentRef: refs[index] })
+          expect(result.authorizedProjection).toBeDefined()
+        }
         const recalled = await reopened.atlas.memory.recall(caseRef, call)
         expect(recalled.status).toBe("ok")
         if (recalled.status === "ok") expect(recalled.records).toHaveLength(1)
         phase("real-atlas-recall-authorized")
         expect((await reopened.business.context.emitFromLedger(eventRef, call)).status).toBe("already-committed")
-        // Pause at an actual host environment read, queue another proof, then
+        // Pause at an actual host environment read, overlap another proof, then
         // revoke the principal before either can disclose its result.
         const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
         interleave.environment = async () => { entered.resolve(); await release.promise }
         const running = reopened.business.calculations.issue(calculation.target.runId, call)
         try {
           await Promise.race([entered.promise, running.then(() => { throw new Error("Actual Planner replay did not reach the environment boundary") })])
-          const queued = reopened.business.calculations.issue(calculation.target.runId, call)
+          const overlapping = reopened.business.calculations.issue(calculation.target.runId, call)
           control.active = false
           release.resolve()
-          const outcomes = await Promise.all([running, queued])
+          const outcomes = await Promise.all([running, overlapping])
           expect(outcomes[0]!.status).not.toBe("ok")
           expect(outcomes[1]!.status).not.toBe("ok")
         } finally { release.resolve(); delete interleave.environment }

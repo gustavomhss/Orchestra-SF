@@ -65,20 +65,9 @@ export function createSfPlannerCalculationServices(input: {
       : Promise.resolve({ status: "unavailable", reason: "calculation-result-kind-unsupported" }),
     replayRecordOnly: recordOnly.simulateScenario,
   })
-  const issuing = new WeakMap<TrustedDomainContext, ReturnType<typeof calculation.issue>>()
   const issue: typeof calculation.issue = async (runId, call) => {
-    const previous = issuing.get(call)
-    // Parallel BCS branches can reach the same calculation in one call. Let
-    // each perform its complete record-only replay after the previous branch
-    // releases the private case binding; a concurrent read is not recursion.
-    const pending = (async () => {
-      await previous?.catch(() => undefined)
-      const binding = await requests.read(runId, call)
-      return binding.status === "ok" ? input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
-    })()
-    issuing.set(call, pending)
-    try { return await pending }
-    finally { if (issuing.get(call) === pending) issuing.delete(call) }
+    const binding = await requests.read(runId, call)
+    return binding.status === "ok" ? input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
   }
   const persist: Persist = async (incoming, callId, call, comparisonReplay) => {
     if (incoming.kind !== "scenario" || incoming.request.assumptions.length || incoming.request.operations.some((operation) => operation.replacementRef))

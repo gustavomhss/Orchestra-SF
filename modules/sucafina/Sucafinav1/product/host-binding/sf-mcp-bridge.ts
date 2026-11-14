@@ -38,6 +38,7 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
       const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair()
       const server = new Server({ name: "sucafina-workbench", version: "1" }, { capabilities: { tools: {} } })
       const client = new Client({ name: "sucafina-private-client", version: "1" })
+      const transport = privateTransportLifetime(client, server)
       try {
         server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: allowed.map((descriptor) => ({
           name: descriptor.id,
@@ -46,6 +47,7 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
         await server.connect(serverTransport)
         await client.connect(clientTransport)
         const result = await client.listTools()
+        if (!(await transport.close())) return { status: "unavailable", reason: "private-mcp-close-unavailable" }
         const currentConfig = await conflict()
         if (currentConfig === undefined) return { status: "unavailable", reason: "provider-configuration-unavailable" }
         if (currentConfig) return { status: "unavailable", reason: "provider-conflict" }
@@ -57,9 +59,8 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
       } catch {
         return { status: "unavailable", reason: "private-mcp-unavailable" }
       } finally {
+        if (!transport.closed()) await transport.close()
         grants.forEach((grant) => input.registry.finish(grant))
-        await client.close().catch(() => undefined)
-        await server.close().catch(() => undefined)
       }
     },
     call: async (context, operation, payload) => {
@@ -77,6 +78,7 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
       const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair()
       const server = new Server({ name: "sucafina-workbench", version: "1" }, { capabilities: { tools: {} } })
       const client = new Client({ name: "sucafina-private-client", version: "1" })
+      const transport = privateTransportLifetime(client, server)
       const observed: { result?: CapabilityResult; encoded?: string; providerConflict?: boolean } = {}
       try {
         server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [{
@@ -111,6 +113,7 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
         if (catalog.tools.length !== 1 || catalog.tools[0]?.name !== operation || !(await input.registry.revalidate(lease.value)))
           return reject("denied", "authority-changed")
         const result = await client.callTool({ name: operation, arguments: payload as Record<string, unknown> })
+        if (!(await transport.close())) return reject("unavailable", "private-mcp-close-unavailable")
         const currentConfig = await conflict()
         if (currentConfig === undefined) return reject("unavailable", "provider-configuration-unavailable")
         if (currentConfig) return reject("provider-conflict", "provider-conflict")
@@ -126,10 +129,24 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
         if (observed.providerConflict) return reject("provider-conflict", "provider-conflict")
         return reject("unavailable", "private-mcp-unavailable")
       } finally {
+        if (!transport.closed()) await transport.close()
         input.registry.finish(lease.value)
-        await client.close().catch(() => undefined)
-        await server.close().catch(() => undefined)
       }
+    },
+  }
+}
+
+/** Successful egress follows transport cleanup. No awaited cleanup remains after the final authority guard. */
+function privateTransportLifetime(client: Client, server: Server) {
+  const state = { closed: false, successful: true }
+  return {
+    closed: () => state.closed,
+    close: async () => {
+      if (state.closed) return state.successful
+      try { await client.close() } catch { state.successful = false }
+      try { await server.close() } catch { state.successful = false }
+      state.closed = true
+      return state.successful
     },
   }
 }

@@ -16,6 +16,7 @@ import { createSfSourceScopeProjector } from "../../../../product/integration/so
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import type { ForecastExplainInput } from "../../../../product/contracts/skill-inputs.ts"
+import { handleSfForecastInput } from "../../../../product/interface/forecast-http.ts"
 import { selection } from "../resident-runtime/fixture.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 
@@ -268,6 +269,16 @@ test("published Forecast form persists the exact canonical selection and denies 
     expect(calls).toBe(0)
     expect(await state.authority.ui.validate(original.value, "sf_forecast_compare", digestSfValue(legacy))).toBe(true)
     expect(await adapter.prepare(original.value, legacy)).toEqual({ status: "ok", value: prepared })
+    // This published handler consumes the UI lease before calling the adapter.
+    // Only its two used ports are mounted here, both using the real authority and
+    // adapter; the deliberately empty financial payload remains a boundary fixture.
+    const consumer = { ui: state.authority.ui, forecastInputs: adapter } as Parameters<typeof handleSfForecastInput>[2]
+    const httpRequest = (key: string) => new Request("https://example.test/product/forecast-input", { method: "POST",
+      headers: { origin: "https://example.test", "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify(legacy) })
+    const response = await handleSfForecastInput(httpRequest("forecast-http-valid"), "https://example.test", consumer)
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ status: "ok", value: prepared })
+    expect(calls).toBe(2)
     expect(wanted?.selection).toEqual(legacy)
     expect(wanted?.request.objective).toBe("Review")
     expect(wanted?.request.manifestDigest).toBe(runtime.manifestDigest)
@@ -279,10 +290,20 @@ test("published Forecast form persists the exact canonical selection and denies 
     expect(await reopened.selectionScope.verify(prepared, wanted.request, followup, () => reopened.read(state.caseRef, wanted!.request.skillId, followup)))
       .toEqual({ status: "ok", value: { selection: legacy, material: {} } })
     state.authority.human.finish(followup)
-    expect((await adapter.prepare(original.value, { ...legacy, candidateRef: "changed-without-human-admission" })).status).toBe("denied")
-    expect(calls).toBe(1)
+    for (const consumed of [false, true]) {
+      const changedIntent = await state.authority.ui.admit(state.request, "sf_forecast_compare", digestSfValue(legacy))
+      if (changedIntent.status !== "ok") throw new Error("Changed-intent UI admission unavailable")
+      if (consumed) expect(await state.authority.ui.validate(changedIntent.value, "sf_forecast_compare", digestSfValue(legacy))).toBe(true)
+      expect((await adapter.prepare(changedIntent.value, { ...legacy, candidateRef: "changed-without-human-admission" })).status).toBe("denied")
+      state.authority.ui.finish(changedIntent.value)
+    }
+    expect(calls).toBe(2)
     revoke = true
-    expect((await adapter.prepare(original.value, legacy)).status).not.toBe("ok")
+    const late = await handleSfForecastInput(httpRequest("forecast-http-revoked"), "https://example.test", consumer)
+    expect(late.status).toBe(503)
+    expect(await late.json()).toEqual({ status: "unavailable" })
+    expect(calls).toBe(3)
+    expect(state.actor.active).toBe(false)
     state.authority.ui.finish(original.value)
   } finally { await state.close() }
 })

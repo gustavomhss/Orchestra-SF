@@ -53,8 +53,9 @@ export function createSfAlternativeCallScope<Value>(input: {
       return sources && current(call, scope) && await host.revalidate(call)
         ? digestSfValue({ state, sources, day, caseRef: selected.value, binding: scope.binding, admission }) : undefined
     })
-    return found.status === "ok" && typeof found.value === "string" && current(call, scope) && await host.revalidate(call) &&
-      await observedDay(scope.request) === day ? found.value : undefined
+    const afterDay = await observedDay(scope.request)
+    return found.status === "ok" && typeof found.value === "string" && afterDay === day && current(call, scope) &&
+      await host.revalidate(call) && current(call, scope) ? found.value : undefined
   }
   const read = async (call: TrustedDomainContext, produce: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
     const scope = active.get(call)

@@ -15,10 +15,11 @@ export function createSfForecastInputAdapter(input: {
 }): NonNullable<SfHostServices["forecastInputs"]> {
   return { prepare: async (call, incoming) => {
     const selection = structuredClone(incoming)
+    const intent = digestSfValue(selection)
     const source = input.authority.host.requestFor(call)
     // The HTTP owner consumes the admission once; this adapter verifies that
     // exact consumed intent and its current authority instead of consuming twice.
-    if (!source || call.kind !== "ui" || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", digestSfValue(selection)) || !await input.authority.host.revalidate(call))
+    if (!source || call.kind !== "ui" || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", intent) || !await input.authority.host.revalidate(call))
       return { status: "denied", reason: "forecast-selection-authority-unavailable" }
     const current = await input.business.cases.read({ caseRef: encodeCaseRef(selection.caseRef) }, call)
     if (current.status !== "ok" || current.value.case.version !== selection.caseRef.version) return { status: "stale", reason: "forecast-case-changed" }
@@ -36,7 +37,8 @@ export function createSfForecastInputAdapter(input: {
       const prepared = await input.inputs.prepare(admitted.value, wanted)
       if (prepared.status !== "ok") return prepared
       const decoded = decodeSfSkillInput("ForecastExplainInput", prepared.value)
-      if (!decoded.ok || !await input.authority.human.authorize(admitted.value, "analysis.prepare", wanted) || !await input.authority.host.revalidate(call))
+      if (!decoded.ok || !await input.authority.human.authorize(admitted.value, "analysis.prepare", wanted) || !await input.authority.host.revalidate(call) ||
+        input.authority.host.requestFor(call) !== source || source.signal.aborted || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", intent))
         return { status: "unavailable", reason: "forecast-analysis-preparation-changed" }
       return { status: "ok", value: decoded.value }
     } finally { input.authority.human.finish(admitted.value) }

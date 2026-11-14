@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { DomainProjection, SourceRef } from "../../../../product/contracts/context.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
+import type { ScenarioRequest } from "../../../../product/contracts/operations.ts"
 import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
@@ -53,12 +54,25 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
     const produced = await business.withCase(call, caseRef, {}, async () => {
       const issued = await business.plannerProduct.issueSource("history-forecast", call)
       if (issued.status !== "ok") return issued
-      // A Portfolio candidate must carry a real, replayable operation. The
-      // producer intentionally rejects an empty baseline as a candidate.
-      const scenario = { baseRef: issued.value.evidence.refId, operations: [{ kind: "replace" as const, targetRef: "line:2", amount: 110,
-        currency: "USD", period: { start: "2026-02-01", end: "2026-02-28" } }], assumptions: [] }
+      const forecast = await business.planner.compareForecast({ baseRef: issued.value.evidence.refId, candidateRef: issued.value.evidence.refId, period, currency: "USD" }, call)
+      if (forecast.status !== "ok") return forecast
+      // A candidate must carry an actual operation. Select the real February
+      // component; January is closed, and exclusion remains a hypothetical preview.
+      const targets = forecast.value.baseline.components.filter((component) => component.period.start === "2026-02-01" && component.period.end === "2026-02-28")
+      expect(targets).toHaveLength(1)
+      const target = targets[0]
+      if (!target || target.amount === null || target.currency !== "USD" || !target.sourceRefs.length) return { status: "unavailable", reason: "authorized-preview-target-unavailable" }
+      expect(target.amount).toBeGreaterThan(0)
+      const scenario: ScenarioRequest = { baseRef: issued.value.evidence.refId,
+        operations: [{ kind: "exclude", targetRef: target.id, currency: target.currency, period: target.period }], assumptions: [] }
       const preview = await business.planner.simulateScenario(scenario, call)
       if (preview.status !== "ok") return preview
+      expect(preview.value).toMatchObject({ comparisonStatus: "conditioned", total: null })
+      expect(preview.value.components.find((component) => component.id === target.id)).toMatchObject({ amount: 0, evidenceState: "hypothetical" })
+      expect(preview.value.restrictions).toContain("preview-not-applied")
+      const unchanged = await business.planner.compareForecast({ baseRef: issued.value.evidence.refId, candidateRef: issued.value.evidence.refId, period, currency: "USD" }, call)
+      if (unchanged.status !== "ok") return unchanged
+      expect(unchanged.value.baseline.components.find((component) => component.id === target.id)).toEqual(target)
       const current = await authority.state.read(fixture.request(), "cases", (state) => state.cases[caseRef.id])
       if (current.status !== "ok") return { status: "unavailable", reason: "case-fixture-unavailable" }
       const changed = await authority.state.transaction(fixture.request("history-alternative"), { namespace: "cases", expectedStorageVersion: current.storageVersion,
@@ -185,6 +199,68 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
     const mutate = (work: (state: SfProductState) => void) => fixture.store.transaction("dashboard", async (snapshot) => {
       work(snapshot.data.__sfProductV1 as SfProductState); return { commit: true, value: undefined }
     })
+    // R1-D1-HTTP-EGRESS-01: the selected Review has already been read when the
+    // real browser bundle is ready. Access can change before those bytes leave.
+    const reviewPageUrl = `https://example.test/dashboard?${new URLSearchParams({ sf: "review", reviewRef: original.id, sectionId: "portfolio", start: period.start, end: period.end })}`
+    for (const revocation of ["case", "session"] as const) {
+      const gate = { reached: () => {}, release: () => {}, script: "" }
+      const reached = new Promise<void>((resolve) => { gate.reached = resolve })
+      const released = new Promise<void>((resolve) => { gate.release = resolve })
+      const gatedHttp = createSfExtendedHttp({ authority, business, bi, reviews: application, persistence, origin: "https://example.test",
+        assets: { bi: assets.bi, reviews: async () => {
+          // Preserve the actual built asset; neither HTTP output nor an access
+          // decision is replaced. Hold only delivery after the real await.
+          const script = await assets.reviews()
+          gate.script = script
+          gate.reached()
+          await released
+          return script
+        } } })
+      const pendingPage = gatedHttp(new Request(reviewPageUrl), "dashboard")
+      try {
+        await Promise.race([reached, pendingPage.then((response) => {
+          throw new Error(`Review did not reach the final asset gate: ${response?.status ?? "no-response"}`)
+        })])
+        expect(gate.script.length).toBeGreaterThan(0)
+        if (revocation === "case") {
+          await mutate((state) => { state.cases[caseRef.id]!.participants = [] })
+          expect(fixture.active.value).toBe(true)
+          expect(await authority.host.revalidate(call)).toBe(true)
+          const authenticated = await fixture.read()
+          try { expect(await authority.host.revalidate(authenticated)).toBe(true) }
+          finally { authority.ui.finish(authenticated) }
+        } else {
+          fixture.active.value = false
+        }
+        gate.release()
+        const denied = await pendingPage
+        expect(denied?.status, `Review egress after ${revocation} revocation`).toBe(403)
+        expect(denied!.headers.get("content-type")).toContain("application/json")
+        const text = await denied!.text()
+        const body = JSON.parse(text)
+        expect(body).toMatchObject({ status: "denied" })
+        expect(body).not.toHaveProperty("value")
+        expect(body).not.toHaveProperty("selectedSection")
+        expect(body).not.toHaveProperty("bootstrap")
+        expect(text).not.toContain("data-sf-review-bootstrap")
+        expect(text).not.toContain("<script")
+        expect(text).not.toContain("Selected Portfolio")
+        expect(text).not.toContain(stored.resultRef)
+      } finally {
+        gate.release()
+        await pendingPage.catch(() => undefined)
+        fixture.active.value = true
+        await mutate((state) => { state.cases[caseRef.id]!.participants = ["person"] })
+      }
+      // Each race leaves a recoverable authorized application. A fresh request
+      // must reopen the real selected content after restoring the same access.
+      const recovered = await http(new Request(reviewPageUrl), "dashboard")
+      expect(recovered?.status, `Review recovery after ${revocation} revocation`).toBe(200)
+      const restored = await recovered!.text()
+      expect(restored).toContain("data-sf-review-bootstrap")
+      expect(restored).toContain("Selected Portfolio")
+      expect(restored).toContain(stored.resultRef)
+    }
     browserChecks.current = await prepareSfReviewAccessBrowser({ http, privateText: "Selected Portfolio",
       url: `https://example.test/dashboard?${new URLSearchParams({ sf: "review", reviewRef: original.id, sectionId: "portfolio", start: period.start, end: period.end })}` })
     await mutate((state) => { state.cases[caseRef.id]!.participants = [] })

@@ -13,7 +13,7 @@ import type { createSfExtendedAssets } from "./extended-assets.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { createSfExtendedBiOptions } from "./extended-bi-options.ts"
 import { readSfDecisionBiSelection, sfPlannerBiSelection } from "./bi-selections.ts"
-import { createSfExtendedReviewCycle } from "./extended-review-cycle.ts"
+import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "./extended-review-cycle.ts"
 import { sfExtendedSourceLinks } from "./extended-source-links.ts"
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 
@@ -120,12 +120,20 @@ export function createSfExtendedHttp(input: {
         } finally { authority.ui.finish(next.value) }
       }
       let data: unknown = undefined
+      let verifyReviewBootstrap: (() => Promise<Response | undefined>) | undefined
       if (mode === "review") {
         if (!input.reviews) return json({ status: "unavailable", reason: "review-producers-unavailable" }, 503)
         const reviewRef = url.searchParams.get("reviewRef")
         if (reviewRef) {
           const current = await input.reviews.reviews.read(reviewRef, call)
           if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
+          const captured = digestSfValue(current.value)
+          verifyReviewBootstrap = async () => {
+            const again = await input.reviews!.reviews.read(reviewRef, call)
+            if (again.status !== "ok") return json(again, again.status === "denied" ? 403 : 409)
+            if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-changed-before-display" }, 409)
+            return undefined
+          }
           const sectionId = url.searchParams.get("sectionId")
           const selectedSection = sectionId ? current.value.sections.find((section) => section.id === sectionId) : undefined
           if (sectionId && !selectedSection) return json({ status: "denied", reason: "review-section-unavailable" }, 403)
@@ -134,16 +142,29 @@ export function createSfExtendedHttp(input: {
           const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
           if (updated.status !== "ok") return json(updated, updated.status === "denied" ? 403 : 409)
           data = updated.value
+          const captured = digestSfValue(updated.value)
+          verifyReviewBootstrap = async () => {
+            const again = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
+            if (again.status !== "ok") return json(again, again.status === "denied" ? 403 : 409)
+            if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-update-changed-before-display" }, 409)
+            return undefined
+          }
         } else {
           const current = await business.dashboardServices.discover({ page: url.searchParams.get("page") ?? "Budget Overview", period }, call)
           if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
           if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
-          const section = current.value.agenda.section
-          data = { items: [{ kind: "dashboard", id: section.id, topic: section.topic, selectionRef: section.selectionRef, period: section.period }] }
+          data = { items: [sfDashboardReviewAgendaItem(current.value.agenda.section)] }
         }
       }
       const script = await (mode === "review" ? input.assets.reviews() : input.assets.bi()).catch(() => undefined)
-      if (!script || !await authority.ui.revalidate(call)) return json({ status: "unavailable", reason: "browser-or-authority-unavailable" }, 503)
+      if (!await authority.ui.revalidate(call)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+      if (!script) return json({ status: "unavailable", reason: "browser-unavailable" }, 503)
+      // Asset loading can outlive case membership. The destination producer
+      // reopens that specific review after the last unrelated await.
+      if (verifyReviewBootstrap) {
+        const unavailable = await verifyReviewBootstrap()
+        if (unavailable) return unavailable
+      }
       const content = mode === "review" ? '<section data-sf-review-workspace><p role="status">Loading review…</p></section>' : '<section data-sf-bi><p role="status">Loading analyses…</p></section>'
       const inline = script.replace(/<\/script/gi, "<\\/script")
       const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`

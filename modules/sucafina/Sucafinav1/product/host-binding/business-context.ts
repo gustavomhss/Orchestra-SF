@@ -11,6 +11,7 @@ import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { DecisionCase } from "../contracts/decisions.ts"
 import type { DomainProjection } from "../contracts/context.ts"
+import { mapSfEvidenceInOrder } from "./evidence-order.ts"
 
 /** Bound repeated source reauthorization without caching an authorization across reads. */
 function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
@@ -65,7 +66,7 @@ function assembleSfBusinessContext(host: {
       if (ref.kind === "case-event" || ref.kind === "calculation") {
         const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.target.sourceRefs
         const next = new Set([...ancestors, ref.refDigest])
-        const dependencies = await Promise.all(children.map((dependency) => resolveAncestry(dependency, call, next)))
+        const dependencies = await mapSfEvidenceInOrder(children, (dependency) => resolveAncestry(dependency, call, next))
         if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await host.revalidate(call))) return unavailable()
       }
       return result
@@ -90,21 +91,21 @@ function assembleSfBusinessContext(host: {
       const binding = digestSfValue([call.kind, call.binding])
       // Share identical reads only within this one authorization pass. No cross-call cache.
       const reads = new Map<string, Promise<BusinessEvidenceResolution>>()
-      const values = await Promise.all(refs.map((ref) => {
+      const values = await mapSfEvidenceInOrder(refs, (ref) => {
         const key = digestSfValue(ref)
         const existing = reads.get(key)
         if (existing) return existing
         const pending = resolve(ref, call)
         reads.set(key, pending)
         return pending
-      }))
+      })
       if (requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding]) || !await host.revalidate(call)) return unavailable()
       return values.map((value) => structuredClone(value))
     },
     async recall(request, call) {
       if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       const records = await host.recall(request, call)
-      const allowed = await Promise.all(records.map(async (record) => {
+      const allowed = await mapSfEvidenceInOrder(records, async (record) => {
         const caseRef = record.envelope.caseRef
         if (!caseRef || !request.caseRefs.some((ref) => ref.id === caseRef.id && ref.incarnation === caseRef.incarnation)) return false
         const refs = [...record.envelope.evidenceRefs, ...record.envelope.dependencies]
@@ -117,7 +118,7 @@ function assembleSfBusinessContext(host: {
         }
         const resolved = await service.context({ refs }, call)
         return refs.length > 0 && resolved.every((item) => item.state === "fresh" || (item.state === "historical" && item.differences !== undefined))
-      }))
+      })
       if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       if (allowed.some((value) => !value)) throw new Error("SF_MEMORY_EVIDENCE_UNAVAILABLE")
       return records
@@ -222,7 +223,7 @@ export function createSfAtlasBusiness(input: {
   let resolveAncestry: ReturnType<typeof assembleSfBusinessContext>["resolveAncestry"] | undefined
   const caseEvent = createSfCaseEventSourceAccess({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, authorizeEvidence: async (refs, call, ancestors) => {
     if (!resolveAncestry) return false
-    const results = await Promise.all(refs.map((ref) => resolveAncestry!(ref, call, ancestors)))
+    const results = await mapSfEvidenceInOrder(refs, (ref) => resolveAncestry!(ref, call, ancestors))
     return results.length === refs.length && results.every((result, index) => (result.state === "fresh" || result.state === "historical") && digestSfValue(result.ref) === digestSfValue(refs[index])) && await input.host.revalidate(call)
   } })
   const currentProcurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
@@ -290,7 +291,7 @@ export function createSfAtlasBusiness(input: {
   const assembled = assembleSfBusinessContext({
     revalidate: input.host.revalidate, ...router,
     recall: async (request, call) => {
-      const records = await Promise.all(request.caseRefs.map((ref) => memory.recall(ref, call)))
+      const records = await mapSfEvidenceInOrder(request.caseRefs, (ref) => memory.recall(ref, call))
       if (records.some((result) => result.status !== "ok")) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
       return records.flatMap((result) => result.status === "ok" ? result.records : [])
     },

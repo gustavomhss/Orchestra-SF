@@ -6,6 +6,7 @@ import { createSfExtendedReviewCycle } from "../../../../../../../apps/cli/src/s
 import { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
 import { createSfPersonalViewAuthority, sfPersonalViewSelectionAllowed } from "../../../../../../../apps/cli/src/sucafina-product/personal-view-authority.ts"
 import type { SfPersonalView } from "../../../../product/interface/personal-views.ts"
+import type { ReviewAgendaItem } from "../../../../product/reviews/selection.ts"
 import { createSfExtendedBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts"
 import { createApplication } from "../../../../runtime/application.ts"
 import { DashboardBudget } from "../../../../runtime/dashboard-budget.ts"
@@ -57,9 +58,20 @@ test("a non-Budget review update preserves topic, period, notes and predecessor 
     const period = { start: "2026-01-01", end: "2026-12-31" }
     const source = await business.dashboardServices.discover({ page: "OPEX Detail", period }, call)
     if (source.status !== "ok" || !source.value.agenda) throw new Error("OPEX agenda unavailable")
-    const selection = source.value.agenda.section
-    const item = { kind: "dashboard" as const, id: "selected-opex", topic: selection.topic, selectionRef: selection.selectionRef, period: selection.period,
-      agendaNote: "Preserve this human note" }
+    expect(source.value.agenda.section.title).toBe("OPEX Detail")
+    const http = createSfExtendedHttp({ authority, business, bi, reviews, persistence, origin: "https://example.test",
+      assets: { bi: async () => "void 0", reviews: async () => "void 0" } })
+    const response = await http(new Request(`https://example.test/dashboard?sf=review&page=OPEX+Detail&start=${period.start}&end=${period.end}`), "dashboard")
+    expect(response?.status).toBe(200)
+    const bootstrap = /<script type="application\/json" data-sf-review-bootstrap>([\s\S]*?)<\/script>/.exec(await response!.text())?.[1]
+    expect(bootstrap).toBeDefined()
+    const payload = JSON.parse(bootstrap!) as { items: ReviewAgendaItem[] }
+    expect(payload.items).toHaveLength(1)
+    expect(Object.keys(payload.items[0]!).sort()).toEqual(["id", "kind", "period", "selectionRef", "topic"])
+    expect(payload.items[0]).toMatchObject({ kind: "dashboard", topic: "opex-detail", period })
+    const selected = payload.items[0]!
+    if (selected.kind !== "dashboard") throw new Error("HTTP bootstrap must retain the Dashboard agenda kind")
+    const item = { ...selected, id: "selected-opex", agendaNote: "Preserve this human note" }
     const agenda = await reviews.agenda!.create([item], call)
     if (agenda.status !== "ok") throw new Error(agenda.reason)
     const preserved = await reviews.human.preserve(fixture.request("review-previous"), { selectionRef: agenda.value.selectionRef, sectionRefs: agenda.value.sectionRefs })
@@ -73,6 +85,7 @@ test("a non-Budget review update preserves topic, period, notes and predecessor 
     expect(update.value.available).toBe(true)
     expect(update.value.items).toHaveLength(1)
     expect(update.value.items[0]).toMatchObject({ kind: "dashboard", id: item.id, topic: item.topic, period, agendaNote: item.agendaNote })
+    expect(update.value.items[0]).not.toHaveProperty("title")
     expect(update.value.confirmations).toHaveLength(1)
     expect(update.value.unavailableSections).toHaveLength(0)
     // The test now makes the explicit new selection represented by the UI confirmation.

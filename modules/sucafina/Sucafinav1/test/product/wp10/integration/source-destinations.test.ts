@@ -27,7 +27,9 @@ test("authorized monthly source links open the real page with the exact primary 
       const issued = await issue({ page: item.page, fields: [item.field], period }, call)
       expect(issued.status).toBe("ok")
       if (issued.status !== "ok") throw new Error(issued.reason)
-      expect((await business.context.resolve(issued.value.evidence, call)).state).toBe("fresh")
+      const evidence = await business.context.resolve(issued.value.evidence, call)
+      expect(evidence).toMatchObject({ state: "fresh", ref: issued.value.evidence, currentRef: issued.value.evidence })
+      expect(evidence.authorizedProjection).toBeDefined()
       const links = await sfExtendedSourceLinks({ business, reference: issued.value.evidence, call, url: new URL("https://example.test/sucafina/dashboard?sf=review-source&year=2026") })
       expect(links).toHaveLength(1)
       const destination = new URL(links[0]!.url, "https://example.test")
@@ -54,13 +56,22 @@ test("monthly source issuance rejects partial spans and navigation refuses a fre
   try {
     await fixture.persistence.transaction("dashboard", async (snapshot) => { snapshot.data.opsTickets = []; return { commit: true, value: undefined } })
     const issue = createDashboardSourceIssuer({ host: fixture.business.host, scopedSources: fixture.persistence })
+    // Monthly facts cannot issue a partial-month evidence scope. No synthetic
+    // positive evidence is supplied to the link builder for this denied request.
     const partial = await issue({ page: "IT Operations", fields: ["opsTickets"], period: { start: "2027-02-01", end: "2027-02-10" } }, call)
     expect(partial).toEqual({ status: "denied", reason: "source-unavailable" })
-    const issued = await issue({ page: "IT Operations", fields: ["opsTickets"], period: { start: "2027-02-01", end: "2027-03-31" } }, call)
+    // Multiple whole months are a valid source scope, but a one-month page must
+    // not silently navigate to only the first month of that authorized evidence.
+    const period = { start: "2027-02-01", end: "2027-03-31" }
+    const issued = await issue({ page: "IT Operations", fields: ["opsTickets"], period }, call)
     expect(issued.status).toBe("ok")
     if (issued.status !== "ok") throw new Error(issued.reason)
-    expect((await fixture.business.context.resolve(issued.value.evidence, call)).state).toBe("fresh")
+    const evidence = await fixture.business.context.resolve(issued.value.evidence, call)
+    expect(evidence).toMatchObject({ state: "fresh", ref: issued.value.evidence, currentRef: issued.value.evidence })
+    expect(evidence.authorizedProjection).toBeDefined()
+    expect(issued.value.evidence.target.period).toEqual(period)
     expect(await sfExtendedSourceLinks({ business: fixture.business, reference: issued.value.evidence, call,
       url: new URL("https://example.test/sucafina/dashboard?sf=review-source") })).toEqual([])
+    expect(issued.value.evidence.target.period).toEqual(period)
   } finally { fixture.authority.ui.finish(call); await fixture.dispose() }
 })
