@@ -265,7 +265,7 @@ async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, leg
     transaction: (surface, work, options) => {
       metrics.persistenceCalls++
       if (!store.currentSnapshots?.()) metrics.rootTransactions++
-      return store.transaction(surface, async (...args) => { const result = await work(...args); if (result.commit) metrics.commitRequests++; return result }, options)
+      return store.transaction(surface, async (snapshot, blobs) => { const result = await work(snapshot, blobs); if (result.commit) metrics.commitRequests++; return result }, options)
     },
     transactionAll: async (work, options) => {
       metrics.persistenceCalls++

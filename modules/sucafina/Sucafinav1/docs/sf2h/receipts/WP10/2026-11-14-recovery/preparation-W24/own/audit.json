@@ -1,0 +1,36 @@
+{
+  "schema": "wp10-w24-own-test-signature-correction-v1",
+  "baseProduct": "f7466375e268b70113312096b2a06ff2d75e4a53",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+  "before": {
+    "bytes": 30355,
+    "sha256": "06e53010610245e9413f470344f6133da72f899ed62a4ba7f8c042ae78a0937a",
+    "blobSha": "67274bd100bbab1ddf4ba02bac9a4b17bcb5472e"
+  },
+  "after": {
+    "bytes": 30371,
+    "sha256": "18931358f1eaf0fe9b5c3e6c5c337bb80b5bb19ed68b636e85c41e7f7a0ba3ea",
+    "blobSha": "863aabc6fef39b87701f1dac005793309b3372a6"
+  },
+  "hostedCause": {
+    "runId": 43613489123,
+    "jobId": 132503406799,
+    "snapshot": "690ddfe29105688519437dc523c69ed6bc46b726",
+    "code": "TS2554",
+    "line": 268,
+    "uniqueOwnDiagnostics": 1,
+    "ownOccurrences": 2,
+    "foreignUniqueDiagnostics": 13
+  },
+  "cause": "LocalStore is Persistence & AssetPersistence. The rest callback inherited the one-argument overload while the measured callback may require the real BlobTransaction second argument.",
+  "correction": "Declare both callback parameters and forward the actual snapshot and BlobTransaction supplied by LocalStore. No cast, synthesized asset port, producer bypass or callback omission.",
+  "preservation": {
+    "oneLineOnly": true,
+    "allTestsAndAssertions": true,
+    "allBudgets": true,
+    "productSourcesByteExact": true,
+    "foreignFilesUnchanged": true
+  },
+  "localProductExecution": false,
+  "candidateHostedAcceptance": false
+}
