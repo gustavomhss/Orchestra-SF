@@ -1,0 +1,66 @@
+{
+  "schema": "sf2-later-authority-reconciliation-v1",
+  "mission": 23,
+  "branch": "sf2-stack",
+  "pr": 65,
+  "writer": "S0-C / current root session only",
+  "lease_epoch": "S0-C-e6-browser23",
+  "previous_control": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+  "current_control": "6da04cd66eb268362ee58509271fef773ac2a62e",
+  "control_commit_time": "2026-11-14T20:58:11Z",
+  "files_read_completely": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/COMMON.json",
+      "blob": "6cdf29c62aa06307aa4d5fb4137b34b1baa84dc1",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-contract-security.json",
+      "blob": "ebc7206f7b690480bc8ac14ec72e5d179be0b5d5",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-functional-composition.json",
+      "blob": "069130f04843e1f8b271c5b6bdd884086921e7ab",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-runtime-evidence.json",
+      "blob": "ed05084805d3e7e9ced8db82af3b9885ce600dfb",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/typecheck-e2e-gate-closure.json",
+      "blob": "171ce861c06e890e73240362dfaeb50a553c82e7",
+      "status": "added"
+    }
+  ],
+  "change_scope": "One additive documentary commit prepares mission26 E2E typecheck support and independent review missions27/28/29. No replacement writer, no authority revocation, no T0/planning change.",
+  "operative_rule": "Session23 remains only sf2-stack writer and S0 sole final dispatcher/acceptor.",
+  "observed_state": "PREPARED_NOT_STARTED; no native session/model IDs supplied",
+  "review_target": {
+    "commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "candidate": "C2",
+    "limits": "Current C3 and future material candidates require scoped rechecks and final verdict on the same exact accepted C. No current/future pass transfer."
+  },
+  "tooling26": {
+    "branch": "astra-compose",
+    "pr": 32,
+    "expected_head": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+    "state": "Prepared source authority only; closed tooling output not yet intaken"
+  },
+  "actions": {
+    "continued_same_bounded_writer": true,
+    "created_supervisor": false,
+    "created_dispatcher": false,
+    "resumed_goal": false,
+    "launched_native_workers": false,
+    "dispatched_ci": false,
+    "executed_tests": false,
+    "wrote_source_or_control_branches": false
+  },
+  "support_scope": "Existing in-session read-only analysis helpers are not the campaign's independent final reviewers.",
+  "final_dispatcher": "S0",
+  "final_acceptance": "S0",
+  "global_release": false
+}
