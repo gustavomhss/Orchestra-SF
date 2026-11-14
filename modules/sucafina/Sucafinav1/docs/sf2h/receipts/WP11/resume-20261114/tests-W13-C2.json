@@ -1,0 +1,160 @@
+{
+  "log": "ci-analysis/wp11-W13-C2-tests.log",
+  "logSha256": "7a5f3319c7df181f5a71381ce0996d0ca50a8aa58de53e8b675e3c539aaad936",
+  "metadata": {
+    "productSha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "productTree": "e6831add3e891e020d34540234bd685a7dd05e01",
+    "snapshotSha": "da8b39a82a45f5846da20923023e2e588578167d",
+    "snapshotTree": "4d80c5f15846c40a4c9586eb8c92d19188567661",
+    "branch": "ci-run-linux-astra-wp11-d7775d6-e991d7a5-c2",
+    "requestSha256": "e991d7a53d722d00e8caf409186e848d5197ebaf7851d04526d536a0598b7f1b",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "-t",
+        "^(?:composed Planner threshold includes confirmed training once and distinguishes zero from missing price|real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result)$",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "19e3e8686a3ce27073f5085dbe8ac5d30e56374e",
+    "runIds": [
+      43593961201
+    ]
+  },
+  "summary": {
+    "pass": 2,
+    "fail": 0,
+    "tests": 2,
+    "files": 2,
+    "durationSeconds": 301.98
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "aadcbf31f89b7c90fb7fcf379aa0ca3f"
+    ],
+    "observedVerdicts": [
+      "omni positive control [aadcbf31f89b7c90fb7fcf379aa0ca3f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [aadcbf31f89b7c90fb7fcf379aa0ca3f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+    "Sucafinav1/test/product/wp05/engine-coverage.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+    "Sucafinav1/test/product/wp05/engine-coverage.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 153684.79,
+      "header": {
+        "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "line": 810,
+        "timestamp": "2026-11-14T12:17:30.9933238Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "status": "pass",
+        "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+        "line": 811,
+        "timestamp": "2026-11-14T12:20:04.7126842Z",
+        "durationMs": 153684.79
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 148136.54,
+      "header": {
+        "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "line": 813,
+        "timestamp": "2026-11-14T12:20:04.7127694Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "status": "pass",
+        "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+        "line": 814,
+        "timestamp": "2026-11-14T12:22:32.8514460Z",
+        "durationMs": 148136.54
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+    "status": "pass",
+    "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+    "line": 814,
+    "timestamp": "2026-11-14T12:22:32.8514460Z",
+    "durationMs": 148136.54
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 0,
+    "fail": 0,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "status": "pass",
+      "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+      "line": 811,
+      "timestamp": "2026-11-14T12:20:04.7126842Z",
+      "durationMs": 153684.79
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "status": "pass",
+      "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+      "line": 814,
+      "timestamp": "2026-11-14T12:22:32.8514460Z",
+      "durationMs": 148136.54
+    }
+  ],
+  "failures": [],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

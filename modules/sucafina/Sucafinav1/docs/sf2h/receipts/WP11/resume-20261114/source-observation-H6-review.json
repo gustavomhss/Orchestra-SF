@@ -1,0 +1,149 @@
+{
+  "schema": "wp11-independent-H6-fixture-source-admission-review-v1",
+  "reviewer": "ci_reconciliation",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+  "baseProductSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+  "baseProductTree": "297243de2cffcdbcf4592e1449783ef3ea43c362",
+  "manifest": {
+    "path": "/workspace/scratch/c3f9350f32d4/requirements/source-observation-proposal-H6/manifest.json",
+    "sha256": "f0d6e89d9da03b735e0e65d3a82ebce0c35d7d29732e90979f25a344c4c5f4e7"
+  },
+  "patch": {
+    "path": "requirements/source-observation-proposal-H6/source-observation-H6.patch",
+    "sha256": "d81218bd69ae68b7544c061cf4d43c9e4baa292cb76f5fa334285aa0322c99ef"
+  },
+  "reviewedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "baseBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "candidateBlob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0",
+      "candidateSha256": "aeb01fde16f61497f952f25c9eaf5c5c4cdbc00967e2f3932806ad0894e72b11",
+      "bytes": 6425,
+      "candidatePath": "/workspace/scratch/c3f9350f32d4/requirements/source-observation-proposal-H6/candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "currentPublishedBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "candidateMatchesManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "baseBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "candidateBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "candidateSha256": "667104e7adbf32bcaca7989c1134bbc23de8d9c040740a2dfd86816577166c79",
+      "bytes": 25596,
+      "candidatePath": "/workspace/scratch/c3f9350f32d4/requirements/source-observation-proposal-H6/candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "currentPublishedBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "candidateMatchesManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "baseBlob": null,
+      "candidateBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "candidateSha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "bytes": 11611,
+      "candidatePath": "/workspace/scratch/c3f9350f32d4/requirements/source-observation-proposal-H6/candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "currentPublishedBlob": null,
+      "candidateMatchesManifest": true
+    }
+  ],
+  "findingResolved": {
+    "finding": "The initial proposal performed a final asynchronous authentication after the final external host.revalidate, allowing a real UI grant change during authentication to remain unseen by the isolated admission helper.",
+    "resolution": "The final real Planner transaction now authenticates, revalidates the UI lease, checks request/binding/cancellation, and only then calls the canonical synchronous projector. The earlier external revalidation remains before the transaction to preserve the real source-CAS race test.",
+    "regression": "The second authenticate observes its principal, revokes the actual Request authorization header and returns that prior principal. The test proves requestFor was still available, then the final host.revalidate invalidates the real UI lease and admission returns false without ui.finish.",
+    "reviewedFinalVerifierBlob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0"
+  },
+  "verifiedMechanisms": [
+    "Closed scenario schema is decoded first. Only operations=[] AND assumptions=[] select the source-only observer; every nonempty scenario delegates to the same canonical operation verifier.",
+    "The source-only guard resolves the complete source envelope twice, clones observations and compares the full selected value. It validates envelope digest, installation/project, refId/versionId, surface/type, exact fields, whole-month period and projection year.",
+    "Two fresh real Planner snapshots authenticate the current actor and call projectPlannerSource. A static synthetic source reference cannot hide a real source edit because the actual projection digest is compared.",
+    "The second source resolution and external revalidation precede the final snapshot; its authentication and lease revalidation precede its final projection. No asynchronous product callback runs after the final projection; request identity, binding digest and abort are checked synchronously.",
+    "Source-CAS success is asserted outside guarded callbacks. The scope variants recompute evidence digests, so mismatches cannot pass merely through the digest check.",
+    "A valid positive source-only control requires two source resolves, two authentications and no C10/environment calls. Three source/lease races, final-authentication revocation, nine scope/digest variants and canonical nonempty delegation form seven tests.",
+    "The nonempty control retains all three actual replacement operations, rejects implementation:13 through the canonical verifier and asserts the official source snapshot stays byte-equivalent by digest.",
+    "The fourth preparePhase projection changes only from classified Planner to existing sourcePlanner where only candidate DomainProjection is consumed. Persisted results, comparisons, criteria, C10 and financial previews remain on their original classified producers."
+  ],
+  "assertionsAndBudget": {
+    "existingHistoryTestBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+    "historyTimeoutMs": 180000,
+    "existingHistoryAssertionsChanged": false,
+    "newAdmissionTests": 7,
+    "originalThreeReplaceOperationsChanged": false,
+    "productionFilesChanged": false,
+    "formulaChanges": false,
+    "cacheBetweenCalls": false
+  },
+  "affectedExistingWp11Roots": [
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+      "changedHelperDependencies": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "closureFileCount": 101,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "changedHelperDependencies": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "closureFileCount": 106,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "changedHelperDependencies": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "closureFileCount": 103,
+      "unresolvedRelativeSpecifiers": []
+    }
+  ],
+  "newHostedRegressionRequired": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+  "activeB1A": {
+    "runId": 43594957479,
+    "productSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+    "roots": [
+      {
+        "root": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+        "closureFileCount": 111,
+        "unresolvedRelativeSpecifiers": [],
+        "affectedProposedPaths": []
+      },
+      {
+        "root": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "closureFileCount": 117,
+        "unresolvedRelativeSpecifiers": [],
+        "affectedProposedPaths": []
+      },
+      {
+        "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+        "closureFileCount": 89,
+        "unresolvedRelativeSpecifiers": [],
+        "affectedProposedPaths": []
+      },
+      {
+        "root": "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+        "closureFileCount": 93,
+        "unresolvedRelativeSpecifiers": [],
+        "affectedProposedPaths": []
+      },
+      {
+        "root": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+        "closureFileCount": 94,
+        "unresolvedRelativeSpecifiers": [],
+        "affectedProposedPaths": []
+      }
+    ],
+    "status": "STATICALLY_UNAFFECTED_BY_THESE_PROPOSED_HELPERS_NO_RUNTIME_OUTCOME_CLAIM"
+  },
+  "limits": [
+    "This is a static review of scratch candidates, not a test or typecheck execution and not a measured performance improvement.",
+    "Synthetic source declarations and fixture authority scopes remain explicit; canonical projection and real UI/SQLite admission do not prove an installed native session or human-browser confirmation.",
+    "No financial output, C10 completeness, arithmetic or human choice is implemented by the auxiliary observer. Those producers and assertions remain mandatory in hosted history/B1.",
+    "Prior H1-H5 timeout/failure evidence remains unchanged. Passing the new seven controls alone cannot qualify the full history, interval or collaborator restart.",
+    "The relative import graph includes type dependencies and excludes package internals/computed filesystem entrypoints. B1A has no unresolved relative import and no dependency on either changed helper."
+  ],
+  "repoWritesByReviewer": false,
+  "remoteWritesByReviewer": false
+}
