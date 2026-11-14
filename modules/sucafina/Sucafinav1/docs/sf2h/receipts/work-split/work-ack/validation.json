@@ -1,0 +1,610 @@
+{
+  "schema": "sf2h.work-ack.validation.v1",
+  "task": {
+    "branch": "work-ack",
+    "pullRequest": 54,
+    "baseBranch": "ui-work",
+    "baseSha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "handoffSha": "09a06b412ca624339b3634cf27d205a930e8f02e",
+    "route": "EXTERNAL_RECEIPT_DEPENDENCY_REPRODUCED_WITH_APPLICABLE_OWNER_PATCH"
+  },
+  "norm": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "criteriaCounts": {
+      "WP01": 75,
+      "WP02": 78
+    }
+  },
+  "candidate": {
+    "W": "6efc22ad55ceb646026d92b80aadd6192ecd033a",
+    "tree": "c0df2145715bae65aded22d54b6c59b62054cae4",
+    "S": "d68be8e7735489a7fc6d3c5518a53ea28a45a87c",
+    "snapshotTree": "22cbd51be1475ed9a9e00f34fc4b35ea81113912"
+  },
+  "producer": {
+    "initialObservedHead": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "latestObservedHead": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "branch": "collab-resume",
+    "pr": 41,
+    "activeBlob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+    "retainedTestedBlob": "9054624ad9cc632f4ba945bdc75b1034a5da16a6",
+    "activeHeadChange": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/increment07.json",
+        "status": "added",
+        "blob": "8e8bfc6b8e071a5f739a5a6c8f730a13292cdfcf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+        "status": "modified",
+        "blob": "a9ad44d2013bb31624633c5a8006667689a4fbab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+        "status": "modified",
+        "blob": "8fd6ad9018ff8b67234b4699916f558c6bf9e223"
+      }
+    ],
+    "observation": "The pinned active source still commits value: true and returns input.read(id, context); no mutationReceipt is published. The active file is byte-identical to the patch preimage.",
+    "executionLimit": "Hosted counterexamples execute the retained work-ack producer, not the complete active producer head or the proposed patch.",
+    "receiptConsumed": false
+  },
+  "scope": {
+    "productionChanges": [],
+    "newTestsPrefix": "modules/sucafina/Sucafinav1/test/product/work-split/work-ack/",
+    "receiptsPrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-ack/",
+    "producerWrites": false,
+    "sharedFixtureWrites": false,
+    "workflowWrites": false,
+    "localProductExecution": false,
+    "merge": false
+  },
+  "consumer": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+    "blob": "175ff36fe09405e0f31dd55207d751e3753f6ffb",
+    "changed": false,
+    "positiveRecipientAck": false,
+    "pendingIntentDurableAcrossReload": false
+  },
+  "patch": {
+    "path": "c03-recipient-receipt.NOT_APPLIED.patch",
+    "sha256": "8e056e78914b0287dfd54d330e5e9e03358fd65f0591699dfeba563c4cb1ec71",
+    "preimage": {
+      "commit": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+      "blob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+      "sha256": "70e8c3eaa6b157b8e138e87b650cf5b31a4022bc07808f4e6a8ae04181877ccd"
+    },
+    "postimage": {
+      "blob": "29ba733fd88814cfc4f872cc9c6c6bde66a814c3",
+      "sha256": "ce70802c8301eaf763e8462f338db321bf49c9a8b1043862e8eafed508403021"
+    },
+    "status": [
+      "NOT_APPLIED",
+      "NOT_COMPILED",
+      "NOT_RUN"
+    ],
+    "textApplication": "git apply --check and exact text application verified on an isolated copy of the active preimage; no product executed.",
+    "ownerRequest": "OWNER_REQUEST.md",
+    "regressionRequest": "owner-regression.ci-request.NOT_RUN.json",
+    "regressionStatus": "PREPARED_NOT_RUN; owner must add new receipt witnesses"
+  },
+  "reviews": [
+    {
+      "reviewer": "/root/cold_patch_review",
+      "role": "Independent static reviewer without patch or test authorship",
+      "patchFinding": "Full-intent mismatch classification was corrected to conflict; final hunks independently match the exact preimage and postimage.",
+      "testSha256": "c01bcaaf72ce1de3c965655621a321b419dce8a34f8123fe3cbe3fb7548f27d9",
+      "status": "NO_BLOCKER_BY_STATIC_INSPECTION",
+      "executedProduct": false,
+      "acceptanceLimit": "Not a campaign fresh review, installed proof or positive ACK validation."
+    }
+  ],
+  "criteria": {
+    "preservedUniverse": {
+      "WP01": [
+        "WP01.DOD.01",
+        "WP01.DOD.02",
+        "WP01.DOD.03",
+        "WP01.DOD.20",
+        "WP01.DOD.30",
+        "WP01.INV.01",
+        "WP01.INV.02",
+        "WP01.INV.20",
+        "WP01.INV.30",
+        "WP01.QLT.01",
+        "WP01.QLT.02",
+        "WP01.QLT.20",
+        "WP01.QLT.30",
+        "WP01.CMP.01",
+        "WP01.CMP.02",
+        "WP01.CMP.20",
+        "WP01.CMP.30",
+        "WP01.SUC.01",
+        "WP01.SUC.02",
+        "WP01.SUC.20",
+        "WP01.SUC.30",
+        "WP01.T01.CHK.01",
+        "WP01.T01.CHK.02",
+        "WP01.T01.CHK.03",
+        "WP01.T01.DOD.01",
+        "WP01.T01.INV.01",
+        "WP01.T01.QLT.01",
+        "WP01.T01.CMP.01",
+        "WP01.T01.SUC.01",
+        "WP01.T02.CHK.01",
+        "WP01.T02.CHK.02",
+        "WP01.T02.CHK.03",
+        "WP01.T02.DOD.01",
+        "WP01.T02.INV.01",
+        "WP01.T02.QLT.01",
+        "WP01.T02.CMP.01",
+        "WP01.T02.SUC.01",
+        "WP01.T03.CHK.01",
+        "WP01.T03.CHK.02",
+        "WP01.T03.CHK.03",
+        "WP01.T03.DOD.01",
+        "WP01.T03.INV.01",
+        "WP01.T03.QLT.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP01.T04.CHK.01",
+        "WP01.T04.CHK.02",
+        "WP01.T04.CHK.03",
+        "WP01.T04.DOD.01",
+        "WP01.T04.INV.01",
+        "WP01.T04.QLT.01",
+        "WP01.T04.CMP.01",
+        "WP01.T04.CMP.02",
+        "WP01.T04.SUC.01",
+        "WP01.T05.CHK.01",
+        "WP01.T05.CHK.02",
+        "WP01.T05.CHK.03",
+        "WP01.T05.CHK.20",
+        "WP01.T05.CHK.30",
+        "WP01.T05.CHK.31",
+        "WP01.T05.DOD.01",
+        "WP01.T05.DOD.20",
+        "WP01.T05.DOD.30",
+        "WP01.T05.INV.01",
+        "WP01.T05.INV.20",
+        "WP01.T05.INV.30",
+        "WP01.T05.QLT.01",
+        "WP01.T05.QLT.20",
+        "WP01.T05.QLT.30",
+        "WP01.T05.CMP.01",
+        "WP01.T05.CMP.20",
+        "WP01.T05.CMP.30",
+        "WP01.T05.SUC.01",
+        "WP01.T05.SUC.20",
+        "WP01.T05.SUC.30"
+      ],
+      "WP02": [
+        "WP02.DOD.01",
+        "WP02.DOD.02",
+        "WP02.DOD.10",
+        "WP02.INV.01",
+        "WP02.INV.02",
+        "WP02.INV.10",
+        "WP02.QLT.01",
+        "WP02.QLT.02",
+        "WP02.QLT.10",
+        "WP02.CMP.01",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.SUC.01",
+        "WP02.SUC.02",
+        "WP02.SUC.10",
+        "WP02.T01.CHK.01",
+        "WP02.T01.CHK.02",
+        "WP02.T01.CHK.03",
+        "WP02.T01.CHK.04",
+        "WP02.T01.CHK.05",
+        "WP02.T01.CHK.18",
+        "WP02.T01.DOD.01",
+        "WP02.T01.DOD.02",
+        "WP02.T01.DOD.18",
+        "WP02.T01.INV.01",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.QLT.01",
+        "WP02.T01.QLT.02",
+        "WP02.T01.QLT.18",
+        "WP02.T01.CMP.01",
+        "WP02.T01.CMP.02",
+        "WP02.T01.CMP.18",
+        "WP02.T01.SUC.01",
+        "WP02.T01.SUC.02",
+        "WP02.T01.SUC.18",
+        "WP02.T02.CHK.01",
+        "WP02.T02.CHK.02",
+        "WP02.T02.CHK.03",
+        "WP02.T02.CHK.04",
+        "WP02.T02.DOD.01",
+        "WP02.T02.DOD.02",
+        "WP02.T02.INV.01",
+        "WP02.T02.INV.02",
+        "WP02.T02.QLT.01",
+        "WP02.T02.QLT.02",
+        "WP02.T02.CMP.01",
+        "WP02.T02.CMP.02",
+        "WP02.T02.CMP.03",
+        "WP02.T02.SUC.01",
+        "WP02.T02.SUC.02",
+        "WP02.T03.CHK.01",
+        "WP02.T03.CHK.02",
+        "WP02.T03.CHK.03",
+        "WP02.T03.DOD.01",
+        "WP02.T03.DOD.02",
+        "WP02.T03.INV.01",
+        "WP02.T03.INV.02",
+        "WP02.T03.QLT.01",
+        "WP02.T03.QLT.02",
+        "WP02.T03.QLT.03",
+        "WP02.T03.CMP.01",
+        "WP02.T03.CMP.02",
+        "WP02.T03.SUC.01",
+        "WP02.T03.SUC.02",
+        "WP02.T04.CHK.01",
+        "WP02.T04.CHK.02",
+        "WP02.T04.CHK.03",
+        "WP02.T04.DOD.01",
+        "WP02.T04.DOD.02",
+        "WP02.T04.INV.01",
+        "WP02.T04.INV.02",
+        "WP02.T04.QLT.01",
+        "WP02.T04.QLT.02",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02",
+        "WP02.T04.SUC.01",
+        "WP02.T04.SUC.02"
+      ]
+    },
+    "affected": [
+      {
+        "id": "WP01.T03.CHK.01",
+        "text": "Uma falha não exibe Saved e não descarta o texto digitado.",
+        "contribution": "Scoped negative evidence: no false success; authorized pending text preserved; revocation removes protected text.",
+        "limit": "Does not cover every save failure.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.T03.INV.01",
+        "text": "Reconciliação visual nunca faz escrita não solicitada nem ignora a versão esperada.",
+        "contribution": "Same frozen body/key on retry; no additional append or automatic resend after reload.",
+        "limit": "Positive reconciliation of the lost intent remains open.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.T03.CMP.01",
+        "text": "Cobrir sucesso, validação, perda de conexão, timeout, conflito, read-only e navegação com edição pendente.",
+        "contribution": "Only lost usable reply delivery, pending retry and revoked access are selected.",
+        "limit": "Success, timeout, conflicts and all remaining variants retain their obligations.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.T03.DOD.01",
+        "text": "Salvamento, validação, cancelamento e conflito têm estados completos e recuperáveis nos componentes reais.",
+        "contribution": "Failure/refusal states in the real UI component are observed.",
+        "limit": "Complete recoverable recipient ACK states are not accepted.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.T03.SUC.01",
+        "text": "A pessoa consegue corrigir o problema e continuar sem redigitar sua contribuição.",
+        "contribution": "Text stays available during an authorized pending attempt.",
+        "limit": "Reload does not recover pending body/key; this criterion is not granted.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.T05.INV.01",
+        "text": "UI nunca inventa permissão, confirmação, resultado de IA ou sucesso de comando; chat não é fonte única dos dados da decisão.",
+        "contribution": "Current projection, stripped current marker and Boolean outcome cannot manufacture command success.",
+        "limit": "No published exact-receipt consumer exists in this candidate.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.T05.CMP.01",
+        "text": "Cobrir novo caso, caso existente, lacuna, análise em curso, cancelamento, falha, stale, escolha, aplicação parcial, reavaliação e acesso revogado.",
+        "contribution": "Revocation during an uncertain reply is exercised.",
+        "limit": "Other decision-workbench states are not requalified.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.T05.CHK.02",
+        "text": "Trocar permissões com análise antiga e confirmar ausência de vazamento na tela e nos detalhes.",
+        "contribution": "Protected text, controls and context are purged after the revoked retry.",
+        "limit": "Scoped corpus; not all permission transitions.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.INV.01",
+        "text": "Visibilidade de controles não substitui autorização; pesquisa e preferências nunca expõem dados fora do acesso existente.",
+        "contribution": "The real authorization boundary denies the revoked retry and protected state read.",
+        "limit": "Fixture identity boundary remains explicit.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.DOD.03",
+        "text": "Hoje e mesa de decisão consomem casos, IA, cenários, perguntas e recibos reais; entrada contextual e operação direta funcionam sem exigir um caso para tarefas simples.",
+        "contribution": "Missing real recipient receipt remains an integration dependency.",
+        "limit": "Not granted.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP01.CMP.02",
+        "text": "Hoje e mesa de decisão consomem casos, IA, cenários, perguntas e recibos reais; entrada contextual e operação direta funcionam sem exigir um caso para tarefas simples.",
+        "contribution": "Missing real recipient receipt remains an integration dependency.",
+        "limit": "Not granted.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP02.T04.CHK.01",
+        "text": "Reenviar a mesma intenção/correlação após uma resposta perdida: deve retornar a mesma referência e existir somente um Hot Topic; intenções diferentes não podem ser fundidas apenas porque têm o mesmo título.",
+        "contribution": "Obligation preserved: exact intention, not equal title, identifies Hot Topic retry.",
+        "limit": "No Hot Topic execution in this slice.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP02.T04.QLT.02",
+        "text": "Correlação identifica a intenção explícita; igualdade de nomes de pessoas ou registros não serve como identidade.",
+        "contribution": "Obligation preserved: names are not correlation identity.",
+        "limit": "No WP02 acceptance granted.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP02.T04.CMP.01",
+        "text": "Criação, reenvio, leitura, atualização e conclusão usam a mesma identidade canônica de ação.",
+        "contribution": "Canonical action identity obligation preserved.",
+        "limit": "No WP02 acceptance granted.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP02.T04.SUC.01",
+        "text": "Uma intenção reenviada produz uma única ação operacional e pode ser aberta no Hot Topics existente.",
+        "contribution": "Single operational action for retried intent obligation preserved.",
+        "limit": "No WP02 acceptance granted.",
+        "wholeCriterionGranted": false
+      },
+      {
+        "id": "WP02.DOD.02",
+        "text": "As portas C02/C03/C04/C06 executam comportamento de domínio verificável; a composição no app é entregue para prova real do WP10, sem ser declarada concluída por mocks.",
+        "contribution": "Real producer and WP10 composition obligations preserved.",
+        "limit": "Reply fixture cannot establish this DoD.",
+        "wholeCriterionGranted": false
+      }
+    ],
+    "contracts": [
+      {
+        "id": "C03",
+        "status": "RECIPIENT_POSITIVE_ACK_OPEN",
+        "obligation": "Persist exact intent/mutation receipt atomically; reauthorize identical retry; conflict for changed intent. Boolean and fresh projection do not satisfy it."
+      },
+      {
+        "id": "C06",
+        "status": "PRESERVED_NOT_ACCEPTED_GLOBALLY",
+        "obligation": "Reply/transport ACK is not scope confirmation or financial approval. Current authorization and source continuity remain mandatory; confirmation validity and case attachment retain separate proofs."
+      }
+    ]
+  },
+  "inheritedProof": {
+    "run": 43621603578,
+    "job": 132528304173,
+    "W": "639636280859f5f21f44813658d5d9a0c207fff0",
+    "S": "aebd6ee7bf597fd6cd742af347e60846f58e5cfc",
+    "status": "PARTIAL_RUN_5_PASS_2_FAIL",
+    "reusedObservations": [
+      "direct C08 snapshot: three equal-text replies, exact same-body/key replay, no new append after retry/reload",
+      "recipient current projection remains unconfirmed; original same-body/key retry and fresh read",
+      "first-cycle selection lost-response retry and reload"
+    ],
+    "use": "Reattached historical scoped observations only; not rerun and not reassigned to work-ack. UI product blob remains identical."
+  },
+  "boundaries": {
+    "fixture": "Real Collaboration HTTP, C03/C06/C08, source issuers and SQLite; fixture actor authentication and recipient leases; case question link seeded; answer attachment unmounted.",
+    "reload": "Fresh authorized reading with no automatic write. The current UI does not persist the unresolved reply key/body across reload and does not reconcile its exact ACK.",
+    "patch": "Owner proposal only; NOT_APPLIED, NOT_COMPILED, NOT_RUN until actual producer publication and hosted validation.",
+    "reload503": "The case holds b1 source references. Under b2 the same-session GET is 503; Chromium may reject the empty error document. A separately authorized recipient read returns current, not exact ACK.",
+    "transport": "Tests damage the real postcommit delivery (invalid JSON, removed current field, Boolean delivered value). The actual producer result and persisted Boolean are independently inspected.",
+    "globalAcceptance": false
+  },
+  "nextActions": [
+    {
+      "owner": "Collaboration",
+      "action": "Apply the prepared patch against the verified preimage, add exact-receipt witnesses, validate on GitHub Actions and publish its own SHA/tree, W/S and run/job receipts."
+    },
+    {
+      "owner": "S0",
+      "action": "Review/version the additive receipt contract and admit the producer increment by SHA. Assign the subsequent UI consumption and pending-intent recovery work explicitly."
+    },
+    {
+      "owner": "UI consumer after published contract",
+      "action": "Consume the real durable receipt and prove equal messages, lost response, unchanged body/key retry, reload recovery with fresh authorization, divergent intent and revocation on the composed candidate."
+    }
+  ],
+  "acceptance": {
+    "requestedFallbackDelivered": true,
+    "recipientPositiveAck": false,
+    "ownerPatchApplied": false,
+    "installedNativeProof": false,
+    "globalRelease": false,
+    "merged": false
+  },
+  "deliveryEnvelope": {
+    "meaning": "Subsequent branch commit adds only new evidence files under this task's authorized receipts prefix. Executed results remain attributed to W/S; no product execution on the evidence-only delivery commit is asserted.",
+    "expectedParentSha": "6efc22ad55ceb646026d92b80aadd6192ecd033a",
+    "addedEvidencePaths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-ack/HANDOFF.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-ack/run-02.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-ack/validation.json"
+    ],
+    "pathAuthority": "Explicit work-ack handoff writing scope; not a global campaign D/G8 acceptance."
+  },
+  "findings": [
+    {
+      "id": "ACK-PRODUCER-01",
+      "status": "OPEN_OWNER_DEPENDENCY",
+      "owner": "Collaboration",
+      "detail": "The active producer's persisted Boolean and current projection cannot identify the exact recipient mutation.",
+      "patch": "c03-recipient-receipt.NOT_APPLIED.patch"
+    },
+    {
+      "id": "ACK-RELOAD-01",
+      "status": "OPEN_DEPENDENCY_AND_UI_INTEGRATION",
+      "owner": "S0 / assigned UI consumer",
+      "detail": "Pending body/key exists only in the current UI closure. Reload does not recover the exact intent or acknowledge it."
+    },
+    {
+      "id": "ACK-TYPECHECK-01",
+      "status": "OPEN_OUTSIDE_SLICE",
+      "owner": "CLI host / WP07 test owners via S0",
+      "detail": "Nine diagnostics in unchanged files remain; no own test diagnostic remains."
+    },
+    {
+      "id": "GUARD-ACK-01",
+      "status": "REPORTED_FALSE_POSITIVE_NONBLOCKING",
+      "owner": "Guardrail maintenance via S0",
+      "rule": "test-timeout-raised",
+      "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-ack/recipient-boundary.test.ts",
+      "line": 74,
+      "sourceLine": "const blockedCase = await app.context.request.get(`${app.origin}/product`, { timeout: 5_000 })",
+      "ruleBlob": "f625a8ddcb51e4723141b2b06809db9b9bc57d3e",
+      "reason": "The rule matches one digit plus four or more digit/underscore characters; 5_000 has five characters but equals 5000 ms, below the advertised 10000 ms threshold. No deadline was increased.",
+      "requestedCorrection": "Guardrail owner should parse/normalize numeric separators before comparing the threshold.",
+      "ignoreAdded": false,
+      "approvalLabelAdded": false,
+      "ruleModified": false
+    }
+  ],
+  "checks": {
+    "counterproofs": {
+      "status": "PASS",
+      "run": 43625483916,
+      "record": "run-02.json"
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "status": "FAIL",
+      "exitCode": 2,
+      "totalDiagnostics": 9,
+      "ownDiagnostics": 0,
+      "externalDiagnostics": 9,
+      "diagnostics": [
+        "../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+        "../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+        "../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+        "../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+        "../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+        "test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+        "test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+        "test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+        "test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+      ],
+      "previousEquivalent": {
+        "run": 43622153636,
+        "job": 132529996818,
+        "diagnosticsExactlyEqual": true
+      }
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "PASS_WITH_WARNINGS",
+      "exitCode": 0,
+      "baseFetchExitCode": 0,
+      "rules": 78,
+      "changedPaths": 937,
+      "gateFindings": 0,
+      "warnings": 53,
+      "errors": 0,
+      "scope": "The W2-equivalent S2 checkout; not a later evidence-only delivery commit.",
+      "ownFinding": {
+        "id": "GUARD-ACK-01",
+        "status": "REPORTED_FALSE_POSITIVE_NONBLOCKING",
+        "owner": "Guardrail maintenance via S0",
+        "rule": "test-timeout-raised",
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-ack/recipient-boundary.test.ts",
+        "line": 74,
+        "sourceLine": "const blockedCase = await app.context.request.get(`${app.origin}/product`, { timeout: 5_000 })",
+        "ruleBlob": "f625a8ddcb51e4723141b2b06809db9b9bc57d3e",
+        "reason": "The rule matches one digit plus four or more digit/underscore characters; 5_000 has five characters but equals 5000 ms, below the advertised 10000 ms threshold. No deadline was increased.",
+        "requestedCorrection": "Guardrail owner should parse/normalize numeric separators before comparing the threshold.",
+        "ignoreAdded": false,
+        "approvalLabelAdded": false,
+        "ruleModified": false
+      },
+      "remainingWarnings": "The other 52 warning strings are identical to run01; outside this new test path. No approval/ignore was added."
+    },
+    "overallRun": "failure",
+    "historicalAttempt": "run-01.json"
+  },
+  "evidenceIndex": [
+    {
+      "path": "HANDOFF.md",
+      "sha256": "94c4dfb9a41e8971e73683fbeab3cab81ef50b315502c598ef563a5115a4ec12",
+      "blob": "c3a33303f007a9910b45c3eadf7588ed48e0d218",
+      "bytes": 10018
+    },
+    {
+      "path": "run-02.json",
+      "sha256": "a60fd0204c6a6e280e46584cdf53b20828e5a204e3056fee94085d64e20f4eb6",
+      "blob": "6fb95157d0366e87e257242ee2793b42360526d1",
+      "bytes": 10542
+    },
+    {
+      "path": "INPUTS.json",
+      "blob": "c4610866c148cbbce121b787c24656d908113b75",
+      "sourceCommit": "6efc22ad55ceb646026d92b80aadd6192ecd033a"
+    },
+    {
+      "path": "OWNER_REQUEST.md",
+      "blob": "2ffc1109b195757590ba554f1f5fcdb9867e8dee",
+      "sourceCommit": "6efc22ad55ceb646026d92b80aadd6192ecd033a"
+    },
+    {
+      "path": "README.md",
+      "blob": "b72c857a4f83a97736b06d7d31832edcbb8aebe3",
+      "sourceCommit": "6efc22ad55ceb646026d92b80aadd6192ecd033a"
+    },
+    {
+      "path": "c03-recipient-receipt.NOT_APPLIED.patch",
+      "blob": "4a49fc20064d8122e226e6ac939481b0156697a3",
+      "sourceCommit": "6efc22ad55ceb646026d92b80aadd6192ecd033a"
+    },
+    {
+      "path": "ci-request.01.json",
+      "blob": "b1cb18d98c40bf0eff05a20049bdcb95ed2874f5",
+      "sourceCommit": "6efc22ad55ceb646026d92b80aadd6192ecd033a"
+    },
+    {
+      "path": "owner-regression.ci-request.NOT_RUN.json",
+      "blob": "722f47190191a608b6e8a151578712edb37fbdb5",
+      "sourceCommit": "6efc22ad55ceb646026d92b80aadd6192ecd033a"
+    },
+    {
+      "path": "run-01.json",
+      "blob": "75b8f4a98703df4a03e2e64228e97e6e9afc1325",
+      "sourceCommit": "6efc22ad55ceb646026d92b80aadd6192ecd033a"
+    }
+  ],
+  "deliveryGuard": {
+    "statusAtEvidenceCreation": "PREPARED_NOT_RUN",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/ui-split/ui-work/guards.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "requestSha256": "2d3eb1be0b921a76359084bcd0674f133f15a17b710dba54946c44978914f6a8",
+    "existingTestBlob": "6b4d9caae7f355509282c24fadad86c32cd63ab5",
+    "externalClosure": "https://github.com/gustavomhss/Orchestra-SF/pull/54",
+    "scope": "After publishing this evidence-only commit, run the existing guards-only test through the canonical snapshot protocol. Its result is recorded in the PR closure, not by editing this receipt or replaying browser tests."
+  }
+}
