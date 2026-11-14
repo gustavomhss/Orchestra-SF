@@ -55,6 +55,7 @@ export function createSfDocumentHost(input: {
   }, documents, parser)
   const capability: DocumentEvidenceHost = { ...input, documents, parser, reader }
   return {
+    evidenceHost: capability,
     documents,
     reader,
     resolvePresentation: createSfDocumentPresentation({ ...input, documents, reader }),
