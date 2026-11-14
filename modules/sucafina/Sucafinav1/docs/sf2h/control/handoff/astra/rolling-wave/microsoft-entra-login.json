@@ -1,0 +1,47 @@
+{
+  "number": 49,
+  "id": "microsoft-entra-login",
+  "state": "BRANCH_PREPARED_SESSION_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "authorization": "Explicit user request to prepare Microsoft Entra code/login for Azure Sucafina MVP and Andre B2B guest; no tenant provisioning in this lane. Preserve entire original campaign acceptance.",
+  "branch": "microsoft-login",
+  "expected_head": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+  "base_branch": "sf2-stack",
+  "candidate": "C12",
+  "lease_epoch": "microsoft-login-browser49",
+  "consumer": "Integration47 / PR65; Azure account and provisioning separately owned by user-started session.",
+  "coordination": "S0 located current product sf2-stack/PR65, terminal42 and successor47. Read47 mission/current ACK and latest candidate, applicable AGENTS, pinned COMMON and identity owner handoff before editing. Publish ACK49 and identity/config/composition boundary contract for47. Repository handoff is coordination route, not proof of a live chat connection. Only49 source writer,47 sole target writer; preserve source work. No waiting for routine decisions or for tenant values to implement independent code.",
+  "existing": "runtime/entra-client.ts already uses jose, PKCE/nonce, JWT issuer/audience/tid/oid checks, Graph identity equality and group resolution. runtime/local-identity.ts already has encrypted private opaque sessions/state/callback/refresh/logout but restricts loopback. local-configuration.ts restricts http://localhost:4110. Reuse and harden this base, no second auth engine. Existing local operator remains loopback-only and is never cloud fallback.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+    "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+    "modules/sucafina/Sucafinav1/runtime/local-contract.ts (auth types only)",
+    "modules/sucafina/Sucafinav1/runtime/microsoft-*.ts (new narrow cloud composition/config)",
+    "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+    "modules/sucafina/Sucafinav1/test/microsoft-*.test.ts",
+    "modules/sucafina/Sucafinav1/test/microsoft-login/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/",
+    "docs/guides/sucafina-microsoft-login.md"
+  ],
+  "shared_paths": "Do not directly edit local-configuration/local.ts, src/identity.ts, host-context, CLI installation/router, runtime/local-store.ts, runtime/contract.ts, workflows or infra/azure. Supply complete minimal integration patches/pre-post manifests for47 and actual source owner. No conflicts with45 compiler,46 CurrentChoice,48 Reports or user Azure session.",
+  "requirements": [
+    "Functional Microsoft login, callback, secure server-side session and logout, wired into actual Sucafina paths through explicit owner-selected HTTPS composition. Pure standalone library without installation patch/composition is incomplete. Missing/invalid tenant/config/identity and unassigned roles fail closed; never anonymous/local-operator fallback.",
+    "Use immutable tenant-scoped resource-tenant identity: validated tid+guest oid, or oid within provably fixed single tenant. Never email/name/default guest role or hardcoded Andre privilege. Only assigned canonical product roles/per-surface grants. Preserve product role/financial policy. Prefer immutable assignment IDs; handle legacy group-name mapping ambiguity safely without silently widening permissions.",
+    "Authorization code + PKCE S256, browser-bound one-time state, nonce, strict signature/algorithm/issuer/audience/tid/oid/exp/iat. Reject wrong tenant/audience/signature/nonce, expired/forged/missing claims, replay, provider failures, unsafe returnTo and callback origins. Trust explicit origin, not arbitrary forwarded headers. Determine supported public/confidential client type from existing implementation and official docs, document server-only credential requirements without requesting values.",
+    "Private encrypted token storage only, opaque HttpOnly Secure SameSite scoped HTTPS cookies, bounded expiry/session rotation, logout CSRF protection and durable revocation. Refresh/logout races cannot revive session or output unauthorized identity. No token/code/credential in tools/agents/HTML/logs/artifacts/business snapshots/committed config. No access token/session cookie export to models.",
+    "Tests exercise actual implementation/private persistence with labeled synthetic OIDC/JWKS transport and real cryptographic test signatures, not disabled verification or permissive auth callback. Test callback/session/logout/role removal, unassigned user, cross-user data/privilege escalation and retained local compatibility. External tenant/B2B proof remains explicitly NOT_RUN until real operator configuration.",
+    "Read dependencies before editing and official Microsoft identity docs for selected deployment/client flow. Keep solution simple and reuse current jose/dependencies. No speculative new infrastructure, global services, auth platform or unrelated refactor."
+  ],
+  "validation": "Tests only GitHub Actions, existing authorized test:ci/request interface, surgical selection at end; dedup and reattach. No local product tests or heavy local checks, no epic. Package bun typecheck and check:guards --base origin/dev as required; coordinate45 for shared workflow. If public Protocol/Server HttpApi changes are truly required, packages/client bun run generate, never generated edits. Preserve failures and exact W/S/run/commands/results.",
+  "handoff": "Commit/publish on microsoft-login with GitHub MCP/CAS; one conventional-title draft PR targeting sf2-stack. Full implementation/usable composition, tests, criterion boundary, blobs, actual CI, complete shared patches, consumer47 ACK request, config variable names/redirect URI template/minimal required permissions for Azure owner, remaining live proof and terminal handoff. Do not invent tenant/client/oid IDs or roles. Final epic/GLOBAL_RELEASE stays S0.",
+  "limits": "No gh/git push/force/dev merge/deploy/Azure provisioning/app registrations/guest invites/permission or financial policy changes/engine edits/runtime restart/third-party messages. User handles Azure. Never read/print/copy credentials. No new Goal/supervisor or interrupted native worker resume.",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow",
+    "https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference",
+    "https://learn.microsoft.com/en-us/entra/external-id/what-is-b2b"
+  ]
+}
