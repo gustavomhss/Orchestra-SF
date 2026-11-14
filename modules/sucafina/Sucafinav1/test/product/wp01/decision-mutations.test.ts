@@ -27,7 +27,10 @@ const ok = (value: unknown = {}) => Response.json({ status: "ok", value })
 const frames = (page: Page) => page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
 async function fixture(body: string, respond: (request: Request) => Response | undefined | Promise<Response | undefined>, check: (page: Page) => Promise<void>, release?: () => void) {
   const html = `<!doctype html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`
-  const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: async (request) => await respond(request) ?? new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } }) })
+  const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: async (request) => {
+    if (new URL(request.url).pathname === "/favicon.ico") return new Response(null, { status: 204 })
+    return await respond(request) ?? new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } })
+  } })
   let context: BrowserContext | undefined
   let page: Page | undefined
   let failure: unknown
@@ -118,20 +121,29 @@ for (const status of [401, 403]) test(`decision edit ${status} scrubs its fields
 }, 30000)
 
 test("a delayed current-value read cannot restore an edit after access revocation", async () => {
-  let reads = 0
+  let currentUrl: string | undefined
   let release!: () => void
   let entered!: () => void
   const wait = new Promise<void>((resolve) => { release = resolve })
   const started = new Promise<void>((resolve) => { entered = resolve })
   await fixture(edit(), async (request) => {
     if (request.method === "POST") return Response.json({ status: "conflict" }, { status: 409 })
-    if (++reads > 1) { entered(); await wait; return new Response(`<!doctype html><html><body>${edit("Formerly authorized values", 2)}</body></html>`, { headers: { "Content-Type": "text/html" } }) }
+    if (request.method === "GET" && request.url === currentUrl && request.headers.get("sec-fetch-dest") === "empty") {
+      entered(); await wait
+      return new Response(`<!doctype html><html><body>${edit("Formerly authorized values", 2)}</body></html>`, { headers: { "Content-Type": "text/html" } })
+    }
   }, async (page) => {
-    await page.getByRole("button", { name: "Save decision", exact: true }).click()
+    currentUrl = page.url()
+    const [request] = await Promise.all([
+      page.waitForRequest((request) => request.method() === "GET" && request.url() === currentUrl && request.resourceType() === "fetch"),
+      page.getByRole("button", { name: "Save decision", exact: true }).click(),
+    ])
     await within(started, "conflict read entered")
-    const pending = page.waitForResponse((response) => response.request().method() === "GET")
     await page.evaluate(() => dispatchEvent(new CustomEvent("sf-access-revoked")))
-    release(); const response = await pending; expect(await within(response.finished(), "conflict read finished")).toBeNull(); await frames(page)
+    release()
+    const response = await within(request.response(), "exact conflict response received")
+    if (!response) throw new Error("The observed conflict read did not complete with a response")
+    expect(await within(response.finished(), "conflict read finished")).toBeNull(); await frames(page)
     expect(await page.locator("[data-context], input, [data-decision-conflict]").count()).toBe(0)
     expect(await page.locator("body").innerText()).not.toContain("Formerly authorized values")
   }, release)
