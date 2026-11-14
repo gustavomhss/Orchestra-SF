@@ -1,3 +1,5 @@
+export { createReviewCollaborationView } from "./collaboration-view.ts"
+
 import type { ReviewActionClosure, ReviewActionHandoff } from "./closure-action.ts"
 import type { HotTopic } from "../dashboard/hot-topics.ts"
 import type { PreservedReview } from "../contracts/context.ts"
