@@ -28,6 +28,6 @@ After publication, the UI owner can validate the returned request identity and e
 
 ## C03-HOST composition boundary
 
-The new browser fixture uses the actual shared Collaboration HTTP router, actual source issuers, UI admissions, C03/C06/C08 and SQLite. Its actor authenticator and recipient lease are explicit boundaries inherited from published Collaboration fixtures. It creates and reads a real authorized case, while question linkage is seeded test corpus. The final decision-answer attachment is deliberately unmounted and yields 404; that observation describes the fixture, not a newly discovered defect of the installed host.
+The new browser fixture uses the actual shared Collaboration HTTP router, actual source issuers, UI admissions, C03/C06/C08 and SQLite. Its actor authenticator and recipient lease are explicit boundaries inherited from published Collaboration fixtures. It creates and reads a real authorized case, while question linkage is seeded test corpus. The final decision-answer attachment is deliberately unmounted; its intended 404 assertion was not reached. This is a fixture boundary, not an observed 404 defect of the installed host. See c03-confirmation-timing.NOT_APPLIED.md.
 
 Composition must run the exact message selection and confirmed answer reuse through the installed case/question attachment mount with the distinct recipient's real session. This lease does not authorize host/source/provider changes or a replacement success handler. The prior C03-HOST finding remains open until that proof exists.
