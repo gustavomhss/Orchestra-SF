@@ -1,0 +1,32 @@
+{
+  "schema": "wp09-hosted-test-cases-v1",
+  "productSha": "b22873489b8937b0d830fbe259d32939317118e0",
+  "snapshotSha": "978ff40767cf87242e9f993527155f8b373b9300",
+  "runId": 43538319016,
+  "jobId": 132272638592,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538319016",
+  "conclusion": "success",
+  "counts": {
+    "passed": 36,
+    "failed": 0,
+    "expects": 141,
+    "files": 1
+  },
+  "durationSeconds": 0.152,
+  "request": {
+    "name": "wave6-request",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp09/export-matrix.test.ts"
+      ],
+      "env": {}
+    },
+    "content": "{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/wp09/export-matrix.test.ts\"],\"env\":{}}\n",
+    "sha256": "dc696f0bb18fc9fc283c9f6b8296bfaa56c3c11a0356342530085522f759e047"
+  },
+  "omniVerdict": "NOT_APPLICABLE",
+  "scope": "Only export-matrix.test.ts changed after W5; exact W5→W6 compare lists one modified test, no product source/config/fixture change."
+}
