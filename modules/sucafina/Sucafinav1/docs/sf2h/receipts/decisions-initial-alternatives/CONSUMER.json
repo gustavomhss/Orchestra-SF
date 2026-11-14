@@ -1,0 +1,251 @@
+{
+  "schema": "sf2h.mission20.consumer-state.v1",
+  "observed_commit": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+  "observed_tree": "72d2a3c443233017dec3820d1a6987c4934e39f6",
+  "previous_commit": "0d5d2e56448bf22ed3fbbf44d8d0e1a52cc3d4b7",
+  "delta": {
+    "commits": 1,
+    "paths": 40,
+    "critical_paths_changed": 1,
+    "purpose": "Published mission23 intake of closed C12 recovery and Finance18 outputs. Apply UI advanced; mission20 Alternatives/Edit/spec and HTTP mounting remain unconsumed.",
+    "changed_product_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "blob": "6ad51e47b22eca073a0a81731575c463d98673e4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+        "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13"
+      }
+    ]
+  },
+  "producer_compatibility": "Compatible published PR29 profile/manifest and Decisions host remain present. No current bootstrap failure is inferred from the historical run.",
+  "product_source": "69624adad312ef27f83310896e7c0b6005eec624",
+  "unit_source": "0fb6101c2804e8d8e2fa352ca5d09b554a7fd435",
+  "status": "BLOCKED_NOT_RUN",
+  "blocker": "The actual published consumer at d81dc320a82044009dd4c39f2e5d062ad46719a9 has no decision-alternatives module or HTTP mounting, still has the previous Edit/spec and lacks optional canonical coverage read. W2 69624adad312ef27f83310896e7c0b6005eec624 is not consumed. No private composition was substituted.",
+  "critical_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "observed_blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+      "mount_present": false,
+      "required_patch": "integration/http-mount.patch",
+      "patch_result_blob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "observed": "404",
+      "required_blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "observed_blob": "ebc7763548e3eaf476f36c17de72e1800f0fee2d",
+      "required_blob": "27bb8adbf3ca2fefce4bc8c756de7f12ce990baa"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "observed_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+      "optional_patch": "integration/coverage-read.patch",
+      "optional_patch_result_blob": "5a348c62d4e247db0f7ecaddaedc041177604d15"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "observed_blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+      "action": "Implementation preserved session19/PR43 Apply at the earlier pin; the integrator must now preserve this newer mission23/C12 Apply UI. No Apply source was edited by mission20.",
+      "previous_observed_blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "observed_blob": "2fa77a69a28ae399f30f4d0e7642c05e7f029077",
+      "required_blob": "a2515c40a71728299b0e9303168b6d822f2ba338"
+    }
+  ],
+  "intake_of_first_product_commit": {
+    "files": 17,
+    "equal": 0,
+    "absent": 15,
+    "different": 2,
+    "scope": "All 17 original output blobs were checked through MCP at d8ab1d3 (0 equal, 15 absent, 2 different). Neither intervening delta changes any of those paths. Six critical files were read again at d81dc320; the W2 comment-only Alternatives blob a731b36427ffbdbc30d19b3b7785be16e5c9747d remains absent with the entire module."
+  },
+  "remaining_consumers": [
+    {
+      "id": "D-INITIAL-ALTERNATIVES-ASSEMBLY",
+      "owner": "session14",
+      "required": "Consume exact source/test blobs and apply the three HTTP additions on the reconciled current HTTP blob."
+    },
+    {
+      "id": "D-REGISTERED-COVERAGE-READ",
+      "owner": "session14 / Decisions producer",
+      "required": "Review/compose optional canonical read if existing coverage must reopen without the current tab's retained receipt; do not invent coverageRef."
+    },
+    {
+      "id": "D-COVERAGE-RETRY-AFTER-CAS",
+      "owner": "Decisions producer with shared-host authority",
+      "required": "Current coverage host rejects historical case versions; old uncertain coverage remains frozen/conflicted or quarantined rather than rebased."
+    },
+    {
+      "id": "D-CONSUMER-CAS-REGRESSION",
+      "owner": "session14",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "blob": "e22020011f464a2cc7277d4fe0f9a999c5587d38",
+      "status": "Not run here: this existing consumer test is present in composed stack and absent in PR40 input. Do not change fixtures; test the combined Edit in the authorized composed selection."
+    },
+    {
+      "id": "D-NOMINAL-DECISIONS",
+      "owner": "session14 / S0 dispatcher",
+      "request": "nominal-request-not-dispatched.json",
+      "required": "Execute the four actual spec tests after published composition, inspect real UI actions and results; no acceptance from collection/source equality."
+    },
+    {
+      "id": "D-APP-E2E-TYPECHECK",
+      "owner": "session14 / authorized checks owner",
+      "status": "NOT_RUN",
+      "reason": "Existing WP11 check workflow covers Sucafina and root guards only; no workflow/config path is writable in mission20. E2E package typecheck needs an authorized existing/composed lane."
+    }
+  ],
+  "acceptance": {
+    "journey": false,
+    "canonical_numeric_oracles": false,
+    "financial_choice_or_approval": false,
+    "C12_Apply": false,
+    "provider_native_AM": false,
+    "full_WP11": false
+  },
+  "observation_history": [
+    {
+      "observed_commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+      "observed_tree": "b9223690f64415a936eb38ad6f8796b21a8a7966",
+      "previous_commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "delta": {
+        "commits": 2,
+        "paths": 65,
+        "critical_paths_changed": 0,
+        "purpose": "Diagnostics, executable mode restoration and composition receipts; no initial-alternatives intake."
+      },
+      "critical_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "observed_blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+          "mount_present": false,
+          "required_patch": "integration/http-mount.patch",
+          "patch_result_blob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+          "observed": "404",
+          "required_blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+          "observed_blob": "ebc7763548e3eaf476f36c17de72e1800f0fee2d",
+          "required_blob": "27bb8adbf3ca2fefce4bc8c756de7f12ce990baa"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+          "observed_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+          "optional_patch": "integration/coverage-read.patch",
+          "optional_patch_result_blob": "5a348c62d4e247db0f7ecaddaedc041177604d15"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "observed_blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+          "action": "Preserve session19/PR43 Apply; no change authorized or made by this mission."
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "observed_blob": "2fa77a69a28ae399f30f4d0e7642c05e7f029077",
+          "required_blob": "a2515c40a71728299b0e9303168b6d822f2ba338"
+        }
+      ],
+      "status": "BLOCKED_NOT_RUN"
+    },
+    {
+      "observed_commit": "0d5d2e56448bf22ed3fbbf44d8d0e1a52cc3d4b7",
+      "observed_tree": "5911cd631db7d2251bbc0bb45d62b4616996c31c",
+      "previous_commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+      "checked_at_utc": "2026-11-14T20:46:23Z",
+      "delta": {
+        "commits": 1,
+        "paths": 1,
+        "critical_paths_changed": 0,
+        "purpose": "Documentation-only acknowledgement of mission23 closed-output integration lease; no mission20 intake."
+      },
+      "critical_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "observed_blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+          "mount_present": false,
+          "required_patch": "integration/http-mount.patch",
+          "patch_result_blob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+          "observed": "404",
+          "required_blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+          "observed_blob": "ebc7763548e3eaf476f36c17de72e1800f0fee2d",
+          "required_blob": "27bb8adbf3ca2fefce4bc8c756de7f12ce990baa"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+          "observed_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+          "optional_patch": "integration/coverage-read.patch",
+          "optional_patch_result_blob": "5a348c62d4e247db0f7ecaddaedc041177604d15"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "observed_blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+          "action": "Preserve session19/PR43 Apply; no change authorized or made by this mission."
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "observed_blob": "2fa77a69a28ae399f30f4d0e7642c05e7f029077",
+          "required_blob": "a2515c40a71728299b0e9303168b6d822f2ba338"
+        }
+      ],
+      "status": "BLOCKED_NOT_RUN"
+    }
+  ],
+  "checked_at_utc": "2026-11-14T20:48:20Z",
+  "product_source_tree": "c16708b9054b9e097f65827fc0ae921da72962c9",
+  "contract_review": {
+    "status": "STATIC_ROUTE_CONTRACTS_UNCHANGED",
+    "method": "Read the published 0d5d2e5-to-d81dc320 delta and the six critical files via GitHub MCP; no tests or CI were run.",
+    "decision_promote": "No change to the decision-promote route, addAlternative request/receipt, mutations.ts or its direct scenario persistence. Existing {caseRef,title,scenario,coverageRef} input and {caseRef,resultRef} success remain.",
+    "decision_coverage": "No change to decision-coverage route, human action, baseline registration request, expectedVersion or {coverageRef,version} success.",
+    "decision_controls": "No change to decision-controls reader or JSON shape; optional forecast.coverage remains absent. Its scalar readHistoricalScenario(request,context) signature and StoredDecisionResult output are unchanged.",
+    "changed_dependencies": [
+      "result-store.ts uses a compact internal idempotency receipt and verifies the canonical StoredDecisionResult before returning it; legacy full receipts remain readable. Public read/write result types remain unchanged.",
+      "readHistoricalScenarios gains optional scalarConcurrency defaulting to serial; sensitivity-units chooses parallel for its existing pairs. This does not change the scalar reader used by decision-controls.",
+      "Procurement and PreparedExecution add receipt-only recovery; normal apply remains the default. decision-apply.ts adds Recover recorded receipt for Procurement and routes those actions to Procurement."
+    ],
+    "http_patch": "The HTTP blob remains the exact 81b7cd4ef5a73670642df42a2f891b9d95420dac preimage. No patch change is needed solely for this delta.",
+    "acceptance_transfer": false
+  },
+  "closure": {
+    "pin": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+    "reason": "Closed this timestamped read-only observation after the additional product intake. Later consumer advances require a new reconciliation; no future head is inferred.",
+    "local_file_updated": "CONSUMER.json",
+    "remote_mutations": 0,
+    "test_runs": 0,
+    "ci_dispatches": 0
+  }
+}

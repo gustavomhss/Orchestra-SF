@@ -1,0 +1,31 @@
+{
+  "schema": "sf-mission20-http-assembly-v1",
+  "consumer": "session14",
+  "base": {
+    "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+    "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+    "blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac"
+  },
+  "patch": "http-mount.patch",
+  "patch_sha256": "5a78be112c6951cf3926a32862d3c55331e0bfcb75245a505651923604467f6b",
+  "result_blob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+  "applied_to_shared_file": false,
+  "edits": [
+    {
+      "find": "import { decisionEditForm, decisionEditScript } from \"../ui/decision-edit.ts\"",
+      "replace": "import { decisionEditForm, decisionEditScript } from \"../ui/decision-edit.ts\"\nimport { decisionAlternativesForm, decisionAlternativesScript } from \"../ui/decision-alternatives.ts\"",
+      "required_occurrences": 1
+    },
+    {
+      "find": "decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value)",
+      "replace": "decisionEditForm(caseOutput.value) + decisionAlternativesForm(caseOutput.value) + decisionChoiceForm(caseOutput.value)",
+      "required_occurrences": 1
+    },
+    {
+      "find": "${decisionEditScript}${decisionChoiceScript}",
+      "replace": "${decisionEditScript}${decisionAlternativesScript}${decisionChoiceScript}",
+      "required_occurrences": 1
+    }
+  ],
+  "rule": "Reconcile newer consumer source before applying. Add only these three fragments; preserve every Apply/Choice/Work/Sourcing/Analysis consumer and current authorization/CSP handling. Never replace the whole HTTP file from an older branch."
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "sf2-intake-required-reading-v1",
+  "mission": 23,
+  "increment": 3,
+  "repository": "microsoft/playwright",
+  "commit": "b4d016aadc5cbd2b898a284307975fe73e05483d",
+  "documents": [
+    {
+      "path": "docs/src/best-practices-js.md",
+      "blob": "02e1e4db6baea68e725040646396e09a29584420",
+      "read": "complete"
+    },
+    {
+      "path": "docs/src/actionability.md",
+      "blob": "848df596771406a7c4d7b2e6120f95b01330a756",
+      "read": "complete"
+    },
+    {
+      "path": "docs/src/test-assertions-js.md",
+      "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+      "read": "complete"
+    }
+  ],
+  "app_agents": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+  "e2e_agents": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+  "discovery": "No packages/AGENTS; recursive e2e subtree has no additional applicable AGENTS in sucafina/ or decisions-support/.",
+  "delegated_documents": [
+    {
+      "path": "docs/src/locators.md",
+      "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+      "lines": 1786,
+      "read": "complete by read-only support"
+    },
+    {
+      "path": "docs/src/network.md",
+      "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+      "lines": 814,
+      "read": "complete by read-only support"
+    },
+    {
+      "path": "docs/src/browser-contexts.md",
+      "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+      "lines": 182,
+      "read": "complete by read-only support"
+    }
+  ],
+  "applied_constraints": [
+    "Actual user-visible UI actions and isolated fixtures preserved",
+    "Unique scoped role/label/test-contract locators",
+    "Waiters installed before actions; web-first assertions",
+    "No sleeps, automatic mutation retries, fake response success or direct test POST introduced",
+    "Original three scenarios, assertions and budgets unchanged",
+    "CDP response-loss semantics not proven by these guides; nominal source journey remains NOT_RUN"
+  ],
+  "no_execution": true,
+  "source_green_transferred": false
+}
