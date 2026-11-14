@@ -8,9 +8,9 @@ import { SessionV2 } from "@orchestra/core/session"
 import { SkillV2 } from "@orchestra/core/skill"
 import { Effect } from "effect"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
-import { registerSfResidentAgents, validSfSelection } from "../../../product/host-binding/resident-agents.ts"
+import { validSfSelection } from "../../../product/host-binding/resident-agents.ts"
 import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
-import { residentNativeLayer } from "./resident-native-fixture.ts"
+import { createResidentNativeFixture } from "./resident-native-fixture.ts"
 
 const root = path.resolve(import.meta.dir, "../../../product/ai")
 
@@ -27,6 +27,7 @@ test("five profiles register and all eighteen distributed skills load into disti
   expect(portfolio.profile.outputTypes).toContain("AlternativeDraft")
   expect(portfolio.skills.find((skill) => skill.id === "sf-compor-portfolio")!.outputSchemaRefs).toContain("AlternativeDraft")
 
+  const fixture = createResidentNativeFixture(bundle)
   const location = Location.Ref.make({ directory: AbsolutePath.make(root) })
   const receipts = await Effect.gen(function* () {
     const session = yield* SessionV2.Service
@@ -34,7 +35,7 @@ test("five profiles register and all eighteen distributed skills load into disti
     return yield* Effect.gen(function* () {
       const agents = yield* AgentV2.Service
       const skills = yield* SkillV2.Service
-      const capability = yield* registerSfResidentAgents({ agents, skills, selected: bundle.selected, source: bundle.source })
+      const capability = fixture.capabilityFor(skills)
       yield* Effect.forEach(bundle.selected, (selection) => Effect.gen(function* () {
         const registered = yield* agents.get(AgentV2.ID.make(selection.profile.id))
         expect(registered?.engine).toBe("orchestra")
@@ -71,7 +72,7 @@ test("five profiles register and all eighteen distributed skills load into disti
         return receipt
       }))
     }).pipe(Effect.provide(locations.get(location)))
-  }).pipe(Effect.scoped, Effect.provide(residentNativeLayer), Effect.runPromise)
+  }).pipe(Effect.scoped, Effect.provide(fixture.layer), Effect.runPromise)
   expect(receipts).toHaveLength(18)
   expect(new Set(receipts.map((receipt) => receipt.nativeSessionId)).size).toBe(18)
   expect(new Set(receipts.map((receipt) => receipt.loadedMessageId)).size).toBe(18)

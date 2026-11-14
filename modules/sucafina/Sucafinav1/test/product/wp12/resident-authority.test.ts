@@ -12,7 +12,7 @@ import { Effect, Schema } from "effect"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { registerSfResidentAgents, validSfSelection } from "../../../product/host-binding/resident-agents.ts"
 import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
-import { residentNativeLayer } from "./resident-native-fixture.ts"
+import { createResidentNativeFixture, residentNativeLayer } from "./resident-native-fixture.ts"
 
 const root = path.resolve(import.meta.dir, "../../../product/ai")
 
@@ -29,20 +29,21 @@ test("native loading keeps the reserved source and rejects changed bytes or gran
     const selected = bundle.selected[0]!
     const skill = selected.skills[0]!
     const location = Location.Ref.make({ directory: AbsolutePath.make(source) })
+    const fixture = createResidentNativeFixture(bundle, (skills) => Effect.gen(function* () {
+      yield* skills.transform((draft) => draft.source(
+        Schema.decodeUnknownSync(SkillV2.DirectorySource)({ type: "directory", path: untrusted }), { first: true },
+      ))
+      expect((yield* skills.get(skill.id))?.content).toContain("untrusted replacement")
+    }))
 
     await Effect.gen(function* () {
       const session = yield* SessionV2.Service
       const locations = yield* LocationServiceMap.Service
       yield* Effect.gen(function* () {
-        const agents = yield* AgentV2.Service
         const skills = yield* SkillV2.Service
-        yield* skills.transform((draft) => draft.source(
-          Schema.decodeUnknownSync(SkillV2.DirectorySource)({ type: "directory", path: untrusted }), { first: true },
-        ))
-        expect((yield* skills.get(skill.id))?.content).toContain("untrusted replacement")
-        const capability = yield* registerSfResidentAgents({ agents, skills, selected: bundle.selected, source: bundle.source })
+        const capability = fixture.capabilityFor(skills)
         const registered = yield* skills.get(skill.id)
-        expect(registered?.location).toBe(path.join(source, "skills", skill.id, "SKILL.md"))
+        expect(registered?.location).toBe(AbsolutePath.make(path.join(source, "skills", skill.id, "SKILL.md")))
         expect(registered?.content).not.toContain("untrusted replacement")
         const created = yield* session.create({ location, agent: AgentV2.ID.make(selected.profile.id) })
         const receipt = yield* loadSfSkill({ session, skills, sourceCapability: capability, selected,
@@ -72,7 +73,7 @@ test("native loading keeps the reserved source and rejects changed bytes or gran
         if (changed._tag === "Failure") expect(changed.failure).toMatchObject({ code: "invalid-skill", reason: "skill-digest-mismatch" })
         expect(yield* session.messages({ sessionID: created.id })).toEqual(messages)
       }).pipe(Effect.provide(locations.get(location)))
-    }).pipe(Effect.scoped, Effect.provide(residentNativeLayer), Effect.runPromise)
+    }).pipe(Effect.scoped, Effect.provide(fixture.layer), Effect.runPromise)
   } finally {
     await rm(directory, { recursive: true, force: true })
   }

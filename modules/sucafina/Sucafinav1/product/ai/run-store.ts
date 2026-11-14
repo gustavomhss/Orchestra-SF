@@ -52,15 +52,17 @@ export function createSfRunStore(input: {
     if (checked.status !== "ok") return checked
     if (digestSfValue(found.value) !== recordDigest) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
+    if (digestSfValue(found.value) !== recordDigest) return { status: "denied", reason: "run-input-changed-during-authorization" }
     return { status: "ok", value: found.value }
   }
 
   async function mutate(record: SfNativeRunRecord, expectedVersion: number | null, context: TrustedDomainContext, output?: ContributionEnvelope, alternative?: AlternativeCapabilityProvenance): Promise<PortResult<SfNativeRunRecord>> {
-    const request = input.requestFor(context)
-    if (!request || !await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
-    if (!record.runRef || !record.principalRef || !Number.isSafeInteger(record.version) || record.version !== (expectedVersion === null ? 1 : expectedVersion + 1) || record.principalRef !== context.binding.principalRef || record.policyVersion !== context.binding.policyVersion || record.accessRevision !== context.binding.accessRevision || (context.kind === "native" && (context.binding.runId !== record.runRef || context.binding.caseId !== record.caseRef.id || context.binding.caseIncarnation !== record.caseRef.incarnation || (record.native && context.binding.nativeSessionId !== record.native.sessionID)))) return { status: "denied", reason: "invalid-run-identity" }
     const mutation = alternative ? { record, output, alternative } : { record, output }
     const commandDigest = digestSfValue(mutation)
+    const request = input.requestFor(context)
+    if (!request || !await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
+    if (digestSfValue(mutation) !== commandDigest) return { status: "denied", reason: "run-input-changed-during-authorization" }
+    if (!record.runRef || !record.principalRef || !Number.isSafeInteger(record.version) || record.version !== (expectedVersion === null ? 1 : expectedVersion + 1) || record.principalRef !== context.binding.principalRef || record.policyVersion !== context.binding.policyVersion || record.accessRevision !== context.binding.accessRevision || (context.kind === "native" && (context.binding.runId !== record.runRef || context.binding.caseId !== record.caseRef.id || context.binding.caseIncarnation !== record.caseRef.incarnation || (record.native && context.binding.nativeSessionId !== record.native.sessionID)))) return { status: "denied", reason: "invalid-run-identity" }
     const terminal = record.state === "stale" || record.state === "cancelled"
     if (terminal && alternative) return { status: "unavailable", reason: "alternative-capture-unavailable" }
     if (!terminal && invalidRequiredNamespaces) return { status: "unavailable", reason: "invalid-run-source-namespaces" }
@@ -132,6 +134,7 @@ export function createSfRunStore(input: {
     if (checkedAgain && checkedAgain.status !== "ok") return checkedAgain
     if (digestSfValue(mutation) !== commandDigest || digestSfValue(current.value) !== digestSfValue(record)) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
+    if (digestSfValue(mutation) !== commandDigest || digestSfValue(current.value) !== digestSfValue(record)) return { status: "denied", reason: "run-input-changed-during-authorization" }
     return { status: "ok", value: current.value }
   }
 

@@ -30,6 +30,7 @@
       "paths": ["modules/sucafina/Sucafinav1/product/ai/run-store.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
       "change": "Pin mutation inputs before asynchronous preflight and use the same digest for C08 command identity. Reject a verifier that mutates run, output or captured alternative; preserve the existing snapshot immutability check. Validate read/egress values against the same immutable inputs.",
       "regressions": ["Preflight cannot rewrite the stored run or an uncommitted admission.", "Commit verifier cannot replace the output after its provenance/schema validation.", "A real SQLite/C08 cancellation committed during publication preflight wins the version race; no contribution is stored and replay cannot publish the cancelled run."],
+      "ci_followup": {"run_id": 43580201805, "job_id": 132403088780, "candidate_sha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f", "finding": "Cancellation and publication both target the run:run:4 idempotency key. C08 legitimately reports conflict/idempotency-content-changed before checking storage versions. W3 fixes the exact expected reason, retaining the strict conflict status and durable cancelled/no-output/late-failure assertions. The W2 assertion failure did not reach those subsequent assertions; W3 must run them."},
       "validation": "NOT_RUN_ON_THIS_CANDIDATE",
       "limit": "Uses real C08 and SQLite with injected authorization/verification callbacks. It does not claim native provider execution."
     },
@@ -45,6 +46,13 @@
       "regressions": ["The existing orchestration harness records failure settlement for a bad digest and unavailable/needs-input settlement from the publication writer while denied/conflict trigger neither.", "Real SQLite/C08 refuses late failure after cancellation and refuses late failure or unavailable settlement after ready publication, preserving the original output."],
       "validation": "NOT_RUN_ON_THIS_CANDIDATE",
       "limit": "The orchestration harness is explicitly injected. Durable terminal-state checks use real C08/SQLite; neither claims provider execution."
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/run-store.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
+      "change": "Pin run/output/alternative mutation inputs on entry, before requestFor and the first asynchronous authority check. Reject caller changes made while authorization is pending, retaining all existing preflight and commit digest guards. Recheck immutable inputs after the final authorization await in both read and mutate before returning their values.",
+      "regressions": ["A real C08/SQLite publication pauses at mutation authorization after run/output matching. The caller replaces actualModel and recalculates the output digest. Publication is denied and neither the running run nor the output namespace is changed.", "A preflight retains a real C08 read result and changes its objective during the final authorization wait. The reader returns denied and the persisted objective/version remain original."],
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE",
+      "limit": "The authority callback supplies a controlled wait; this exercises the real durable store and does not claim native provider execution."
     }
   ],
   "consumer_review": {
@@ -61,13 +69,14 @@
       "source_pin": "5866bcb2ed610f80138aaabc261acac4acf709cd",
       "source_path": "apps/cli/src/sucafina-product/host-context.ts",
       "functions": ["withRunContext", "createSfRunStore preflight", "createSfRunStore revalidateForCommit"],
-      "finding": "The active host scopes withRunContext to baseRequest.caseRef. Its commit validator permits a special terminal branch only for cancelled; stale still requires the previously captured source fences. createSfRunStore deliberately skips ordinary source preflight for stale transitions. When a source changes during inference, markStale or preserveStale reaches the old-fence check and cannot commit the terminal state. A case-version change can additionally fail the exact-case scope before the terminal callback runs.",
-      "required_delta": "Provide a host-owned fresh-authority terminal path which checks the current principal and case incarnation/participant membership, accepts only legal forward case versions and the exact prior run/session/receipt, and can atomically mark stale without pretending the original inputs are current. Historical output retention additionally requires current source access; it must not authorize a fresh domain effect or reuse an expired native grant. Keep normal publication on the exact current-source fence.",
+      "finding": "The active host scopes withRunContext to baseRequest.caseRef. Its commit validator permits a special terminal branch only for cancelled; stale still requires the previously captured source fences. createSfRunStore deliberately skips ordinary source preflight for stale transitions. When a source changes during inference, markStale or preserveStale reaches the old-fence check and cannot commit the terminal state. A case-version change can additionally fail the exact-case scope before the terminal callback runs. Source preflight returning unavailable/needs-input also blocks host.settle because store.read and the transition repeat that preflight. W2/W3 settle final publication outcomes only when the existing host can authorize them; source-unavailable runs can therefore remain running pending this host-owned terminal path.",
+      "required_delta": "Provide a host-owned fresh-authority terminal path which checks the current principal and case incarnation/participant membership, accepts only legal forward case versions and the exact prior run/session/receipt, and can atomically settle stale/unavailable/needs-input without pretending the original inputs are current. Historical output retention additionally requires current source access; it must not authorize a fresh domain effect or reuse an expired native grant. Keep normal publication on the exact current-source fence. Do not bypass source or ACL guards in the ordinary store to conceal terminal-path unavailability.",
       "required_proof": [
         "Real host admission and native wait; change a material Planner source; old result does not become current and the stored run becomes stale.",
         "Advance the case version during inference; retain original caseRef and output provenance only when current access permits it.",
         "Revoke source/case access before terminal handling; no restricted result is returned or newly made readable.",
-        "Reopen storage; stale progress is available to a freshly authenticated permitted reader; the old execution ticket cannot resume."
+        "Reopen storage; stale progress is available to a freshly authenticated permitted reader; the old execution ticket cannot resume.",
+        "A required source becomes unavailable or requires input after native collection; persist the explicit terminal reason under fresh case/principal authority without storing an unverified output or returning source data."
       ],
       "criterion_ids": ["WP12.T04.CHK.01", "WP12.T04.CHK.10", "WP12.T04.DOD.10", "WP12.T04.CMP.01", "WP12.T04.CMP.10"],
       "proof_status": "NOT_RUN"
