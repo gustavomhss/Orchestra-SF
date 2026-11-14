@@ -1,0 +1,293 @@
+{
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 132552127580,
+      "run_id": 43629303473,
+      "workflow_name": "test-ci",
+      "head_branch": "ci-run-linux-astra-wp10-d4fb072f-f4259ab0-01",
+      "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43629303473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVsSYps8AAAAe3Lj0XA",
+      "head_sha": "84432d8ab3a5f1619eb2e96652290434d2bb0a2e",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132552127580",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629303473/job/132552127580",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-14T18:55:53Z",
+      "started_at": "2026-11-14T18:55:55Z",
+      "completed_at": "2026-11-14T18:58:00Z",
+      "name": "test (ubuntu-24.04)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T18:55:55Z",
+          "completed_at": "2026-11-14T18:55:58Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T18:55:58Z",
+          "completed_at": "2026-11-14T18:56:06Z"
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3,
+          "started_at": "2026-11-14T18:56:06Z",
+          "completed_at": "2026-11-14T18:56:06Z"
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-14T18:56:06Z",
+          "completed_at": "2026-11-14T18:56:06Z"
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-14T18:56:06Z",
+          "completed_at": "2026-11-14T18:56:10Z"
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-14T18:56:10Z",
+          "completed_at": "2026-11-14T18:56:10Z"
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-14T18:56:10Z",
+          "completed_at": "2026-11-14T18:56:10Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-14T18:56:10Z",
+          "completed_at": "2026-11-14T18:56:56Z"
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-14T18:56:56Z",
+          "completed_at": "2026-11-14T18:56:57Z"
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-14T18:56:57Z",
+          "completed_at": "2026-11-14T18:56:57Z"
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-14T18:56:57Z",
+          "completed_at": "2026-11-14T18:56:57Z"
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-14T18:56:57Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:44Z"
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-14T18:57:44Z",
+          "completed_at": "2026-11-14T18:57:44Z"
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-14T18:57:44Z",
+          "completed_at": "2026-11-14T18:57:44Z"
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20,
+          "started_at": "2026-11-14T18:57:44Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132552127580",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000058825,
+      "runner_name": "GitHub Actions 1000058825",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 132552703448,
+      "run_id": 43629303473,
+      "workflow_name": "test-ci",
+      "head_branch": "ci-run-linux-astra-wp10-d4fb072f-f4259ab0-01",
+      "run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43629303473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVsSYps8AAAAe3MG92A",
+      "head_sha": "84432d8ab3a5f1619eb2e96652290434d2bb0a2e",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132552703448",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629303473/job/132552703448",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-14T18:58:00Z",
+      "started_at": "2026-11-14T18:58:02Z",
+      "completed_at": "2026-11-14T18:58:05Z",
+      "name": "cleanup",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T18:58:02Z",
+          "completed_at": "2026-11-14T18:58:03Z"
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T18:58:03Z",
+          "completed_at": "2026-11-14T18:58:03Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-14T18:58:03Z",
+          "completed_at": "2026-11-14T18:58:04Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-runs/132552703448",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000058828,
+      "runner_name": "GitHub Actions 1000058828",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -1,0 +1,1089 @@
+{
+  "schema": "wp10-continuation-terminal-consolidation-v1",
+  "observedAt": "2026-11-14 19:07:20 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp10",
+  "pr": 29,
+  "base": "sf2-stack",
+  "state": "DRAFT_HOLD",
+  "immutableInputs": {
+    "reviewFixes": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+    "pack": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "criteria": 171,
+    "tasks": 7,
+    "obligations": 80,
+    "read": "Full WP10.pack.json reconciled by root plus three delegated read-only reviews; all applicable AGENTS and current workflow/validators read."
+  },
+  "reviews": {
+    "finance": {
+      "pr": 50,
+      "sha": "7155f90a6492597a3dd79cfcfda9330fef8be2a2",
+      "candidate": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+    },
+    "contracts": {
+      "pr": 51,
+      "sha": "fa520193f5df9d6585d5f4c40d071215efb42923"
+    }
+  },
+  "contextReplacement": {
+    "authorization": "User explicitly requested continuation in a new session, preserving this branch and PR. No second product branch or PR.",
+    "liveWriter": "No proven active competing writer observed. Git silence and terminal CI do not establish prior-session termination. Publish with expected_sha compare-and-swap and stop to reconcile any mismatch.",
+    "remoteChannel": "GitHub MCP only"
+  },
+  "commits": [
+    {
+      "label": "W27",
+      "sha": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "tree": "6b889a436fafe019580801edba3015d90fa75dfd",
+      "scope": "Inherited state"
+    },
+    {
+      "label": "W28",
+      "sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "tree": "232c69db4eed34e913f125bb787b926971d6d031",
+      "parent": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "scope": "Exact PR59 two-file own runtime intake, three own tests, append-only receipts"
+    },
+    {
+      "label": "W29",
+      "sha": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+      "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219",
+      "parent": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "scope": "Only two own new tests plus new receipts; runtime and C09 unchanged"
+    },
+    {
+      "label": "W30",
+      "sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+      "tree": "8f2cd84288df2a9d70402219df871765fe1890ca",
+      "parent": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+      "scope": "Only forecast test locator/native timeouts/diagnostics plus new receipts; all17 assertions and30s outer budget preserved"
+    }
+  ],
+  "delivery": {
+    "identity": "The commit containing this file",
+    "candidateSha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+    "changeScope": "Append-only new WP10 receipt files (.json/.md/.txt); no candidate source/test or existing receipt edits",
+    "check": "Existing astra-wp10-check delivery mode; candidateSha=W30, productSha=this delivery commit, devSha observed immediately before dispatch",
+    "terminalLocation": "PR29 body records exact delivery commit, check snapshot/run/job/artifact and actual terminal after this append-only commit. No anticipatory result is asserted here.",
+    "isFinalD": false
+  },
+  "deltas": [
+    {
+      "id": "FIN-IND-001",
+      "origin": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
+      "currentBlob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+      "action": "preserve supplied verifyScenarioOperations; no reimplementation",
+      "evidence": "A27 analysis-services cases passed with actual authority/readers and explicit fixture analysis producer/verifier; new real canonical C09 case read supplies a current composition recheck. Full real Planner forecast preparation is not established by those analysis-service fixtures.",
+      "status": "STATIC_FIX_PRESERVED_PARTIAL_FUNCTIONAL_RECHECK",
+      "functionalStatus": "A27 fixture-bounded analysis services passed; C28 actual canonical cases.read passed. Full real Planner forecast preparation not established."
+    },
+    {
+      "id": "FIN-IND-002",
+      "reviewedProducerBlob": "3cff741ce7dd96b7fdec8ac803e3b27c6170a463",
+      "reviewedContract": "{host,cases}",
+      "currentProducerBlob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "currentContract": "{host,state,authorizeCase,authorizeEvidence}",
+      "callerBlob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "compositionOrigin": "d02c64430d459d183eeb9e467e1c35d9a6b958f8",
+      "originProducerCommit": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "validationComposition": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "currentProducerInput": "46c904ead4e9b363422f6739258e492913ae6e2e",
+      "action": "do not add obsolete cases property; prove installed production reader/router/C17 without a permissive reader",
+      "functionalStatus": "C28 two real canonical C09→BCS→C17 tests PASS; entire C28 remains failure 8/1.",
+      "test": "test/product/wp10/atlas-business/case-event-continuity.test.ts",
+      "status": "CURRENT_CONTRACT_RECONCILED_SCOPED_FUNCTIONAL_PASS",
+      "evidence": {
+        "run": 43627315630,
+        "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+        "S": "8dedb1fa71a0805505e50eda8c0a038de79276a8",
+        "job": 132546009522,
+        "testBlob": "3cab95503375cd8c3ed4ea473a2443099a046379",
+        "sameTestAndRuntimeThrough": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7"
+      },
+      "limits": [
+        "Authorized synthetic ledger payload, real canonical reader/storage/outbox/resolver/Atlas/scanner.",
+        "Driver reopen is not process restart, full recall or UI.",
+        "No dedicated ancestry-cycle proof added. Existing reader/ancestry checks remain unchanged.",
+        "Installed foreign C17 between-observations header finding remains open."
+      ]
+    },
+    {
+      "id": "FIN-IND-003",
+      "origin": "d41ea01b8d9aa068301c1643c1ec3dc088900533",
+      "currentProviderBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "existingTestBlob": "533faeeb846987f99c67cbc69e86eb80f67054fc",
+      "earlierRun": 43544861337,
+      "earlierJob": 132293688965,
+      "earlierW": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "earlierS": "d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5",
+      "action": "preserve prefix and rerun existing five-case authority-composition file after provider migration/selection-guard changes",
+      "limitation": "Negative private-campaign grant refusal does not establish full successful campaign/reopen journey.",
+      "status": "EXISTING_IMPLEMENTATION_PRESERVED_CURRENT_SCOPE_PASS",
+      "functionalStatus": "C28 existing five-case authority-composition file PASS, whole C28 failure8/1.",
+      "limits": [
+        "Campaign-prefix negative wrong-grant check is not full successful campaign/reopen journey."
+      ]
+    },
+    {
+      "id": "CR-C11-001",
+      "origin": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "blob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+      "run": 43604032487,
+      "job": 132474686748,
+      "W": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "S": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+      "proof": "Four analysis-lifecycle-context cases passed. Wrapper, fixture, test, analysis-run-context, run-store and state-provider blobs match current W27 exactly.",
+      "action": "no code change and no redundant rerun; whole historical run remains failure (188 pass / 11 fail).",
+      "status": "EXISTING_IMPLEMENTATION_AND_VALID_BLOB_SCOPED_EVIDENCE_RETAINED",
+      "functionalStatus": "Four A21 cases PASS on unchanged six-blob slice. No rerun. Whole A21 remains failure188/11."
+    },
+    {
+      "id": "FIN-IND-004",
+      "owner": "astra-wp12",
+      "ownerSha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "currentAndOwnerBlob": "973a2f09b394426364c514b923ecdc8e10ffb184",
+      "compositionOrigin": "d02c64430d459d183eeb9e467e1c35d9a6b958f8",
+      "composedInput": "516f1d15f76e5e340609bd4a4b905e3a5f877cab",
+      "action": "preserve byte-identical UI; add own consumer DOM proof with existing WP01 browser lifecycle",
+      "scope": "Real renderer, script, browser and resident catalog; case/HTTP are declared UI fixtures. No native/financial/AM05 acceptance.",
+      "status": "OWNER_DELIVERY_RECONCILED_SUBMIT_FLOW_OBSERVED_UI_GATE_FAIL",
+      "functionalStatus": "U30 actual positive click reaches prepare/start/read/output and ready result; cancel remains visible and assertion fails. Negative keyboard409 scenario PASS. Whole U30 FAIL3/1.",
+      "currentTestBlob": "b312f2dda7029b79c7420af91d52ca6fec1b098d",
+      "remainingFinding": "WP10-U30-CANCEL-VISIBILITY",
+      "limits": [
+        "Whole run remains FAIL; ready scenario is not promoted to PASS.",
+        "UI server uses an explicit prepare/analysis fixture; this proves the real DOM/controller path and declared request contract, not execution of a live analysis agent.",
+        "Positive common assertions after line164 were not reached.",
+        "No local product tests, remote mutations or new dispatch by collecting agent."
+      ],
+      "readyScope": {
+        "complete_test": "FAIL",
+        "observed": [
+          "native implicit submit type and duplicate-source guard pass",
+          "selection fields filled",
+          "prepare HTTP200",
+          "start/read/output HTTP200",
+          "Analysis ready text rendered",
+          "Open result clicked",
+          "supplied explicit UI fixture output rendered",
+          "order prepare/start/read/output asserted",
+          "start/read/output payloads asserted"
+        ],
+        "failure": "Cancel remains visible at analysis.cancel-hidden; expected false,received true.",
+        "positive_common_assertions_NOT_REACHED": [
+          "prepare payload equals selected source/case/period/currency",
+          "requests.every(key) assertion",
+          "submit re-enabled",
+          "currency re-enabled",
+          "currency value preserved",
+          "pageErrors equals [] assertion"
+        ],
+        "observations_not_promoted_to_unreached_assertions": {
+          "pageErrors": [],
+          "logged_request_keys_present": true
+        }
+      }
+    }
+  ],
+  "calculationIntake": {
+    "pr": 59,
+    "head": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+    "tree": "f1ef898362d27d16f53aebfc278eee6d6ff9d73d",
+    "preimages": {
+      "product/integration/source-lifecycle.ts": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "product/integration/planner-sources.ts": "6230f22e7dd66fec1103f28cc9a7937b2dca1449"
+    },
+    "action": "Initial W28 intake: exact two-source patch; diagnostic structural test first adapted only for relative fixture import and execution-neutral comment. W29 then corrected callback type annotations and the post-revocation oracle, explicitly asserting missing host.requestFor admission and zero subsequent revalidate. Current test blob1085cf4ad7e747cd03ebb86c8c36454e3ffed20a passed both cases in C29.",
+    "discriminant": "Four to two source transaction envelopes per resolver invocation while preserving two fresh observations, six direct authentications, four external revalidations, ABA/source identity, revocation and request abort.",
+    "status": "INSTALLED_W28_STRUCTURAL_AND_SOURCE_FENCES_PASS_END_TO_END_HOLD",
+    "xRepeatCondition": "Historical condition met once: C29 structural tests and F29 full source-fence files passed, then X29 ran at unchanged budgets. X29 failed; do not repeat unchanged. No performance acceptance from static diff/counts.",
+    "installedBlobs": {
+      "product/integration/source-lifecycle.ts": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "product/integration/planner-sources.ts": "02d75207b2978cc5c05368cc7e3517efeb3ce3ce"
+    },
+    "structuralProof": {
+      "run": 43628006308,
+      "testsPass": 2,
+      "wholeRun": "failure3/3",
+      "testBlob": "1085cf4ad7e747cd03ebb86c8c36454e3ffed20a",
+      "fallback": {
+        "transactions": 4,
+        "directAuthentications": 6,
+        "revalidations": 4
+      },
+      "prepared": {
+        "transactions": 2,
+        "directAuthentications": 6,
+        "revalidations": 4
+      },
+      "checks": [
+        "two fresh observations per invocation",
+        "no cached authority/result",
+        "exact original projection/digest",
+        "ABA",
+        "egress revocation",
+        "post-revocation missing admission no revalidate",
+        "abort"
+      ],
+      "sourceFences": {
+        "run": 43628418430,
+        "result": "PASS10/0",
+        "expects": 132,
+        "files": 3
+      }
+    },
+    "endToEnd": {
+      "run": 43628663680,
+      "result": "FAIL0/1",
+      "expects": 3,
+      "seconds": 285.8,
+      "hypothesis": "one unchanged-budget run after structural/source-fence PASS",
+      "finding": "No usable returned host result or end-to-end gain established",
+      "repeats": "Do not repeat unchanged"
+    },
+    "financialGateReachability": "diagnostics/wp10-pr59-financial-gate-reachability.json",
+    "noLocalProductExecution": true
+  },
+  "currentRuns": {
+    "C28": {
+      "product": {
+        "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+        "tree": "232c69db4eed34e913f125bb787b926971d6d031"
+      },
+      "snapshot": {
+        "S": "8dedb1fa71a0805505e50eda8c0a038de79276a8",
+        "tree": "7d885e25c52af39b9d22357c59910df6e6d78051",
+        "parents": [
+          "90f2c4f81f74edc26a1783bfda7891638b429fa6"
+        ],
+        "branch": "ci-run-linux-astra-wp10-90f2c4f8-3374ee0a-01",
+        "requestBlob": "2a5d2075dd0bc797ddbe251d9b0bc7391856427b",
+        "requestSha256": "3374ee0a5278d8b7b91478bcae1abdfbfc01f2017428190b4a61999f2a3c3905",
+        "compareFiles": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "sha": "2a5d2075dd0bc797ddbe251d9b0bc7391856427b"
+          }
+        ]
+      },
+      "run": {
+        "id": 43627315630,
+        "head_sha": "8dedb1fa71a0805505e50eda8c0a038de79276a8",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-14T18:34:04Z",
+        "updated_at": "2026-11-14T18:36:16Z",
+        "run_attempt": 1,
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627315630"
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+          "Sucafinav1/test/product/wp10/integration/authority-composition.test.ts",
+          "Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "jobs": [
+        {
+          "id": 132546009522,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132546614709,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [],
+      "overall": "failure",
+      "result": {
+        "pass": 8,
+        "fail": 1,
+        "expects": 136,
+        "tests": 9,
+        "files": 3,
+        "bunSeconds": 16.27
+      },
+      "omni": {
+        "nonce": "81db0eef6ccbc9217052308e67530829",
+        "status": "pass",
+        "declaredTests": 2,
+        "declaringFile": "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+        "spawns": 4,
+        "delegated": 0
+      },
+      "receipt": "runs/W28/C28-terminal.json"
+    },
+    "CHECK28": {
+      "product": {
+        "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+        "tree": "232c69db4eed34e913f125bb787b926971d6d031",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "snapshot": {
+        "S": "66d3a7fc3160a54aad1766e096a6b4cb397ab82b",
+        "tree": "3aaaadc3fc9e1c6264bdc8f54ed6c54ad8ab26c3",
+        "parents": [
+          "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+          "26db95e4764bf80148543798aa594ac7921f3b22"
+        ],
+        "branch": "astra-check-wp10",
+        "envelope": {
+          "productSha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+          "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+        },
+        "envelopeBlob": "fb378d1111f83573c8e3f36e979167d1c9f777f6",
+        "envelopeSha256": "239a643676345f9d1cedcdb404cc9e51d7a51470c0ae43c59070181ba8534e12",
+        "compareFiles": [
+          {
+            "filename": ".astra-wp10-check.json",
+            "status": "added",
+            "sha": "fb378d1111f83573c8e3f36e979167d1c9f777f6"
+          }
+        ],
+        "history": "Existing check branch fast-forward preservation via second parent CHECK27; only added .astra-wp10-check.json relative to W28. Workflow exact product/envelope gate passed."
+      },
+      "run": {
+        "id": 43627330840,
+        "head_sha": "66d3a7fc3160a54aad1766e096a6b4cb397ab82b",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-14T18:34:14Z",
+        "updated_at": "2026-11-14T18:37:24Z",
+        "run_attempt": 1,
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627330840"
+      },
+      "request": {
+        "productSha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "jobs": [
+        {
+          "id": 132546056147,
+          "name": "composition",
+          "status": "completed",
+          "conclusion": "failure"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14127220650,
+          "name": "astra-wp10-check-1",
+          "size_in_bytes": 5469,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127220650",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127220650/zip",
+          "expired": false,
+          "created_at": "2026-11-14T18:37:22Z",
+          "expires_at": "2026-11-28T18:37:21Z",
+          "updated_at": "2026-11-14T18:37:22Z",
+          "digest": "sha256:dd6776908d198c4e130ba5c114da7f5d2eb0a66d0487da99753894228735e42a",
+          "workflow_run": {
+            "id": 43627330840,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp10",
+            "head_sha": "66d3a7fc3160a54aad1766e096a6b4cb397ab82b"
+          }
+        }
+      ],
+      "overall": "failure",
+      "result": {
+        "overall": "failure",
+        "sucafinaTypecheck": {
+          "result": "failure",
+          "diagnostics": 16,
+          "externalHistorical": 13,
+          "ownWp10": 3
+        },
+        "wp10ConsumersTypecheck": {
+          "result": "failure",
+          "diagnostics": 3
+        },
+        "cliTypecheck": "success",
+        "atlasGenerationCheckDiff": "success",
+        "atlasTypecheck": "success",
+        "spawnImports": "success",
+        "guardsAgainstOriginDev": "success",
+        "snapshotEnvelope": "success",
+        "artifactUpload": "success",
+        "cleanup": "No dedicated cleanup job in this standing check workflow; post Setup Bun and both checkout cleanup steps succeeded.",
+        "omni": "Not applicable: typecheck/guards workflow does not execute product tests or Omni proof."
+      },
+      "omni": {
+        "status": "not applicable",
+        "scope": "typechecks/guards only"
+      },
+      "receipt": "runs/W28/CHECK28-terminal.json"
+    },
+    "C29": {
+      "product": {
+        "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+        "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219"
+      },
+      "snapshot": {
+        "S": "d33cc53660250bde7bfb19a26401f4c722fe4875",
+        "tree": "822087bcda13bb0db7f2b4df21131b2c503f06c6",
+        "parents": [
+          "813806af6c2ce74b2a087139c544e90dd1adcbe4"
+        ],
+        "branch": "ci-run-linux-astra-wp10-813806af-01ada578-01",
+        "requestBlob": "96d7349d88fecf42c2a4451b6f10587c98984633",
+        "requestSha256": "01ada578d4cbe7738438b433f942d1d0608e93a644bd98aa5453afdbb110dc98",
+        "compareFiles": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "sha": "96d7349d88fecf42c2a4451b6f10587c98984633"
+          }
+        ]
+      },
+      "run": {
+        "id": 43628006308,
+        "head_sha": "d33cc53660250bde7bfb19a26401f4c722fe4875",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-14T18:41:30Z",
+        "updated_at": "2026-11-14T18:44:33Z",
+        "run_attempt": 1,
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628006308"
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "jobs": [
+        {
+          "id": 132548123768,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132548953183,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [],
+      "overall": "failure",
+      "result": {
+        "pass": 3,
+        "fail": 3,
+        "expects": 36,
+        "tests": 6,
+        "files": 4,
+        "bunSeconds": 42.39
+      },
+      "omni": {
+        "nonce": "8d065236e1d7016a815410d941ea9b3e",
+        "status": "pass",
+        "declaredTests": 1,
+        "declaringFile": "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "spawns": 1,
+        "delegated": 0
+      },
+      "receipt": "runs/W29/C29-terminal.json"
+    },
+    "CHECK29": {
+      "product": {
+        "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+        "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "snapshot": {
+        "S": "92319dad2957a023cf1a7c9cfe0e03e77e2242af",
+        "tree": "b3e201d8d0b6873a4fd2c5224a19bfcd8e9d7e78",
+        "parents": [
+          "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+          "66d3a7fc3160a54aad1766e096a6b4cb397ab82b"
+        ],
+        "branch": "astra-check-wp10",
+        "envelope": {
+          "productSha": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+          "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+        },
+        "envelopeBlob": "4d60289774cbafc7ac88666c8203f2ccb60bc5d2",
+        "envelopeSha256": "d97e836243420ec99a8d6fe5ae711844857a5412d69b136c69b7547de51e19ef",
+        "compareFiles": [
+          {
+            "filename": ".astra-wp10-check.json",
+            "status": "added",
+            "sha": "4d60289774cbafc7ac88666c8203f2ccb60bc5d2"
+          }
+        ],
+        "history": "Check branch preserves CHECK28 as second parent; exact product/envelope validation passed."
+      },
+      "run": {
+        "id": 43628024706,
+        "head_sha": "92319dad2957a023cf1a7c9cfe0e03e77e2242af",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-14T18:41:42Z",
+        "updated_at": "2026-11-14T18:45:35Z",
+        "run_attempt": 1,
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628024706"
+      },
+      "request": {
+        "productSha": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "jobs": [
+        {
+          "id": 132548181579,
+          "name": "composition",
+          "status": "completed",
+          "conclusion": "failure"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14127078300,
+          "name": "astra-wp10-check-1",
+          "size_in_bytes": 4364,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127078300",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14127078300/zip",
+          "expired": false,
+          "created_at": "2026-11-14T18:45:31Z",
+          "expires_at": "2026-11-28T18:45:30Z",
+          "updated_at": "2026-11-14T18:45:31Z",
+          "digest": "sha256:b660a75b3b9ea3aa76837c47fbe4abbe4a1c6e96ee2106291333cedae29124f5",
+          "workflow_run": {
+            "id": 43628024706,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp10",
+            "head_sha": "92319dad2957a023cf1a7c9cfe0e03e77e2242af"
+          }
+        }
+      ],
+      "overall": "failure",
+      "result": {
+        "overall": "failure",
+        "sucafinaTypecheck": {
+          "result": "failure",
+          "diagnostics": 13,
+          "externalHistorical": 13,
+          "ownWp10": 0
+        },
+        "wp10ConsumersTypecheck": "success",
+        "cliTypecheck": "success",
+        "atlasGenerationCheckDiff": "success",
+        "atlasTypecheck": "success",
+        "spawnImports": "success",
+        "guardsAgainstOriginDev": "success",
+        "snapshotEnvelope": "success",
+        "artifactUpload": "success",
+        "cleanup": "No dedicated cleanup job in this standing check workflow; post Setup Bun and both checkout cleanup steps succeeded.",
+        "omni": "Not applicable: typecheck/guards workflow does not execute product tests or Omni proof."
+      },
+      "omni": {
+        "status": "not applicable",
+        "scope": "typechecks/guards only"
+      },
+      "receipt": "runs/W29/CHECK29-terminal.json"
+    },
+    "F29": {
+      "product": {
+        "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+        "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219"
+      },
+      "snapshot": {
+        "S": "e71d4beacdc1309c1affa571454809dce172b8c1",
+        "tree": "c75ec5350874d8e6c0bf7de8c79f099e496578a0",
+        "parents": [
+          "813806af6c2ce74b2a087139c544e90dd1adcbe4"
+        ],
+        "branch": "ci-run-linux-astra-wp10-813806af-cede46b7-01",
+        "requestBlob": "dea0dacd170e18998c7b4b499389a1cfa824df82",
+        "requestSha256": "cede46b79a37583c13ce622322628e3f4851d3cf0d56fa02c640259898ae36b9",
+        "compareFiles": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "sha": "dea0dacd170e18998c7b4b499389a1cfa824df82"
+          }
+        ]
+      },
+      "run": {
+        "id": 43628418430,
+        "head_sha": "e71d4beacdc1309c1affa571454809dce172b8c1",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-14T18:45:58Z",
+        "updated_at": "2026-11-14T18:47:37Z",
+        "run_attempt": 1,
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628418430"
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "jobs": [
+        {
+          "id": 132549392319,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 132549821272,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [],
+      "overall": "success",
+      "result": {
+        "pass": 10,
+        "fail": 0,
+        "expects": 132,
+        "tests": 10,
+        "files": 3,
+        "bunMilliseconds": 1044
+      },
+      "omni": {
+        "nonce": "a1e93437d3e876aa71de81b22665a064",
+        "status": "not applicable",
+        "spawns": 0,
+        "delegated": 0,
+        "proof": "This selection declares no Omni-positive test; not a native/Omni acceptance."
+      },
+      "receipt": "runs/F29/F29-terminal.json"
+    },
+    "X29": {
+      "product": {
+        "sha": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+        "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219"
+      },
+      "snapshot": {
+        "sha": "d356d543298835b09b0452777fbd76cdaea77c85",
+        "tree": "d6e9e7e25fa52d292fb4d09b444e2440c4c3b728",
+        "parents": [
+          "813806af6c2ce74b2a087139c544e90dd1adcbe4"
+        ],
+        "only_diff_from_W": ".ci-run.json",
+        "branch": "ci-run-linux-astra-wp10-813806af-821eb0a6-01"
+      },
+      "run": {
+        "id": 43628663680,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628663680",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "created_at": "2026-11-14T18:48:43Z",
+        "updated_at": "2026-11-14T18:55:13Z"
+      },
+      "request": {
+        "path": ".ci-run.json",
+        "blob": "e21191fec19858eeaf49109057fb9203ac72dd3b",
+        "sha256": "821eb0a6ccf2937cf026854389f3f882a6cad60e2e9c14941c9327212f3e3cb4",
+        "bytes": 281,
+        "literal": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+          }
+        }
+      },
+      "jobs": [
+        {
+          "id": 132550149012,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132551901878,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [],
+      "overall": "failure",
+      "result": {
+        "expected_files": [
+          "./Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+        ],
+        "observed_files": [
+          "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+        ],
+        "runner": "bun 1.3.14 (0d9b296a)",
+        "tests": 1,
+        "files": 1,
+        "pass": 0,
+        "fail": 1,
+        "expect_calls": 3,
+        "bun_duration_seconds": 285.8,
+        "test_duration_ms": 285252.85,
+        "configured_total_assertions": 40,
+        "cooperative_deadline_ms": 285000,
+        "bun_test_timeout_ms": 300000,
+        "request_timeout_ms": 120000,
+        "test_blob": "fa4bdf61e69af2498b5668a5dfceb9286613d0bd",
+        "test_identical_to_W27": true
+      },
+      "omni": {
+        "nonce": "198da391adf18595b28e37401694ce3a",
+        "result": "not applicable",
+        "declared": 0,
+        "spawned": 0,
+        "delegated": 0,
+        "limitation": "No declaring test ran; this run proves nothing about omni."
+      },
+      "receipt": "runs/X29/X29-terminal.json"
+    },
+    "U30": {
+      "product": {
+        "sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+        "tree": "8f2cd84288df2a9d70402219df871765fe1890ca"
+      },
+      "snapshot": {
+        "sha": "84432d8ab3a5f1619eb2e96652290434d2bb0a2e",
+        "tree": "938cdbc8a43094b52c101d61d60ee2564dc879d1",
+        "parents": [
+          "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7"
+        ],
+        "only_diff_from_W": ".ci-run.json",
+        "branch": "ci-run-linux-astra-wp10-d4fb072f-f4259ab0-01"
+      },
+      "run": {
+        "id": 43629303473,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629303473",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "created_at": "2026-11-14T18:55:52Z",
+        "updated_at": "2026-11-14T18:58:06Z"
+      },
+      "request": {
+        "path": ".ci-run.json",
+        "blob": "789d044c489eae96aef1877d98a249ba86d854ed",
+        "bytes": 397,
+        "sha256": "f4259ab02921f2fc9f7b5ba18f79df529035dd48f5200e87d1fa7111f89bbf9a",
+        "literal": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+          }
+        }
+      },
+      "jobs": [
+        {
+          "id": 132552127580,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132552703448,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [],
+      "overall": "failure",
+      "result": {
+        "observed_file_order": [
+          "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+          "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+        ],
+        "matches_request_order": true,
+        "tests": 4,
+        "files": 3,
+        "pass": 3,
+        "fail": 1,
+        "expect_calls": 35,
+        "bun_duration_seconds": 13.66,
+        "forecast_test_timeout_ms": 30000,
+        "forecast_test_blob": "b312f2dda7029b79c7420af91d52ca6fec1b098d"
+      },
+      "omni": {
+        "nonce": "bceba14f449cce8e07472045234fb8ed",
+        "result": "PASS",
+        "declared": 1,
+        "declaring_file": "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "spawned": 1,
+        "delegated": 0
+      },
+      "receipt": "runs/W30/U30-terminal.json"
+    },
+    "CHECK30": {
+      "product": {
+        "sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+        "tree": "8f2cd84288df2a9d70402219df871765fe1890ca"
+      },
+      "snapshot": {
+        "sha": "00d1ba5220121c8490ae28ed0fc839c56b0b7192",
+        "tree": "74baf3094086b85bd5c003ff4a2dfa9cb9119f57",
+        "parents": [
+          "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "92319dad2957a023cf1a7c9cfe0e03e77e2242af"
+        ],
+        "only_diff_from_W": ".astra-wp10-check.json",
+        "branch": "astra-check-wp10"
+      },
+      "run": {
+        "id": 43629131094,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629131094",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "created_at": "2026-11-14T18:53:55Z",
+        "updated_at": "2026-11-14T18:57:20Z"
+      },
+      "request": {
+        "blob": "44644019c1aa76864506d1d59d99ae61500a5774",
+        "bytes": 119,
+        "sha256": "72327724e46c908a75da3108e780b46803d97366fdd788f3439b493691542322",
+        "content": {
+          "productSha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+          "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+        }
+      },
+      "jobs": [
+        {
+          "id": 132551590764,
+          "name": "composition",
+          "status": "completed",
+          "conclusion": "failure"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14126584278,
+          "name": "astra-wp10-check-1",
+          "size_in_bytes": 4363,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14126584278",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14126584278/zip",
+          "expired": false,
+          "created_at": "2026-11-14T18:57:17Z",
+          "expires_at": "2026-11-28T18:57:17Z",
+          "updated_at": "2026-11-14T18:57:17Z",
+          "digest": "sha256:310967dbfb665fc8e68640d8ddc8386d5e8602fc80a06be16e179267b862eb84",
+          "workflow_run": {
+            "id": 43629131094,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp10",
+            "head_sha": "00d1ba5220121c8490ae28ed0fc839c56b0b7192"
+          }
+        }
+      ],
+      "overall": "failure",
+      "result": {
+        "sucafina_typecheck": "FAIL:13 historical external diagnostics",
+        "cli_typecheck": "PASS",
+        "wp10_test_typecheck": "PASS",
+        "atlas_generate_check_and_diff": "PASS",
+        "atlas_typecheck": "PASS",
+        "subprocess_import_guard": "PASS",
+        "guards_origin_dev": "PASS"
+      },
+      "omni": {
+        "status": "not applicable",
+        "scope": "typechecks/guards only"
+      },
+      "receipt": "runs/W30/CHECK30-terminal.json"
+    }
+  },
+  "reattachedOriginalRuns": {
+    "CHECK27": {
+      "id": 43623374771,
+      "status": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 13
+    },
+    "X27": {
+      "id": 43623440133,
+      "status": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expects": 3,
+      "tests": 1,
+      "files": 1,
+      "seconds": 285.57,
+      "cleanup": 132535684366
+    },
+    "A27": {
+      "id": 43624030665,
+      "status": "failure",
+      "pass": 59,
+      "fail": 1,
+      "expects": 1447,
+      "tests": 60,
+      "files": 8,
+      "seconds": 297.68,
+      "cleanup": 132537774635
+    },
+    "R27": {
+      "id": 43624794783,
+      "status": "failure",
+      "pass": 34,
+      "fail": 13,
+      "expects": 839,
+      "tests": 47,
+      "files": 10,
+      "seconds": 1052.08,
+      "cleanup": 132543694722
+    }
+  },
+  "evidenceTransfer": {
+    "W28toW29": "Only two own new test files and new receipts changed. Runtime and C09/authority test files unchanged.",
+    "W29toW30": "Only forecast-submit.test.ts and new receipts changed. Runtime, C09, authority, structural and all source-fence tests unchanged.",
+    "policy": "All run identities remain original W/S. Byte identity permits scoped retained evidence, not relabeling old results as new executions."
+  },
+  "preparedNotExecuted": [
+    "F28",
+    "U28"
+  ],
+  "pending": [
+    {
+      "id": "MEMORY-A27-INTEGRITY",
+      "status": "OPEN",
+      "evidence": "A27 59/1; historical-memory.test.ts:580:103 stale.preflight returns ok for corrupted record after Atlas rejects it. Assertion, not timeout. Final three revocation probes NOT_REACHED.",
+      "diagnostic": "PR55@0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8 read before work; proposal not applied; no duplicate investigation/A27 rerun."
+    },
+    {
+      "id": "X29-END-TO-END",
+      "status": "HOLD",
+      "evidence": "X29 0/1,3expects,285.80s. Raw sensitivitywrite ok; first bind/proof aborts, host.evaluate-and-store does not return. Usable persisted host result/recomposed read/retry/revocation NOT_REACHED.",
+      "qualification": "PR59 source patch structurally qualified; no end-to-end latency gain established. No unchanged X rerun."
+    },
+    {
+      "id": "WP10-U30-CANCEL-VISIBILITY",
+      "status": "OPEN_OWNER_S0_COMPOSITION",
+      "evidence": "U30 ready flow HTTP200s and rendered body; analysis.cancel-hidden expects false but receives true at forecast-submit.test.ts:164:113.",
+      "ownerScope": "Installed readonly forecast-analysis.ts and shared screen-shell.ts; owner/S0 must supply compatible source delivery. No foreign UI change in this continuation.",
+      "staticHypothesis": "screen-shell.ts author CSS includes button,.button display:inline-flex; forecast controller sets cancel.hidden=!active. Cascade explanation is an inference: computedStyle and hidden attribute at failure were not captured.",
+      "sourceBlobs": {
+        "forecast": "973a2f09b394426364c514b923ecdc8e10ffb184",
+        "screenShell": "d69bb554ba35863b0bf248c6aa0382205614d12a"
+      },
+      "nextDiscriminant": "Compatible owner/S0 delivery, then same UI contract with failure assertion preserved. Do not conceal cancel in fixture or weaken assertion."
+    },
+    {
+      "id": "FOREIGN-TYPECHECK-13",
+      "status": "HOLD",
+      "evidence": "CHECK29 and CHECK30 identical13diagnostic headlines. WP04=3 WP06=4 WP08=5 WP09=1; zero WP10. Full check remains FAIL.",
+      "ownerDeliveryRequired": true
+    },
+    {
+      "id": "B26-ANCESTRY-AND-CALCULATION-PERSISTENCE",
+      "status": "HOLD",
+      "evidence": "B26 38/2. Own ancestry deadline105s during produce-outer; foreign wp11/calculation-persistence.test.ts nestedC17 timeout180s. This is not a composite-coverage timeout."
+    },
+    {
+      "id": "H05-FREEZE10-CURRENTCHOICE",
+      "status": "HOLD",
+      "evidence": "H25 42/1 H05 expected409 got200; compatible WP04/WP11 delivery pending. Freeze10 37/38 expected6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772 versus composed42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893 remains. PR35 CurrentChoice cohort RETAINED, not installed; final-lease hold is not attributed to installed runtime."
+    },
+    {
+      "id": "BI-REVIEW-R27",
+      "status": "HOLD",
+      "evidence": "R27 34/13,839expects47tests10files1052.08s. Six bi-call-scope setup order diffs plus one bi-case-access order diff; four choices403; one auth counter0; Review focus transport10s vs actual200 handlers about13.65s. Later probes NOT_REACHED, not13proven auth defects."
+    },
+    {
+      "id": "R1-W23-C17-BETWEEN-OBSERVATIONS",
+      "status": "STATIC_BOUNDARY_LIMIT_NOT_EXECUTED_BREACH",
+      "scope": "INSTALLED foreign business-context.ts calculationProof",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "ownerPin": "WP00/PR32@35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc",
+      "evidence": "historicalCalculation two calls pin request/binding/refs/maps/projection but not every header across both. Existing intra-observation negative tests do not close this. C09 PASS does not close calculation window."
+    },
+    {
+      "id": "REMAINING-FINANCIAL-BROWSER-CLI-D-P-Q",
+      "status": "PRESERVED_NOT_PROMOTED",
+      "evidence": "P27/Q27 requests only. D22 canceledpartial, no aggregate Bun terminal; older foreign blob evidence not transferred. Three financial files bypass both PR59 changed modules; no redundant rerun offered as4→2 proof.",
+      "reference": "diagnostics/wp10-pr59-financial-gate-reachability.json"
+    },
+    {
+      "id": "NATIVE-AM-GNATIVE",
+      "status": "HOLD",
+      "evidence": "Real Task name/input persisted; Relay/governance C07; public anchor resolver and actual Session; Watch descriptors/admission/schedule/occurrence/owner remain unproved. Requirements for9nativeoperations,5callables,39routes,8packs,5profiles,18skills and nonempty installed journeys retained."
+    },
+    {
+      "id": "GLOBAL-CRITERIA-AND-REVIEWS",
+      "status": "HOLD",
+      "criteria": 171,
+      "tasks": 7,
+      "obligations": 80,
+      "independentFinalReviewsMissing": 3,
+      "evidence": "No criterion wholesale closure, FINAL W/D or GLOBAL_RELEASE. Internal preflight reviews are not FINAL. S0 retains integration decision."
+    }
+  ],
+  "constraints": {
+    "allRemoteOperations": "GitHub MCP",
+    "allProductTests": "GitHub Actions scoped existing test-ci",
+    "newProductBranch": false,
+    "newPR": false,
+    "forcePush": false,
+    "localTests": false,
+    "epicOrFullSuite": false,
+    "newDispatcher": false,
+    "merge": false,
+    "deploy": false,
+    "engineChanges": false,
+    "orchestraRestart": false,
+    "globalRelease": false,
+    "finalIndependentReview": false
+  }
+}

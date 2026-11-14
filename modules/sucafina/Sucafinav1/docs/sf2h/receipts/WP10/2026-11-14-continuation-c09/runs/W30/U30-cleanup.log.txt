@@ -1,0 +1,39 @@
+﻿2026-11-14T18:58:02.9986853Z Current runner version: '2.338.2'
+2026-11-14T18:58:03.0022195Z ##[group]Runner Image Provisioner
+2026-11-14T18:58:03.0023619Z Hosted Compute Agent
+2026-11-14T18:58:03.0024732Z Version: 20261103.629
+2026-11-14T18:58:03.0026031Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T18:58:03.0027735Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T18:58:03.0029417Z Worker ID: {75d9ba22-cf5b-4d40-b10d-b59d8ea02e8d}
+2026-11-14T18:58:03.0030767Z Region: eastus2
+2026-11-14T18:58:03.0031915Z Cloud: Azure
+2026-11-14T18:58:03.0032881Z ##[endgroup]
+2026-11-14T18:58:03.0035324Z ##[group]Operating System
+2026-11-14T18:58:03.0036554Z Ubuntu
+2026-11-14T18:58:03.0037478Z 24.04.5
+2026-11-14T18:58:03.0038459Z LTS
+2026-11-14T18:58:03.0039760Z ##[endgroup]
+2026-11-14T18:58:03.0040806Z ##[group]Runner Image
+2026-11-14T18:58:03.0041987Z Image: ubuntu-24.04
+2026-11-14T18:58:03.0042968Z Version: 20261111.370.1
+2026-11-14T18:58:03.0045205Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T18:58:03.0048094Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+2026-11-14T18:58:03.0050272Z ##[endgroup]
+2026-11-14T18:58:03.0052273Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T18:58:03.0055918Z Contents: write
+2026-11-14T18:58:03.0057028Z Metadata: read
+2026-11-14T18:58:03.0058182Z ##[endgroup]
+2026-11-14T18:58:03.0061553Z Secret source: Actions
+2026-11-14T18:58:03.0063386Z Cache mode: write
+2026-11-14T18:58:03.0064644Z Prepare workflow directory
+2026-11-14T18:58:03.0539447Z Prepare all required actions
+2026-11-14T18:58:03.0693506Z Complete job name: cleanup
+2026-11-14T18:58:03.2093495Z ##[group]Run gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
+2026-11-14T18:58:03.2095654Z [36;1mgh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true[0m
+2026-11-14T18:58:03.2391216Z shell: /usr/bin/bash -e {0}
+2026-11-14T18:58:03.2392378Z env:
+2026-11-14T18:58:03.2396676Z   GH_TOKEN: ***
+2026-11-14T18:58:03.2397435Z   REPO: gustavomhss/Orchestra-SF
+2026-11-14T18:58:03.2398196Z   BRANCH: ci-run-linux-astra-wp10-d4fb072f-f4259ab0-01
+2026-11-14T18:58:03.2398935Z ##[endgroup]
+2026-11-14T18:58:03.9614493Z Cleaning up orphan processes

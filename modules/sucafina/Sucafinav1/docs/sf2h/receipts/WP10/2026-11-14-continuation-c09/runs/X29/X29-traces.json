@@ -1,0 +1,8360 @@
+[
+  {
+    "elapsedMs": 0,
+    "environmentReads": 0,
+    "state": "started",
+    "id": 1,
+    "parentId": null,
+    "name": "phase.fixture.complete",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 44,
+    "environmentReads": 0,
+    "state": "observing-shared",
+    "scenarios": true,
+    "scenarioBatch": true
+  },
+  {
+    "elapsedMs": 44,
+    "environmentReads": 0,
+    "state": "observing-host",
+    "label": "primary",
+    "exposedUnits": true,
+    "proof": true
+  },
+  {
+    "elapsedMs": 63,
+    "environmentReads": 0,
+    "state": "started",
+    "id": 2,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 73,
+    "environmentReads": 0,
+    "state": "returned",
+    "id": 2,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 10,
+    "details": {}
+  },
+  {
+    "elapsedMs": 79,
+    "environmentReads": 0,
+    "state": "started",
+    "id": 3,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 2,
+    "details": {}
+  },
+  {
+    "elapsedMs": 88,
+    "environmentReads": 0,
+    "state": "returned",
+    "id": 3,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 8,
+    "details": {}
+  },
+  {
+    "elapsedMs": 97,
+    "environmentReads": 0,
+    "state": "started",
+    "id": 4,
+    "parentId": 1,
+    "name": "shared.cases.read",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 104,
+    "environmentReads": 0,
+    "state": "started",
+    "id": 5,
+    "parentId": 4,
+    "name": "shared.evidence.context",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 124,
+    "environmentReads": 1,
+    "state": "started",
+    "id": 7,
+    "parentId": 5,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 4,
+    "details": {}
+  },
+  {
+    "elapsedMs": 134,
+    "environmentReads": 1,
+    "state": "returned",
+    "id": 7,
+    "parentId": 5,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 10,
+    "details": {}
+  },
+  {
+    "elapsedMs": 194,
+    "environmentReads": 2,
+    "state": "returned",
+    "id": 5,
+    "parentId": 4,
+    "name": "shared.evidence.context",
+    "ordinal": 1,
+    "status": "array:2",
+    "durationMs": 90,
+    "details": {}
+  },
+  {
+    "elapsedMs": 200,
+    "environmentReads": 2,
+    "state": "started",
+    "id": 10,
+    "parentId": 4,
+    "name": "shared.evidence.context",
+    "ordinal": 2,
+    "details": {}
+  },
+  {
+    "elapsedMs": 212,
+    "environmentReads": 3,
+    "state": "started",
+    "id": 12,
+    "parentId": 10,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 8,
+    "details": {}
+  },
+  {
+    "elapsedMs": 218,
+    "environmentReads": 3,
+    "state": "returned",
+    "id": 12,
+    "parentId": 10,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 8,
+    "status": "ok",
+    "durationMs": 6,
+    "details": {}
+  },
+  {
+    "elapsedMs": 251,
+    "environmentReads": 4,
+    "state": "returned",
+    "id": 10,
+    "parentId": 4,
+    "name": "shared.evidence.context",
+    "ordinal": 2,
+    "status": "array:2",
+    "durationMs": 51,
+    "details": {}
+  },
+  {
+    "elapsedMs": 254,
+    "environmentReads": 4,
+    "state": "returned",
+    "id": 4,
+    "parentId": 1,
+    "name": "shared.cases.read",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 157,
+    "details": {}
+  },
+  {
+    "elapsedMs": 267,
+    "environmentReads": 4,
+    "state": "started",
+    "id": 16,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 274,
+    "environmentReads": 4,
+    "state": "returned",
+    "id": 16,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 7,
+    "details": {}
+  },
+  {
+    "elapsedMs": 283,
+    "environmentReads": 5,
+    "state": "started",
+    "id": 19,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 2,
+    "details": {}
+  },
+  {
+    "elapsedMs": 289,
+    "environmentReads": 5,
+    "state": "returned",
+    "id": 19,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 6,
+    "details": {}
+  },
+  {
+    "elapsedMs": 300,
+    "environmentReads": 5,
+    "state": "started",
+    "id": 23,
+    "parentId": 22,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 16,
+    "details": {}
+  },
+  {
+    "elapsedMs": 307,
+    "environmentReads": 5,
+    "state": "returned",
+    "id": 23,
+    "parentId": 22,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 16,
+    "status": "ok",
+    "durationMs": 6,
+    "details": {}
+  },
+  {
+    "elapsedMs": 319,
+    "environmentReads": 7,
+    "state": "started",
+    "id": 25,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 4,
+    "details": {}
+  },
+  {
+    "elapsedMs": 325,
+    "environmentReads": 7,
+    "state": "returned",
+    "id": 25,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 6,
+    "details": {}
+  },
+  {
+    "elapsedMs": 370,
+    "environmentReads": 7,
+    "state": "started",
+    "id": 35,
+    "parentId": 1,
+    "name": "shared.results.write",
+    "ordinal": 1,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 446,
+    "environmentReads": 9,
+    "state": "started",
+    "id": 41,
+    "parentId": 35,
+    "name": "shared.evidence.context",
+    "ordinal": 4,
+    "details": {}
+  },
+  {
+    "elapsedMs": 530,
+    "environmentReads": 11,
+    "state": "returned",
+    "id": 41,
+    "parentId": 35,
+    "name": "shared.evidence.context",
+    "ordinal": 4,
+    "status": "array:2",
+    "durationMs": 84,
+    "details": {}
+  },
+  {
+    "elapsedMs": 543,
+    "environmentReads": 11,
+    "state": "started",
+    "id": 47,
+    "parentId": 46,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 32,
+    "details": {}
+  },
+  {
+    "elapsedMs": 555,
+    "environmentReads": 11,
+    "state": "returned",
+    "id": 47,
+    "parentId": 46,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 32,
+    "status": "ok",
+    "durationMs": 12,
+    "details": {}
+  },
+  {
+    "elapsedMs": 625,
+    "environmentReads": 13,
+    "state": "returned",
+    "id": 35,
+    "parentId": 1,
+    "name": "shared.results.write",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 254,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 639,
+    "environmentReads": 13,
+    "state": "started",
+    "id": 52,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 8,
+    "details": {}
+  },
+  {
+    "elapsedMs": 648,
+    "environmentReads": 13,
+    "state": "returned",
+    "id": 52,
+    "parentId": 1,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 8,
+    "status": "ok",
+    "durationMs": 10,
+    "details": {}
+  },
+  {
+    "elapsedMs": 788,
+    "environmentReads": 16,
+    "state": "started",
+    "id": 71,
+    "parentId": 1,
+    "name": "shared.results.write",
+    "ordinal": 2,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 1017,
+    "environmentReads": 20,
+    "state": "started",
+    "id": 82,
+    "parentId": 71,
+    "name": "shared.evidence.context",
+    "ordinal": 8,
+    "details": {}
+  },
+  {
+    "elapsedMs": 1126,
+    "environmentReads": 22,
+    "state": "returned",
+    "id": 82,
+    "parentId": 71,
+    "name": "shared.evidence.context",
+    "ordinal": 8,
+    "status": "array:2",
+    "durationMs": 109,
+    "details": {}
+  },
+  {
+    "elapsedMs": 1137,
+    "environmentReads": 22,
+    "state": "returned",
+    "id": 71,
+    "parentId": 1,
+    "name": "shared.results.write",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 349,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 1153,
+    "environmentReads": 22,
+    "state": "started",
+    "id": 87,
+    "parentId": 1,
+    "name": "shared.cases.read",
+    "ordinal": 2,
+    "details": {}
+  },
+  {
+    "elapsedMs": 1261,
+    "environmentReads": 24,
+    "state": "started",
+    "id": 92,
+    "parentId": 88,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 64,
+    "details": {}
+  },
+  {
+    "elapsedMs": 1279,
+    "environmentReads": 24,
+    "state": "returned",
+    "id": 92,
+    "parentId": 88,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 64,
+    "status": "ok",
+    "durationMs": 19,
+    "details": {}
+  },
+  {
+    "elapsedMs": 1458,
+    "environmentReads": 26,
+    "state": "returned",
+    "id": 87,
+    "parentId": 1,
+    "name": "shared.cases.read",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 305,
+    "details": {}
+  },
+  {
+    "elapsedMs": 1776,
+    "environmentReads": 30,
+    "state": "started",
+    "id": 109,
+    "parentId": 1,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 1,
+    "details": {
+      "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+    }
+  },
+  {
+    "elapsedMs": 1777,
+    "environmentReads": 30,
+    "state": "started",
+    "id": 110,
+    "parentId": 1,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 2,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 2117,
+    "environmentReads": 34,
+    "state": "started",
+    "id": 122,
+    "parentId": 110,
+    "name": "shared.evidence.context",
+    "ordinal": 16,
+    "details": {}
+  },
+  {
+    "elapsedMs": 2386,
+    "environmentReads": 38,
+    "state": "returned",
+    "id": 122,
+    "parentId": 110,
+    "name": "shared.evidence.context",
+    "ordinal": 16,
+    "status": "array:2",
+    "durationMs": 268,
+    "details": {}
+  },
+  {
+    "elapsedMs": 2408,
+    "environmentReads": 38,
+    "state": "returned",
+    "id": 109,
+    "parentId": 1,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 631,
+    "details": {
+      "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+    }
+  },
+  {
+    "elapsedMs": 2413,
+    "environmentReads": 38,
+    "state": "returned",
+    "id": 110,
+    "parentId": 1,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 637,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 2413,
+    "environmentReads": 38,
+    "state": "started",
+    "id": 131,
+    "parentId": 1,
+    "name": "shared.cases.read",
+    "ordinal": 4,
+    "details": {}
+  },
+  {
+    "elapsedMs": 2705,
+    "environmentReads": 42,
+    "state": "returned",
+    "id": 131,
+    "parentId": 1,
+    "name": "shared.cases.read",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 291,
+    "details": {}
+  },
+  {
+    "elapsedMs": 2705,
+    "environmentReads": 42,
+    "state": "started",
+    "id": 142,
+    "parentId": 1,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 1,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 3005,
+    "environmentReads": 46,
+    "state": "started",
+    "id": 154,
+    "parentId": 142,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 4,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 3306,
+    "environmentReads": 50,
+    "state": "returned",
+    "id": 154,
+    "parentId": 142,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 301,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 3660,
+    "environmentReads": 55,
+    "state": "started",
+    "id": 180,
+    "parentId": 142,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 16,
+    "details": {}
+  },
+  {
+    "elapsedMs": 3660,
+    "environmentReads": 55,
+    "state": "started",
+    "id": 181,
+    "parentId": 180,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 128,
+    "details": {}
+  },
+  {
+    "elapsedMs": 3678,
+    "environmentReads": 55,
+    "state": "returned",
+    "id": 181,
+    "parentId": 180,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 128,
+    "status": "ok",
+    "durationMs": 18,
+    "details": {}
+  },
+  {
+    "elapsedMs": 3678,
+    "environmentReads": 55,
+    "state": "returned",
+    "id": 180,
+    "parentId": 142,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 16,
+    "status": "ok",
+    "durationMs": 18,
+    "details": {}
+  },
+  {
+    "elapsedMs": 4677,
+    "environmentReads": 68,
+    "state": "returned",
+    "id": 142,
+    "parentId": 1,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 1,
+    "status": "array:2",
+    "durationMs": 1971,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 4680,
+    "environmentReads": 68,
+    "state": "started",
+    "id": 221,
+    "parentId": 1,
+    "name": "shared.evidence.resolve",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 4680,
+    "environmentReads": 68,
+    "state": "started",
+    "id": 222,
+    "parentId": 1,
+    "name": "shared.evidence.resolve",
+    "ordinal": 2,
+    "details": {}
+  },
+  {
+    "elapsedMs": 4804,
+    "environmentReads": 70,
+    "state": "returned",
+    "id": 221,
+    "parentId": 1,
+    "name": "shared.evidence.resolve",
+    "ordinal": 1,
+    "status": "fresh",
+    "durationMs": 124,
+    "details": {}
+  },
+  {
+    "elapsedMs": 4804,
+    "environmentReads": 70,
+    "state": "returned",
+    "id": 222,
+    "parentId": 1,
+    "name": "shared.evidence.resolve",
+    "ordinal": 2,
+    "status": "fresh",
+    "durationMs": 124,
+    "details": {}
+  },
+  {
+    "elapsedMs": 4956,
+    "environmentReads": 72,
+    "state": "started",
+    "id": 233,
+    "parentId": 227,
+    "name": "shared.evidence.context",
+    "ordinal": 32,
+    "details": {}
+  },
+  {
+    "elapsedMs": 5087,
+    "environmentReads": 74,
+    "state": "returned",
+    "id": 233,
+    "parentId": 227,
+    "name": "shared.evidence.context",
+    "ordinal": 32,
+    "status": "array:2",
+    "durationMs": 131,
+    "details": {}
+  },
+  {
+    "elapsedMs": 5097,
+    "environmentReads": 74,
+    "state": "started",
+    "id": 238,
+    "parentId": 1,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 2,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 5412,
+    "environmentReads": 78,
+    "state": "started",
+    "id": 250,
+    "parentId": 238,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 8,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 5720,
+    "environmentReads": 82,
+    "state": "returned",
+    "id": 250,
+    "parentId": 238,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 8,
+    "status": "ok",
+    "durationMs": 309,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 5720,
+    "environmentReads": 82,
+    "state": "started",
+    "id": 261,
+    "parentId": 238,
+    "name": "shared.cases.read",
+    "ordinal": 8,
+    "details": {}
+  },
+  {
+    "elapsedMs": 6015,
+    "environmentReads": 86,
+    "state": "returned",
+    "id": 261,
+    "parentId": 238,
+    "name": "shared.cases.read",
+    "ordinal": 8,
+    "status": "ok",
+    "durationMs": 295,
+    "details": {}
+  },
+  {
+    "elapsedMs": 7110,
+    "environmentReads": 100,
+    "state": "returned",
+    "id": 238,
+    "parentId": 1,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 2,
+    "status": "array:2",
+    "durationMs": 2013,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 7112,
+    "environmentReads": 100,
+    "state": "started",
+    "id": 318,
+    "parentId": 1,
+    "name": "shared.evidence.resolve",
+    "ordinal": 4,
+    "details": {}
+  },
+  {
+    "elapsedMs": 7242,
+    "environmentReads": 102,
+    "state": "returned",
+    "id": 318,
+    "parentId": 1,
+    "name": "shared.evidence.resolve",
+    "ordinal": 4,
+    "status": "fresh",
+    "durationMs": 130,
+    "details": {}
+  },
+  {
+    "elapsedMs": 8320,
+    "environmentReads": 116,
+    "state": "started",
+    "id": 360,
+    "parentId": 356,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 256,
+    "details": {}
+  },
+  {
+    "elapsedMs": 8336,
+    "environmentReads": 116,
+    "state": "returned",
+    "id": 360,
+    "parentId": 356,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 256,
+    "status": "ok",
+    "durationMs": 15,
+    "details": {}
+  },
+  {
+    "elapsedMs": 8721,
+    "environmentReads": 120,
+    "state": "returned",
+    "id": 1,
+    "parentId": null,
+    "name": "phase.fixture.complete",
+    "ordinal": 1,
+    "status": "returned",
+    "durationMs": 8721,
+    "details": {}
+  },
+  {
+    "elapsedMs": 8721,
+    "environmentReads": 120,
+    "state": "started",
+    "id": 371,
+    "parentId": null,
+    "name": "phase.storage.before",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 8726,
+    "environmentReads": 120,
+    "state": "returned",
+    "id": 371,
+    "parentId": null,
+    "name": "phase.storage.before",
+    "ordinal": 1,
+    "status": "returned",
+    "durationMs": 5,
+    "details": {}
+  },
+  {
+    "elapsedMs": 8726,
+    "environmentReads": 120,
+    "state": "started",
+    "id": 372,
+    "parentId": null,
+    "name": "phase.host.evaluate-and-store",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 10359,
+    "environmentReads": 140,
+    "state": "started",
+    "id": 429,
+    "parentId": 427,
+    "name": "shared.evidence.context",
+    "ordinal": 64,
+    "details": {}
+  },
+  {
+    "elapsedMs": 10645,
+    "environmentReads": 144,
+    "state": "returned",
+    "id": 429,
+    "parentId": 427,
+    "name": "shared.evidence.context",
+    "ordinal": 64,
+    "status": "array:2",
+    "durationMs": 286,
+    "details": {}
+  },
+  {
+    "elapsedMs": 11294,
+    "environmentReads": 152,
+    "state": "started",
+    "id": 461,
+    "parentId": 460,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 16,
+    "details": {
+      "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+    }
+  },
+  {
+    "elapsedMs": 11612,
+    "environmentReads": 156,
+    "state": "returned",
+    "id": 461,
+    "parentId": 460,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 16,
+    "status": "ok",
+    "durationMs": 318,
+    "details": {
+      "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+    }
+  },
+  {
+    "elapsedMs": 13083,
+    "environmentReads": 174,
+    "state": "started",
+    "id": 528,
+    "parentId": 460,
+    "name": "shared.cases.read",
+    "ordinal": 16,
+    "details": {}
+  },
+  {
+    "elapsedMs": 13406,
+    "environmentReads": 178,
+    "state": "returned",
+    "id": 528,
+    "parentId": 460,
+    "name": "shared.cases.read",
+    "ordinal": 16,
+    "status": "ok",
+    "durationMs": 322,
+    "details": {}
+  },
+  {
+    "elapsedMs": 13408,
+    "environmentReads": 178,
+    "state": "returned",
+    "id": 460,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 3,
+    "status": "array:2",
+    "durationMs": 2114,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 13867,
+    "environmentReads": 184,
+    "state": "started",
+    "id": 556,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 4,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 15069,
+    "environmentReads": 199,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 6343,
+        "details": {}
+      },
+      {
+        "id": 556,
+        "parentId": 372,
+        "name": "shared.scenarios.resolveMany",
+        "activeMs": 1202,
+        "details": {
+          "references": [
+            "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+            "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+          ]
+        }
+      },
+      {
+        "id": 602,
+        "parentId": 556,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 44,
+        "details": {
+          "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+        }
+      },
+      {
+        "id": 603,
+        "parentId": 602,
+        "name": "shared.evidence.context",
+        "activeMs": 32,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 429,
+        "completed": 429,
+        "threw": 0,
+        "inclusiveMs": 8025,
+        "maximumMs": 48,
+        "outcomes": {
+          "ok": 429
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 18,
+        "completed": 18,
+        "threw": 0,
+        "inclusiveMs": 5381,
+        "maximumMs": 324,
+        "outcomes": {
+          "ok": 18
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 90,
+        "completed": 89,
+        "threw": 0,
+        "inclusiveMs": 13221,
+        "maximumMs": 286,
+        "outcomes": {
+          "array:2": 84,
+          "array:4": 5
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 30,
+        "completed": 30,
+        "threw": 0,
+        "inclusiveMs": 392,
+        "maximumMs": 20,
+        "outcomes": {
+          "ok": 30
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 604,
+        "maximumMs": 349,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 22,
+        "completed": 21,
+        "threw": 0,
+        "inclusiveMs": 8462,
+        "maximumMs": 645,
+        "outcomes": {
+          "ok": 21
+        },
+        "active": 1
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 4,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 6098,
+        "maximumMs": 2114,
+        "outcomes": {
+          "array:2": 3
+        },
+        "active": 1
+      },
+      "shared.evidence.resolve": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 775,
+        "maximumMs": 134,
+        "outcomes": {
+          "fresh": 6
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      }
+    }
+  },
+  {
+    "elapsedMs": 16007,
+    "environmentReads": 210,
+    "state": "returned",
+    "id": 556,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 4,
+    "status": "array:2",
+    "durationMs": 2140,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 16009,
+    "environmentReads": 210,
+    "state": "started",
+    "id": 636,
+    "parentId": 372,
+    "name": "shared.evidence.resolve",
+    "ordinal": 8,
+    "details": {}
+  },
+  {
+    "elapsedMs": 16149,
+    "environmentReads": 212,
+    "state": "returned",
+    "id": 636,
+    "parentId": 372,
+    "name": "shared.evidence.resolve",
+    "ordinal": 8,
+    "status": "fresh",
+    "durationMs": 140,
+    "details": {}
+  },
+  {
+    "elapsedMs": 17427,
+    "environmentReads": 228,
+    "state": "started",
+    "id": 685,
+    "parentId": 372,
+    "name": "shared.results.readByRequest",
+    "ordinal": 1,
+    "details": {
+      "kind": "sensitivity"
+    }
+  },
+  {
+    "elapsedMs": 17455,
+    "environmentReads": 228,
+    "state": "returned",
+    "id": 685,
+    "parentId": 372,
+    "name": "shared.results.readByRequest",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 28,
+    "details": {
+      "kind": "sensitivity"
+    }
+  },
+  {
+    "elapsedMs": 18391,
+    "environmentReads": 240,
+    "state": "started",
+    "id": 717,
+    "parentId": 713,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 512,
+    "details": {}
+  },
+  {
+    "elapsedMs": 18410,
+    "environmentReads": 240,
+    "state": "returned",
+    "id": 717,
+    "parentId": 713,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 512,
+    "status": "ok",
+    "durationMs": 19,
+    "details": {}
+  },
+  {
+    "elapsedMs": 20446,
+    "environmentReads": 265,
+    "state": "started",
+    "id": 789,
+    "parentId": 751,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 32,
+    "details": {}
+  },
+  {
+    "elapsedMs": 20465,
+    "environmentReads": 265,
+    "state": "returned",
+    "id": 789,
+    "parentId": 751,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 32,
+    "status": "ok",
+    "durationMs": 19,
+    "details": {}
+  },
+  {
+    "elapsedMs": 20885,
+    "environmentReads": 270,
+    "state": "started",
+    "id": 808,
+    "parentId": 751,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 32,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 21215,
+    "environmentReads": 274,
+    "state": "returned",
+    "id": 808,
+    "parentId": 751,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 32,
+    "status": "ok",
+    "durationMs": 329,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 21531,
+    "environmentReads": 278,
+    "state": "returned",
+    "id": 751,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 5,
+    "status": "array:2",
+    "durationMs": 2118,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 22009,
+    "environmentReads": 284,
+    "state": "started",
+    "id": 849,
+    "parentId": 848,
+    "name": "shared.evidence.context",
+    "ordinal": 128,
+    "details": {}
+  },
+  {
+    "elapsedMs": 22150,
+    "environmentReads": 286,
+    "state": "returned",
+    "id": 849,
+    "parentId": 848,
+    "name": "shared.evidence.context",
+    "ordinal": 128,
+    "status": "array:2",
+    "durationMs": 141,
+    "details": {}
+  },
+  {
+    "elapsedMs": 24102,
+    "environmentReads": 310,
+    "state": "returned",
+    "id": 847,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 6,
+    "status": "array:2",
+    "durationMs": 2105,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 24104,
+    "environmentReads": 310,
+    "state": "started",
+    "id": 927,
+    "parentId": 372,
+    "name": "shared.evidence.resolve",
+    "ordinal": 16,
+    "details": {}
+  },
+  {
+    "elapsedMs": 24245,
+    "environmentReads": 312,
+    "state": "returned",
+    "id": 927,
+    "parentId": 372,
+    "name": "shared.evidence.resolve",
+    "ordinal": 16,
+    "status": "fresh",
+    "durationMs": 141,
+    "details": {}
+  },
+  {
+    "elapsedMs": 29546,
+    "environmentReads": 378,
+    "state": "returned",
+    "id": 1041,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 7,
+    "status": "array:2",
+    "durationMs": 2120,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 29993,
+    "environmentReads": 384,
+    "state": "started",
+    "id": 1137,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 8,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 30100,
+    "environmentReads": 386,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 21374,
+        "details": {}
+      },
+      {
+        "id": 1137,
+        "parentId": 372,
+        "name": "shared.scenarios.resolveMany",
+        "activeMs": 107,
+        "details": {
+          "references": [
+            "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+            "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+          ]
+        }
+      },
+      {
+        "id": 1138,
+        "parentId": 1137,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 107,
+        "details": {
+          "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+        }
+      },
+      {
+        "id": 1139,
+        "parentId": 1138,
+        "name": "shared.evidence.context",
+        "activeMs": 95,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 815,
+        "completed": 815,
+        "threw": 0,
+        "inclusiveMs": 16795,
+        "maximumMs": 48,
+        "outcomes": {
+          "ok": 815
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 31,
+        "completed": 31,
+        "threw": 0,
+        "inclusiveMs": 9480,
+        "maximumMs": 328,
+        "outcomes": {
+          "ok": 31
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 172,
+        "completed": 171,
+        "threw": 0,
+        "inclusiveMs": 26893,
+        "maximumMs": 286,
+        "outcomes": {
+          "array:2": 158,
+          "array:4": 13
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 42,
+        "completed": 42,
+        "threw": 0,
+        "inclusiveMs": 620,
+        "maximumMs": 26,
+        "outcomes": {
+          "ok": 42
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 604,
+        "maximumMs": 349,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 46,
+        "completed": 45,
+        "threw": 0,
+        "inclusiveMs": 18838,
+        "maximumMs": 659,
+        "outcomes": {
+          "ok": 45
+        },
+        "active": 1
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 8,
+        "completed": 7,
+        "threw": 0,
+        "inclusiveMs": 14582,
+        "maximumMs": 2140,
+        "outcomes": {
+          "array:2": 7
+        },
+        "active": 1
+      },
+      "shared.evidence.resolve": {
+        "started": 22,
+        "completed": 22,
+        "threw": 0,
+        "inclusiveMs": 2970,
+        "maximumMs": 147,
+        "outcomes": {
+          "fresh": 22
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 28,
+        "maximumMs": 28,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 30651,
+    "environmentReads": 392,
+    "state": "started",
+    "id": 1160,
+    "parentId": 1137,
+    "name": "shared.cases.read",
+    "ordinal": 32,
+    "details": {}
+  },
+  {
+    "elapsedMs": 30964,
+    "environmentReads": 396,
+    "state": "returned",
+    "id": 1160,
+    "parentId": 1137,
+    "name": "shared.cases.read",
+    "ordinal": 32,
+    "status": "ok",
+    "durationMs": 313,
+    "details": {}
+  },
+  {
+    "elapsedMs": 32124,
+    "environmentReads": 410,
+    "state": "returned",
+    "id": 1137,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 8,
+    "status": "array:2",
+    "durationMs": 2131,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 34868,
+    "environmentReads": 444,
+    "state": "started",
+    "id": 1310,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 1,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 36241,
+    "environmentReads": 461,
+    "state": "returned",
+    "id": 1310,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 1373,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 36599,
+    "environmentReads": 465,
+    "state": "started",
+    "id": 1374,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 1,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 36848,
+    "environmentReads": 468,
+    "state": "returned",
+    "id": 1374,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 249,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 36848,
+    "environmentReads": 468,
+    "state": "started",
+    "id": 1392,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 2,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 37990,
+    "environmentReads": 482,
+    "state": "started",
+    "id": 1436,
+    "parentId": 1433,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 1024,
+    "details": {}
+  },
+  {
+    "elapsedMs": 38007,
+    "environmentReads": 482,
+    "state": "returned",
+    "id": 1436,
+    "parentId": 1433,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 1024,
+    "status": "ok",
+    "durationMs": 16,
+    "details": {}
+  },
+  {
+    "elapsedMs": 38214,
+    "environmentReads": 485,
+    "state": "returned",
+    "id": 1392,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 1366,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 38569,
+    "environmentReads": 489,
+    "state": "started",
+    "id": 1456,
+    "parentId": 372,
+    "name": "shared.results.readByRequest",
+    "ordinal": 2,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 38596,
+    "environmentReads": 489,
+    "state": "returned",
+    "id": 1456,
+    "parentId": 372,
+    "name": "shared.results.readByRequest",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 28,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 38597,
+    "environmentReads": 489,
+    "state": "started",
+    "id": 1457,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 3,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 39160,
+    "environmentReads": 495,
+    "state": "returned",
+    "id": 1457,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 3,
+    "status": "ok",
+    "durationMs": 564,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 40808,
+    "environmentReads": 512,
+    "state": "returned",
+    "id": 1473,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 3,
+    "status": "ok",
+    "durationMs": 1641,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 41224,
+    "environmentReads": 516,
+    "state": "started",
+    "id": 1537,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 2,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 240
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 41354,
+    "environmentReads": 517,
+    "state": "started",
+    "id": 1545,
+    "parentId": 1537,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 64,
+    "details": {}
+  },
+  {
+    "elapsedMs": 41376,
+    "environmentReads": 517,
+    "state": "returned",
+    "id": 1545,
+    "parentId": 1537,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 64,
+    "status": "ok",
+    "durationMs": 21,
+    "details": {}
+  },
+  {
+    "elapsedMs": 41527,
+    "environmentReads": 519,
+    "state": "returned",
+    "id": 1537,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 302,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 240
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 41527,
+    "environmentReads": 519,
+    "state": "started",
+    "id": 1555,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 4,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 43163,
+    "environmentReads": 536,
+    "state": "returned",
+    "id": 1555,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 1636,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 43618,
+    "environmentReads": 540,
+    "state": "started",
+    "id": 1620,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 4,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 44303,
+    "environmentReads": 546,
+    "state": "returned",
+    "id": 1620,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 685,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 45140,
+    "environmentReads": 554,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 36414,
+        "details": {}
+      },
+      {
+        "id": 1636,
+        "parentId": 372,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 829,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 1648,
+        "parentId": 1636,
+        "name": "shared.cases.read",
+        "activeMs": 362,
+        "details": {}
+      },
+      {
+        "id": 1654,
+        "parentId": 1648,
+        "name": "shared.evidence.context",
+        "activeMs": 131,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 1181,
+        "completed": 1181,
+        "threw": 0,
+        "inclusiveMs": 24446,
+        "maximumMs": 48,
+        "outcomes": {
+          "ok": 1181
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 44,
+        "completed": 43,
+        "threw": 0,
+        "inclusiveMs": 13510,
+        "maximumMs": 383,
+        "outcomes": {
+          "ok": 43
+        },
+        "active": 1
+      },
+      "shared.evidence.context": {
+        "started": 247,
+        "completed": 246,
+        "threw": 0,
+        "inclusiveMs": 38866,
+        "maximumMs": 286,
+        "outcomes": {
+          "array:2": 223,
+          "array:4": 15,
+          "array:3": 8
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 70,
+        "completed": 70,
+        "threw": 0,
+        "inclusiveMs": 2441,
+        "maximumMs": 368,
+        "outcomes": {
+          "ok": 70
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 1852,
+        "maximumMs": 685,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 62,
+        "completed": 62,
+        "threw": 0,
+        "inclusiveMs": 25407,
+        "maximumMs": 659,
+        "outcomes": {
+          "ok": 62
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 8,
+        "completed": 8,
+        "threw": 0,
+        "inclusiveMs": 16713,
+        "maximumMs": 2140,
+        "outcomes": {
+          "array:2": 8
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 28,
+        "completed": 28,
+        "threw": 0,
+        "inclusiveMs": 3793,
+        "maximumMs": 147,
+        "outcomes": {
+          "fresh": 28
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 3,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 89,
+        "maximumMs": 32,
+        "outcomes": {
+          "ok": 3
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 5,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 6016,
+        "maximumMs": 1641,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 1
+      },
+      "primary.planner.simulateScenario": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 551,
+        "maximumMs": 302,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 46238,
+    "environmentReads": 563,
+    "state": "returned",
+    "id": 1636,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 5,
+    "status": "ok",
+    "durationMs": 1928,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 46729,
+    "environmentReads": 567,
+    "state": "started",
+    "id": 1700,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 3,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 47086,
+    "environmentReads": 570,
+    "state": "returned",
+    "id": 1700,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 3,
+    "status": "ok",
+    "durationMs": 357,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 47087,
+    "environmentReads": 570,
+    "state": "started",
+    "id": 1719,
+    "parentId": 1718,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 64,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 47539,
+    "environmentReads": 574,
+    "state": "returned",
+    "id": 1719,
+    "parentId": 1718,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 64,
+    "status": "ok",
+    "durationMs": 453,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 47557,
+    "environmentReads": 574,
+    "state": "started",
+    "id": 1731,
+    "parentId": 1730,
+    "name": "shared.evidence.context",
+    "ordinal": 256,
+    "details": {}
+  },
+  {
+    "elapsedMs": 47747,
+    "environmentReads": 576,
+    "state": "returned",
+    "id": 1731,
+    "parentId": 1730,
+    "name": "shared.evidence.context",
+    "ordinal": 256,
+    "status": "array:2",
+    "durationMs": 190,
+    "details": {}
+  },
+  {
+    "elapsedMs": 48992,
+    "environmentReads": 587,
+    "state": "returned",
+    "id": 1718,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 6,
+    "status": "ok",
+    "durationMs": 1905,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 49482,
+    "environmentReads": 591,
+    "state": "started",
+    "id": 1782,
+    "parentId": 372,
+    "name": "shared.results.readByRequest",
+    "ordinal": 4,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 49519,
+    "environmentReads": 591,
+    "state": "returned",
+    "id": 1782,
+    "parentId": 372,
+    "name": "shared.results.readByRequest",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 37,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 49519,
+    "environmentReads": 591,
+    "state": "started",
+    "id": 1783,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 5,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 50276,
+    "environmentReads": 597,
+    "state": "returned",
+    "id": 1783,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 5,
+    "status": "ok",
+    "durationMs": 757,
+    "details": {
+      "kind": "scenario"
+    }
+  },
+  {
+    "elapsedMs": 50279,
+    "environmentReads": 597,
+    "state": "started",
+    "id": 1799,
+    "parentId": 372,
+    "name": "primary.hostUnits.issue",
+    "ordinal": 1,
+    "details": {
+      "scenarioRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+      "baselineRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532",
+      "parameterRef": "line:1"
+    }
+  },
+  {
+    "elapsedMs": 55163,
+    "environmentReads": 635,
+    "state": "returned",
+    "id": 1833,
+    "parentId": 1799,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 9,
+    "status": "array:2",
+    "durationMs": 3347,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 59254,
+    "environmentReads": 667,
+    "state": "returned",
+    "id": 1929,
+    "parentId": 1799,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 10,
+    "status": "array:2",
+    "durationMs": 3366,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 59256,
+    "environmentReads": 667,
+    "state": "started",
+    "id": 2009,
+    "parentId": 1799,
+    "name": "shared.evidence.resolve",
+    "ordinal": 32,
+    "details": {}
+  },
+  {
+    "elapsedMs": 59469,
+    "environmentReads": 669,
+    "state": "returned",
+    "id": 2009,
+    "parentId": 1799,
+    "name": "shared.evidence.resolve",
+    "ordinal": 32,
+    "status": "fresh",
+    "durationMs": 213,
+    "details": {}
+  },
+  {
+    "elapsedMs": 60326,
+    "environmentReads": 676,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 51600,
+        "details": {}
+      },
+      {
+        "id": 1799,
+        "parentId": 372,
+        "name": "primary.hostUnits.issue",
+        "activeMs": 10047,
+        "details": {
+          "scenarioRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+          "baselineRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532",
+          "parameterRef": "line:1"
+        }
+      },
+      {
+        "id": 2014,
+        "parentId": 1799,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 857,
+        "details": {
+          "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+        }
+      },
+      {
+        "id": 2015,
+        "parentId": 1799,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 856,
+        "details": {
+          "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 2026,
+        "parentId": 2014,
+        "name": "shared.evidence.context",
+        "activeMs": 311,
+        "details": {}
+      },
+      {
+        "id": 2027,
+        "parentId": 2015,
+        "name": "shared.evidence.context",
+        "activeMs": 305,
+        "details": {}
+      },
+      {
+        "id": 2033,
+        "parentId": 2027,
+        "name": "shared.sources.resolveForecastSource",
+        "activeMs": 53,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 1447,
+        "completed": 1446,
+        "threw": 0,
+        "inclusiveMs": 32816,
+        "maximumMs": 70,
+        "outcomes": {
+          "ok": 1446
+        },
+        "active": 1
+      },
+      "shared.cases.read": {
+        "started": 53,
+        "completed": 53,
+        "threw": 0,
+        "inclusiveMs": 18268,
+        "maximumMs": 510,
+        "outcomes": {
+          "ok": 53
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 302,
+        "completed": 300,
+        "threw": 0,
+        "inclusiveMs": 51728,
+        "maximumMs": 455,
+        "outcomes": {
+          "array:2": 273,
+          "array:4": 15,
+          "array:3": 12
+        },
+        "active": 2
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 90,
+        "completed": 90,
+        "threw": 0,
+        "inclusiveMs": 3777,
+        "maximumMs": 440,
+        "outcomes": {
+          "ok": 90
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 77,
+        "completed": 75,
+        "threw": 0,
+        "inclusiveMs": 32950,
+        "maximumMs": 1035,
+        "outcomes": {
+          "ok": 75
+        },
+        "active": 2
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 10,
+        "completed": 10,
+        "threw": 0,
+        "inclusiveMs": 23426,
+        "maximumMs": 3366,
+        "outcomes": {
+          "array:2": 10
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 32,
+        "completed": 32,
+        "threw": 0,
+        "inclusiveMs": 4645,
+        "maximumMs": 213,
+        "outcomes": {
+          "fresh": 32
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 9849,
+        "maximumMs": 1928,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 3,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 908,
+        "maximumMs": 357,
+        "outcomes": {
+          "ok": 3
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      }
+    }
+  },
+  {
+    "elapsedMs": 60530,
+    "environmentReads": 677,
+    "state": "returned",
+    "id": 1799,
+    "parentId": 372,
+    "name": "primary.hostUnits.issue",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 10252,
+    "details": {
+      "scenarioRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+      "baselineRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532",
+      "parameterRef": "line:1"
+    }
+  },
+  {
+    "elapsedMs": 62759,
+    "environmentReads": 694,
+    "state": "returned",
+    "id": 2036,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 7,
+    "status": "ok",
+    "durationMs": 2224,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 63295,
+    "environmentReads": 698,
+    "state": "started",
+    "id": 2100,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 4,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 63705,
+    "environmentReads": 701,
+    "state": "returned",
+    "id": 2100,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 410,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 63705,
+    "environmentReads": 701,
+    "state": "started",
+    "id": 2118,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 8,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 65894,
+    "environmentReads": 718,
+    "state": "returned",
+    "id": 2118,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 8,
+    "status": "ok",
+    "durationMs": 2189,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 68636,
+    "environmentReads": 739,
+    "state": "returned",
+    "id": 2182,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 9,
+    "status": "ok",
+    "durationMs": 2184,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 69180,
+    "environmentReads": 743,
+    "state": "started",
+    "id": 2246,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 5,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 69580,
+    "environmentReads": 746,
+    "state": "returned",
+    "id": 2246,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 5,
+    "status": "ok",
+    "durationMs": 400,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 71773,
+    "environmentReads": 763,
+    "state": "returned",
+    "id": 2264,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 10,
+    "status": "ok",
+    "durationMs": 2193,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 74509,
+    "environmentReads": 784,
+    "state": "returned",
+    "id": 2328,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 11,
+    "status": "ok",
+    "durationMs": 2169,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 75063,
+    "environmentReads": 788,
+    "state": "started",
+    "id": 2392,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 6,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 75464,
+    "environmentReads": 791,
+    "state": "returned",
+    "id": 2392,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 6,
+    "status": "ok",
+    "durationMs": 402,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 75527,
+    "environmentReads": 792,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 66801,
+        "details": {}
+      },
+      {
+        "id": 2410,
+        "parentId": 372,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 62,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 2411,
+        "parentId": 2410,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 62,
+        "details": {
+          "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 2412,
+        "parentId": 2411,
+        "name": "shared.evidence.context",
+        "activeMs": 42,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 1713,
+        "completed": 1713,
+        "threw": 0,
+        "inclusiveMs": 40623,
+        "maximumMs": 70,
+        "outcomes": {
+          "ok": 1713
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 63,
+        "completed": 63,
+        "threw": 0,
+        "inclusiveMs": 23338,
+        "maximumMs": 543,
+        "outcomes": {
+          "ok": 63
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 353,
+        "completed": 352,
+        "threw": 0,
+        "inclusiveMs": 63723,
+        "maximumMs": 455,
+        "outcomes": {
+          "array:2": 315,
+          "array:4": 15,
+          "array:3": 22
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 123,
+        "completed": 123,
+        "threw": 0,
+        "inclusiveMs": 7025,
+        "maximumMs": 496,
+        "outcomes": {
+          "ok": 123
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 88,
+        "completed": 87,
+        "threw": 0,
+        "inclusiveMs": 40173,
+        "maximumMs": 1045,
+        "outcomes": {
+          "ok": 87
+        },
+        "active": 1
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 10,
+        "completed": 10,
+        "threw": 0,
+        "inclusiveMs": 23426,
+        "maximumMs": 3366,
+        "outcomes": {
+          "array:2": 10
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 32,
+        "completed": 32,
+        "threw": 0,
+        "inclusiveMs": 4645,
+        "maximumMs": 213,
+        "outcomes": {
+          "fresh": 32
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 12,
+        "completed": 11,
+        "threw": 0,
+        "inclusiveMs": 20808,
+        "maximumMs": 2224,
+        "outcomes": {
+          "ok": 11
+        },
+        "active": 1
+      },
+      "primary.planner.simulateScenario": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 2120,
+        "maximumMs": 410,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 10252,
+        "maximumMs": 10252,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 75970,
+    "environmentReads": 795,
+    "state": "started",
+    "id": 2422,
+    "parentId": 2410,
+    "name": "shared.cases.read",
+    "ordinal": 64,
+    "details": {}
+  },
+  {
+    "elapsedMs": 76467,
+    "environmentReads": 799,
+    "state": "returned",
+    "id": 2422,
+    "parentId": 2410,
+    "name": "shared.cases.read",
+    "ordinal": 64,
+    "status": "ok",
+    "durationMs": 497,
+    "details": {}
+  },
+  {
+    "elapsedMs": 77628,
+    "environmentReads": 808,
+    "state": "returned",
+    "id": 2410,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 12,
+    "status": "ok",
+    "durationMs": 2163,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 79340,
+    "environmentReads": 821,
+    "state": "started",
+    "id": 2501,
+    "parentId": 2474,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 128,
+    "details": {}
+  },
+  {
+    "elapsedMs": 79368,
+    "environmentReads": 821,
+    "state": "returned",
+    "id": 2501,
+    "parentId": 2474,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 128,
+    "status": "ok",
+    "durationMs": 29,
+    "details": {}
+  },
+  {
+    "elapsedMs": 80380,
+    "environmentReads": 829,
+    "state": "returned",
+    "id": 2474,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 13,
+    "status": "ok",
+    "durationMs": 2178,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 80940,
+    "environmentReads": 833,
+    "state": "started",
+    "id": 2538,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 7,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000006
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 81350,
+    "environmentReads": 836,
+    "state": "returned",
+    "id": 2538,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 7,
+    "status": "ok",
+    "durationMs": 410,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000006
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 83529,
+    "environmentReads": 853,
+    "state": "returned",
+    "id": 2556,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 14,
+    "status": "ok",
+    "durationMs": 2179,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 86274,
+    "environmentReads": 874,
+    "state": "returned",
+    "id": 2620,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 15,
+    "status": "ok",
+    "durationMs": 2175,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 86828,
+    "environmentReads": 878,
+    "state": "started",
+    "id": 2684,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 8,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 87230,
+    "environmentReads": 881,
+    "state": "returned",
+    "id": 2684,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 8,
+    "status": "ok",
+    "durationMs": 402,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 87230,
+    "environmentReads": 881,
+    "state": "started",
+    "id": 2702,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 16,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 89418,
+    "environmentReads": 898,
+    "state": "returned",
+    "id": 2702,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 16,
+    "status": "ok",
+    "durationMs": 2188,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 90565,
+    "environmentReads": 907,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 81839,
+        "details": {}
+      },
+      {
+        "id": 2766,
+        "parentId": 372,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 569,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 2778,
+        "parentId": 2766,
+        "name": "shared.cases.read",
+        "activeMs": 62,
+        "details": {}
+      },
+      {
+        "id": 2779,
+        "parentId": 2778,
+        "name": "shared.evidence.context",
+        "activeMs": 43,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 1973,
+        "completed": 1973,
+        "threw": 0,
+        "inclusiveMs": 48043,
+        "maximumMs": 70,
+        "outcomes": {
+          "ok": 1973
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 74,
+        "completed": 73,
+        "threw": 0,
+        "inclusiveMs": 28369,
+        "maximumMs": 543,
+        "outcomes": {
+          "ok": 73
+        },
+        "active": 1
+      },
+      "shared.evidence.context": {
+        "started": 405,
+        "completed": 404,
+        "threw": 0,
+        "inclusiveMs": 75248,
+        "maximumMs": 455,
+        "outcomes": {
+          "array:2": 357,
+          "array:4": 15,
+          "array:3": 32
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 150,
+        "completed": 150,
+        "threw": 0,
+        "inclusiveMs": 10146,
+        "maximumMs": 506,
+        "outcomes": {
+          "ok": 150
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 98,
+        "completed": 98,
+        "threw": 0,
+        "inclusiveMs": 45800,
+        "maximumMs": 1045,
+        "outcomes": {
+          "ok": 98
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 10,
+        "completed": 10,
+        "threw": 0,
+        "inclusiveMs": 23426,
+        "maximumMs": 3366,
+        "outcomes": {
+          "array:2": 10
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 32,
+        "completed": 32,
+        "threw": 0,
+        "inclusiveMs": 4645,
+        "maximumMs": 213,
+        "outcomes": {
+          "fresh": 32
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 17,
+        "completed": 16,
+        "threw": 0,
+        "inclusiveMs": 31691,
+        "maximumMs": 2224,
+        "outcomes": {
+          "ok": 16
+        },
+        "active": 1
+      },
+      "primary.planner.simulateScenario": {
+        "started": 8,
+        "completed": 8,
+        "threw": 0,
+        "inclusiveMs": 2932,
+        "maximumMs": 410,
+        "outcomes": {
+          "ok": 8
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 10252,
+        "maximumMs": 10252,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 92166,
+    "environmentReads": 919,
+    "state": "returned",
+    "id": 2766,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 17,
+    "status": "ok",
+    "durationMs": 2170,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 92715,
+    "environmentReads": 923,
+    "state": "started",
+    "id": 2830,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 9,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000002
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 93114,
+    "environmentReads": 926,
+    "state": "returned",
+    "id": 2830,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 9,
+    "status": "ok",
+    "durationMs": 399,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000002
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 94681,
+    "environmentReads": 938,
+    "state": "started",
+    "id": 2886,
+    "parentId": 2883,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 2048,
+    "details": {}
+  },
+  {
+    "elapsedMs": 94710,
+    "environmentReads": 938,
+    "state": "returned",
+    "id": 2886,
+    "parentId": 2883,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 2048,
+    "status": "ok",
+    "durationMs": 28,
+    "details": {}
+  },
+  {
+    "elapsedMs": 95303,
+    "environmentReads": 943,
+    "state": "returned",
+    "id": 2848,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 18,
+    "status": "ok",
+    "durationMs": 2188,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 98047,
+    "environmentReads": 964,
+    "state": "returned",
+    "id": 2912,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 19,
+    "status": "ok",
+    "durationMs": 2176,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 98596,
+    "environmentReads": 968,
+    "state": "started",
+    "id": 2976,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 10,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 98996,
+    "environmentReads": 971,
+    "state": "returned",
+    "id": 2976,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 10,
+    "status": "ok",
+    "durationMs": 400,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 101194,
+    "environmentReads": 988,
+    "state": "returned",
+    "id": 2994,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 20,
+    "status": "ok",
+    "durationMs": 2198,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 103946,
+    "environmentReads": 1009,
+    "state": "returned",
+    "id": 3058,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 21,
+    "status": "ok",
+    "durationMs": 2185,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 104495,
+    "environmentReads": 1013,
+    "state": "started",
+    "id": 3122,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 11,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 104890,
+    "environmentReads": 1016,
+    "state": "returned",
+    "id": 3122,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 11,
+    "status": "ok",
+    "durationMs": 394,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 105574,
+    "environmentReads": 1022,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 96848,
+        "details": {}
+      },
+      {
+        "id": 3140,
+        "parentId": 372,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 684,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 3152,
+        "parentId": 3140,
+        "name": "shared.cases.read",
+        "activeMs": 169,
+        "details": {}
+      },
+      {
+        "id": 3153,
+        "parentId": 3152,
+        "name": "shared.evidence.context",
+        "activeMs": 152,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 2238,
+        "completed": 2238,
+        "threw": 0,
+        "inclusiveMs": 55616,
+        "maximumMs": 70,
+        "outcomes": {
+          "ok": 2238
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 84,
+        "completed": 83,
+        "threw": 0,
+        "inclusiveMs": 33396,
+        "maximumMs": 543,
+        "outcomes": {
+          "ok": 83
+        },
+        "active": 1
+      },
+      "shared.evidence.context": {
+        "started": 455,
+        "completed": 454,
+        "threw": 0,
+        "inclusiveMs": 86349,
+        "maximumMs": 455,
+        "outcomes": {
+          "array:2": 397,
+          "array:4": 15,
+          "array:3": 42
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 183,
+        "completed": 183,
+        "threw": 0,
+        "inclusiveMs": 13402,
+        "maximumMs": 506,
+        "outcomes": {
+          "ok": 183
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 108,
+        "completed": 108,
+        "threw": 0,
+        "inclusiveMs": 50950,
+        "maximumMs": 1045,
+        "outcomes": {
+          "ok": 108
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 10,
+        "completed": 10,
+        "threw": 0,
+        "inclusiveMs": 23426,
+        "maximumMs": 3366,
+        "outcomes": {
+          "array:2": 10
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 32,
+        "completed": 32,
+        "threw": 0,
+        "inclusiveMs": 4645,
+        "maximumMs": 213,
+        "outcomes": {
+          "fresh": 32
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 22,
+        "completed": 21,
+        "threw": 0,
+        "inclusiveMs": 42609,
+        "maximumMs": 2224,
+        "outcomes": {
+          "ok": 21
+        },
+        "active": 1
+      },
+      "primary.planner.simulateScenario": {
+        "started": 11,
+        "completed": 11,
+        "threw": 0,
+        "inclusiveMs": 4125,
+        "maximumMs": 410,
+        "outcomes": {
+          "ok": 11
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 10252,
+        "maximumMs": 10252,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 107081,
+    "environmentReads": 1033,
+    "state": "returned",
+    "id": 3140,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 22,
+    "status": "ok",
+    "durationMs": 2191,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 109822,
+    "environmentReads": 1054,
+    "state": "returned",
+    "id": 3204,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 23,
+    "status": "ok",
+    "durationMs": 2178,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 110367,
+    "environmentReads": 1058,
+    "state": "started",
+    "id": 3268,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 12,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 110766,
+    "environmentReads": 1061,
+    "state": "returned",
+    "id": 3268,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 12,
+    "status": "ok",
+    "durationMs": 398,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 112943,
+    "environmentReads": 1078,
+    "state": "returned",
+    "id": 3286,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 24,
+    "status": "ok",
+    "durationMs": 2177,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 113508,
+    "environmentReads": 1082,
+    "state": "started",
+    "id": 3350,
+    "parentId": 372,
+    "name": "primary.hostUnits.issue",
+    "ordinal": 2,
+    "details": {
+      "scenarioRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+      "baselineRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532",
+      "parameterRef": "line:1"
+    }
+  },
+  {
+    "elapsedMs": 118419,
+    "environmentReads": 1120,
+    "state": "returned",
+    "id": 3384,
+    "parentId": 3350,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 11,
+    "status": "array:2",
+    "durationMs": 3365,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 120667,
+    "environmentReads": 1138,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 111941,
+        "details": {}
+      },
+      {
+        "id": 3350,
+        "parentId": 372,
+        "name": "primary.hostUnits.issue",
+        "activeMs": 7159,
+        "details": {
+          "scenarioRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+          "baselineRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532",
+          "parameterRef": "line:1"
+        }
+      },
+      {
+        "id": 3480,
+        "parentId": 3350,
+        "name": "shared.scenarios.resolveMany",
+        "activeMs": 1452,
+        "details": {
+          "references": [
+            "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+            "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+          ]
+        }
+      },
+      {
+        "id": 3503,
+        "parentId": 3480,
+        "name": "shared.cases.read",
+        "activeMs": 414,
+        "details": {}
+      },
+      {
+        "id": 3509,
+        "parentId": 3503,
+        "name": "shared.evidence.context",
+        "activeMs": 147,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 2491,
+        "completed": 2491,
+        "threw": 0,
+        "inclusiveMs": 63477,
+        "maximumMs": 88,
+        "outcomes": {
+          "ok": 2491
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 94,
+        "completed": 93,
+        "threw": 0,
+        "inclusiveMs": 38408,
+        "maximumMs": 543,
+        "outcomes": {
+          "ok": 93
+        },
+        "active": 1
+      },
+      "shared.evidence.context": {
+        "started": 508,
+        "completed": 507,
+        "threw": 0,
+        "inclusiveMs": 99015,
+        "maximumMs": 455,
+        "outcomes": {
+          "array:2": 444,
+          "array:4": 15,
+          "array:3": 48
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 202,
+        "completed": 202,
+        "threw": 0,
+        "inclusiveMs": 15334,
+        "maximumMs": 506,
+        "outcomes": {
+          "ok": 202
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 121,
+        "completed": 121,
+        "threw": 0,
+        "inclusiveMs": 58709,
+        "maximumMs": 1045,
+        "outcomes": {
+          "ok": 121
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 12,
+        "completed": 11,
+        "threw": 0,
+        "inclusiveMs": 26791,
+        "maximumMs": 3366,
+        "outcomes": {
+          "array:2": 11
+        },
+        "active": 1
+      },
+      "shared.evidence.resolve": {
+        "started": 34,
+        "completed": 34,
+        "threw": 0,
+        "inclusiveMs": 5222,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 34
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 24,
+        "completed": 24,
+        "threw": 0,
+        "inclusiveMs": 49156,
+        "maximumMs": 2224,
+        "outcomes": {
+          "ok": 24
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 12,
+        "completed": 12,
+        "threw": 0,
+        "inclusiveMs": 4524,
+        "maximumMs": 410,
+        "outcomes": {
+          "ok": 12
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 10252,
+        "maximumMs": 10252,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 1
+      }
+    }
+  },
+  {
+    "elapsedMs": 121845,
+    "environmentReads": 1146,
+    "state": "started",
+    "id": 3543,
+    "parentId": 3537,
+    "name": "shared.evidence.context",
+    "ordinal": 512,
+    "details": {}
+  },
+  {
+    "elapsedMs": 122066,
+    "environmentReads": 1148,
+    "state": "returned",
+    "id": 3543,
+    "parentId": 3537,
+    "name": "shared.evidence.context",
+    "ordinal": 512,
+    "status": "array:2",
+    "durationMs": 221,
+    "details": {}
+  },
+  {
+    "elapsedMs": 122603,
+    "environmentReads": 1152,
+    "state": "returned",
+    "id": 3480,
+    "parentId": 3350,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 12,
+    "status": "array:2",
+    "durationMs": 3388,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 123866,
+    "environmentReads": 1162,
+    "state": "returned",
+    "id": 3350,
+    "parentId": 372,
+    "name": "primary.hostUnits.issue",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 10357,
+    "details": {
+      "scenarioRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+      "baselineRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532",
+      "parameterRef": "line:1"
+    }
+  },
+  {
+    "elapsedMs": 126060,
+    "environmentReads": 1179,
+    "state": "returned",
+    "id": 3587,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 25,
+    "status": "ok",
+    "durationMs": 2188,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 126604,
+    "environmentReads": 1183,
+    "state": "started",
+    "id": 3651,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 13,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 127004,
+    "environmentReads": 1186,
+    "state": "returned",
+    "id": 3651,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 13,
+    "status": "ok",
+    "durationMs": 399,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 127004,
+    "environmentReads": 1186,
+    "state": "started",
+    "id": 3670,
+    "parentId": 3669,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 128,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 127518,
+    "environmentReads": 1190,
+    "state": "returned",
+    "id": 3670,
+    "parentId": 3669,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 128,
+    "status": "ok",
+    "durationMs": 514,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 129176,
+    "environmentReads": 1203,
+    "state": "returned",
+    "id": 3669,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 26,
+    "status": "ok",
+    "durationMs": 2172,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 131907,
+    "environmentReads": 1224,
+    "state": "returned",
+    "id": 3733,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 27,
+    "status": "ok",
+    "durationMs": 2172,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 132448,
+    "environmentReads": 1228,
+    "state": "started",
+    "id": 3797,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 14,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 132846,
+    "environmentReads": 1231,
+    "state": "returned",
+    "id": 3797,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 14,
+    "status": "ok",
+    "durationMs": 398,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 135035,
+    "environmentReads": 1248,
+    "state": "returned",
+    "id": 3815,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 28,
+    "status": "ok",
+    "durationMs": 2189,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 135779,
+    "environmentReads": 1254,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 127052,
+        "details": {}
+      },
+      {
+        "id": 3879,
+        "parentId": 372,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 178,
+        "details": {
+          "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+        }
+      },
+      {
+        "id": 3880,
+        "parentId": 3879,
+        "name": "shared.evidence.context",
+        "activeMs": 157,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 2753,
+        "completed": 2753,
+        "threw": 0,
+        "inclusiveMs": 71545,
+        "maximumMs": 88,
+        "outcomes": {
+          "ok": 2753
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 103,
+        "completed": 103,
+        "threw": 0,
+        "inclusiveMs": 43431,
+        "maximumMs": 543,
+        "outcomes": {
+          "ok": 103
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 559,
+        "completed": 558,
+        "threw": 0,
+        "inclusiveMs": 111199,
+        "maximumMs": 455,
+        "outcomes": {
+          "array:2": 487,
+          "array:4": 15,
+          "array:3": 56
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 230,
+        "completed": 230,
+        "threw": 0,
+        "inclusiveMs": 17963,
+        "maximumMs": 506,
+        "outcomes": {
+          "ok": 230
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 134,
+        "completed": 133,
+        "threw": 0,
+        "inclusiveMs": 65907,
+        "maximumMs": 1045,
+        "outcomes": {
+          "ok": 133
+        },
+        "active": 1
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 12,
+        "completed": 12,
+        "threw": 0,
+        "inclusiveMs": 30178,
+        "maximumMs": 3388,
+        "outcomes": {
+          "array:2": 12
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 36,
+        "completed": 36,
+        "threw": 0,
+        "inclusiveMs": 5654,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 36
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 28,
+        "completed": 28,
+        "threw": 0,
+        "inclusiveMs": 57876,
+        "maximumMs": 2224,
+        "outcomes": {
+          "ok": 28
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 14,
+        "completed": 14,
+        "threw": 0,
+        "inclusiveMs": 5321,
+        "maximumMs": 410,
+        "outcomes": {
+          "ok": 14
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 142001,
+    "environmentReads": 1302,
+    "state": "returned",
+    "id": 3944,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 13,
+    "status": "array:2",
+    "durationMs": 3345,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 146021,
+    "environmentReads": 1334,
+    "state": "returned",
+    "id": 4040,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 14,
+    "status": "array:2",
+    "durationMs": 3308,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 150880,
+    "environmentReads": 1373,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 142154,
+        "details": {}
+      },
+      {
+        "id": 4223,
+        "parentId": 372,
+        "name": "shared.cases.read",
+        "activeMs": 69,
+        "details": {}
+      },
+      {
+        "id": 4224,
+        "parentId": 4223,
+        "name": "shared.evidence.context",
+        "activeMs": 50,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 2999,
+        "completed": 2999,
+        "threw": 0,
+        "inclusiveMs": 80491,
+        "maximumMs": 88,
+        "outcomes": {
+          "ok": 2999
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 112,
+        "completed": 111,
+        "threw": 0,
+        "inclusiveMs": 47415,
+        "maximumMs": 543,
+        "outcomes": {
+          "ok": 111
+        },
+        "active": 1
+      },
+      "shared.evidence.context": {
+        "started": 613,
+        "completed": 612,
+        "threw": 0,
+        "inclusiveMs": 125770,
+        "maximumMs": 455,
+        "outcomes": {
+          "array:2": 535,
+          "array:4": 21,
+          "array:3": 56
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 238,
+        "completed": 238,
+        "threw": 0,
+        "inclusiveMs": 18187,
+        "maximumMs": 506,
+        "outcomes": {
+          "ok": 238
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 149,
+        "completed": 149,
+        "threw": 0,
+        "inclusiveMs": 77148,
+        "maximumMs": 1045,
+        "outcomes": {
+          "ok": 149
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 14,
+        "completed": 14,
+        "threw": 0,
+        "inclusiveMs": 36832,
+        "maximumMs": 3388,
+        "outcomes": {
+          "array:2": 14
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 44,
+        "completed": 44,
+        "threw": 0,
+        "inclusiveMs": 7367,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 44
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 28,
+        "completed": 28,
+        "threw": 0,
+        "inclusiveMs": 57876,
+        "maximumMs": 2224,
+        "outcomes": {
+          "ok": 28
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 14,
+        "completed": 14,
+        "threw": 0,
+        "inclusiveMs": 5321,
+        "maximumMs": 410,
+        "outcomes": {
+          "ok": 14
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 154627,
+    "environmentReads": 1402,
+    "state": "returned",
+    "id": 4234,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 15,
+    "status": "array:2",
+    "durationMs": 3317,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 155344,
+    "environmentReads": 1408,
+    "state": "started",
+    "id": 4330,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 16,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 158671,
+    "environmentReads": 1434,
+    "state": "returned",
+    "id": 4330,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 16,
+    "status": "array:2",
+    "durationMs": 3327,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 161911,
+    "environmentReads": 1460,
+    "state": "started",
+    "id": 4481,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 1,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:081c1bce-031d-4e07-a859-7ce8aaac1826"
+    }
+  },
+  {
+    "elapsedMs": 161911,
+    "environmentReads": 1460,
+    "state": "started",
+    "id": 4482,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 2,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:538f1af7-6b4b-4f88-bf3a-eeb1f4f46eb6"
+    }
+  },
+  {
+    "elapsedMs": 163416,
+    "environmentReads": 1472,
+    "state": "returned",
+    "id": 4481,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 1505,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:081c1bce-031d-4e07-a859-7ce8aaac1826"
+    }
+  },
+  {
+    "elapsedMs": 163425,
+    "environmentReads": 1472,
+    "state": "returned",
+    "id": 4482,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 2,
+    "status": "ok",
+    "durationMs": 1514,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:538f1af7-6b4b-4f88-bf3a-eeb1f4f46eb6"
+    }
+  },
+  {
+    "elapsedMs": 163433,
+    "environmentReads": 1472,
+    "state": "returned",
+    "id": 4483,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 3,
+    "status": "ok",
+    "durationMs": 1522,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:1e521dc7-797a-48a3-9291-f63ebb5d0221"
+    }
+  },
+  {
+    "elapsedMs": 164984,
+    "environmentReads": 1484,
+    "state": "returned",
+    "id": 4515,
+    "parentId": 4514,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 162,
+    "status": "ok",
+    "durationMs": 1542,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 164993,
+    "environmentReads": 1484,
+    "state": "returned",
+    "id": 4517,
+    "parentId": 4516,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 163,
+    "status": "ok",
+    "durationMs": 1543,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 165004,
+    "environmentReads": 1484,
+    "state": "returned",
+    "id": 4519,
+    "parentId": 4518,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 164,
+    "status": "ok",
+    "durationMs": 1550,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 165920,
+    "environmentReads": 1491,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 157193,
+        "details": {}
+      },
+      {
+        "id": 4514,
+        "parentId": 372,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 2477,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 4516,
+        "parentId": 372,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 2470,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 4518,
+        "parentId": 372,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 2465,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 4550,
+        "parentId": 4514,
+        "name": "shared.cases.read",
+        "activeMs": 931,
+        "details": {}
+      },
+      {
+        "id": 4551,
+        "parentId": 4516,
+        "name": "shared.cases.read",
+        "activeMs": 922,
+        "details": {}
+      },
+      {
+        "id": 4552,
+        "parentId": 4518,
+        "name": "shared.cases.read",
+        "activeMs": 911,
+        "details": {}
+      },
+      {
+        "id": 4568,
+        "parentId": 4550,
+        "name": "shared.evidence.context",
+        "activeMs": 136,
+        "details": {}
+      },
+      {
+        "id": 4569,
+        "parentId": 4551,
+        "name": "shared.evidence.context",
+        "activeMs": 131,
+        "details": {}
+      },
+      {
+        "id": 4570,
+        "parentId": 4552,
+        "name": "shared.evidence.context",
+        "activeMs": 127,
+        "details": {}
+      },
+      {
+        "id": 4572,
+        "parentId": 4569,
+        "name": "shared.sources.resolveForecastSource",
+        "activeMs": 86,
+        "details": {}
+      },
+      {
+        "id": 4573,
+        "parentId": 4570,
+        "name": "shared.sources.resolveForecastSource",
+        "activeMs": 78,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 3245,
+        "completed": 3243,
+        "threw": 0,
+        "inclusiveMs": 91834,
+        "maximumMs": 99,
+        "outcomes": {
+          "ok": 3243
+        },
+        "active": 2
+      },
+      "shared.cases.read": {
+        "started": 120,
+        "completed": 117,
+        "threw": 0,
+        "inclusiveMs": 50414,
+        "maximumMs": 543,
+        "outcomes": {
+          "ok": 117
+        },
+        "active": 3
+      },
+      "shared.evidence.context": {
+        "started": 668,
+        "completed": 665,
+        "threw": 0,
+        "inclusiveMs": 144945,
+        "maximumMs": 684,
+        "outcomes": {
+          "array:2": 586,
+          "array:4": 23,
+          "array:3": 56
+        },
+        "active": 3
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 246,
+        "completed": 246,
+        "threw": 0,
+        "inclusiveMs": 18405,
+        "maximumMs": 506,
+        "outcomes": {
+          "ok": 246
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 164,
+        "completed": 164,
+        "threw": 0,
+        "inclusiveMs": 88897,
+        "maximumMs": 1550,
+        "outcomes": {
+          "ok": 164
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 16,
+        "completed": 16,
+        "threw": 0,
+        "inclusiveMs": 43475,
+        "maximumMs": 3388,
+        "outcomes": {
+          "array:2": 16
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 52,
+        "completed": 52,
+        "threw": 0,
+        "inclusiveMs": 9083,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 52
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 31,
+        "completed": 28,
+        "threw": 0,
+        "inclusiveMs": 57876,
+        "maximumMs": 2224,
+        "outcomes": {
+          "ok": 28
+        },
+        "active": 3
+      },
+      "primary.planner.simulateScenario": {
+        "started": 14,
+        "completed": 14,
+        "threw": 0,
+        "inclusiveMs": 5321,
+        "maximumMs": 410,
+        "outcomes": {
+          "ok": 14
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 3,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 4541,
+        "maximumMs": 1522,
+        "outcomes": {
+          "ok": 3
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 166494,
+    "environmentReads": 1496,
+    "state": "returned",
+    "id": 4550,
+    "parentId": 4514,
+    "name": "shared.cases.read",
+    "ordinal": 118,
+    "status": "ok",
+    "durationMs": 1505,
+    "details": {}
+  },
+  {
+    "elapsedMs": 166500,
+    "environmentReads": 1496,
+    "state": "returned",
+    "id": 4551,
+    "parentId": 4516,
+    "name": "shared.cases.read",
+    "ordinal": 119,
+    "status": "ok",
+    "durationMs": 1502,
+    "details": {}
+  },
+  {
+    "elapsedMs": 168438,
+    "environmentReads": 1511,
+    "state": "returned",
+    "id": 4601,
+    "parentId": 4514,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 165,
+    "status": "ok",
+    "durationMs": 1510,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 168455,
+    "environmentReads": 1511,
+    "state": "returned",
+    "id": 4602,
+    "parentId": 4516,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 166,
+    "status": "ok",
+    "durationMs": 1517,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 168468,
+    "environmentReads": 1511,
+    "state": "returned",
+    "id": 4603,
+    "parentId": 4518,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 167,
+    "status": "ok",
+    "durationMs": 1517,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 169946,
+    "environmentReads": 1523,
+    "state": "returned",
+    "id": 4634,
+    "parentId": 4514,
+    "name": "shared.cases.read",
+    "ordinal": 121,
+    "status": "ok",
+    "durationMs": 1503,
+    "details": {}
+  },
+  {
+    "elapsedMs": 169948,
+    "environmentReads": 1523,
+    "state": "returned",
+    "id": 4514,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 29,
+    "status": "ok",
+    "durationMs": 6505,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 169961,
+    "environmentReads": 1523,
+    "state": "returned",
+    "id": 4635,
+    "parentId": 4516,
+    "name": "shared.cases.read",
+    "ordinal": 122,
+    "status": "ok",
+    "durationMs": 1501,
+    "details": {}
+  },
+  {
+    "elapsedMs": 169963,
+    "environmentReads": 1523,
+    "state": "returned",
+    "id": 4516,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 30,
+    "status": "ok",
+    "durationMs": 6513,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 169973,
+    "environmentReads": 1523,
+    "state": "returned",
+    "id": 4518,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 31,
+    "status": "ok",
+    "durationMs": 6519,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 171583,
+    "environmentReads": 1535,
+    "state": "started",
+    "id": 4706,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 15,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 171595,
+    "environmentReads": 1535,
+    "state": "started",
+    "id": 4707,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 16,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 240
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 171605,
+    "environmentReads": 1535,
+    "state": "started",
+    "id": 4709,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 17,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 171690,
+    "environmentReads": 1535,
+    "state": "started",
+    "id": 4712,
+    "parentId": 4706,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 256,
+    "details": {}
+  },
+  {
+    "elapsedMs": 171775,
+    "environmentReads": 1535,
+    "state": "returned",
+    "id": 4712,
+    "parentId": 4706,
+    "name": "shared.sources.resolveForecastCoverage",
+    "ordinal": 256,
+    "status": "ok",
+    "durationMs": 85,
+    "details": {}
+  },
+  {
+    "elapsedMs": 172754,
+    "environmentReads": 1544,
+    "state": "returned",
+    "id": 4706,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 15,
+    "status": "ok",
+    "durationMs": 1171,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 172754,
+    "environmentReads": 1544,
+    "state": "started",
+    "id": 4760,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 32,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 172797,
+    "environmentReads": 1544,
+    "state": "returned",
+    "id": 4707,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 16,
+    "status": "ok",
+    "durationMs": 1201,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 240
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 172802,
+    "environmentReads": 1544,
+    "state": "returned",
+    "id": 4709,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 17,
+    "status": "ok",
+    "durationMs": 1197,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 174281,
+    "environmentReads": 1556,
+    "state": "returned",
+    "id": 4761,
+    "parentId": 4760,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 168,
+    "status": "ok",
+    "durationMs": 1527,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 174325,
+    "environmentReads": 1556,
+    "state": "returned",
+    "id": 4763,
+    "parentId": 4762,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 169,
+    "status": "ok",
+    "durationMs": 1528,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 174333,
+    "environmentReads": 1556,
+    "state": "returned",
+    "id": 4765,
+    "parentId": 4764,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 170,
+    "status": "ok",
+    "durationMs": 1531,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 177755,
+    "environmentReads": 1583,
+    "state": "returned",
+    "id": 4847,
+    "parentId": 4760,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 171,
+    "status": "ok",
+    "durationMs": 1526,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 177796,
+    "environmentReads": 1583,
+    "state": "returned",
+    "id": 4848,
+    "parentId": 4762,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 172,
+    "status": "ok",
+    "durationMs": 1527,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 177802,
+    "environmentReads": 1583,
+    "state": "started",
+    "id": 4881,
+    "parentId": 4762,
+    "name": "shared.cases.read",
+    "ordinal": 128,
+    "details": {}
+  },
+  {
+    "elapsedMs": 177809,
+    "environmentReads": 1583,
+    "state": "returned",
+    "id": 4849,
+    "parentId": 4764,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 173,
+    "status": "ok",
+    "durationMs": 1534,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 179268,
+    "environmentReads": 1595,
+    "state": "returned",
+    "id": 4880,
+    "parentId": 4760,
+    "name": "shared.cases.read",
+    "ordinal": 127,
+    "status": "ok",
+    "durationMs": 1507,
+    "details": {}
+  },
+  {
+    "elapsedMs": 179270,
+    "environmentReads": 1595,
+    "state": "returned",
+    "id": 4760,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 32,
+    "status": "ok",
+    "durationMs": 6515,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 179305,
+    "environmentReads": 1595,
+    "state": "returned",
+    "id": 4881,
+    "parentId": 4762,
+    "name": "shared.cases.read",
+    "ordinal": 128,
+    "status": "ok",
+    "durationMs": 1503,
+    "details": {}
+  },
+  {
+    "elapsedMs": 179306,
+    "environmentReads": 1595,
+    "state": "returned",
+    "id": 4762,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 33,
+    "status": "ok",
+    "durationMs": 6509,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 179315,
+    "environmentReads": 1595,
+    "state": "returned",
+    "id": 4882,
+    "parentId": 4764,
+    "name": "shared.cases.read",
+    "ordinal": 129,
+    "status": "ok",
+    "durationMs": 1501,
+    "details": {}
+  },
+  {
+    "elapsedMs": 179316,
+    "environmentReads": 1595,
+    "state": "returned",
+    "id": 4764,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 34,
+    "status": "ok",
+    "durationMs": 6514,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 181023,
+    "environmentReads": 1608,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 172297,
+        "details": {}
+      },
+      {
+        "id": 4952,
+        "parentId": 372,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 66,
+        "details": {
+          "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+        }
+      },
+      {
+        "id": 4953,
+        "parentId": 4952,
+        "name": "shared.evidence.context",
+        "activeMs": 46,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 3516,
+        "completed": 3516,
+        "threw": 0,
+        "inclusiveMs": 115328,
+        "maximumMs": 101,
+        "outcomes": {
+          "ok": 3516
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 129,
+        "completed": 129,
+        "threw": 0,
+        "inclusiveMs": 68418,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 129
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 717,
+        "completed": 716,
+        "threw": 0,
+        "inclusiveMs": 178634,
+        "maximumMs": 684,
+        "outcomes": {
+          "array:2": 625,
+          "array:4": 23,
+          "array:3": 68
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 282,
+        "completed": 282,
+        "threw": 0,
+        "inclusiveMs": 29707,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 282
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 174,
+        "completed": 173,
+        "threw": 0,
+        "inclusiveMs": 102614,
+        "maximumMs": 1550,
+        "outcomes": {
+          "ok": 173
+        },
+        "active": 1
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 16,
+        "completed": 16,
+        "threw": 0,
+        "inclusiveMs": 43475,
+        "maximumMs": 3388,
+        "outcomes": {
+          "array:2": 16
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 52,
+        "completed": 52,
+        "threw": 0,
+        "inclusiveMs": 9083,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 52
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 34,
+        "completed": 34,
+        "threw": 0,
+        "inclusiveMs": 96953,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 34
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 17,
+        "completed": 17,
+        "threw": 0,
+        "inclusiveMs": 8890,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 17
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 3,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 4541,
+        "maximumMs": 1522,
+        "outcomes": {
+          "ok": 3
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 187351,
+    "environmentReads": 1657,
+    "state": "returned",
+    "id": 5017,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 17,
+    "status": "array:2",
+    "durationMs": 3330,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 191465,
+    "environmentReads": 1689,
+    "state": "returned",
+    "id": 5113,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 18,
+    "status": "array:2",
+    "durationMs": 3400,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 195918,
+    "environmentReads": 1724,
+    "state": "returned",
+    "id": 5242,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 35,
+    "status": "ok",
+    "durationMs": 2228,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 196046,
+    "environmentReads": 1725,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 187320,
+        "details": {}
+      },
+      {
+        "id": 5295,
+        "parentId": 372,
+        "name": "shared.sources.resolveForecastCoverage",
+        "activeMs": 71,
+        "details": {}
+      },
+      {
+        "id": 5296,
+        "parentId": 5295,
+        "name": "shared.evidence.context",
+        "activeMs": 44,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 3762,
+        "completed": 3762,
+        "threw": 0,
+        "inclusiveMs": 123848,
+        "maximumMs": 101,
+        "outcomes": {
+          "ok": 3762
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 138,
+        "completed": 138,
+        "threw": 0,
+        "inclusiveMs": 72947,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 138
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 769,
+        "completed": 768,
+        "threw": 0,
+        "inclusiveMs": 191961,
+        "maximumMs": 684,
+        "outcomes": {
+          "array:2": 673,
+          "array:4": 27,
+          "array:3": 68
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 293,
+        "completed": 292,
+        "threw": 0,
+        "inclusiveMs": 29991,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 292
+        },
+        "active": 1
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 188,
+        "completed": 188,
+        "threw": 0,
+        "inclusiveMs": 112386,
+        "maximumMs": 1550,
+        "outcomes": {
+          "ok": 188
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 18,
+        "completed": 18,
+        "threw": 0,
+        "inclusiveMs": 50206,
+        "maximumMs": 3400,
+        "outcomes": {
+          "array:2": 18
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 60,
+        "completed": 60,
+        "threw": 0,
+        "inclusiveMs": 10788,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 60
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 35,
+        "completed": 35,
+        "threw": 0,
+        "inclusiveMs": 99180,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 35
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 17,
+        "completed": 17,
+        "threw": 0,
+        "inclusiveMs": 8890,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 17
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 3,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 4541,
+        "maximumMs": 1522,
+        "outcomes": {
+          "ok": 3
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 196481,
+    "environmentReads": 1728,
+    "state": "started",
+    "id": 5306,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 18,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 196887,
+    "environmentReads": 1731,
+    "state": "returned",
+    "id": 5306,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 18,
+    "status": "ok",
+    "durationMs": 405,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.0000000000001
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 199087,
+    "environmentReads": 1748,
+    "state": "returned",
+    "id": 5324,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 36,
+    "status": "ok",
+    "durationMs": 2201,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 201825,
+    "environmentReads": 1769,
+    "state": "returned",
+    "id": 5388,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 37,
+    "status": "ok",
+    "durationMs": 2168,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 202369,
+    "environmentReads": 1773,
+    "state": "started",
+    "id": 5452,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 19,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 202773,
+    "environmentReads": 1776,
+    "state": "returned",
+    "id": 5452,
+    "parentId": 372,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 19,
+    "status": "ok",
+    "durationMs": 404,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 320.00000000000017
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 204967,
+    "environmentReads": 1793,
+    "state": "returned",
+    "id": 5470,
+    "parentId": 372,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 38,
+    "status": "ok",
+    "durationMs": 2194,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 211119,
+    "environmentReads": 1841,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 202393,
+        "details": {}
+      },
+      {
+        "id": 5599,
+        "parentId": 372,
+        "name": "shared.scenarios.resolveMany",
+        "activeMs": 2502,
+        "details": {
+          "references": [
+            "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+            "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+          ]
+        }
+      },
+      {
+        "id": 5656,
+        "parentId": 5599,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 177,
+        "details": {
+          "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 5657,
+        "parentId": 5656,
+        "name": "shared.evidence.context",
+        "activeMs": 156,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 4020,
+        "completed": 4020,
+        "threw": 0,
+        "inclusiveMs": 131794,
+        "maximumMs": 101,
+        "outcomes": {
+          "ok": 4020
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 147,
+        "completed": 147,
+        "threw": 0,
+        "inclusiveMs": 77503,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 147
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 821,
+        "completed": 820,
+        "threw": 0,
+        "inclusiveMs": 204392,
+        "maximumMs": 684,
+        "outcomes": {
+          "array:2": 715,
+          "array:4": 29,
+          "array:3": 76
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 318,
+        "completed": 318,
+        "threw": 0,
+        "inclusiveMs": 32601,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 318
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 2610,
+        "maximumMs": 757,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 201,
+        "completed": 200,
+        "threw": 0,
+        "inclusiveMs": 119538,
+        "maximumMs": 1550,
+        "outcomes": {
+          "ok": 200
+        },
+        "active": 1
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 19,
+        "completed": 18,
+        "threw": 0,
+        "inclusiveMs": 50206,
+        "maximumMs": 3400,
+        "outcomes": {
+          "array:2": 18
+        },
+        "active": 1
+      },
+      "shared.evidence.resolve": {
+        "started": 60,
+        "completed": 60,
+        "threw": 0,
+        "inclusiveMs": 10788,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 60
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 4,
+        "completed": 4,
+        "threw": 0,
+        "inclusiveMs": 126,
+        "maximumMs": 37,
+        "outcomes": {
+          "ok": 4
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 38,
+        "completed": 38,
+        "threw": 0,
+        "inclusiveMs": 105743,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 38
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 19,
+        "completed": 19,
+        "threw": 0,
+        "inclusiveMs": 9699,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 19
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 3,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 4541,
+        "maximumMs": 1522,
+        "outcomes": {
+          "ok": 3
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 211971,
+    "environmentReads": 1847,
+    "state": "returned",
+    "id": 5599,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 19,
+    "status": "array:2",
+    "durationMs": 3354,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 215684,
+    "environmentReads": 1876,
+    "state": "started",
+    "id": 5767,
+    "parentId": 5764,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 4096,
+    "details": {}
+  },
+  {
+    "elapsedMs": 215713,
+    "environmentReads": 1876,
+    "state": "returned",
+    "id": 5767,
+    "parentId": 5764,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 4096,
+    "status": "ok",
+    "durationMs": 29,
+    "details": {}
+  },
+  {
+    "elapsedMs": 216050,
+    "environmentReads": 1879,
+    "state": "returned",
+    "id": 5695,
+    "parentId": 372,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 20,
+    "status": "array:2",
+    "durationMs": 3361,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 216052,
+    "environmentReads": 1879,
+    "state": "started",
+    "id": 5775,
+    "parentId": 372,
+    "name": "shared.evidence.resolve",
+    "ordinal": 64,
+    "details": {}
+  },
+  {
+    "elapsedMs": 216266,
+    "environmentReads": 1881,
+    "state": "returned",
+    "id": 5775,
+    "parentId": 372,
+    "name": "shared.evidence.resolve",
+    "ordinal": 64,
+    "status": "fresh",
+    "durationMs": 213,
+    "details": {}
+  },
+  {
+    "elapsedMs": 218800,
+    "environmentReads": 1901,
+    "state": "started",
+    "id": 5835,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 4,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:081c1bce-031d-4e07-a859-7ce8aaac1826"
+    }
+  },
+  {
+    "elapsedMs": 220310,
+    "environmentReads": 1913,
+    "state": "returned",
+    "id": 5835,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 4,
+    "status": "ok",
+    "durationMs": 1510,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:081c1bce-031d-4e07-a859-7ce8aaac1826"
+    }
+  },
+  {
+    "elapsedMs": 220318,
+    "environmentReads": 1913,
+    "state": "returned",
+    "id": 5836,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 5,
+    "status": "ok",
+    "durationMs": 1518,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:538f1af7-6b4b-4f88-bf3a-eeb1f4f46eb6"
+    }
+  },
+  {
+    "elapsedMs": 220327,
+    "environmentReads": 1913,
+    "state": "returned",
+    "id": 5837,
+    "parentId": 372,
+    "name": "shared.results.read",
+    "ordinal": 6,
+    "status": "ok",
+    "durationMs": 1526,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:1e521dc7-797a-48a3-9291-f63ebb5d0221"
+    }
+  },
+  {
+    "elapsedMs": 220375,
+    "environmentReads": 1913,
+    "state": "started",
+    "id": 5869,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 6,
+    "details": {
+      "kind": "sensitivity"
+    }
+  },
+  {
+    "elapsedMs": 221651,
+    "environmentReads": 1919,
+    "state": "returned",
+    "id": 5869,
+    "parentId": 372,
+    "name": "shared.results.write",
+    "ordinal": 6,
+    "status": "ok",
+    "durationMs": 1275,
+    "details": {
+      "kind": "sensitivity"
+    }
+  },
+  {
+    "elapsedMs": 221653,
+    "environmentReads": 1919,
+    "state": "started",
+    "id": 5885,
+    "parentId": 372,
+    "name": "primary.sensitivityBindings.bind",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 224058,
+    "environmentReads": 1929,
+    "state": "started",
+    "id": 5912,
+    "parentId": 5885,
+    "name": "primary.proof.verifySensitivity",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 224101,
+    "environmentReads": 1929,
+    "state": "started",
+    "id": 5913,
+    "parentId": 5912,
+    "name": "primary.hostUnits.resolve",
+    "ordinal": 1,
+    "details": {}
+  },
+  {
+    "elapsedMs": 226128,
+    "environmentReads": 1938,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 217402,
+        "details": {}
+      },
+      {
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "activeMs": 4475,
+        "details": {}
+      },
+      {
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "activeMs": 2070,
+        "details": {}
+      },
+      {
+        "id": 5913,
+        "parentId": 5912,
+        "name": "primary.hostUnits.resolve",
+        "activeMs": 2027,
+        "details": {}
+      },
+      {
+        "id": 5936,
+        "parentId": 5913,
+        "name": "shared.evidence.context",
+        "activeMs": 81,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 4218,
+        "completed": 4218,
+        "threw": 0,
+        "inclusiveMs": 140930,
+        "maximumMs": 101,
+        "outcomes": {
+          "ok": 4218
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 152,
+        "completed": 152,
+        "threw": 0,
+        "inclusiveMs": 80457,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 152
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 865,
+        "completed": 864,
+        "threw": 0,
+        "inclusiveMs": 219769,
+        "maximumMs": 684,
+        "outcomes": {
+          "array:2": 754,
+          "array:4": 33,
+          "array:3": 76,
+          "array:6": 1
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 322,
+        "completed": 322,
+        "threw": 0,
+        "inclusiveMs": 32720,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 322
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 3885,
+        "maximumMs": 1275,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 209,
+        "completed": 209,
+        "threw": 0,
+        "inclusiveMs": 125615,
+        "maximumMs": 1550,
+        "outcomes": {
+          "ok": 209
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 20,
+        "completed": 20,
+        "threw": 0,
+        "inclusiveMs": 56921,
+        "maximumMs": 3400,
+        "outcomes": {
+          "array:2": 20
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 68,
+        "completed": 68,
+        "threw": 0,
+        "inclusiveMs": 12511,
+        "maximumMs": 288,
+        "outcomes": {
+          "fresh": 68
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 166,
+        "maximumMs": 40,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 38,
+        "completed": 38,
+        "threw": 0,
+        "inclusiveMs": 105743,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 38
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 19,
+        "completed": 19,
+        "threw": 0,
+        "inclusiveMs": 9699,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 19
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 7,
+        "completed": 7,
+        "threw": 0,
+        "inclusiveMs": 10050,
+        "maximumMs": 1526,
+        "outcomes": {
+          "ok": 7
+        },
+        "active": 0
+      },
+      "primary.sensitivityBindings.bind": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.proof.verifySensitivity": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.hostUnits.resolve": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      }
+    }
+  },
+  {
+    "elapsedMs": 228826,
+    "environmentReads": 1949,
+    "state": "returned",
+    "id": 5946,
+    "parentId": 5913,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 210,
+    "status": "ok",
+    "durationMs": 1865,
+    "details": {
+      "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+    }
+  },
+  {
+    "elapsedMs": 228844,
+    "environmentReads": 1949,
+    "state": "returned",
+    "id": 5947,
+    "parentId": 5913,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 211,
+    "status": "ok",
+    "durationMs": 1883,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 235952,
+    "environmentReads": 1979,
+    "state": "returned",
+    "id": 5979,
+    "parentId": 5913,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 21,
+    "status": "array:2",
+    "durationMs": 6178,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 241165,
+    "environmentReads": 2002,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 232439,
+        "details": {}
+      },
+      {
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "activeMs": 19513,
+        "details": {}
+      },
+      {
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "activeMs": 17107,
+        "details": {}
+      },
+      {
+        "id": 5913,
+        "parentId": 5912,
+        "name": "primary.hostUnits.resolve",
+        "activeMs": 17064,
+        "details": {}
+      },
+      {
+        "id": 6075,
+        "parentId": 5913,
+        "name": "shared.scenarios.resolveMany",
+        "activeMs": 3893,
+        "details": {
+          "references": [
+            "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+            "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+          ]
+        }
+      },
+      {
+        "id": 6121,
+        "parentId": 6075,
+        "name": "shared.results.readHistoricalScenario",
+        "activeMs": 570,
+        "details": {
+          "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+        }
+      },
+      {
+        "id": 6127,
+        "parentId": 6121,
+        "name": "shared.evidence.context",
+        "activeMs": 84,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 4354,
+        "completed": 4354,
+        "threw": 0,
+        "inclusiveMs": 149186,
+        "maximumMs": 120,
+        "outcomes": {
+          "ok": 4354
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 157,
+        "completed": 157,
+        "threw": 0,
+        "inclusiveMs": 85096,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 157
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 894,
+        "completed": 893,
+        "threw": 0,
+        "inclusiveMs": 233177,
+        "maximumMs": 810,
+        "outcomes": {
+          "array:2": 781,
+          "array:4": 35,
+          "array:3": 76,
+          "array:6": 1
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 330,
+        "completed": 330,
+        "threw": 0,
+        "inclusiveMs": 33120,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 330
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 3885,
+        "maximumMs": 1275,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 218,
+        "completed": 217,
+        "threw": 0,
+        "inclusiveMs": 135016,
+        "maximumMs": 1883,
+        "outcomes": {
+          "ok": 217
+        },
+        "active": 1
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 22,
+        "completed": 21,
+        "threw": 0,
+        "inclusiveMs": 63099,
+        "maximumMs": 6178,
+        "outcomes": {
+          "array:2": 21
+        },
+        "active": 1
+      },
+      "shared.evidence.resolve": {
+        "started": 70,
+        "completed": 70,
+        "threw": 0,
+        "inclusiveMs": 13302,
+        "maximumMs": 395,
+        "outcomes": {
+          "fresh": 70
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 166,
+        "maximumMs": 40,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 38,
+        "completed": 38,
+        "threw": 0,
+        "inclusiveMs": 105743,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 38
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 19,
+        "completed": 19,
+        "threw": 0,
+        "inclusiveMs": 9699,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 19
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 7,
+        "completed": 7,
+        "threw": 0,
+        "inclusiveMs": 10050,
+        "maximumMs": 1526,
+        "outcomes": {
+          "ok": 7
+        },
+        "active": 0
+      },
+      "primary.sensitivityBindings.bind": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.proof.verifySensitivity": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.hostUnits.resolve": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      }
+    }
+  },
+  {
+    "elapsedMs": 243406,
+    "environmentReads": 2011,
+    "state": "returned",
+    "id": 6075,
+    "parentId": 5913,
+    "name": "shared.scenarios.resolveMany",
+    "ordinal": 22,
+    "status": "array:2",
+    "durationMs": 6134,
+    "details": {
+      "references": [
+        "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352",
+        "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+      ]
+    }
+  },
+  {
+    "elapsedMs": 245657,
+    "environmentReads": 2021,
+    "state": "returned",
+    "id": 6160,
+    "parentId": 5913,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 220,
+    "status": "ok",
+    "durationMs": 1844,
+    "details": {
+      "resultRef": "decision-result:9f217fbc-c0f9-48c6-a8d9-3829f2cfa352"
+    }
+  },
+  {
+    "elapsedMs": 245672,
+    "environmentReads": 2021,
+    "state": "returned",
+    "id": 6161,
+    "parentId": 5913,
+    "name": "shared.results.readHistoricalScenario",
+    "ordinal": 221,
+    "status": "ok",
+    "durationMs": 1859,
+    "details": {
+      "resultRef": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 247462,
+    "environmentReads": 2029,
+    "state": "returned",
+    "id": 5913,
+    "parentId": 5912,
+    "name": "primary.hostUnits.resolve",
+    "ordinal": 1,
+    "status": "ok",
+    "durationMs": 23360,
+    "details": {}
+  },
+  {
+    "elapsedMs": 251356,
+    "environmentReads": 2045,
+    "state": "started",
+    "id": 6248,
+    "parentId": 5912,
+    "name": "shared.results.read",
+    "ordinal": 8,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:081c1bce-031d-4e07-a859-7ce8aaac1826"
+    }
+  },
+  {
+    "elapsedMs": 252315,
+    "environmentReads": 2049,
+    "state": "returned",
+    "id": 6248,
+    "parentId": 5912,
+    "name": "shared.results.read",
+    "ordinal": 8,
+    "status": "ok",
+    "durationMs": 959,
+    "details": {
+      "kind": "scenario",
+      "resultRef": "decision-result:081c1bce-031d-4e07-a859-7ce8aaac1826"
+    }
+  },
+  {
+    "elapsedMs": 256171,
+    "environmentReads": 2066,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 247445,
+        "details": {}
+      },
+      {
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "activeMs": 34518,
+        "details": {}
+      },
+      {
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "activeMs": 32113,
+        "details": {}
+      },
+      {
+        "id": 6259,
+        "parentId": 5912,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 3848,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 6299,
+        "parentId": 6259,
+        "name": "shared.cases.read",
+        "activeMs": 766,
+        "details": {}
+      },
+      {
+        "id": 6305,
+        "parentId": 6299,
+        "name": "shared.evidence.context",
+        "activeMs": 286,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 4484,
+        "completed": 4484,
+        "threw": 0,
+        "inclusiveMs": 157517,
+        "maximumMs": 120,
+        "outcomes": {
+          "ok": 4484
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 162,
+        "completed": 161,
+        "threw": 0,
+        "inclusiveMs": 88808,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 161
+        },
+        "active": 1
+      },
+      "shared.evidence.context": {
+        "started": 922,
+        "completed": 921,
+        "threw": 0,
+        "inclusiveMs": 246185,
+        "maximumMs": 810,
+        "outcomes": {
+          "array:2": 807,
+          "array:4": 37,
+          "array:3": 76,
+          "array:6": 1
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 332,
+        "completed": 332,
+        "threw": 0,
+        "inclusiveMs": 33227,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 332
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 3885,
+        "maximumMs": 1275,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 225,
+        "completed": 225,
+        "threw": 0,
+        "inclusiveMs": 144372,
+        "maximumMs": 1883,
+        "outcomes": {
+          "ok": 225
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 22,
+        "completed": 22,
+        "threw": 0,
+        "inclusiveMs": 69234,
+        "maximumMs": 6178,
+        "outcomes": {
+          "array:2": 22
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 76,
+        "completed": 76,
+        "threw": 0,
+        "inclusiveMs": 15687,
+        "maximumMs": 404,
+        "outcomes": {
+          "fresh": 76
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 166,
+        "maximumMs": 40,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 39,
+        "completed": 38,
+        "threw": 0,
+        "inclusiveMs": 105743,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 38
+        },
+        "active": 1
+      },
+      "primary.planner.simulateScenario": {
+        "started": 19,
+        "completed": 19,
+        "threw": 0,
+        "inclusiveMs": 9699,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 19
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 8,
+        "completed": 8,
+        "threw": 0,
+        "inclusiveMs": 11008,
+        "maximumMs": 1526,
+        "outcomes": {
+          "ok": 8
+        },
+        "active": 0
+      },
+      "primary.sensitivityBindings.bind": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.proof.verifySensitivity": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.hostUnits.resolve": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 23360,
+        "maximumMs": 23360,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 256326,
+    "environmentReads": 2066,
+    "state": "returned",
+    "id": 6259,
+    "parentId": 5912,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 39,
+    "status": "ok",
+    "durationMs": 4002,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 257349,
+    "environmentReads": 2070,
+    "state": "started",
+    "id": 6323,
+    "parentId": 5912,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 20,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 258099,
+    "environmentReads": 2073,
+    "state": "returned",
+    "id": 6323,
+    "parentId": 5912,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 20,
+    "status": "ok",
+    "durationMs": 750,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 80
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 262105,
+    "environmentReads": 2090,
+    "state": "returned",
+    "id": 6341,
+    "parentId": 5912,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 40,
+    "status": "ok",
+    "durationMs": 4006,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 268065,
+    "environmentReads": 2115,
+    "state": "returned",
+    "id": 6416,
+    "parentId": 5912,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 41,
+    "status": "ok",
+    "durationMs": 3984,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 269089,
+    "environmentReads": 2119,
+    "state": "started",
+    "id": 6480,
+    "parentId": 5912,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 21,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 240
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 269822,
+    "environmentReads": 2122,
+    "state": "returned",
+    "id": 6480,
+    "parentId": 5912,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 21,
+    "status": "ok",
+    "durationMs": 733,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 240
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 271356,
+    "environmentReads": 2129,
+    "state": "pulse",
+    "aborted": false,
+    "active": [
+      {
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "activeMs": 262630,
+        "details": {}
+      },
+      {
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "activeMs": 49703,
+        "details": {}
+      },
+      {
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "activeMs": 47297,
+        "details": {}
+      },
+      {
+        "id": 6498,
+        "parentId": 5912,
+        "name": "shared.scenarios.resolve",
+        "activeMs": 1533,
+        "details": {
+          "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+        }
+      },
+      {
+        "id": 6510,
+        "parentId": 6498,
+        "name": "shared.cases.read",
+        "activeMs": 570,
+        "details": {}
+      },
+      {
+        "id": 6516,
+        "parentId": 6510,
+        "name": "shared.evidence.context",
+        "activeMs": 91,
+        "details": {}
+      }
+    ],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 4630,
+        "completed": 4630,
+        "threw": 0,
+        "inclusiveMs": 165274,
+        "maximumMs": 120,
+        "outcomes": {
+          "ok": 4630
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 167,
+        "completed": 166,
+        "threw": 0,
+        "inclusiveMs": 93408,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 166
+        },
+        "active": 1
+      },
+      "shared.evidence.context": {
+        "started": 950,
+        "completed": 949,
+        "threw": 0,
+        "inclusiveMs": 257552,
+        "maximumMs": 810,
+        "outcomes": {
+          "array:2": 829,
+          "array:4": 37,
+          "array:3": 82,
+          "array:6": 1
+        },
+        "active": 1
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 351,
+        "completed": 351,
+        "threw": 0,
+        "inclusiveMs": 36785,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 351
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 3885,
+        "maximumMs": 1275,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 230,
+        "completed": 230,
+        "threw": 0,
+        "inclusiveMs": 149095,
+        "maximumMs": 1883,
+        "outcomes": {
+          "ok": 230
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 22,
+        "completed": 22,
+        "threw": 0,
+        "inclusiveMs": 69234,
+        "maximumMs": 6178,
+        "outcomes": {
+          "array:2": 22
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 76,
+        "completed": 76,
+        "threw": 0,
+        "inclusiveMs": 15687,
+        "maximumMs": 404,
+        "outcomes": {
+          "fresh": 76
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "shared.results.readByRequest": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 166,
+        "maximumMs": 40,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 42,
+        "completed": 41,
+        "threw": 0,
+        "inclusiveMs": 117735,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 41
+        },
+        "active": 1
+      },
+      "primary.planner.simulateScenario": {
+        "started": 21,
+        "completed": 21,
+        "threw": 0,
+        "inclusiveMs": 11182,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 21
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 9,
+        "completed": 9,
+        "threw": 0,
+        "inclusiveMs": 11955,
+        "maximumMs": 1526,
+        "outcomes": {
+          "ok": 9
+        },
+        "active": 0
+      },
+      "primary.sensitivityBindings.bind": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.proof.verifySensitivity": {
+        "started": 1,
+        "completed": 0,
+        "threw": 0,
+        "inclusiveMs": 0,
+        "maximumMs": 0,
+        "outcomes": {},
+        "active": 1
+      },
+      "primary.hostUnits.resolve": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 23360,
+        "maximumMs": 23360,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    }
+  },
+  {
+    "elapsedMs": 273848,
+    "environmentReads": 2139,
+    "state": "returned",
+    "id": 6498,
+    "parentId": 5912,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 42,
+    "status": "ok",
+    "durationMs": 4025,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 279811,
+    "environmentReads": 2164,
+    "state": "returned",
+    "id": 6573,
+    "parentId": 5912,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 43,
+    "status": "ok",
+    "durationMs": 3976,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 280814,
+    "environmentReads": 2168,
+    "state": "started",
+    "id": 6637,
+    "parentId": 5912,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 22,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 281581,
+    "environmentReads": 2171,
+    "state": "returned",
+    "id": 6637,
+    "parentId": 5912,
+    "name": "primary.planner.simulateScenario",
+    "ordinal": 22,
+    "status": "ok",
+    "durationMs": 768,
+    "details": {
+      "baseRef": "planner-version:v1:cb84d68b-d8c5-4e76-baee-3fbffc83747f:1",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "line:1",
+          "amount": 400
+        }
+      ]
+    }
+  },
+  {
+    "elapsedMs": 285244,
+    "environmentReads": 2187,
+    "state": "threw",
+    "id": 6701,
+    "parentId": 6695,
+    "name": "shared.evidence.context",
+    "ordinal": 976,
+    "durationMs": 83,
+    "errorName": "Error",
+    "details": {}
+  },
+  {
+    "elapsedMs": 285244,
+    "environmentReads": 2187,
+    "state": "returned",
+    "id": 6695,
+    "parentId": 6655,
+    "name": "shared.cases.read",
+    "ordinal": 172,
+    "status": "denied",
+    "durationMs": 585,
+    "details": {}
+  },
+  {
+    "elapsedMs": 285244,
+    "environmentReads": 2187,
+    "state": "returned",
+    "id": 6655,
+    "parentId": 5912,
+    "name": "shared.scenarios.resolve",
+    "ordinal": 44,
+    "status": "denied",
+    "durationMs": 3663,
+    "details": {
+      "reference": "decision-result:9ad2ca44-4b6c-4467-8d25-438a23e33532"
+    }
+  },
+  {
+    "elapsedMs": 285244,
+    "environmentReads": 2187,
+    "state": "returned",
+    "id": 6703,
+    "parentId": 5912,
+    "name": "shared.sources.resolveForecastSource",
+    "ordinal": 4762,
+    "status": "denied",
+    "durationMs": 0,
+    "details": {}
+  },
+  {
+    "elapsedMs": 285244,
+    "environmentReads": 2187,
+    "state": "returned",
+    "id": 5912,
+    "parentId": 5885,
+    "name": "primary.proof.verifySensitivity",
+    "ordinal": 1,
+    "status": "false",
+    "durationMs": 61186,
+    "details": {}
+  },
+  {
+    "elapsedMs": 285244,
+    "environmentReads": 2187,
+    "state": "returned",
+    "id": 5885,
+    "parentId": 372,
+    "name": "primary.sensitivityBindings.bind",
+    "ordinal": 1,
+    "status": "denied",
+    "durationMs": 63592,
+    "details": {}
+  },
+  {
+    "elapsedMs": 285245,
+    "environmentReads": 2187,
+    "state": "threw",
+    "id": 372,
+    "parentId": null,
+    "name": "phase.host.evaluate-and-store",
+    "ordinal": 1,
+    "durationMs": 276519,
+    "errorName": "Error",
+    "details": {}
+  },
+  {
+    "elapsedMs": 285248,
+    "environmentReads": 2187,
+    "state": "finished",
+    "aborted": true,
+    "active": [],
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 8721,
+        "maximumMs": 8721,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 4762,
+        "completed": 4762,
+        "threw": 0,
+        "inclusiveMs": 172169,
+        "maximumMs": 120,
+        "outcomes": {
+          "ok": 4761,
+          "denied": 1
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 172,
+        "completed": 172,
+        "threw": 0,
+        "inclusiveMs": 98601,
+        "maximumMs": 1508,
+        "outcomes": {
+          "ok": 171,
+          "denied": 1
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 976,
+        "completed": 975,
+        "threw": 1,
+        "inclusiveMs": 268186,
+        "maximumMs": 810,
+        "outcomes": {
+          "array:2": 851,
+          "array:4": 37,
+          "array:3": 86,
+          "array:6": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 365,
+        "completed": 365,
+        "threw": 0,
+        "inclusiveMs": 39224,
+        "maximumMs": 1463,
+        "outcomes": {
+          "ok": 365
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 3885,
+        "maximumMs": 1275,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 235,
+        "completed": 235,
+        "threw": 0,
+        "inclusiveMs": 153789,
+        "maximumMs": 1883,
+        "outcomes": {
+          "ok": 235
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 22,
+        "completed": 22,
+        "threw": 0,
+        "inclusiveMs": 69234,
+        "maximumMs": 6178,
+        "outcomes": {
+          "array:2": 22
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 76,
+        "completed": 76,
+        "threw": 0,
+        "inclusiveMs": 15687,
+        "maximumMs": 404,
+        "outcomes": {
+          "fresh": 76
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 5,
+        "maximumMs": 5,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 1,
+        "inclusiveMs": 276519,
+        "maximumMs": 276519,
+        "outcomes": {},
+        "active": 0
+      },
+      "shared.results.readByRequest": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 166,
+        "maximumMs": 40,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 44,
+        "completed": 44,
+        "threw": 0,
+        "inclusiveMs": 129400,
+        "maximumMs": 6519,
+        "outcomes": {
+          "ok": 43,
+          "denied": 1
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 22,
+        "completed": 22,
+        "threw": 0,
+        "inclusiveMs": 11950,
+        "maximumMs": 1201,
+        "outcomes": {
+          "ok": 22
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 2,
+        "completed": 2,
+        "threw": 0,
+        "inclusiveMs": 20609,
+        "maximumMs": 10357,
+        "outcomes": {
+          "ok": 2
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 10,
+        "completed": 10,
+        "threw": 0,
+        "inclusiveMs": 12897,
+        "maximumMs": 1526,
+        "outcomes": {
+          "ok": 10
+        },
+        "active": 0
+      },
+      "primary.sensitivityBindings.bind": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 63592,
+        "maximumMs": 63592,
+        "outcomes": {
+          "denied": 1
+        },
+        "active": 0
+      },
+      "primary.proof.verifySensitivity": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 61186,
+        "maximumMs": 61186,
+        "outcomes": {
+          "false": 1
+        },
+        "active": 0
+      },
+      "primary.hostUnits.resolve": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 23360,
+        "maximumMs": 23360,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    }
+  }
+]

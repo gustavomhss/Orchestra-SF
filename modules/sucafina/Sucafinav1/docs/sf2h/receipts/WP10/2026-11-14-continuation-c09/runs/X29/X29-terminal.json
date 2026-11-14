@@ -1,0 +1,1270 @@
+{
+  "schema": "wp10-ci-receipt-v1",
+  "label": "X29",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "sha": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+    "tree": "06db6b04ee6bdb2af26b71d0b4031d769b76d219"
+  },
+  "snapshot": {
+    "sha": "d356d543298835b09b0452777fbd76cdaea77c85",
+    "tree": "d6e9e7e25fa52d292fb4d09b444e2440c4c3b728",
+    "parents": [
+      "813806af6c2ce74b2a087139c544e90dd1adcbe4"
+    ],
+    "only_diff_from_W": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp10-813806af-821eb0a6-01"
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "blob": "e21191fec19858eeaf49109057fb9203ac72dd3b",
+    "sha256": "821eb0a6ccf2937cf026854389f3f882a6cad60e2e9c14941c9327212f3e3cb4",
+    "bytes": 281,
+    "literal": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    }
+  },
+  "run": {
+    "id": 43628663680,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628663680",
+    "status": "completed",
+    "conclusion": "failure",
+    "attempt": 1,
+    "created_at": "2026-11-14T18:48:43Z",
+    "updated_at": "2026-11-14T18:55:13Z"
+  },
+  "jobs": [
+    {
+      "id": 132550149012,
+      "name": "test (ubuntu-24.04)",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628663680/job/132550149012",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-14T18:48:45Z",
+      "completed_at": "2026-11-14T18:55:04Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T18:48:46Z",
+          "completed_at": "2026-11-14T18:48:47Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T18:48:47Z",
+          "completed_at": "2026-11-14T18:48:52Z"
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3,
+          "started_at": "2026-11-14T18:48:52Z",
+          "completed_at": "2026-11-14T18:48:52Z"
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-14T18:48:52Z",
+          "completed_at": "2026-11-14T18:48:52Z"
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-14T18:48:52Z",
+          "completed_at": "2026-11-14T18:48:57Z"
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-14T18:48:57Z",
+          "completed_at": "2026-11-14T18:48:57Z"
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-14T18:48:57Z",
+          "completed_at": "2026-11-14T18:48:57Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-14T18:48:57Z",
+          "completed_at": "2026-11-14T18:49:33Z"
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-14T18:49:33Z",
+          "completed_at": "2026-11-14T18:49:34Z"
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-14T18:49:34Z",
+          "completed_at": "2026-11-14T18:49:34Z"
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-14T18:49:34Z",
+          "completed_at": "2026-11-14T18:49:34Z"
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-14T18:49:34Z",
+          "completed_at": "2026-11-14T18:49:43Z"
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-14T18:49:43Z",
+          "completed_at": "2026-11-14T18:49:43Z"
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-14T18:49:43Z",
+          "completed_at": "2026-11-14T18:49:43Z"
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-14T18:49:43Z",
+          "completed_at": "2026-11-14T18:49:43Z"
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-14T18:49:43Z",
+          "completed_at": "2026-11-14T18:49:43Z"
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-14T18:49:43Z",
+          "completed_at": "2026-11-14T18:50:15Z"
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-14T18:50:15Z",
+          "completed_at": "2026-11-14T18:50:15Z"
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-14T18:50:15Z",
+          "completed_at": "2026-11-14T18:50:15Z"
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20,
+          "started_at": "2026-11-14T18:50:15Z",
+          "completed_at": "2026-11-14T18:55:01Z"
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-14T18:55:01Z",
+          "completed_at": "2026-11-14T18:55:01Z"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-14T18:55:01Z",
+          "completed_at": "2026-11-14T18:55:01Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42,
+          "started_at": "2026-11-14T18:55:01Z",
+          "completed_at": "2026-11-14T18:55:01Z"
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-14T18:55:01Z",
+          "completed_at": "2026-11-14T18:55:01Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-11-14T18:55:01Z",
+          "completed_at": "2026-11-14T18:55:01Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-11-14T18:55:01Z",
+          "completed_at": "2026-11-14T18:55:01Z"
+        }
+      ]
+    },
+    {
+      "id": 132551901878,
+      "name": "cleanup",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628663680/job/132551901878",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T18:55:06Z",
+      "completed_at": "2026-11-14T18:55:12Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T18:55:06Z",
+          "completed_at": "2026-11-14T18:55:06Z"
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T18:55:06Z",
+          "completed_at": "2026-11-14T18:55:11Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-14T18:55:11Z",
+          "completed_at": "2026-11-14T18:55:11Z"
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "selection": {
+    "expected_files": [
+      "./Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+    ],
+    "observed_files": [
+      "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+    ],
+    "runner": "bun 1.3.14 (0d9b296a)",
+    "tests": 1,
+    "files": 1,
+    "pass": 0,
+    "fail": 1,
+    "expect_calls": 3,
+    "bun_duration_seconds": 285.8,
+    "test_duration_ms": 285252.85,
+    "configured_total_assertions": 40,
+    "cooperative_deadline_ms": 285000,
+    "bun_test_timeout_ms": 300000,
+    "request_timeout_ms": 120000,
+    "test_blob": "fa4bdf61e69af2498b5668a5dfceb9286613d0bd",
+    "test_identical_to_W27": true
+  },
+  "omni": {
+    "nonce": "198da391adf18595b28e37401694ce3a",
+    "result": "not applicable",
+    "declared": 0,
+    "spawned": 0,
+    "delegated": 0,
+    "limitation": "No declaring test ran; this run proves nothing about omni."
+  },
+  "failure": {
+    "message": "portfolio-host-exact-threshold exceeded its 285000ms cooperative deadline",
+    "source": "test/product/wp10/integration/composition-test-deadline.ts:5:29",
+    "active_phase": "host.evaluate-and-store",
+    "first_negative_outcomes_elapsed_ms": 285244,
+    "final_elapsed_ms": 285248,
+    "aborted": true,
+    "active_after_cleanup": [],
+    "earlier_negative_outcomes_observed": false
+  },
+  "progress": {
+    "fixture": "PASS",
+    "storage_before": "PASS",
+    "three_initial_samples": "produced and stored",
+    "threshold_probes": "returned ok",
+    "raw_sensitivity_write": {
+      "status": "ok",
+      "started_elapsed_ms": 220375,
+      "returned_elapsed_ms": 221651,
+      "duration_ms": 1275,
+      "environment_reads_at_return": 1919
+    },
+    "first_binding": {
+      "started_elapsed_ms": 221653,
+      "returned_elapsed_ms": 285244,
+      "status": "denied",
+      "duration_ms": 63592
+    },
+    "first_proof": {
+      "started_elapsed_ms": 224058,
+      "returned_elapsed_ms": 285244,
+      "status": "false",
+      "duration_ms": 61186
+    },
+    "binding_host_unit_resolve": {
+      "status": "ok",
+      "duration_ms": 23360
+    },
+    "binding_sample_recalculations": "three returned ok, last at281581ms",
+    "host_return": "NOT_REACHED",
+    "usable_final_persistence": "NOT_PROVEN",
+    "recomposed_service_read": "NOT_REACHED",
+    "same_operation_retry": "NOT_REACHED",
+    "authority_revocation": "NOT_REACHED",
+    "store_restart": "NOT_CLAIMED: test recomposes host service/verifier over still-open C08 store"
+  },
+  "environment_reads": {
+    "fixture": 120,
+    "host_evaluate_and_store": 2067,
+    "total": 2187
+  },
+  "trace_events": 322,
+  "composition_phases": [
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.complete",
+      "state": "started",
+      "elapsedMs": 1
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 2
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 43,
+      "elapsedMs": 45,
+      "aborted": false
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.produce-scenarios",
+      "state": "started",
+      "elapsedMs": 96
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.produce-scenarios",
+      "state": "returned",
+      "phaseMs": 1043,
+      "elapsedMs": 1139,
+      "aborted": false
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.issue-units",
+      "state": "started",
+      "elapsedMs": 1153
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.issue-units",
+      "state": "returned",
+      "phaseMs": 6706,
+      "elapsedMs": 7859,
+      "aborted": false
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.register-human-rule",
+      "state": "started",
+      "elapsedMs": 7868
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.register-human-rule",
+      "state": "returned",
+      "phaseMs": 844,
+      "elapsedMs": 8713,
+      "aborted": false
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "fixture.complete",
+      "state": "returned",
+      "phaseMs": 8720,
+      "elapsedMs": 8721,
+      "aborted": false
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "storage.before",
+      "state": "started",
+      "elapsedMs": 8721
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "storage.before",
+      "state": "returned",
+      "phaseMs": 5,
+      "elapsedMs": 8726,
+      "aborted": false
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "host.evaluate-and-store",
+      "state": "started",
+      "elapsedMs": 8726
+    },
+    {
+      "fixture": "portfolio-host-exact-threshold",
+      "phase": "host.evaluate-and-store",
+      "state": "returned",
+      "phaseMs": 276519,
+      "elapsedMs": 285245,
+      "aborted": true
+    }
+  ],
+  "observations": [
+    {
+      "phase": "fixture.complete",
+      "environmentReads": 120,
+      "totalEnvironmentReads": 120
+    },
+    {
+      "phase": "storage.before",
+      "environmentReads": 0,
+      "totalEnvironmentReads": 120
+    },
+    {
+      "phase": "host.evaluate-and-store",
+      "environmentReads": 2067,
+      "totalEnvironmentReads": 2187
+    }
+  ],
+  "final_metrics": {
+    "phase.fixture.complete": {
+      "started": 1,
+      "completed": 1,
+      "threw": 0,
+      "inclusiveMs": 8721,
+      "maximumMs": 8721,
+      "outcomes": {
+        "returned": 1
+      },
+      "active": 0
+    },
+    "shared.sources.resolveForecastSource": {
+      "started": 4762,
+      "completed": 4762,
+      "threw": 0,
+      "inclusiveMs": 172169,
+      "maximumMs": 120,
+      "outcomes": {
+        "ok": 4761,
+        "denied": 1
+      },
+      "active": 0
+    },
+    "shared.cases.read": {
+      "started": 172,
+      "completed": 172,
+      "threw": 0,
+      "inclusiveMs": 98601,
+      "maximumMs": 1508,
+      "outcomes": {
+        "ok": 171,
+        "denied": 1
+      },
+      "active": 0
+    },
+    "shared.evidence.context": {
+      "started": 976,
+      "completed": 975,
+      "threw": 1,
+      "inclusiveMs": 268186,
+      "maximumMs": 810,
+      "outcomes": {
+        "array:2": 851,
+        "array:4": 37,
+        "array:3": 86,
+        "array:6": 1
+      },
+      "active": 0
+    },
+    "shared.sources.resolveForecastCoverage": {
+      "started": 365,
+      "completed": 365,
+      "threw": 0,
+      "inclusiveMs": 39224,
+      "maximumMs": 1463,
+      "outcomes": {
+        "ok": 365
+      },
+      "active": 0
+    },
+    "shared.results.write": {
+      "started": 6,
+      "completed": 6,
+      "threw": 0,
+      "inclusiveMs": 3885,
+      "maximumMs": 1275,
+      "outcomes": {
+        "ok": 6
+      },
+      "active": 0
+    },
+    "shared.results.readHistoricalScenario": {
+      "started": 235,
+      "completed": 235,
+      "threw": 0,
+      "inclusiveMs": 153789,
+      "maximumMs": 1883,
+      "outcomes": {
+        "ok": 235
+      },
+      "active": 0
+    },
+    "shared.scenarios.resolveMany": {
+      "started": 22,
+      "completed": 22,
+      "threw": 0,
+      "inclusiveMs": 69234,
+      "maximumMs": 6178,
+      "outcomes": {
+        "array:2": 22
+      },
+      "active": 0
+    },
+    "shared.evidence.resolve": {
+      "started": 76,
+      "completed": 76,
+      "threw": 0,
+      "inclusiveMs": 15687,
+      "maximumMs": 404,
+      "outcomes": {
+        "fresh": 76
+      },
+      "active": 0
+    },
+    "phase.storage.before": {
+      "started": 1,
+      "completed": 1,
+      "threw": 0,
+      "inclusiveMs": 5,
+      "maximumMs": 5,
+      "outcomes": {
+        "returned": 1
+      },
+      "active": 0
+    },
+    "phase.host.evaluate-and-store": {
+      "started": 1,
+      "completed": 0,
+      "threw": 1,
+      "inclusiveMs": 276519,
+      "maximumMs": 276519,
+      "outcomes": {},
+      "active": 0
+    },
+    "shared.results.readByRequest": {
+      "started": 5,
+      "completed": 5,
+      "threw": 0,
+      "inclusiveMs": 166,
+      "maximumMs": 40,
+      "outcomes": {
+        "ok": 5
+      },
+      "active": 0
+    },
+    "shared.scenarios.resolve": {
+      "started": 44,
+      "completed": 44,
+      "threw": 0,
+      "inclusiveMs": 129400,
+      "maximumMs": 6519,
+      "outcomes": {
+        "ok": 43,
+        "denied": 1
+      },
+      "active": 0
+    },
+    "primary.planner.simulateScenario": {
+      "started": 22,
+      "completed": 22,
+      "threw": 0,
+      "inclusiveMs": 11950,
+      "maximumMs": 1201,
+      "outcomes": {
+        "ok": 22
+      },
+      "active": 0
+    },
+    "primary.hostUnits.issue": {
+      "started": 2,
+      "completed": 2,
+      "threw": 0,
+      "inclusiveMs": 20609,
+      "maximumMs": 10357,
+      "outcomes": {
+        "ok": 2
+      },
+      "active": 0
+    },
+    "shared.results.read": {
+      "started": 10,
+      "completed": 10,
+      "threw": 0,
+      "inclusiveMs": 12897,
+      "maximumMs": 1526,
+      "outcomes": {
+        "ok": 10
+      },
+      "active": 0
+    },
+    "primary.sensitivityBindings.bind": {
+      "started": 1,
+      "completed": 1,
+      "threw": 0,
+      "inclusiveMs": 63592,
+      "maximumMs": 63592,
+      "outcomes": {
+        "denied": 1
+      },
+      "active": 0
+    },
+    "primary.proof.verifySensitivity": {
+      "started": 1,
+      "completed": 1,
+      "threw": 0,
+      "inclusiveMs": 61186,
+      "maximumMs": 61186,
+      "outcomes": {
+        "false": 1
+      },
+      "active": 0
+    },
+    "primary.hostUnits.resolve": {
+      "started": 1,
+      "completed": 1,
+      "threw": 0,
+      "inclusiveMs": 23360,
+      "maximumMs": 23360,
+      "outcomes": {
+        "ok": 1
+      },
+      "active": 0
+    }
+  },
+  "comparison": {
+    "baseline": {
+      "label": "X27",
+      "W": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "S": "329a3b4547ec77c6b516ac1f28c732f0fc076902",
+      "run_id": 43623440133,
+      "test_job_id": 132533968037,
+      "request_sha256": "f6f9f060070f9a06a1798d1558c0e69f3638ea54df85304e45572e80f935b076",
+      "log_sha256": "5502d1994dbf67587ac303043275072842563fcea8f3d490ef45ba6f35a5ec13"
+    },
+    "same_test_blob": true,
+    "same_budgets": true,
+    "requested_file_arg_normalization": "X29 adds canonical ./ prefix and puts file before common flags; both logs observed exactly same single full test file.",
+    "raw_sensitivity_write_completed_elapsed_ms": {
+      "X27": 209914,
+      "X29": 221651
+    },
+    "raw_sensitivity_write_environment_reads": {
+      "X27": 1919,
+      "X29": 1919
+    },
+    "first_bind_started_elapsed_ms": {
+      "X27": 209916,
+      "X29": 221653
+    },
+    "first_proof_started_elapsed_ms": {
+      "X27": 212103,
+      "X29": 224058
+    },
+    "total_environment_reads": {
+      "X27": 2246,
+      "X29": 2187
+    },
+    "metrics": [
+      {
+        "name": "phase.fixture.complete",
+        "X27": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 7766,
+          "maximumMs": 7766,
+          "outcomes": {
+            "returned": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 8721,
+          "maximumMs": 8721,
+          "outcomes": {
+            "returned": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.sources.resolveForecastSource",
+        "X27": {
+          "started": 4885,
+          "completed": 4885,
+          "threw": 0,
+          "inclusiveMs": 189597,
+          "maximumMs": 142,
+          "outcomes": {
+            "ok": 4885
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 4762,
+          "completed": 4762,
+          "threw": 0,
+          "inclusiveMs": 172169,
+          "maximumMs": 120,
+          "outcomes": {
+            "ok": 4761,
+            "denied": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.cases.read",
+        "X27": {
+          "started": 177,
+          "completed": 177,
+          "threw": 0,
+          "inclusiveMs": 97897,
+          "maximumMs": 1501,
+          "outcomes": {
+            "ok": 176,
+            "unavailable": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 172,
+          "completed": 172,
+          "threw": 0,
+          "inclusiveMs": 98601,
+          "maximumMs": 1508,
+          "outcomes": {
+            "ok": 171,
+            "denied": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.evidence.context",
+        "X27": {
+          "started": 1003,
+          "completed": 1002,
+          "threw": 1,
+          "inclusiveMs": 269829,
+          "maximumMs": 820,
+          "outcomes": {
+            "array:2": 876,
+            "array:4": 37,
+            "array:3": 88,
+            "array:6": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 976,
+          "completed": 975,
+          "threw": 1,
+          "inclusiveMs": 268186,
+          "maximumMs": 810,
+          "outcomes": {
+            "array:2": 851,
+            "array:4": 37,
+            "array:3": 86,
+            "array:6": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.sources.resolveForecastCoverage",
+        "X27": {
+          "started": 370,
+          "completed": 370,
+          "threw": 0,
+          "inclusiveMs": 39850,
+          "maximumMs": 1419,
+          "outcomes": {
+            "ok": 370
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 365,
+          "completed": 365,
+          "threw": 0,
+          "inclusiveMs": 39224,
+          "maximumMs": 1463,
+          "outcomes": {
+            "ok": 365
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.results.write",
+        "X27": {
+          "started": 6,
+          "completed": 6,
+          "threw": 0,
+          "inclusiveMs": 3717,
+          "maximumMs": 1367,
+          "outcomes": {
+            "ok": 6
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 6,
+          "completed": 6,
+          "threw": 0,
+          "inclusiveMs": 3885,
+          "maximumMs": 1275,
+          "outcomes": {
+            "ok": 6
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.results.readHistoricalScenario",
+        "X27": {
+          "started": 245,
+          "completed": 245,
+          "threw": 0,
+          "inclusiveMs": 154478,
+          "maximumMs": 1844,
+          "outcomes": {
+            "ok": 243,
+            "denied": 2
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 235,
+          "completed": 235,
+          "threw": 0,
+          "inclusiveMs": 153789,
+          "maximumMs": 1883,
+          "outcomes": {
+            "ok": 235
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.scenarios.resolveMany",
+        "X27": {
+          "started": 24,
+          "completed": 24,
+          "threw": 0,
+          "inclusiveMs": 73923,
+          "maximumMs": 6108,
+          "outcomes": {
+            "array:2": 24
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 22,
+          "completed": 22,
+          "threw": 0,
+          "inclusiveMs": 69234,
+          "maximumMs": 6178,
+          "outcomes": {
+            "array:2": 22
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.evidence.resolve",
+        "X27": {
+          "started": 80,
+          "completed": 80,
+          "threw": 0,
+          "inclusiveMs": 15545,
+          "maximumMs": 414,
+          "outcomes": {
+            "fresh": 78,
+            "unavailable": 2
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 76,
+          "completed": 76,
+          "threw": 0,
+          "inclusiveMs": 15687,
+          "maximumMs": 404,
+          "outcomes": {
+            "fresh": 76
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "phase.storage.before",
+        "X27": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 6,
+          "maximumMs": 6,
+          "outcomes": {
+            "returned": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 5,
+          "maximumMs": 5,
+          "outcomes": {
+            "returned": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "phase.host.evaluate-and-store",
+        "X27": {
+          "started": 1,
+          "completed": 0,
+          "threw": 1,
+          "inclusiveMs": 277391,
+          "maximumMs": 277391,
+          "outcomes": {},
+          "active": 0
+        },
+        "X29": {
+          "started": 1,
+          "completed": 0,
+          "threw": 1,
+          "inclusiveMs": 276519,
+          "maximumMs": 276519,
+          "outcomes": {},
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.results.readByRequest",
+        "X27": {
+          "started": 5,
+          "completed": 5,
+          "threw": 0,
+          "inclusiveMs": 135,
+          "maximumMs": 36,
+          "outcomes": {
+            "ok": 5
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 5,
+          "completed": 5,
+          "threw": 0,
+          "inclusiveMs": 166,
+          "maximumMs": 40,
+          "outcomes": {
+            "ok": 5
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.scenarios.resolve",
+        "X27": {
+          "started": 44,
+          "completed": 44,
+          "threw": 0,
+          "inclusiveMs": 124342,
+          "maximumMs": 6314,
+          "outcomes": {
+            "ok": 44
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 44,
+          "completed": 44,
+          "threw": 0,
+          "inclusiveMs": 129400,
+          "maximumMs": 6519,
+          "outcomes": {
+            "ok": 43,
+            "denied": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "primary.planner.simulateScenario",
+        "X27": {
+          "started": 22,
+          "completed": 22,
+          "threw": 0,
+          "inclusiveMs": 12318,
+          "maximumMs": 1240,
+          "outcomes": {
+            "ok": 22
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 22,
+          "completed": 22,
+          "threw": 0,
+          "inclusiveMs": 11950,
+          "maximumMs": 1201,
+          "outcomes": {
+            "ok": 22
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "primary.hostUnits.issue",
+        "X27": {
+          "started": 3,
+          "completed": 3,
+          "threw": 0,
+          "inclusiveMs": 31935,
+          "maximumMs": 12179,
+          "outcomes": {
+            "ok": 2,
+            "stale": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 2,
+          "completed": 2,
+          "threw": 0,
+          "inclusiveMs": 20609,
+          "maximumMs": 10357,
+          "outcomes": {
+            "ok": 2
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "shared.results.read",
+        "X27": {
+          "started": 10,
+          "completed": 10,
+          "threw": 0,
+          "inclusiveMs": 12337,
+          "maximumMs": 1507,
+          "outcomes": {
+            "ok": 10
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 10,
+          "completed": 10,
+          "threw": 0,
+          "inclusiveMs": 12897,
+          "maximumMs": 1526,
+          "outcomes": {
+            "ok": 10
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "primary.sensitivityBindings.bind",
+        "X27": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 75247,
+          "maximumMs": 75247,
+          "outcomes": {
+            "denied": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 63592,
+          "maximumMs": 63592,
+          "outcomes": {
+            "denied": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "primary.proof.verifySensitivity",
+        "X27": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 73060,
+          "maximumMs": 73060,
+          "outcomes": {
+            "false": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 61186,
+          "maximumMs": 61186,
+          "outcomes": {
+            "false": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      },
+      {
+        "name": "primary.hostUnits.resolve",
+        "X27": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 22807,
+          "maximumMs": 22807,
+          "outcomes": {
+            "ok": 1
+          },
+          "active": 0
+        },
+        "X29": {
+          "started": 1,
+          "completed": 1,
+          "threw": 0,
+          "inclusiveMs": 23360,
+          "maximumMs": 23360,
+          "outcomes": {
+            "ok": 1
+          },
+          "active": 0
+        },
+        "warning": "inclusive times overlap and must not be added; deadline-truncated calls are not equal completed workload"
+      }
+    ],
+    "interpretation": "Both hit original cooperative deadline during the first binding proof. Fewer final calls in X29 reflect different truncation at deadline and do not establish causal improvement. Raw sensitivity write completed later in this sample, but a single hosted run does not establish a general performance regression. Inclusive spans overlap and are not wall-clock-additive."
+  },
+  "gate_scope": {
+    "calculation_source_observation": "C29 two complete own structural tests PASS; whole C29 FAIL due to separate browser tests.",
+    "source_fences": "F29 all three full fence files PASS: 10 tests,132 asserts.",
+    "end_to_end_exact_threshold": "HOLD after X29 failure",
+    "further_run": "NOT_DISPATCHED; no further rerun/deadline change authorized by this delegated task."
+  },
+  "limitations": [
+    "Raw write success is not a usable persisted host result.",
+    "No blanket functional denial before deadline is inferred.",
+    "No process restart or SQLite reopen was exercised by the unreached recomposition stage.",
+    "Same assertion count and budgets preserved; 3 actually executed versus40 configured.",
+    "No local product tests or new remote dispatch by collection agent."
+  ]
+}

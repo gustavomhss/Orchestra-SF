@@ -1,0 +1,1233 @@
+{
+  "schema": "wp10-ci-receipt-v1",
+  "label": "U30",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "sha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+    "tree": "8f2cd84288df2a9d70402219df871765fe1890ca"
+  },
+  "snapshot": {
+    "sha": "84432d8ab3a5f1619eb2e96652290434d2bb0a2e",
+    "tree": "938cdbc8a43094b52c101d61d60ee2564dc879d1",
+    "parents": [
+      "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7"
+    ],
+    "only_diff_from_W": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp10-d4fb072f-f4259ab0-01"
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "blob": "789d044c489eae96aef1877d98a249ba86d854ed",
+    "bytes": 397,
+    "sha256": "f4259ab02921f2fc9f7b5ba18f79df529035dd48f5200e87d1fa7111f89bbf9a",
+    "literal": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+        "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    }
+  },
+  "run": {
+    "id": 43629303473,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629303473",
+    "status": "completed",
+    "conclusion": "failure",
+    "attempt": 1,
+    "created_at": "2026-11-14T18:55:52Z",
+    "updated_at": "2026-11-14T18:58:06Z"
+  },
+  "jobs": [
+    {
+      "id": 132552127580,
+      "name": "test (ubuntu-24.04)",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629303473/job/132552127580",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-14T18:55:55Z",
+      "completed_at": "2026-11-14T18:58:00Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T18:55:55Z",
+          "completed_at": "2026-11-14T18:55:58Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T18:55:58Z",
+          "completed_at": "2026-11-14T18:56:06Z"
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3,
+          "started_at": "2026-11-14T18:56:06Z",
+          "completed_at": "2026-11-14T18:56:06Z"
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-14T18:56:06Z",
+          "completed_at": "2026-11-14T18:56:06Z"
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-14T18:56:06Z",
+          "completed_at": "2026-11-14T18:56:10Z"
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-14T18:56:10Z",
+          "completed_at": "2026-11-14T18:56:10Z"
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-14T18:56:10Z",
+          "completed_at": "2026-11-14T18:56:10Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-14T18:56:10Z",
+          "completed_at": "2026-11-14T18:56:56Z"
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-14T18:56:56Z",
+          "completed_at": "2026-11-14T18:56:57Z"
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-14T18:56:57Z",
+          "completed_at": "2026-11-14T18:56:57Z"
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-14T18:56:57Z",
+          "completed_at": "2026-11-14T18:56:57Z"
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-14T18:56:57Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:20Z"
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-14T18:57:20Z",
+          "completed_at": "2026-11-14T18:57:44Z"
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-14T18:57:44Z",
+          "completed_at": "2026-11-14T18:57:44Z"
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-14T18:57:44Z",
+          "completed_at": "2026-11-14T18:57:44Z"
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20,
+          "started_at": "2026-11-14T18:57:44Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-11-14T18:57:58Z",
+          "completed_at": "2026-11-14T18:57:58Z"
+        }
+      ]
+    },
+    {
+      "id": 132552703448,
+      "name": "cleanup",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629303473/job/132552703448",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T18:58:02Z",
+      "completed_at": "2026-11-14T18:58:05Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-14T18:58:02Z",
+          "completed_at": "2026-11-14T18:58:03Z"
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-14T18:58:03Z",
+          "completed_at": "2026-11-14T18:58:03Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-14T18:58:03Z",
+          "completed_at": "2026-11-14T18:58:04Z"
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "selection": {
+    "observed_file_order": [
+      "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+      "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ],
+    "matches_request_order": true,
+    "tests": 4,
+    "files": 3,
+    "pass": 3,
+    "fail": 1,
+    "expect_calls": 35,
+    "bun_duration_seconds": 13.66,
+    "forecast_test_timeout_ms": 30000,
+    "forecast_test_blob": "b312f2dda7029b79c7420af91d52ca6fec1b098d"
+  },
+  "test_results": [
+    {
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "result": "PASS",
+      "duration_ms": 10682.24
+    },
+    {
+      "name": "FIN-IND-004 real implicit forecast button prepares, starts, polls and displays the supplied result",
+      "result": "FAIL",
+      "duration_ms": 2108.93,
+      "location": "forecast-submit.test.ts:164:113",
+      "stage": "analysis.cancel-hidden",
+      "expected": false,
+      "received": true,
+      "failure_elapsed_ms": 2070
+    },
+    {
+      "name": "FIN-IND-004 real keyboard submit reports rejected preparation without starting an analysis",
+      "result": "PASS",
+      "duration_ms": 389.44
+    },
+    {
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "result": "PASS",
+      "duration_ms": 63.38
+    }
+  ],
+  "ready_scope": {
+    "complete_test": "FAIL",
+    "observed": [
+      "native implicit submit type and duplicate-source guard pass",
+      "selection fields filled",
+      "prepare HTTP200",
+      "start/read/output HTTP200",
+      "Analysis ready text rendered",
+      "Open result clicked",
+      "supplied explicit UI fixture output rendered",
+      "order prepare/start/read/output asserted",
+      "start/read/output payloads asserted"
+    ],
+    "failure": "Cancel remains visible at analysis.cancel-hidden; expected false,received true.",
+    "positive_common_assertions_NOT_REACHED": [
+      "prepare payload equals selected source/case/period/currency",
+      "requests.every(key) assertion",
+      "submit re-enabled",
+      "currency re-enabled",
+      "currency value preserved",
+      "pageErrors equals [] assertion"
+    ],
+    "observations_not_promoted_to_unreached_assertions": {
+      "pageErrors": [],
+      "logged_request_keys_present": true
+    }
+  },
+  "rejected_scope": {
+    "complete_test": "PASS",
+    "status": 409,
+    "keyboard_enter": true,
+    "no_analysis_start_read_output": true,
+    "no_output": true,
+    "prepare_payload_assertion_pass": true,
+    "current_key_assertion_pass": true,
+    "form_reenabled_and_currency_preserved": true,
+    "pageErrors_empty_assertion_pass": true
+  },
+  "omni": {
+    "nonce": "bceba14f449cce8e07472045234fb8ed",
+    "result": "PASS",
+    "declared": 1,
+    "declaring_file": "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "spawned": 1,
+    "delegated": 0
+  },
+  "browser_lifecycle": {
+    "result": "PASS",
+    "launches": 1,
+    "acquisitions": 2,
+    "releases": 2,
+    "contexts": 0,
+    "activeLease": false,
+    "browser_pid": 4103,
+    "disconnected": true,
+    "driverClosed": true,
+    "processExited": true,
+    "node_exit_code": 0,
+    "browser_exit_code": 0,
+    "remainingContexts": 0,
+    "proof": {
+      "consumer": "wp01-shared-pool",
+      "clientRuntime": {
+        "name": "bun",
+        "version": "1.3.14",
+        "pid": 4068
+      },
+      "driverRuntime": {
+        "name": "node",
+        "version": "24.22.2",
+        "pid": 4088
+      },
+      "playwrightVersion": "1.59.1",
+      "browserVersion": "157.0.8103.50",
+      "browserPid": 4103,
+      "transport": "playwright-unix-pipe-node-websocket",
+      "spawnBoundary": "AppProcess",
+      "browserStdioCount": 5,
+      "browserUsesPipe": true,
+      "browserPipeOwner": "node",
+      "bridge": {
+        "framing": "json-nul",
+        "acceptedClients": 1,
+        "framesToBrowser": 55,
+        "framesFromBrowser": 167,
+        "peakQueuedBytes": 3043,
+        "peakBufferedBytes": 532,
+        "maxFrameBytes": 16777216,
+        "maxQueuedBytes": 33554432,
+        "directoryMode": 448,
+        "socketMode": 384
+      },
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    }
+  },
+  "ui_phases": [
+    {
+      "outcome": "ready",
+      "phase": "fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "outcome": "ready",
+      "phase": "fixture",
+      "state": "returned",
+      "phaseMs": 44
+    },
+    {
+      "outcome": "ready",
+      "phase": "browser.page",
+      "state": "started",
+      "elapsedMs": 49
+    },
+    {
+      "outcome": "ready",
+      "phase": "browser.page",
+      "state": "returned",
+      "phaseMs": 1382
+    },
+    {
+      "outcome": "ready",
+      "phase": "page.goto",
+      "state": "started",
+      "elapsedMs": 1432
+    },
+    {
+      "outcome": "ready",
+      "phase": "page.goto",
+      "state": "returned",
+      "phaseMs": 298
+    },
+    {
+      "outcome": "ready",
+      "phase": "form.ready",
+      "state": "started",
+      "elapsedMs": 1730
+    },
+    {
+      "outcome": "ready",
+      "phase": "form.ready",
+      "state": "returned",
+      "phaseMs": 69
+    },
+    {
+      "outcome": "ready",
+      "phase": "history.empty",
+      "state": "started",
+      "elapsedMs": 1799
+    },
+    {
+      "outcome": "ready",
+      "phase": "history.empty",
+      "state": "returned",
+      "phaseMs": 5
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.type-attribute",
+      "state": "started",
+      "elapsedMs": 1804
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.type-attribute",
+      "state": "returned",
+      "phaseMs": 7
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.native-type",
+      "state": "started",
+      "elapsedMs": 1811
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.native-type",
+      "state": "returned",
+      "phaseMs": 25
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.duplicate-sources",
+      "state": "started",
+      "elapsedMs": 1836
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.duplicate-sources",
+      "state": "returned",
+      "phaseMs": 50
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.duplicate-guard",
+      "state": "started",
+      "elapsedMs": 1886
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.duplicate-guard",
+      "state": "returned",
+      "phaseMs": 4
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.comparison",
+      "state": "started",
+      "elapsedMs": 1889
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.comparison",
+      "state": "returned",
+      "phaseMs": 6
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.start",
+      "state": "started",
+      "elapsedMs": 1895
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.start",
+      "state": "returned",
+      "phaseMs": 12
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.end",
+      "state": "started",
+      "elapsedMs": 1908
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.end",
+      "state": "returned",
+      "phaseMs": 5
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.currency",
+      "state": "started",
+      "elapsedMs": 1912
+    },
+    {
+      "outcome": "ready",
+      "phase": "selection.currency",
+      "state": "returned",
+      "phaseMs": 15
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.click",
+      "state": "started",
+      "elapsedMs": 1928
+    },
+    {
+      "outcome": "ready",
+      "phase": "submit.click",
+      "state": "returned",
+      "phaseMs": 49
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.ready",
+      "state": "started",
+      "elapsedMs": 1977
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.ready",
+      "state": "returned",
+      "phaseMs": 26
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.open-result",
+      "state": "started",
+      "elapsedMs": 2003
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.open-result",
+      "state": "returned",
+      "phaseMs": 35
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.rendered",
+      "state": "started",
+      "elapsedMs": 2038
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.rendered",
+      "state": "returned",
+      "phaseMs": 29
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.cancel-hidden",
+      "state": "started",
+      "elapsedMs": 2067
+    },
+    {
+      "outcome": "ready",
+      "phase": "analysis.cancel-hidden",
+      "state": "returned",
+      "phaseMs": 3
+    },
+    {
+      "outcome": "rejected",
+      "phase": "fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "outcome": "rejected",
+      "phase": "fixture",
+      "state": "returned",
+      "phaseMs": 7
+    },
+    {
+      "outcome": "rejected",
+      "phase": "browser.page",
+      "state": "started",
+      "elapsedMs": 12
+    },
+    {
+      "outcome": "rejected",
+      "phase": "browser.page",
+      "state": "returned",
+      "phaseMs": 111
+    },
+    {
+      "outcome": "rejected",
+      "phase": "page.goto",
+      "state": "started",
+      "elapsedMs": 124
+    },
+    {
+      "outcome": "rejected",
+      "phase": "page.goto",
+      "state": "returned",
+      "phaseMs": 56
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.ready",
+      "state": "started",
+      "elapsedMs": 180
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.ready",
+      "state": "returned",
+      "phaseMs": 33
+    },
+    {
+      "outcome": "rejected",
+      "phase": "history.empty",
+      "state": "started",
+      "elapsedMs": 213
+    },
+    {
+      "outcome": "rejected",
+      "phase": "history.empty",
+      "state": "returned",
+      "phaseMs": 4
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.type-attribute",
+      "state": "started",
+      "elapsedMs": 217
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.type-attribute",
+      "state": "returned",
+      "phaseMs": 6
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.native-type",
+      "state": "started",
+      "elapsedMs": 224
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.native-type",
+      "state": "returned",
+      "phaseMs": 26
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.duplicate-sources",
+      "state": "started",
+      "elapsedMs": 250
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.duplicate-sources",
+      "state": "returned",
+      "phaseMs": 32
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.duplicate-guard",
+      "state": "started",
+      "elapsedMs": 282
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.duplicate-guard",
+      "state": "returned",
+      "phaseMs": 6
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.comparison",
+      "state": "started",
+      "elapsedMs": 289
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.comparison",
+      "state": "returned",
+      "phaseMs": 18
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.start",
+      "state": "started",
+      "elapsedMs": 306
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.start",
+      "state": "returned",
+      "phaseMs": 8
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.end",
+      "state": "started",
+      "elapsedMs": 314
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.end",
+      "state": "returned",
+      "phaseMs": 6
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.currency",
+      "state": "started",
+      "elapsedMs": 320
+    },
+    {
+      "outcome": "rejected",
+      "phase": "selection.currency",
+      "state": "returned",
+      "phaseMs": 6
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.enter",
+      "state": "started",
+      "elapsedMs": 325
+    },
+    {
+      "outcome": "rejected",
+      "phase": "submit.enter",
+      "state": "returned",
+      "phaseMs": 16
+    },
+    {
+      "outcome": "rejected",
+      "phase": "analysis.rejected",
+      "state": "started",
+      "elapsedMs": 342
+    },
+    {
+      "outcome": "rejected",
+      "phase": "analysis.rejected",
+      "state": "returned",
+      "phaseMs": 11
+    },
+    {
+      "outcome": "rejected",
+      "phase": "analysis.no-output",
+      "state": "started",
+      "elapsedMs": 353
+    },
+    {
+      "outcome": "rejected",
+      "phase": "analysis.no-output",
+      "state": "returned",
+      "phaseMs": 2
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.submit-enabled",
+      "state": "started",
+      "elapsedMs": 355
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.submit-enabled",
+      "state": "returned",
+      "phaseMs": 4
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.currency-enabled",
+      "state": "started",
+      "elapsedMs": 359
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.currency-enabled",
+      "state": "returned",
+      "phaseMs": 2
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.currency-preserved",
+      "state": "started",
+      "elapsedMs": 362
+    },
+    {
+      "outcome": "rejected",
+      "phase": "form.currency-preserved",
+      "state": "returned",
+      "phaseMs": 7
+    }
+  ],
+  "http_observations": [
+    {
+      "outcome": "ready",
+      "mode": "page",
+      "method": "GET",
+      "status": 200,
+      "elapsedMs": 1450
+    },
+    {
+      "outcome": "ready",
+      "stage": "page.goto",
+      "mode": "workbench-analysis",
+      "action": "list",
+      "status": 200,
+      "keyPresent": true,
+      "elapsedMs": 1708
+    },
+    {
+      "outcome": "ready",
+      "mode": "page",
+      "method": "GET",
+      "status": 200,
+      "elapsedMs": 1729
+    },
+    {
+      "outcome": "ready",
+      "stage": "submit.click",
+      "mode": "workbench-forecast",
+      "status": 200,
+      "keyPresent": true,
+      "elapsedMs": 1974
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.ready",
+      "mode": "workbench-analysis",
+      "action": "start",
+      "status": 200,
+      "keyPresent": true,
+      "elapsedMs": 1985
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.ready",
+      "mode": "workbench-analysis",
+      "action": "read",
+      "status": 200,
+      "keyPresent": true,
+      "elapsedMs": 1988
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.ready",
+      "mode": "workbench-analysis",
+      "action": "list",
+      "status": 200,
+      "keyPresent": true,
+      "elapsedMs": 1991
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.open-result",
+      "mode": "workbench-analysis",
+      "action": "output",
+      "status": 200,
+      "keyPresent": true,
+      "elapsedMs": 2036
+    },
+    {
+      "outcome": "rejected",
+      "mode": "page",
+      "method": "GET",
+      "status": 200,
+      "elapsedMs": 131
+    },
+    {
+      "outcome": "rejected",
+      "stage": "page.goto",
+      "mode": "workbench-analysis",
+      "action": "list",
+      "status": 200,
+      "keyPresent": true,
+      "elapsedMs": 151
+    },
+    {
+      "outcome": "rejected",
+      "mode": "page",
+      "method": "GET",
+      "status": 200,
+      "elapsedMs": 183
+    },
+    {
+      "outcome": "rejected",
+      "stage": "submit.enter",
+      "mode": "workbench-forecast",
+      "status": 409,
+      "keyPresent": true,
+      "elapsedMs": 337
+    }
+  ],
+  "client_observations": [
+    {
+      "outcome": "ready",
+      "stage": "page.goto",
+      "elapsedMs": 1482,
+      "event": "response",
+      "mode": "page",
+      "status": 200
+    },
+    {
+      "outcome": "ready",
+      "stage": "page.goto",
+      "elapsedMs": 1520,
+      "event": "navigation",
+      "mode": "page"
+    },
+    {
+      "outcome": "ready",
+      "stage": "page.goto",
+      "elapsedMs": 1718,
+      "event": "response",
+      "mode": "workbench-analysis",
+      "status": 200
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.ready",
+      "elapsedMs": 1987,
+      "event": "response",
+      "mode": "workbench-forecast",
+      "status": 200
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.ready",
+      "elapsedMs": 1989,
+      "event": "response",
+      "mode": "workbench-analysis",
+      "status": 200
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.ready",
+      "elapsedMs": 1992,
+      "event": "response",
+      "mode": "workbench-analysis",
+      "status": 200
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.ready",
+      "elapsedMs": 1996,
+      "event": "response",
+      "mode": "workbench-analysis",
+      "status": 200
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.rendered",
+      "elapsedMs": 2051,
+      "event": "response",
+      "mode": "workbench-analysis",
+      "status": 200
+    },
+    {
+      "outcome": "ready",
+      "stage": "analysis.cancel-hidden",
+      "elapsedMs": 2086,
+      "event": "navigation",
+      "mode": "page"
+    },
+    {
+      "outcome": "rejected",
+      "stage": "page.goto",
+      "elapsedMs": 134,
+      "event": "response",
+      "mode": "page",
+      "status": 200
+    },
+    {
+      "outcome": "rejected",
+      "stage": "page.goto",
+      "elapsedMs": 146,
+      "event": "navigation",
+      "mode": "page"
+    },
+    {
+      "outcome": "rejected",
+      "stage": "form.ready",
+      "elapsedMs": 183,
+      "event": "response",
+      "mode": "workbench-analysis",
+      "status": 200
+    },
+    {
+      "outcome": "rejected",
+      "stage": "analysis.rejected",
+      "elapsedMs": 347,
+      "event": "response",
+      "mode": "workbench-forecast",
+      "status": 409
+    },
+    {
+      "outcome": "rejected",
+      "stage": "analysis.rejected",
+      "elapsedMs": 348,
+      "event": "console.error",
+      "message": "Failed to load resource: the server responded with a status of 409 (Conflict)"
+    },
+    {
+      "outcome": "rejected",
+      "stage": "form.currency-preserved",
+      "elapsedMs": 374,
+      "event": "navigation",
+      "mode": "page"
+    }
+  ],
+  "failures": [
+    {
+      "outcome": "ready",
+      "stage": "analysis.cancel-hidden",
+      "elapsedMs": 2070,
+      "error": "expect(received).toBe(expected)\n\nExpected: false\nReceived: true\n",
+      "pageErrors": [],
+      "clientEvents": [
+        {
+          "event": "response",
+          "mode": "page",
+          "status": 200
+        },
+        {
+          "event": "navigation",
+          "mode": "page"
+        },
+        {
+          "event": "response",
+          "mode": "workbench-analysis",
+          "status": 200
+        },
+        {
+          "event": "response",
+          "mode": "workbench-forecast",
+          "status": 200
+        },
+        {
+          "event": "response",
+          "mode": "workbench-analysis",
+          "status": 200
+        },
+        {
+          "event": "response",
+          "mode": "workbench-analysis",
+          "status": 200
+        },
+        {
+          "event": "response",
+          "mode": "workbench-analysis",
+          "status": 200
+        },
+        {
+          "event": "response",
+          "mode": "workbench-analysis",
+          "status": 200
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "output",
+          "keyPresent": true
+        }
+      ]
+    }
+  ],
+  "fixture_cleanup": [
+    {
+      "outcome": "ready",
+      "state": "started",
+      "elapsedMs": 2071
+    },
+    {
+      "outcome": "ready",
+      "state": "returned",
+      "elapsedMs": 2107
+    },
+    {
+      "outcome": "rejected",
+      "state": "started",
+      "elapsedMs": 369
+    },
+    {
+      "outcome": "rejected",
+      "state": "returned",
+      "elapsedMs": 381
+    }
+  ],
+  "limitations": [
+    "Whole run remains FAIL; ready scenario is not promoted to PASS.",
+    "UI server uses an explicit prepare/analysis fixture; this proves the real DOM/controller path and declared request contract, not execution of a live analysis agent.",
+    "Positive common assertions after line164 were not reached.",
+    "No local product tests, remote mutations or new dispatch by collecting agent."
+  ]
+}
