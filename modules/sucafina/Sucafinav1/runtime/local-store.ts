@@ -80,13 +80,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
 
   // This is a memo of the pure v1 decoder, not of a transaction or authority.
   // Every caller still observes SQL under the existing lock. Only immutable
-  // strings survive a call; each hit parses a new, fully detached object graph.
+  // strings survive requests; each demanded surface gets a fresh object graph.
   const materializations = new Map<Surface, SnapshotMaterialization>()
-  const loadSnapshot = (surface: Surface, payload?: string): Snapshot => {
+  const observeSnapshot = (surface: Surface, payload?: string): (() => Snapshot) => {
     const prior = materializations.get(surface)
-    if (payload !== undefined && prior?.payload === payload) return materializeSnapshot(prior)
+    if (payload !== undefined && prior?.payload === payload) return () => materializeSnapshot(prior)
     materializations.delete(surface)
-    if (payload === undefined) return { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+    if (payload === undefined) return () => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
     const snapshot = decodeSnapshot(payload)
     const plan = planSnapshotMaterialization(snapshot, payload)
     if (plan) {
@@ -98,8 +98,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       }
       materializations.set(surface, plan)
     }
-    return snapshot
+    return () => snapshot
   }
+  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload)()
 
   type ReadScope = {
     root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; poisoned: boolean; readers: number }
@@ -222,9 +223,23 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return operation(true, async (db) => {
         const read = (name: Surface) => {
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
-          return loadSnapshot(name, row?.payload)
+          // Observe and validate changed bytes now, including unrequested surfaces.
+          // The captured materializer never consults SQL or the shared memo again.
+          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: observeSnapshot(name, row?.payload) }
+          return () => {
+            if (observed.value) return observed.value
+            observed.value = observed.materialize!()
+            observed.materialize = undefined
+            return observed.value
+          }
         }
-        const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        // This container is private to one live root scope. The callback receives
+        // only its normal target snapshot; nested/current reads still clone.
+        const snapshots = {
+          get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
+          get procurement() { return observed.procurement() },
+        }
         const snapshot = snapshots[surface]
         const generations = new Map(Object.entries(snapshot.sfBlobGenerations ?? {}))
         const checkGenerations = () => {
@@ -477,7 +492,9 @@ export function encodeSnapshot(snapshot: Snapshot): string {
   return JSON.stringify(["sucafina-snapshot", 1, encode(snapshot)])
 }
 
-// At most three entries and 16 MiB of UTF-16 string content per open store.
+// The shared memo retains at most three entries and 16 MiB of UTF-16 strings.
+// A live root may temporarily retain observed plans evicted during admission;
+// their combined content is bounded by one additional memo budget until used.
 // These are optimization limits only: larger/deeper valid v1 snapshots keep
 // using the original decoder. No new persisted format or acceptance limit.
 const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024

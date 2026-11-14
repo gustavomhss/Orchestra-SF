@@ -86,6 +86,53 @@ test("FIN-IND-005 persistence profile isolates real SQLite decode and staged sna
           return { cold: cold.counts, warm: warm.counts }
         } finally { await fresh.dispose() }
       })()
+      const plannerPayload = persisted.find((row) => row.surface === "planner")?.payload
+      if (!plannerPayload) throw new Error("Representative SQLite Planner snapshot unavailable")
+      const demandStore = await openLocalStore(history.fixture.directory)
+      const surfaceDemand = await (async () => {
+        try {
+          if (!demandStore.transactionAll) throw new Error("All-surface SQLite transactions unavailable")
+          const all = demandStore.transactionAll
+          const readPlanner = () => demandStore.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))
+          const readAll = () => all(async (snapshots) => ({ commit: false, value: snapshots.planner }))
+          // Both arms observe every SQL row. The cold admission must still
+          // decode/validate all new payloads before invoking the Planner callback.
+          const coldPlanner = await countWork(readPlanner)
+          expect(encodeSnapshot(coldPlanner.value)).toBe(plannerPayload)
+          coldPlanner.value.data["retained-planner-only"] = { corrupted: true }
+          const warmPlanner = await countWork(readPlanner)
+          const eagerAll = await countWork(readAll)
+          expect(encodeSnapshot(warmPlanner.value)).toBe(plannerPayload)
+          expect(encodeSnapshot(eagerAll.value)).toBe(plannerPayload)
+          expect(warmPlanner.value).not.toBe(coldPlanner.value)
+          expect(warmPlanner.value.data).not.toBe(coldPlanner.value.data)
+          expect(eagerAll.value).not.toBe(warmPlanner.value)
+          expect(eagerAll.value.data).not.toBe(warmPlanner.value.data)
+          expect(coldPlanner.counts.taggedParseCalls).toBe(persisted.length)
+          expect(coldPlanner.counts.taggedCharacters).toBe(persisted.reduce((sum, row) => sum + row.payload.length, 0))
+          expect(warmPlanner.counts.taggedParseCalls).toBe(0)
+          expect(warmPlanner.counts.encodedObjectDescriptorReads).toBe(0)
+          expect(eagerAll.counts.taggedParseCalls).toBe(0)
+          expect(eagerAll.counts.encodedObjectDescriptorReads).toBe(0)
+          // This is skipped parse work on the same representative Finance state,
+          // not a wall-clock ratio or a claim about the full journey.
+          expect(eagerAll.counts.parsedCharacters - warmPlanner.counts.parsedCharacters).toBeGreaterThan(800000)
+          const timings: { mode: "planner" | "all"; elapsedMs: number }[] = []
+          for (let round = 0; round < 6; round++) {
+            for (const mode of round % 2 ? ["all", "planner"] as const : ["planner", "all"] as const) {
+              const measured = await timeWork(mode === "planner" ? readPlanner : readAll)
+              expect(encodeSnapshot(measured.value)).toBe(plannerPayload)
+              timings.push({ mode, elapsedMs: measured.elapsedMs })
+            }
+          }
+          warmPlanner.value.data["retained-planner-only"] = { corrupted: true }
+          const afterMutation = await readPlanner()
+          expect(encodeSnapshot(afterMutation)).toBe(plannerPayload)
+          expect(afterMutation).not.toBe(warmPlanner.value)
+          expect(afterMutation.data).not.toBe(warmPlanner.value.data)
+          return { coldPlanner: coldPlanner.counts, warmPlanner: warmPlanner.counts, eagerAll: eagerAll.counts, timings }
+        } finally { await demandStore.dispose() }
+      })()
       const store = history.fixture.store
       const read = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
       const current = () => {
@@ -96,8 +143,9 @@ test("FIN-IND-005 persistence profile isolates real SQLite decode and staged sna
       const observe = <T>(mode: Mode, measure: (work: Work) => Promise<T>) => {
         if (mode === "decode") return measure(() => decodeSnapshot(payload))
         if (mode === "transaction") return measure(read)
-        // The enclosing transaction is outside this measurement. These two modes
-        // isolate only the staged clone path; they are not end-to-end timings.
+        // Admission and the requested Dashboard load are outside this measurement.
+        // currentSnapshots may first demand sibling graphs inside it. These are
+        // scoped call timings, not end-to-end transaction timings.
         return store.transaction("dashboard", async () => ({ commit: false, value: await measure(mode === "currentSnapshots" ? current : read) }))
       }
       const modes: readonly Mode[] = ["decode", "transaction", "currentSnapshots", "nestedRead"]
@@ -130,8 +178,9 @@ test("FIN-IND-005 persistence profile isolates real SQLite decode and staged sna
         return { mode, samples: values.length, medianMs: (values[2]! + values[3]!) / 2, minimumMs: values[0], maximumMs: values.at(-1) }
       })
       console.log("FIN_PERSISTENCE_PROFILE " + JSON.stringify({
-        sizes, counts, timings, summary, coldWarm,
-        interpretation: "Direct codec and transaction timings overlap; scoped modes exclude outer admission/load. Do not add these categories or extrapolate a whole-journey speedup.",
+        sizes, counts, timings, summary, coldWarm, surfaceDemand,
+        interpretation: "Direct codec and transaction timings overlap; scoped modes exclude outer admission and target load, while currentSnapshots may first demand sibling graphs. Do not add these categories or extrapolate a whole-journey speedup.",
+        surfaceInterpretation: "Cold Planner admission validates all three new SQL payloads. Warm Planner needs only its own fresh graph; transactionAll is the unchanged eager materialization control on the same Finance state. Both retain fresh SQL observations. Their timing samples are separate from the four original modes.",
         disclosure: "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged.",
       }))
       expect(counts.find((item) => item.mode === "decode")?.counts.taggedParseCalls).toBe(1)
@@ -148,3 +197,4 @@ test("FIN-IND-005 persistence profile isolates real SQLite decode and staged sna
     } finally { database.close() }
   } finally { await history.cleanup() }
 }, 120000)
+

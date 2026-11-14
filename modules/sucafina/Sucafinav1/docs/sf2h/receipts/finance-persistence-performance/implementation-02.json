@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.finance-persistence-performance.implementation.v2",
+  "mission": 34,
+  "stage": "W3_LAZY_ROOT_SURFACE_CANDIDATE",
+  "parentCommit": "17bab9f471a818be1631652d3ec0adcec00d52bf",
+  "priorProductCommit": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+  "product": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "preimageBlob": "1eaf5b42230829466d29a82ac0d5361e98b1a64d",
+    "candidateBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+    "bytes": 29961,
+    "contractUntouched": true
+  },
+  "trigger": {
+    "runId": 43646928826,
+    "probeStatus": "1 PASS, 0 FAIL, 38 assertions",
+    "confirmedRootPlannerCalls": 124,
+    "unrequestedDashboardMaterializationsAvoidable": 124,
+    "nestedDashboardReads": 0,
+    "currentSnapshotsReads": 0,
+    "rootTaggedParses": 0
+  },
+  "change": [
+    "Observe all three fresh SQL payloads under the unchanged root transaction/lock before callback admission.",
+    "On missing or changed payload, preserve immediate original decode and validation; only exact immutable-payload hits defer graph creation.",
+    "Capture the validated plan in the per-root loader, not a later Map lookup; each surface materializes once on first demand.",
+    "Keep getters private to the root scope. Business callbacks receive ordinary snapshots and nested/current outputs retain original cloning.",
+    "Keep transactionAll eager with its ordinary record, and preserve writes, rollback, blob generations, CAS, poison and scope closure."
+  ],
+  "retention": {
+    "sharedMemoMaxEntries": 3,
+    "sharedMemoMaxUtf16Units": 8388608,
+    "sharedMemoMaxStringContentBytes": 16777216,
+    "activeRootAdditionalCapturedPlanStringBudgetBytes": 16777216,
+    "scope": "Only the shared immutable-plan map and a root's captured pre-admission plans; not a heap/RSS bound or a bound on caller-retained graphs or async scopes.",
+    "evictionObservation": "A captured immutable plan may outlive its Map eviction until the admitted root demands it; the loader releases its materializer after success."
+  },
+  "validationPlan": {
+    "short": "S4: original S1 selection plus unchanged causal scope profile and seven surface-demand counterproofs; updated quantitative profile retains original assertions/modes.",
+    "checks": "Existing astra-check-fresume workflow: bun typecheck and guards, compare all findings to inherited baseline.",
+    "long": "Only after material short proof, rerun original request byte-for-byte with fixture180000 and test300000; all original assertions remain unchanged."
+  },
+  "nonClaims": [
+    "W3 is not yet runtime-validated at publication.",
+    "No short result closes FIN-IND-005.",
+    "No bundle merge, deploy, native Omni or corporate authorization proof."
+  ],
+  "review": {
+    "reviewer": "persistence_review",
+    "method": "Independent static diff and hash verification only; no local tests.",
+    "result": "No blockers found; exact candidate blob confirmed."
+  }
+}
