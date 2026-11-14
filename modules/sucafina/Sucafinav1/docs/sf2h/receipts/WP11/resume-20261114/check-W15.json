@@ -1,0 +1,165 @@
+{
+  "source": {
+    "productSha": "18d4c4dc502a5cedb5659eb29413ec7390c6e3df",
+    "productTree": "07c5ebf7b7a657c6db85543c32462f5378e65559",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "run": {
+    "id": 43595477134,
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T12:34:14Z",
+    "updated_at": "2026-11-14T12:35:36Z",
+    "head_sha": "18d4c4dc502a5cedb5659eb29413ec7390c6e3df",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43595477134",
+    "run_attempt": 1,
+    "head_commit": {
+      "id": "18d4c4dc502a5cedb5659eb29413ec7390c6e3df",
+      "tree_id": "07c5ebf7b7a657c6db85543c32462f5378e65559",
+      "message": "test(sucafina): bound source-only admission without bypassing authority",
+      "timestamp": "2026-11-14T12:34:06Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    }
+  },
+  "jobs": [
+    {
+      "id": 132448924729,
+      "name": "wp11-checks",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43595477134,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout exact product commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Typecheck Sucafina package",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Guardrails against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Upload exact check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Checkout exact product commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "runId": 43595477134,
+    "jobId": 132448924729,
+    "artifactId": 14113624863,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 130,
+      "removedSinceW14": [],
+      "addedSinceW14": [],
+      "sameLogBytesAsW14": true
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 824,
+      "gates": 0,
+      "warnings": 12,
+      "errors": 0
+    },
+    "artifact": {
+      "id": 14113624863,
+      "name": "astra-wp11-checks-18d4c4dc502a5cedb5659eb29413ec7390c6e3df-1",
+      "zipSha256": "39e543f878b0015f36901231135c1f96922902e345a22578411b234c0c7228f8",
+      "remoteDigestMatched": true,
+      "sourceMatched": true,
+      "files": {
+        "guards.log": {
+          "sha256": "480faa5ef800d2b3ed9ee0fb0dc8f0bde67b2e6043e978cb1cc785c2fefe87eb",
+          "bytes": 4861
+        },
+        "source.json": {
+          "sha256": "86444bf882cf03b9435f8d50e339bb604a4de862e7610f28435da0bc429c45a4",
+          "bytes": 296
+        },
+        "typecheck.log": {
+          "sha256": "6be625fa5ba28cef35348d3f1412d88577b3c8391b9f0ca93acef4807566e0d7",
+          "bytes": 63595
+        }
+      }
+    }
+  },
+  "claimBoundary": [
+    "The package-wide typecheck remains failed with130 foreign diagnostics; zero own diagnostics does not make the global gate green.",
+    "Typecheck log bytes are identical to W14 and prior W7 diagnostics.",
+    "This hosted check includes the exact three reviewed H6 fixture/regression blobs, but does not execute their product tests.",
+    "Only remote logs/artifact metadata inspected; no local product tests/typecheck/build/guards/install."
+  ],
+  "files": {
+    "wp11-W15-check.log": {
+      "sha256": "3d7328bd9146cb13966372397134d2379d70da0b076cc8ace16753bf904e230d",
+      "bytes": 127047
+    },
+    "wp11-W15-remote-final.json": {
+      "sha256": "f0c2a6275f455ab429205c8f584b8f17980d82d3eb7dde92c354965b667b3473",
+      "bytes": 3478
+    }
+  }
+}

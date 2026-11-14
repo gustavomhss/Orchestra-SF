@@ -1,0 +1,29 @@
+Excerpt of the primary GitHub Actions job log; selected test outcome and control lines only.
+Source: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43527686283/job/132237395611
+
+2026-11-13T23:32:22.5045564Z omni control nonce: f76fac72c6b465c8b7768384625002fc
+2026-11-13T23:32:22.5762967Z (fail) monthly lines previews reserve no live IDs and cannot replace a live or deleted identity [19.45ms]
+2026-11-13T23:32:22.5850609Z (fail) monthly projects previews reserve no live IDs and cannot replace a live or deleted identity [7.66ms]
+2026-11-13T23:32:22.5930091Z (pass) monthly egress revocation distinguishes a committed write [8.99ms]
+2026-11-13T23:32:22.5991841Z (fail) monthly egress revocation distinguishes a rejected write [5.83ms]
+2026-11-13T23:32:22.6103131Z (fail) headcount position-save preview is repeatable without consuming the host ID allocator [10.90ms]
+2026-11-13T23:32:22.6200807Z (fail) headcount rate-save preview is repeatable without consuming the host ID allocator [9.16ms]
+2026-11-13T23:32:22.6314394Z (fail) headcount sync preview is repeatable without consuming the host ID allocator [11.95ms]
+2026-11-13T23:32:22.6360905Z (fail) catalog read reports unavailable when the host environment cannot be loaded [4.76ms]
+2026-11-13T23:32:22.6403652Z (fail) catalog read fails closed when admission revalidation rejects [4.33ms]
+2026-11-13T23:32:22.6457751Z (fail) catalog read fails closed when egress revalidation rejects [5.36ms]
+2026-11-13T23:32:22.6571213Z (fail) catalog fx-save rejects an ambiguous identity without changing either record [9.39ms]
+2026-11-13T23:32:22.6657971Z (fail) catalog fx-delete rejects an ambiguous identity without changing either record [7.66ms]
+2026-11-13T23:32:22.6730333Z (fail) catalog entity-save rejects an ambiguous identity without changing either record [8.30ms]
+2026-11-13T23:32:22.6810779Z (fail) catalog entity-delete rejects an ambiguous identity without changing either record [8.15ms]
+2026-11-13T23:32:22.6883005Z (fail) catalog allocation-save rejects an ambiguous identity without changing either record [7.90ms]
+2026-11-13T23:32:22.6958341Z (fail) catalog allocation-delete rejects an ambiguous identity without changing either record [8.06ms]
+2026-11-13T23:32:22.9359380Z (fail) scenario comparison snapshots each cached resolver result before resolving the next reference [138.40ms]
+2026-11-13T23:32:23.0495091Z (fail) criterion mutation in a reused response cannot erase the first freshness observation [112.19ms]
+2026-11-13T23:32:23.1481213Z (fail) distinct criterion observations remain associated when the evaluator reuses one cache object [99.90ms]
+2026-11-13T23:32:23.3025540Z (fail) preview comparison rejects a reused baseline cache changed after a real simulation [138.98ms]
+2026-11-13T23:32:23.4070123Z (pass) stable preview remains conditioned with the canonical cost difference and preserved domain [120.63ms]
+2026-11-13T23:32:23.4087966Z omni positive control [f76fac72c6b465c8b7768384625002fc]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-13T23:32:23.4095215Z  28 expect() calls
+2026-11-13T23:32:23.4095466Z Ran 21 tests across 2 files. [889.00ms]
+

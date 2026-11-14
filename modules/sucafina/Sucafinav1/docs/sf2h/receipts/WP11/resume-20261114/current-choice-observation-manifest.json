@@ -1,0 +1,29 @@
+{
+  "schema": "wp11-B1A-assertion-input-isolation-proposal-v1",
+  "status": "PROPOSED_NOT_APPLIED",
+  "baseSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+  "beforeBlob": "5b754d16c5d61764bffc8268075fbd4551dd2072",
+  "candidateBlob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+  "candidateSha256": "6db9a23b59b2e444e30128dbd5659a8f5a07a551fc247d1651f90f5e2b15a18c",
+  "patchSha256": "f7e33306604e0b7a8f7edb3e3f0d89fadfd8ea3ada3a1c77fa6b8cf526f4e324",
+  "changes": "One observation hunk only; same included status and arrayContaining(training:11) assertion now observes an exact detached clone. New full assessment+entries digest equality checks that live producer inputs remain unchanged.",
+  "productChanges": false,
+  "newSourceCalls": 0,
+  "newPlannerReplay": 0,
+  "timeoutChanged": false,
+  "executionLocal": false,
+  "reportedB1AFailure": {
+    "runId": 43594957479,
+    "productSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+    "reason": "choice-preview-coverage-unavailable",
+    "durationMs": 49664.0
+  },
+  "causeDisposition": "HYPOTHESIS_WITH_CONCRETE_ALIAS_PATH; no Bun mutation reproduced locally and no claimed definitive cause from the own log.",
+  "publishedRelatedSource": {
+    "pin": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+    "adoption": "Only minimal observation-isolation approach proposed; no intake of its additional diagnostic callbacks or runtime."
+  }
+}

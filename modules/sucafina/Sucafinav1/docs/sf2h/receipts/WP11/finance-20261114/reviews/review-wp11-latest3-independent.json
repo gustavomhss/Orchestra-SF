@@ -1,0 +1,117 @@
+{
+  "schema": "astra-independent-static-review-v1",
+  "reviewer": "/root/last_wp11_refresh/latest3_static_review",
+  "reviewedAt": "2026-11-14T11:39:41.470851+00:00",
+  "sourceHead": "65509f0b8c435b88fb0ec9949299571f011d2347",
+  "financeProductBaseline": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+  "financeDocumentationHeadAsReported": "3ab41cbb106435635999e1417b10a087a34a5d95",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "beforeBlob": "5e0b80a470958dd201db4283bde96d594935e68d",
+      "candidateBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "sha256": "45eb7d1418a0f62ec8f361e9d78a3ed09a98e9d48318db0c2a7b986493fb84fa",
+      "bytes": 20044
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "beforeBlob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+      "candidateBlob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "sha256": "c1270b39da0574403f7461e007c14e9fb19c8726aa949f938d09879df3988813",
+      "bytes": 39202
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "beforeBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "candidateBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+      "bytes": 25216
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "beforeBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+      "candidateBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129",
+      "bytes": 14461
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "beforeBlob": null,
+      "candidateBlob": "ad9f8aa17a1ece912132d4c2453547693697716f",
+      "sha256": "f08b3293538d2e22382dd394f8a16fb9ca90c90356dc984707656d0f4310f61f",
+      "bytes": 20251
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "beforeBlob": null,
+      "candidateBlob": "991a7fb18f9e8e7372bd2e0193b6727ab6633b26",
+      "sha256": "067e2120174c4767a18cc0714e52a81818b8872855400d79ddb8a246568e0a79",
+      "bytes": 22644
+    }
+  ],
+  "blockingFindings": [],
+  "observations": [
+    {
+      "id": "WP11-L3-HOTTOPIC",
+      "result": "supported-by-source-review",
+      "detail": "readCurrent and list detach incoming requests, retain their prior source/case checks, then observe case and private drafts together through the existing C08 read port after the last domain callback. Exact case/draft/active digests prevent returning a replaced private draft. The existing state provider authenticates before and after its callback, and allowed/sameAuthority plus abort checks remain. No new domain authorization is synthesized. Dashboard transaction surface, original CAS, provenance, and private/official separation are unchanged."
+    },
+    {
+      "id": "WP11-L3-SOURCE-PROJECTION",
+      "result": "supported-by-source-review",
+      "detail": "Both renewal fixture changes supply a real source Planner only to createStoredPlannerScenarioHost. That host reads FinancialAnalysis.baseline while retaining its persisted alternative result and basis, two result reads, exact association to the current alternative, and final case digest. The source Planner still uses real source resolution, domain projection, source digest and authenticated domain reads. The classified Planner and sources remain on comparison, preview, mutation, criterion rules, metric and exact threshold. compareScenarios reobserves and matches coverageRef, basis and assessment; unavailable source-only comparison does not become a complete C10 result."
+    },
+    {
+      "id": "WP11-L3-PROOF",
+      "result": "semantic-equivalence-to-finance",
+      "detail": "mutations.ts changes only the two-line explanatory comment relative to Finance. The stronger unconditional entries call and canonical reassessScenarioCoverage path remain intact even when the prior assessment matches. No amount, formula, grant or financial policy changes."
+    },
+    {
+      "id": "WP11-L3-TESTS",
+      "result": "additional-regressions-require-actions",
+      "detail": "hot-topic-snapshot.test.ts defines six cases: private draft persistence/idempotency/Dashboard provenance, source/case/authority commit races, a draft replacement at final source callback and one at final case authorization. promotion-coverage-proof.test.ts defines six cases: both source orders with canonical result digest, retry and hypothetical preview, plus missing proof/revocation/source/case race negatives. These use actual C08/Planner/Dashboard producers with private test admissions and controlled callbacks; they are not installed shell or native proof."
+    }
+  ],
+  "unchangedContractFacts": [
+    "Existing renewal fixtures change only source Planner wiring and explanatory comments; no existing assertion, threshold, grant, operation, or timeout was changed by these deltas.",
+    "New source-only promotion assertions preserve conditioned total:null, 1200/2400 known subtotals, preview 2242 and no choice/prepared change/receipt or official domain mutation.",
+    "Exact canonical Planner batching source blobs were already in Finance; no review conclusion here depends on adopting older Planner code."
+  ],
+  "consumerPaths": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts"
+  ],
+  "validationGuidance": {
+    "ownedBy": "root; no dispatch by this reviewer",
+    "newRegressionFiles": [
+      "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts"
+    ],
+    "consumerSelection": "Use the exact affected renewal/BI lifecycle consumers as needed to validate the new fixture bytes; a run pinned to W22/W23 does not execute the new sourcePlanner wiring. Avoid repeating unrelated unchanged batch tests merely because PR40 carries their blobs.",
+    "nonClaim": "No CI PASS, typecheck result, runtime duration, installed/native evidence, C/D, or global readiness is asserted."
+  },
+  "reviewMethod": [
+    "Read repository AGENTS.md",
+    "Read exact candidate source, saved Finance diff and relevant C08/Planner consumers",
+    "Computed Git blob SHA-1 and SHA-256 metadata from file bytes",
+    "Enumerated direct fixture importers by text search"
+  ],
+  "executions": {
+    "productTests": 0,
+    "productImports": 0,
+    "bunCommands": 0,
+    "typecheck": 0,
+    "ciDispatches": 0,
+    "remoteWrites": 0,
+    "browserActions": 0,
+    "repositoryEdits": 0
+  },
+  "limits": [
+    "Static reasoning cannot prove elapsed-time improvement or end-to-end lifecycle success.",
+    "Private admissions and controlled callbacks are product regressions, not native human-session evidence.",
+    "Outstanding Finance/integration findings outside these six files remain unchanged."
+  ]
+}

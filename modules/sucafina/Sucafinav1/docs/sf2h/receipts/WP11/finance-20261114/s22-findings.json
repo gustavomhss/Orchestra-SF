@@ -1,0 +1,405 @@
+{
+  "schema": "sf-finance-s22-observed-findings-v1",
+  "recordedAt": "2026-11-14T13:17:52.790897+00:00",
+  "author": "/root/finance_w32_delivery_audit",
+  "classification": "OBSERVED_SCOPED_FAILURE_NOT_CAUSAL_ATTRIBUTION",
+  "execution": {
+    "selection": 22,
+    "runId": 43597449806,
+    "jobId": 132454907023,
+    "productSha": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+    "productTree": "485a3ac2ac1322d03d7421a17eb1791153f11c1b",
+    "snapshotSha": "ef218e5c436f8518ee582232a820cd41048f8d3b",
+    "snapshotTree": "4634ce02d9e3127a9fa3fcc51dcec262a74f947c",
+    "conclusion": "failure",
+    "branch": "ci-run-linux-astra-wp11-79531ae-76efd12-a1",
+    "artifacts": [],
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43597449806",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "./Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "./Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+        "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "./Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+        "./Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestSha256": "76efd1280d0df63faa5de9680e3afad82e70f151db82b780fd2dc921d708c228",
+    "snapshotDiff": [
+      ".ci-run.json"
+    ],
+    "productBlobEqualityVerified": true,
+    "localProductTests": false,
+    "attempt": 1,
+    "logSha256": "c7fd561530a6fb0965e6b117d32e9de67067fde1b9e6a707bd2b48b8e3ef588d",
+    "counts": {
+      "pass": 14,
+      "fail": 2,
+      "error": 0
+    },
+    "expectCalls": 195,
+    "omni": {
+      "nonce": "9015b398e5b551a53e5a799321d21879",
+      "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    },
+    "reported": {
+      "tests": 16,
+      "files": 7,
+      "duration": 560.64,
+      "unit": "s"
+    }
+  },
+  "caseResults": [
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "status": "pass",
+      "name": "current-choice read suppresses its binding when membership changes during the final case authorization",
+      "milliseconds": 122.87
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "status": "pass",
+      "name": "current-choice read suppresses its binding when preferences read changes during the final case authorization",
+      "milliseconds": 63.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "status": "pass",
+      "name": "empty-source admission observes two authenticated projections and refuses a static reference after a real Planner edit",
+      "milliseconds": 62.6
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "status": "pass",
+      "name": "empty-source admission refuses second-source-resolve before its final projection",
+      "milliseconds": 41.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "status": "pass",
+      "name": "empty-source admission refuses last-revalidate-source-change before its final projection",
+      "milliseconds": 42.69
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "status": "pass",
+      "name": "empty-source admission refuses last-revalidate-revocation before its final projection",
+      "milliseconds": 50.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "status": "pass",
+      "name": "empty-source admission refuses authority revoked by its final authentication callback",
+      "milliseconds": 44.73
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "status": "pass",
+      "name": "empty-source admission refuses mismatched scope, projection fields, digest and source period",
+      "milliseconds": 41.97
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "status": "pass",
+      "name": "nonempty operations retain the canonical target verifier and never write the real source",
+      "milliseconds": 76.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+      "status": "pass",
+      "name": "renewal admission verifies operations and source-only alternatives without changing any durable snapshot",
+      "milliseconds": 60.1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+      "status": "pass",
+      "name": "a later renewal admission observes a canonical source edit instead of reusing the earlier read scope",
+      "milliseconds": 42.73
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+      "status": "pass",
+      "name": "renewal admission refuses a UI lease revoked during an awaited source callback inside the read scope",
+      "milliseconds": 59.87
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "status": "pass",
+      "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+      "milliseconds": 70042.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "status": "fail",
+      "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+      "milliseconds": 180034.05
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "status": "fail",
+      "name": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+      "milliseconds": 196569.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+      "status": "pass",
+      "name": "a confirmed implementation quote of 70000 yields 235000 and 5000 advantage in the same case while preserving shared scope and the human choice",
+      "milliseconds": 113051.04
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "status": "fail",
+      "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+      "milliseconds": 180034.05,
+      "failureKind": "timeout",
+      "configuredTestTimeoutMs": 180000,
+      "configuredFixtureTraceBudgetMs": 180000,
+      "timeoutChangedForThisRun": false,
+      "lastRecordedPhaseAtDeadline": "threshold-after:start",
+      "deadlineTrace": {
+        "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "loggedAt": "2026-11-14T13:04:57.9762477Z",
+        "trace": {
+          "label": "renewal-choice-history",
+          "phase": "threshold-after:start",
+          "elapsedMs": 180030,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.read.cases": {
+              "calls": 2871,
+              "elapsedMs": 69411,
+              "maximumMs": 92
+            },
+            "host.revalidate": {
+              "calls": 17235,
+              "elapsedMs": 7068,
+              "maximumMs": 33
+            },
+            "operation-source": {
+              "calls": 4008,
+              "elapsedMs": 28359,
+              "maximumMs": 68
+            },
+            "operation-coverage": {
+              "calls": 1760,
+              "elapsedMs": 2,
+              "maximumMs": 1
+            },
+            "c08.read.preferences": {
+              "calls": 486,
+              "elapsedMs": 11686,
+              "maximumMs": 49
+            },
+            "c08.transaction.preferences": {
+              "calls": 6,
+              "elapsedMs": 335,
+              "maximumMs": 112
+            },
+            "classified-source": {
+              "calls": 278,
+              "elapsedMs": 2081,
+              "maximumMs": 33
+            },
+            "classified-coverage": {
+              "calls": 262,
+              "elapsedMs": 31964,
+              "maximumMs": 272
+            },
+            "c08.transaction.cases": {
+              "calls": 11,
+              "elapsedMs": 895,
+              "maximumMs": 136
+            },
+            "planner.verifySourceOnly": {
+              "calls": 780,
+              "elapsedMs": 75392,
+              "maximumMs": 191
+            },
+            "planner.verifyOperation": {
+              "calls": 344,
+              "elapsedMs": 6171,
+              "maximumMs": 23
+            },
+            "planner.verifySourceProjection": {
+              "calls": 1560,
+              "elapsedMs": 36928,
+              "maximumMs": 36
+            },
+            "c08.read.outbox": {
+              "calls": 1,
+              "elapsedMs": 17,
+              "maximumMs": 17
+            }
+          }
+        }
+      },
+      "previousS19Observation": {
+        "runId": 43594791351,
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+        "status": "pass",
+        "milliseconds": 146843.85,
+        "comparability": "Different product bytes and source-only timing boundary; this observation is not an isolated causal control."
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "status": "fail",
+      "name": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+      "milliseconds": 196569.25,
+      "failureKind": "timeout",
+      "configuredTestTimeoutMs": 180000,
+      "configuredFixtureTraceBudgetMs": 180000,
+      "timeoutChangedForThisRun": false,
+      "lastRecordedPhaseAtDeadline": "prepare:transition-confirmed:complete",
+      "deadlineTrace": {
+        "file": "Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+        "loggedAt": "2026-11-14T13:08:14.5489224Z",
+        "trace": {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-confirmed:complete",
+          "elapsedMs": 196567,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.read.cases": {
+              "calls": 1214,
+              "elapsedMs": 33664,
+              "maximumMs": 89
+            },
+            "host.revalidate": {
+              "calls": 7335,
+              "elapsedMs": 4256,
+              "maximumMs": 30
+            },
+            "operation-source": {
+              "calls": 1460,
+              "elapsedMs": 16021,
+              "maximumMs": 58
+            },
+            "operation-coverage": {
+              "calls": 564,
+              "elapsedMs": 1,
+              "maximumMs": 1
+            },
+            "c08.read.preferences": {
+              "calls": 178,
+              "elapsedMs": 3844,
+              "maximumMs": 45
+            },
+            "c08.transaction.preferences": {
+              "calls": 6,
+              "elapsedMs": 336,
+              "maximumMs": 117
+            },
+            "classified-source": {
+              "calls": 61,
+              "elapsedMs": 252,
+              "maximumMs": 29
+            },
+            "classified-coverage": {
+              "calls": 67,
+              "elapsedMs": 6595,
+              "maximumMs": 218
+            },
+            "c08.transaction.cases": {
+              "calls": 10,
+              "elapsedMs": 824,
+              "maximumMs": 133
+            },
+            "planner.verifySourceOnly": {
+              "calls": 352,
+              "elapsedMs": 39178,
+              "maximumMs": 182
+            },
+            "planner.verifyOperation": {
+              "calls": 96,
+              "elapsedMs": 1809,
+              "maximumMs": 24
+            },
+            "planner.verifySourceProjection": {
+              "calls": 704,
+              "elapsedMs": 17688,
+              "maximumMs": 42
+            }
+          }
+        }
+      },
+      "previousS19Observation": {
+        "runId": 43594791351,
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+        "status": "pass",
+        "milliseconds": 124684.11,
+        "comparability": "Different product bytes and source-only timing boundary; this observation is not an isolated causal control."
+      }
+    }
+  ],
+  "passingScope": {
+    "count": 14,
+    "directFenceAdmissionReadScopeCases": 12,
+    "remainingPassingJourneys": [
+      {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "status": "pass",
+        "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+        "milliseconds": 70042.47
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+        "status": "pass",
+        "name": "a confirmed implementation quote of 70000 yields 235000 and 5000 advantage in the same case while preserving shared scope and the human choice",
+        "milliseconds": 113051.04
+      }
+    ],
+    "scopeRule": "Passing cases are observations of W32/S22 only. The whole selection failed. They do not qualify timed-out journeys, later helper bytes, installed/native execution or integral criteria."
+  },
+  "measurementBoundary": {
+    "S19": {
+      "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "helperBlob": "2338917427497733e4bd88aec852985206cce066",
+      "sourceOnlyMeasure": "planner.verifySourceOnly starts inside the enclosing real read-only Planner transaction; outer transaction acquisition/decode is outside this timer."
+    },
+    "S22": {
+      "productSha": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "helperBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sourceOnlyMeasure": "planner.verifySourceOnly surrounds source-only admission including two fresh root Planner transactions; planner.verifySourceProjection is nested within it."
+    },
+    "conclusions": [
+      "The identically named timer does not delimit the same work in S19 and S22. Its elapsed values cannot isolate a regression cause by subtraction or ratio.",
+      "Nested timer totals overlap and must not be added as independent wall-clock cost.",
+      "Completed passes at S19 and timeouts at S22 are preserved as observed outcomes of different W/S snapshots; no root cause is established by these records alone.",
+      "No financial assertion, admission check or timeout is loosened by this findings receipt."
+    ]
+  },
+  "scope": {
+    "noLocalProductExecution": true,
+    "noRemoteMutationByAuthor": true,
+    "fixReviewed": false,
+    "fixValidated": false,
+    "candidateFixClaimed": false,
+    "nativeProof": null,
+    "C": null,
+    "D": null,
+    "integralAcceptance": false,
+    "READY": false,
+    "DONE": false
+  },
+  "nextRequiredEvidence": [
+    "A bounded implementation change with exact published W/tree and independent review.",
+    "A new affected Actions request with exact W/S and completed case results, retaining the 180000ms per-test limits and existing assertions.",
+    "Keep S22 failed in the historical ledger even if a later selection passes."
+  ]
+}

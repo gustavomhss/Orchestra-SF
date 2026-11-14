@@ -1,0 +1,45 @@
+{
+  "schema": "wp11-independent-B1A-observation-isolation-review-v1",
+  "reviewer": "ci_reconciliation",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_REVALIDATION_PENDING",
+  "baseProductSha": "18d4c4dc502a5cedb5659eb29413ec7390c6e3df",
+  "baseProductTree": "07c5ebf7b7a657c6db85543c32462f5378e65559",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+  "beforeBlob": "5b754d16c5d61764bffc8268075fbd4551dd2072",
+  "reviewedCandidateBlob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+  "candidateSha256": "6db9a23b59b2e444e30128dbd5659a8f5a07a551fc247d1651f90f5e2b15a18c",
+  "manifest": {
+    "path": "/workspace/scratch/c3f9350f32d4/seams/B1A-current-choice-observation-proposal/manifest.json",
+    "sha256": "163193f5c71b4d9c41aab63905ac5b3ea7d25276a881afa323e23f0ff106306b"
+  },
+  "patch": {
+    "path": "/workspace/scratch/c3f9350f32d4/seams/B1A-current-choice-observation-proposal/isolate-coverage-observation.patch",
+    "sha256": "f7e33306604e0b7a8f7edb3e3f0d89fadfd8ea3ada3a1c77fa6b8cf526f4e324"
+  },
+  "verified": [
+    "Only the training coverage observation hunk changes. The original included status and arrayContaining(training:11) expectation are byte-identical and apply to a detached structuredClone of the actual producer entry.",
+    "The new digest assertion compares both live assessment and source entries before/after observation, so matcher behavior cannot silently rewrite canonical reassessment inputs.",
+    "The alias path is concrete: assessCostCoverage returns the included input entry object after validating it, and renewalCoverage returns both the original entries and that assessment.",
+    "No production file, source provider, C10 classifier, financial formula, human admission, timeout, expected total, later lifecycle assertion or replay call changes.",
+    "structuredClone(undefined) preserves the original missing-entry failure rather than fabricating a valid training entry. The new variable introduces no circular inferred type."
+  ],
+  "failureEvidence": {
+    "runId": 43594957479,
+    "jobId": 132447384785,
+    "productSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+    "actual": "choice-preview-coverage-unavailable",
+    "durationMs": 49664.04,
+    "receipt": "ci-analysis/wp11-W14-B1A-evidence-meta.json",
+    "receiptSha256": "c42ddfdf68bf2c9da6538716650d506ec2b23a3d6439baf0d521d928f13890ca"
+  },
+  "causeDisposition": "Input aliasing is established by source inspection. Matcher mutation as the cause of the own B1A failure remains a hypothesis until a new hosted run; no local reproduction or definitive cause is claimed.",
+  "requiredHostedValidation": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+  ],
+  "limits": [
+    "The new digest check qualifies input isolation; it does not itself qualify successful preparation/promotion, immutable original choice or restart. Those existing assertions must all complete in hosted CI.",
+    "The proposal is a WP11-owned minimal adaptation, not an exact intake of the larger published Finance diagnostic fixture.",
+    "No local product test, typecheck, build, install or remote mutation occurred in this review."
+  ],
+  "repoWritesByReviewer": false
+}

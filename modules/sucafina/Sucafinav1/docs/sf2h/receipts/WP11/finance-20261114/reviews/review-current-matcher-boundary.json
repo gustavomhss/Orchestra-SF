@@ -1,0 +1,113 @@
+{
+  "schema": "sf-finance-independent-review-v1",
+  "reviewer": "current_matcher_boundary_review",
+  "scope": "Static review of the current-choice fixture matcher isolation only",
+  "verdict": "NO_STATIC_BLOCKER_ACTIONS_PENDING",
+  "baseline": {
+    "head": "29172d2e4db859eedac31e84778c447bb97f6c08",
+    "tree": "8d7a7657597d024c5a55a9f5a4fdccf604c40d25",
+    "blob": "35d562e6686b27f5fdad5c88584391d7649571df",
+    "capture": "finance-W28-changes.json"
+  },
+  "candidate": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+    "sha256": "d8aa020d994c2ed6aa489a9b4968c44cfd3c0be4f3d76caaefc8b0b7470b6f4d",
+    "bytes": 27779,
+    "capture": "current-choice-matcher-isolation-changes.json",
+    "captureMatchesLocalBytes": true
+  },
+  "checks": {
+    "diffHunks": 1,
+    "outsideObservationHunkByteIdentical": true,
+    "capturePaths": 1,
+    "originalExpectations": 40,
+    "candidateExpectations": 41,
+    "orderedOriginalAssertionsEquivalent": true,
+    "originalExpectedTrainingStatus": "included",
+    "originalExpectedContainedComponent": "training:11",
+    "timeoutMs": 180000,
+    "timeoutUnchanged": true,
+    "testDeclarations": 1,
+    "productionChanges": 0,
+    "additionalProductStorageCalls": 0,
+    "additionalSourceCalls": 0,
+    "additionalPlannerReplay": 0,
+    "additionalDiagnosticConsoleLine": 1,
+    "newInvariant": "digestSfValue(coverage.assessment) unchanged across matcher observation"
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "matchesPublishedManifest": true
+    }
+  ],
+  "observedPriorRun": {
+    "runId": 43593276333,
+    "jobId": 132442336638,
+    "productSha": "29172d2e4db859eedac31e84778c447bb97f6c08",
+    "snapshotSha": "5178f3ff43a3387b3e25e4769a8b391a4ea9e423",
+    "logSha256": "f2ddd43802e937d99fac54620e3e628db91f95d9216c7029a1180db091c0dfa1",
+    "observations": [
+      "DataCloneError in entries observation",
+      "undefined reassessment after three fresh evidence resolutions",
+      "baseline basis version2 equals selected basis version2",
+      "final reason choice-preview-coverage-unavailable"
+    ]
+  },
+  "findings": [
+    {
+      "id": "M1",
+      "severity": "low",
+      "state": "corrected-before-freeze",
+      "detail": "Initial comment incorrectly said classification shares included entries. classifyCoverage clones included and N/A entries. Final candidate states that assessment and source entry list share objects while classification keeps its own cloned entries.",
+      "supersededBlob": "0a5c3908792d12468cda60975398256e73e4a72a",
+      "correctedBlob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5"
+    }
+  ],
+  "reasoning": [
+    "assessCostCoverage returns the input included entry when valid, so renewalCoverage.assessment and renewalCoverage.entries share those entry objects.",
+    "classifyCoverage copies included and N/A entries. Its support verifier compares canonical digests against the current assessment entry; mutation of the latter can therefore invalidate that comparison or make canonicalization throw.",
+    "The candidate clones the exact selected entry before the existing asymmetric matcher. Expected status and arrayContaining payload are unchanged. The clone is only an assertion observation and is never passed into financial producers.",
+    "The new digest assertion checks the complete original assessment after the matcher. The diagnostic catch affects only logging the clone digest and cannot convert a failed original assertion or invariant into a pass.",
+    "All remaining source, authority, case race, conditioned result, historical choice, human promotion, durable replay/reopen and no-application oracles are byte identical outside the observation hunk."
+  ],
+  "limits": [
+    "No Bun matcher implementation was executed or reproduced. A runtime mutation by toMatchObject remains a hypothesis until Actions logs the new before/after observation.",
+    "S18 evidence alone does not identify the exact unsupported object or establish that matcher mutation is the sole cause.",
+    "This static review does not establish the full lifecycle passes, its elapsed time, package typecheck, native installed behavior, C/D acceptance, or global criteria acceptance.",
+    "The previous diagnostic observer and source guards remain unchanged; any next failure must retain its actual reason rather than be treated as an accepted conditional result."
+  ],
+  "execution": {
+    "localProductTests": false,
+    "productImports": false,
+    "bun": false,
+    "ciDispatch": false,
+    "nativeProof": false,
+    "remoteWrites": false,
+    "sourceEditsByReviewer": false,
+    "onlyMetadataPython": true
+  },
+  "acceptance": {
+    "READY": false,
+    "DONE": false,
+    "C": null,
+    "D": null
+  }
+}

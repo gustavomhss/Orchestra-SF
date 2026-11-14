@@ -1,0 +1,174 @@
+{
+  "schema": "sf-finance-independent-source-init-review-v1",
+  "reviewer": "/root/s17_fixture_init_review",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+  "reviewedBaseline": {
+    "head": "332c5a762365e8550eaac7a278c864be0452651d",
+    "tree": "ace9841eefc65a9e3335fad0fe6846aaaff11f4b",
+    "note": "W27 documentation only;code baseline W26."
+  },
+  "trigger": {
+    "selection": 17,
+    "runId": 43591635600,
+    "jobId": 132437416020,
+    "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+    "conclusion": "failure",
+    "relevantCases": [
+      {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "fail",
+        "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+        "milliseconds": 17.02
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "fail",
+        "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+        "milliseconds": 9.87
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "fail",
+        "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+        "milliseconds": 9.22
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "fail",
+        "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+        "milliseconds": 8.95
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "fail",
+        "name": "hot-topic read refuses an old draft replaced during its last source callback",
+        "milliseconds": 8.62
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "fail",
+        "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+        "milliseconds": 9.52
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "fail",
+        "name": "source-only promotions establish current coverage proofs in source order 0-1",
+        "milliseconds": 29.05
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "fail",
+        "name": "source-only promotions establish current coverage proofs in source order 1-0",
+        "milliseconds": 21.47
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "fail",
+        "name": "source-only promotion refuses missing-proof between coverage observation and commit",
+        "milliseconds": 21.7
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "fail",
+        "name": "source-only promotion refuses revoke between coverage observation and commit",
+        "milliseconds": 21.76
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "fail",
+        "name": "source-only promotion refuses source-change between coverage observation and commit",
+        "milliseconds": 21.58
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "fail",
+        "name": "source-only promotion refuses case-change between coverage observation and commit",
+        "milliseconds": 24.67
+      }
+    ],
+    "failure": "SF_SOURCE_IDENTITIES_UNAVAILABLE before test scenario assertions",
+    "rawLogSha256": "bee8143075a7ec7ecfc512df315fa23f42ec3dbf7b438a0e597ab9cd90c8cb16"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "previousBlob": "ad9f8aa17a1ece912132d4c2453547693697716f",
+      "candidateBlob": "a45ca2e3e8efd8b39f53a94615cdad1064d8fe6b",
+      "sha256": "14de70f09d592ff4d4b33b09560e5170f0bd1baf3b1cc65283249fbcde4c5628",
+      "bytes": 20338,
+      "testCases": 6,
+      "assertionLines": 52,
+      "assertionLinesEqual": true,
+      "allTestBodiesByteIdentical": true,
+      "allOtherCodeByteIdenticalAfterExactInitializationReversal": true,
+      "explicitTimeouts": [],
+      "timeoutChange": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "previousBlob": "991a7fb18f9e8e7372bd2e0193b6727ab6633b26",
+      "candidateBlob": "11c8bd90a9886fec96acddecba26132f3b304c1b",
+      "sha256": "d997d23b4b39a353b9dbc426bc4bd276151ca1b1d3280d340c6110f3898ba6ec",
+      "bytes": 22776,
+      "testCases": 6,
+      "assertionLines": 39,
+      "assertionLinesEqual": true,
+      "allTestBodiesByteIdentical": true,
+      "allOtherCodeByteIdenticalAfterExactInitializationReversal": true,
+      "explicitTimeouts": [
+        "60_000",
+        "60_000"
+      ],
+      "timeoutChange": false
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "publishedBlob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "publishedBlob": "1b183b82758f8f49954a5038b675bb784fc89915",
+      "sha256": "f224d17c0207dc505554c5464e9070e883cdaa5460c0dab0e48703589a8c49d7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "publishedBlob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "publishedBlob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "sha256": "ce0483cee32f81c4616ae51369152618da94784ea195f5f8c6c3bcdabf038a5f"
+    }
+  ],
+  "findings": [],
+  "conclusions": [
+    "Canonical scoped persistence validates source identities before invoking each transaction callback.",
+    "plannerFixture initializes only the Planner source registry.",
+    "Hot Topic previously used the scoped Dashboard transaction before initializing its registry; moving the canonical initializer first satisfies that precondition. The normal commit guard still enumerates and synchronizes the seeded topic.",
+    "Promotion previously reached C08 on Dashboard without source initialization; the added canonical initializer precedes all C08 work.",
+    "No direct sfSources writes, authorization change, source fence bypass, new financial calculation or product implementation edit appears in this patch.",
+    "All12expanded test cases, assertions, explicit timeouts, input facts, private human admissions, source observers and cleanup bodies remain unchanged."
+  ],
+  "verification": {
+    "localProductExecution": false,
+    "importsOfProduct": false,
+    "bun": false,
+    "tests": false,
+    "typecheck": false,
+    "guards": false,
+    "ciDispatch": false,
+    "remoteWrites": false,
+    "repositoryEditsByReviewer": false,
+    "textMetadataOnly": true
+  },
+  "pending": [
+    "Actions selection of the exact two final files after publication.",
+    "No runtime pass, criterion acceptance, native session proof or C/D is inferred from this review."
+  ]
+}

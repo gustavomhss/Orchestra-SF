@@ -1,0 +1,804 @@
+{
+  "schema": "astra-finance-pr40-reconciliation-v1",
+  "status": "FILES_FROZEN_STATIC_REVIEW_NO_RUNTIME_APPROVAL",
+  "observedAt": "2026-11-14T11:39:25.424124+00:00",
+  "source": {
+    "sourcePrevious": "2bf0197c5d607b43063c36e1c8fef9e769c716ca",
+    "sourceHead": "65509f0b8c435b88fb0ec9949299571f011d2347",
+    "sourceTree": "47d4e0833764aebe49a5a6b7ee8a6d937a4193c3",
+    "commits": [
+      {
+        "sha": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+        "message": "fix(sucafina): reconcile WP11 coverage proofs and Hot Topic snapshot fences",
+        "tree": "1a8280cfc76c234bc7970e3709a78395b12c1c5c",
+        "parents": [
+          "2bf0197c5d607b43063c36e1c8fef9e769c716ca"
+        ]
+      },
+      {
+        "sha": "65509f0b8c435b88fb0ec9949299571f011d2347",
+        "message": "fix(sucafina): consume canonical scenario batching for WP11 replay",
+        "tree": "47d4e0833764aebe49a5a6b7ee8a6d937a4193c3",
+        "parents": [
+          "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+        ]
+      }
+    ],
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W7.json",
+        "sourceBlob": "fa25c3083fe81ba0db770591ed74ae81c716c858",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W8.json",
+        "sourceBlob": "4c2df4a35656722ba77cc66f3ac5a38c9c20a5d9",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-d9b8-batch-intake.json",
+        "sourceBlob": "fa24a529fea8ced07f7e7aa82d7ae08cb385e2fc",
+        "status": "added",
+        "additions": 82,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-d9b8-batch-review.json",
+        "sourceBlob": "03eaa90473e8dc9787a6074d96c24a58c78b5b28",
+        "status": "added",
+        "additions": 272,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9-reasoning.json",
+        "sourceBlob": "e7fb1ba9816f8c74fcfff9439c70df99fb2654ea",
+        "status": "added",
+        "additions": 175,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9-reasoning.md",
+        "sourceBlob": "04064b1befe7fe22e2e3d3cdcc47c3c49a348e82",
+        "status": "added",
+        "additions": 23,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9.json",
+        "sourceBlob": "74203812d32840906958cfc868d552586dded79f",
+        "status": "added",
+        "additions": 51,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/foreign-provenance-W8.json",
+        "sourceBlob": "ed58caab7164ef5071bce085a4985a8a58986bae",
+        "status": "added",
+        "additions": 7250,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W7-final.json",
+        "sourceBlob": "abc63db6bc9ee7c75b73519cf83b6aae2783d04d",
+        "status": "added",
+        "additions": 112,
+        "deletions": 0,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W8.json",
+        "sourceBlob": "2ecb6d06281df9cebd91b87b4432c3ccbcc04d02",
+        "status": "added",
+        "additions": 51,
+        "deletions": 0,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W9.json",
+        "sourceBlob": "c301bdbbc2b14b13811ac69bea685d88f6a1466a",
+        "status": "added",
+        "additions": 157,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-deltas/WP10-own-reconciliation-W8.json",
+        "sourceBlob": "77749bf8e64bc5273d4d532280e0c7b1f8caabfe",
+        "status": "added",
+        "additions": 87,
+        "deletions": 0,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W6-C1.json",
+        "sourceBlob": "c563e0c033ca10afaf68b887bbeb80f5c3994784",
+        "status": "added",
+        "additions": 555,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W8-H2.json",
+        "sourceBlob": "bbf22510da5c1295514aa464e63f7734492ac0c2",
+        "status": "added",
+        "additions": 1300,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W6-C1.json",
+        "sourceBlob": "1d181af9c704f26c0251fcd25962e43ca8574cd5",
+        "status": "added",
+        "additions": 1102,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W8-H2.json",
+        "sourceBlob": "e0d16f40582bed8f0377caf431ad17ed68ec5b19",
+        "status": "added",
+        "additions": 694,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W7.json",
+        "sourceBlob": "64f635c8be1b76257d76ff950240e626b2b9d268",
+        "status": "added",
+        "additions": 919,
+        "deletions": 0,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W8.json",
+        "sourceBlob": "3644c3fbd4764025a61c5fe63b138340972e7904",
+        "status": "added",
+        "additions": 922,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "sourceBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+        "status": "modified",
+        "additions": 18,
+        "deletions": 5,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "sourceBlob": "e0840d775274ea73c6b938711764c69593dadca0",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 2,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "sourceBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "status": "modified",
+        "additions": 19,
+        "deletions": 7,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "sourceBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 3,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "sourceBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+        "status": "modified",
+        "additions": 56,
+        "deletions": 28,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "sourceBlob": "ad9f8aa17a1ece912132d4c2453547693697716f",
+        "status": "added",
+        "additions": 244,
+        "deletions": 0,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "sourceBlob": "991a7fb18f9e8e7372bd2e0193b6727ab6633b26",
+        "status": "added",
+        "additions": 245,
+        "deletions": 0,
+        "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "sourceBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 1,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+        "sourceBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 1,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+        "sourceBlob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+        "status": "added",
+        "additions": 120,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+        "sourceBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "status": "added",
+        "additions": 175,
+        "deletions": 0,
+        "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347"
+      }
+    ]
+  },
+  "financeBaseline": {
+    "head": "3ab41cbb106435635999e1417b10a087a34a5d95",
+    "tree": "e7974c33c9a5bbf4a20ce0c1db4a66ae04f3b8a9",
+    "productBase": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+    "note": "W24 documentation-only; all non-docs same as W23 at intake"
+  },
+  "additionalParentForRoot": "65509f0b8c435b88fb0ec9949299571f011d2347",
+  "changedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "action": "adopt-exact-source",
+      "beforeBlob": "5e0b80a470958dd201db4283bde96d594935e68d",
+      "sourceBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "candidateBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "sha256": "45eb7d1418a0f62ec8f361e9d78a3ed09a98e9d48318db0c2a7b986493fb84fa",
+      "bytes": 20044
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "action": "adopt-exact-source",
+      "beforeBlob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+      "sourceBlob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "candidateBlob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "sha256": "c1270b39da0574403f7461e007c14e9fb19c8726aa949f938d09879df3988813",
+      "bytes": 39202
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "action": "adopt-exact-source",
+      "beforeBlob": null,
+      "sourceBlob": "ad9f8aa17a1ece912132d4c2453547693697716f",
+      "candidateBlob": "ad9f8aa17a1ece912132d4c2453547693697716f",
+      "sha256": "f08b3293538d2e22382dd394f8a16fb9ca90c90356dc984707656d0f4310f61f",
+      "bytes": 20251
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "action": "adopt-exact-source",
+      "beforeBlob": null,
+      "sourceBlob": "991a7fb18f9e8e7372bd2e0193b6727ab6633b26",
+      "candidateBlob": "991a7fb18f9e8e7372bd2e0193b6727ab6633b26",
+      "sha256": "067e2120174c4767a18cc0714e52a81818b8872855400d79ddb8a246568e0a79",
+      "bytes": 22644
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "action": "adopt-exact-source",
+      "beforeBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "sourceBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "candidateBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+      "bytes": 25216
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "action": "adopt-exact-source",
+      "beforeBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+      "sourceBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "candidateBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129",
+      "bytes": 14461
+    }
+  ],
+  "alreadyIdentical": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "action": "already-identical-no-write"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "blob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "action": "already-identical-no-write"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "action": "already-identical-no-write"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "blob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+      "action": "already-identical-no-write"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "blob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "action": "already-identical-no-write"
+    }
+  ],
+  "historicalReceipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W7.json",
+      "sourceBlob": "fa25c3083fe81ba0db770591ed74ae81c716c858",
+      "status": "added",
+      "additions": 53,
+      "deletions": 0,
+      "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W7.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W8.json",
+      "sourceBlob": "4c2df4a35656722ba77cc66f3ac5a38c9c20a5d9",
+      "status": "added",
+      "additions": 53,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W8.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-d9b8-batch-intake.json",
+      "sourceBlob": "fa24a529fea8ced07f7e7aa82d7ae08cb385e2fc",
+      "status": "added",
+      "additions": 82,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-d9b8-batch-intake.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-d9b8-batch-review.json",
+      "sourceBlob": "03eaa90473e8dc9787a6074d96c24a58c78b5b28",
+      "status": "added",
+      "additions": 272,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-d9b8-batch-review.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9-reasoning.json",
+      "sourceBlob": "e7fb1ba9816f8c74fcfff9439c70df99fb2654ea",
+      "status": "added",
+      "additions": 175,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9-reasoning.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9-reasoning.md",
+      "sourceBlob": "04064b1befe7fe22e2e3d3cdcc47c3c49a348e82",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9-reasoning.md",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9.json",
+      "sourceBlob": "74203812d32840906958cfc868d552586dded79f",
+      "status": "added",
+      "additions": 51,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-source-projection-W9.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/foreign-provenance-W8.json",
+      "sourceBlob": "ed58caab7164ef5071bce085a4985a8a58986bae",
+      "status": "added",
+      "additions": 7250,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/foreign-provenance-W8.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W7-final.json",
+      "sourceBlob": "abc63db6bc9ee7c75b73519cf83b6aae2783d04d",
+      "status": "added",
+      "additions": 112,
+      "deletions": 0,
+      "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W7-final.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W8.json",
+      "sourceBlob": "2ecb6d06281df9cebd91b87b4432c3ccbcc04d02",
+      "status": "added",
+      "additions": 51,
+      "deletions": 0,
+      "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W8.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W9.json",
+      "sourceBlob": "c301bdbbc2b14b13811ac69bea685d88f6a1466a",
+      "status": "added",
+      "additions": 157,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W9.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-deltas/WP10-own-reconciliation-W8.json",
+      "sourceBlob": "77749bf8e64bc5273d4d532280e0c7b1f8caabfe",
+      "status": "added",
+      "additions": 87,
+      "deletions": 0,
+      "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-deltas/WP10-own-reconciliation-W8.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W6-C1.json",
+      "sourceBlob": "c563e0c033ca10afaf68b887bbeb80f5c3994784",
+      "status": "added",
+      "additions": 555,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W6-C1.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W8-H2.json",
+      "sourceBlob": "bbf22510da5c1295514aa464e63f7734492ac0c2",
+      "status": "added",
+      "additions": 1300,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W8-H2.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W6-C1.json",
+      "sourceBlob": "1d181af9c704f26c0251fcd25962e43ca8574cd5",
+      "status": "added",
+      "additions": 1102,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W6-C1.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W8-H2.json",
+      "sourceBlob": "e0d16f40582bed8f0377caf431ad17ed68ec5b19",
+      "status": "added",
+      "additions": 694,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W8-H2.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W7.json",
+      "sourceBlob": "64f635c8be1b76257d76ff950240e626b2b9d268",
+      "status": "added",
+      "additions": 919,
+      "deletions": 0,
+      "sourceCommit": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W7.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W8.json",
+      "sourceBlob": "3644c3fbd4764025a61c5fe63b138340972e7904",
+      "status": "added",
+      "additions": 922,
+      "deletions": 0,
+      "sourceCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "publishedBlob": null,
+      "localBlob": null,
+      "action": "carry-exact-new-blob",
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W8.json",
+      "qualification": "historical-source-only-no-transfer-to-Finance"
+    }
+  ],
+  "protectedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "beforeBlob": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "afterBlob": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "beforeBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "afterBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "beforeBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "afterBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "beforeBlob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "afterBlob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "beforeBlob": "310435389682b2892fc255a0eb60030ae7dda6a6",
+      "afterBlob": "310435389682b2892fc255a0eb60030ae7dda6a6",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "beforeBlob": "90333c12d277942667810d6ed802e019e799f837",
+      "afterBlob": "90333c12d277942667810d6ed802e019e799f837",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "beforeBlob": "a8b72e8c30d6e365c77169e53d499dc163530318",
+      "afterBlob": "a8b72e8c30d6e365c77169e53d499dc163530318",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "beforeBlob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "afterBlob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "beforeBlob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "afterBlob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "unchanged": true
+    }
+  ],
+  "semanticPreservation": {
+    "mutations": "Only comment differs; always entries+canonical reassess preserved byte-for-byte after removing full-line comments",
+    "hotTopicSurface": "Dashboard preserved; new final joint C08 observation after source/case callbacks",
+    "renewalFixture": "Canonical source Planner feeds only stored-scenarios DomainProjection; classified Planner remains on all C10 judgment/preview/calculation producers",
+    "trainingCalendar": "All12 forecast months explicit including zero, November40000 preserved",
+    "grantsAndPersistence": "Apply/retry authoritative receipt/result/request fences and explicit human grants unchanged",
+    "currentChoice": "W22 diagnostic retained; no coverage-unavailable cause/fix claimed"
+  },
+  "newProofDesign": [
+    {
+      "file": "test/product/wp11/hot-topic-snapshot.test.ts",
+      "testCases": 6,
+      "additionalRisk": "Read/list private draft replacement during final source or case callback; actual Dashboard snapshot; source/case/authority precommit races",
+      "limits": "Private real SQLite/C08 and UI-admission fixtures; not native/installed witness"
+    },
+    {
+      "file": "test/product/wp11/promotion-coverage-proof.test.ts",
+      "testCases": 6,
+      "additionalRisk": "Two source orders, basis-first reassessment digest versus source-first observation, exact proof and missing-proof/source/case/revoke rejection",
+      "limits": "Canonical Planner/baseline classification with private consumer proof protocol; no installed/native claim"
+    }
+  ],
+  "realConsumers": {
+    "hotTopic": [
+      "product/decisions/product.ts#createDecisionProduct",
+      "product/decisions/http.ts#createDecisionHttp",
+      "test/product/wp11/hot-topic-snapshot.test.ts",
+      "test/product/wp11/hot-topic-draft-domain.test.ts"
+    ],
+    "renewalSourcePlanner": [
+      "test/product/wp11/renewal-choice-history.test.ts",
+      "test/product/wp11/renewal-choice-revision.test.ts",
+      "test/product/wp11/implementation-quote-history.test.ts",
+      "test/product/wp05/choice-history-bi.test.ts"
+    ],
+    "scenarioBatch": [
+      "product/planner/scenario-comparison-port.ts",
+      "product/planner/sensitivity-units.ts",
+      "test/product/wp11/scenario-batch.test.ts"
+    ]
+  },
+  "criterionScope": [
+    "WP11.T02.CHK.01",
+    "WP11.T02.CHK.03",
+    "WP11.T02.CHK.20",
+    "WP11.T02.CHK.21",
+    "WP11.T03.CHK.01",
+    "WP11.T03.CHK.02",
+    "WP11.T03.CHK.20",
+    "WP11.T02.INV.01",
+    "WP11.T02.INV.20",
+    "WP11.T03.INV.01"
+  ],
+  "criteriaStatus": "No criterion promoted by this intake; retain root complete83-criterion map and global gates",
+  "validation": {
+    "performed": [
+      "GitHub MCP compare and each commit read",
+      "Git blob and SHA256 verification of11 incoming product/test paths",
+      "Pre-edit local equality to published path blobs",
+      "9 protected path blobs before/after",
+      "Static import resolution; no module execution",
+      "Diff confirms assertions/timeouts unchanged in existing fixtures",
+      "18 historical receipt source SHAs and absence/collision check"
+    ],
+    "notPerformed": [
+      "Product tests",
+      "Bun/typecheck",
+      "Guards",
+      "Browser/native proof",
+      "CI dispatch",
+      "Remote writes"
+    ],
+    "inFlightAtTaskAssignment": [
+      {
+        "selection": "S14WP11",
+        "runId": 43589528126,
+        "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d"
+      },
+      {
+        "selection": "S15WP05",
+        "runId": 43590340187,
+        "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5"
+      }
+    ],
+    "qualification": "Previous/external CI remains historical; no transfer to adopted final bytes",
+    "rootReportedCompletedRuns": [
+      {
+        "selection": "S14WP11",
+        "runId": 43589528126,
+        "status": "failure",
+        "pass": 22,
+        "fail": 5,
+        "expectCalls": 384,
+        "durationSeconds": 940.06,
+        "passedScopes": [
+          "source-promotion",
+          "hot-topic core",
+          "calculation-persistence",
+          "calculation-history",
+          "case-import"
+        ],
+        "failures": [
+          "choice-prepared-execution: SF_SOURCE_IDENTITIES_UNAVAILABLE at fixture117",
+          "renewal-choice-history:180s",
+          "renewal-choice-revision:180s",
+          "compositevariant:204s",
+          "current-choice: delegated to separate fresh agent"
+        ],
+        "source": "Root message after review; log test14-clean.log not independently parsed by this intake"
+      },
+      {
+        "selection": "S15WP05",
+        "runId": 43590340187,
+        "status": "failure",
+        "failure": "180s deadline before SVG; W23 not qualified",
+        "source": "Root message after review; log test15-clean.log not independently parsed by this intake"
+      }
+    ]
+  },
+  "surgicalValidationRecommendation": {
+    "newProofFiles": [
+      "test/product/wp11/hot-topic-snapshot.test.ts",
+      "test/product/wp11/promotion-coverage-proof.test.ts"
+    ],
+    "changedFixtureConsumers": [
+      "test/product/wp11/renewal-choice-history.test.ts",
+      "test/product/wp11/renewal-choice-revision.test.ts",
+      "test/product/wp11/implementation-quote-history.test.ts"
+    ],
+    "crossWpConsumer": "test/product/wp05/choice-history-bi.test.ts uses changed renewal fixture; S15 failed at180s before SVG and does not qualify W23 or final sourcePlanner bytes; root chooses narrowly scoped follow-up.",
+    "doNotDuplicate": [
+      "S14/S15 in flight",
+      "Planner batch tests already exact; no rerun solely for upstream copy",
+      "Whole-group epic"
+    ],
+    "owner": "Root controls dispatch after existing compatible runs settle"
+  },
+  "remaining": [
+    "Typecheck and guards qualification by root on published candidate",
+    "Hosted tests for exact new proof/wiring bytes",
+    "No demonstrated fix for current-choice coverage-unavailable yet",
+    "No measured performance guarantee from source-only wiring",
+    "Native proofs, C/D and final S0 epic remain mandatory",
+    "S14/S15 closed failure as reported by root; new sourcePlanner wiring has no measured runtime qualification."
+  ],
+  "independentReview": {
+    "agent": "latest3_static_review",
+    "files": [
+      "review-wp11-latest3-independent.json",
+      "review-wp11-latest3-independent.md"
+    ],
+    "state": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+    "blockingFindings": []
+  },
+  "artifacts": {
+    "ready": "wp11-latest3-files-ready.json",
+    "changes": "wp11-latest3-changes.json",
+    "receipts": "wp11-latest3-historical-receipts.json",
+    "diff": "intake-reconciliation-pr40-final-65509.diff"
+  }
+}

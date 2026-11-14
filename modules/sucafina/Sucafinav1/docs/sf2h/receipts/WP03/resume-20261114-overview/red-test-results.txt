@@ -1,0 +1,125 @@
+Hosted RED excerpt; exact job 132261371579 from run 43534889692. This excerpt preserves runtime timestamps and assertion output.
+2026-11-14T00:34:45.4489448Z bun test v1.3.14 (0d9b296a)
+2026-11-14T00:34:45.4559342Z 
+2026-11-14T00:34:45.4559751Z Sucafinav1/test/product/wp03/overview-drilldown.test.ts:
+2026-11-14T00:34:45.6815757Z 24 |         { id: "candidateBudget", label: "Candidate budget", total: 600000, after: 60000, afterRef: candidate },
+2026-11-14T00:34:45.6816690Z 25 |         { id: "varianceToCandidateBudget", label: "Variance to candidate budget", total: vector.variance, before: 60000, beforeRef: candidate, after: vector.november, afterRef: candidate, difference: vector.novemberVariance },
+2026-11-14T00:34:45.6817738Z 26 |         { id: "officialBudget", label: "Official budget", total: 600000, after: 60000, afterRef: official },
+2026-11-14T00:34:45.6818655Z 27 |         { id: "varianceToOfficialBudget", label: "Variance to official budget", total: vector.variance, before: 60000, beforeRef: official, after: vector.november, afterRef: candidate, difference: vector.novemberVariance },
+2026-11-14T00:34:45.6819258Z 28 |       ]
+2026-11-14T00:34:45.6819996Z 29 |       expect(elements(selected.tree).filter((node) => node.attributes["data-overview-metric"] !== undefined).map((node) => node.attributes["data-overview-metric"]).sort()).toEqual(expected.map((metric) => metric.id).sort())
+2026-11-14T00:34:45.6820987Z                                                                                                                                                                                  ^
+2026-11-14T00:34:45.6821423Z error: expect(received).toEqual(expected)
+2026-11-14T00:34:45.6821599Z 
+2026-11-14T00:34:45.6821688Z - [
+2026-11-14T00:34:45.6821932Z -   "baselineOutlook",
+2026-11-14T00:34:45.6822190Z -   "candidateBudget",
+2026-11-14T00:34:45.6822449Z -   "candidateOutlook",
+2026-11-14T00:34:45.6822714Z -   "deltaToBase",
+2026-11-14T00:34:45.6822960Z -   "officialBudget",
+2026-11-14T00:34:45.6823212Z -   "varianceToCandidateBudget",
+2026-11-14T00:34:45.6823477Z -   "varianceToOfficialBudget",
+2026-11-14T00:34:45.6823715Z - ]
+2026-11-14T00:34:45.6823908Z + []
+2026-11-14T00:34:45.6824031Z 
+2026-11-14T00:34:45.6824134Z - Expected  - 9
+2026-11-14T00:34:45.6824327Z + Received  + 1
+2026-11-14T00:34:45.6824429Z 
+2026-11-14T00:34:45.6824942Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:29:173)
+2026-11-14T00:34:45.6829947Z (fail) Overview opens each canonical total into the correct record, monthly measure and version [90.43ms]
+2026-11-14T00:34:45.7562762Z 291 | 
+2026-11-14T00:34:45.7566227Z 292 | function elements(root: ParsedElement): ParsedElement[] { return root.children.flatMap((node) => [node, ...elements(node)]) }
+2026-11-14T00:34:45.7567783Z 293 | 
+2026-11-14T00:34:45.7568264Z 294 | function find(root: ParsedElement, attribute: string, value: string) {
+2026-11-14T00:34:45.7568966Z 295 |   const matching = elements(root).filter((node) => node.attributes[attribute] === value)
+2026-11-14T00:34:45.7569618Z 296 |   expect(matching.map((node) => node.tag)).toHaveLength(1)
+2026-11-14T00:34:45.7570043Z                                                  ^
+2026-11-14T00:34:45.7570463Z error: expect(received).toHaveLength(expected)
+2026-11-14T00:34:45.7570668Z 
+2026-11-14T00:34:45.7570795Z Expected length: 1
+2026-11-14T00:34:45.7571047Z Received length: 0
+2026-11-14T00:34:45.7571189Z 
+2026-11-14T00:34:45.7571738Z       at find (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:296:44)
+2026-11-14T00:34:45.7572838Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:71:33)
+2026-11-14T00:34:45.7573860Z (fail) Overview drills into the separately selected official budget and only the requested months [73.34ms]
+2026-11-14T00:34:45.7941904Z 291 | 
+2026-11-14T00:34:45.7942484Z 292 | function elements(root: ParsedElement): ParsedElement[] { return root.children.flatMap((node) => [node, ...elements(node)]) }
+2026-11-14T00:34:45.7942897Z 293 | 
+2026-11-14T00:34:45.7943189Z 294 | function find(root: ParsedElement, attribute: string, value: string) {
+2026-11-14T00:34:45.7943663Z 295 |   const matching = elements(root).filter((node) => node.attributes[attribute] === value)
+2026-11-14T00:34:45.7944072Z 296 |   expect(matching.map((node) => node.tag)).toHaveLength(1)
+2026-11-14T00:34:45.7944356Z                                                  ^
+2026-11-14T00:34:45.7944619Z error: expect(received).toHaveLength(expected)
+2026-11-14T00:34:45.7944779Z 
+2026-11-14T00:34:45.7944858Z Expected length: 1
+2026-11-14T00:34:45.7945045Z Received length: 0
+2026-11-14T00:34:45.7945135Z 
+2026-11-14T00:34:45.7945493Z       at find (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:296:44)
+2026-11-14T00:34:45.7946191Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:95:33)
+2026-11-14T00:34:45.7946832Z (fail) Overview leaves an unselected official unavailable instead of reusing candidate records [37.89ms]
+2026-11-14T00:34:45.8464562Z 291 | 
+2026-11-14T00:34:45.8465148Z 292 | function elements(root: ParsedElement): ParsedElement[] { return root.children.flatMap((node) => [node, ...elements(node)]) }
+2026-11-14T00:34:45.8465552Z 293 | 
+2026-11-14T00:34:45.8465840Z 294 | function find(root: ParsedElement, attribute: string, value: string) {
+2026-11-14T00:34:45.8466289Z 295 |   const matching = elements(root).filter((node) => node.attributes[attribute] === value)
+2026-11-14T00:34:45.8466715Z 296 |   expect(matching.map((node) => node.tag)).toHaveLength(1)
+2026-11-14T00:34:45.8466997Z                                                  ^
+2026-11-14T00:34:45.8467422Z error: expect(received).toHaveLength(expected)
+2026-11-14T00:34:45.8467660Z 
+2026-11-14T00:34:45.8467754Z Expected length: 1
+2026-11-14T00:34:45.8467935Z Received length: 0
+2026-11-14T00:34:45.8468036Z 
+2026-11-14T00:34:45.8468399Z       at find (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:296:44)
+2026-11-14T00:34:45.8469128Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:118:31)
+2026-11-14T00:34:45.8469896Z (fail) Overview keeps known budget, missing outlook, numeric zero and structural additions or removals distinct [52.26ms]
+2026-11-14T00:34:45.8924951Z 291 | 
+2026-11-14T00:34:45.8925751Z 292 | function elements(root: ParsedElement): ParsedElement[] { return root.children.flatMap((node) => [node, ...elements(node)]) }
+2026-11-14T00:34:45.8926164Z 293 | 
+2026-11-14T00:34:45.8926451Z 294 | function find(root: ParsedElement, attribute: string, value: string) {
+2026-11-14T00:34:45.8926905Z 295 |   const matching = elements(root).filter((node) => node.attributes[attribute] === value)
+2026-11-14T00:34:45.8927474Z 296 |   expect(matching.map((node) => node.tag)).toHaveLength(1)
+2026-11-14T00:34:45.8927759Z                                                  ^
+2026-11-14T00:34:45.8928040Z error: expect(received).toHaveLength(expected)
+2026-11-14T00:34:45.8928193Z 
+2026-11-14T00:34:45.8928282Z Expected length: 1
+2026-11-14T00:34:45.8928452Z Received length: 0
+2026-11-14T00:34:45.8928550Z 
+2026-11-14T00:34:45.8928908Z       at find (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:296:44)
+2026-11-14T00:34:45.8929678Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:174:22)
+2026-11-14T00:34:45.8930494Z (fail) Overview distinguishes original EUR inputs from converted USD measures and missing conversion [45.98ms]
+2026-11-14T00:34:45.9415137Z 291 | 
+2026-11-14T00:34:45.9416033Z 292 | function elements(root: ParsedElement): ParsedElement[] { return root.children.flatMap((node) => [node, ...elements(node)]) }
+2026-11-14T00:34:45.9416667Z 293 | 
+2026-11-14T00:34:45.9417376Z 294 | function find(root: ParsedElement, attribute: string, value: string) {
+2026-11-14T00:34:45.9418116Z 295 |   const matching = elements(root).filter((node) => node.attributes[attribute] === value)
+2026-11-14T00:34:45.9418765Z 296 |   expect(matching.map((node) => node.tag)).toHaveLength(1)
+2026-11-14T00:34:45.9419203Z                                                  ^
+2026-11-14T00:34:45.9419545Z error: expect(received).toHaveLength(expected)
+2026-11-14T00:34:45.9419768Z 
+2026-11-14T00:34:45.9419892Z Expected length: 1
+2026-11-14T00:34:45.9420153Z Received length: 0
+2026-11-14T00:34:45.9420295Z 
+2026-11-14T00:34:45.9420850Z       at find (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:296:44)
+2026-11-14T00:34:45.9421994Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:211:31)
+2026-11-14T00:34:45.9434424Z (fail) Overview preserves opaque record identities and escapes HTML without cross-selecting records [50.83ms]
+2026-11-14T00:34:45.9694235Z 291 | 
+2026-11-14T00:34:45.9694969Z 292 | function elements(root: ParsedElement): ParsedElement[] { return root.children.flatMap((node) => [node, ...elements(node)]) }
+2026-11-14T00:34:45.9695492Z 293 | 
+2026-11-14T00:34:45.9695867Z 294 | function find(root: ParsedElement, attribute: string, value: string) {
+2026-11-14T00:34:45.9696452Z 295 |   const matching = elements(root).filter((node) => node.attributes[attribute] === value)
+2026-11-14T00:34:45.9697008Z 296 |   expect(matching.map((node) => node.tag)).toHaveLength(1)
+2026-11-14T00:34:45.9697536Z                                                  ^
+2026-11-14T00:34:45.9697863Z error: expect(received).toHaveLength(expected)
+2026-11-14T00:34:45.9698022Z 
+2026-11-14T00:34:45.9698111Z Expected length: 1
+2026-11-14T00:34:45.9698283Z Received length: 0
+2026-11-14T00:34:45.9698377Z 
+2026-11-14T00:34:45.9698738Z       at find (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:296:44)
+2026-11-14T00:34:45.9699455Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts:247:33)
+2026-11-14T00:34:45.9700118Z (fail) Overview retains published totals but exposes incomplete or divergent detail composition [26.10ms]
+2026-11-14T00:34:45.9710250Z 
+2026-11-14T00:34:45.9711353Z omni positive control [b1f6239f9226105347130f07a6c83eb4]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T00:34:45.9711906Z  0 pass
+2026-11-14T00:34:45.9712055Z  7 fail
+2026-11-14T00:34:45.9712215Z  34 expect() calls
+2026-11-14T00:34:45.9712428Z Ran 7 tests across 1 file. [524.00ms]

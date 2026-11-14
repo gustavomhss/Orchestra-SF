@@ -1,0 +1,95 @@
+{
+  "schema": "sf-finance-post-W32-criterion-bindings-v1",
+  "product": {
+    "head": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+    "tree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f"
+  },
+  "counts": {
+    "bindings": 2,
+    "criteria": 2,
+    "tests": 1
+  },
+  "bindings": [
+    {
+      "binding_id": "WP11.POSTW32.01",
+      "criterion_wp": "WP11",
+      "criterion_id": "WP11.T01.INV.01",
+      "criterion_text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+      "test_path": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "test_blob": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "property_under_test": "O consumidor verifica as alternativas do caso em um snapshot real consistente por invocação, recusa write aninhado/revogação e observa um commit de fonte na próxima invocação.",
+      "authored_oracles": [
+        "Operações e alternativas vazias são verificadas sem alterar nenhum dos três snapshots duráveis.",
+        "O domínio aceita o comando de fonte, mas o armazenamento recusa o commit aninhado; capturar a rejeição não permite admissão positiva.",
+        "Um commit oficial posterior invalida a próxima verificação mesmo quando a declaração sintética da referência não muda.",
+        "Revogar a autoridade durante callback assíncrono de fonte causa recusa."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-operation-verifier.ts#createRenewalCaseOperationVerifier",
+        "test/product/wp11/renewal-choice-fixture.ts#createRenewalChoiceHistory",
+        "test/product/wp11/renewal-human-choice-fixture.ts",
+        "product/decisions/case-port.ts#createDecisionCasePort",
+        "runtime/local-store.ts#openLocalStore"
+      ],
+      "remaining_full_criterion_gap": "Este teste direto comprova somente a admissão read-only da fixture pelo verificador canônico e o LocalStore real. Os históricos e consumidores têm seleções próprias. Não cria prova C10, valor financeiro, escolha aplicada, identidade instalada ou aceite do critério integral.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 25
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP03.POSTW32.02",
+      "criterion_wp": "WP03",
+      "criterion_id": "WP03.T01.INV.01",
+      "criterion_text": "Toda projeção e simulação reutiliza o cálculo e a autorização do domínio; não existe fórmula financeira paralela.",
+      "test_path": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "test_blob": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "property_under_test": "O consumidor verifica as alternativas do caso em um snapshot real consistente por invocação, recusa write aninhado/revogação e observa um commit de fonte na próxima invocação.",
+      "authored_oracles": [
+        "Operações e alternativas vazias são verificadas sem alterar nenhum dos três snapshots duráveis.",
+        "O domínio aceita o comando de fonte, mas o armazenamento recusa o commit aninhado; capturar a rejeição não permite admissão positiva.",
+        "Um commit oficial posterior invalida a próxima verificação mesmo quando a declaração sintética da referência não muda.",
+        "Revogar a autoridade durante callback assíncrono de fonte causa recusa."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-operation-verifier.ts#createRenewalCaseOperationVerifier",
+        "test/product/wp11/renewal-choice-fixture.ts#createRenewalChoiceHistory",
+        "test/product/wp11/renewal-human-choice-fixture.ts",
+        "product/decisions/case-port.ts#createDecisionCasePort",
+        "runtime/local-store.ts#openLocalStore"
+      ],
+      "remaining_full_criterion_gap": "Este teste direto comprova somente a admissão read-only da fixture pelo verificador canônico e o LocalStore real. Os históricos e consumidores têm seleções próprias. Não cria prova C10, valor financeiro, escolha aplicada, identidade instalada ou aceite do critério integral.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 25
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    }
+  ],
+  "acceptance": {
+    "criteria_fully_accepted": 0,
+    "native": null,
+    "C": null,
+    "D": null
+  },
+  "sourceObservation": {
+    "pr40": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+    "sourceCutoff": "2026-11-14 12:47:36 UTC",
+    "additionalSourceCommits": 0
+  },
+  "relatedFinding": "s22-findings.json",
+  "exactChangeManifest": "s22-grouped-scope-changes.json",
+  "independentReview": "reviews/review-s22-grouped-read-scope.json",
+  "execution": "S25/S26 dispatched; completed outcomes resolve exclusively from product-tests.json. No pass is asserted by this binding document."
+}

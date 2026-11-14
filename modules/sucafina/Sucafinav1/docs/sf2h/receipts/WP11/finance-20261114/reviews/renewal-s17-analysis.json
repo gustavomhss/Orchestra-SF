@@ -1,0 +1,145 @@
+{
+  "status": "STATIC_CORRECTION_FROZEN_HOSTED_MEASUREMENT_PENDING",
+  "productExecution": false,
+  "localTests": false,
+  "ciDispatch": false,
+  "remoteWrites": false,
+  "baseline": {
+    "head": "29172d2e4db859eedac31e84778c447bb97f6c08",
+    "tree": "8d7a7657597d024c5a55a9f5a4fdccf604c40d25"
+  },
+  "S17": {
+    "runId": 43591635600,
+    "jobId": 132437416020,
+    "W": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "S": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+    "conclusion": "failure",
+    "total": {
+      "pass": 4,
+      "fail": 15,
+      "expects": 165,
+      "seconds": 713.39
+    },
+    "sourceLogSha256": "bee8143075a7ec7ecfc512df315fa23f42ec3dbf7b438a0e597ab9cd90c8cb16",
+    "history": {
+      "milliseconds": 180008.19,
+      "timeout": 180000,
+      "phase": "threshold-after:start",
+      "prepareCompletedMs": 160823,
+      "stateBytes": 1367034,
+      "verificationSourceOnlyCalls": 658,
+      "verificationSourceOnlyElapsedMs": 100931,
+      "operationSourceElapsedMs": 24019,
+      "operationCoverageElapsedMs": 19470
+    },
+    "revision": {
+      "milliseconds": 210367.19,
+      "timeout": 180000,
+      "phase": "prepare:transition-confirmed:complete then human choice",
+      "prepareCompletedMs": 177207,
+      "verificationSourceOnlyCalls": 352,
+      "verificationSourceOnlyElapsedMs": 71843,
+      "operationSourceElapsedMs": 19667,
+      "operationCoverageElapsedMs": 16109
+    }
+  },
+  "cause": {
+    "revisionAdapter": "renewal-source-fixture.ts currentSource calls raw store.transaction(planner) on each revised-source observation",
+    "storageBoundary": "External LocalStore.transaction decodes Dashboard, Planner and Procurement before every transaction; nested readonly transaction clones only its selected staged surface",
+    "observedGrowth": "Dashboard C08 grows as real choices/results/transaction receipts persist; unrelated C08 decoding is repeated for Planner-only source observations",
+    "no_runtime_profile_invention": true
+  },
+  "change": {
+    "file": "test/product/wp11/renewal-operation-verifier.ts",
+    "mechanism": "One real readonly transaction per verifier invocation, containing all existing canonical calls. Nested reads use the production LocalStore isolated snapshot path. An additional ingress and egress host revalidation surrounds the scope.",
+    "commit": false,
+    "cachesBetweenInvocations": false,
+    "productImplementationChanged": false,
+    "foreignFilesChanged": false,
+    "authorizationCallbacksRemoved": false,
+    "sourceCallbacksRemoved": false,
+    "financialFormulaAdded": false,
+    "monetaryOutputSupplied": false,
+    "semanticLimit": "This is a fixture boundary with raw existing-reference adapters; not a generic wrapper for source issuers that may write scoped identities."
+  },
+  "readOnlyDelegates": [
+    {
+      "consumer": "renewal-choice-fixture.ts",
+      "hostPersistence": "rawLocalStore",
+      "source": "existing reference lookup or currentSource readonly planner transaction",
+      "verifier": "canonicaloperation verifier or canonical compareForecast",
+      "writes": "none during verification"
+    },
+    {
+      "consumer": "renewal-human-choice-fixture.ts",
+      "hostPersistence": "same rawLocalStore",
+      "source": "known reference plus currentSource readonly snapshot; operationCoverage explicitly unavailable",
+      "writes": "none during verification"
+    },
+    {
+      "consumer": "renewal-restart-reader.ts",
+      "hostPersistence": "reopened rawLocalStore",
+      "source": "persisted reference plus current source/actor projection; operationCoverage explicitly unavailable",
+      "writes": "none during verification"
+    }
+  ],
+  "newTests": {
+    "file": "test/product/wp11/renewal-read-scope.test.ts",
+    "count": 3,
+    "cases": [
+      "nonempty and source-only canonical verification preserves all durable snapshots",
+      "canonical Planner source edit between invocations rejects the old reference",
+      "UI lease revocation during an awaited source callback is rejected"
+    ]
+  },
+  "unchangedConsumerOracles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "blob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "bytes": 8546,
+      "assertionLines": 41,
+      "timeouts": [
+        "180000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "blob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "bytes": 9923,
+      "assertionLines": 44,
+      "timeouts": [
+        "180000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+      "blob": "5e4519aaf1cc7d9bb17a1ec93b81ea950084bb2a",
+      "bytes": 5653,
+      "assertionLines": 28,
+      "timeouts": [
+        "180000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "blob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "bytes": 16901,
+      "assertionLines": 69,
+      "timeouts": [
+        "180000"
+      ]
+    }
+  ],
+  "recommendedCI": [
+    "test/product/wp11/renewal-read-scope.test.ts",
+    "test/product/wp11/renewal-choice-history.test.ts",
+    "test/product/wp11/renewal-choice-revision.test.ts",
+    "test/product/wp11/implementation-quote-history.test.ts",
+    "test/product/wp05/choice-history-bi.test.ts"
+  ],
+  "risks": [
+    "Duration improvement unmeasured until Actions on the exact candidate.",
+    "The outer read scope holds the existing LocalStore write-admission lock for one complete verifier invocation; these fixtures use bounded local readonly callbacks, no network or scoped-source issuer writes.",
+    "Native installed authority, full bundle composition and C/D remain separate."
+  ]
+}

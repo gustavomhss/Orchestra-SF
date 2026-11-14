@@ -1,0 +1,922 @@
+{
+  "runId": 43588379426,
+  "jobId": 132427652242,
+  "artifactId": 14111801238,
+  "total": 130,
+  "own": [],
+  "foreign": [
+    {
+      "path": "../../../apps/cli/src/sucafina-product/business-services.ts",
+      "line": 85,
+      "column": 30,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/business-services.ts",
+      "line": 85,
+      "column": 40,
+      "code": "TS7006",
+      "message": "Parameter 'evidence' implicitly has an 'any' type."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/business-services.ts",
+      "line": 102,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextServi...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/business-services.ts",
+      "line": 188,
+      "column": 20,
+      "code": "TS2322",
+      "message": "Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 158,
+      "column": 128,
+      "code": "TS2345",
+      "message": "Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 185,
+      "column": 136,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 217,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 273,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 396,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 412,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 551,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/import-services.ts",
+      "line": 85,
+      "column": 101,
+      "code": "TS2304",
+      "message": "Cannot find name 'Period'."
+    },
+    {
+      "path": "../../../apps/cli/src/sucafina-product/import-services.ts",
+      "line": 115,
+      "column": 21,
+      "code": "TS2304",
+      "message": "Cannot find name 'isSfPeriod'."
+    },
+    {
+      "path": "product/collaboration/confirmation.ts",
+      "line": 79,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'."
+    },
+    {
+      "path": "product/collaboration/confirmation.ts",
+      "line": 91,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'."
+    },
+    {
+      "path": "product/collaboration/hot-topic-host.ts",
+      "line": 16,
+      "column": 9,
+      "code": "TS2322",
+      "message": "Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'."
+    },
+    {
+      "path": "product/collaboration/recipient-actions.ts",
+      "line": 50,
+      "column": 32,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'."
+    },
+    {
+      "path": "product/collaboration/relations.ts",
+      "line": 70,
+      "column": 66,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'."
+    },
+    {
+      "path": "product/collaboration/relations.ts",
+      "line": 116,
+      "column": 35,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'."
+    },
+    {
+      "path": "product/collaboration/relations.ts",
+      "line": 127,
+      "column": 35,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'."
+    },
+    {
+      "path": "product/collaboration/threads.ts",
+      "line": 57,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'."
+    },
+    {
+      "path": "product/collaboration/threads.ts",
+      "line": 68,
+      "column": 33,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'."
+    },
+    {
+      "path": "product/collaboration/threads.ts",
+      "line": 86,
+      "column": 31,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'."
+    },
+    {
+      "path": "product/collaboration/threads.ts",
+      "line": 101,
+      "column": 32,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'."
+    },
+    {
+      "path": "product/contracts/host-context.ts",
+      "line": 14,
+      "column": 45,
+      "code": "TS2307",
+      "message": "Cannot find module '../routines/factory.ts' or its corresponding type declarations."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 66,
+      "column": 474,
+      "code": "TS7006",
+      "message": "Parameter 'field' implicitly has an 'any' type."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 104,
+      "column": 41,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 118,
+      "column": 16,
+      "code": "TS2339",
+      "message": "Property 'state' does not exist on type '{}'."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 118,
+      "column": 52,
+      "code": "TS2339",
+      "message": "Property 'index' does not exist on type '{}'."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 119,
+      "column": 16,
+      "code": "TS2339",
+      "message": "Property 'state' does not exist on type '{}'."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 120,
+      "column": 77,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 121,
+      "column": 163,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 123,
+      "column": 61,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'."
+    },
+    {
+      "path": "product/dashboard/confirmation.ts",
+      "line": 128,
+      "column": 126,
+      "code": "TS2339",
+      "message": "Property 'physicalIncarnations' does not exist on type '{}'."
+    },
+    {
+      "path": "product/decision-memory/source-access.ts",
+      "line": 216,
+      "column": 35,
+      "code": "TS2349",
+      "message": "This expression is not callable."
+    },
+    {
+      "path": "product/decision-memory/source-access.ts",
+      "line": 222,
+      "column": 33,
+      "code": "TS2349",
+      "message": "This expression is not callable."
+    },
+    {
+      "path": "product/documents/capabilities.ts",
+      "line": 71,
+      "column": 172,
+      "code": "TS2339",
+      "message": "Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'."
+    },
+    {
+      "path": "product/host-binding/business-context.ts",
+      "line": 170,
+      "column": 71,
+      "code": "TS2353",
+      "message": "Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'."
+    },
+    {
+      "path": "product/host-binding/business-context.ts",
+      "line": 170,
+      "column": 153,
+      "code": "TS7006",
+      "message": "Parameter 'refs' implicitly has an 'any' type."
+    },
+    {
+      "path": "product/host-binding/business-context.ts",
+      "line": 170,
+      "column": 159,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "product/host-binding/business-context.ts",
+      "line": 212,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'."
+    },
+    {
+      "path": "product/host-binding/state-provider.ts",
+      "line": 37,
+      "column": 128,
+      "code": "TS2345",
+      "message": "Argument of type 'SfStateNamespace' is not assignable to parameter of type '\"atlas\" | \"cases\" | \"confirmations\" | \"contributions\" | \"documents\" | \"outbox\" | \"preferences\" | \"receipts\" | \"relations\" | \"reviews\" | \"threads\"'."
+    },
+    {
+      "path": "product/host-binding/state-provider.ts",
+      "line": 113,
+      "column": 43,
+      "code": "TS2741",
+      "message": "Property '\"bi-artifacts\"' is missing in type '{ preferences: number; reviews: number; relations: number; threads: number; confirmations: number; cases: number; contributions: number; documents: number; receipts: number; atlas: number; outbox: number; }' but required in type 'Record<SfStateNamespace, number>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 38,
+      "column": 75,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 17,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 71,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 119,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 62,
+      "column": 29,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 251,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 306,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 353,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 457,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 297,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 445,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 469,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 545,
+      "code": "TS2339",
+      "message": "Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 573,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 592,
+      "code": "TS2322",
+      "message": "Type '{}' is not assignable to type 'string'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 674,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 848,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 114,
+      "code": "TS2339",
+      "message": "Property 'runRef' does not exist on type 'ContributionEnvelope'."
+    },
+    {
+      "path": "product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'version' does not exist on type 'ContributionEnvelope'."
+    },
+    {
+      "path": "product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 197,
+      "code": "TS2339",
+      "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'."
+    },
+    {
+      "path": "product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 235,
+      "code": "TS2339",
+      "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'."
+    },
+    {
+      "path": "product/interface/http.ts",
+      "line": 148,
+      "column": 82,
+      "code": "TS7006",
+      "message": "Parameter 'run' implicitly has an 'any' type."
+    },
+    {
+      "path": "product/interface/http.ts",
+      "line": 148,
+      "column": 87,
+      "code": "TS7006",
+      "message": "Parameter 'index' implicitly has an 'any' type."
+    },
+    {
+      "path": "product/interface/import-http.ts",
+      "line": 54,
+      "column": 249,
+      "code": "TS2345",
+      "message": "Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'."
+    },
+    {
+      "path": "product/portfolio/catalog.ts",
+      "line": 13,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "product/portfolio/handoff.ts",
+      "line": 41,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "product/portfolio/handoff.ts",
+      "line": 78,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'."
+    },
+    {
+      "path": "product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'."
+    },
+    {
+      "path": "product/portfolio/port.ts",
+      "line": 36,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "product/portfolio/sensitivity-store.ts",
+      "line": 25,
+      "column": 19,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "product/portfolio/verification.ts",
+      "line": 119,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'."
+    },
+    {
+      "path": "product/portfolio/verification.ts",
+      "line": 119,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'."
+    },
+    {
+      "path": "product/ui/components.ts",
+      "line": 49,
+      "column": 9,
+      "code": "TS2741",
+      "message": "Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'."
+    },
+    {
+      "path": "product/ui/contribution-body.ts",
+      "line": 7,
+      "column": 65,
+      "code": "TS2366",
+      "message": "Function lacks ending return statement and return type does not include 'undefined'."
+    },
+    {
+      "path": "test/product/wp01/http.test.ts",
+      "line": 36,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContex...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    },
+    {
+      "path": "test/product/wp01/personal-views.test.ts",
+      "line": 35,
+      "column": 137,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'."
+    },
+    {
+      "path": "test/product/wp01/workbench-analysis.test.ts",
+      "line": 6,
+      "column": 38,
+      "code": "TS2307",
+      "message": "Cannot find module '@orchestra/server/routes' or its corresponding type declarations."
+    },
+    {
+      "path": "test/product/wp04/prepared-production.test.ts",
+      "line": 208,
+      "column": 41,
+      "code": "TS2554",
+      "message": "Expected 0 arguments, but got 1."
+    },
+    {
+      "path": "test/product/wp04/prepared-production.test.ts",
+      "line": 220,
+      "column": 107,
+      "code": "TS2554",
+      "message": "Expected 0 arguments, but got 1."
+    },
+    {
+      "path": "test/product/wp04/prepared-production.test.ts",
+      "line": 274,
+      "column": 39,
+      "code": "TS2741",
+      "message": "Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: { requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }; ... 10 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 25,
+      "column": 40,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 101,
+      "column": 227,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 101,
+      "column": 230,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 114,
+      "column": 229,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 114,
+      "column": 232,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 253,
+      "column": 225,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 253,
+      "column": 228,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 263,
+      "column": 227,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 263,
+      "column": 230,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp06/imports/end-to-end.test.ts",
+      "line": 56,
+      "column": 72,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'."
+    },
+    {
+      "path": "test/product/wp06/imports/end-to-end.test.ts",
+      "line": 65,
+      "column": 590,
+      "code": "TS2322",
+      "message": "Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'."
+    },
+    {
+      "path": "test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 41,
+      "column": 76,
+      "code": "TS2322",
+      "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'."
+    },
+    {
+      "path": "test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 42,
+      "column": 12,
+      "code": "TS18046",
+      "message": "'applied' is of type 'unknown'."
+    },
+    {
+      "path": "test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 46,
+      "column": 74,
+      "code": "TS2322",
+      "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'."
+    },
+    {
+      "path": "test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 47,
+      "column": 12,
+      "code": "TS18046",
+      "message": "'stale' is of type 'unknown'."
+    },
+    {
+      "path": "test/product/wp07/review-port.test.ts",
+      "line": 106,
+      "column": 64,
+      "code": "TS2769",
+      "message": "No overload matches this call."
+    },
+    {
+      "path": "test/product/wp07/review-port.test.ts",
+      "line": 113,
+      "column": 122,
+      "code": "TS2769",
+      "message": "No overload matches this call."
+    },
+    {
+      "path": "test/product/wp07/review-port.test.ts",
+      "line": 124,
+      "column": 64,
+      "code": "TS2769",
+      "message": "No overload matches this call."
+    },
+    {
+      "path": "test/product/wp08/confirmation-integration.test.ts",
+      "line": 63,
+      "column": 289,
+      "code": "TS2739",
+      "message": "Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection"
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 13,
+      "column": 112,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 13,
+      "column": 122,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 31,
+      "column": 58,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 31,
+      "column": 68,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 40,
+      "column": 63,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 40,
+      "column": 73,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 51,
+      "column": 49,
+      "code": "TS7006",
+      "message": "Parameter '_snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 51,
+      "column": 60,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 68,
+      "column": 69,
+      "code": "TS7006",
+      "message": "Parameter '_snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/blob-generations.test.ts",
+      "line": 68,
+      "column": 80,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/product-authority.test.ts",
+      "line": 24,
+      "column": 47,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp10/integration/product-authority.test.ts",
+      "line": 24,
+      "column": 57,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "test/product/wp12/author-reader.test.ts",
+      "line": 32,
+      "column": 26,
+      "code": "TS2352",
+      "message": "Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first."
+    },
+    {
+      "path": "test/product/wp13/candidates-store.test.ts",
+      "line": 27,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    },
+    {
+      "path": "test/product/wp13/production.test.ts",
+      "line": 41,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    },
+    {
+      "path": "test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 117,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: () => Promise<...>; evidence: BusinessContextService; createId: () => string; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    },
+    {
+      "path": "test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 218,
+      "column": 211,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'."
+    },
+    {
+      "path": "test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 230,
+      "column": 25,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'."
+    },
+    {
+      "path": "test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 230,
+      "column": 25,
+      "code": "TS18048",
+      "message": "'store.transactionAll' is possibly 'undefined'."
+    },
+    {
+      "path": "test/product/wp13/stored-store.test.ts",
+      "line": 32,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    },
+    {
+      "path": "test/product/wp14/source-access-atlas.test.ts",
+      "line": 55,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${stri...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    },
+    {
+      "path": "test/product/wp14/source-access-procurement.test.ts",
+      "line": 10,
+      "column": 43,
+      "code": "TS2305",
+      "message": "Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'."
+    },
+    {
+      "path": "test/product/wp14/source-access-procurement.test.ts",
+      "line": 11,
+      "column": 33,
+      "code": "TS2724",
+      "message": "'\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?"
+    },
+    {
+      "path": "test/product/wp14/source-access-procurement.test.ts",
+      "line": 31,
+      "column": 54,
+      "code": "TS2741",
+      "message": "Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'."
+    },
+    {
+      "path": "test/product/wp14/source-access-procurement.test.ts",
+      "line": 32,
+      "column": 51,
+      "code": "TS2322",
+      "message": "Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+    },
+    {
+      "path": "test/product/wp14/source-access-procurement.test.ts",
+      "line": 32,
+      "column": 83,
+      "code": "TS2322",
+      "message": "Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+    },
+    {
+      "path": "test/product/wp14/source-access-procurement.test.ts",
+      "line": 33,
+      "column": 25,
+      "code": "TS2349",
+      "message": "This expression is not callable."
+    }
+  ],
+  "guardSummary": [
+    "2026-11-14T11:07:24.7581055Z guards: 78 rules, 752 changed paths, 0 gate and 12 warn findings, 0 errors."
+  ]
+}

@@ -1,0 +1,1271 @@
+{
+  "schema": "sf-finance-final-heads-observation-v1",
+  "reviewer": "/root/finance_final_heads_observation",
+  "headObservationAt": "2026-11-14 12:19:40 UTC",
+  "retrievalCompletedAt": "2026-11-14 12:22:50 UTC",
+  "headScope": "One bounded observation. No second head refresh; comparisons and files are read by those immutable SHAs.",
+  "trees": {
+    "PR22": "62545e5c8a90e03d6ca92298dc5547853e8ea88a",
+    "PR24": "220df3c21c228afee30bc7d06e998eaa4fca2f36",
+    "STACK": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "priorHeads": {
+    "PR22": "90c467cea436daa24987ad68a588a7d80f91064e",
+    "PR24": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+    "PR40": "65509f0b8c435b88fb0ec9949299571f011d2347",
+    "STACK": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "COMPOSE": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "INTERFACE": "4bd1f807e449d040e3db61c4d2b1e177b205ac69"
+  },
+  "classifications": {
+    "calculation-history.test.ts": {
+      "kind": "ADDITIVE_ASSERTIONS_REQUIRE_MERGE",
+      "details": [
+        "Same real renewed UI admission after permanent lease revocation already exists in Finance.",
+        "Owner adds requestFor(revokedContext) undefined, a new requestId, unchanged principal, and revalidated live lease after source edit.",
+        "Owner removes Finance's later historical read denial for the revoked context; preserve that existing negative when consuming additions.",
+        "Variable rename and explicit Request annotation difference are not a product fix."
+      ]
+    },
+    "choice-prepared-execution.test.ts": {
+      "kind": "ALREADY_IMPLEMENTED_EQUIVALENT_INITIALIZATION",
+      "details": [
+        "Owner loops over dashboard/procurement; Finance already performs the same two ordered initializeSources calls.",
+        "Only loop/comment spelling differs. No consumer oracle or product behavior delta."
+      ]
+    },
+    "hot-topic-snapshot.test.ts": {
+      "kind": "ADDITIVE_COMMIT_WITNESS_AND_PROCUREMENT_INIT",
+      "details": [
+        "Both now seed canonical lowercase open.",
+        "Owner adds sourceRace.committed captured from the real command transaction and a positive assertion before existing Dashboard snapshot/persistence oracles.",
+        "Owner additionally initializes Procurement; Finance already initializes Dashboard before first protected transaction.",
+        "Owner error string lacks Finance's JSON command details. No reason to discard the useful Finance diagnostic on merge."
+      ]
+    },
+    "promotion-coverage-proof.test.ts": {
+      "kind": "ADDITIONAL_PROCUREMENT_INITIALIZATION",
+      "details": [
+        "Dashboard initialization already matches Finance behavior.",
+        "Owner adds canonical Procurement initialization and updates comment.",
+        "No assertion, source proof, producer or authorization change in this diff."
+      ]
+    },
+    "renewal-choice-fixture.ts": {
+      "kind": "AUXILIARY_SOURCE_PROJECTION_ROUTE_CHANGED",
+      "details": [
+        "Owner switches baseline projectForecast, renewalCoverage projection, and renewalProjection from classified planner to sourcePlanner.",
+        "operationSources.resolveForecastCoverage explicitly returns unavailable; no C10 classification is requested at auxiliary target/source admission.",
+        "Stored-scenario projection already used sourcePlanner in Finance. Classified Planner remains for judgment/promotion.",
+        "This is a material fixture adapter difference; independent review and affected Actions required before qualifying. It does not replace Finance's separate W29 per-invocation read transaction helper."
+      ]
+    },
+    "renewal-choice-history.test.ts": {
+      "kind": "ADDITIONAL_CANONICAL_MONTH_ORACLES",
+      "details": [
+        "Adds assertions for exactly12 training components,11 confirmed zero months and training:11 amount40000 USD confirmed.",
+        "All prior financial/choice/history assertions remain in this diff."
+      ]
+    },
+    "renewal-source-fixture.ts": {
+      "kind": "ALTERNATE_EXPLICIT_12_MONTH_COMMAND_PAYLOAD",
+      "details": [
+        "Finance supplies a 12-element f array with40000/amount at November and zero elsewhere; owner supplies scalar f0...f11 fields with the same values.",
+        "Both invoke the real canonical OPEX command; no new calculation or amount.",
+        "Equivalence is intended by the payload and prior Finance S16/S17 evidence; this read alone does not execute the alternate owner payload."
+      ]
+    }
+  },
+  "foreignFindings": [
+    {
+      "owner": "astra-compose",
+      "head": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+      "kind": "OWNER_DELTA_OBSERVED_NOT_IMPORTED",
+      "details": [
+        "One commit16paths after ed10; adds a private historical calculation read lease for stale analysis settlement with active-case, snapshot, original-authority and final fences.",
+        "New analysis-stale-calculation regression is authored; no claim that it passed at00304.",
+        "BI UI revocation regression narrows current.kind to ui before fixture.ui.finish, statically addressing the previously observed TS2345 at this callsite.",
+        "Four FinanceW23 blobs are consumed, including hot-topic-draft5e0b80a and mutations3e7575c. Finance's later W25 hot-topic d8a151c and mutations e0840d7 must not be overwritten by this older intake."
+      ]
+    },
+    {
+      "owner": "astra-interface",
+      "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+      "kind": "OWNER_DELTA_OBSERVED_NOT_IMPORTED",
+      "details": [
+        "Two commits46paths after4bd1; adds case-work selection/recovery and stabilizes question select labels.",
+        "No Planner, Analytics, Decisions or monthly source file changed in this bounded comparison.",
+        "A published owner-only WP11 case-port fixture patch proposes explicit empty-operation guards for three callers. It is not applied, not tested, and must be assessed against the actual composed contract before intake."
+      ]
+    }
+  ],
+  "ownerOnlyProposal": {
+    "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/wp11-empty-operation-callers.additive.patch",
+    "blob": "5d7413a5547beaad313fb2db1552f4f8b487b1f1",
+    "metadataBlob": "23c39396c28bcb50973df61c92f0efa0de656c40",
+    "metadata": {
+      "file": "wp11-empty-operation-callers.additive.patch",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "baseBlob": "ed68e903fdaaa313ea14b18f194ee319b6dbdf09",
+      "proposedBlob": "70671dcc034499ba7fad04d0984ca5407b6cb616",
+      "scope": "Owner-only artifact: explicit empty-operation component guard; not a semantic operation verifier or an applied foreign edit. C12 remains held.",
+      "retainedExpectCalls": 109,
+      "allOriginalExpectLinesIdentical": true,
+      "realPartialDomainBodySha256": "6561a58a62aad096f47dbeb6d0c447405e49a31ac471567573781a4030c3cb6a",
+      "realPartialDomainBodyUnchanged": true,
+      "productTestsExecuted": false,
+      "typecheckExecuted": false,
+      "appliedToRepository": false
+    }
+  },
+  "scopeLimits": [
+    "No product source or repository file changed by this observer.",
+    "No imports, Bun, tests, typecheck, CI dispatch or remote mutations.",
+    "CI metadata/jobs were read; no new passing test counts, native proof or installed acceptance is inferred.",
+    "PR40d777 was newly observed and still requires parent-led reconciliation. Reports do not themselves consume it.",
+    "No READY/DONE or C/D claim."
+  ],
+  "observation": {
+    "observedAt": "2026-11-14 12:19:40 UTC",
+    "pulls": [
+      {
+        "key": "PR22",
+        "number": 22,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/22",
+        "head": "90c467cea436daa24987ad68a588a7d80f91064e",
+        "headBranch": "astra-wp03",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "baseBranch": "sf2-stack",
+        "state": "open",
+        "draft": true,
+        "updatedAt": "2026-11-14T00:58:49Z"
+      },
+      {
+        "key": "PR24",
+        "number": 24,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/24",
+        "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+        "headBranch": "astra-wp05",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "baseBranch": "sf2-stack",
+        "state": "open",
+        "draft": true,
+        "updatedAt": "2026-11-14T00:58:07Z"
+      },
+      {
+        "key": "PR40",
+        "number": 40,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/40",
+        "head": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+        "headBranch": "astra-wp11",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "baseBranch": "sf2-stack",
+        "state": "open",
+        "draft": true,
+        "updatedAt": "2026-11-14T12:08:22Z"
+      }
+    ],
+    "branches": [
+      {
+        "key": "STACK",
+        "ref": "refs/heads/sf2-stack",
+        "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+      },
+      {
+        "key": "COMPOSE",
+        "ref": "refs/heads/astra-compose",
+        "head": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1"
+      },
+      {
+        "key": "INTERFACE",
+        "ref": "refs/heads/astra-interface",
+        "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801"
+      }
+    ],
+    "comparisons": [
+      {
+        "key": "WP11",
+        "status": "ahead",
+        "mergeBase": "65509f0b8c435b88fb0ec9949299571f011d2347",
+        "ahead": 4,
+        "behind": 0,
+        "totalCommits": 4,
+        "headTree": "e6831add3e891e020d34540234bd685a7dd05e01",
+        "commits": [
+          {
+            "sha": "14d0cef142561c33076e19bf9c8fb17d1f1e7038",
+            "tree": "bd90d90fc5eff26323e522fa42f17a198fa3f233",
+            "message": "test(sucafina): declare complete annual training quote in WP11 history"
+          },
+          {
+            "sha": "c41d7277be5941bafb105654360a32adea7f0347",
+            "tree": "ef9c1884d1de59316421347174ea0ef580bf7e91",
+            "message": "test(sucafina): restore authority and lifecycle in WP11 execution fixtures"
+          },
+          {
+            "sha": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+            "tree": "88a9ea457363fc14d4c9a3735d70f06f10655493",
+            "message": "test(sucafina): reconcile WP11 source lifecycle and bounded finance fixtures"
+          },
+          {
+            "sha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+            "tree": "e6831add3e891e020d34540234bd685a7dd05e01",
+            "message": "test(sucafina): exercise real Dashboard edit in WP11 source race"
+          }
+        ],
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/calculation-history-grant-fix-W11.json",
+            "sha": "9ac58fc9d24b8e6ff4930733628b82ed8d0c0fae",
+            "status": "added",
+            "changes": 64
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W10.json",
+            "sha": "6aaa07a4a76102edf3e2335a6da1bd94f97263d0",
+            "status": "added",
+            "changes": 55
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W11.json",
+            "sha": "48c18509b7837b5ca14a37575f2c091cce633761",
+            "status": "added",
+            "changes": 55
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W12.json",
+            "sha": "0c94b8506748e6a523fe78b0717684e9bb2a72d9",
+            "status": "added",
+            "changes": 55
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W9.json",
+            "sha": "c6303294ca778c9b09b1f9de4fbdb38334104253",
+            "status": "added",
+            "changes": 53
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-0c4a-intake.json",
+            "sha": "de4543e930c370aebcea0c27b81c479e77551c3e",
+            "status": "added",
+            "changes": 82
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-0c4a-review.json",
+            "sha": "d65bd752a641ac504108521281601a765291b48a",
+            "status": "added",
+            "changes": 429
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W10.json",
+            "sha": "f52bd59da46111985dafa15dfb570e298fdceb56",
+            "status": "added",
+            "changes": 45
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W11.json",
+            "sha": "fc9329235bf217c3ec66112b226649f8ce628b72",
+            "status": "added",
+            "changes": 42
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W12-F1.json",
+            "sha": "be998726ae76a47e4f1345798ef8e2730ab8bdc7",
+            "status": "added",
+            "changes": 44
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W13-F2.json",
+            "sha": "693aae2d1a99626ae92f6eb2fabc79723ee71ac7",
+            "status": "added",
+            "changes": 31
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W10-H4.json",
+            "sha": "7f12492a181bd8cc5cbebe92141401a42c44cdcc",
+            "status": "added",
+            "changes": 1217
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W11-AR3-attempt1.json",
+            "sha": "dacaa1c00940065db935c65840dea70adae8eec6",
+            "status": "added",
+            "changes": 280
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W11-AR3-attempt2.json",
+            "sha": "30dd20feb9db2decce11a6a5a57ef4fddc4557ea",
+            "status": "added",
+            "changes": 337
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W11-F1.json",
+            "sha": "37daaf50c5177d51de32262d5dce8627dfb89999",
+            "status": "added",
+            "changes": 946
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W12-F2.json",
+            "sha": "ba5d2e549c5b52982d6842d0a6410e312f0b1787",
+            "status": "added",
+            "changes": 345
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W9-AR2.json",
+            "sha": "a519f13b35352dc50593833f0b5a74471081a74e",
+            "status": "added",
+            "changes": 1007
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W9-H3.json",
+            "sha": "510e84b5b6d5d16cd9cef0b7aa707cbf127367c7",
+            "status": "added",
+            "changes": 1594
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-projection-H5-diagnosis.json",
+            "sha": "7dc9c8214d47268a4a21b10ed907a2d56467e01c",
+            "status": "added",
+            "changes": 210
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-projection-H5-manifest.json",
+            "sha": "d3d99e20d3ae543ce7c0ebebd75b9caa80292472",
+            "status": "added",
+            "changes": 55
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-projection-H5-review.json",
+            "sha": "a8db90998814dee2ca09c34d76909e5d915b583c",
+            "status": "added",
+            "changes": 77
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W10-H4.json",
+            "sha": "5c04135e1a8f7fad9776dd12d10197845abd073f",
+            "status": "added",
+            "changes": 998
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W11-AR3-attempt1.json",
+            "sha": "bf2e90cce4ae5d82434220c9ae531cbc4b745f82",
+            "status": "added",
+            "changes": 73
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W11-AR3-attempt2.json",
+            "sha": "cc48a2d918adf61e4dfffee7da9add23c90f6018",
+            "status": "added",
+            "changes": 158
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W11-F1.json",
+            "sha": "e24a6d8005190296d11be036c25239159c61b8f9",
+            "status": "added",
+            "changes": 1198
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W12-F2.json",
+            "sha": "9b32ba6a2b566c737513f06ce428b59c4afb132c",
+            "status": "added",
+            "changes": 247
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W9-AR2.json",
+            "sha": "86afdc3297c4317a53d0bc18363c285caad667ca",
+            "status": "added",
+            "changes": 849
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W9-H3.json",
+            "sha": "040a017b618f2abf12a0d44f7eb788f323666b7d",
+            "status": "added",
+            "changes": 876
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/training-forecast-fix-W10.json",
+            "sha": "24784d8e962f9a9bfab185d5c7cea3ab2b397c51",
+            "status": "added",
+            "changes": 97
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W10.json",
+            "sha": "5904fa803dd1a970a06485f170aee6f635f6a34d",
+            "status": "added",
+            "changes": 926
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W11.json",
+            "sha": "69af659c014ca6e1808c53b76618c6bf5df55961",
+            "status": "added",
+            "changes": 926
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W12.json",
+            "sha": "417fb6ecdc4f3705a3897fdeb9c1c74407a370bb",
+            "status": "added",
+            "changes": 926
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W9.json",
+            "sha": "1209dd542224f2cf338c21524dd6061bd116edb6",
+            "status": "added",
+            "changes": 922
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+            "sha": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+            "status": "modified",
+            "changes": 11
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+            "sha": "608b1a95b491740041f8689a41b4a064c7254b24",
+            "status": "modified",
+            "changes": 19
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+            "sha": "9f804318ece7b82c9119508e24763ada47ce294d",
+            "status": "modified",
+            "changes": 22
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+            "sha": "90333c12d277942667810d6ed802e019e799f837",
+            "status": "modified",
+            "changes": 7
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+            "sha": "326a262f17914de6675657dd1e6f82baec31e5c3",
+            "status": "modified",
+            "changes": 3
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+            "sha": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+            "status": "modified",
+            "changes": 10
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+            "sha": "f3f66378b7e310565e46eef1767f8110675d38de",
+            "status": "modified",
+            "changes": 10
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+            "sha": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+            "status": "modified",
+            "changes": 2
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+            "sha": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+            "status": "modified",
+            "changes": 10
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+            "sha": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+            "status": "modified",
+            "changes": 4
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+            "sha": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+            "status": "modified",
+            "changes": 7
+          }
+        ]
+      },
+      {
+        "key": "COMPOSE",
+        "status": "ahead",
+        "mergeBase": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "ahead": 1,
+        "behind": 0,
+        "totalCommits": 1,
+        "headTree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+        "commits": [
+          {
+            "sha": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+            "tree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+            "message": "feat(sucafina): compose coverage proof and stale calculation settlement\n\nConsume four exact WP11 owner blobs from PR35@6184a0d3. Reauthorize captured historical calculations through a private read lease for stale analysis settlement, preserve active-case and C08 fences, and add composed regressions. Correct the BI UI admission type narrowing; keep all 38 contract freeze artifacts unchanged.\n\nNo global acceptance claimed; owner type, native execution, C17 matrix, UX and C/G7/D/G8 gates remain explicit."
+          }
+        ],
+        "files": [
+          {
+            "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+            "sha": "299979047340dd76d7cc2db667b826da675a1e2e",
+            "status": "modified",
+            "changes": 51
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/README.md",
+            "sha": "49e6545fb737234dff7194ff86a17bf913dae789",
+            "status": "modified",
+            "changes": 2
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intake-10.json",
+            "sha": "5cc1b2d0d6b2c8278e0113e7c7df9e8ea351768b",
+            "status": "added",
+            "changes": 51
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group-heads-observed-after-w9.json",
+            "sha": "c561c3d7894a10e34e396f7129cadd8f0df88198",
+            "status": "added",
+            "changes": 84
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group35-6184a0d3c818.json",
+            "sha": "16b0f6beec63762dd721a1cfddb452912c9964f8",
+            "status": "added",
+            "changes": 520
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/own-stale-calculation-w10.json",
+            "sha": "b360407eac0a6d9f970073afbbc0a31d0a1f4a3c",
+            "status": "added",
+            "changes": 546
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/round10-files.json",
+            "sha": "2a3275101372f8b8b2cd69c78b2ea630687aa14a",
+            "status": "added",
+            "changes": 149
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/check7-external-diagnostics.json",
+            "sha": "90772aea1a2bd098165cf8c50fe3f6ff75b89f28",
+            "status": "added",
+            "changes": 180
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/runs/w9-check7-ci5-observation.json",
+            "sha": "0a07150d6b8330a6fd35d2fddb0511c7dd4d9da1",
+            "status": "added",
+            "changes": 111
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/runs/w9-check7-diagnostics.json",
+            "sha": "d52034c90eb88ad649463a0db2a99aed6d0cc454",
+            "status": "added",
+            "changes": 122
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+            "sha": "5e0b80a470958dd201db4283bde96d594935e68d",
+            "status": "modified",
+            "changes": 2
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+            "sha": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+            "status": "modified",
+            "changes": 34
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+            "sha": "727997f3fb0554c44056a7e2930888a28e6184ca",
+            "status": "added",
+            "changes": 371
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+            "sha": "a4b2f5b3f2d66c5c78bfc8d837edad6225d9ed80",
+            "status": "modified",
+            "changes": 6
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+            "sha": "d75d700de4a9a607550691382dc0e14237c289a0",
+            "status": "added",
+            "changes": 96
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+            "sha": "1c2d45332907483ec7c816ebdc64ea81ee8b215e",
+            "status": "added",
+            "changes": 226
+          }
+        ]
+      },
+      {
+        "key": "INTERFACE",
+        "status": "ahead",
+        "mergeBase": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+        "ahead": 2,
+        "behind": 0,
+        "totalCommits": 2,
+        "headTree": "68a8d13d3d60164670a7e95310b2cf1afb294e43",
+        "commits": [
+          {
+            "sha": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+            "tree": "294c7bd28795119a014190c34a643fe85616e0ac",
+            "message": "feat(sucafina): save case work selections and recover access safely"
+          },
+          {
+            "sha": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+            "tree": "68a8d13d3d60164670a7e95310b2cf1afb294e43",
+            "message": "fix(sucafina): keep question select labels stable after directory reads"
+          }
+        ],
+        "files": [
+          {
+            "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+            "sha": "0891d178833165fff098e3c05f3a64c5f5b35043",
+            "status": "modified",
+            "changes": 7
+          },
+          {
+            "path": "docs/guides/sucafina-workbench.md",
+            "sha": "97adc8ba58ed3fbd6d20fc02e9154c9ef7499647",
+            "status": "modified",
+            "changes": 6
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/intelligence-callers-w12-review.json",
+            "sha": "9910d3891e8e2881806d74d35b6c1045025130dd",
+            "status": "added",
+            "changes": 380
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/intelligence-callers-w12-review.md",
+            "sha": "b14794557dfc2b05ca03ad35ab509949ad5123f6",
+            "status": "added",
+            "changes": 37
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/ownership-closure-w13.md",
+            "sha": "c71755b5d06c50b0fa96273b2566e5751773c504",
+            "status": "added",
+            "changes": 115
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/w13-retained-review-fixtures.owner-only.patch",
+            "sha": "bd9ddaf5a019765574760f7dd93e5d8f58699488",
+            "status": "added",
+            "changes": 44
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/w13-retained-review-fixtures.owner-only.patch.metadata.json",
+            "sha": "87e7ea8283646ba47b9c58ca474d64f484fc52d2",
+            "status": "added",
+            "changes": 26
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/w13-state-discriminant.owner-only.patch",
+            "sha": "69c15342e95ea4d3c0dc0f51fe835ff28c4be4f7",
+            "status": "added",
+            "changes": 12
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/w13-state-discriminant.owner-only.patch.metadata.json",
+            "sha": "3ff1c900c5ec37ddbb4898ed3bb6961202d3f0c4",
+            "status": "added",
+            "changes": 26
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/wp11-empty-operation-callers.additive.metadata.json",
+            "sha": "23c39396c28bcb50973df61c92f0efa0de656c40",
+            "status": "added",
+            "changes": 14
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/wp11-empty-operation-callers.additive.patch",
+            "sha": "5d7413a5547beaad313fb2db1552f4f8b487b1f1",
+            "status": "added",
+            "changes": 44
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w13-delayed-review-causal-read.md",
+            "sha": "de6b7c5e1bd4bca881b3e426a6ed1233af83ce66",
+            "status": "added",
+            "changes": 46
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w13-state-result-caller-review.json",
+            "sha": "e08db5052699889644240f89efe239b4905957f0",
+            "status": "added",
+            "changes": 42
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w13-static-foreign-closure.md",
+            "sha": "d4cb11067cea4965d4eeccfa6faea48e80b3c371",
+            "status": "added",
+            "changes": 102
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w14-delayed-review.md",
+            "sha": "2d38fe9ce09f34dea00a4f14999f83f26f9504f3",
+            "status": "added",
+            "changes": 23
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w14-work-selection.md",
+            "sha": "05d346e25160653e09ac8631c132de98432aa85d",
+            "status": "added",
+            "changes": 33
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w15-recipient-label.md",
+            "sha": "6e96e3e880ca8456c6a5eebe148bfc254a903df3",
+            "status": "added",
+            "changes": 13
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w13-c12-held-inputs.json",
+            "sha": "a1158113b3e7f94058cb0e3c9863d8720a173b00",
+            "status": "added",
+            "changes": 442
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-change-scope.md",
+            "sha": "f9012ac36206291511085f609a87bfa22fa6cd4c",
+            "status": "added",
+            "changes": 42
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-delayed-review.json",
+            "sha": "4cc7ecab816c010598601181e0aec0400b62112c",
+            "status": "added",
+            "changes": 80
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-preservation-audit.json",
+            "sha": "b9406474cd77f6f721b5651a1043d11b441c1b38",
+            "status": "added",
+            "changes": 8279
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-preservation-audit.md",
+            "sha": "7d5d19c3a72ce7151d0948e4519b006439663977",
+            "status": "added",
+            "changes": 71
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-published-caller-intake.json",
+            "sha": "949fcd47599f3cfa4d6d0e836dc9f67993b8a7f4",
+            "status": "added",
+            "changes": 467
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-work-destination-peer-read.json",
+            "sha": "ea81a49643dece17cbac7fbd7126ec209ebbfa8e",
+            "status": "added",
+            "changes": 92
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-work-selection-own.json",
+            "sha": "d852591551074ce250a7ea7f7139c57dc6eaf3e9",
+            "status": "added",
+            "changes": 115
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-change-scope.md",
+            "sha": "86e3ad853e910916e8050f4e5c76ffebe2a1321f",
+            "status": "added",
+            "changes": 27
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-recipient-label-own.json",
+            "sha": "d546ebf36877d68fce83c224db5dcbafa397674d",
+            "status": "added",
+            "changes": 85
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-recipient-label-peer-read.json",
+            "sha": "8b93a80086059e03eb10314d223583a78850b953",
+            "status": "added",
+            "changes": 93
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590725536.json",
+            "sha": "0085770ce35971e06e362bc33af6f4441c04067c",
+            "status": "added",
+            "changes": 2268
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590725536.md",
+            "sha": "043cb6ed6bea25997c97b8da3903ae6f2e116a8d",
+            "status": "added",
+            "changes": 36
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590725536.request.json",
+            "sha": "52b75818aec78242d848a7138604651209b93694",
+            "status": "added",
+            "changes": 21
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590727281.static.json",
+            "sha": "a4607073f05d4b60cfd7267fc50c4720638093a9",
+            "status": "added",
+            "changes": 822
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592240575.json",
+            "sha": "6d914741f947fa48b5a0bf05310db998fb668f3f",
+            "status": "added",
+            "changes": 2546
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592240575.md",
+            "sha": "16a6c25ae97de0ab4a8fceeda2cb6fd5708aaf22",
+            "status": "added",
+            "changes": 47
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592240575.request.json",
+            "sha": "f754b4c2ea7792ad3951aa455011938e2fe73718",
+            "status": "added",
+            "changes": 22
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592242039.static.json",
+            "sha": "6fa859d081dbbe3d30d452a42cff1cc510bc77b9",
+            "status": "added",
+            "changes": 781
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+            "sha": "6b655187d4444cff5b8966e868ba163191adfc42",
+            "status": "modified",
+            "changes": 52
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+            "sha": "930c93a1704d0444519ffa85b8f69f57cc6c2735",
+            "status": "modified",
+            "changes": 7
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+            "sha": "3f76f17d51d09b86fa63a5c98c70cd4e77c91713",
+            "status": "added",
+            "changes": 175
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+            "sha": "99e0d4a9f8c265688e7488ece05ab30edf070658",
+            "status": "modified",
+            "changes": 50
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+            "sha": "e6aa3175931b38e1a12e02664a859779993506a5",
+            "status": "modified",
+            "changes": 4
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+            "sha": "3699a3c9c3206e86878770768a2399fc49d11618",
+            "status": "added",
+            "changes": 205
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+            "sha": "be4e6c1f990ab190291022f2133e239fb9239eb8",
+            "status": "modified",
+            "changes": 42
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+            "sha": "b47b29497f2ec9a2673bfbb299829191de32622f",
+            "status": "modified",
+            "changes": 12
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+            "sha": "6321582683cfaec721ad5cf0624a8e2da6e37226",
+            "status": "added",
+            "changes": 184
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+            "sha": "85ee6b0c7111023fc58576c1ad227907daed18a4",
+            "status": "modified",
+            "changes": 8
+          }
+        ]
+      }
+    ],
+    "ci": [
+      {
+        "key": "COMPOSECI",
+        "id": 43589763353,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589763353",
+        "status": "completed",
+        "conclusion": "failure",
+        "head": "564d04391d009b89718b10e67175d710d9e6b9c9",
+        "branch": "ci-run-linux-astra-compose-ed10a380-a4e017c1-a1",
+        "updatedAt": "2026-11-14T12:00:59Z"
+      },
+      {
+        "key": "INTERFACECI",
+        "id": 43590725536,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590725536",
+        "status": "completed",
+        "conclusion": "failure",
+        "head": "2af8d573e7d2c808e5222d44242eb1ee8f66d467",
+        "branch": "ci-run-linux-astra-interface-4bd1f807e4-86c9cfbc97-1",
+        "updatedAt": "2026-11-14T11:39:02Z"
+      },
+      {
+        "key": "INTERFACECHECK",
+        "id": 43590727281,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590727281",
+        "status": "completed",
+        "conclusion": "failure",
+        "head": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+        "branch": "astra-check-interface",
+        "updatedAt": "2026-11-14T11:37:12Z"
+      },
+      {
+        "key": "INTERFACENEWCI",
+        "id": 43592240575,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592240575",
+        "status": "completed",
+        "conclusion": "failure",
+        "head": "ff98cac1845c831aab7bff01507864314a3254a4",
+        "branch": "ci-run-linux-astra-interface-edefb5b667-6aa5c3fd85-1",
+        "updatedAt": "2026-11-14T11:58:00Z"
+      },
+      {
+        "key": "INTERFACENEWCHECK",
+        "id": 43592242039,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592242039",
+        "status": "completed",
+        "conclusion": "failure",
+        "head": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+        "branch": "astra-check-interface",
+        "updatedAt": "2026-11-14T11:56:49Z"
+      }
+    ]
+  },
+  "ownedCodeBlobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "newSha": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "financePublishedBlob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "financeLocalBlob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "sameAsPublished": true,
+      "sameAsLocal": true,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "newSha": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "financePublishedBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "financeLocalBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sameAsPublished": true,
+      "sameAsLocal": true,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "newSha": "9f804318ece7b82c9119508e24763ada47ce294d",
+      "financePublishedBlob": "310435389682b2892fc255a0eb60030ae7dda6a6",
+      "financeLocalBlob": "310435389682b2892fc255a0eb60030ae7dda6a6",
+      "sameAsPublished": false,
+      "sameAsLocal": false,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2",
+      "ownerDownloadedBlob": "9f804318ece7b82c9119508e24763ada47ce294d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "newSha": "90333c12d277942667810d6ed802e019e799f837",
+      "financePublishedBlob": "90333c12d277942667810d6ed802e019e799f837",
+      "financeLocalBlob": "90333c12d277942667810d6ed802e019e799f837",
+      "sameAsPublished": true,
+      "sameAsLocal": true,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "newSha": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "financePublishedBlob": "1014fdc4461211ae3310e4d9f5ddafea22786713",
+      "financeLocalBlob": "1014fdc4461211ae3310e4d9f5ddafea22786713",
+      "sameAsPublished": false,
+      "sameAsLocal": false,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2",
+      "ownerDownloadedBlob": "326a262f17914de6675657dd1e6f82baec31e5c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "newSha": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "financePublishedBlob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "financeLocalBlob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "sameAsPublished": true,
+      "sameAsLocal": true,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "newSha": "f3f66378b7e310565e46eef1767f8110675d38de",
+      "financePublishedBlob": "9a60848e9a050ffc6690cd484ce12b2d0cd2e9c8",
+      "financeLocalBlob": "9a60848e9a050ffc6690cd484ce12b2d0cd2e9c8",
+      "sameAsPublished": false,
+      "sameAsLocal": false,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2",
+      "ownerDownloadedBlob": "f3f66378b7e310565e46eef1767f8110675d38de"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "newSha": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "financePublishedBlob": "11c8bd90a9886fec96acddecba26132f3b304c1b",
+      "financeLocalBlob": "11c8bd90a9886fec96acddecba26132f3b304c1b",
+      "sameAsPublished": false,
+      "sameAsLocal": false,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2",
+      "ownerDownloadedBlob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "newSha": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "financePublishedBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "financeLocalBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "sameAsPublished": false,
+      "sameAsLocal": false,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2",
+      "ownerDownloadedBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "newSha": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "financePublishedBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "financeLocalBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "sameAsPublished": false,
+      "sameAsLocal": false,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2",
+      "ownerDownloadedBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "newSha": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "financePublishedBlob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "financeLocalBlob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "sameAsPublished": false,
+      "sameAsLocal": false,
+      "financeObservedHead": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "financeObservedTree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2",
+      "ownerDownloadedBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d"
+    }
+  ],
+  "receiptIntakeElements": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/calculation-history-grant-fix-W11.json",
+      "sha": "9ac58fc9d24b8e6ff4930733628b82ed8d0c0fae",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W10.json",
+      "sha": "6aaa07a4a76102edf3e2335a6da1bd94f97263d0",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W11.json",
+      "sha": "48c18509b7837b5ca14a37575f2c091cce633761",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W12.json",
+      "sha": "0c94b8506748e6a523fe78b0717684e9bb2a72d9",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W9.json",
+      "sha": "c6303294ca778c9b09b1f9de4fbdb38334104253",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-0c4a-intake.json",
+      "sha": "de4543e930c370aebcea0c27b81c479e77551c3e",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-0c4a-review.json",
+      "sha": "d65bd752a641ac504108521281601a765291b48a",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W10.json",
+      "sha": "f52bd59da46111985dafa15dfb570e298fdceb56",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W11.json",
+      "sha": "fc9329235bf217c3ec66112b226649f8ce628b72",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W12-F1.json",
+      "sha": "be998726ae76a47e4f1345798ef8e2730ab8bdc7",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W13-F2.json",
+      "sha": "693aae2d1a99626ae92f6eb2fabc79723ee71ac7",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W10-H4.json",
+      "sha": "7f12492a181bd8cc5cbebe92141401a42c44cdcc",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W11-AR3-attempt1.json",
+      "sha": "dacaa1c00940065db935c65840dea70adae8eec6",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W11-AR3-attempt2.json",
+      "sha": "30dd20feb9db2decce11a6a5a57ef4fddc4557ea",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W11-F1.json",
+      "sha": "37daaf50c5177d51de32262d5dce8627dfb89999",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W12-F2.json",
+      "sha": "ba5d2e549c5b52982d6842d0a6410e312f0b1787",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W9-AR2.json",
+      "sha": "a519f13b35352dc50593833f0b5a74471081a74e",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W9-H3.json",
+      "sha": "510e84b5b6d5d16cd9cef0b7aa707cbf127367c7",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-projection-H5-diagnosis.json",
+      "sha": "7dc9c8214d47268a4a21b10ed907a2d56467e01c",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-projection-H5-manifest.json",
+      "sha": "d3d99e20d3ae543ce7c0ebebd75b9caa80292472",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-projection-H5-review.json",
+      "sha": "a8db90998814dee2ca09c34d76909e5d915b583c",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W10-H4.json",
+      "sha": "5c04135e1a8f7fad9776dd12d10197845abd073f",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W11-AR3-attempt1.json",
+      "sha": "bf2e90cce4ae5d82434220c9ae531cbc4b745f82",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W11-AR3-attempt2.json",
+      "sha": "cc48a2d918adf61e4dfffee7da9add23c90f6018",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W11-F1.json",
+      "sha": "e24a6d8005190296d11be036c25239159c61b8f9",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W12-F2.json",
+      "sha": "9b32ba6a2b566c737513f06ce428b59c4afb132c",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W9-AR2.json",
+      "sha": "86afdc3297c4317a53d0bc18363c285caad667ca",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W9-H3.json",
+      "sha": "040a017b618f2abf12a0d44f7eb788f323666b7d",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/training-forecast-fix-W10.json",
+      "sha": "24784d8e962f9a9bfab185d5c7cea3ab2b397c51",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W10.json",
+      "sha": "5904fa803dd1a970a06485f170aee6f635f6a34d",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W11.json",
+      "sha": "69af659c014ca6e1808c53b76618c6bf5df55961",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W12.json",
+      "sha": "417fb6ecdc4f3705a3897fdeb9c1c74407a370bb",
+      "type": "blob",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W9.json",
+      "sha": "1209dd542224f2cf338c21524dd6061bd116edb6",
+      "type": "blob",
+      "mode": "100644"
+    }
+  ],
+  "receiptExistingCollisions": []
+}

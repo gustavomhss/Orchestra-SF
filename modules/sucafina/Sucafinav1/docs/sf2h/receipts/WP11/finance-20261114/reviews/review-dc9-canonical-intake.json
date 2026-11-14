@@ -1,0 +1,271 @@
+{
+  "schema": "sf-finance-dc9-canonical-intake-review-v1",
+  "reviewer": "/root/dc9_canonical_intake_audit",
+  "status": "PASS_STATIC_AFFECTED_ACTIONS_REQUIRED",
+  "financeBase": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+  "financeTree": "82ea6bff11f9647d14cac30587ccd2feb80c6950",
+  "sourceHead": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "beforeBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "candidateBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "beforeBlob": "2338917427497733e4bd88aec852985206cce066",
+      "candidateBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc",
+      "bytes": 6337
+    }
+  ],
+  "checks": [
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts candidate blob",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts SHA256",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts before blob",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts applied exact",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts candidate blob",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts SHA256",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts before blob",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts applied exact",
+      "status": "PASS"
+    },
+    {
+      "check": "port only pure mapper extraction",
+      "status": "PASS"
+    },
+    {
+      "check": "mapper literal policy preserved",
+      "status": "PASS"
+    },
+    {
+      "check": "helper uses canonical mapper",
+      "status": "PASS"
+    },
+    {
+      "check": "helper no copied Actor mapping",
+      "status": "PASS"
+    },
+    {
+      "check": "nonempty full verifier retained",
+      "status": "PASS"
+    },
+    {
+      "check": "source-only original scope and period guards retained",
+      "status": "PASS"
+    },
+    {
+      "check": "final source/lease tail retained",
+      "status": "PASS"
+    },
+    {
+      "check": "port.test.ts unchanged",
+      "status": "PASS"
+    },
+    {
+      "check": "port-hr.test.ts unchanged",
+      "status": "PASS"
+    },
+    {
+      "check": "capability-parity.test.ts unchanged",
+      "status": "PASS"
+    },
+    {
+      "check": "operation-verifier.test.ts unchanged",
+      "status": "PASS"
+    },
+    {
+      "check": "renewal-source-admission.test.ts exact source",
+      "status": "PASS"
+    },
+    {
+      "check": "renewal-choice-fixture.ts exact source",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../../runtime/admin.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../../runtime/contract.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../../runtime/contract.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../../src/nav.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../../src/planner-accounts.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../contracts/canonical.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../contracts/context.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../contracts/ports.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../contracts/operations.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../contracts/business-context.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../contracts/sf-execution.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ../contracts/schema-admission.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./adapter.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./bi.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./headcount-months.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./actual-presence.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./coverage.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./scenario-port.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./scenario-port.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./scenario-comparison-port.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/product/planner/port.ts import ./scenario-comparison-port.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/contracts/canonical.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/contracts/operations.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/contracts/ports.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/contracts/sf-execution.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/contracts/schema-admission.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/planner/operation-verifier.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/planner/port.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../product/planner/scenario-inputs.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ../../../runtime/admin.ts",
+      "status": "PASS"
+    },
+    {
+      "check": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts import ./fixture-trace.ts",
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "checks": 52,
+    "pass": 52,
+    "blockers": 0
+  },
+  "conclusions": [
+    "Planner mapper extraction preserves null/mismatched/local principal rejection, Planner roles, canWrite, assigned and domains. CompareForecast retains original authenticate call and projection/calculation flow.",
+    "Renewal fixture reuses canonical mapper and projector without reproducing monetary formulas or Actor authorization. Nonempty operations/assumptions preserve Finance readonly per-invocation full canonical verifier plus ingress/egress authority checks.",
+    "Source-only reference digest/scope/fields/period/year/projection guards retained; final authentication revalidated before projection, no later asynchronous host callback. No cross-invocation cache.",
+    "LocalStore nested writes poison root and throw; top-level transactions serialize writes. Reviewed helper admission pertains to this fixture store, not arbitrary Persistence implementations.",
+    "Exact upstream seven source-admission cases/nine scope variants and 2/2/3 observation oracle retained. No assertions or timeouts changed in this patch."
+  ],
+  "affectedCi": {
+    "WP03": [
+      "port.test.ts",
+      "port-hr.test.ts",
+      "capability-parity.test.ts",
+      "operation-verifier.test.ts"
+    ],
+    "WP11": [
+      "current-choice-read-fence.test.ts",
+      "current-choice-lifecycle.test.ts",
+      "renewal-read-scope.test.ts",
+      "renewal-source-admission.test.ts",
+      "renewal-choice-history.test.ts",
+      "renewal-choice-revision.test.ts",
+      "implementation-quote-history.test.ts"
+    ],
+    "WP05": [
+      "choice-history-bi.test.ts"
+    ]
+  },
+  "limits": [
+    "Metadata/static review only; no Bun/import execution/product tests/remote mutations by reviewer.",
+    "Synthetic source references and in-process UI fixtures remain explicit. No installed/native/C/D/global acceptance.",
+    "S19/S20/S21 do not qualify new bytes until affected Actions complete."
+  ]
+}

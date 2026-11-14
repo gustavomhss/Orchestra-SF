@@ -1,0 +1,61 @@
+{
+  "operation": "CI request/file metadata only; no product execution",
+  "selector": {
+    "package": "sucafina",
+    "directory": "modules/sucafina"
+  },
+  "fileCount": 31,
+  "ownFiles": 24,
+  "consumers": [
+    "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+    "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+    "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+    "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+    "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+    "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+    "Sucafinav1/test/product/wp05/capacity-numeric.test.ts"
+  ],
+  "requestSha256": "49bdad2fcd254dbd6e154d416bbe25bb7c04542f4b8583526d59f23bcd9ee717",
+  "omniControlScope": "declared",
+  "normalized": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp11/http.test.ts",
+      "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+      "--timeout",
+      "180000"
+    ],
+    "env": {}
+  }
+}

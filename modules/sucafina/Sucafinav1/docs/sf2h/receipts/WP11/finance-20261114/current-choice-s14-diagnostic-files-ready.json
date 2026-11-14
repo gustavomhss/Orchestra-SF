@@ -1,0 +1,27 @@
+{
+  "kind": "diagnostic-only-not-product-fix",
+  "trigger": {
+    "selection": 14,
+    "runId": 43589528126,
+    "jobId": 132431103700,
+    "reason": "choice-preview-unavailable",
+    "coverageError": "coverage-callback-not-reached"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "beforeBlob": "a8b72e8c30d6e365c77169e53d499dc163530318",
+      "candidateBlob": "2ad002beca9b3c6dab4e1d8841345c9250a6826d",
+      "sha256": "5c1ed70d2057ab37ce9ffec0de949e8a5024a244014b7fee772a2921f8bd16de",
+      "bytes": 25755
+    }
+  ],
+  "assertions": {
+    "before": 40,
+    "after": 40,
+    "removed": 0
+  },
+  "timeout": 180000,
+  "runtimeTestsExecuted": false,
+  "changes": "Transparent tracing of resimulate and coverage resolver delegates captures the thrown boundary while returning the same real result and preserving every assertion. No product implementation modified."
+}

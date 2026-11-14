@@ -1,0 +1,207 @@
+{
+  "schema": "sf-independent-static-review-v1",
+  "reviewer": "/root/renewal_transaction_review",
+  "createdAt": "2026-11-14T12:12:07.353061+00:00",
+  "scope": "Two frozen WP11 harness files; existing LocalStore/Planner/UI authority and all three helper consumers read-only.",
+  "baselineAtAssignment": "332c5a762365e8550eaac7a278c864be0452651d",
+  "observedPublishedHeadMetadata": {
+    "head": "29172d2e4db859eedac31e84778c447bb97f6c08",
+    "tree": "8d7a7657597d024c5a55a9f5a4fdccf604c40d25"
+  },
+  "verdict": "NO_STATIC_BLOCKER_FOR_LIMITED_PUBLICATION; RUNTIME_AND_ACCEPTANCE_PENDING",
+  "reviewedCandidates": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sha": "2338917427497733e4bd88aec852985206cce066",
+      "previousBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "sha256": "ddaa4cc2a68b466179408513c3f96614265251916e5a31f1638e1c6ebf828eca",
+      "bytes": 3665,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+      "sha": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+      "previousBlob": null,
+      "sha256": "8a111fa08b5d4a6c1a569ad12d105e0d80a89f866fc04ff2509eb008c0b002e1",
+      "bytes": 3219,
+      "verified": true
+    }
+  ],
+  "readOnlyContext": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-inputs.ts",
+      "blob": "f2a49fc79880ccb204184c6c83e957bab97b483f",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "blob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "blob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "matchesPublishedManifest": true
+    }
+  ],
+  "unchangedOriginalTests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "blob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "matchesPublishedManifest": true,
+      "expectContainingLines": 41,
+      "modifiedByCandidate": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "blob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "matchesPublishedManifest": true,
+      "expectContainingLines": 44,
+      "modifiedByCandidate": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+      "blob": "5e4519aaf1cc7d9bb17a1ec93b81ea950084bb2a",
+      "matchesPublishedManifest": true,
+      "expectContainingLines": 28,
+      "modifiedByCandidate": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "blob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "matchesPublishedManifest": true,
+      "expectContainingLines": 69,
+      "modifiedByCandidate": false
+    }
+  ],
+  "findings": [],
+  "conclusions": [
+    {
+      "id": "R1",
+      "topic": "One transaction per invocation",
+      "conclusion": "Each decoded invocation admits request/authority, awaits host.persistence.transaction(planner) with commit:false and the request signal, then revalidates authority outside its own scope. No result/projection/authority cache is introduced."
+    },
+    {
+      "id": "R2",
+      "topic": "LocalStore lifetime and durability",
+      "conclusion": "An outer transaction reads all three surfaces once under BEGIN IMMEDIATE. AsyncLocalStorage is confined to the work callback. Each nested surface transaction clones the root snapshot, rejects commit:true, poisons attempted nested writes and closes its scope in finally. commit:false rolls back the SQLite transaction. The helper receives no blob capability and does not mutate the root snapshot."
+    },
+    {
+      "id": "R3",
+      "topic": "Canonical checks",
+      "conclusion": "Nonempty operations or assumptions retain createPlannerOperationVerifier, including actor/role validation, target checks, canonical simulation, replacement resolution, source/projection rereads and authority checks. Source-only retains canonical compareForecast and exact evidence/source comparison."
+    },
+    {
+      "id": "R4",
+      "topic": "Three consumers",
+      "conclusion": "History fixture uses only current.sources from initial or revised source fixtures. Human fixture uses read-only currentSource plus unavailable coverage. Restart reader authenticates and projects from a read-only Planner snapshot plus unavailable coverage. No inspected adapter emits scoped source identities or performs C08/domain writes inside verification."
+    },
+    {
+      "id": "R5",
+      "topic": "Revocation and freshness",
+      "conclusion": "UI revocation remains observable because revalidate reads current in-memory admission/authorize state, not a memoized result. Every independent invocation opens a fresh storage scope. Repeated SQL projections inside one invocation intentionally share one atomic snapshot; the helper is not a later-write authorization or fence."
+    }
+  ],
+  "newTests": [
+    {
+      "name": "durable snapshots unchanged",
+      "location": "renewal-read-scope.test.ts:7",
+      "coverage": "Real three-operation fixture plus source-only verification; compares all three persisted surface snapshots before/after.",
+      "executedByReviewer": false
+    },
+    {
+      "name": "canonical source edit between invocations",
+      "location": "renewal-read-scope.test.ts:19",
+      "coverage": "Real OPEX save with CAS to f10=46000; second invocation must reject the unchanged old evidence.",
+      "executedByReviewer": false
+    },
+    {
+      "name": "UI revoke during awaited source callback",
+      "location": "renewal-read-scope.test.ts:38",
+      "coverage": "ui.finish at second source observation inside scope; verifies false and authority revoked.",
+      "executedByReviewer": false
+    }
+  ],
+  "observedPriorEvidence": {
+    "runId": 43591635600,
+    "jobId": 132437416020,
+    "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+    "rawLogSha256": "bee8143075a7ec7ecfc512df315fa23f42ec3dbf7b438a0e597ab9cd90c8cb16",
+    "status": "Prior failing run only; not evidence for these candidate blobs",
+    "deadlineSamples": [
+      {
+        "phase": "threshold-after:start",
+        "elapsedMs": 180004,
+        "budgetMs": 180000,
+        "sourceOnlyCalls": 658,
+        "sourceOnlyElapsedMs": 100931
+      },
+      {
+        "phase": "prepare:transition-confirmed:complete",
+        "elapsedMs": 210363,
+        "budgetMs": 180000,
+        "sourceOnlyCalls": 352,
+        "sourceOnlyElapsedMs": 71843
+      }
+    ]
+  },
+  "risksAndLimits": [
+    "No timing benefit, runtime pass, typecheck, guard pass, installed/native proof, C/D approval or final epic is established by this static review.",
+    "BEGIN IMMEDIATE holds the writer-admission lock for the entire individual verification, including awaited callbacks. These three fixtures have local read-only callbacks; do not generalize the helper to source issuers, database-authority writers, network callbacks or nested transactionAll without a new review.",
+    "Repeated projection callbacks within one invocation observe the same snapshot. A canonical source edit committed between independent invocations is observed on the next invocation. The new tests do not establish behavior of an independent writer committing after transaction release but before return, or application/replay fencing; those remain producer responsibilities.",
+    "If the helper is invoked under an existing LocalStore scope, it inherits that atomic root under the existing nested-read contract. The helper itself does not create cache lifetime across calls.",
+    "The new outer transaction may reject on lock timeout, aborted signal or poisoned nested writes; it cannot convert those errors into successful acceptance. No blanket catch(false) was added. This review does not require one for the bounded harness.",
+    "New boundary tests use the initial source fixture; existing full history/revision/BI tests remain necessary to exercise revised-source nested reads and persisted human choices/restart."
+  ],
+  "requiredNextEvidence": [
+    "Coordinator-owned surgical Actions selection for the three new boundary tests and unchanged affected history/revision/implementation/BI consumers, on exact candidate commit/tree.",
+    "Record run IDs, product/snapshot SHAs, durations and negative assertions; no timeout/assertion relaxations.",
+    "Preserve installed/native, independent acceptance C/D and S0 bundle epic gates."
+  ],
+  "actionsByReviewer": {
+    "sourceWrites": false,
+    "remoteWrites": false,
+    "productImports": false,
+    "productTests": false,
+    "bunCommands": false,
+    "ciDispatch": false,
+    "nativeExecution": false,
+    "scratchReportWritesOnly": true
+  }
+}

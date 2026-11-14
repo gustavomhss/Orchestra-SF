@@ -1,0 +1,288 @@
+--- PR40-be50d42/modules/sucafina/Sucafinav1/product/decisions/apply.ts
++++ astra-finance/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+@@ -4,7 +4,7 @@
+ import type { CommandReceipt } from "../contracts/context.ts"
+ import type { DomainPortHost, PortResult, PreparedApplyPort } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+-import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
++import type { SfProductState, SfProductStatePort, SfStateResult } from "../contracts/state.ts"
+ import { caseApplicationState, reconcileDomainReceipt } from "./receipts.ts"
+ import { isReviewDigest, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
+ import { applicationAttempt, applicationAttemptKey, applicationAttempts } from "./application-attempt.ts"
+@@ -36,10 +36,16 @@
+     if (value.version < request.caseRef.version) return { status: "stale", reason: "case-changed" }
+     if (change.state !== "planned" && !change.receipt) return { status: "conflict", reason: "change-not-applicable" }
+     if (!await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
+-    const lookup = await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context))
++    const lookup = structuredClone(await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)))
+     if (lookup.status !== "ok") return lookup
+     const reviewDigest = input.reviewDigestFor(context, request, change)
+     if (!isReviewDigest(reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
++    const retainReceipt = async (expectedCase: DecisionCase, receipt: CommandReceipt) => {
++      // This is a consistency fence for a receipt already authorized by its
++      // canonical reader, never a substitute for that reader's authority.
++      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, change, receipt, reviewDigest, context.binding.principalRef)).catch(() => undefined)
++      return !source.signal.aborted && retained?.status === "ok" && retained.value
++    }
+     if (lookup.value.state === "found") {
+       const bound = await input.state.read(source, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)] : undefined).catch(() => undefined)
+       if (!bound || bound.status !== "ok" || !bound.value) return { status: "unavailable", reason: "review-proof-unbound" }
+@@ -47,6 +53,7 @@
+       if (change.receipt) {
+         if (digestSfValue(change.receipt) !== digestSfValue(lookup.value.receipt)) return { status: "unavailable", reason: "receipt-identity-collision" }
+         if (!await input.host.revalidate(context) || !await input.authorizeCase(value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
++        if (!await retainReceipt(value, lookup.value.receipt)) return { status: "unavailable", reason: "receipt-authority-changed" }
+         return { status: "ok", value: lookup.value.receipt }
+       }
+     }
+@@ -84,9 +91,9 @@
+       }
+       if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
+     }
+-    const observed = lookup.value.state === "found" ? { status: "ok" as const, value: lookup.value.receipt } : await callDomain(() => input.apply.executePrepared(request, context))
++    const observed = structuredClone(lookup.value.state === "found" ? { status: "ok" as const, value: lookup.value.receipt } : await callDomain(() => input.apply.executePrepared(request, context)))
+     if (observed.status !== "ok") return observed
+-    const result = await input.classifyReceipt(observed.value, change, context).catch(() => undefined)
++    const result = structuredClone(await input.classifyReceipt(structuredClone(observed.value), structuredClone(change), context).catch(() => undefined))
+     if (!result || !await input.host.revalidate(context)) return { status: "unavailable", reason: "receipt-classification-unavailable" }
+     if (result.evidence.installationId !== context.binding.installationId || result.evidence.projectId !== context.binding.projectId || result.evidence.target.surface !== observed.value.surface || result.evidence.target.receiptId !== observed.value.id || result.evidence.target.idempotencyKey !== observed.value.idempotencyKey || result.evidence.target.targetIncarnation !== observed.value.targetIncarnation || result.evidence.target.commandDigest !== observed.value.commandDigest || result.evidence.target.version !== observed.value.version) return { status: "unavailable", reason: "receipt-evidence-mismatch" }
+     const priorReceipt = value.receipts.find((receipt) => receipt.id === observed.value.id)
+@@ -96,6 +103,7 @@
+     if (reconciled.status !== "ok") return reconciled
+     if (change.receipt) {
+       if (!await input.authorizeCase(value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
++      if (!await retainReceipt(value, observed.value)) return { status: "unavailable", reason: "receipt-authority-changed" }
+       return { status: "ok", value: observed.value }
+     }
+     // The producer may have advanced the cases namespace while committing its receipt.
+@@ -105,22 +113,41 @@
+     const fresh = reconciliation.value
+     const selected = fresh.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId)
+     if (fresh.incarnation !== value.incarnation || fresh.version < value.version || !fresh.participants.includes(context.binding.principalRef) || !fresh.choices.some((choice) => choice.id === request.choiceId) || !selected || !await input.authorizeCase(fresh, context).catch(() => false) || !await input.authorizeApplication(request, selected, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
+-    if (selected.receipt) return digestSfValue(selected) === digestSfValue(reconciled.change) ? { status: "ok", value: observed.value } : { status: "unavailable", reason: "receipt-identity-collision" }
++    // Re-observe the domain's authoritative receipt after the asynchronous case
++    // callbacks. The earlier command response is not a durable receipt fence.
++    const confirmedReceipt = structuredClone(await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)))
++    if (confirmedReceipt.status !== "ok") return confirmedReceipt
++    if (confirmedReceipt.value.state !== "found" || digestSfValue(confirmedReceipt.value.receipt) !== digestSfValue(observed.value)) return { status: "unavailable", reason: "authoritative-receipt-changed" }
++    if (source.signal.aborted || !await input.authorizeCase(fresh, context).catch(() => false) || !await input.authorizeApplication(request, selected, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
++    if (selected.receipt) {
++      if (digestSfValue(selected) !== digestSfValue(reconciled.change)) return { status: "unavailable", reason: "receipt-identity-collision" }
++      if (!await retainReceipt(fresh, observed.value)) return { status: "unavailable", reason: "receipt-authority-changed" }
++      return { status: "ok", value: observed.value }
++    }
+     if (digestSfValue(selected) !== digestSfValue(change)) return { status: "stale", reason: "prepared-change-changed" }
+     if (fresh.preparedChanges.some((item) => item.id !== change.id && item.receipt?.id === observed.value.id) || fresh.receipts.some((receipt) => receipt.id === observed.value.id && digestSfValue(receipt) !== digestSfValue(observed.value))) return { status: "unavailable", reason: "receipt-identity-collision" }
++    const changes = fresh.preparedChanges.map((item) => item.id === change.id ? reconciled.change : item)
++    const reconciledCase: DecisionCase = { ...fresh, version: fresh.version + 1, preparedChanges: changes, receipts: fresh.receipts.some((receipt) => receipt.id === observed.value.id) ? fresh.receipts : [...fresh.receipts, observed.value], sourceRefs: [...fresh.sourceRefs, result.evidence].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index), state: caseApplicationState(changes) }
+     const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: reconciliation.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
+       const actual = state.cases[value.id]
+-      if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: false }
+-      const changes = actual.preparedChanges.map((item) => item.id === change.id ? reconciled.change : item)
+-      state.cases[value.id] = { ...actual, version: actual.version + 1, preparedChanges: changes, receipts: actual.receipts.some((receipt) => receipt.id === observed.value.id) ? actual.receipts : [...actual.receipts, observed.value], sourceRefs: [...actual.sourceRefs, result.evidence].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index), state: caseApplicationState(changes) }
++      if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || !receiptSnapshotMatches(state, change, observed.value, reviewDigest, context.binding.principalRef)) return { commit: false, value: false }
++      state.cases[value.id] = reconciledCase
+       return { commit: true, value: true }
+     }).catch(() => undefined)
+     if (!saved || saved.status !== "ok") return { status: "unavailable", reason: "case-reconciliation-pending" }
+     if (!saved.value) return { status: "unavailable", reason: "case-reconciliation-pending" }
+-    const currentReceipt = await input.classifyReceipt(observed.value, reconciled.change, context).catch(() => undefined)
++    const currentReceipt = await input.classifyReceipt(structuredClone(observed.value), structuredClone(reconciled.change), context).catch(() => undefined)
+     if (!currentReceipt || digestSfValue(currentReceipt) !== digestSfValue(result) || !await input.authorizeApplication(request, reconciled.change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "receipt-authority-changed" }
++    if (!await retainReceipt(reconciledCase, observed.value)) return { status: "unavailable", reason: "receipt-authority-changed" }
+     return { status: "ok", value: observed.value }
+   }
++}
++
++function receiptSnapshotMatches(state: SfProductState, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, principalRef: string) {
++  const stored = state.receipts[receipt.id]
++  const proof = state.transactions[receiptProofTransactionKey(principalRef, change.target.id, change.idempotencyKey)]
++  const matches = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.targetIncarnation === change.target.incarnation && item.idempotencyKey === change.idempotencyKey && item.principalRef === principalRef)
++  return matches.length === 1 && !!stored && !!proof && digestSfValue(stored) === digestSfValue(receipt) && proof.commandDigest === receiptReviewBinding(change, reviewDigest) && digestSfValue(proof.value) === digestSfValue(receipt)
+ }
+ 
+ async function callDomain<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {
+--- PR40-be50d42/modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts
++++ astra-finance/modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts
+@@ -21,6 +21,7 @@
+     const state = createSfProductState({ persistence: store, createId: () => "state", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+     const caseRef = { id: "case", incarnation: "inc", version: 1 }
+     const horizon = { start: "2027-01-01", end: "2027-12-31" }
++    // This contract fixture supplies the observed Planner source boundary; native capture is tested separately.
+     const unsignedSource = { schema: "sf-evidence-v1", kind: "record", refId: "planner-base", installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: "base", incarnation: "base-inc", version: 1, fields: ["amount"], period: horizon, projectionDigest: "a".repeat(64) } } as const
+     const plannerSource = { ...unsignedSource, refDigest: digestSfEvidenceRef(unsignedSource) }
+     const basis = { id: "basis", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: [plannerSource] } as const
+--- PR40-be50d42/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts
++++ astra-finance/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts
+@@ -24,7 +24,7 @@
+   const fixture = await plannerFixture()
+   try {
+     for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
+-    const context = await fixture.admit("sf-human:planner.read", {})
++    const context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+     const http = fixture.host.requestFor(context)
+     if (!http) throw new Error("Real UI authority unavailable")
+     const issuedSource = await fixture.issueSource("v0", context)
+--- PR40-be50d42/modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts
++++ astra-finance/modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts
+@@ -13,6 +13,7 @@
+   try {
+     const coverage = await renewalCoverage(fixture, "bundled")
+     expect(coverage.assessment.coverageState).toBe("complete")
++    if (coverage.assessment.coverageState !== "complete") throw new Error("Expected the complete producer-supported coverage fixture")
+     expect(coverage.assessment.issues).toEqual([])
+     expect(coverage.assessment.derivedMissingCategoryIds).toEqual([])
+     expect(fixture.selectedResult.knownSubtotal).toBe(210000)
+@@ -31,13 +32,12 @@
+     const decision = { ...fixture.decision, alternatives: fixture.decision.alternatives.map((item) => item.id === "selected" ? { ...item, result: storedResult } : item) }
+     const input = { decision, selection, scenario: fixture.scenario, storedResult, rule: rule.value, structural: structural.value, assessment: coverage.assessment, basis: fixture.basis, classification: coverage.classification, evidence: coverage.evidence, context: fixture.context }
+     const certificate = createCoverageIntervalCertificate(input)
+-    expect(certificate?.bounds).toEqual(fixture.sensitivityRequest.parameterBounds && { parameterRef: "implementation:11", minimum: 10000, maximum: 70000 })
++    expect(certificate?.bounds).toEqual({ parameterRef: "implementation:11", minimum: 10000, maximum: 70000 })
+     expect(certificate?.structuralDigest).toBe(digestSfValue(structural.value))
+     expect(createCoverageIntervalCertificate({ ...input, evidence: coverage.evidence.map((item) => item.ref.refId === coverage.statement.refId ? { ...item, state: "revoked" as const } : item) })).toBeUndefined()
+     expect(createCoverageIntervalCertificate({ ...input, classification: { ...coverage.classification, notApplicableEntries: [] } })).toBeUndefined()
+     const duplicated = { ...structural.value, componentIds: [...structural.value.componentIds, structural.value.componentIds[0]!] }
+     expect(createCoverageIntervalCertificate({ ...input, structural: duplicated })).toBeUndefined()
+-    if (coverage.assessment.coverageState !== "complete") throw new Error("Expected complete coverage before tampering")
+     const forged = { ...storedResult, costCoverage: { ...coverage.assessment, entries: coverage.assessment.entries.filter((item) => item.categoryId !== "training") } }
+     expect(validateScenarioCoverage(forged, fixture.basis, forged.costCoverage)).toBe("incomplete-cost-coverage")
+     const exact = await fixture.exact(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)
+--- PR40-be50d42/modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts
++++ astra-finance/modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts
+@@ -29,7 +29,6 @@
+ import { createProcurementC12Bridge } from "../../../product/procurement/c12.ts"
+ import { createProcurementPort } from "../../../product/procurement/port.ts"
+ import { prepareProcurementMutation } from "../../../product/procurement/prepared.ts"
+-import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
+ import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
+ 
+ const at = "2026-11-13T00:00:00Z"
+@@ -176,7 +175,7 @@
+ 
+ async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, reviewed: ReadonlyMap<string, ReviewedIntent>) {
+   const projector = createSfSourceScopeProjector(() => at)
+-  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: (surface, snapshot, scope) => surface === "procurement" ? projectProcurementScope(surface, snapshot, scope) : projector(surface, snapshot, scope) })
++  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: projector })
+   const controls = { confirmed: false, racePending: false, races: 0, producerReviews: 0, executions: [] as string[] }
+   const environment = { at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] }
+   const request = new Request("https://local.invalid/cases", { headers: { authorization: "Bearer alice" } })
+--- PR40-be50d42/modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts
++++ astra-finance/modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts
+@@ -12,15 +12,16 @@
+ import { preparePlannerMutation } from "../../../product/planner/prepared.ts"
+ import { createPlannerProduct } from "../../../product/planner/product.ts"
+ import { createPreparedExecution } from "../../../product/decisions/apply.ts"
+-import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { CommandReceipt } from "../../../product/contracts/context.ts"
+ import type { PreparedApplyPort } from "../../../product/contracts/ports.ts"
+ import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
+ import type { DecisionCase, PreparedChange } from "../../../product/contracts/decisions.ts"
+ import type { DomainPortHost } from "../../../product/contracts/ports.ts"
+ import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
+ 
+-for (const mode of ["normal", "lost-response", "revoked"] as const) test(`real prepared execution reconciles ${mode} without repeating Planner effects`, async () => {
++for (const mode of ["normal", "lost-response", "revoked", "receipt-removed", "receipt-replaced", "receipt-collision", "receipt-removed-late", "receipt-replaced-late", "receipt-collision-late"] as const) test(`real prepared execution reconciles ${mode} without repeating Planner effects`, async () => {
+   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-planner-apply-"))
+   await chmod(directory, 0o700)
+   const store = await openLocalStore(directory)
+@@ -35,6 +36,11 @@
+       return { commit: true, value: true }
+     })
+     const access = { revoked: false, executions: 0 }
++    const receiptFault: { original?: CommandReceipt; calls: number; retry: boolean } = { calls: 0, retry: false }
++    const hasReceiptFault = mode.startsWith("receipt-")
++    const removeReceipt = mode.startsWith("receipt-removed")
++    const collideReceipt = mode.startsWith("receipt-collision")
++    const faultAfterCallbacks = mode.endsWith("-late") ? 2 : 1
+     const context = { kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: "finance", requestId: "r", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
+     const request = new Request("https://example.test", { headers: { authorization: "finance" } })
+     const host: DomainPortHost = { persistence, authenticate: async (http, snapshot) => { const id = http.headers.get("authorization"); return id ? resolve(id, [...snapshot!.roleMap], (group) => id === "finance" && group === "finance-group") : null }, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: randomUUID, directory: [] }), requestFor: () => request, revalidate: async () => !access.revoked }
+@@ -61,18 +67,48 @@
+     const apply: PreparedApplyPort = { ...producer, executePrepared: async (operation, binding) => {
+       access.executions += 1
+       const result = await producer.executePrepared(operation, binding)
+-      if (result.status === "ok" && access.executions === 1 && mode !== "normal") {
++      if (result.status === "ok" && access.executions === 1 && (mode === "lost-response" || mode === "revoked")) {
+         if (mode === "revoked") access.revoked = true
+         throw new Error("transport lost the committed result")
+       }
+       return result
+     } }
+-    const makeExecutor = (state: ReturnType<typeof createSfProductState>, host: DomainPortHost, apply: PreparedApplyPort) => createPreparedExecution({ state, host, apply, authorizeCase: async () => !access.revoked, authorizeApplication: async () => !access.revoked, confirmApplication: async () => !access.revoked, operationIdentity: () => "apply-command", reviewDigestFor: () => "a".repeat(64), revalidateProducer: async () => ({ status: "ok", value: { reviewDigest: "a".repeat(64) } }), classifyReceipt: async (receipt) => {
++    const makeExecutor = (state: ReturnType<typeof createSfProductState>, host: DomainPortHost, apply: PreparedApplyPort) => createPreparedExecution({ state, host, apply, authorizeCase: async () => !access.revoked, authorizeApplication: async () => {
++      // Inject both before and after the final canonical receipt lookup. A second
++      // phase targets the last callback on an already reconciled receipt replay.
++      if (access.executions === 1 && !receiptFault.original && hasReceiptFault && ++receiptFault.calls === (receiptFault.retry ? 2 : faultAfterCallbacks)) {
++        const current = await state.read(request, "receipts", (value) => value.receipts["receipt-1"])
++        if (current.status !== "ok" || !current.value) throw new Error("Committed receipt unavailable before fault")
++        const receipt = structuredClone(current.value)
++        receiptFault.original = receipt
++        const changed = await state.transaction(request, { namespace: "receipts", expectedStorageVersion: current.storageVersion, targetRef: target.id, targetIncarnation: target.incarnation, idempotencyKey: `fault-${receiptFault.retry ? "reconciled-retry" : "before-reconciliation"}`, commandDigest: digestSfValue({ mode, receipt }) }, async (value) => {
++          if (removeReceipt) delete value.receipts[receipt.id]
++          else if (collideReceipt) value.receipts["receipt-collision"] = { ...receipt, id: "receipt-collision" }
++          else value.receipts[receipt.id] = { ...receipt, at: "2026-11-14T00:00:00Z" }
++          return { commit: true, value: true }
++        })
++        if (changed.status !== "ok") throw new Error("Authoritative receipt fault failed")
++      }
++      return !access.revoked
++    }, confirmApplication: async () => !access.revoked, operationIdentity: () => "apply-command", reviewDigestFor: () => "a".repeat(64), revalidateProducer: async () => ({ status: "ok", value: { reviewDigest: "a".repeat(64) } }), classifyReceipt: async (receipt) => {
+       if (access.revoked) return undefined
+       const ref: Extract<BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", kind: "receipt", refId: receipt.id, installationId: "i", projectId: "p", evidenceLevel: "observed", refDigest: "", target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
+       return { state: receipt.result.ok ? "applied" : "conflict", evidence: { ...ref, refDigest: digestSfEvidenceRef(ref) } }
+     } })
+     const execute = makeExecutor(state, host, apply)
++    const restoreReceipt = async (identity: string) => {
++      const current = await state.read(request, "receipts", (value) => ({ receipt: value.receipts["receipt-1"], collision: value.receipts["receipt-collision"] }))
++      const receipt = receiptFault.original
++      if (current.status !== "ok" || !receipt) throw new Error("Original receipt unavailable for recovery")
++      if (removeReceipt) expect(current.value.receipt).toBeUndefined()
++      else if (collideReceipt) {
++        expect(current.value.receipt).toEqual(receipt)
++        expect(current.value.collision).toEqual({ ...receipt, id: "receipt-collision" })
++      } else expect(current.value.receipt).toEqual({ ...receipt, at: "2026-11-14T00:00:00Z" })
++      const restored = await state.transaction(request, { namespace: "receipts", expectedStorageVersion: current.storageVersion, targetRef: target.id, targetIncarnation: target.incarnation, idempotencyKey: identity, commandDigest: digestSfValue(receipt) }, async (value) => { delete value.receipts["receipt-collision"]; value.receipts[receipt.id] = structuredClone(receipt); return { commit: true, value: true } })
++      expect(restored.status).toBe("ok")
++      expect(access.executions).toBe(1)
++    }
+     const operation = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
+     access.revoked = true
+     expect(await execute(operation, context)).toMatchObject({ status: "denied" })
+@@ -83,6 +119,14 @@
+     expect(access.executions).toBe(1)
+     const official = await persistence.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.versions) }))
+     expect((official as { lines: { f: number[] }[] }[])[0]!.lines[0]!.f[0]).toBe(42)
++    if (hasReceiptFault) {
++      expect(receiptFault.calls).toBe(faultAfterCallbacks)
++      expect(first).toEqual({ status: "unavailable", reason: faultAfterCallbacks === 2 ? "case-reconciliation-pending" : collideReceipt ? "receipt-identity-conflict" : "authoritative-receipt-changed" })
++      const untouched = await state.read(request, "cases", (value) => value.cases.case)
++      if (untouched.status !== "ok") throw new Error("Case unavailable after receipt fault")
++      expect(untouched.value).toEqual(decision)
++      await restoreReceipt("recover-before-case-reconciliation")
++    }
+     if (mode === "revoked") {
+       expect(await execute(operation, context)).toMatchObject({ status: "denied" })
+       expect(access.executions).toBe(1)
+@@ -108,6 +152,19 @@
+     expect(await execute({ ...operation, changeId: "stale-change" }, context)).toMatchObject({ status: "stale" })
+     expect(access.executions).toBe(1)
+     if (mode !== "normal") expect(persisted.value.objective).toBe("Keep this concurrent edit")
++    if (hasReceiptFault) {
++      receiptFault.original = undefined
++      receiptFault.calls = 0
++      receiptFault.retry = true
++      expect(await execute(operation, context)).toEqual({ status: "unavailable", reason: "receipt-authority-changed" })
++      expect(receiptFault.calls).toBe(2)
++      const unchanged = await state.read(request, "cases", (value) => value.cases.case)
++      if (unchanged.status !== "ok") throw new Error("Reconciled case unavailable after retry fault")
++      expect(unchanged.value).toEqual(persisted.value)
++      await restoreReceipt("recover-reconciled-retry")
++      expect(await execute(operation, context)).toEqual(recovered)
++      expect(access.executions).toBe(1)
++    }
+     const pending = { ...operation, caseRef: { ...operation.caseRef, version: persisted.value.version }, changeId: "stale-change" }
+     expect(await execute(pending, context)).toMatchObject({ status: "ok", value: { result: { ok: false, status: 409 } } })
+     expect(access.executions).toBe(2)

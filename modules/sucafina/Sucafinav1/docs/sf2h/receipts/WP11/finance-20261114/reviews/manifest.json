@@ -1,0 +1,639 @@
+{
+  "schema": "sf-finance-independent-review-v1",
+  "reviewedProduct": "66bbe152c145f04c16223a938589c63cedb3b716",
+  "reviewedTree": "f727ae5bfcef26383ff47a2b06bb65b161295dd2",
+  "reviews": [
+    {
+      "role": "financial",
+      "file": "review-financial-report.md",
+      "sha256": "f3e99bed9d5920d546aa8760e7dd6023165c0e81db65d2bc9c24b5a5445b0ea8"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-report.json",
+      "sha256": "52553827adb6fa5a1fe03c144f05dfd806dace5eef7ef117ece8d4f2fe679e07"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-report.md",
+      "sha256": "c8e29ac329bf37eaceff4f673e1c55cef734f5edfaf1c872285e7581542013c9"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-report.json",
+      "sha256": "01ff7610dcfd53e71688d8e0bad31b8baf0e9d950ff7d27c512a01a2f8b98c43"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-report.md",
+      "sha256": "7e2cd81b74fab196fd413605f16a8fdaa93dad034871d610e760c7e303549aed"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-report.json",
+      "sha256": "135ead5cfbc57b4efae5d0f3254ea27547516b72dad97bbbb332dcedfc34c510"
+    }
+  ],
+  "reviewStatus": "PINNED_SCOPED_REVIEWS; HISTORICAL_FINDINGS_PRESERVED; NO_GLOBAL_ACCEPTANCE",
+  "externalSourceEnvelopeNotes": [
+    "Reviewer authority read an extra final newline in local COMPOSE3 business-services.ts: observed blob a48424fcea0b39e20dfce2da079decc4afc04a9d; exact source bytes restored from GitHub MCP structured content and SHA-1 verified as 34a491f859f7b57b0883a122f816803df43c74c8, pin5866bcb2ed610f80138aaabc261acac4acf709cd. The source reasoning is unchanged.",
+    "Reviewer consumers similarly identified the extra newline in local INTERFACE5 bi-entry.ts. Exact GitHub bytes restored and verified as305ee63cd74658f6665a6ebbca885fe5995ea95f, pine5afff327dc64735bbd8a646124570a0c97a9c6b. Original reports are retained unchanged.",
+    "Current external COMPOSE4306b310e4d6dac77f9beab461adad4e8e924849 has since composed group W2 and nested C17. Historical W3 findings must be read with the current group handoff and addenda."
+  ],
+  "addenda": [
+    {
+      "role": "authority",
+      "file": "review-authority-addendum.md",
+      "sha256": "ba8ab1e440949bdfa9032d7201caa71155996de0dadc0b9237bc8e6f4678445c",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-addendum.json",
+      "sha256": "114a6b4f18283302fd81aeb628f5305808cb921054f9835dc904f298c49df9a3",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-addendum.md",
+      "sha256": "fb36911322bf36fe569f5bfd31cf14c68d85e321357c33909374eb09a8ad7f55",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-addendum.json",
+      "sha256": "d76514485e012766865a4052f5df5d5e39628a7e9e73013163d91a31953a0cb1",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-addendum.md",
+      "sha256": "aa766b3372d3d1852de5c2d68dc6f8ef48f37fab75c2f5b9021c2ba39a12ab66",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-addendum.json",
+      "sha256": "2e044959c0525ab35d71824dbe6f5a79b8a3ff59defcbb73eccda70571675ddf",
+      "reviewedProduct": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "reviewedTree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-presence-addendum.md",
+      "sha256": "4e0110286edb514001e37390f0f93e498c01e2577cbb80118500f4bdcbbcb807",
+      "reviewedProduct": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "reviewedTree": "fdc061f1ab7bbb0b28f591550af391e500dc7c8b"
+    },
+    {
+      "role": "financial",
+      "file": "review-financial-presence-addendum.json",
+      "sha256": "dbba1b606aac40b08783933d7dbbe5bcb46172ceb5ca878c34ef701660adc6e3",
+      "reviewedProduct": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "reviewedTree": "fdc061f1ab7bbb0b28f591550af391e500dc7c8b"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-focus-addendum.md",
+      "sha256": "bc7d057fa50c53c7d3014e0c44f7acbb16450a806c6e487aed6e27938c74cc20",
+      "reviewedProduct": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+      "reviewedTree": "eeae1c748b3e1e73be8686c3f1df325e2fac3824"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-focus-addendum.json",
+      "sha256": "69919306d203192f2797cf1598aca19a92b56e74923fffd0c527218ac893fc49",
+      "reviewedProduct": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+      "reviewedTree": "eeae1c748b3e1e73be8686c3f1df325e2fac3824"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-advantage-addendum.md",
+      "sha256": "6c6043d2478dff6722ed15e857edf8c6be9175f65d969165acdfe77a7e7150e5",
+      "reviewedProduct": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "reviewedTree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "consumers",
+      "file": "review-consumers-advantage-addendum.json",
+      "sha256": "fb2cad1267d21035b1a5a4dd25864d294be636bd908d946090e94fa6690f82ce",
+      "reviewedProduct": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "reviewedTree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-batch-addendum.md",
+      "sha256": "6452ee758bd9b7bf05e372c55007dc412da4d501dc9a14e8988e4fa63ad29b37",
+      "reviewedProduct": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "reviewedTree": "ffb3cd9e1ee689732cbae33658506c628539d032",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-batch-addendum.json",
+      "sha256": "a2e8faabee84a8f54bd206871e58a4823c5127c93653eaf9fc007b64034b06f0",
+      "reviewedProduct": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "reviewedTree": "ffb3cd9e1ee689732cbae33658506c628539d032",
+      "scope": "Scoped static review; execution linked separately"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-compose5-addendum.md",
+      "sha256": "4d07fc94569dd037432b0478e19ba43a862fffceee504b05d14a16a51ae3be80",
+      "reviewedProduct": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "reviewedTree": null,
+      "scope": "External owner inspection only"
+    },
+    {
+      "role": "authority",
+      "file": "review-authority-compose5-addendum.json",
+      "sha256": "93f1e348d9c463d04262236bc0c11d00df1cc727df33f5049d5c21f24791afc9",
+      "reviewedProduct": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "reviewedTree": null,
+      "scope": "External owner inspection only"
+    },
+    {
+      "role": "authority-independent-final",
+      "file": "review-authority-apply-final.md",
+      "sha256": "ea38ca5a81961444d90db7a716919c64dfffa8ac47faed31fd046190a6a55bc2",
+      "reviewedProduct": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "reviewedTree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+      "association": "Root verified remote commit file blobs equal both frozen reviewed blobs; report itself names blobs, not an invented commit",
+      "scope": "Final apply/CAS/receipt consistency static review; hosted execution recorded separately"
+    },
+    {
+      "role": "authority-independent-final",
+      "file": "review-authority-apply-final.json",
+      "sha256": "704375ea06723246f4c0a1fa109bcb603846b41fb1b071ada2dab09995966aaa",
+      "reviewedProduct": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "reviewedTree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+      "association": "Root verified remote commit file blobs equal both frozen reviewed blobs; report itself names blobs, not an invented commit",
+      "scope": "Final apply/CAS/receipt consistency static review; hosted execution recorded separately"
+    },
+    {
+      "role": "independent-core",
+      "file": "review-late-core.md",
+      "sha256": "760b757aa637c7a936e072068fc47c05708a0659ac6a2304cc8bdf7500bdab74",
+      "reviewedProduct": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "reviewedTree": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+      "scope": "Source-promotion proof and Hot Topic surface;4frozen blobs match W20.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-core",
+      "file": "review-late-core.json",
+      "sha256": "1885c5bd57f3415831b7706c2eaabacf8f981e25bb81294860ce01a8e5a4d26d",
+      "reviewedProduct": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "reviewedTree": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+      "scope": "Source-promotion proof and Hot Topic surface;4frozen blobs match W20.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-fixtures",
+      "file": "review-late-fixtures.md",
+      "sha256": "1dd602d3bb5f6a831099c2d42e5ae28ece5425638ce3db569f7d4aced0ac3470",
+      "reviewedProduct": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+      "reviewedTree": "77bef954682387ac0fdd3c01e7dd51b9201d2aac",
+      "scope": "Five S11/S12 fixture fixes;frozen blobs match W21.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-fixtures",
+      "file": "review-late-fixtures.json",
+      "sha256": "e8a6ce2d6a404a6567d041bbacd7b03dacb8e4731f3922b2bad07917a19ce778",
+      "reviewedProduct": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+      "reviewedTree": "77bef954682387ac0fdd3c01e7dd51b9201d2aac",
+      "scope": "Five S11/S12 fixture fixes;frozen blobs match W21.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "external-composition",
+      "file": "review-compose6.md",
+      "sha256": "17c54f6999b5eef6a113e79b2ef405cf9bea2e6f4428d74a35fea437496187e6",
+      "reviewedProduct": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "reviewedTree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "scope": "External historical C17 record-only path and current limits;not an independent review of that author own2fixes.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "external-composition",
+      "file": "review-compose6.json",
+      "sha256": "3e0d466c47818ecc1f2e3dffbf6be88515aaf8d9bbffed27ce6564045201adbc",
+      "reviewedProduct": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "reviewedTree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "scope": "External historical C17 record-only path and current limits;not an independent review of that author own2fixes.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-diagnostic",
+      "file": "review-current-choice-diagnostic.md",
+      "sha256": "a2401087149b18d6e11520f895fc8f23c89378622fedbb5a4785b51e141222d4",
+      "reviewedProduct": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+      "reviewedTree": "26843c698c3cf7b923d364434fae443a63efafaa",
+      "scope": "Diagnostic callback output preserved;no added source I/O or Planner replay;not a functional fix.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-diagnostic",
+      "file": "review-current-choice-diagnostic.json",
+      "sha256": "81d852d78061d7b2d5d2f1039e3a532de4fd6964f5dc2a36209c7894dc5fa7ba",
+      "reviewedProduct": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+      "reviewedTree": "26843c698c3cf7b923d364434fae443a63efafaa",
+      "scope": "Diagnostic callback output preserved;no added source I/O or Planner replay;not a functional fix.",
+      "execution": "Static only; product runs and actual assertions are recorded separately."
+    },
+    {
+      "role": "independent-bi-interaction",
+      "file": "review-bi-timeline.md",
+      "sha256": "e097ea0572769d67b5f7b10e1868264183bc50b91a0156562dc20014587f3de9",
+      "reviewedProduct": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "reviewedTree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "scope": "Timeline hit geometry and independent table-origin assertion;exact2frozen blobs published inW23;Actions scope separate."
+    },
+    {
+      "role": "independent-bi-interaction",
+      "file": "review-bi-timeline.json",
+      "sha256": "9e43ae288a64c760ca8132c6be24983385ce4026f6cff61c023b6a5737b83b83",
+      "reviewedProduct": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "reviewedTree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "scope": "Timeline hit geometry and independent table-origin assertion;exact2frozen blobs published inW23;Actions scope separate."
+    },
+    {
+      "role": "independent-pr40-intake",
+      "file": "review-wp11-latest3-independent.md",
+      "sha256": "2a42f66705918e36b4b591b0dd575b43623bd01a47d9e220f780a57bd25e5306",
+      "reviewedProduct": "c99d6dfb4f443b8f626010e78276874ae842f370",
+      "reviewedTree": "d6f28f45ac55c5d345b0694d02441849a2cf27d7",
+      "scope": "Six exactPR40blobs;final Hot Topic read and canonical source projection;no runtime qualification",
+      "execution": "Review scope is static unless the external report explicitly cites an existing exact owner run;product receipts remain separate."
+    },
+    {
+      "role": "independent-pr40-intake",
+      "file": "review-wp11-latest3-independent.json",
+      "sha256": "481502ea59674de374c678259f4ad694178be7627cc270356df98842617ce880",
+      "reviewedProduct": "c99d6dfb4f443b8f626010e78276874ae842f370",
+      "reviewedTree": "d6f28f45ac55c5d345b0694d02441849a2cf27d7",
+      "scope": "Six exactPR40blobs;final Hot Topic read and canonical source projection;no runtime qualification",
+      "execution": "Review scope is static unless the external report explicitly cites an existing exact owner run;product receipts remain separate."
+    },
+    {
+      "role": "independent-fixture-boundaries",
+      "file": "review-fixture-boundaries.md",
+      "sha256": "a8546dec9d3e9d5081856a1431449a9c4ab556e057cd55154e7e07e1407a3d66",
+      "reviewedProduct": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "reviewedTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "scope": "Three exactblobs;comparison-onlysetup preservesalloracles;currentchoice transparentdiagnostic",
+      "execution": "Review scope is static unless the external report explicitly cites an existing exact owner run;product receipts remain separate."
+    },
+    {
+      "role": "independent-fixture-boundaries",
+      "file": "review-fixture-boundaries.json",
+      "sha256": "9c5fae4db79b4b20b06193e264d3cd99778fce7c5b98fc294458500b460f68d2",
+      "reviewedProduct": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "reviewedTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "scope": "Three exactblobs;comparison-onlysetup preservesalloracles;currentchoice transparentdiagnostic",
+      "execution": "Review scope is static unless the external report explicitly cites an existing exact owner run;product receipts remain separate."
+    },
+    {
+      "role": "independent-fixture-initialization",
+      "file": "review-choice-prepared-initialization.json",
+      "sha256": "aa35ec34b7efacae8b01a9d5ad88e656651e6ca405dc05a40c6bb26c8fef5e7a",
+      "reviewedProduct": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "reviewedTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "scope": "Canonical source registries before C08/apply;exact1014fdc testblob",
+      "execution": "Review scope is static unless the external report explicitly cites an existing exact owner run;product receipts remain separate."
+    },
+    {
+      "role": "independent-external-composition",
+      "file": "latest-external-refresh.md",
+      "sha256": "40bd79b6e9e4823a8dcfa7c34cfac89cf344c1518bc680604bfa1d8ac11dad2c",
+      "reviewedProduct": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "reviewedTree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+      "scope": "Composeed10/Interfacecccd+4bd1 andactualownerCI; scopeandtimepreserved",
+      "execution": "Review scope is static unless the external report explicitly cites an existing exact owner run;product receipts remain separate."
+    },
+    {
+      "role": "independent-external-composition",
+      "file": "latest-external-refresh.json",
+      "sha256": "7a2e1faef0312263a7af2565ffd7ff16d638aa58d904295443f555a9ee2de06c",
+      "reviewedProduct": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "reviewedTree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+      "scope": "Composeed10/Interfacecccd+4bd1 andactualownerCI; scopeandtimepreserved",
+      "execution": "Review scope is static unless the external report explicitly cites an existing exact owner run;product receipts remain separate."
+    },
+    {
+      "role": "independent-receipt-consistency",
+      "file": "review-receipt-consistency.md",
+      "sha256": "8588b7fc00caf9ffdd4e66034d6e478f966dfb84c43bd891dd70622e93148788",
+      "reviewedProduct": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "reviewedTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "scope": "303 literalcriteria;14fulltasks;41origins;17CIreceipts at observation;3documentaryfindingsclosedstatically in9files;W21auditpreserved",
+      "execution": "Metadata/text only;S17pending at review and no product/native/C/Dacceptance."
+    },
+    {
+      "role": "independent-receipt-consistency",
+      "file": "review-receipt-consistency.json",
+      "sha256": "6f4408e31d946d7e23d08d6ec91f036bc0a8903169b594baddf837b63fded6a0",
+      "reviewedProduct": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "reviewedTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "scope": "303 literalcriteria;14fulltasks;41origins;17CIreceipts at observation;3documentaryfindingsclosedstatically in9files;W21auditpreserved",
+      "execution": "Metadata/text only;S17pending at review and no product/native/C/Dacceptance."
+    },
+    {
+      "role": "source-init-s17",
+      "file": "review-source-init-s17.md",
+      "sha256": "f0ec6fb0a102b58e8aadb4cf9469d481a0f15835e516ce60067b553ab280f640",
+      "reviewedProduct": "29172d2e4db859eedac31e84778c447bb97f6c08",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "source-init-s17",
+      "file": "review-source-init-s17.json",
+      "sha256": "e5a51296f39acba2d1cac98540fa8a14b52a3fa31146d30cc5e7e005bebf15ca",
+      "reviewedProduct": "29172d2e4db859eedac31e84778c447bb97f6c08",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "renewal-transaction",
+      "file": "review-renewal-transaction.md",
+      "sha256": "ef3025cfc5359a5242b8448e002d915a7bdfaa4d9c4cf9d58d4701444c1c7466",
+      "reviewedProduct": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "renewal-transaction",
+      "file": "review-renewal-transaction.json",
+      "sha256": "acdacf0910d11095b3f455e6168edad5bda8de079a979dab05e908636ddde20e",
+      "reviewedProduct": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "hot-topic-source-race",
+      "file": "review-hot-topic-s18.md",
+      "sha256": "8669c34d328aeeb955006add0e844b644deee565eeaa8c3d81f64a90f826b866",
+      "reviewedProduct": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "hot-topic-source-race",
+      "file": "review-hot-topic-s18.json",
+      "sha256": "f4168d5b5d0393d60e86bb52be083f19b0897a2bf1efe2f07925b952d0a71eb5",
+      "reviewedProduct": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "matcher-observation",
+      "file": "review-current-matcher-boundary.md",
+      "sha256": "b8159f2a0bce10d70fa11f1269aece83d2ac1eeea9f61c90aebac4b260f06296",
+      "reviewedProduct": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "matcher-observation",
+      "file": "review-current-matcher-boundary.json",
+      "sha256": "0d78c3619eda93a8ce82b0d5d07d950ee9a13d118f76525dc7e6952f389f17a7",
+      "reviewedProduct": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "pr40-d777-intake",
+      "file": "review-pr40-d777-independent.md",
+      "sha256": "99679f7fdbffd8bf31690f961590c2e849d7e477c8069cd34c0ad0568e704f6d",
+      "reviewedProduct": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "pr40-d777-intake",
+      "file": "review-pr40-d777-independent.json",
+      "sha256": "f0be093866cfc496e4daa59f5da28a1727fd884280a49db8cd6e958ef213d14c",
+      "reviewedProduct": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "remote-heads-observation",
+      "file": "final-heads-observation.md",
+      "sha256": "616d950221ee115af0ba9d91c6dd8192b29234af272a7a2c6aead7bc28e5c7d6",
+      "reviewedProduct": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "remote-heads-observation",
+      "file": "final-heads-observation.json",
+      "sha256": "ff33ed73830fdbb5722639e58c1722f8f4e57432834ddbc81c6d0026b09c962d",
+      "reviewedProduct": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "read-scope-required-capability",
+      "file": "review-read-scope-typeguard.md",
+      "sha256": "1aff84898187d275f27d73743c88fac5a59289d980f30f2964be3c2a2521a1a0",
+      "reviewedProduct": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "read-scope-required-capability",
+      "file": "review-read-scope-typeguard.json",
+      "sha256": "a911124b6de88ebb4b97ac24db18f594144c297ecaca2643a3dcf7d3ad565282",
+      "reviewedProduct": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "runtime-cause-confirmation",
+      "file": "current-choice-matcher-runtime-confirmation.md",
+      "sha256": "70120c0fb2ccc4f14e0c059b3d137f9f57de8f6d08e52d4567516da3b9cbfa2b",
+      "reviewedProduct": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "runtime-cause-confirmation",
+      "file": "current-choice-matcher-runtime-confirmation.json",
+      "sha256": "199c130cd37813fc892872f79c4157a649bcd29d8f9a5532a3c9a51eb8ab328f",
+      "reviewedProduct": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "scope": "Exact static review or completed-log observation at the file pins stated by this report; no integral native/C/D acceptance.",
+      "execution": "Product execution belongs only to the separately recorded GitHub Actions runs."
+    },
+    {
+      "role": "independent-frozen-documentary-audit-W31",
+      "file": "final-documentary-audit-W31.md",
+      "sha256": "206056096b246327515abf66b60c9cbfe2246e7d467a3eeec06a7375edb473f2",
+      "reviewedProduct": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "independent-frozen-documentary-audit-W31",
+      "file": "final-documentary-audit-W31.json",
+      "sha256": "f3d5e01e3b97df081665977f1c298ecf4900f3df6c9abbd8dc7e2e73d31f8225",
+      "reviewedProduct": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "independent-current-choice-fence-review",
+      "file": "review-dc9-choice-fence.md",
+      "sha256": "5adb4c864d618bc541e4095e3571db11c948a219ebe178fd7415153f0a42ac71",
+      "reviewedProduct": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "independent-current-choice-fence-review",
+      "file": "review-dc9-choice-fence.json",
+      "sha256": "83c617bfb5dc556b1680df26b0aef707f5596b7f8dd243407f5f2f89061f5d38",
+      "reviewedProduct": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "author-review-not-independent",
+      "file": "review-dc9-renewal-author.md",
+      "sha256": "043eff5c894141ca80849b6b7c2ef0a0b547d1e96669420f29cedcf0b827b4d8",
+      "reviewedProduct": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "author-review-not-independent",
+      "file": "review-dc9-renewal-author.json",
+      "sha256": "6fa078f76f4d160da0fe94ac13745c5792e960806c92e7ad6ada33d4f45870fa",
+      "reviewedProduct": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "independent-canonical-intake-review",
+      "file": "review-dc9-canonical-intake.md",
+      "sha256": "4979e4024c3f15e5ebbd08e0625454f91be6043f3b9599f6c40af0186f475d33",
+      "reviewedProduct": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "independent-canonical-intake-review",
+      "file": "review-dc9-canonical-intake.json",
+      "sha256": "5e0578eea65a27c6de52e592fc093986dbb250ec99e2a43fb5468f241d563111",
+      "reviewedProduct": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "scope": "Only exact static/content pins and boundaries stated in this report; prior W31 frozen documents remain a historical audit, not approval of W32.",
+      "execution": "Product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "author-review-not-independent",
+      "file": "review-s22-grouped-scope-author.md",
+      "sha256": "a38a8d71b3d039502a32b8f0d73dbf2dbf8ee33d21ef0d4926869f6dbc27ac7b",
+      "reviewedProduct": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "scope": "Exact four fixture/test pins only; no production financial or authorization change; runtime conclusions belong to S25/S26.",
+      "execution": "Static content review, no local product execution."
+    },
+    {
+      "role": "author-review-not-independent",
+      "file": "review-s22-grouped-scope-author.json",
+      "sha256": "38ce54a8f1f802f0db8451beb341631ff0edd612862d0430531078b1e421e86d",
+      "reviewedProduct": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "scope": "Exact four fixture/test pins only; no production financial or authorization change; runtime conclusions belong to S25/S26.",
+      "execution": "Static content review, no local product execution."
+    },
+    {
+      "role": "independent-consistent-read-scope-review",
+      "file": "review-s22-grouped-read-scope.md",
+      "sha256": "fc7b2e11b80fbd995cd52142ea618d9f18f16819f8ed7d33a4d019f2436c4a95",
+      "reviewedProduct": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "scope": "Exact four fixture/test pins only; no production financial or authorization change; runtime conclusions belong to S25/S26.",
+      "execution": "Static content review, no local product execution."
+    },
+    {
+      "role": "independent-consistent-read-scope-review",
+      "file": "review-s22-grouped-read-scope.json",
+      "sha256": "2edb03c22a6da3335422354948c5553f77b3f9b99c9072aa794d3fb7086948b1",
+      "reviewedProduct": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "scope": "Exact four fixture/test pins only; no production financial or authorization change; runtime conclusions belong to S25/S26.",
+      "execution": "Static content review, no local product execution."
+    },
+    {
+      "role": "independent-final-documentary-audit-W33",
+      "file": "final-documentary-audit-W33.md",
+      "sha256": "bfb70116dc924013b36b3add80b0698e4714e94666de78f785df69cdd68e83d6",
+      "reviewedProduct": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "scope": "36 exact frozen documentary files; only these two reports and their two manifest hash entries added afterward. No criterion acceptance or installed/native qualification.",
+      "execution": "303 documentary checks and 25 separate prose checks; product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    },
+    {
+      "role": "independent-final-documentary-audit-W33",
+      "file": "final-documentary-audit-W33.json",
+      "sha256": "88c3936e0a733bba1d570aac9a8d4931aaea912656de477e125af031b483f37e",
+      "reviewedProduct": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "scope": "36 exact frozen documentary files; only these two reports and their two manifest hash entries added afterward. No criterion acceptance or installed/native qualification.",
+      "execution": "303 documentary checks and 25 separate prose checks; product execution belongs exclusively to separately recorded GitHub Actions W/S."
+    }
+  ],
+  "historicalPostReviewImplementation": [
+    {
+      "finding": "financial:F1",
+      "commit": "df29a62e5ede5b9ff9344b4f5b51eba4102e2093",
+      "followup": "a274302d15990919007dbe958d95653508c730a7",
+      "state": "PUBLISHED_PENDING_ACTIONS_AND_ADDENDUM"
+    },
+    {
+      "finding": "authority:F2",
+      "commit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "runId": 43581387704,
+      "state": "OWN_PRODUCER_13_TESTS_PASS_PENDING_INDEPENDENT_ADDENDUM",
+      "external": "COMPOSE4306 wrapper still uses a binding-global replaying Map; bounded owner delta remains."
+    },
+    {
+      "finding": "consumers:C1",
+      "commit": "453edcd3c3c2a20413ef0d3f679b0fbc46fca2b5",
+      "state": "PUBLISHED_PENDING_ACTIONS_AND_ADDENDUM"
+    },
+    {
+      "finding": "consumers:C2",
+      "commit": "9913b0c622aa09da7914f231bd9f2ff54d872634",
+      "state": "PUBLISHED_PENDING_ACTIONS_AND_ADDENDUM"
+    }
+  ],
+  "currentReconciliation": "../external-reconciliation.json",
+  "currentCodeObservation": {
+    "head": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+    "tree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+    "finalValidation": "../final-validation.json",
+    "criterionOverlay": "../post-W21-criterion-bindings.json",
+    "sourceProvenance": "../source-provenance.json",
+    "externalPins": "../integration-pins-final.json",
+    "integralAcceptance": false,
+    "criterionOverlays": [
+      "../post-W21-criterion-bindings.json",
+      "../post-W31-criterion-bindings.json",
+      "../post-W32-criterion-bindings.json"
+    ]
+  },
+  "frozenW31DocumentaryCapture": {
+    "treeObject": "2cb4338fe0752e0ab0b197f6b9b7cfb264dc532d",
+    "treeNature": "Staged immutable Git tree, no branch publication or runtime claim; original frozen capture is independently audited.",
+    "freezeManifestSha256": "27d72c570803d6052bc00abe7cc0f556f570ef3f9a255175923fdcf22d2402cf",
+    "candidateCaptureSha256": "cf50a7fd30bac69a56975934756516a9570e14ea97779de827d3057ff0e14fc2",
+    "review": "final-documentary-audit-W31.json",
+    "subsequentChangesRequireSeparateAudit": true,
+    "freezeManifest": "final-documentary-audit-W31-freeze.json"
+  }
+}

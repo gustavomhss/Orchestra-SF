@@ -1,0 +1,326 @@
+{
+  "schema": "astra-independent-review-fixtures-v1",
+  "reviewer": "/root/review_late_core",
+  "createdAt": "2026-11-14T11:16:42.265919+00:00",
+  "status": "STATIC_REVIEW_COMPLETE_REMOTE_VALIDATION_PENDING",
+  "conclusion": "No additional blocking defect found in these five frozen fixture/test deltas. No production code was edited by the fixes, and the reviewer executed metadata checks only.",
+  "coreReviewSeparate": "review-late-core.json",
+  "reviewedHead": null,
+  "scope": [
+    "Two S12 fixture repairs authored by /root",
+    "Three S11 training quote fixture/test repairs authored by /root/bi_choice_failure"
+  ],
+  "baselineNote": "Exact baseline and reviewed blobs are recorded per file. S12 baseline bytes match W18 and were reported unchanged in published W19 by the parent. No older run is attributed to these reviewed bytes.",
+  "files": [
+    {
+      "group": "S12",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "baseline": {
+        "gitBlob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+        "sha256": "fc036f1a474858ae1f4d441f0f1b725d891754ae16fd6ffa5ee0d655a9411c92",
+        "bytes": 22877
+      },
+      "reviewed": {
+        "gitBlob": "310435389682b2892fc255a0eb60030ae7dda6a6",
+        "sha256": "d69b20bb17a263ae40620bb5e043f198ba7f6d4342311bf7c0949ed156b05fe4",
+        "bytes": 23730
+      },
+      "baselineSource": "finance-W18-changes.json, matched frozen previousBlob",
+      "unifiedDiff": "--- before/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts\n+++ reviewed/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts\n@@ -24,9 +24,10 @@\n   const fixture = await plannerFixture()\n   try {\n     for (const surface of [\"dashboard\", \"procurement\"] as const) await fixture.persistence.initializeSources(surface)\n-    const context = await fixture.admit(\"sf-human:planner.read\", {}, \"finance\", true)\n-    const http = fixture.host.requestFor(context)\n-    if (!http) throw new Error(\"Real UI authority unavailable\")\n+    let context = await fixture.admit(\"sf-human:planner.read\", {}, \"finance\", true)\n+    const initialHttp = fixture.host.requestFor(context)\n+    if (!initialHttp) throw new Error(\"Real UI authority unavailable\")\n+    let http: Request = initialHttp\n     const issuedSource = await fixture.issueSource(\"v0\", context)\n     if (issuedSource.status !== \"ok\") throw new Error(issuedSource.reason)\n     const sourceRef = issuedSource.value.evidence\n@@ -197,6 +198,17 @@\n       fixture.access.allowed = false\n       expect((await second.results.readHistoricalCalculation(currentSelection, context)).status).toBe(\"denied\")\n       fixture.access.allowed = true\n+      // Revocation permanently retires that admission; renewed access needs a new\n+      // real UI admission before testing unrelated source and incarnation changes.\n+      const revokedContext = context\n+      expect(await fixture.host.revalidate(revokedContext)).toBe(false)\n+      context = await fixture.admit(\"sf-human:planner.read\", {}, \"finance\", true)\n+      const renewedHttp = fixture.host.requestFor(context)\n+      if (!renewedHttp) throw new Error(\"Renewed UI authority unavailable\")\n+      http = renewedHttp\n+      expect(await fixture.host.revalidate(context)).toBe(true)\n+      expect(await second.results.readHistoricalCalculation(currentSelection, context)).toEqual(stored)\n+      expect((await second.results.readHistoricalCalculation(currentSelection, revokedContext)).status).toBe(\"denied\")\n       const changed = await fixture.persistence.transaction(\"planner\", async (snapshot) => {\n         const result = domain.execute(snapshot, { id: \"finance\", roles: [\"finance\"], canWrite: true, assigned: [], domains: [] }, { page: \"OPEX\", action: \"save\", id: \"line\", version: 0, values: { versionId: \"v0\", f10: 43 } }, { at: plannerAt, id: () => \"source-change\", directory: [] })\n         return { commit: result.ok, value: result }\n",
+      "expectCallCountBefore": 37,
+      "expectCallCountAfter": 41,
+      "timeoutsBefore": [
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000"
+      ]
+    },
+    {
+      "group": "S12",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "baseline": {
+        "gitBlob": "fe8e2173a1291efd8bed0305c8ef6b5c3e725a94",
+        "sha256": "da9dc478e5ec5becefb1926d14d1e14a960fd06a4e73fbfa77f4930d8512fa4c",
+        "bytes": 16597
+      },
+      "reviewed": {
+        "gitBlob": "90333c12d277942667810d6ed802e019e799f837",
+        "sha256": "64c9cc28a80437fa9d6ee37b5efc67f266506b4edfdc6c4bc877168e1346ef23",
+        "bytes": 17058
+      },
+      "baselineSource": "finance-W18-changes.json, matched frozen previousBlob",
+      "unifiedDiff": "--- before/modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts\n+++ reviewed/modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts\n@@ -141,7 +141,12 @@\n     // A confirmed backup restore is the supported producer that can reintroduce that ID.\n     expect((await current.app(request({ page: \"All Projects\", action: \"save\", version: 0, values: project }))).status).toBe(409)\n     const restoredBusiness = { projects: [project], roleMap: [{ surface: \"dashboard\", role: \"admin\", entra: \"attacker\", version: 999, by: \"attacker\" }], access: { attacker: { assigned: [project.id] } } }\n-    expect((await current.app(request(backup(restoredBusiness, 1)))).status).toBe(200)\n+    // The successful HTTP delete advanced the dataset CAS independently of the\n+    // immutable C08 history. Read that current revision for the confirmed restore.\n+    const afterDelete = await current.persistence.transaction(\"dashboard\", async (snapshot) => ({ commit: false, value: snapshot.versions.dataset?.version }))\n+    expect(afterDelete).toBe(2)\n+    if (afterDelete === undefined) throw new Error(\"Dataset revision unavailable after delete\")\n+    expect((await current.app(request(backup(restoredBusiness, afterDelete)))).status).toBe(200)\n     expect(await current.state.read(fixture.request, \"cases\", (state) => structuredClone(state))).toEqual(trusted)\n     const recreated = await current.records.issue(selection, fixture.context)\n     if (recreated.status !== \"ok\") throw new Error(`Recreated Dashboard source unavailable: ${recreated.reason}`)\n",
+      "expectCallCountBefore": 48,
+      "expectCallCountAfter": 49,
+      "timeoutsBefore": [
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000"
+      ]
+    },
+    {
+      "group": "S11",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "baseline": {
+        "gitBlob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056",
+        "sha256": "1b1d5c5d154710410c9a069d6d3fd9bdf24d9a546c85050cfc85a0686d7b771b",
+        "bytes": 9185
+      },
+      "reviewed": {
+        "gitBlob": "856381de3f333ca79b302483d3b8893d55f00441",
+        "sha256": "6326a5eca7578a08a506e8b5d26f57e02d4f9c710d0521d9d12270d0f6211683",
+        "bytes": 9405
+      },
+      "baselineSource": "bi-choice-failure-before captured copy matched frozen beforeBlob",
+      "unifiedDiff": "--- before/modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts\n+++ reviewed/modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts\n@@ -38,7 +38,9 @@\n     const previousDigest = digestSfValue(previous)\n     const copied = domain.execute(snapshot, author, { page: \"Versions\", action: \"copy\", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: revision.name } }, environment)\n     if (!copied.ok || copied.value !== versionId) throw new Error(`Planner copy rejected: ${JSON.stringify(copied)}`)\n-    const added = domain.execute(snapshot, author, { page: \"OPEX\", action: \"save\", id: revision.lineId, version: snapshot.versions[`${versionId}:lines:${revision.lineId}`]?.version ?? 0, values: revision.lineId === \"training\" ? { versionId, el: \"licenses\", cur: \"USD\", annual: 0, f10: revision.amount } : { versionId, f10: revision.amount } }, environment)\n+    // This synthetic quote confirms one November charge and zero charges in the\n+    // other months. A null forecast would remain an estimated budget fallback.\n+    const added = domain.execute(snapshot, author, { page: \"OPEX\", action: \"save\", id: revision.lineId, version: snapshot.versions[`${versionId}:lines:${revision.lineId}`]?.version ?? 0, values: revision.lineId === \"training\" ? { versionId, el: \"licenses\", cur: \"USD\", annual: 0, f: Array.from({ length: 12 }, (_, month) => month === 10 ? revision.amount : 0) } : { versionId, f10: revision.amount } }, environment)\n     if (!added.ok) throw new Error(`Planner quote rejected: ${JSON.stringify(added)}`)\n     if (digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== previousDigest) throw new Error(\"Copy changed the original source\")\n     const projection = projectPlannerSource(snapshot, reader, versionId)\n",
+      "expectCallCountBefore": 0,
+      "expectCallCountAfter": 0,
+      "timeoutsBefore": [],
+      "timeoutsAfter": []
+    },
+    {
+      "group": "S11",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "baseline": {
+        "gitBlob": "40fbaf6eb4a7b88c3f4feb54773961188cd007da",
+        "sha256": "628575be8788473057666c511a0f6f4955725cc2e6aac9454acdf0e36e2f1563",
+        "bytes": 15525
+      },
+      "reviewed": {
+        "gitBlob": "c939c5e39c80f3cdbc08fd700cd017a7b0ed50b4",
+        "sha256": "546a5bf18a4bd61bdf9d340cbe5d0bac16b75ff3d52ba2e78a511dda4be0291b",
+        "bytes": 16368
+      },
+      "baselineSource": "bi-choice-failure-before captured copy matched frozen beforeBlob",
+      "unifiedDiff": "--- before/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts\n+++ reviewed/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts\n@@ -69,6 +69,11 @@\n     expect(afterPhase.caseRef.id).toBe(history.before.caseRef.id)\n     expect(afterPhase.caseRef.incarnation).toBe(history.before.caseRef.incarnation)\n     expect(afterPhase.caseRef.version).toBeGreaterThan(chosen.caseRef.version)\n+    // Completeness must already belong to the canonical source result. BI may\n+    // not turn an estimated budget fallback into a confirmed monthly quote.\n+    expect(afterPhase.scenario).toEqual({ baseRef: \"transition-confirmed\", operations: [], assumptions: [] })\n+    expect(afterPhase.projection.components.filter((component) => component.id.startsWith(\"training:\")).map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, evidenceState: component.evidenceState }))).toEqual(Array.from({ length: 12 }, (_, month) => ({ id: `training:${month + 1}`, amount: month === 10 ? 40000 : 0, currency: \"USD\", evidenceState: \"confirmed\" })))\n+    expect(afterPhase.selectedResult).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: \"complete\", costCoverage: { coverageState: \"complete\" } })\n     const afterReader = consumer(afterPhase, history.fixture.host, await persistAdvantage(afterPhase, history.fixture.context))\n     const after = await afterReader.read(afterReader.selection, history.fixture.context)\n     expect(after.status).toBe(\"ok\")\n",
+      "expectCallCountBefore": 65,
+      "expectCallCountAfter": 68,
+      "timeoutsBefore": [
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000"
+      ]
+    },
+    {
+      "group": "S11",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "baseline": {
+        "gitBlob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+        "sha256": "e1245f8cce8f39a460b49ddd43cd266fb851fabff9f348b094ce653202acd5c4",
+        "bytes": 16241
+      },
+      "reviewed": {
+        "gitBlob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+        "sha256": "6688b1095ad923b429300f4fbcdc184d9cf5fef7e1d91eed9cbf5493b1818111",
+        "bytes": 16461
+      },
+      "baselineSource": "bi-choice-failure-before captured copy matched frozen beforeBlob",
+      "unifiedDiff": "--- before/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts\n+++ reviewed/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts\n@@ -104,7 +104,9 @@\n     const originalDigest = digestSfValue(previous)\n     const copied = domain.execute(snapshot, author, { page: \"Versions\", action: \"copy\", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: `Confirmed ${kind} quote` } }, environment)\n     if (!copied.ok || copied.value !== versionId) throw new Error(\"Canonical source copy rejected\")\n-    const saved = domain.execute(snapshot, author, { page: \"OPEX\", action: \"save\", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === \"training\" ? { versionId, el: \"licenses\", cur: \"USD\", annual: 0, f10: amount } : { versionId, f10: amount } }, environment)\n+    // The supplied training quote confirms one November charge and explicitly\n+    // no charges in the other months; omitted forecasts are not confirmed zeros.\n+    const saved = domain.execute(snapshot, author, { page: \"OPEX\", action: \"save\", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === \"training\" ? { versionId, el: \"licenses\", cur: \"USD\", annual: 0, f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) } : { versionId, f10: amount } }, environment)\n     if (!saved.ok || digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== originalDigest) throw new Error(\"Canonical quote revision changed its original source\")\n     const projection = projectPlannerSource(snapshot, reader, versionId)\n     if (!projection) throw new Error(\"Revised source unavailable\")\n",
+      "expectCallCountBefore": 0,
+      "expectCallCountAfter": 0,
+      "timeoutsBefore": [],
+      "timeoutsAfter": []
+    }
+  ],
+  "support": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "gitBlob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+      "bytes": 6876,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "gitBlob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "sha256": "ce0483cee32f81c4616ae51369152618da94784ea195f5f8c6c3bcdabf038a5f",
+      "bytes": 6477,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "gitBlob": "74fa17f6e08efeabe08820454bfde7cc309f36ad",
+      "sha256": "87d40d6504988b65e28bcda49c05f55cd367ef9364c42c51d6f664a237072183",
+      "bytes": 38175,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+      "gitBlob": "4b4ef9038d78d36e24450b574e9327c93f9b2a57",
+      "sha256": "0e196dcd4babb54e59378f55ad4e30dfa1eb111df259497a1d61a0c8ffd3e5b8",
+      "bytes": 2898,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "gitBlob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "sha256": "46129c8de9cc6531f3009e228039fb80b5ef8e7f03b834fe7ab0d604c04025c0",
+      "bytes": 106544,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "sha256": "724cabc70e417a23f740c5ccd8f15e71c49a2caca17e0c84d0b97faf98905100",
+      "bytes": 25809,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "gitBlob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "sha256": "e14759041d8b0c7854d1e5f3317e7780c69a6ae72950c10a2759762467eea674",
+      "bytes": 3068,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "gitBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd",
+      "bytes": 17443,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "gitBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "bytes": 11922,
+      "mode": "read-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "gitBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "sha256": "d550cf3e4c24b89f8eb224071f72f0f39bc3d7b0446eb790231fcdb3b92d7209",
+      "bytes": 24863,
+      "mode": "read-only"
+    }
+  ],
+  "findings": [
+    {
+      "id": "FIXTURE-S12-ADMISSION",
+      "severity": "P2",
+      "state": "FIX_PRESENT_IN_REVIEWED_CODE_PENDING_ACTIONS",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "diagnosis": "ui-authority.revalidate deletes the private admission when authorization is revoked. Changing the fixture allowed flag back to true cannot revive that lease.",
+      "assessment": "The fixture now admits and consumes a new real UI context and obtains its Request before continuing independent source/incarnation negatives. The old context is explicitly asserted invalid both before and after renewal; fresh context is asserted valid and can read the exact stored historical result. Existing negative cases and timeout remain."
+    },
+    {
+      "id": "FIXTURE-S12-DATASET-CAS",
+      "severity": "P2",
+      "state": "FIX_PRESENT_IN_REVIEWED_CODE_PENDING_ACTIONS",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "diagnosis": "The successful HTTP delete increments dataset version from 1 to 2. Dashboard backup-import compares command.version against the current dataset CAS.",
+      "assessment": "The successful restore reads current dataset revision and asserts it is exactly 2, then submits that revision. The later stale retry still submits 1 and requires 409. Private C08 metadata preservation, source incarnation replacement, old reference denial, roles/access protection and export assertions remain."
+    },
+    {
+      "id": "FIXTURE-S11-TRAINING-CALENDAR",
+      "severity": "P2",
+      "state": "FIX_PRESENT_IN_REVIEWED_CODE_PENDING_ACTIONS",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts"
+      ],
+      "diagnosis": "The prior fixture declared annual budget zero and only November forecast 40000. Eleven missing forecast entries cause estimated budget fallback; canonical coverage requires confirmed components, so total null was correct for that source.",
+      "assessment": "Only the synthetic quote inputs change: the real OPEX command receives twelve forecasts, November 40000 and eleven explicitly declared zero charges. No product qualifier, financial formula, permission or coverage assertion is relaxed. New pre-BI assertions require a source-only request, all twelve confirmed training components and the complete canonical 250000 result."
+    }
+  ],
+  "invariants": [
+    "No product formula, authorization or source projector edited",
+    "No former negative assertion removed",
+    "All touched test timeouts unchanged",
+    "Revoked UI context stays invalid; renewed access uses an independent admission",
+    "Dataset stale conflict remains a negative 409 assertion",
+    "Confirmed zero is explicit source data, never inferred from null",
+    "Old ChoiceRecord, before projection, no prepared changes, no receipts and not applied assertions preserved",
+    "Original Planner source digest checks remain in both quote fixture writers"
+  ],
+  "testCountsStatic": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "expectCallCountBefore": 37,
+      "expectCallCountAfter": 41,
+      "timeoutsBefore": [
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "expectCallCountBefore": 48,
+      "expectCallCountAfter": 49,
+      "timeoutsBefore": [
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "expectCallCountBefore": 0,
+      "expectCallCountAfter": 0,
+      "timeoutsBefore": [],
+      "timeoutsAfter": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "expectCallCountBefore": 65,
+      "expectCallCountAfter": 68,
+      "timeoutsBefore": [
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "expectCallCountBefore": 0,
+      "expectCallCountAfter": 0,
+      "timeoutsBefore": [],
+      "timeoutsAfter": []
+    }
+  ],
+  "consumerBoundary": "The late PR40 renewal-choice fixture consumes renewal-source-fixture. rg found no imports/callers of the old wp05 engine-revision helper outside its own definitions; that helper is consistency maintenance, not an exercised selected-consumer claim.",
+  "performanceRisk": {
+    "state": "OBSERVED_UPSTREAM_NOT_REMEASURED",
+    "upstreamManifest": "bi-choice-failure-files-ready.json",
+    "reportedRunId": 43586902727,
+    "reportedJobId": 132423255218,
+    "reportedDurationMs": 645858.41,
+    "declaredTimeoutMs": 180000,
+    "limit": "The reviewer did not independently download the run logs. This review does not claim a performance fix or infer runtime success from static fixture repair. The separate PR40 fixture restructuring must be measured on the new candidate."
+  },
+  "executedChecks": {
+    "productTests": 0,
+    "bunCommands": 0,
+    "ciRuns": 0,
+    "productEdits": 0,
+    "remoteWrites": 0,
+    "metadataOnly": [
+      "Git blob and SHA256 identity for five reviewed files and baselines",
+      "Unified diff comparison against frozen baselines",
+      "Static expect-call counts and timeout literal preservation",
+      "Read canonical UI authority, dataset CAS and Planner source/coverage control flow"
+    ]
+  },
+  "remaining": [
+    "Actions at exact published matching blobs for the two S12 tests",
+    "Actions at exact published matching blobs for choice-history-bi and affected renewal history/revision tests",
+    "Package typecheck/guards on the final candidate",
+    "Installed/native/C17 BI consumers, no fixture equivalence assumed",
+    "Observed S11 duration risk requires measured evidence; no timeout increase",
+    "Cross-domain Procurement source projector divergence remains integration-owned and is outside these five edits",
+    "Current-choice fixture diagnosis assigned elsewhere is excluded"
+  ],
+  "recommendation": "Preserve the five bounded fixes for parent publication and surgical Actions validation; no READY/DONE/native/global acceptance follows from this static review.",
+  "markdownArtifact": {
+    "path": "/workspace/scratch/a97ca4c53050/review-late-fixtures.md",
+    "sha256": "1dd602d3bb5f6a831099c2d42e5ae28ece5425638ce3db569f7d4aced0ac3470"
+  }
+}

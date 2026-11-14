@@ -1,0 +1,2370 @@
+{
+  "schema": "sf-finance-final-documentary-audit-w31-v1",
+  "author": "/root/finance_final_receipt_audit",
+  "completedAt": "2026-11-14T12:53:22.868023+00:00",
+  "verdict": "NO_DOCUMENTARY_BLOCKER_IN_FROZEN_W31_SCOPE",
+  "acceptance": {
+    "productAccepted": false,
+    "criterionFullyAccepted": false,
+    "nativeProof": null,
+    "C_G7": null,
+    "D_G8": null,
+    "S0BundleEpic": null
+  },
+  "scope": {
+    "productCode": {
+      "head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "tree": "82ea6bff11f9647d14cac30587ccd2feb80c6950"
+    },
+    "sourceObservationCut": "2026-11-14 12:19:40 UTC",
+    "latestIncludedPR40": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "documentationFiles": 29,
+    "sourceCommits": 45,
+    "productSelections": 21,
+    "hostedChecks": 14,
+    "metadataChecks": 228,
+    "allMetadataChecksPassed": true,
+    "frozenCaptureSha256": "cf50a7fd30bac69a56975934756516a9570e14ea97779de827d3057ff0e14fc2",
+    "frozenManifestSha256": "27d72c570803d6052bc00abe7cc0f556f570ef3f9a255175923fdcf22d2402cf",
+    "reportManifestSelfHashExcluded": true
+  },
+  "lateHeadExcluded": {
+    "sourcePR": 40,
+    "head": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+    "observedByRootAt": "2026-11-14 12:47:36 UTC",
+    "audited": false,
+    "qualificationTransferred": false,
+    "boundary": "This head, its three subsequently reported commits and six non-documentation paths, and every later intake are excluded. Their disposition belongs to a separate root addendum and independent review."
+  },
+  "immutableSources": {
+    "planCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "handoffCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "criteriaCounts": {
+      "WP03": 112,
+      "WP05": 108,
+      "WP11": 83
+    },
+    "taskCounts": {
+      "WP03": 5,
+      "WP05": 5,
+      "WP11": 4
+    },
+    "literalCriteriaExact": true,
+    "completeTaskObjectsExact": true,
+    "taskDeliveryMapW21BytesUnchanged": true
+  },
+  "confirmed": {
+    "documentationCapture": "All 29 unique paths are documentation, type blob and mode 100644; captured UTF-8 bytes, current local bytes, lengths, SHA256 and Git blob IDs agree.",
+    "criteria": "All 303 criterion IDs and literal texts equal the immutable packs, all criterion_fully_accepted remain false, and the 14 complete task objects plus scope/contracts/handoff are unchanged.",
+    "provenance": "45 unique source commit IDs match the increment ledger and the intake receipts: PR22 15, PR24 16, WP11/PR40 including initial branch 14. No source qualification transfer is claimed.",
+    "productReceipts": "21 sequential unique run receipts preserve W/S hashes, request hashes, raw log hashes, single attempts and snapshot diff .ci-run.json. Latest S19/S20/S21 summaries were compared with literal log text.",
+    "hostedChecks": "14 historical hosted receipts retained. Check14 remains package failure with 131 external and zero WP03/WP05/WP11 diagnostics; exact diagnostic positions/messages equal check12. Check14 raw log, ZIP and all three artifact members match their SHA256 values.",
+    "overlay": "18 additional property bindings refer to 12 existing literal criteria and six exact test blobs, with explicit full-criterion gaps and receipt lookup boundaries; they do not change the frozen W21 delivery map.",
+    "links": "127 relative Markdown links in the frozen candidate resolve locally or through the already recorded published manifest.",
+    "history": "Six previous W27 prose bodies are byte-for-byte suffixes under their new W31 headers. The previous external Markdown is preserved verbatim, and its JSON plus preceding history reconstruct exactly from the new historical record. All six original review files and 53 addenda match their recorded hashes.",
+    "integrationPins": "48 unique (head,path) integration pins; five same paths intentionally record distinct external/Finance versions. No deduplication by path alone is appropriate.",
+    "choiceBoundary": "The current-choice re-evaluation has complete coverage and known subtotal 250000 while remaining conditioned with total null because historical operations are hypothetical. A newly confirmed source yielding complete 250000, and a separate ChoiceRecord to reviewed proposal to application grant to persisted Planner receipt, are distinct proofs."
+  },
+  "latestProductReceipts": [
+    {
+      "selection": 19,
+      "runId": 43594791351,
+      "jobId": 132446885026,
+      "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "productTree": "7adcfb7d4687aa192b68eeddd3cce4fd0bf92d18",
+      "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+      "snapshotTree": "4ccdd3979631b2df4344ca7fcfaf4828062509fa",
+      "conclusion": "success",
+      "requestSha256": "e10e1d80f05899bdc57e4ccb68cc48e3732b7b66f5cb89d3619b6d51863e4fe3",
+      "logSha256": "ccf1eccb4f0a88c94996930d7f8420ba28d309147e8e654d62fcff62fd1e9e5c",
+      "counts": {
+        "pass": 21,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 448,
+      "reported": {
+        "tests": 21,
+        "files": 9,
+        "duration": 407.8,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 20,
+      "runId": 43594793696,
+      "jobId": 132446892033,
+      "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "productTree": "7adcfb7d4687aa192b68eeddd3cce4fd0bf92d18",
+      "snapshotSha": "14b1aac9f3b62b3d1b4f466a0fc214779a344667",
+      "snapshotTree": "e1db19116673412b6ea04121ad2e278b2561c3c0",
+      "conclusion": "success",
+      "requestSha256": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652",
+      "logSha256": "3e7c3efbc5acda27fe8415e6134e43990cb7ba3f57759b9c69a24a57e02f7cbd",
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 86,
+      "reported": {
+        "tests": 1,
+        "files": 1,
+        "duration": 113.3,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 21,
+      "runId": 43595579525,
+      "jobId": 132449221370,
+      "productSha": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "productTree": "82ea6bff11f9647d14cac30587ccd2feb80c6950",
+      "snapshotSha": "6c98bd185ed3041ecd6b1c9d6c3eb169968cd410",
+      "snapshotTree": "8dc65c7732ca687a9dabf8725ccdf35cb5277d81",
+      "conclusion": "success",
+      "requestSha256": "2d3178b76853ea35ae07adf39db18e30e440970a6619e25a09e817ec37c2b28e",
+      "logSha256": "86f8c9d2c5e4f7a036c471226f00d578b7f1a7d9418c8e8d4c56932bd47eaf77",
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 9,
+      "reported": {
+        "tests": 3,
+        "files": 1,
+        "duration": 396.0,
+        "unit": "ms"
+      }
+    }
+  ],
+  "latestHostedCheck": {
+    "runId": 43595368852,
+    "jobId": 132448599923,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43595368852",
+    "source": {
+      "productSha": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "productTree": "82ea6bff11f9647d14cac30587ccd2feb80c6950",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+    },
+    "conclusion": "failure",
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "conclusion": "failure",
+      "diagnostics": 131,
+      "attribution": {
+        "WP03": 0,
+        "WP05": 0,
+        "WP11": 0,
+        "external": 131
+      }
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 1033,
+      "warnings": 13,
+      "errors": 0
+    },
+    "rawMcpLogSha256": "fe08f52e1b93bee87bb8600407b9466fdfafdd71d4d7e38d25b4fba794dc7603",
+    "artifact": {
+      "id": 14114141034,
+      "sha256": "ffa9aa6f5cfb0cd40925708cf7a4297bf659cd0affd16af3389c2d81a02fef54",
+      "downloadedAndHashVerified": true,
+      "members": [
+        {
+          "name": "guards.log",
+          "sha256": "73e8188fc3de531737f3529c7358602374695a9e69c2ee5a213157890d8c8f86"
+        },
+        {
+          "name": "source.json",
+          "sha256": "6713d764ec0652bba943aa6f69b06087d611ee2f0fe4ac0524824485e7e376e7"
+        },
+        {
+          "name": "typecheck.log",
+          "sha256": "9d3b98c754286f19770057ade1cc4a169ed04b15bdf243eb77a8eeeab6654563"
+        }
+      ]
+    },
+    "productTests": false
+  },
+  "proseReview": {
+    "author": "/root/finance_final_receipt_audit/final_prose_boundaries",
+    "files": 11,
+    "sha256": "884c0250463b0bcb99a2273d99beeb1e5da0456486c15be166a29fcff5b2892e",
+    "verdict": "NO_STATIC_PROSE_BLOCKER_IN_FROZEN_SCOPE",
+    "scope": "Current sections and six W31 headers within the same frozen cutoff; no product execution."
+  },
+  "findings": [],
+  "limits": [
+    "Only frozen documentation and stable local receipt/source metadata were inspected. No product module was executed or imported; no Bun, tests, typecheck, guards, CI dispatch, remote write or remote head chase was performed by this reviewer.",
+    "No full criterion acceptance, installed/native provider proof, C/G7, D/G8 or S0 final bundle epic is established by this audit. Existing independent review history is preserved without converting it into acceptance of a later tree.",
+    "S19 and S20 ran on W30. S21 ran only the revised renewal-read-scope test on W31. The unchanged-product continuity is bounded to the one test capability guard recorded by the W31 capture; it is not a repeat of all suites on W31.",
+    "Focused-run Omni verdicts are not applicable and prove no Omni spawn. Empty artifact arrays for those scoped runs are not native proof.",
+    "External Compose/interface observations are pinned at the 12:19:40 UTC cut. Static correction of TS2345 in external Compose is not runtime qualification. Limited C17 prior protected capture is separate from the new stale-analysis historical read lease.",
+    "N/A classification, WP13 persisted/reopened/replay sensitivity, monthly editing and uncertain-response retry, Procurement canonical closure, installed BI/navigation and UI C05/C12 remain bounded owner/integration work as documented.",
+    "Historical timing and failed cases remain in the ledgers: no timeout or assertion was relaxed or failure relabeled by this review.",
+    "The 29-file manifest hash is the pre-report frozen capture. This report, its companion, their future reviews/manifest.json registration, any subsequent intake, and any future publication commit/tree are outside that self-hash claim."
+  ],
+  "frozenFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/criteria.json",
+      "beforeBlob": "6748e6cdd5146079f57c83eb7e759f7b3ce84626",
+      "candidateBlob": "f140cbe95139a2009e9bd0c4b8028754b54f3754",
+      "sha256": "9531e2d1f86d50d6f8269161a41e65ad7928d5649241e7278ede427b8c929cb3",
+      "bytes": 421545
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+      "beforeBlob": "1f302a3b5e4ba58836c9e7b402160b9287e6812e",
+      "candidateBlob": "4eb018ce37ba524a29544fabe0c4edb60d670cae",
+      "sha256": "c1bc2983db4b328366c56ad4fce8fe514dc1714dce2b12b860775871ffba64a7",
+      "bytes": 606624
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria.json",
+      "beforeBlob": "90d153582fe2e14831ae8bde2fef982f4f7f8ab9",
+      "candidateBlob": "aa3900752ab8cb40b6b534e7a3f258bad76d1ae9",
+      "sha256": "bfa7c7683bae03e757814b5696df8090d561b24f36f623bf328783fdada851fb",
+      "bytes": 917633
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "beforeBlob": "0e735dc0fa3f01f3a770c3b222a2d62e53a8827f",
+      "candidateBlob": "aa984d325beef3dcbcba5fd6d474ebe483d78910",
+      "sha256": "35c9552007b4c4154bf1590aa2d3124ebcb6a43f1279fce2cff842ef7a74c97a",
+      "bytes": 18233
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+      "beforeBlob": "6f1fa5623e1568056c7bd261764eb21cbf2386ad",
+      "candidateBlob": "eaf69954e4c0384e80d9b7bbaa0fb5401ff9c17a",
+      "sha256": "311230b793db88b41ac7db7d27d16c99c5515238aeb478b627b24ba7bb0b8e1e",
+      "bytes": 30236
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "beforeBlob": "1a708ab1a76e7020791df1d6015821e50c7a3acd",
+      "candidateBlob": "329911942f4437ecc369668672b7613149fa7c0c",
+      "sha256": "63590f3ff00d283d29c3c8a81749db2c050ceaf8747a06cd3abe755450538549",
+      "bytes": 12497
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "beforeBlob": "0a94a69187b8679ecef000f8ec9d1dc836ff9cfd",
+      "candidateBlob": "3b4070ea3e83ce71acef832550c43648e8d0e01d",
+      "sha256": "e14e1bd44dfd7abcbe24c7a2fe7cda47842a583b8ead4ff80147b57a99f6eee9",
+      "bytes": 7143
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+      "beforeBlob": "501396fdaaebd183b5ef2361d2890b84f3c288ba",
+      "candidateBlob": "00347716302b6abf94675fb7061f1f943a9f90dd",
+      "sha256": "0b970d7f355800f4771195d3c4ad3e78469c68d00d58745685256113257e894f",
+      "bytes": 16372
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+      "beforeBlob": "861b453d2f7e4fdde3f4568bc25c38a690ddee70",
+      "candidateBlob": "9749b45f6ad5b0cb240b6f27f8043ec049f265e6",
+      "sha256": "caf547ee6de39b01805a119c893d707b7e6e19d0315703a2fe7765a9042b2066",
+      "bytes": 15009
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/product-tests.json",
+      "beforeBlob": "9efe9c72124aef80585c129b6e64c139c687153c",
+      "candidateBlob": "c39d5b2a767c240765b24ca53de090c5d50192fd",
+      "sha256": "8665249d44a068624dc65da110ef920639055f04e497a44afcce6319a1d5b815",
+      "bytes": 116027
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/hosted-checks.json",
+      "beforeBlob": "3fd49da89c11f7f758acd3b12c9c0b46bd63c44b",
+      "candidateBlob": "d7d6419cfec5f57caaa817923b91e21762527ec1",
+      "sha256": "020e40841ca329dc206a99c28cd60ace5fd0e5fad29a6826b576308ff74f9145",
+      "bytes": 26500
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-typecheck-findings.json",
+      "beforeBlob": "f2cd38be0db6ebf8a0ba3615b9672864c0fd290f",
+      "candidateBlob": "be1cf3586a68b0ea2e56385773415837cc7e8dd8",
+      "sha256": "f8a539823eec54a4d6b672bb788c8e7a10ded1dd277dc52c3da754f7aa708637",
+      "bytes": 47541
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria-verification.json",
+      "beforeBlob": "c7b500f82dd7b2d0f4a3edf6c375543e359d97af",
+      "candidateBlob": "71443693d3b057759af36a6e66b35b5f7bc505b9",
+      "sha256": "187c4cd62eeee9a9ab0c85f0487a4b8d5b128143b239492acd6d48fca2912705",
+      "bytes": 1245
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/published-increments.json",
+      "beforeBlob": "f11c7f604784920a68f61fb9a87508e7c3cd4234",
+      "candidateBlob": "4ea5417add484acaf84333625d4894e11450fd10",
+      "sha256": "deb9864629cd102a9f6b371e9fc6f392d2c28668ef675c672c7bad9d405ae54f",
+      "bytes": 8403
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/remote-reconciliation.json",
+      "beforeBlob": "e853f70eca0663162438acc96d872526b21aea41",
+      "candidateBlob": "3b92c969adf3b46f7efbbf9f9e71c2dff1719fe6",
+      "sha256": "8bdd7db698b36d516706af7bc8b7ccf396d3b03e0fe4e569658d3b2ed290b4a9",
+      "bytes": 53747
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "beforeBlob": "073f8092c965f4a19177e78e1ebb1731281e7fee",
+      "candidateBlob": "558ec4177d194988fe916933faa4f5fdad52b709",
+      "sha256": "e07f446352b500b1019067c3da14290b91d660d05893d070e7f675a95840f25f",
+      "bytes": 31177
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/manifest.json",
+      "beforeBlob": "7006dded16c28a97609dfbc4702becb329f450bf",
+      "candidateBlob": "db4b3e53d4e8c262781cc0a64d0644b736953249",
+      "sha256": "ab79b078b1984fcd98705c136765ca4efe2adc692d412dbe148a2528eaa8b65c",
+      "bytes": 28106
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "beforeBlob": "7c8a434d3a17f1629715aa7363a9c6bb924b9f2b",
+      "candidateBlob": "12d6a8733ea6226026182a693858d15d5bd6fb82",
+      "sha256": "d2681b2944c68e9bfc957995f7e5e7e8153307e4c545667f25220d7a1e850f35",
+      "bytes": 24336
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.json",
+      "beforeBlob": "0d927c41aa49ea8f673476d59b4396cb4c12fb54",
+      "candidateBlob": "6b42fdc4a20154a1b10571c4c735b5a014122f5c",
+      "sha256": "9249f4cfdd0ed2ce8f5b8461d579c8da5ce5c4bae339971e1447c99be34b4662",
+      "bytes": 241915
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.md",
+      "beforeBlob": null,
+      "candidateBlob": "ce8f3fb6684f30b2f5e1229d3c10fcaca87742c9",
+      "sha256": "cb2e813c5ce5fbadab6cbc0ba020070d29f97ea24ec9a36c4025570f66f091dc",
+      "bytes": 8510
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.json",
+      "beforeBlob": null,
+      "candidateBlob": "24c882d867177949baf29db4b8d21ad49207d478",
+      "sha256": "c193b133b89ab3980c0512e970d77b02fe184b9b091c24c39c599d05a354bdba",
+      "bytes": 53602
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.md",
+      "beforeBlob": null,
+      "candidateBlob": "c37861159cf354b661021c6118b5138bb15fbe85",
+      "sha256": "c254fc05ba7a393761ff44d94e139a3b415d7ffee50356502247efd6a00fdba9",
+      "bytes": 19282
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.json",
+      "beforeBlob": null,
+      "candidateBlob": "5c11442a825a5407d599c3b787db2f080f2b4179",
+      "sha256": "7ca02c8ae85a51b1b300a2248220f2ed6a7addd51354f0f05ae289ac3e3be272",
+      "bytes": 45611
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/current-choice-matcher-runtime-confirmation.md",
+      "beforeBlob": null,
+      "candidateBlob": "8def2d1698291399e847398bda1888a6a4f831a7",
+      "sha256": "70120c0fb2ccc4f14e0c059b3d137f9f57de8f6d08e52d4567516da3b9cbfa2b",
+      "bytes": 4949
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/current-choice-matcher-runtime-confirmation.json",
+      "beforeBlob": null,
+      "candidateBlob": "e2759f1f0ea981ebba4a9b7e4a05e0a245078779",
+      "sha256": "199c130cd37813fc892872f79c4157a649bcd29d8f9a5532a3c9a51eb8ab328f",
+      "bytes": 4696
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.md",
+      "beforeBlob": null,
+      "candidateBlob": "5fc90e82ddae8dbb2822e3e28d30a2684ddd0e90",
+      "sha256": "c6a8a13b745a89cd636e581f8adec11a74fc390eb34d323646138b5ab1b6583c",
+      "bytes": 5180
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.json",
+      "beforeBlob": null,
+      "candidateBlob": "d7408cc1338897186183547119f1e0a4b66f8394",
+      "sha256": "0d33bec0d10794258ff362911ee19307bf6d97446d94bf221774fdd4fd3cb86a",
+      "bytes": 19638
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "beforeBlob": null,
+      "candidateBlob": "ae4ed1c35dd678333323f5580643bfa50a7cac64",
+      "sha256": "c1f56bc37897fc5c4bff0d35b1e3ec52b5e07d2089a88cbd9847f232f078b971",
+      "bytes": 11759
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.json",
+      "beforeBlob": null,
+      "candidateBlob": "e4ceb8a3d6fa49fd38b40c3accd122d4c7a12eea",
+      "sha256": "b3dcc6ec00ff2fb125881a87c2466a63fdcb2ba1d205b186d1ec67fe80382afa",
+      "bytes": 17791
+    }
+  ],
+  "checks": [
+    {
+      "check": "29 unique candidate paths",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/criteria.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/product-tests.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/hosted-checks.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-typecheck-findings.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria-verification.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/published-increments.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/remote-reconciliation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/manifest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/current-choice-matcher-runtime-confirmation.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/current-choice-matcher-runtime-confirmation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "freeze:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 literal criteria",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 no full acceptance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 complete tasks preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 pack checksum",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 obligation objective",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 obligation scope_in",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 obligation scope_out",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 obligation contract_reads",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 obligation contract_provides",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP03 obligation handoff",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 literal criteria",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 no full acceptance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 complete tasks preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 pack checksum",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 obligation objective",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 obligation scope_in",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 obligation scope_out",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 obligation contract_reads",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 obligation contract_provides",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP05 obligation handoff",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 literal criteria",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 no full acceptance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 complete tasks preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 pack checksum",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 obligation objective",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 obligation scope_in",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 obligation scope_out",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 obligation contract_reads",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 obligation contract_provides",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "WP11 obligation handoff",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "14 task count",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "published immutable task-delivery-map.json",
+      "passed": true,
+      "detail": {
+        "blob": "e25f3226da894867d968e5fa79709667eb0070ae",
+        "published": "e25f3226da894867d968e5fa79709667eb0070ae"
+      }
+    },
+    {
+      "check": "published immutable task-delivery-map.md",
+      "passed": true,
+      "detail": {
+        "blob": "4521101073c32af59414a12b7eb684781ade3034",
+        "published": "4521101073c32af59414a12b7eb684781ade3034"
+      }
+    },
+    {
+      "check": "published immutable task-obligations.json",
+      "passed": true,
+      "detail": {
+        "blob": "66eae5c7ca963be7b86812ed4561843ba268d953",
+        "published": "66eae5c7ca963be7b86812ed4561843ba268d953"
+      }
+    },
+    {
+      "check": "immutable campaign checksum",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "45 unique source commits equal ledger",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "source PR counts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "source no qualification transfer",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "32 initial source mapping",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "13 late source mappings and local receipts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "mapped intake-reconciliation-pr40-latest.json",
+      "passed": true,
+      "detail": {
+        "wanted": 2,
+        "got": 2
+      }
+    },
+    {
+      "check": "mapped intake-reconciliation-pr40-final-65509.json",
+      "passed": true,
+      "detail": {
+        "wanted": 2,
+        "got": 2
+      }
+    },
+    {
+      "check": "mapped final d777",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "21 selections ordered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "unique run IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S1 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S1 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S2 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S2 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S3 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S3 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S4 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S4 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S5 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S5 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S6 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S6 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S7 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S7 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S8 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S8 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S9 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S9 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S10 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S10 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S11 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S11 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S12 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S12 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S13 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S13 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S14 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S14 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S15 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S15 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S16 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S16 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S17 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S17 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S18 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S18 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S19 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S19 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S19 completed success and counts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S20 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S20 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S20 completed success and counts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S21 request and log hashes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S21 W S and execution boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S21 completed success and counts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no repeated W/request dispatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "14 hosted checks",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 preserved package failure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 guards",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 ZIP checksum",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 artifact member guards.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 artifact member source.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 artifact member typecheck.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 raw log checksum",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "check14 source W31",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay cardinality",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay file current-choice-lifecycle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay file choice-prepared-execution",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay file hot-topic-snapshot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay file promotion-coverage-proof",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay file renewal-choice-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay file renewal-read-scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.01",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.02",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.03",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.04",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.05",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.06",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.07",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.08",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.09",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.11",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.13",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.14",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.16",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.17",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "overlay binding WP11.POSTW21.18",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "W30 W31 one scoped test code path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-financial-report.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-financial-report.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-report.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-report.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-report.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-report.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-financial-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-financial-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-financial-presence-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-financial-presence-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-focus-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-focus-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-advantage-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-consumers-advantage-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-batch-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-batch-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-compose5-addendum.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-compose5-addendum.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-apply-final.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-authority-apply-final.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-late-core.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-late-core.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-late-fixtures.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-late-fixtures.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-compose6.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-compose6.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-current-choice-diagnostic.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-current-choice-diagnostic.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-bi-timeline.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-bi-timeline.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-wp11-latest3-independent.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-wp11-latest3-independent.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-fixture-boundaries.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-fixture-boundaries.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-choice-prepared-initialization.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest latest-external-refresh.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest latest-external-refresh.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-receipt-consistency.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-receipt-consistency.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-source-init-s17.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-source-init-s17.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-renewal-transaction.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-renewal-transaction.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-hot-topic-s18.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-hot-topic-s18.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-current-matcher-boundary.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-current-matcher-boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-pr40-d777-independent.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-pr40-d777-independent.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest final-heads-observation.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest final-heads-observation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-read-scope-typeguard.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest review-read-scope-typeguard.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest current-choice-matcher-runtime-confirmation.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "manifest current-choice-matcher-runtime-confirmation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "relative Markdown links resolve",
+      "passed": true,
+      "detail": {
+        "count": 127,
+        "missing": []
+      }
+    },
+    {
+      "check": "six original header bodies remain byte exact",
+      "passed": true,
+      "detail": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+          "priorBodyPreserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+          "priorBodyPreserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+          "priorBodyPreserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+          "priorBodyPreserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+          "priorBodyPreserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+          "priorBodyPreserved": true
+        }
+      ]
+    },
+    {
+      "check": "final validation duplicates latest product receipts exactly",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "final validation check14 equality",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "131 diagnostic locations and messages identical to check12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S19 literal log summary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S20 literal log summary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S21 literal log summary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "S19 current-choice matcher disposable observation log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "first PR40 additional five source IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "external prior JSON and full predecessor history structurally preserved",
+      "passed": true,
+      "detail": "Snapshot omits recursive historicalInspections; prior list remains unchanged as first two siblings. Reconstructing the original object is exactly equal."
+    },
+    {
+      "check": "external prior MD exact byte preservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "48 unique integration head/path pins",
+      "passed": true,
+      "detail": "Five paths intentionally appear at different heads: compose observation versus Finance-preserved fences; identity is head+path, not path alone."
+    }
+  ],
+  "relativeLinks": [
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "target": "../../WP11/finance-20261114/group-handoff.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "target": "../../WP11/finance-20261114/final-validation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "target": "../../WP11/finance-20261114/integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "target": "../../WP11/finance-20261114/external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "target": "../../WP11/finance-20261114/external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+      "target": "../../WP11/finance-20261114/group-handoff.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+      "target": "../../WP11/finance-20261114/final-validation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+      "target": "../../WP11/finance-20261114/integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+      "target": "../../WP11/finance-20261114/external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+      "target": "../../WP11/finance-20261114/external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "target": "group-handoff.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "target": "final-validation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "target": "integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "target": "external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+      "target": "external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "target": "../../WP11/finance-20261114/group-handoff.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "target": "../../WP11/finance-20261114/final-validation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "target": "../../WP11/finance-20261114/integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "target": "../../WP11/finance-20261114/external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "target": "advantage-selection-proposal.patch",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+      "target": "advantage-selection-proposal-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+      "target": "../../WP11/finance-20261114/group-handoff.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+      "target": "../../WP11/finance-20261114/final-validation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+      "target": "../../WP11/finance-20261114/integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+      "target": "../../WP11/finance-20261114/external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+      "target": "group-handoff.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+      "target": "final-validation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+      "target": "integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+      "target": "external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "intake-reconciliation-pr40.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "intake-reconciliation-pr40-latest.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "intake-reconciliation-pr40-final-65509.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "intake-reconciliation-pr40-final-d777.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "source-provenance.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "contract-intake.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "host-authority-intake.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "post-W21-criterion-bindings.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "task-obligations.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "../../WP03/finance-20261114/criteria.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "../../WP05/finance-20261114/criteria.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "criteria.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "task-delivery-map.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "task-delivery-map.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "external-reconciliation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "reviews/latest-external-refresh.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "reviews/final-heads-observation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "final-validation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "product-tests.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "hosted-checks.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "external-typecheck-findings.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "reviews/manifest.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "../../WP03/finance-20261114/owner-deltas.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "host-c17-proposal.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "../../WP05/finance-20261114/advantage-selection-proposal.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "procurement-projection-dependency.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+      "target": "external-reconciliation.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "reviews/final-heads-observation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "reviews/final-heads-observation.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "reviews/latest-external-refresh.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "intake-reconciliation-pr40-final-d777.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "integration-pins-final.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "external-reconciliation.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "product-tests.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "../../WP03/finance-20261114/monthly-consumer-proposal.diff.txt",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "reviews/latest-external-refresh.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "reviews/latest-external-refresh.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "external-reconciliation.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "remote-reconciliation.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "intake-reconciliation-pr40-final-65509.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "reviews/latest-external-refresh.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "../../WP03/finance-20261114/monthly-consumer-proposal.diff.txt",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "reviews/latest-external-refresh.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+      "target": "procurement-projection-dependency.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.md",
+      "target": "integration-pins-final.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.md",
+      "target": "post-W21-criterion-bindings.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.md",
+      "target": "product-tests.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.md",
+      "target": "criteria.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.md",
+      "target": "reviews/current-choice-matcher-runtime-confirmation.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.md",
+      "target": "hosted-checks.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.md",
+      "target": "integration-pins-final.md",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-pins.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-latest.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-latest.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-final-65509.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-final-65509.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-final-d777.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-final-d777.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-final-d777.json",
+      "exists": true,
+      "publishedOnly": false
+    },
+    {
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+      "target": "intake-reconciliation-pr40-final-d777.json",
+      "exists": true,
+      "publishedOnly": false
+    }
+  ]
+}

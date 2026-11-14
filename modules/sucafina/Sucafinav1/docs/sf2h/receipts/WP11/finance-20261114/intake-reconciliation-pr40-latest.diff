@@ -1,0 +1,1596 @@
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts
+@@ -2,100 +2,163 @@
+ import { digestSfValue } from "../../../product/contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
+ import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { CostCoverageBasis, DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
+ import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
+ import { createScenarioRequestStore } from "../../../product/decisions/scenario-request-store.ts"
+ import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+ import { createPlannerCalculationEvidence } from "../../../product/planner/calculation-evidence.ts"
+ import { createPlannerPort } from "../../../product/planner/port.ts"
+ import { openLocalStore } from "../../../runtime/local-store.ts"
+-import { createWp05SensitivityFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
++import { domain } from "../../../runtime/planner.ts"
++import { plannerAt, plannerFixture, plannerPeriod, plannerSnapshot } from "../wp03/planner-fixture.ts"
++import { createWp11FixtureTrace } from "./fixture-trace.ts"
+ 
+ test("nested C17 calculations reopen through persisted canonical requests and replay every ancestor", async () => {
+-  const startedAt = Date.now()
+-  const calls = { requestReads: 0, resultReads: 0, verifySources: 0, verifyCalculationSources: 0, verifyRequestSources: 0, recordEvidence: 0, calculationEvidence: 0, replays: 0 }
+-  const count = <T>(key: keyof typeof calls, read: () => Promise<T>) => { calls[key]++; return read() }
+-  const phase = async <T>(label: string, work: () => Promise<T>) => {
+-    const beganAt = Date.now()
+-    const before = { ...calls }
+-    console.info("WP11 C17 phase start", { label, elapsedMs: beganAt - startedAt, calls: before })
+-    try {
+-      const value = await work()
+-      console.info("WP11 C17 phase done", { label, elapsedMs: Date.now() - startedAt, durationMs: Date.now() - beganAt, calls: { ...calls }, delta: Object.fromEntries(Object.entries(calls).map(([key, value]) => [key, value - before[key as keyof typeof before]])) })
+-      return value
+-    } catch (error) {
+-      console.error("WP11 C17 phase failed", { label, elapsedMs: Date.now() - startedAt, durationMs: Date.now() - beganAt, calls: { ...calls } })
+-      throw error
+-    }
+-  }
+-  const fixture = await phase("sensitivity-fixture", () => createWp05SensitivityFixture({ mode: "renewal-usd", training: "omitted", composed: true }))
++  // Keep the W17 phase/callback diagnostics on the smaller canonical fixture.
++  const trace = createWp11FixtureTrace("calculation-persistence")
++  await trace.checkpoint("bootstrap-start")
++  const fixture = await trace.measure("bootstrap", () => calculationFixture(trace))
+   const compose = (persistence: Awaited<ReturnType<typeof openLocalStore>>) => {
+     const writes = new WeakSet<object>()
+     const ports: { producer?: ReturnType<typeof createPlannerCalculationEvidence>; next: number } = { next: 0 }
+-    const state = createSfProductState({ persistence, proposalCoverageWrites: writes, createId: () => "wp11-calculation-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request ? fixture.context.binding : undefined })
++    const state = trace.state(createSfProductState({ persistence, proposalCoverageWrites: writes, createId: () => "wp11-calculation-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? fixture.context.binding : undefined }))
+     const resolve: BusinessContextService["resolve"] = async (ref, context): Promise<BusinessEvidenceResolution> => {
+       if (ref.kind === "calculation") {
+-        calls.calculationEvidence++
+-        const replayed = await ports.producer?.issue(ref.target.runId, context)
++        const replayed = await trace.measure("evidence.calculation", async () => ports.producer?.issue(ref.target.runId, context))
+         return { state: replayed?.status === "ok" && digestSfValue(replayed.value) === digestSfValue(ref) ? "fresh" : "unavailable", ref, ...(replayed?.status === "ok" ? { currentRef: replayed.value } : {}), accessRevision: context.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
+       }
+-      calls.recordEvidence++
+-      const resolved = await fixture.evidence.resolve(ref, context)
++      const resolved = await trace.measure("evidence.record", () => fixture.evidence.resolve(ref, context))
+       if (resolved.state !== "fresh" || ref.kind !== "record" || ref.target.surface !== "planner") return resolved
+-      const projection = await fixture.planner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: wp05Horizon, currency: "USD" }, context)
++      const projection = await trace.measure("evidence.recordProjection", () => fixture.planner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: plannerPeriod, currency: "USD" }, context))
+       return projection.status === "ok" ? { ...resolved, currentRef: ref, authorizedProjection: projection.value.baseline } : { ...resolved, state: "unavailable" }
+     }
+     const evidence: BusinessContextService = { ...fixture.evidence, resolve, context: async ({ refs }, context) => Promise.all(refs.map((ref) => resolve(ref, context))) }
+     const planner = createPlannerPort({ host: fixture.host, sources: fixture.sources, evidence })
+-    const settings = { state, host: fixture.host, authorizeCase: async () => true, verifySources: async (_value: unknown, refs: readonly BusinessEvidenceRef[]) => count("verifySources", async () => (await Promise.all(refs.map((ref) => resolve(ref, fixture.context)))).every((value) => value.state === "fresh")), createId: () => `wp11-calculation-${++ports.next}`, now: () => "2026-11-13T00:00:00Z" }
+-    const results = createSfDecisionResultStore({ ...settings, verifyCalculationSources: (value, refs, context) => count("verifyCalculationSources", () => ports.producer ? ports.producer.verifyCalculationSources(value, refs, context) : Promise.resolve(false)) })
++    const settings = { state, host: fixture.host, authorizeCase: async (value: DecisionCase) => value.id === fixture.caseRef.id && value.incarnation === fixture.caseRef.incarnation && value.participants.includes(fixture.context.binding.principalRef) && await fixture.host.revalidate(fixture.context), verifySources: (_value: unknown, refs: readonly BusinessEvidenceRef[], context: Parameters<typeof resolve>[1]) => trace.measure("result.verifySources", async () => {
++      // Generic result access needs current scoped-source authorization. The separate
++      // canonical verifyCalculationSources callback still obtains an authorized financial
++      // projection and replays every ancestor. Do not run an extra forecast self-comparison
++      // merely to check a record's freshness; the actual source issuer checks its digest.
++      const observed = await Promise.all(refs.map((ref) => ref.kind === "record" ? fixture.evidence.resolve(ref, context) : resolve(ref, context)))
++      return observed.every((value) => value.state === "fresh")
++    }), createId: () => `wp11-calculation-${++ports.next}`, now: () => "2026-11-13T00:00:00Z" }
++    const results = createSfDecisionResultStore({ ...settings, verifyCalculationSources: (value, refs, context) => trace.measure("result.verifyCalculationSources", () => ports.producer ? ports.producer.verifyCalculationSources(value, refs, context) : Promise.resolve(false)) })
+     const requestSettings = { state, results, host: fixture.host, authorizeCase: async () => true, authorizeProducer: async () => true, verifySnapshot: () => true, operationIdentity: () => `wp11-request-${ports.next}`, writes }
+-    const requests = createScenarioRequestStore({ ...requestSettings, verifyRequestSources: (request, result, context) => count("verifyRequestSources", () => ports.producer ? ports.producer.verifyCalculationRequestSources(request, result, context) : Promise.resolve(false)) })
+-    const producer = createPlannerCalculationEvidence({ host: fixture.host, readForCalculation: (request, context) => count("resultReads", () => results.readForCalculation(request, context)), loadRecordOnlyRequest: (runId, context) => count("requestReads", () => requests.read(runId, context)), replayRecordOnly: (request, context) => count("replays", () => fixture.planner.simulateScenario(request, context)), nested: { replayScenario: (request, context) => count("replays", () => planner.simulateScenario(request, context)), evidence } })
++    const requests = createScenarioRequestStore({ ...requestSettings, verifyRequestSources: (request, result, context) => trace.measure("request.verifySources", () => ports.producer ? ports.producer.verifyCalculationRequestSources(request, result, context) : Promise.resolve(false)) })
++    const producer = createPlannerCalculationEvidence({ host: fixture.host, readForCalculation: (request, context) => trace.measure(`c17.result:${request.resultRef}`, () => results.readForCalculation(request, context)), loadRecordOnlyRequest: (runId, context) => trace.measure(`c17.request:${runId}`, () => requests.read(runId, context)), replayRecordOnly: (request, context) => trace.measure("planner.replay.record", () => fixture.planner.simulateScenario(request, context)), nested: { replayScenario: (request, context) => trace.measure("planner.replay.nested", () => planner.simulateScenario(request, context)), evidence } })
+     ports.producer = producer
+     return { state, results, requests, producer, planner, conservativeResults: createSfDecisionResultStore(settings), conservativeRequests: createScenarioRequestStore(requestSettings) }
+   }
+   try {
+     const first = compose(fixture.store)
++    const seed = await first.state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: 0, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: "calculation-case", commandDigest: digestSfValue(fixture.decision) }, async (state) => { state.cases[fixture.caseRef.id] = fixture.decision; return { commit: true, value: true } })
++    expect(seed.status).toBe("ok")
++    await trace.checkpoint("bootstrap-complete", first.state, fixture.request)
+     const persist = async (request: ScenarioRequest, idempotencyKey: string) => {
+-      const simulated = await phase(`${idempotencyKey}:simulate`, () => first.planner.simulateScenario(request, fixture.context))
++      const simulated = await trace.measure(`${idempotencyKey}:simulate`, () => first.planner.simulateScenario(request, fixture.context))
+       if (simulated.status !== "ok") throw new Error(simulated.reason)
+       const refs = [...simulated.value.sourceRefs, ...simulated.value.costCoverage.evaluatedSourceRefs].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
+-      const stored = await phase(`${idempotencyKey}:store`, () => first.results.write({ kind: "scenario", result: simulated.value, caseRef: fixture.caseRef, requestDigest: digestSfValue(request), sourceRefs: refs, idempotencyKey }, fixture.context))
++      const stored = await trace.measure(`${idempotencyKey}:store`, () => first.results.write({ kind: "scenario", result: simulated.value, caseRef: fixture.caseRef, requestDigest: digestSfValue(request), sourceRefs: refs, idempotencyKey }, fixture.context))
+       if (stored.status !== "ok") throw new Error(stored.reason)
+       if (stored.value.kind !== "scenario") throw new Error("Unexpected result kind")
+-      const binding = await phase(`${idempotencyKey}:request`, () => first.requests.register({ resultRef: stored.value.resultRef, request, engineVersion: "planner-runtime-v1" }, fixture.context))
++      const binding = await trace.measure(`${idempotencyKey}:request`, () => first.requests.register({ resultRef: stored.value.resultRef, request, engineVersion: "planner-runtime-v1" }, fixture.context))
+       expect(binding.status).toBe("ok")
+       if (binding.status !== "ok") throw new Error(binding.reason)
++      await trace.checkpoint(`persist:${idempotencyKey}:complete`, first.state, fixture.request)
+       return stored.value
+     }
+     const inner = await persist(fixture.scenario, "inner")
+-    const innerEvidence = await phase("inner:issue", () => first.producer.issue(inner.resultRef, fixture.context))
++    const innerEvidence = await trace.measure("inner:issue", () => first.producer.issue(inner.resultRef, fixture.context))
+     expect(innerEvidence.status).toBe("ok")
+     if (innerEvidence.status !== "ok") throw new Error(innerEvidence.reason)
+-    const outerRequest: ScenarioRequest = { ...fixture.scenario, operations: fixture.scenario.operations.map((operation) => operation.targetRef === "implementation:11" ? { ...operation, amount: 46000 } : operation), assumptions: [{ id: "ancestor-analysis", value: "Use the earlier scenario only as traceable analysis, without approving or applying it.", state: "hypothetical", evidenceRefs: [innerEvidence.value] }] }
++    await trace.checkpoint("inner-evidence:complete", first.state, fixture.request)
++    const outerRequest: ScenarioRequest = { ...fixture.scenario, operations: [{ kind: "replace", targetRef: "implementation:11", amount: 46000, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } }], assumptions: [{ id: "ancestor-analysis", value: "Use the earlier scenario only as traceable analysis, without approving or applying it.", state: "hypothetical", evidenceRefs: [innerEvidence.value] }] }
+     const outer = await persist(outerRequest, "outer")
+     expect(outer.result.knownSubtotal).toBe(211000)
+     expect(outer.result.total).toBeNull()
+     expect(outer.result.comparisonStatus).toBe("conditioned")
+-    expect(await phase("conservative:result", () => first.conservativeResults.readForCalculation({ resultRef: outer.resultRef }, fixture.context))).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
+-    expect(await phase("conservative:request", () => first.conservativeRequests.read(outer.resultRef, fixture.context))).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
+-    const issued = await phase("outer:issue", () => first.producer.issue(outer.resultRef, fixture.context))
++    expect(outer.result.currency).toBe("USD")
++    expect(outer.result.horizon).toEqual(plannerPeriod)
++    expect(await trace.measure("conservative:result", () => first.conservativeResults.readForCalculation({ resultRef: outer.resultRef }, fixture.context))).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
++    expect(await trace.measure("conservative:request", () => first.conservativeRequests.read(outer.resultRef, fixture.context))).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
++    const issued = await trace.measure("outer:issue", () => first.producer.issue(outer.resultRef, fixture.context))
+     expect(issued.status).toBe("ok")
+     if (issued.status !== "ok") throw new Error(issued.reason)
+     expect(issued.value.target.sourceRefs).toContainEqual(innerEvidence.value)
+-    expect(await phase("outer:resolve", () => first.producer.resolve(issued.value.refId, fixture.context))).toEqual(issued)
+-    const reopened = await phase("reopen:store", () => openLocalStore(fixture.directory))
++    expect(await trace.measure("outer:resolve", () => first.producer.resolve(issued.value.refId, fixture.context))).toEqual(issued)
++    await trace.checkpoint("outer-evidence:complete", first.state, fixture.request)
++    const reopened = await trace.measure("reopen:store", () => openLocalStore(fixture.directory))
+     try {
+       const second = compose(reopened)
+-      expect((await phase("reopen:request", () => second.requests.read(outer.resultRef, fixture.context))).status).toBe("ok")
+-      expect(await phase("reopen:issue", () => second.producer.issue(outer.resultRef, fixture.context))).toEqual(issued)
+-      fixture.revokeSource(fixture.scenario.baseRef)
+-      expect((await phase("revoked:result", () => second.results.readForCalculation({ resultRef: outer.resultRef }, fixture.context))).status).not.toBe("ok")
+-      expect((await phase("revoked:issue", () => second.producer.issue(outer.resultRef, fixture.context))).status).not.toBe("ok")
++      expect((await trace.measure("reopen:request", () => second.requests.read(outer.resultRef, fixture.context))).status).toBe("ok")
++      expect(await trace.measure("reopen:issue", () => second.producer.issue(outer.resultRef, fixture.context))).toEqual(issued)
++      await trace.checkpoint("reopened-ancestry:complete", second.state, fixture.request)
++      await trace.measure("source:revision", () => fixture.reviseSource(fixture.scenario.baseRef))
++      expect(await fixture.host.revalidate(fixture.context)).toBe(true)
++      expect((await trace.measure("revoked:result", () => second.results.readForCalculation({ resultRef: outer.resultRef }, fixture.context))).status).not.toBe("ok")
++      expect((await trace.measure("revoked:issue", () => second.producer.issue(outer.resultRef, fixture.context))).status).not.toBe("ok")
++      await trace.checkpoint("source-revision:complete", second.state, fixture.request)
+     } finally {
+-      await phase("reopen:dispose", () => reopened.dispose())
++      await reopened.dispose()
+     }
+   } finally {
+-    await phase("fixture:cleanup", () => fixture.cleanup())
++    await fixture.cleanup()
+   }
+ }, 180000)
++
++/** Minimal real Planner/SQLite/source-authority fixture; no unrelated sensitivity construction. */
++async function calculationFixture(trace: ReturnType<typeof createWp11FixtureTrace>) {
++  const snapshot = plannerSnapshot()
++  const months = (amount: number) => Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0)
++  snapshot.data.versions = [{ id: "v0", name: "Persisted C17 source", year: 2027, closed: 0, lines: [
++    { id: "bridge", sec: "opex", el: "licenses", cur: "USD", b: months(60000), a: Array(12).fill(null), f: months(60000) },
++    { id: "implementation", sec: "opex", el: "licenses", cur: "USD", b: months(45000), a: Array(12).fill(null), f: months(45000) },
++    { id: "new-service", sec: "opex", el: "licenses", cur: "USD", b: months(105000), a: Array(12).fill(null), f: months(105000) },
++  ], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
++  const fixture = await plannerFixture(snapshot)
++  try {
++    const context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
++    const request = fixture.host.requestFor(context)
++    if (!request) throw new Error("Real Planner UI authority unavailable")
++    const host = { ...fixture.host, revalidate: (trusted: Parameters<typeof fixture.host.revalidate>[0]) => trace.measure("host.revalidate", () => fixture.host.revalidate(trusted)) }
++    const issued = await fixture.issueSource("v0", context)
++    if (issued.status !== "ok") throw new Error(issued.reason)
++    const source = issued.value.evidence
++    const basis: CostCoverageBasis = { id: "calculation-source-coverage", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [source] }
++    const sources: PlannerSourceHost = {
++      resolveForecastSource: (reference, trusted) => trace.measure("source.resolve", () => fixture.sources.resolveForecastSource(reference, trusted)),
++      resolveForecastCoverage: (reference, trusted) => trace.measure("source.coverage", async () => {
++        if (reference !== source.refId || !await host.revalidate(trusted)) return { status: "unavailable" as const, reason: "calculation-coverage-unavailable" }
++        // No applicability claim is supplied by this persistence fixture.
++        return { status: "ok" as const, value: { coverageRef: "calculation-source-coverage", basis, assessment: { basisId: basis.id, basisVersion: basis.version, alternativeId: "scenario", alternativeVersion: 1, currency: "USD", horizon: plannerPeriod, coverageState: "pending" as const, entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending" as const, reason: "human-cost-classification-required" })), derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES], issues: ["human-cost-classification-required"], evaluatedSourceRefs: [source] } } }
++      }),
++    }
++    const evidence: BusinessContextService = {
++      resolve: async (ref, trusted) => {
++        const current = ref.kind === "record" ? await sources.resolveForecastSource(ref.refId, trusted) : undefined
++        return { state: current?.status === "ok" && digestSfValue(current.value.evidence) === digestSfValue(ref) ? "fresh" : "revoked", ref, accessRevision: trusted.binding.accessRevision, checkedAt: plannerAt }
++      },
++      context: async ({ refs }, trusted) => Promise.all(refs.map((ref) => evidence.resolve(ref, trusted))),
++      recall: async () => [], emitFromLedger: async () => { throw new Error("No memory publication in the persistence fixture") },
++    }
++    const caseRef = { id: "calculation-case", incarnation: "calculation-incarnation", version: 1 }
++    // The parent observes the same three real source components. Replacing all three
++    // with their existing amounts added no ancestry assertion but multiplied every
++    // canonical replay. The child still performs a real 46000 replacement and carries
++    // this source-only C17 parent; all ancestor, conservative-reader and CAS checks stay.
++    const scenario: ScenarioRequest = { baseRef: source.refId, operations: [], assumptions: [] }
++    const decision: DecisionCase = { ...caseRef, state: "investigating", objective: "Persist and reopen the canonical calculation ancestry", horizon: plannerPeriod, currency: "USD", criteria: [], participants: [context.binding.principalRef], sourceRefs: [source], alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++    const reviseSource = async (reference: string) => {
++      if (reference !== source.refId) throw new Error("Unknown calculation source")
++      const changed = await fixture.persistence.transaction("planner", async (value) => {
++        const result = domain.execute(value, { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }, { page: "OPEX", action: "save", id: "implementation", version: value.versions["v0:lines:implementation"]?.version ?? 0, values: { versionId: "v0", f10: 47000 } }, { at: plannerAt, id: () => "revoked-calculation-source", directory: [] })
++        return { commit: result.ok, value: result }
++      })
++      if (!changed.ok) throw new Error("Canonical source revision was refused")
++      expect((await sources.resolveForecastSource(source.refId, context)).status).not.toBe("ok")
++    }
++    return { ...fixture, host, context, request, caseRef, decision, scenario, sources, evidence, planner: createPlannerPort({ host, sources }), reviseSource, cleanup: fixture.close }
++  } catch (error) { await fixture.close(); throw error }
++}
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts
+@@ -258,9 +258,11 @@
+     const binding = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
+     const horizon = { start: "2027-01-01", end: "2027-12-31" }
+     const plannerRef = { schema: "sf-evidence-v1", kind: "record", refId: "planner", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: "base", incarnation: "base-inc", version: 1, fields: ["amount"], period: horizon, projectionDigest: "b".repeat(64) } } as const
+-    const scenario = { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [plannerRef], unresolvedConditions: ["training:missing-category"], restrictions: [], comparisonStatus: "conditioned", costCoverage: { basisId: "renewal", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [plannerRef], coverageState: "pending", entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"] }, knownSubtotal: 210000, total: null } as const
++    // This persistence fixture supplies a conditioned comparison; canonical amounts are covered separately.
++    const chosenOperation = { kind: "include", targetRef: "target" } as const
++    const scenario = { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [plannerRef], unresolvedConditions: ["training:missing-category"], restrictions: ["preview-not-applied"], comparisonStatus: "conditioned", costCoverage: { basisId: "renewal", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [plannerRef], coverageState: "pending", entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"] }, knownSubtotal: 210000, total: null } as const
+     const comparison = { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training:missing-category"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
+-    const decision = { id: "case", incarnation: "inc", version: 1, state: "comparing", objective: "transition", currency: "USD", horizon, criteria: [{ id: "cost", description: "cost", required: true }], participants: ["principal"], sourceRefs: [plannerRef], alternatives: [{ id: "a", version: 1, title: "replace", scenario: { baseRef: "base", operations: [], assumptions: [] }, result: scenario }], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: [] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
++    const decision = { id: "case", incarnation: "inc", version: 1, state: "comparing", objective: "transition", currency: "USD", horizon, criteria: [{ id: "cost", description: "cost", required: true }], participants: ["principal"], sourceRefs: [plannerRef], alternatives: [{ id: "a", version: 1, title: "replace", scenario: { baseRef: "base", operations: [chosenOperation], assumptions: [] }, result: scenario }], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: [] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
+     const proposalCoverageWrites = new WeakSet<object>()
+     const state = createSfProductState({ persistence: store, proposalCoverageWrites, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "b".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = decision; staged.decisionResults = { result: { schema: "sf-decision-result-v1", kind: "scenario", resultRef: "result", caseRef: { id: "case", incarnation: "inc", version: 1 }, principalRef: "principal", accessRevision: "access", policyVersion: "policy", requestDigest: digestSfValue(decision.alternatives[0].scenario), resultDigest: digestSfValue(scenario), sourceRefs: [plannerRef], createdAt: "2026-11-13T00:00:00Z", result: scenario } }; return { commit: true, value: true } })
+@@ -302,9 +304,9 @@
+     const proposalStore = createChangeProposalStore({ state, host, authorizeCase: async () => true, authorizeProposal: async () => true, verifySources: async () => true, verifySnapshot: () => true, operationIdentity: () => "proposal-operation", proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
+     const change = createChangeProposalService({ cases, host, store: proposalStore, resolvePreview, resolveChanges: async () => ({ status: "ok", value: { changes: [{ command: { id: "domain-command", target, expectedVersion: 0, idempotencyKey: "domain-key", commandDigest: "c".repeat(64), requiredAuthority: ["planner"], command: { page: "planner", action: "edit", version: 0, values: {} }, preview: {} as import("../../../product/contracts/context.ts").DomainProjection }, preview: scenario, targetEvidence }], conditions: [] } }), authorizeProposal: async () => true })
+     const changeDescriptors = createDecisionCapabilities({ cases, change, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "prepareChange", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })
+-    const changeProposal = await changeDescriptors.find((item) => item.id === "sf_change_prepare")!.handler({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
++    const changeProposal = await changeDescriptors.find((item) => item.id === "sf_change_prepare")!.handler({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [chosenOperation] }, binding)
+     expect(changeProposal.status).toBe("ok")
+-    const replayedProposal = await change({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
++    const replayedProposal = await change({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [chosenOperation] }, binding)
+     expect(replayedProposal.status).toBe("ok")
+     if (replayedProposal.status === "ok") {
+       const refs = replayedProposal.value.changes.map((item) => item.changeRef)
+@@ -319,11 +321,16 @@
+     expect(await mutations.recordChoice(request, binding)).toEqual(chosen)
+     expect((await mutations.recordChoice({ ...request, reason: "different" }, binding)).status).toBe("conflict")
+     const persisted = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
+-    if (persisted.status === "ok") expect(persisted.value).toMatchObject({ version: 2, state: "chosen", choices: [{ result: { knownSubtotal: 210000 }, comparison: { knownDifference: 30000 } }], ledger: [{ kind: "choice-recorded", principalRef: "principal" }] })
++    if (persisted.status === "ok") expect(persisted.value).toMatchObject({ version: 2, state: "chosen", choices: [{ scenario: { operations: [chosenOperation] }, result: { knownSubtotal: 210000, total: null, comparisonStatus: "conditioned", restrictions: ["preview-not-applied"] }, comparison: { knownDifference: 30000, completeDifference: null } }], ledger: [{ kind: "choice-recorded", principalRef: "principal" }] })
+     const question = await mutations.addQuestion({ caseRef: { id: "case", incarnation: "inc", version: 2 }, questionRef: "choice-event" }, binding)
+     expect(question.status).toBe("ok")
+     expect((await mutations.answerQuestion({ caseRef: { id: "case", incarnation: "inc", version: 3 }, questionId: "choice-event", answerRef: "answer" }, binding)).status).toBe("denied")
+-    const prepared = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
++    const unchosen = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [{ kind: "include", targetRef: "unselected-target" }] }, binding)
++    expect(unchosen).toEqual({ status: "conflict", reason: "operation-not-in-choice" })
++    const afterUnchosen = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
++    if (afterUnchosen.status !== "ok") throw new Error("case unavailable after rejected operation")
++    expect(afterUnchosen.value).toMatchObject({ version: 3, preparedChanges: [], receipts: [], choices: [{ scenario: { operations: [chosenOperation] }, result: { total: null, comparisonStatus: "conditioned" } }] })
++    const prepared = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [chosenOperation] }, binding)
+     expect(prepared.status).toBe("ok")
+     const after = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
+     if (after.status === "ok") expect(after.value).toMatchObject({ version: 4, preparedChanges: [{ state: "planned", choiceId: "choice-event", expectedVersion: 0, target: { incarnation: "target-inc", version: 1 } }] })
+@@ -342,7 +349,7 @@
+       expect(await mutations.addAlternative({ caseRef: { id: "case", incarnation: "inc", version: 4 }, title: "revised", scenario: { baseRef: "base", operations: [], assumptions: [] }, coverageRef: "coverage-2", alternativeRef: { id: "a", version: 1 } }, binding)).toEqual(updated)
+     }
+     const reconsidered = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
+-    if (reconsidered.status === "ok") expect(reconsidered.value).toMatchObject({ version: 5, state: "reconsidering", alternatives: [{ id: "a", version: 2 }], choices: [{ alternativeVersion: 1, result: { knownSubtotal: 210000 } }] })
++    if (reconsidered.status === "ok") expect(reconsidered.value).toMatchObject({ version: 5, state: "reconsidering", alternatives: [{ id: "a", version: 2 }], choices: [{ alternativeVersion: 1, scenario: { operations: [chosenOperation] }, result: { knownSubtotal: 210000, total: null, comparisonStatus: "conditioned" } }] })
+   } finally {
+     await store.dispose()
+     await rm(directory, { recursive: true, force: true })
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts
+@@ -0,0 +1,290 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { PreparedCommand } from "../../../product/contracts/context.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageAssessment, CostCoverageBasis, DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { ScenarioOperation, ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import { createPreparedExecution } from "../../../product/decisions/apply.ts"
++import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
++import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
++import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
++import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
++import { proposalReviewDigest } from "../../../product/decisions/receipt-review-binding.ts"
++import type { PreparedApplyRequest, ReviewDigestFor } from "../../../product/decisions/receipt-review-binding.ts"
++import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
++import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
++import { sfPlannerProjectionSelector } from "../../../product/integration/source-projections.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
++import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
++import { plannerPreparedRevision, preparePlannerMutation } from "../../../product/planner/prepared.ts"
++import { createPlannerPreparedReview } from "../../../product/planner/prepared-review.ts"
++import { createPlannerProduct } from "../../../product/planner/product.ts"
++import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
++import { rows } from "../../../runtime/contract.ts"
++import { plannerAt, plannerFixture, plannerPeriod, plannerSnapshot } from "../wp03/planner-fixture.ts"
++
++const origin = "https://example.test"
++const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
++const january = { start: "2027-01-01", end: "2027-01-31" }
++const caseRef = { id: "choice-to-domain", incarnation: "choice-to-domain-incarnation", version: 1 }
++type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
++
++// Real SQLite, scoped source issuer, canonical Planner calculation/preparation/review/apply
++// and private human/UI admissions. The requests are explicit test admissions, not evidence
++// of a person using an installed UI or a native resident session. No choice/change is seeded.
++test("a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it", async () => {
++  const initial = plannerSnapshot()
++  initial.data.versions = ["v0", "v1"].map((id) => ({ id, name: id, year: 2027, closed: 0,
++    lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(100) }],
++    fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {},
++  }))
++  const fixture = await plannerFixture(initial)
++  const contexts: TrustedUiContext[] = []
++  let finish: ((context: TrustedUiContext) => void) | undefined
++  try {
++    const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operationId: string }>()
++    const payloads = new WeakMap<TrustedUiContext, { action: SfHumanAction; payload: unknown }>()
++    const authorize = async (request: Request) => fixture.access.allowed && intents.has(request) && request.headers.get("authorization") === "finance"
++      ? { installationId: "i", projectId: "p", principalRef: "finance", accessRevision: "1", policyVersion: "1" } : undefined
++    const actions: SfHumanAction[] = ["decisions.portfolio.read", "decisions.choose", "decisions.prepare-changes", "decisions.apply"]
++    const ui = createSfUiAuthority({ authorize, commandIdentity: async (request, operation, digest) => {
++      const intent = intents.get(request)
++      return intent && operation === `sf-human:${intent.action}` && digest === intent.digest ? intent.operationId : undefined
++    }, privateCommands: actions.map((action) => `sf-human:${action}`), createId: randomUUID, now: () => Date.parse(plannerAt) })
++    const human = createSfHumanAuthority({ origin, ui })
++    finish = human.finish
++    const admit = async (action: SfHumanAction, payload: unknown, operationId: string) => {
++      const request = new Request(`${origin}/decisions`, { method: "POST", headers: { authorization: "finance", origin, "content-type": "application/json" }, body: JSON.stringify(payload) })
++      intents.set(request, { action, digest: digestSfValue(payload), operationId })
++      const admitted = await human.admit(request, action, payload)
++      if (admitted.status !== "ok") throw new Error(admitted.reason)
++      contexts.push(admitted.value)
++      payloads.set(admitted.value, { action, payload: structuredClone(payload) })
++      return admitted.value
++    }
++    const host: DomainPortHost = { ...fixture.host,
++      requestFor: (binding) => binding.kind === "ui" ? ui.requestFor(binding) : undefined,
++      revalidate: (binding) => binding.kind === "ui" ? ui.revalidate(binding) : Promise.resolve(false),
++    }
++    const readContext = await admit("decisions.portfolio.read", { caseRef }, "read-case")
++    const readRequest = host.requestFor(readContext)
++    if (!readRequest) throw new Error("Read authority unavailable")
++    const issuedRefs: RecordEvidence[] = []
++    const coverage = new Map<string, CostCoverageAssessment>()
++    const basis: CostCoverageBasis = { id: "choice-execution-basis", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: issuedRefs }
++    const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-choice-execution-proof" })
++    let resolveForecastSource: PlannerSourceHost["resolveForecastSource"] | undefined
++    const domainPlanner = createPlannerProduct({ host, scopedSources: fixture.persistence, coverageFor: async (reference, binding) => {
++      const assessment = coverage.get(reference)
++      const current = await resolveForecastSource?.(reference, binding)
++      if (!assessment || !current || current.status !== "ok" || !assessment.evaluatedSourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(current.value.evidence))) return { status: "unavailable", reason: "source-coverage-unavailable" }
++      return { status: "ok", value: { coverageRef: reference, basis, assessment } }
++    } })
++    resolveForecastSource = domainPlanner.sources.resolveForecastSource
++    for (const [index, id] of ["v0", "v1"].entries()) {
++      const issued = await domainPlanner.issueSource(id, readContext)
++      if (issued.status !== "ok") throw new Error(issued.reason)
++      const source = issued.value.evidence
++      issuedRefs.push(source)
++      coverage.set(source.refId, { basisId: basis.id, basisVersion: basis.version, alternativeId: index === 0 ? "baseline" : "selected", alternativeVersion: 1,
++        currency: "USD", horizon: plannerPeriod, evaluatedSourceRefs: [source], coverageState: "pending",
++        entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending", reason: "human-cost-classification-required" })),
++        derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES], issues: ["human-cost-classification-required"],
++      })
++    }
++    const selectedOperation: ScenarioOperation = { kind: "replace", targetRef: "line:1", amount: 42, currency: "USD", period: january }
++    const requests: ScenarioRequest[] = [
++      { baseRef: issuedRefs[0]!.refId, operations: [], assumptions: [] },
++      { baseRef: issuedRefs[1]!.refId, operations: [selectedOperation], assumptions: [] },
++    ]
++    const simulated = await Promise.all(requests.map((request) => domainPlanner.planner.simulateScenario(request, readContext)))
++    if (simulated[0]?.status !== "ok" || simulated[1]?.status !== "ok") throw new Error("Canonical alternatives unavailable")
++    const alternatives = [simulated[0].value, simulated[1].value].map((result, index) => ({ id: result.costCoverage.alternativeId, version: result.costCoverage.alternativeVersion, title: index === 0 ? "Keep forecast" : "Explicit January edit", scenario: requests[index]!, result }))
++    expect(alternatives.map((alternative) => alternative.result.knownSubtotal)).toEqual([1200, 1142])
++    expect(alternatives[1]!.result).toMatchObject({ total: null, comparisonStatus: "conditioned", restrictions: ["preview-not-applied"] })
++    const seed: DecisionCase = { ...caseRef, state: "comparing", objective: "Keep the chosen financial basis through a separately reviewed forecast edit", horizon: plannerPeriod, currency: "USD",
++      criteria: [{ id: "review-cost", description: "Review the known cost with unresolved coverage", required: true }], participants: ["finance"], sourceRefs: issuedRefs,
++      alternatives, costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [],
++    }
++    const state = createSfProductState({ persistence: fixture.persistence, authorize, createId: randomUUID, resolveTarget: async (_request, _snapshot, namespace, targetRef) => {
++      if (namespace === "cases" && targetRef === caseRef.id) return { incarnation: caseRef.incarnation }
++      if (namespace === "receipts" && targetRef === "v1") return { incarnation: issuedRefs[1]!.target.incarnation }
++      return undefined
++    } })
++    const seeded = await state.transaction(readRequest, { namespace: "cases", expectedStorageVersion: 0, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "seed-alternatives-only", commandDigest: digestSfValue(seed) }, async (value) => { value.cases[caseRef.id] = seed; return { commit: true, value: true } })
++    if (seeded.status !== "ok") throw new Error("Case setup unavailable")
++    const authorizeCase = async (decision: DecisionCase, binding: TrustedDomainContext) => decision.id === caseRef.id && decision.incarnation === caseRef.incarnation && decision.participants.includes(binding.binding.principalRef) && await host.revalidate(binding)
++    const readCase = async () => {
++      const current = await state.read(readRequest, "cases", (value) => value.cases[caseRef.id])
++      if (current.status !== "ok" || !current.value) throw new Error("Case unavailable")
++      return current.value
++    }
++    const verifySources = async (refs: readonly BusinessEvidenceRef[], binding: TrustedDomainContext) => {
++      for (const ref of refs) {
++        if (ref.kind !== "record") return false
++        const current = await domainPlanner.sources.resolveForecastSource(ref.refId, binding)
++        if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref)) return false
++      }
++      return host.revalidate(binding)
++    }
++    const evidence: BusinessContextService = {
++      resolve: async (ref, binding) => ({ state: await verifySources([ref], binding) ? "fresh" : "revoked", ref, accessRevision: binding.binding.accessRevision, checkedAt: plannerAt }),
++      context: async ({ refs }, binding) => Promise.all(refs.map((ref) => evidence.resolve(ref, binding))), recall: async () => [],
++      emitFromLedger: async () => { throw new Error("No native memory publication in this proof") },
++    }
++    const caseCoverage = createDecisionCoverageAccess({ state, host, authorizeCase, verifyEvidence: (inventory, assessment, binding) => verifySources([...inventory.sourceRefs, ...assessment.evaluatedSourceRefs], binding) })
++    const sources: PlannerSourceHost = { ...domainPlanner.sources, resolveForecastCoverage: (reference, binding) => reference.startsWith("case-coverage:") ? caseCoverage(reference, binding) : domainPlanner.sources.resolveForecastCoverage(reference, binding) }
++    const results = createSfDecisionResultStore({ state, host, authorizeCase, verifySources: (_value, refs, binding) => verifySources(refs, binding), createId: randomUUID, now: () => plannerAt })
++    const stored = []
++    for (const alternative of alternatives) {
++      const saved = await results.write({ kind: "scenario", caseRef, result: alternative.result, requestDigest: digestSfValue(alternative.scenario), sourceRefs: alternative.result.sourceRefs, idempotencyKey: alternative.id }, readContext)
++      if (saved.status !== "ok") throw new Error(saved.reason)
++      stored.push(saved.value.resultRef)
++    }
++    const verifier = createPlannerOperationVerifier({ host, planner: domainPlanner.planner, sources: domainPlanner.sources, scenarioInputs: domainPlanner.scenarioInputs })
++    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: (binding) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined,
++      authorizeCase, verifyScenarioOperations: async (decision, binding) => (await Promise.all(decision.alternatives.map((alternative) => verifier(alternative.scenario, binding)))).every(Boolean), evidence, createId: randomUUID, now: () => plannerAt,
++    })
++    const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: domainPlanner.planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
++    const planner = createPlannerPort({ host, sources, scenarios, evidence })
++    const prepareOne = async (operation: ScenarioOperation, binding: TrustedDomainContext) => {
++      if (digestSfValue(operation) !== digestSfValue(selectedOperation)) return undefined
++      const source = await domainPlanner.sources.resolveForecastSource(issuedRefs[1]!.refId, binding)
++      if (source.status !== "ok") return undefined
++      const snapshot = await fixture.readSnapshot()
++      const target = { surface: "planner" as const, type: "planner-version", id: "v1", incarnation: source.value.evidence.target.incarnation, version: source.value.evidence.target.version, fields: source.value.evidence.target.fields, period: plannerPeriod, observedAt: plannerAt }
++      // Fixture routing for this one selected field; arithmetic and the command digest are
++      // produced by the published Planner. This is not a generic production operation mapper.
++      const produced = preparePlannerMutation({ snapshot, actor, environment: { at: plannerAt, id: randomUUID, directory: [] }, context: binding, target, evidence: source.value.evidence,
++        scope: { principalRef: "finance", accessRevision: "1", policyVersion: "1", recordType: "planner-version", recordId: "v1", selector: sfPlannerProjectionSelector(snapshot, actor) },
++        command: { page: "OPEX", action: "save", id: "line", version: snapshot.versions["v1:lines:line"]?.version ?? 0, values: { versionId: "v1", f0: operation.amount } }, operationId: "selected-forecast-operation", idempotencyKey: "selected-forecast-edit",
++      })
++      const line = produced?.preview && rows(produced.preview.lines).find((item) => item.id === "line")
++      if (!produced || !line || !Array.isArray(line.f) || typeof line.f[0] !== "number") return undefined
++      const projection = await domainPlanner.planner.compareForecast({ baseRef: source.value.evidence.refId, candidateRef: source.value.evidence.refId, period: plannerPeriod, currency: "USD" }, binding)
++      if (projection.status !== "ok") return undefined
++      const command: PreparedCommand = { id: "selected-forecast-operation", target, command: produced.command, expectedVersion: produced.command.version, idempotencyKey: "selected-forecast-edit", commandDigest: produced.mutation.commandDigest, requiredAuthority: ["finance"],
++        preview: { context: projection.value.baseline.context, version: target.version, engineVersion: "planner-runtime-v1", components: [], missing: [], values: [{ id: "line:1:forecast", value: line.f[0], currency: "USD", period: january, granularity: "month", sourceRefs: [source.value.evidence], drilldown: source.value.evidence, evidenceState: "confirmed" }] },
++      }
++      return { command, targetEvidence: source.value.evidence }
++    }
++    const actionFor = (operation: string): SfHumanAction | undefined => operation === "record-choice" ? "decisions.choose" : operation === "prepare-changes" ? "decisions.prepare-changes" : undefined
++    const mutations = createDecisionMutations({ state, host, planner, sources, authorizeCase,
++      authorizeMutation: async (operation, payload, binding) => { const action = actionFor(operation); return !!action && human.authorize(binding, action, payload) },
++      verifyMutation: (snapshot, operation, payload, binding) => {
++        const action = actionFor(operation)
++        return !!action && binding.kind === "ui" && ui.matchesIntent(binding, `sf-human:${action}`, digestSfValue(payload)) && issuedRefs.every((ref) => {
++          const projection = projectPlannerSource(snapshot, actor, ref.target.recordId)
++          return !!projection && digestSfValue({ versionId: ref.target.recordId, projection }) === ref.target.projectionDigest
++        })
++      }, operationIdentity: (binding) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined,
++      confirmChoice: async (ref, alternativeId, binding) => {
++        const admitted = binding.kind === "ui" ? payloads.get(binding) : undefined
++        if (admitted?.action !== "decisions.choose" || !admitted.payload || typeof admitted.payload !== "object" || !("caseRef" in admitted.payload) || !("alternativeId" in admitted.payload)) return false
++        return digestSfValue(admitted.payload.caseRef) === digestSfValue(ref) && admitted.payload.alternativeId === alternativeId && human.authorize(binding, admitted.action, admitted.payload)
++      }, resolveQuestion: unavailable, resolveAnswer: unavailable, confirmAnswer: async () => false,
++      resolveChoiceValues: async (_ref, request, binding) => { const compared = await planner.compareScenarios(request, binding); return compared.status === "ok" ? { status: "ok", value: [{ criterionRef: "review-cost", value: compared.value.knownDifference, unit: "USD", currency: "USD", horizon: plannerPeriod }] } : compared },
++      readScenarioResult: (resultRef, binding) => results.readHistoricalScenario({ resultRef }, binding),
++      prepareDomainCommands: async (ref, choiceId, operations, binding) => {
++        const decision = await readCase()
++        const choice = decision.choices.find((item) => item.id === choiceId)
++        if (!choice || decision.version !== ref.version || operations.length !== 1 || digestSfValue(choice.scenario.operations) !== digestSfValue(operations)) return { status: "denied", reason: "selection-unavailable" }
++        const prepared = await prepareOne(operations[0]!, binding)
++        return prepared ? { status: "ok", value: [{ ...prepared, preview: choice.result }] } : { status: "unavailable", reason: "canonical-preparation-unavailable" }
++      }, createId: randomUUID, now: () => plannerAt,
++    })
++    const official = async () => { const snapshot = await fixture.readSnapshot(); return structuredClone({ versions: snapshot.data.versions, officials: snapshot.data.officials, revisions: snapshot.versions, audit: snapshot.audit }) }
++    const before = await official()
++    const choiceRequest = { caseRef, alternativeId: "selected", alternativeVersion: 1, comparison: { scenarioRefs: stored, criteria: ["review-cost"] }, criteria: ["review-cost"], reason: "Review the January forecast separately; cost coverage and criterion evaluation remain unresolved, and no approval is implied." }
++    expect((await mutations.recordChoice(choiceRequest, readContext)).status).toBe("denied")
++    const choiceContext = await admit("decisions.choose", choiceRequest, "human-choice")
++    const chosen = await mutations.recordChoice(choiceRequest, choiceContext)
++    expect(chosen.status).toBe("ok")
++    if (chosen.status !== "ok") throw new Error(chosen.reason)
++    const afterChoice = await readCase()
++    expect(afterChoice.choices).toHaveLength(1)
++    expect(afterChoice.preparedChanges).toEqual([])
++    expect(afterChoice.receipts).toEqual([])
++    const choice = structuredClone(afterChoice.choices[0]!)
++    expect(choice.result).toEqual(alternatives[1]!.result)
++    expect(choice.comparison).toMatchObject({ knownDifference: -58, completeDifference: null, comparisonStatus: "conditioned", criterionResults: [{ criterionId: "review-cost", state: "unknown" }] })
++    expect(await official()).toEqual(before)
++    const prepareRequest = { caseRef: chosen.value.caseRef, choiceId: choice.id, operations: [selectedOperation] }
++    expect((await mutations.prepareChanges(prepareRequest, choiceContext)).status).toBe("denied")
++    const prepareContext = await admit("decisions.prepare-changes", prepareRequest, "human-prepare")
++    const prepared = await mutations.prepareChanges(prepareRequest, prepareContext)
++    expect(prepared.status).toBe("ok")
++    if (prepared.status !== "ok") throw new Error(prepared.reason)
++    const afterPrepare = await readCase()
++    expect(afterPrepare.preparedChanges).toHaveLength(1)
++    const change = afterPrepare.preparedChanges[0]!
++    expect(change).toMatchObject({ choiceId: choice.id, state: "planned", target: { surface: "planner", id: "v1" }, operation: { command: { action: "save", values: { versionId: "v1", f0: 42 } } } })
++    expect(change.preview).toEqual(choice.result)
++    expect(afterPrepare.choices).toEqual([choice])
++    expect(await official()).toEqual(before)
++    expect(await mutations.prepareChanges(prepareRequest, prepareContext)).toEqual(prepared)
++    const review = createPlannerPreparedReview({ host, issueSource: domainPlanner.issueSource })
++    const reviewed = await review(change.operation, readContext)
++    expect(reviewed.status).toBe("ok")
++    if (reviewed.status !== "ok") throw new Error(reviewed.reason)
++    expect(reviewed.value.fields).toEqual([{ field: "line:1:forecast", before: 100, after: 42, beforeCurrency: "USD", afterCurrency: "USD" }])
++    const reviewDigest = proposalReviewDigest({ caseId: caseRef.id, caseIncarnation: caseRef.incarnation, changeCaseVersion: change.caseVersion, choiceDigest: digestSfValue(choice), change, fields: reviewed.value.fields, sourceRefDigest: reviewed.value.source.refDigest })
++    const reviewedGrants = new WeakMap<TrustedUiContext, string>()
++    const reviewDigestFor: ReviewDigestFor = (binding, incoming, selected) => binding.kind === "ui" && incoming.changeId === selected.id && incoming.choiceId === choice.id ? reviewedGrants.get(binding) : undefined
++    const appliedRequest: PreparedApplyRequest = { caseRef: prepared.value.caseRef, choiceId: choice.id, changeId: change.id }
++    const producer = createSfPreparedApply({ state, host, authorizeCase, authorizeLookup: async (_lookup, binding) => host.revalidate(binding), authorizeReceipt: async (receipt, lookup, binding) => receipt.principalRef === binding.binding.principalRef && receipt.surface === lookup.surface && await host.revalidate(binding),
++      confirmHuman: (request, _change, binding) => human.authorize(binding, "decisions.apply", request), reviewDigestFor, resolveActor: (_snapshot, binding) => binding.binding.principalRef === actor.id ? actor : undefined,
++      resolveMutation: (snapshot, selected, currentActor, binding) => {
++        const source = selected.operation.preview.values[0]?.sourceRefs[0]
++        if (source?.kind !== "record") return undefined
++        return preparePlannerMutation({ snapshot, actor: currentActor, environment: { at: plannerAt, id: randomUUID, directory: [] }, context: binding, target: selected.target, evidence: source,
++          scope: { principalRef: currentActor.id, accessRevision: "1", policyVersion: "1", recordType: "planner-version", recordId: "v1", selector: sfPlannerProjectionSelector(snapshot, currentActor) }, command: selected.operation.command, operationId: selected.operation.id, idempotencyKey: selected.idempotencyKey })?.mutation
++      }, verifyGrant: (_snapshot, _request, _change, currentActor, binding) => currentActor.id === binding.binding.principalRef && currentActor.canWrite && currentActor.roles.includes("finance"), receiptVersion: (snapshot, selected) => plannerPreparedRevision(snapshot, selected.operation.command), environment: () => ({ at: plannerAt, id: randomUUID, directory: [] }), createId: randomUUID, now: () => plannerAt,
++    })
++    const counters = { dispatch: 0 }
++    const execute = createPreparedExecution({ state, host, apply: { ...producer, executePrepared: async (request, binding) => { counters.dispatch++; return producer.executePrepared(request, binding) } }, authorizeCase,
++      authorizeApplication: (request, _change, binding) => human.authorize(binding, "decisions.apply", request), confirmApplication: (request, binding) => human.authorize(binding, "decisions.apply", request), operationIdentity: (binding) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined, reviewDigestFor,
++      revalidateProducer: async (_request, binding) => { const current = await review(change.operation, binding); return current.status === "ok" ? { status: "ok", value: { reviewDigest: proposalReviewDigest({ caseId: caseRef.id, caseIncarnation: caseRef.incarnation, changeCaseVersion: change.caseVersion, choiceDigest: digestSfValue(choice), change, fields: current.value.fields, sourceRefDigest: current.value.source.refDigest }) } } : current },
++      classifyReceipt: async (receipt, _change, binding) => {
++        if (!await host.revalidate(binding)) return undefined
++        const ref: Extract<BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", kind: "receipt", refId: receipt.id, installationId: "i", projectId: "p", evidenceLevel: "observed", refDigest: "", target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
++        return { state: receipt.result.ok ? "applied" : "conflict", evidence: { ...ref, refDigest: digestSfEvidenceRef(ref) } }
++      },
++    })
++    expect((await execute(appliedRequest, prepareContext)).status).not.toBe("ok")
++    expect(counters.dispatch).toBe(0)
++    expect(await official()).toEqual(before)
++    const applyContext = await admit("decisions.apply", appliedRequest, "human-apply-after-review")
++    reviewedGrants.set(applyContext, reviewDigest)
++    const applied = await execute(appliedRequest, applyContext)
++    expect(applied).toMatchObject({ status: "ok", value: { surface: "planner", version: 1, result: { ok: true } } })
++    if (applied.status !== "ok") throw new Error(applied.reason)
++    const final = await readCase()
++    expect(final.choices).toEqual([choice])
++    expect(final.preparedChanges).toMatchObject([{ id: change.id, state: "applied", receipt: applied.value }])
++    expect(final.receipts).toEqual([applied.value])
++    const after = await official()
++    const version = rows(after.versions).find((value) => value.id === "v1")
++    const line = rows(version?.lines).find((value) => value.id === "line")
++    expect(Array.isArray(line?.f) ? line.f[0] : undefined).toBe(42)
++    expect(after.officials).toEqual(before.officials)
++    expect(await execute(appliedRequest, applyContext)).toEqual(applied)
++    expect(await mutations.recordChoice(choiceRequest, choiceContext)).toEqual(chosen)
++    expect(await mutations.prepareChanges(prepareRequest, prepareContext)).toEqual(prepared)
++    expect(counters.dispatch).toBe(1)
++    expect(await official()).toEqual(after)
++    expect((await readCase()).choices).toEqual([choice])
++  } finally {
++    // Host leases are discarded with the real provider; native grant persistence is not claimed.
++    for (const context of contexts) finish?.(context)
++    await fixture.close()
++  }
++}, 180000)
++
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts
+@@ -8,13 +8,15 @@
+ import type { Actor } from "../../../runtime/contract.ts"
+ import { openLocalStore } from "../../../runtime/local-store.ts"
+ import { domain } from "../../../runtime/procurement.ts"
+-import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+ import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+ import type { PreparedCommand, ProductContext, SourceRef } from "../../../product/contracts/context.ts"
+ import type { ChoiceRecord, DecisionCase, PreparedChange, ScenarioResult } from "../../../product/contracts/decisions.ts"
+ import type { PreparedApplyPort } from "../../../product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+ import { createPreparedExecution } from "../../../product/decisions/apply.ts"
++import { createPreparedApplicationStatus } from "../../../product/decisions/application-status.ts"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
+ import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
+ import { proposalReviewDigest } from "../../../product/decisions/receipt-review-binding.ts"
+ import type { PreparedApplyRequest, ReviewDigestFor } from "../../../product/decisions/receipt-review-binding.ts"
+@@ -49,69 +51,7 @@
+   const reviewed = new Map<string, ReviewedIntent>()
+   try {
+     const session = await createSession(driver.value, reviewed)
+-    await session.persistence.initializeSources("dashboard")
+-    await session.persistence.initializeSources("planner")
+-    await session.persistence.initializeSources("procurement")
+-    await session.persistence.transaction("planner", async (snapshot) => {
+-      snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]
+-      snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+-      return { commit: true, value: true }
+-    })
+-    await session.persistence.transaction("procurement", async (snapshot) => {
+-      snapshot.data.store = {
+-        requests: { "PR-1": { request: { number: "PR-1", createdBy: "alice", status: "draft", pr: { title: "Original requisition", justification: "Original scope", estAmount: 100 }, history: [] }, version: 1, by: "alice" } },
+-        suppliers: [], settings: { currency: "USD", fxRates: [] }, issued: { pr: ["PR-1"], po: [] },
+-      }
+-      snapshot.versions["requests:PR-1"] = { version: 0, by: "alice" }
+-      return { commit: true, value: true }
+-    })
+-
+-    const issuedPlanner = await session.planner.issueSource("v0", session.context)
+-    if (issuedPlanner.status !== "ok" || !issuedPlanner.value.evidence.target.period) throw new Error("Planner source unavailable")
+-    const plannerEvidence = issuedPlanner.value.evidence
+-    const plannerTarget: SourceRef = { surface: "planner", type: "planner-version", id: "v0", incarnation: plannerEvidence.target.incarnation, version: plannerEvidence.target.version, fields: plannerEvidence.target.fields, period: issuedPlanner.value.evidence.target.period, observedAt: at }
+-    const plannerSnapshot = await session.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+-    const preparedPlanner = preparePlannerMutation({
+-      snapshot: plannerSnapshot, actor: plannerActor, environment: session.environment, context: session.context, target: plannerTarget, evidence: plannerEvidence,
+-      scope: { principalRef: "alice", accessRevision: "a1", policyVersion: "p1", recordType: "planner-version", recordId: "v0", selector: sfPlannerProjectionSelector(plannerSnapshot, plannerActor) },
+-      command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "planner-operation", idempotencyKey: "planner-edit",
+-    })
+-    if (!preparedPlanner?.preview) throw new Error("Planner preparation unavailable")
+-    const forecast = rows(preparedPlanner.preview.lines).find((line) => line.id === "line")?.f
+-    if (!Array.isArray(forecast) || typeof forecast[0] !== "number") throw new Error("Canonical Planner preview unavailable")
+-    const plannerOperation: PreparedCommand = {
+-      id: "planner-operation", target: plannerTarget, command: preparedPlanner.command, expectedVersion: 0, idempotencyKey: "planner-edit", commandDigest: preparedPlanner.mutation.commandDigest, requiredAuthority: ["finance"],
+-      preview: { context: session.productContext("planner"), version: plannerTarget.version, engineVersion: "wp11-canonical-command-fixture", components: [], missing: [], values: [{ id: "line:1:forecast", value: forecast[0], currency: "USD", period, granularity: "month", sourceRefs: [plannerEvidence], drilldown: plannerEvidence, evidenceState: "confirmed" }] },
+-    }
+-    const issuedProcurement = await session.procurementSources.issue("procurement-request", "PR-1", session.context)
+-    if (issuedProcurement.status !== "ok") throw new Error("Procurement source unavailable")
+-    const procurementSource = await session.procurementSources.resolveForPreparation(issuedProcurement.value, session.context)
+-    if (procurementSource.status !== "ok") throw new Error("Procurement scope unavailable")
+-    const procurementEvidence = procurementSource.value.evidence
+-    const procurementTarget: SourceRef = { surface: "procurement", type: "procurement-request", id: "PR-1", incarnation: procurementEvidence.target.incarnation, version: procurementEvidence.target.version, fields: procurementEvidence.target.fields, period, observedAt: at }
+-    const procurementSnapshot = await session.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+-    const preparedProcurement = prepareProcurementMutation({
+-      snapshot: procurementSnapshot, actor: procurementActor, environment: session.environment, context: session.context, target: procurementTarget, scope: procurementSource.value.scope, evidence: procurementEvidence,
+-      command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { title: "Updated requisition", justification: "Approved scope" } } }, operationId: "procurement-operation", idempotencyKey: "procurement-edit",
+-    })
+-    if (!preparedProcurement) throw new Error("Procurement preparation unavailable")
+-
+-    // This fixture exercises execution of a recorded human choice; it asserts no financial total.
+-    const preview: ScenarioResult = { id: "execution-scenario", version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [plannerEvidence, procurementEvidence], unresolvedConditions: ["financial-comparison-outside-this-fixture"], restrictions: [], comparisonStatus: "unavailable", knownSubtotal: null, total: null,
+-      costCoverage: { basisId: "execution-basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: ["execution-fixture"], evaluatedSourceRefs: [plannerEvidence, procurementEvidence], coverageState: "unavailable", entries: [{ status: "pending", categoryId: "service", reason: "financial-comparison-outside-this-fixture" }], derivedMissingCategoryIds: ["service"] },
+-    }
+-    const choice: ChoiceRecord = { id: choiceId, alternativeId: "alternative", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [plannerEvidence, procurementEvidence], principalRef: "alice", reason: "Human choice to apply the two separately reviewed domain edits", at, scenario: { baseRef: "v0", operations: [], assumptions: [] }, result: preview, comparison: { baselineResultRef: "baseline", alternativeResultRef: preview.id, costCoverageRefs: ["execution-basis"], criterionResults: [], unresolvedConditions: preview.unresolvedConditions, comparisonStatus: "unavailable", knownDifference: null, completeDifference: null }, comparisonStatus: "unavailable", costCoverage: preview.costCoverage }
+-    const changes: PreparedChange[] = [plannerOperation, preparedProcurement.command].map((operation) => ({ id: `${operation.target.surface}-change`, caseId, caseVersion: 1, choiceId, target: operation.target, expectedVersion: operation.expectedVersion, operation, preview, requiredAuthority: operation.requiredAuthority, idempotencyKey: operation.idempotencyKey, state: "planned" }))
+-    const decision: DecisionCase = { id: caseId, incarnation: caseIncarnation, version: 1, state: "chosen", objective: "Apply reviewed Planner and Procurement changes independently", horizon: period, currency: "USD", criteria: [], participants: ["alice"], sourceRefs: [plannerEvidence, procurementEvidence], alternatives: [{ id: "alternative", version: 1, title: "Human selection", scenario: choice.scenario, result: preview }], costCoverageBases: [], assumptions: [], questions: [], choices: [choice], preparedChanges: changes, receipts: [], ledger: [] }
+-    const seeded = await session.state.transaction(session.request, { namespace: "cases", expectedStorageVersion: 0, targetRef: caseId, targetIncarnation: caseIncarnation, idempotencyKey: "seed-cross-domain", commandDigest: digestSfValue(decision) }, async (state) => { state.cases[caseId] = decision; return { commit: true, value: true } })
+-    if (seeded.status !== "ok") throw new Error("Case seed failed")
+-    for (const change of changes) {
+-      const review = await session.reviewDomain(change.operation, session.context)
+-      if (review.status !== "ok") throw new Error(`Domain review failed: ${review.reason}`)
+-      reviewed.set(change.id, { commandDigest: change.operation.commandDigest, reviewDigest: proposalReviewDigest({ caseId, caseIncarnation, changeCaseVersion: change.caseVersion, choiceDigest: digestSfValue(choice), change, fields: review.value.fields, sourceRefDigest: review.value.source.refDigest }) })
+-    }
+-
+-    const plannerRequest: PreparedApplyRequest = { caseRef: { id: caseId, incarnation: caseIncarnation, version: 1 }, changeId: "planner-change", choiceId }
++    const { choice, plannerRequest } = await prepareCase(session, reviewed)
+     const untouched = await session.domains()
+     expect(await session.execute(plannerRequest)).toMatchObject({ status: "denied", reason: "application-confirmation-required" })
+     expect(session.controls.executions).toEqual([])
+@@ -173,10 +113,256 @@
+   }
+ })
+ 
++test("both real domain edits apply, retain ordered receipts and replay after restart without another effect", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-cross-domain-success-"))
++  await chmod(directory, 0o700)
++  const driver = { value: await openLocalStore(directory), open: true }
++  const reviewed = new Map<string, ReviewedIntent>()
++  try {
++    const session = await createSession(driver.value, reviewed)
++    const prepared = await prepareCase(session, reviewed)
++    const initialCase = await session.readCase()
++    const initialDomains = await session.domains()
++    // The published C12 producer supports reviewed requisition edits only. Its
++    // refusal is not a simulated awaiting-approval receipt or formal approval.
++    expect(prepareProcurementMutation({ ...prepared.procurementPreparation, command: { ...prepared.procurementPreparation.command, action: "submit_pr" } })).toBeUndefined()
++    expect(await session.readCase()).toEqual(initialCase)
++    expect(await session.domains()).toEqual(initialDomains)
++    expect(session.controls.executions).toEqual([])
++
++    session.controls.confirmed = true
++    const procurementRequest: PreparedApplyRequest = { ...prepared.plannerRequest, changeId: "procurement-change" }
++    const procurement = await session.execute(procurementRequest)
++    expect(procurement).toMatchObject({ status: "ok", value: { surface: "procurement", result: { ok: true, value: { status: "applied" } }, version: 1 } })
++    if (procurement.status !== "ok") throw new Error("Procurement application failed")
++    const partial = await session.readCase()
++    expect(partial).toMatchObject({ state: "partially-applied", preparedChanges: [{ state: "planned" }, { state: "applied" }] })
++    const plannerRequest: PreparedApplyRequest = { ...prepared.plannerRequest, caseRef: { ...prepared.plannerRequest.caseRef, version: partial.version } }
++    const planner = await session.execute(plannerRequest)
++    expect(planner).toMatchObject({ status: "ok", value: { surface: "planner", result: { ok: true }, version: 1 } })
++    if (planner.status !== "ok") throw new Error("Planner application failed")
++    const persisted = await session.readCase()
++    expect(persisted.state).toBe("applied")
++    expect(persisted.preparedChanges.map((change) => [change.id, change.state, change.receipt?.id])).toEqual([["planner-change", "applied", planner.value.id], ["procurement-change", "applied", procurement.value.id]])
++    expect(persisted.receipts.map((receipt) => [receipt.id, receipt.surface])).toEqual([[procurement.value.id, "procurement"], [planner.value.id, "planner"]])
++    expect(persisted.choices).toEqual([prepared.choice])
++    expect(persisted.sourceRefs.filter((ref) => ref.kind === "receipt")).toHaveLength(2)
++    const official = await session.domains()
++    const forecast = rows(rows(official.planner.data.versions)[0]?.lines)[0]?.f
++    if (!Array.isArray(forecast)) throw new Error("Applied Planner forecast unavailable")
++    expect(forecast[0]).toBe(42)
++    const requisition = object(object(object(official.procurement.data.store).requests)["PR-1"])
++    expect(requisition.request).toMatchObject({ status: "draft", pr: { title: "Updated requisition", justification: "Approved scope", estAmount: 100 } })
++    expect(object(requisition.request).history).toHaveLength(1)
++    expect(official.procurement.versions["requests:PR-1"]?.version).toBe(1)
++    const currentRef = { id: caseId, incarnation: caseIncarnation, version: persisted.version }
++    for (const changeId of ["planner-change", "procurement-change"]) expect(await session.applicationStatus({ caseRef: currentRef, choiceId, changeId })).toMatchObject({ status: "ok", value: { recordedState: "applied", status: "reconciled" } })
++    expect(await session.readAggregate()).toMatchObject({ status: "ok", value: { case: { state: "applied", receipts: [{ id: procurement.value.id, status: "applied" }, { id: planner.value.id, status: "applied" }] } } })
++
++    session.controls.confirmed = false
++    const reviews = session.controls.producerReviews
++    expect(await Promise.all([session.execute(plannerRequest), session.execute(procurementRequest), session.execute(plannerRequest)])).toEqual([planner, procurement, planner])
++    expect(session.controls.executions).toEqual(["procurement", "planner"])
++    expect(session.controls.producerReviews).toBe(reviews)
++    expect(await session.readCase()).toEqual(persisted)
++    expect(await session.domains()).toEqual(official)
++    await driver.value.dispose()
++    driver.open = false
++    driver.value = await openLocalStore(directory)
++    driver.open = true
++    // Fresh UI admission and the reviewed-intent map are explicit host boundaries;
++    // the reopened SQLite store, domain effects and receipts are real.
++    const restarted = await createSession(driver.value, reviewed)
++    expect(await Promise.all([restarted.execute(procurementRequest), restarted.execute(plannerRequest)])).toEqual([procurement, planner])
++    expect(restarted.controls.executions).toEqual([])
++    expect(restarted.controls.producerReviews).toBe(0)
++    expect(restarted.controls.races).toBe(0)
++    expect(await restarted.readCase()).toEqual(persisted)
++    expect(await restarted.domains()).toEqual(official)
++    expect(await restarted.readAggregate()).toMatchObject({ status: "ok", value: { case: { state: "applied" } } })
++  } finally {
++    if (driver.open) await driver.value.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++})
++
++test("domain permission and receipt revocation preserve case access while denying pending application and restricted aggregate results", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-cross-domain-revocation-"))
++  await chmod(directory, 0o700)
++  const driver = { value: await openLocalStore(directory), open: true }
++  const reviewed = new Map<string, ReviewedIntent>()
++  try {
++    const session = await createSession(driver.value, reviewed)
++    const { choice, plannerRequest } = await prepareCase(session, reviewed)
++    const procurementAtPreparation: PreparedApplyRequest = { ...plannerRequest, changeId: "procurement-change" }
++    const pending = await session.readCase()
++    const untouched = await session.domains()
++    expect(await session.readAggregate()).toMatchObject({ status: "ok", value: { case: { state: "chosen" } } })
++    session.controls.confirmed = true
++    session.controls.domainAccess.procurement.application = false
++    expect(await session.execute(procurementAtPreparation)).toEqual({ status: "denied", reason: "application-authority-unavailable" })
++    expect(await session.readAggregate()).toMatchObject({ status: "ok", value: { case: { state: "chosen" } } })
++    expect(await session.readCase()).toEqual(pending)
++    expect(await session.domains()).toEqual(untouched)
++    expect(session.controls.executions).toEqual([])
++    expect(session.controls.producerReviews).toBe(0)
++
++    session.controls.domainAccess.procurement.application = true
++    session.controls.domainAccess.procurement.lookup = false
++    const deniedLookup = await session.execute(procurementAtPreparation)
++    expect(deniedLookup).toMatchObject({ status: "denied" })
++    expect("value" in deniedLookup).toBe(false)
++    expect(await session.readCase()).toEqual(pending)
++    expect(await session.applicationStatus(procurementAtPreparation)).toMatchObject({ status: "ok", value: { recordedState: "planned", status: "not-attempted" } })
++    expect(session.controls.executions).toEqual([])
++    expect(session.controls.producerReviews).toBe(0)
++    expect(await session.domains()).toEqual(untouched)
++
++    session.controls.domainAccess.procurement.lookup = true
++    const planner = await session.execute(plannerRequest)
++    if (planner.status !== "ok") throw new Error("Planner application failed after Procurement revocation")
++    const partial = await session.readCase()
++    const procurementRequest: PreparedApplyRequest = { ...procurementAtPreparation, caseRef: { ...procurementAtPreparation.caseRef, version: partial.version } }
++    const procurement = await session.execute(procurementRequest)
++    if (procurement.status !== "ok") throw new Error("Procurement application failed after restored permission")
++    expect(planner.value.result.ok).toBe(true)
++    expect(procurement.value.result.ok).toBe(true)
++    const persisted = await session.readCase()
++    expect(persisted.state).toBe("applied")
++    expect(persisted.choices).toEqual([choice])
++    const official = await session.domains()
++    const currentRef = { id: caseId, incarnation: caseIncarnation, version: persisted.version }
++    const statusRequest: PreparedApplyRequest = { caseRef: currentRef, choiceId, changeId: "procurement-change" }
++    expect(await session.applicationStatus(statusRequest)).toMatchObject({ status: "ok", value: { recordedState: "applied", status: "reconciled" } })
++    expect(await session.readAggregate()).toMatchObject({ status: "ok", value: { case: { state: "applied" } } })
++
++    // The UI/case lease stays authorized. Only the already produced Procurement
++    // receipt is revoked, so case aggregates must not disclose its terminal result.
++    session.controls.confirmed = false
++    session.controls.domainAccess.procurement.receipt = false
++    const checksBefore = session.controls.receiptChecks.length
++    const restrictedStatus = await session.applicationStatus(statusRequest)
++    expect(restrictedStatus).toEqual({ status: "denied", reason: "receipt-access-unavailable" })
++    expect("value" in restrictedStatus).toBe(false)
++    const restrictedAggregate = await session.readAggregate()
++    expect(restrictedAggregate).toEqual({ status: "unavailable", reason: "case-evidence-unavailable" })
++    expect("value" in restrictedAggregate).toBe(false)
++    expect(session.controls.receiptChecks.slice(checksBefore)).toContain("procurement:receipt")
++    const restrictedReplay = await session.execute(procurementRequest)
++    expect(restrictedReplay).toMatchObject({ status: "denied" })
++    expect("value" in restrictedReplay).toBe(false)
++    expect(await session.applicationStatus({ ...statusRequest, changeId: "planner-change" })).toMatchObject({ status: "ok", value: { recordedState: "applied", status: "reconciled" } })
++    expect(await session.execute(plannerRequest)).toEqual(planner)
++    expect(await session.readCase()).toEqual(persisted)
++    expect(await session.domains()).toEqual(official)
++    expect(session.controls.executions).toEqual(["planner", "procurement"])
++
++    await driver.value.dispose()
++    driver.open = false
++    driver.value = await openLocalStore(directory)
++    driver.open = true
++    const restarted = await createSession(driver.value, reviewed)
++    restarted.controls.domainAccess.procurement.receipt = false
++    expect(await restarted.readCase()).toEqual(persisted)
++    expect(await restarted.applicationStatus(statusRequest)).toEqual({ status: "denied", reason: "receipt-access-unavailable" })
++    expect(await restarted.readAggregate()).toEqual({ status: "unavailable", reason: "case-evidence-unavailable" })
++    expect(await restarted.execute(procurementRequest)).toMatchObject({ status: "denied" })
++    expect(restarted.controls.executions).toEqual([])
++    expect(restarted.controls.producerReviews).toBe(0)
++    restarted.controls.domainAccess.procurement.receipt = true
++    expect(await restarted.applicationStatus(statusRequest)).toMatchObject({ status: "ok", value: { recordedState: "applied", status: "reconciled" } })
++    expect(await restarted.readAggregate()).toMatchObject({ status: "ok", value: { case: { state: "applied", choices: [choice] } } })
++    expect(await restarted.execute(procurementRequest)).toEqual(procurement)
++    expect(await restarted.execute(plannerRequest)).toEqual(planner)
++    expect(restarted.controls.executions).toEqual([])
++    expect(restarted.controls.producerReviews).toBe(0)
++    expect(await restarted.readCase()).toEqual(persisted)
++    expect(await restarted.domains()).toEqual(official)
++  } finally {
++    if (driver.open) await driver.value.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++})
++
++async function prepareCase(session: Awaited<ReturnType<typeof createSession>>, reviewed: Map<string, ReviewedIntent>) {
++  await session.persistence.initializeSources("dashboard")
++  await session.persistence.initializeSources("planner")
++  await session.persistence.initializeSources("procurement")
++  await session.persistence.transaction("planner", async (snapshot) => {
++    snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]
++    snapshot.data.versions = [{ id: "v0", year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [100] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
++    return { commit: true, value: true }
++  })
++  await session.persistence.transaction("procurement", async (snapshot) => {
++    snapshot.data.store = {
++      requests: { "PR-1": { request: { number: "PR-1", createdBy: "alice", status: "draft", pr: { title: "Original requisition", justification: "Original scope", estAmount: 100 }, history: [] }, version: 1, by: "alice" } },
++      suppliers: [], settings: { currency: "USD", fxRates: [] }, issued: { pr: ["PR-1"], po: [] },
++    }
++    snapshot.versions["requests:PR-1"] = { version: 0, by: "alice" }
++    return { commit: true, value: true }
++  })
++
++  const issuedPlanner = await session.planner.issueSource("v0", session.context)
++  if (issuedPlanner.status !== "ok" || !issuedPlanner.value.evidence.target.period) throw new Error("Planner source unavailable")
++  const plannerEvidence = issuedPlanner.value.evidence
++  const plannerTarget: SourceRef = { surface: "planner", type: "planner-version", id: "v0", incarnation: plannerEvidence.target.incarnation, version: plannerEvidence.target.version, fields: plannerEvidence.target.fields, period: issuedPlanner.value.evidence.target.period, observedAt: at }
++  const plannerSnapshot = await session.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++  const preparedPlanner = preparePlannerMutation({
++    snapshot: plannerSnapshot, actor: plannerActor, environment: session.environment, context: session.context, target: plannerTarget, evidence: plannerEvidence,
++    scope: { principalRef: "alice", accessRevision: "a1", policyVersion: "p1", recordType: "planner-version", recordId: "v0", selector: sfPlannerProjectionSelector(plannerSnapshot, plannerActor) },
++    command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "planner-operation", idempotencyKey: "planner-edit",
++  })
++  if (!preparedPlanner?.preview) throw new Error("Planner preparation unavailable")
++  const forecast = rows(preparedPlanner.preview.lines).find((line) => line.id === "line")?.f
++  if (!Array.isArray(forecast) || typeof forecast[0] !== "number") throw new Error("Canonical Planner preview unavailable")
++  const plannerOperation: PreparedCommand = {
++    id: "planner-operation", target: plannerTarget, command: preparedPlanner.command, expectedVersion: 0, idempotencyKey: "planner-edit", commandDigest: preparedPlanner.mutation.commandDigest, requiredAuthority: ["finance"],
++    preview: { context: session.productContext("planner"), version: plannerTarget.version, engineVersion: "wp11-canonical-command-fixture", components: [], missing: [], values: [{ id: "line:1:forecast", value: forecast[0], currency: "USD", period, granularity: "month", sourceRefs: [plannerEvidence], drilldown: plannerEvidence, evidenceState: "confirmed" }] },
++  }
++  const issuedProcurement = await session.procurementSources.issue("procurement-request", "PR-1", session.context)
++  if (issuedProcurement.status !== "ok") throw new Error("Procurement source unavailable")
++  const procurementSource = await session.procurementSources.resolveForPreparation(issuedProcurement.value, session.context)
++  if (procurementSource.status !== "ok") throw new Error("Procurement scope unavailable")
++  const procurementEvidence = procurementSource.value.evidence
++  const procurementTarget: SourceRef = { surface: "procurement", type: "procurement-request", id: "PR-1", incarnation: procurementEvidence.target.incarnation, version: procurementEvidence.target.version, fields: procurementEvidence.target.fields, period, observedAt: at }
++  const procurementSnapshot = await session.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++  const procurementPreparation: Parameters<typeof prepareProcurementMutation>[0] = {
++    snapshot: procurementSnapshot, actor: procurementActor, environment: session.environment, context: session.context, target: procurementTarget, scope: procurementSource.value.scope, evidence: procurementEvidence,
++    command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { title: "Updated requisition", justification: "Approved scope" } } }, operationId: "procurement-operation", idempotencyKey: "procurement-edit",
++  }
++  const preparedProcurement = prepareProcurementMutation(procurementPreparation)
++  if (!preparedProcurement) throw new Error("Procurement preparation unavailable")
++
++  // This fixture exercises execution of a recorded human choice; it asserts no financial total.
++  const preview: ScenarioResult = { id: "execution-scenario", version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [plannerEvidence, procurementEvidence], unresolvedConditions: ["financial-comparison-outside-this-fixture"], restrictions: [], comparisonStatus: "unavailable", knownSubtotal: null, total: null,
++    costCoverage: { basisId: "execution-basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: ["execution-fixture"], evaluatedSourceRefs: [plannerEvidence, procurementEvidence], coverageState: "unavailable", entries: [{ status: "pending", categoryId: "service", reason: "financial-comparison-outside-this-fixture" }], derivedMissingCategoryIds: ["service"] },
++  }
++  const choice: ChoiceRecord = { id: choiceId, alternativeId: "alternative", alternativeVersion: 1, basisVersion: 1, criteria: [], values: [], evidenceRefs: [plannerEvidence, procurementEvidence], principalRef: "alice", reason: "Human choice to apply the two separately reviewed domain edits", at, scenario: { baseRef: "v0", operations: [], assumptions: [] }, result: preview, comparison: { baselineResultRef: "baseline", alternativeResultRef: preview.id, costCoverageRefs: ["execution-basis"], criterionResults: [], unresolvedConditions: preview.unresolvedConditions, comparisonStatus: "unavailable", knownDifference: null, completeDifference: null }, comparisonStatus: "unavailable", costCoverage: preview.costCoverage }
++  const changes: PreparedChange[] = [plannerOperation, preparedProcurement.command].map((operation) => ({ id: `${operation.target.surface}-change`, caseId, caseVersion: 1, choiceId, target: operation.target, expectedVersion: operation.expectedVersion, operation, preview, requiredAuthority: operation.requiredAuthority, idempotencyKey: operation.idempotencyKey, state: "planned" }))
++  const decision: DecisionCase = { id: caseId, incarnation: caseIncarnation, version: 1, state: "chosen", objective: "Apply reviewed Planner and Procurement changes independently", horizon: period, currency: "USD", criteria: [], participants: ["alice"], sourceRefs: [plannerEvidence, procurementEvidence], alternatives: [{ id: "alternative", version: 1, title: "Human selection", scenario: choice.scenario, result: preview }], costCoverageBases: [], assumptions: [], questions: [], choices: [choice], preparedChanges: changes, receipts: [], ledger: [] }
++  const seeded = await session.state.transaction(session.request, { namespace: "cases", expectedStorageVersion: 0, targetRef: caseId, targetIncarnation: caseIncarnation, idempotencyKey: "seed-cross-domain", commandDigest: digestSfValue(decision) }, async (state) => { state.cases[caseId] = decision; return { commit: true, value: true } })
++  if (seeded.status !== "ok") throw new Error("Case seed failed")
++  for (const change of changes) {
++    const review = await session.reviewDomain(change.operation, session.context)
++    if (review.status !== "ok") throw new Error(`Domain review failed: ${review.reason}`)
++    reviewed.set(change.id, { commandDigest: change.operation.commandDigest, reviewDigest: proposalReviewDigest({ caseId, caseIncarnation, changeCaseVersion: change.caseVersion, choiceDigest: digestSfValue(choice), change, fields: review.value.fields, sourceRefDigest: review.value.source.refDigest }) })
++  }
++
++  const plannerRequest: PreparedApplyRequest = { caseRef: { id: caseId, incarnation: caseIncarnation, version: 1 }, changeId: "planner-change", choiceId }
++  return { choice, plannerRequest, changes, procurementPreparation }
++}
++
+ async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, reviewed: ReadonlyMap<string, ReviewedIntent>) {
+   const projector = createSfSourceScopeProjector(() => at)
+   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: projector })
+-  const controls = { confirmed: false, racePending: false, races: 0, producerReviews: 0, executions: [] as string[] }
++  const controls = {
++    confirmed: false, racePending: false, races: 0, producerReviews: 0, executions: [] as string[], receiptChecks: [] as string[],
++    domainAccess: {
++      planner: { application: true, lookup: true, receipt: true },
++      procurement: { application: true, lookup: true, receipt: true },
++    },
++  }
++  const domainAccess = (surface: string) => surface === "planner" || surface === "procurement" ? controls.domainAccess[surface] : undefined
+   const environment = { at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] }
+   const request = new Request("https://local.invalid/cases", { headers: { authorization: "Bearer alice" } })
+   const authorize = async (current: Request) => current.headers.get("authorization") === "Bearer alice" ? { installationId: "install", projectId: "project", principalRef: "alice", accessRevision: "a1", policyVersion: "p1" } : undefined
+@@ -187,7 +373,7 @@
+     return admission.value
+   }
+   const context = await admit("sf_request_read", digestSfValue({ caseId }))
+-  const authenticate: Application["authenticate"] = async (current, scope) => current.headers.get("authorization") === "Bearer alice" ? { id: "alice", canWrite: true, roles: [{ surface: scope?.surface ?? "procurement", role: scope?.surface === "planner" ? "finance" : "requester" }] } : null
++  const authenticate: Application["authenticate"] = async (current, scope) => current.headers.get("authorization") === "Bearer alice" ? { id: "alice", canWrite: domainAccess(scope?.surface ?? "procurement")?.application === true, roles: [{ surface: scope?.surface ?? "procurement", role: scope?.surface === "planner" ? "finance" : "requester" }] } : null
+   const host = { persistence, authenticate, environment: async () => environment, requestFor: (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.requestFor(binding) : undefined, revalidate: (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.revalidate(binding) : Promise.resolve(false) }
+   const productContext = (surface: "planner" | "procurement"): ProductContext => ({ installationId: "install", projectId: "project", principalRef: "alice", accessRevision: "a1", policyVersion: "p1", surface, period, currency: "USD", sourceRefs: [], capabilities: [] })
+   const procurementSources = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor: async () => ({ status: "ok", value: productContext("procurement") }) })
+@@ -210,12 +396,16 @@
+     return current.value
+   }
+   const reviewDigestFor: ReviewDigestFor = (binding, incoming, change) => binding.binding.principalRef === "alice" && incoming.caseRef.id === caseId && incoming.caseRef.incarnation === caseIncarnation && incoming.choiceId === choiceId && incoming.changeId === change.id && reviewed.get(change.id)?.commandDigest === change.operation.commandDigest ? reviewed.get(change.id)?.reviewDigest : undefined
++  const authorizeCase = async (value: DecisionCase, binding: TrustedDomainContext) => value.participants.includes(binding.binding.principalRef) && await host.revalidate(binding)
+   const producer = createSfPreparedApply({
+-    state, host, authorizeCase: async (value, binding) => value.participants.includes(binding.binding.principalRef) && await host.revalidate(binding),
+-    authorizeLookup: async (lookup, binding) => ["planner", "procurement"].includes(lookup.surface) && await host.revalidate(binding),
+-    authorizeReceipt: async (receipt, lookup, binding) => receipt.principalRef === binding.binding.principalRef && receipt.surface === lookup.surface && receipt.idempotencyKey === lookup.idempotencyKey && await host.revalidate(binding),
+-    confirmHuman: async (_incoming, _change, binding) => controls.confirmed && await host.revalidate(binding), reviewDigestFor,
+-    resolveActor: (snapshot, binding) => binding.binding.principalRef === "alice" ? Array.isArray(snapshot.data.versions) ? plannerActor : procurementActor : undefined,
++    state, host, authorizeCase,
++    authorizeLookup: async (lookup, binding) => { controls.receiptChecks.push(`${lookup.surface}:lookup`); return domainAccess(lookup.surface)?.lookup === true && await host.revalidate(binding) },
++    authorizeReceipt: async (receipt, lookup, binding) => { controls.receiptChecks.push(`${receipt.surface}:receipt`); return domainAccess(receipt.surface)?.receipt === true && receipt.principalRef === binding.binding.principalRef && receipt.surface === lookup.surface && receipt.idempotencyKey === lookup.idempotencyKey && await host.revalidate(binding) },
++    confirmHuman: async (_incoming, change, binding) => controls.confirmed && domainAccess(change.target.surface)?.application === true && await host.revalidate(binding), reviewDigestFor,
++    resolveActor: (snapshot, binding) => {
++      const surface = Array.isArray(snapshot.data.versions) ? "planner" : "procurement"
++      return binding.binding.principalRef === "alice" && domainAccess(surface)?.application === true ? surface === "planner" ? plannerActor : procurementActor : undefined
++    },
+     resolveMutation: (snapshot, change, actor, binding) => {
+       if (change.target.surface === "procurement") return bridge.resolveMutation(snapshot, change, actor, binding)
+       const evidence = change.operation.preview.values[0]?.sourceRefs[0]
+@@ -223,7 +413,7 @@
+       const scope = { principalRef: actor.id, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, recordType: change.target.type, recordId: change.target.id, selector: sfPlannerProjectionSelector(snapshot, actor) }
+       return preparePlannerMutation({ snapshot, actor, environment, context: binding, target: change.target, evidence, scope, command: change.operation.command, operationId: change.operation.id, idempotencyKey: change.idempotencyKey })?.mutation
+     },
+-    verifyGrant: (_snapshot, _incoming, change, actor, binding) => actor.id === binding.binding.principalRef && actor.canWrite && actor.roles.includes(change.target.surface === "planner" ? "finance" : "requester"),
++    verifyGrant: (_snapshot, _incoming, change, actor, binding) => domainAccess(change.target.surface)?.application === true && actor.id === binding.binding.principalRef && actor.canWrite && actor.roles.includes(change.target.surface === "planner" ? "finance" : "requester"),
+     receiptVersion: (snapshot, change) => change.target.surface === "planner" ? plannerPreparedRevision(snapshot, change.operation.command) : bridge.receiptVersion(snapshot, change),
+     environment: () => environment, createId: randomUUID, now: () => at,
+   })
+@@ -235,7 +425,7 @@
+     return producer.executePrepared(incoming, binding)
+   } }
+   const execute = createPreparedExecution({
+-    state, host, apply, authorizeCase: async (value, binding) => value.participants.includes(binding.binding.principalRef) && await host.revalidate(binding), authorizeApplication: async (_incoming, _change, binding) => host.revalidate(binding),
++    state, host, apply, authorizeCase, authorizeApplication: async (_incoming, change, binding) => domainAccess(change.target.surface)?.application === true && await host.revalidate(binding),
+     confirmApplication: async (incoming, binding) => {
+       if (!controls.confirmed || !await host.revalidate(binding)) return false
+       if (controls.racePending && incoming.changeId === "procurement-change") {
+@@ -261,7 +451,7 @@
+       return { status: "ok", value: { reviewDigest: proposalReviewDigest({ caseId, caseIncarnation, changeCaseVersion: change.caseVersion, choiceDigest: digestSfValue(choice), change, fields: review.value.fields, sourceRefDigest: review.value.source.refDigest }) } }
+     },
+     classifyReceipt: async (receipt, _change, binding) => {
+-      if (!await host.revalidate(binding)) return undefined
++      if (domainAccess(receipt.surface)?.receipt !== true || !await host.revalidate(binding)) return undefined
+       const ref: Extract<BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", kind: "receipt", refId: receipt.id, installationId: binding.binding.installationId, projectId: binding.binding.projectId, evidenceLevel: "observed", refDigest: "", target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
+       return { state: receipt.result.ok ? "applied" : "conflict", evidence: { ...ref, refDigest: digestSfEvidenceRef(ref) } }
+     },
+@@ -270,5 +460,32 @@
+     planner: await persistence.transaction("planner", async ({ data, versions, sequences, audit, notices }) => ({ commit: false, value: structuredClone({ data, versions, sequences, audit, notices }) })),
+     procurement: await persistence.transaction("procurement", async ({ data, versions, sequences, audit, notices }) => ({ commit: false, value: structuredClone({ data, versions, sequences, audit, notices }) })),
+   })
+-  return { persistence, context, environment, request, state, planner, procurementSources, reviewDomain, productContext, controls, readCase, domains, execute: async (incoming: PreparedApplyRequest) => execute(incoming, await admit("wp11-human-application", digestSfValue(incoming))) }
++  const applicationStatus = createPreparedApplicationStatus({ state, host, receipts: producer, authorizeCase })
++  // Record-history authority is an explicit fixture boundary. Receipt evidence always
++  // delegates to the real persisted producer lookup and its current per-domain ACL.
++  const resolveEvidence: BusinessContextService["resolve"] = async (ref, binding) => {
++    const checked = { ref, accessRevision: binding.binding.accessRevision, checkedAt: at }
++    const decision = await readCase()
++    if (!await authorizeCase(decision, binding)) return { ...checked, state: "revoked" }
++    if (ref.refDigest !== digestSfEvidenceRef(ref)) return { ...checked, state: "invalid" }
++    if (ref.kind === "record") {
++      const recorded = decision.sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))
++      return { ...checked, state: recorded && domainAccess(ref.target.surface)?.lookup === true ? "historical" : "revoked" }
++    }
++    if (ref.kind !== "receipt") return { ...checked, state: "unavailable" }
++    const change = decision.preparedChanges.find((item) => item.receipt?.id === ref.target.receiptId && item.target.surface === ref.target.surface)
++    if (!change?.receipt) return { ...checked, state: "unavailable" }
++    const receipt = await producer.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, binding)
++    if (receipt.status !== "ok") return { ...checked, state: receipt.status === "denied" ? "revoked" : "unavailable" }
++    if (receipt.value.state !== "found" || digestSfValue(receipt.value.receipt) !== digestSfValue(change.receipt) || ref.target.version !== receipt.value.receipt.version || ref.target.commandDigest !== receipt.value.receipt.commandDigest || ref.target.idempotencyKey !== receipt.value.receipt.idempotencyKey || ref.target.targetIncarnation !== receipt.value.receipt.targetIncarnation) return { ...checked, state: "unavailable" }
++    return { ...checked, state: "fresh", currentRef: ref }
++  }
++  const evidence: BusinessContextService = { resolve: resolveEvidence, context: async ({ refs }, binding) => Promise.all(refs.map((ref) => resolveEvidence(ref, binding))), recall: async () => [], emitFromLedger: async () => { throw new Error("Memory emission is outside this execution fixture") } }
++  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseId, incarnation: caseIncarnation }, operationIdentity: (binding) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined, authorizeCase, verifyScenarioOperations: async (decision) => decision.alternatives.every((alternative) => alternative.scenario.operations.length === 0 && alternative.scenario.assumptions.length === 0), evidence, createId: randomUUID, now: () => at })
++  return {
++    persistence, context, environment, request, state, planner, procurementSources, reviewDomain, productContext, controls, readCase, domains,
++    execute: async (incoming: PreparedApplyRequest) => execute(incoming, await admit("wp11-human-application", digestSfValue(incoming))),
++    applicationStatus: async (incoming: PreparedApplyRequest) => applicationStatus(incoming, await admit("sf_case_read", digestSfValue(incoming))),
++    readAggregate: async () => { const incoming = { caseRef: encodeCaseRef({ id: caseId, incarnation: caseIncarnation }) }; return cases.read(incoming, await admit("sf_case_read", digestSfValue(incoming))) },
++  }
+ }
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts
+@@ -0,0 +1,48 @@
++import { Buffer } from "node:buffer"
++import type { SfProductStatePort } from "../../../product/contracts/state.ts"
++
++/** Hosted-test diagnostics only. The wall-clock guard preserves the original test budget. */
++export function createWp11FixtureTrace(label: string, budgetMs = 180000) {
++  const started = Date.now()
++  const counts: Record<string, { calls: number; elapsedMs: number; maximumMs: number }> = {}
++  const progress = { phase: "start", reported: false }
++  const guard = () => {
++    if (Date.now() - started <= budgetMs) return
++    if (!progress.reported) {
++      progress.reported = true
++      console.error("[wp11-fixture-trace]", JSON.stringify({ label, phase: progress.phase, elapsedMs: Date.now() - started, budgetMs, status: "deadline-exceeded", counts }))
++    }
++    throw new Error(`WP11_FIXTURE_DEADLINE_EXCEEDED:${label}:${progress.phase}:${budgetMs}`)
++  }
++  const measure = async <T>(operation: string, work: () => Promise<T>): Promise<T> => {
++    guard()
++    const counter = counts[operation] ??= { calls: 0, elapsedMs: 0, maximumMs: 0 }
++    counter.calls++
++    const before = Date.now()
++    try {
++      const value = await work()
++      guard()
++      return value
++    } finally {
++      const elapsed = Date.now() - before
++      counter.elapsedMs += elapsed
++      counter.maximumMs = Math.max(counter.maximumMs, elapsed)
++    }
++  }
++  const state = (port: SfProductStatePort): SfProductStatePort => ({
++    read: (request, namespace, read) => measure(`c08.read.${namespace}`, () => port.read(request, namespace, read)),
++    transaction: (request, command, work) => measure(`c08.transaction.${command.namespace}`, () => port.transaction(request, command, work)),
++  })
++  const checkpoint = async (phase: string, port?: SfProductStatePort, request?: Request) => {
++    guard()
++    progress.phase = phase
++    const bytes = (value: unknown) => Buffer.byteLength(JSON.stringify(value ?? {}))
++    const observed = port && request ? await port.read(request, "cases", (value) => ({
++      stateBytes: bytes(value), transactionsBytes: bytes(value.transactions), casesBytes: bytes(value.cases), resultBytes: bytes(value.decisionResults),
++      transactions: Object.keys(value.transactions).length, cases: Object.keys(value.cases).length, results: Object.keys(value.decisionResults ?? {}).length,
++    })) : undefined
++    console.info("[wp11-fixture-trace]", JSON.stringify({ label, phase, elapsedMs: Date.now() - started, budgetMs, counts, ...(observed?.status === "ok" ? observed.value : observed ? { stateStatus: observed.status } : {}) }))
++    guard()
++  }
++  return { guard, measure, state, checkpoint }
++}
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts
+@@ -13,15 +13,16 @@
+ import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+ import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
+ import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
+-import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
+ import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
+ import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
+-import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
+ import { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
+ import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
+-import { createWp05SensitivityFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
+-import { createWp05ImplementationRevision, createWp05TrainingRevision } from "../wp05/engine-revision-fixture.ts"
++import { wp05Horizon } from "../wp05/engine-fixture.ts"
+ import { renewalCoverage } from "./renewal-coverage-fixture.ts"
++import { createWp11FixtureTrace } from "./fixture-trace.ts"
++import { createRenewalQuoteRevision, createRenewalSourceFixture, renewalEvidenceContext } from "./renewal-source-fixture.ts"
++import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
++import { createRenewalRestartReader } from "./renewal-restart-reader.ts"
+ 
+ type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
+ const now = () => "2026-11-13T02:00:00Z"
+@@ -29,14 +30,19 @@
+ 
+ /** One durable case. Source declarations and human grants are synthetic; every financial value comes from Planner. */
+ export async function createRenewalChoiceHistory(options: { training: "omitted" | "bundled" } = { training: "omitted" }) {
+-  const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training: options.training, composed: true })
++  const trace = createWp11FixtureTrace("renewal-choice-history")
++  await trace.checkpoint("bootstrap-start")
++  const upstream = await createRenewalSourceFixture(options.training)
++  const fixture = { ...upstream, host: { ...upstream.host, revalidate: (context: Parameters<typeof upstream.host.revalidate>[0]) => trace.measure("host.revalidate", () => upstream.host.revalidate(context)) } }
+   try {
+     const writes = new WeakSet<object>()
+-    const current = { sources: fixture.sources, evidence: fixture.evidence, identity: "wp11-history", next: 0, ruleVersion: 1, sourceFenceValid: true }
++    const current = { sources: fixture.sources, evidence: fixture.evidence, identity: "wp11-history", next: 0, ruleVersion: 0, sourceFenceValid: true }
+     const declarations = new Map<string, { ref: RecordEvidence; entries: readonly CostCoverageEntry[] }>()
+     const classifications: ReturnType<typeof classifyCoverage>[] = []
+     const coverageVersions = new Map<string, number>()
+-    const state = createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes, createId: () => "wp11-history-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request ? fixture.context.binding : undefined })
++    const state = trace.state(createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes, createId: () => "wp11-history-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request ? fixture.context.binding : undefined }))
++    const checkpoint = (phase: string) => trace.checkpoint(phase, state, fixture.request)
++    await checkpoint("bootstrap-complete")
+     const readCase = async () => {
+       const loaded = await state.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
+       if (loaded.status !== "ok" || !loaded.value) throw new Error("Current decision unavailable")
+@@ -50,7 +56,7 @@
+         ? { state: "fresh", ref, currentRef: ref, accessRevision: context.binding.accessRevision, checkedAt: now() }
+         : current.evidence.resolve(ref, context)
+     }
+-    const evidence: BusinessContextService = { ...fixture.evidence, resolve, context: async ({ refs }, context) => Promise.all(refs.map((ref) => resolve(ref, context))) }
++    const evidence: BusinessContextService = { ...fixture.evidence, resolve, context: renewalEvidenceContext(resolve) }
+     const verifyEvidence = async (refs: readonly BusinessEvidenceRef[]) => (await evidence.context({ refs }, fixture.context)).every((value) => value.state === "fresh")
+     const snapshotMatches = (snapshot: Parameters<Parameters<typeof createDecisionBaselineCoverage>[0]["verifySnapshot"]>[0], refs: readonly BusinessEvidenceRef[]) => refs.every((ref) => {
+       if (declarations.has(ref.refDigest)) return digestSfValue(declarations.get(ref.refDigest)!.ref) === digestSfValue(ref)
+@@ -61,15 +67,15 @@
+     const supports = (entry: Exclude<CostCoverageEntry, { status: "pending" }>, resolutions: readonly BusinessEvidenceResolution[]) => classifications.some((classification) => supportsCoverageClassification(classification, entry, resolutions))
+     const ports: { baseline?: ReturnType<typeof createDecisionBaselineCoverage>; caseCoverage?: PlannerSourceHost["resolveForecastCoverage"] } = {}
+     const sources: PlannerSourceHost = {
+-      resolveForecastSource: (reference, context) => current.sources.resolveForecastSource(reference, context),
+-      resolveForecastCoverage: async (reference, context) => {
++      resolveForecastSource: (reference, context) => trace.measure("classified-source", () => current.sources.resolveForecastSource(reference, context)),
++      resolveForecastCoverage: (reference, context) => trace.measure("classified-coverage", async () => {
+         if (reference.startsWith("case-coverage:") && ports.caseCoverage) return ports.caseCoverage(reference, context)
+         if (ports.baseline) {
+           const classified = await ports.baseline.resolveForecastCoverage(reference, context)
+           if (classified.status === "ok" || classified.reason !== "baseline-coverage-unavailable") return classified
+         }
+         return current.sources.resolveForecastCoverage(reference, context)
+-      },
++      }),
+     }
+     const planner = createPlannerPort({ host: fixture.host, sources, evidence })
+     const baseline = createDecisionBaselineCoverage({ state, host: fixture.host, resolveCase: async () => ({ status: "ok", value: refFor(await readCase()) }), authorizeCase, authorizeCoverage: async () => true,
+@@ -80,7 +86,14 @@
+     ports.baseline = baseline
+     ports.caseCoverage = createDecisionCoverageAccess({ state, host: fixture.host, authorizeCase, verifyEvidence: (basis, assessment) => verifyEvidence([...basis.sourceRefs, ...assessment.evaluatedSourceRefs]) })
+     const results = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase, verifySources: (_value, refs) => verifyEvidence(refs), createId: () => `wp11-history-result-${++current.next}`, now })
+-    const verifyOperations = createPlannerOperationVerifier({ host: fixture.host, planner, sources, scenarioInputs: createPlannerScenarioInputs({ planner, sources }) })
++    // Operation admission needs canonical targets and current source authority, not
++    // enrichment from the decision's C10 registry. Keep that registry on the
++    // calculation/comparison Planner below without re-entering it for every target.
++    const operationSources: PlannerSourceHost = {
++      resolveForecastSource: (reference, context) => trace.measure("operation-source", () => current.sources.resolveForecastSource(reference, context)),
++      resolveForecastCoverage: (reference, context) => trace.measure("operation-coverage", () => current.sources.resolveForecastCoverage(reference, context)),
++    }
++    const verifyOperations = createRenewalOperationVerifier(fixture.host, operationSources, trace)
+     const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })
+     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+     const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({ host: fixture.host, sources, scenarios, planner }, request, context)
+@@ -114,8 +127,9 @@
+       if (advanced.status !== "ok") throw new Error(`Alternative revision: ${advanced.reason}`)
+     }
+     const preparePhase = async (source: RecordEvidence, basis: CostCoverageBasis, scenario: ScenarioRequest, training: "omitted" | "confirmed" | "bundled") => {
++      await checkpoint(`prepare:${source.refId}:start`)
+       const phaseRefs = [...basis.sourceRefs].filter((ref): ref is RecordEvidence => ref.kind === "record")
+-      const coverage = await renewalCoverage({ ...fixture, state, planner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
++      const coverage = await renewalCoverage({ ...fixture, planner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
+       declarations.set(coverage.statement.refDigest, { ref: coverage.statement, entries: coverage.entries })
+       const selectedCoverageRef = await register(source, basis, coverage.entries)
+       const renewalSource = phaseRefs.find((ref) => ref.refId === fixture.baselineScenario.baseRef)
+@@ -160,6 +174,7 @@
+       const classification = await baseline.readClassification(source.refId, fixture.context)
+       const rule = await rules.resolve({ caseRef, criterionId: "renewal-difference" }, fixture.context)
+       if (classification.status !== "ok" || rule.status !== "ok") throw new Error("Current classification or rule unavailable")
++      await checkpoint(`prepare:${source.refId}:complete`)
+       return { caseRef, selectedRef: selected.resultRef, baselineRef: renewed.resultRef, comparisonRef: comparisonStored.value.resultRef, comparison: compared.value, advantageComparison: advantage.value, selectedResult: selected.result, baselineResult: renewed.result, scenario, baselineScenario, projection: projection.value.candidate, sourceRefs: basis.sourceRefs, basis, planner: withCriteria, results, evidence, cases, issuer, exact, preview, classification: classification.value, rule: rule.value, sensitivityRequest: { scenarioRef: selected.resultRef, parameterBounds: { parameterRef: "implementation:11", minimum: 10000, maximum: 70000, steps: 2 }, criterion: { id: "renewal-difference", operator: "lte" as const, value: -20000 } } }
+     }
+     const originalSource = fixture.sourceRefs.find((ref) => ref.refId === fixture.scenario.baseRef)
+@@ -176,13 +191,13 @@
+       return { caseRef: recorded.value.caseRef, choice: structuredClone(choice), retry: () => { current.identity = "human-records-original-choice"; return mutation.recordChoice(request, fixture.context) } }
+     }
+     const resolveTraining = async () => {
+-      const revision = await createWp05TrainingRevision(fixture)
++      const revision = await createRenewalQuoteRevision(fixture, "training")
+       current.sources = revision.sources
+       current.evidence = revision.evidence
+       return preparePhase(revision.source, revision.basis, { baseRef: revision.source.refId, operations: [], assumptions: [] }, "confirmed")
+     }
+     const reviseImplementation = async () => {
+-      const revision = await createWp05ImplementationRevision(fixture)
++      const revision = await createRenewalQuoteRevision(fixture, "implementation")
+       current.sources = revision.sources
+       current.evidence = revision.evidence
+       return preparePhase(revision.source, revision.basis, { baseRef: revision.source.refId, operations: [], assumptions: [] }, "bundled")
+@@ -198,7 +213,12 @@
+       try { return await mutation.addAlternative({ caseRef: refFor(decision), alternativeRef: { id: selected.id, version: selected.version }, title: selected.title, scenario: selected.scenario, coverageRef: coverage.value.coverageRef }, fixture.context) }
+       finally { current.sourceFenceValid = true }
+     }
+-    return { fixture, before, choose, resolveTraining, reviseImplementation, readCase, state, rejectLockedSourceCheck, cleanup: fixture.cleanup }
++    const restart = async () => {
++      await checkpoint("restart:start")
++      await fixture.closeStore()
++      return createRenewalRestartReader(fixture.directory, fixture.caseRef, trace)
++    }
++    return { fixture, before, choose, resolveTraining, reviseImplementation, readCase, state, checkpoint, restart, rejectLockedSourceCheck, cleanup: fixture.cleanup }
+   } catch (error) {
+     await fixture.cleanup()
+     throw error
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts
+@@ -14,16 +14,20 @@
+     expect(before.selectedResult).toMatchObject({ knownSubtotal: 210000, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending", derivedMissingCategoryIds: ["training"] } })
+     expect(before.comparison).toMatchObject({ knownDifference: -30000, completeDifference: null, comparisonStatus: "conditioned" })
+     expect(before.advantageComparison.knownDifference).toBe(30000)
++    await history.checkpoint("threshold-before:start")
+     const thresholdBefore = await before.exact(before.sensitivityRequest, before.baselineRef, history.fixture.context)
++    await history.checkpoint("threshold-before:complete")
+     expect(thresholdBefore.status).toBe("ok")
+     if (thresholdBefore.status !== "ok") throw new Error(thresholdBefore.reason)
+     expect(thresholdBefore.value.value).toBeCloseTo(55000, 8)
+     const chosen = await history.choose()
++    await history.checkpoint("choice-recorded")
+     const choiceDigest = digestSfValue(chosen.choice)
+     expect(chosen.choice).toMatchObject({ result: { knownSubtotal: 210000, total: null }, costCoverage: { coverageState: "pending", derivedMissingCategoryIds: ["training"] } })
+     expect((await history.readCase()).preparedChanges).toEqual([])
+     expect((await history.readCase()).receipts).toEqual([])
+     const after = await history.resolveTraining()
++    await history.checkpoint("training-revised")
+     expect(after.caseRef.id).toBe(before.caseRef.id)
+     expect(after.caseRef.incarnation).toBe(before.caseRef.incarnation)
+     expect(after.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
+@@ -33,7 +37,9 @@
+     expect(after.selectedResult.components.every((component) => component.evidenceState === "confirmed")).toBe(true)
+     expect(after.comparison).toMatchObject({ knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete", criterionResults: [{ criterionId: "renewal-difference", state: "failed" }] })
+     expect(after.advantageComparison.completeDifference).toBe(-10000)
++    await history.checkpoint("threshold-after:start")
+     const thresholdAfter = await after.exact(after.sensitivityRequest, after.baselineRef, history.fixture.context)
++    await history.checkpoint("threshold-after:complete")
+     expect(thresholdAfter.status).toBe("ok")
+     if (thresholdAfter.status !== "ok") throw new Error(thresholdAfter.reason)
+     expect(thresholdAfter.value.value).toBeCloseTo(15000, 8)
+@@ -49,6 +55,7 @@
+     expect((await history.readCase()).ledger.filter((event) => event.kind === "choice-recorded")).toHaveLength(1)
+     // An interval certificate can use a source-only scenario only with the producer's current-value parameter proof.
+     const structural = await createPlannerIntervalProof({ units: after.issuer, preview: after.preview })(after.sensitivityRequest, after.baselineRef, history.fixture.context)
++    await history.checkpoint("interval-proof:complete")
+     if (structural.status !== "ok") throw new Error(structural.reason)
+     const body = { schema: "sf-portfolio-selection-v1" as const, selectionRef: "history-selection", caseRef: after.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", baselineRef: after.baselineRef, alternativeRef: after.selectedRef, criteria: [after.rule.criterionId], comparisonDigest: digestSfValue(after.comparison), version: 1, principalRef: "finance", accessRevision: "access", policyVersion: "policy", createdAt: "2026-11-13T02:00:00Z" }
+     const selection: PortfolioSelection = { ...body, selectionDigest: digestSfValue(body) }
+@@ -65,5 +72,24 @@
+       expect(digestSfValue(persisted.value.decision?.choices[0])).toBe(choiceDigest)
+       expect(persisted.value.result).toMatchObject({ caseRef: after.caseRef, kind: "scenario", result: { total: 250000, comparisonStatus: "complete" } })
+     } finally { await reopened.dispose() }
++    await history.checkpoint("history-reopened:complete")
++    // Dispose the original store/UI, rebuild the reader from SQLite, and read the
++    // SAME financial choice with the second explicitly authorized participant.
++    const restarted = await history.restart()
++    try {
++      expect(await history.fixture.host.revalidate(history.fixture.context)).toBe(false)
++      const collaborator = await restarted.read()
++      expect(collaborator.status).toBe("ok")
++      if (collaborator.status !== "ok") throw new Error(`Collaborator read failed:${collaborator.reason}`)
++      expect(collaborator.value.context.principalRef).toBe("collaborator")
++      expect(collaborator.value.case).toMatchObject({ id: decision.id, incarnation: decision.incarnation, version: decision.version, state: "reconsidering", choices: [chosen.choice], preparedChanges: [], receipts: [] })
++      expect(digestSfValue(collaborator.value.case.choices[0])).toBe(choiceDigest)
++      expect(collaborator.value.case.alternatives.find((alternative) => alternative.id === "selected")?.result).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: "complete" })
++      expect(collaborator.value.events.filter((event) => event.kind === "choice-recorded")).toHaveLength(1)
++      expect(await restarted.read("outsider")).toMatchObject({ status: "denied", reason: "case-access-unavailable" })
++      await restarted.checkpoint("history-restarted-collaborator:complete")
++      restarted.revoke()
++      expect((await restarted.read()).status).toBe("denied")
++    } finally { await restarted.close() }
+   } finally { await history.cleanup() }
+ }, 180000)
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts
+@@ -6,7 +6,7 @@
+ import { classifyCoverage, supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
+ import { wp05Horizon, type createWp05SensitivityFixture } from "../wp05/engine-fixture.ts"
+ 
+-type Fixture = Awaited<ReturnType<typeof createWp05SensitivityFixture>>
++type Fixture = Pick<Awaited<ReturnType<typeof createWp05SensitivityFixture>>, "sourceRefs" | "scenario" | "planner" | "context" | "evidence" | "caseRef" | "basis" | "sources">
+ 
+ /** Synthetic source declarations classify real Planner components; they supply no computed financial values. */
+ export async function renewalCoverage(fixture: Fixture, training: "bundled" | "omitted" | "confirmed" | "zero" | "null") {
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts
+@@ -12,15 +12,15 @@
+ import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
+ import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
+ import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
+-import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
+ import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
+ import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
+-import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
+ import { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
+ import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
+ import type { Snapshot } from "../../../runtime/contract.ts"
+ import { wp05Horizon } from "../wp05/engine-fixture.ts"
+ import type { createRenewalChoiceHistory } from "./renewal-choice-fixture.ts"
++import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
++import { renewalEvidenceContext } from "./renewal-source-fixture.ts"
+ 
+ type History = Awaited<ReturnType<typeof createRenewalChoiceHistory>>
+ type Phase = History["before"]
+@@ -78,7 +78,7 @@
+   }
+   const evidence: BusinessContextService = {
+     resolve: async (ref, context) => ({ state: await currentSource(ref, context) ? "fresh" : "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: at }),
+-    context: async ({ refs }, context) => Promise.all(refs.map((ref) => evidence.resolve(ref, context))),
++    context: renewalEvidenceContext((ref, context) => evidence.resolve(ref, context)),
+     recall: async () => [], emitFromLedger: async () => { throw new Error("No native memory emission in human choice fixture") },
+   }
+   const verifyEvidence = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => (await evidence.context({ refs }, context)).every((resolved) => resolved.state === "fresh")
+@@ -100,7 +100,9 @@
+   }
+   const planner = createPlannerPort({ host, sources, evidence })
+   const results = createSfDecisionResultStore({ state, host, authorizeCase, verifySources: (_value, refs, context) => verifyEvidence(refs, context), createId: () => `unused-human-result-${++controls.event}`, now: () => at })
+-  const verifyOperations = createPlannerOperationVerifier({ host, planner, sources, scenarioInputs: createPlannerScenarioInputs({ planner, sources }) })
++  // Admission needs current canonical targets; C10 stays on the judgment Planner.
++  const operationSources: PlannerSourceHost = { resolveForecastSource: sources.resolveForecastSource, resolveForecastCoverage: async () => ({ status: "unavailable", reason: "coverage-not-needed-for-operation-admission" }) }
++  const verifyOperations = createRenewalOperationVerifier(host, operationSources)
+   const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })
+   const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner }, request, context)
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts
+@@ -0,0 +1,36 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { decodeSfOperationInput } from "../../../product/contracts/schema-admission.ts"
++import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
++import { createPlannerPort } from "../../../product/planner/port.ts"
++import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
++import type { createWp11FixtureTrace } from "./fixture-trace.ts"
++
++/** Source-only alternatives have no operation targets to execute in a copied
++ * snapshot. Observe their canonical source/projection under current authority;
++ * every nonempty operation/assumption scenario retains the complete verifier.
++ * No financial result or authority observation is memoized between calls.
++ */
++export function createRenewalOperationVerifier(host: DomainPortHost, sources: PlannerSourceHost, trace?: ReturnType<typeof createWp11FixtureTrace>) {
++  const planner = createPlannerPort({ host, sources })
++  const verify = createPlannerOperationVerifier({ host, planner, sources, scenarioInputs: createPlannerScenarioInputs({ planner, sources }) })
++  const measure = <T>(label: string, work: () => Promise<T>) => trace ? trace.measure(label, work) : work()
++  return async (incoming: ScenarioRequest, context: TrustedDomainContext) => {
++    const parsed = decodeSfOperationInput("sf_scenario_simulate", incoming)
++    if (!parsed.ok) return false
++    if (parsed.value.operations.length || parsed.value.assumptions.length) return measure("planner.verifyOperation", () => verify(parsed.value, context))
++    return measure("planner.verifySourceOnly", async () => {
++      const request = host.requestFor(context)
++      if (!request || request.signal.aborted || !await host.revalidate(context)) return false
++      const source = structuredClone(await sources.resolveForecastSource(parsed.value.baseRef, context))
++      if (source.status !== "ok" || !source.value.evidence.target.period) return false
++      // This real producer re-observes the actor, source scope, projection and
++      // coverage at ingress/egress. Its monetary output is not supplied by us.
++      const observed = await planner.compareForecast({ baseRef: parsed.value.baseRef, candidateRef: parsed.value.baseRef, period: source.value.evidence.target.period, currency: "USD" }, context)
++      const again = await sources.resolveForecastSource(parsed.value.baseRef, context)
++      return observed.status === "ok" && observed.value.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(source.value.evidence)) && again.status === "ok" && digestSfValue(again.value) === digestSfValue(source.value) && !request.signal.aborted && await host.revalidate(context)
++    })
++  }
++}
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts
+@@ -0,0 +1,91 @@
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { projectPlannerSource } from "../../../product/planner/port.ts"
++import { roleMap } from "../../../runtime/admin.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { resolve } from "../../../src/identity.ts"
++import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
++import { renewalEvidenceContext } from "./renewal-source-fixture.ts"
++import type { createWp11FixtureTrace } from "./fixture-trace.ts"
++
++/** Rebuilds reader/UI/C08 state from SQLite after the writer was disposed. Fixture
++ * membership and synthetic scope declarations remain explicit host boundaries.
++ */
++export async function createRenewalRestartReader(directory: string, ref: Pick<DecisionCase, "id" | "incarnation">, trace: ReturnType<typeof createWp11FixtureTrace>) {
++  const store = await openLocalStore(directory)
++  const controls = { active: true, sequence: 0 }
++  const contexts: TrustedUiContext[] = []
++  const command = "sf-human:decisions.read"
++  const payload = { caseRef: encodeCaseRef(ref) }
++  const requests = new WeakSet<Request>()
++  const authorize = async (request: Request) => {
++    const principalRef = request.headers.get("x-principal")
++    return controls.active && requests.has(request) && (principalRef === "collaborator" || principalRef === "outsider") ? { installationId: "install", projectId: "project", principalRef, policyVersion: "policy", accessRevision: "access" } : undefined
++  }
++  const ui = createSfUiAuthority({ authorize, commandIdentity: async () => "renewal-restarted-read", privateCommands: [command], createId: () => `renewal-restarted-${++controls.sequence}`, now: () => Date.parse("2026-11-13T03:00:00Z") })
++  const host: DomainPortHost = {
++    persistence: store,
++    authenticate: async (request, input) => { const identity = await authorize(request); return identity ? resolve(identity.principalRef, [...input!.roleMap], (group) => group === "finance-group") : null },
++    environment: async () => ({ at: "2026-11-13T03:00:00Z", id: () => "unused-restarted-read", directory: [] }),
++    requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined,
++    revalidate: (context) => trace.measure("restarted.revalidate", () => context.kind === "ui" ? ui.revalidate(context) : Promise.resolve(false)),
++  }
++  const state = trace.state(createSfProductState({ persistence: store, createId: () => "unused-restarted-state", resolveTarget: async () => ({ incarnation: ref.incarnation }), authorize }))
++  const admit = async (principalRef: "collaborator" | "outsider") => {
++    const request = new Request("https://example.test/decisions/read", { headers: { "x-principal": principalRef } })
++    requests.add(request)
++    const admitted = await ui.admit(request, command, digestSfValue(payload))
++    if (admitted.status !== "ok" || !await ui.validate(admitted.value, command, digestSfValue(payload))) throw new Error("Restarted UI read admission unavailable")
++    contexts.push(admitted.value)
++    return admitted.value
++  }
++  try {
++    const collaborator = await admit("collaborator")
++    const request = host.requestFor(collaborator)
++    if (!request) throw new Error("Restarted collaborator request unavailable")
++    const loaded = await state.read(request, "cases", (value) => value.cases[ref.id])
++    if (loaded.status !== "ok" || !loaded.value || loaded.value.incarnation !== ref.incarnation || !loaded.value.participants.includes("collaborator")) throw new Error("Persisted collaborator membership unavailable")
++    const decision = loaded.value
++    const coverageRefs = (assessment: DecisionCase["alternatives"][number]["result"]["costCoverage"]) => [...assessment.evaluatedSourceRefs, ...assessment.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
++    const persistedRefs = [...decision.sourceRefs, ...decision.costCoverageBases.flatMap((basis) => basis.sourceRefs), ...decision.alternatives.flatMap((alternative) => [...alternative.result.sourceRefs, ...coverageRefs(alternative.result.costCoverage)]), ...decision.choices.flatMap((choice) => [...choice.evidenceRefs, ...choice.result.sourceRefs, ...coverageRefs(choice.costCoverage), ...coverageRefs(choice.result.costCoverage)]), ...decision.ledger.flatMap((event) => event.evidenceRefs)]
++    const known = new Map(persistedRefs.map((item) => [digestSfValue(item), item]))
++    const currentSource = async (reference: BusinessEvidenceRef, context: TrustedDomainContext) => {
++      if (!known.has(digestSfValue(reference)) || reference.refDigest !== digestSfEvidenceRef(reference) || reference.installationId !== context.binding.installationId || reference.projectId !== context.binding.projectId || reference.kind !== "record" || !await host.revalidate(context)) return false
++      // These declarations were fixture inputs persisted with the classification;
++      // this reader does not promote them to externally observed human evidence.
++      if (reference.target.recordType === "synthetic-scope") return true
++      if (reference.target.surface !== "planner" || reference.target.recordType !== "planner-version") return false
++      const sourceRequest = host.requestFor(context)
++      if (!sourceRequest) return false
++      return store.transaction("planner", async (snapshot) => {
++        const principal = await host.authenticate(sourceRequest, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
++        if (!principal || principal.id !== context.binding.principalRef) return { commit: false, value: false }
++        const roles = principal.roles.filter((entry) => entry.surface === "planner").map((entry) => entry.role)
++        const projection = projectPlannerSource(snapshot, { id: principal.id, roles, canWrite: principal.canWrite, assigned: [], domains: [] }, reference.target.recordId)
++        return { commit: false, value: !!projection && digestSfValue({ versionId: reference.target.recordId, projection }) === reference.target.projectionDigest }
++      })
++    }
++    const evidence: BusinessContextService = { resolve: async (reference, context) => ({ state: await currentSource(reference, context) ? "fresh" : "revoked", ref: reference, accessRevision: context.binding.accessRevision, checkedAt: "2026-11-13T03:00:00Z" }), context: renewalEvidenceContext((reference, context) => evidence.resolve(reference, context)), recall: async () => [], emitFromLedger: async () => { throw new Error("No memory publication in restarted reader") } }
++    const sources: PlannerSourceHost = {
++      resolveForecastSource: async (reference, context) => {
++        const candidates = [...known.values()].filter((item): item is Extract<BusinessEvidenceRef, { kind: "record" }> => item.kind === "record" && item.refId === reference && item.target.recordType === "planner-version")
++        return candidates.length === 1 && await currentSource(candidates[0]!, context) ? { status: "ok", value: { versionId: candidates[0]!.target.recordId, evidence: candidates[0]! } } : { status: "unavailable", reason: "restarted-source-unavailable" }
++      },
++      resolveForecastCoverage: async () => ({ status: "unavailable", reason: "coverage-not-needed-for-read-admission" }),
++    }
++    const verifyOperations = createRenewalOperationVerifier(host, sources, trace)
++    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: ref.id, incarnation: ref.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.id === ref.id && value.incarnation === ref.incarnation && value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => "unused-restarted-case", now: () => "2026-11-13T03:00:00Z" })
++    return {
++      read: async (principalRef: "collaborator" | "outsider" = "collaborator") => cases.read(payload, principalRef === "collaborator" ? collaborator : await admit(principalRef)),
++      revoke: () => { controls.active = false },
++      checkpoint: (phase: string) => trace.checkpoint(phase, state, request),
++      close: async () => { for (const context of contexts) ui.finish(context); await store.dispose() },
++    }
++  } catch (error) { for (const context of contexts) ui.finish(context); await store.dispose(); throw error }
++}
+--- W18/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts
+@@ -0,0 +1,153 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageAssessment, CostCoverageBasis, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
++import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { domain } from "../../../runtime/planner.ts"
++import { resolve } from "../../../src/identity.ts"
++import { wp05Horizon } from "../wp05/engine-fixture.ts"
++
++type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
++const now = () => "2026-11-13T00:00:00Z"
++const november = { start: "2027-11-01", end: "2027-11-30" }
++const reader = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
++
++/** The published WP05 renewal inputs and explicit synthetic source boundary, without
++ * its unrelated sensitivity/bootstrap results. SQLite, UI admission and every
++ * financial projection/simulation still use the production implementations.
++ */
++export async function createRenewalSourceFixture(training: "omitted" | "bundled") {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-wp11-renewal-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  const access = { allowed: true, revokedSources: new Set<string>(), disposed: false }
++  const request = new Request("https://example.test/wp11-renewal", { headers: { authorization: "wp11-renewal-fixture" } })
++  const identity = { installationId: "install", projectId: "project", principalRef: "finance", policyVersion: "policy", accessRevision: "access" }
++  const authorize = async (incoming: Request) => access.allowed && incoming === request && incoming.headers.get("authorization") === "wp11-renewal-fixture" ? identity : undefined
++  const ui = createSfUiAuthority({ authorize, commandIdentity: async () => "wp11-renewal-command", createId: () => "wp11-renewal-request", now: () => Date.parse(now()) })
++  const intent = { viewId: "BI11", selectionRef: "authorized-selection", period: wp05Horizon }
++  const admitted = await ui.admit(request, "sf_bi_view", digestSfValue(intent))
++  if (admitted.status !== "ok") throw new Error("Renewal UI admission unavailable")
++  const context = admitted.value
++  if (!await ui.validate(context, "sf_bi_view", digestSfValue(intent))) throw new Error("Renewal UI admission was not consumed")
++  const closeStore = async () => {
++    ui.finish(context)
++    if (!access.disposed) { await store.dispose(); access.disposed = true }
++  }
++  const cleanup = async () => { await closeStore(); await rm(directory, { recursive: true, force: true }) }
++  try {
++    const line = (id: string, amount: number) => ({ id, sec: "opex", el: "licenses", cur: "USD", b: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0), a: Array(12).fill(null), f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) })
++    const version = (id: string, lines: ReturnType<typeof line>[]) => ({ id, year: 2027, closed: 0, lines, fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} })
++    const snapshot: Snapshot = { data: { roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }], versions: [version("renewal", [line("renewal", 240000)]), version(`transition-${training}`, [line("bridge", 60000), line("implementation", 45000), line("new-service", 105000)])] }, versions: {}, sequences: {}, audit: [], notices: [] }
++    await store.transaction("planner", async (current) => { Object.assign(current, snapshot); return { commit: true, value: true } })
++    const caseRef = { id: "case", incarnation: "case-incarnation", version: 1 }
++    const sourceRefs = [`transition-${training}`, "renewal"].map((id): RecordEvidence => {
++      const projection = projectPlannerSource(snapshot, reader, id)
++      if (!projection) throw new Error(`Planner source unavailable:${id}`)
++      const unsigned: RecordEvidence = { schema: "sf-evidence-v1", refId: id, installationId: identity.installationId, projectId: identity.projectId, refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `planner-${id}`, version: 1, fields: Object.keys(projection), period: wp05Horizon, projectionDigest: digestSfValue({ versionId: id, projection }) } }
++      return { ...unsigned, refDigest: digestSfEvidenceRef(unsigned) }
++    })
++    const sourceMatches = (ref: BusinessEvidenceRef) => access.allowed && !access.revokedSources.has(ref.refId) && sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))
++    const basis: CostCoverageBasis = { id: "renewal-transition", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs }
++    const host: DomainPortHost = { persistence: store, authenticate: async (_request, input) => resolve("finance", [...input!.roleMap], (group) => group === "finance-group"), environment: async () => ({ at: now(), id: () => "unused", directory: [] }), requestFor: (trusted) => trusted.kind === "ui" ? ui.requestFor(trusted) : undefined, revalidate: (trusted) => trusted.kind === "ui" ? ui.revalidate(trusted) : Promise.resolve(false) }
++    const sources: PlannerSourceHost = {
++      resolveForecastSource: async (reference) => {
++        const evidence = sourceRefs.find((ref) => ref.refId === reference)
++        return evidence && sourceMatches(evidence) ? { status: "ok", value: { versionId: reference, evidence } } : { status: "unavailable", reason: "planner-source-unavailable" }
++      },
++      resolveForecastCoverage: async (reference) => {
++        const source = sourceRefs.find((ref) => ref.refId === reference)
++        if (!source || !sourceMatches(source)) return { status: "unavailable", reason: "planner-coverage-unavailable" }
++        return { status: "ok", value: { coverageRef: `source-coverage:${reference}`, basis, assessment: pending(basis, reference) } }
++      },
++    }
++    const planner = createPlannerPort({ host, sources })
++    const state = createSfProductState({ persistence: store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (incoming) => await authorize(incoming) ? identity : undefined })
++    const evidence: BusinessContextService = { resolve: async (ref) => ({ state: sourceMatches(ref) ? "fresh" : "revoked", ref, accessRevision: identity.accessRevision, checkedAt: now() }), context: renewalEvidenceContext((ref, trusted) => evidence.resolve(ref, trusted)), recall: async () => [], emitFromLedger: async () => { throw new Error("No memory publication in renewal source fixture") } }
++    const scenario: ScenarioRequest = { baseRef: `transition-${training}`, operations: [{ kind: "replace", targetRef: "implementation:11", amount: 45000, currency: "USD", period: november }, { kind: "replace", targetRef: "bridge:11", amount: 60000, currency: "USD", period: november }, { kind: "replace", targetRef: "new-service:11", amount: 105000, currency: "USD", period: november }], assumptions: [] }
++    const baselineScenario: ScenarioRequest = { baseRef: "renewal", operations: [{ kind: "replace", targetRef: "renewal:11", amount: 240000, currency: "USD", period: november }], assumptions: [] }
++    const selectedPreview = await planner.simulateScenario(scenario, context)
++    const baselinePreview = await planner.simulateScenario(baselineScenario, context)
++    if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok" || selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error("Canonical conditioned renewal previews unavailable")
++    const selectedResult: ScenarioResult = { ...selectedPreview.value, costCoverage: { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
++    const baselineResult: ScenarioResult = { ...baselinePreview.value, costCoverage: { ...baselinePreview.value.costCoverage, alternativeId: "baseline", alternativeVersion: 1 } }
++    // The second participant is an explicit fixture membership, not an inferred grant.
++    const decision: DecisionCase = { ...caseRef, state: "comparing", objective: "renewal", currency: "USD", horizon: wp05Horizon, criteria: [{ id: "renewal-difference", description: "Explicit known subtotal criterion", required: true }], participants: ["finance", "collaborator"], sourceRefs, alternatives: [{ id: "selected", version: 1, title: "Transition", scenario, result: selectedResult }, { id: "baseline", version: 1, title: "Renewal", scenario: baselineScenario, result: baselineResult }], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++    const seeded = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "wp11-renewal-seed", commandDigest: digestSfValue(decision), targetRef: caseRef.id, targetIncarnation: caseRef.incarnation }, async (value) => { value.cases[caseRef.id] = decision; return { commit: true, value: true } })
++    if (seeded.status !== "ok" || !seeded.value) throw new Error("Renewal case seed unavailable")
++    return { context, host, ui, state, store, directory, request, decision, planner, sources, sourceRefs, basis, caseRef, scenario, baselineScenario, selectedResult, baselineResult, evidence, closeStore, cleanup }
++  } catch (error) { await cleanup(); throw error }
++}
++
++/** A new synthetic quote is authored into a copied real version through Planner CAS.
++ * This helper does not create sensitivity results or supply calculated totals.
++ */
++export async function createRenewalQuoteRevision(fixture: Awaited<ReturnType<typeof createRenewalSourceFixture>>, kind: "training" | "implementation") {
++  const versionId = kind === "training" ? "transition-confirmed" : "transition-implementation70000"
++  const amount = kind === "training" ? 40000 : 70000
++  const author = { ...reader, id: "fixture-source-author", roles: ["admin"] }
++  let allocated = 0
++  const environment = { at: now(), id: () => ++allocated === 1 ? versionId : `wp11-${kind}-revision-${allocated}`, directory: [] }
++  const source = await fixture.store.transaction("planner", async (snapshot) => {
++    const previous = projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)
++    if (!previous) throw new Error("Original source unavailable")
++    const originalDigest = digestSfValue(previous)
++    const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: `Confirmed ${kind} quote` } }, environment)
++    if (!copied.ok || copied.value !== versionId) throw new Error("Canonical source copy rejected")
++    const saved = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f10: amount } : { versionId, f10: amount } }, environment)
++    if (!saved.ok || digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== originalDigest) throw new Error("Canonical quote revision changed its original source")
++    const projection = projectPlannerSource(snapshot, reader, versionId)
++    if (!projection) throw new Error("Revised source unavailable")
++    const unsigned: RecordEvidence = { schema: "sf-evidence-v1", kind: "record", refId: versionId, installationId: fixture.context.binding.installationId, projectId: fixture.context.binding.projectId, refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: versionId, incarnation: `planner-${versionId}`, version: snapshot.versions[`versions:${versionId}`]?.version ?? 1, fields: Object.keys(projection), period: wp05Horizon, projectionDigest: digestSfValue({ versionId, projection }) } }
++    return { commit: true, value: { ...unsigned, refDigest: digestSfEvidenceRef(unsigned) } }
++  })
++  const sourceRefs = [...structuredClone(fixture.sourceRefs), source]
++  const basis: CostCoverageBasis = { ...structuredClone(fixture.basis), version: fixture.basis.version + 1, sourceRefs }
++  const currentSource = async (ref: BusinessEvidenceRef, context: TrustedDomainContext) => {
++    if (!await fixture.host.revalidate(context)) return false
++    if (digestSfValue(ref) !== digestSfValue(source)) return (await fixture.evidence.resolve(ref, context)).state === "fresh"
++    const projection = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: projectPlannerSource(snapshot, reader, versionId) }))
++    return !!projection && digestSfValue({ versionId, projection }) === source.target.projectionDigest
++  }
++  const sources: PlannerSourceHost = {
++    resolveForecastSource: async (reference, context) => reference === source.refId ? await currentSource(source, context) ? { status: "ok", value: { versionId, evidence: source } } : { status: "unavailable", reason: "planner-source-unavailable" } : fixture.sources.resolveForecastSource(reference, context),
++    resolveForecastCoverage: async (reference, context) => {
++      const selected = sourceRefs.find((ref) => ref.refId === reference)
++      return selected && await currentSource(selected, context) ? { status: "ok", value: { coverageRef: `revised-source-coverage:${reference}`, basis, assessment: pending(basis, reference) } } : { status: "unavailable", reason: "planner-coverage-unavailable" }
++    },
++  }
++  const evidence: BusinessContextService = { resolve: async (ref, context) => ({ state: await currentSource(ref, context) ? "fresh" : "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: now() }), context: renewalEvidenceContext((ref, trusted) => evidence.resolve(ref, trusted)), recall: async () => [], emitFromLedger: async () => { throw new Error("No memory publication in quote revision fixture") } }
++  return { source, sourceRefs, basis, sources, evidence }
++}
++
++function pending(basis: CostCoverageBasis, alternativeId: string): CostCoverageAssessment {
++  return { basisId: basis.id, basisVersion: basis.version, alternativeId, alternativeVersion: 1, currency: "USD", horizon: wp05Horizon, issues: [], evaluatedSourceRefs: basis.sourceRefs, coverageState: "pending", entries: basis.categoryIds.map((categoryId) => ({ categoryId, status: "pending", reason: "missing-category" })), derivedMissingCategoryIds: [...basis.categoryIds] }
++}
++
++/** One observation per distinct reference in the SAME context call. Each later
++ * call resolves again; no authority, projection or result survives this batch.
++ */
++export function renewalEvidenceContext(resolve: BusinessContextService["resolve"]): BusinessContextService["context"] {
++  return async ({ refs }, context) => {
++    const observations = new Map<string, ReturnType<BusinessContextService["resolve"]>>()
++    const values = await Promise.all(refs.map((ref) => {
++      const key = digestSfValue(ref)
++      const previous = observations.get(key)
++      if (previous) return previous
++      const observed = resolve(ref, context)
++      observations.set(key, observed)
++      return observed
++    }))
++    return structuredClone(values)
++  }
++}

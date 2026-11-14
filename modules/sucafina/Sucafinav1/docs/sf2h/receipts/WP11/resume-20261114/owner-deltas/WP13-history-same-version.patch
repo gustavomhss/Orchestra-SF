@@ -1,0 +1,35 @@
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts b/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts
+index 18c18eeaf6b0aca408d934771a3a95db4c1e7d0f..29981a792db2b0e857920971b44fa4e9d1628d25 100644
+--- a/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts
+@@ -17,7 +17,9 @@
+     if (stored.kind !== "portfolio" || !stored.resultRef.trim() || !stored.requestDigest.trim() || !stored.resultDigest.trim() || !stored.sourceRefs.length) return false
+     const inspect = async () => {
+       const current = await input.caseFor(context).catch(() => undefined)
+-      if (!current || current.status !== "ok" || current.value.id !== stored.caseRef.id || current.value.incarnation !== stored.caseRef.incarnation || current.value.version <= stored.caseRef.version) return undefined
++      // Domain sources may change while the durable case remains at the same version.
++      // Equality permits historical provenance; it never makes old evidence fresh.
++      if (!current || current.status !== "ok" || current.value.id !== stored.caseRef.id || current.value.incarnation !== stored.caseRef.incarnation || current.value.version < stored.caseRef.version) return undefined
+       const bindingResult = await input.readHistoricalBinding({ caseRef: current.value, resultRef: stored.resultRef }, context).catch(() => undefined)
+       if (!bindingResult || bindingResult.status !== "ok" || !bindingResult.value) return undefined
+       const binding = structuredClone(bindingResult.value.binding)
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
+index 2c4887d711ff636754b7aed9638b0681fe3fc334..72283a87f56088f9774c681eb3c7c561a98cc03c 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
+@@ -46,6 +46,15 @@
+ describe("portfolio historical provenance", () => {
+   test("accepts an original binding and selection when current case and evidence remain authorized", async () => {
+     expect(await createPortfolioHistoricalProvenance(harness())(stored, context)).toBe(true)
++  })
++
++  test("same-version history requires the original candidate and current evidence authority", async () => {
++    const input = harness()
++    input.caseFor = async () => ({ status: "ok", value: originalCase })
++    input.cases.read = async () => ({ status: "ok", value: { case: { ...originalCase, alternatives: [alternative] } } } as never)
++    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(true)
++    input.evidence.context = async ({ refs }) => refs.map((ref) => ({ ref, state: "revoked", accessRevision: "access-7", checkedAt: "now" }))
++    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+   })
+ 
+   test("rejects a candidate whose case incarnation was replaced", async () => {

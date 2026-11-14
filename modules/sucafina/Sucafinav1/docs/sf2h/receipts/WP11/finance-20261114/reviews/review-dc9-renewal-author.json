@@ -1,0 +1,234 @@
+{
+  "scope": "Author static proposal review, not independent acceptance",
+  "sourceHead": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+  "financeHead": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+  "checks": {
+    "importsResolve": true,
+    "imports": [
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../../runtime/admin.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../../runtime/contract.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../../runtime/contract.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../../src/nav.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../../src/planner-accounts.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../contracts/canonical.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../contracts/context.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../contracts/ports.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../contracts/operations.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../contracts/business-context.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../contracts/sf-execution.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "../contracts/schema-admission.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./adapter.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./bi.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./headcount-months.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./actual-presence.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./coverage.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./scenario-port.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./scenario-port.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./scenario-comparison-port.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "import": "./scenario-comparison-port.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/contracts/canonical.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/contracts/operations.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/contracts/ports.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/contracts/sf-execution.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/contracts/schema-admission.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/planner/operation-verifier.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/planner/port.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../product/planner/scenario-inputs.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "../../../runtime/admin.ts",
+        "exists": true
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "import": "./fixture-trace.ts",
+        "exists": true
+      }
+    ],
+    "actorObjectLiteralByteIdentical": true,
+    "nonemptyCanonicalVerifierWrappedReadOnly": true,
+    "newTestDeclaredCases": 7,
+    "newTestSourceExpectLines": 35,
+    "newTestScopeVariants": 9,
+    "newTestSourceBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+    "sourceTestChanged": false
+  },
+  "candidateManifest": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "beforeBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "candidateBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "beforeBlob": "2338917427497733e4bd88aec852985206cce066",
+      "candidateBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc",
+      "bytes": 6337
+    }
+  ],
+  "requiredActions": {
+    "wp03": [
+      "test/product/wp03/port.test.ts",
+      "test/product/wp03/port-hr.test.ts",
+      "test/product/wp03/capability-parity.test.ts"
+    ],
+    "wp11": [
+      "test/product/wp11/renewal-source-admission.test.ts",
+      "test/product/wp11/renewal-read-scope.test.ts",
+      "test/product/wp11/current-choice-lifecycle.test.ts",
+      "test/product/wp11/renewal-choice-history.test.ts",
+      "test/product/wp11/renewal-choice-revision.test.ts",
+      "test/product/wp11/implementation-quote-history.test.ts"
+    ],
+    "wp05": [
+      "test/product/wp05/choice-history-bi.test.ts"
+    ]
+  },
+  "notExecuted": [
+    "product tests",
+    "typecheck",
+    "guards",
+    "native proofs",
+    "C/D qualification"
+  ],
+  "dispositions": [
+    {
+      "file": "test/product/wp11/renewal-choice-fixture.ts",
+      "action": "adopt exact dc9 source final projection-only sourcePlanner call",
+      "sourceBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "reason": "Only phase member projection is returned; persisted results/comparisons/criterion/preview remain classified Planner/C10."
+    },
+    {
+      "file": "test/product/wp11/renewal-source-admission.test.ts",
+      "action": "adopt exact dc9 source",
+      "sourceBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "reason": "Preserve every assertion including source commit oracle, counts, nine scope variants and final-authentication revocation."
+    }
+  ],
+  "notes": [
+    "Source-only admission returns boolean, never totals/C10 evidence or a ChoiceRecord. It delegates authenticated Actor mapping to canonical Planner and projection to projectPlannerSource.",
+    "Operation/assumption cases continue full canonical operation verification and Finance one-invocation real read-only transaction with external authority revalidation.",
+    "No cross-invocation cache, authorization bypass, new financial formula, C08 write or accepted result is introduced.",
+    "Two source-only snapshots remain fresh across awaited source and authority callbacks; keeping the old outer transaction here would prevent the source-CAS race from committing and would not reproduce dc9 behavior.",
+    "Source-only projection cost improvement remains unmeasured until Actions."
+  ]
+}

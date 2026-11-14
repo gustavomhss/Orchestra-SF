@@ -21,12 +21,19 @@ export function createProcurementBiSource(host: ProcurementBiHost): BiPresentati
       if (request.viewId === "BI05") return { status: "ok", value: stock }
       const rows = result.value.aging
       if (rows.some((row) => row.context.installationId !== stock.context.installationId || row.context.projectId !== stock.context.projectId || row.context.principalRef !== stock.context.principalRef || row.context.accessRevision !== stock.context.accessRevision || row.context.policyVersion !== stock.context.policyVersion || row.context.currency !== stock.context.currency || row.context.period.start !== stock.context.period.start || row.context.period.end !== stock.context.period.end)) return { status: "unavailable", reason: "inconsistent-collection-context" }
-      const identified = rows.map((row) => ({ row, ref: row.values.flatMap((value) => value.sourceRefs).find((ref) => ref.kind === "record" && ref.target.recordType === "procurement-request") }))
-      if (identified.some((entry) => !entry.ref || entry.ref.kind !== "record")) return { status: "unavailable", reason: "missing-request-reference" }
+      const identified = rows.map((row) => {
+        const requests = row.values.flatMap((value) => value.sourceRefs.flatMap((ref) => ref.kind === "record" && ref.target.recordType === "procurement-request" ? [ref] : []))
+        const drilldowns = row.values.flatMap((value) => {
+          const reference = value.drilldown
+          return reference?.kind === "record" && reference.target.recordType === "procurement-request" ? [reference] : []
+        })
+        return { row, requests, drilldowns }
+      })
+      if (identified.some((entry) => !entry.requests.length)) return { status: "unavailable", reason: "missing-request-reference" }
+      if (identified.some((entry) => [...entry.requests, ...entry.drilldowns].some((ref) => ref.installationId !== stock.context.installationId || ref.projectId !== stock.context.projectId || ref.target.surface !== "procurement") || new Set([...entry.requests, ...entry.drilldowns].map((ref) => JSON.stringify([ref.target.recordId, ref.target.incarnation, ref.target.version]))).size !== 1)) return { status: "unavailable", reason: "inconsistent-request-reference" }
       const entries = identified.flatMap((entry) => {
-        if (!entry.ref || entry.ref.kind !== "record") return []
-        const prefix = `${entry.ref.target.recordId}:${entry.ref.target.incarnation}`
-        return [{ prefix, row: entry.row }]
+        const ref = entry.requests[0]
+        return ref ? [{ prefix: `${ref.target.recordId}:${ref.target.incarnation}`, row: entry.row }] : []
       })
       if (new Set(entries.map((entry) => entry.prefix)).size !== entries.length) return { status: "unavailable", reason: "duplicate-request-reference" }
       return { status: "ok", value: { ...stock, values: entries.flatMap((entry) => entry.row.values.map((value) => ({ ...value, id: `${entry.prefix}:${value.id}` }))), missing: entries.flatMap((entry) => entry.row.missing.map((missing) => ({ ...missing, field: `${entry.prefix}:${missing.field}` }))) } }

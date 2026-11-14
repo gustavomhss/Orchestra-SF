@@ -1,0 +1,125 @@
+{
+  "schema": "wp11-h6-source-only-admission-review-v1",
+  "status": "PROPOSED_STATIC_ONLY_NOT_RUN",
+  "rootAuthorization": "Prepare scratch proposal only, preserving all financial assertions, three replaces, source/authority fences and180000ms. No local product execution.",
+  "observedFailure": {
+    "productSha": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+    "runId": 43593078090,
+    "jobId": 132441740160,
+    "conclusion": "FAILURE_TIMEOUT",
+    "summary": "0pass1fail1error/180.30s",
+    "metadataPath": "ci-analysis/wp11-W12-H5-evidence-meta.json",
+    "metadataSha256": "f0d8e2258bf43013c421000ddb12564be5f3380d158d78624e9f3c6e82f0ba92",
+    "milestonesElapsedMs": {
+      "choiceRecorded": 78240,
+      "confirmedPrepared": 167332,
+      "trainingRevised": 167378,
+      "thresholdAfterStart": 167428,
+      "guard": 180020
+    },
+    "limits": "Callback timings are inclusive/overlapping; they are not exclusive CPU or proof of a performance cause. H5 did not finish threshold-after, interval or restart."
+  },
+  "rejectedShortcut": {
+    "proposal": "Resolve the existing source host twice and compare the returned value, with no real projection observation.",
+    "counterexample": "The original renewal-source-fixture resolver returns an immutable sourceRefs array after access flags. A real Planner CAS can change the original source while both resolves still return the same old evidence. The revised ref alone performs a fresh projection read; originals still fall back to the static resolver.",
+    "decision": "Rejected. Preserve two authenticated canonical projection observations for every no-op base, including original refs."
+  },
+  "contractReasoning": [
+    "createPlannerOperationVerifier documents verification of operation targets and replacement amount references. Strict operations=[] and assumptions=[] have no such targets or premises. This own fixture helper returns admission only; it must not issue a financial result or C10 completeness.",
+    "The canonical projectPlannerSource remains the only projector. The fixture repeats the existing host.authenticate/roleMap/access-to-Actor wiring for two real persistence transactions; no financial expression, cost aggregate or classification is copied.",
+    "The complete reference envelope, digest, installation/project, surface/type/versionId, exact fields, whole-month period and projection year are validated against fresh snapshots. Both source resolves remain, and the full selected value is compared after cloning.",
+    "The second source resolution and external host revalidation occur BEFORE the second authenticated snapshot. Because authenticate is also asynchronous, the final observe performs one more host revalidation after authenticate and BEFORE projectPlannerSource, inside the final transaction. No asynchronous callback runs after that projection; return checks only synchronous request identity, binding digest and abort. Source drift introduced by external revalidate #2 and authority revocation introduced by authenticate #2 are separately refused.",
+    "Every request with operations OR assumptions still delegates to the existing canonical operation verifier. Every decision calculation, baseline assessment, C10 registry read, criterion, comparison and preview retains its current producer and fences.",
+    "The fourth preparePhase comparison exposes only value.candidate as a DomainProjection. It can use the already existing sourcePlanner, whose FinancialAnalysis completeness is deliberately not consumed there."
+  ],
+  "proofBoundary": [
+    "The original source refs and scope declarations remain explicit synthetic fixture inputs. This proposal does not establish a native source issuer, loaded skill, installation session or human/browser journey.",
+    "No result, grant, projection or evidence cache survives a call. Each later admission observes again.",
+    "The observer does not validate financial completeness or generate monetary observations. Those obligations remain with the unchanged Planner and C10 consumers.",
+    "No expected performance gain is claimed. Only hosted negative tests and the complete180000ms history can qualify the candidate."
+  ],
+  "negativeTestsPlanned": [
+    {
+      "name": "empty-source admission observes two authenticated projections and refuses a static reference after a real Planner edit",
+      "discriminator": "Positive requires exactly two source resolutions, two canonical authentications and three lease revalidations; no financial environment/C10 calls. A real source CAS leaves the fixture ref identical but admission must become false. Missing operations array is rejected by the closed schema."
+    },
+    {
+      "name": "empty-source admission refuses second-source-resolve before its final projection",
+      "discriminator": "The second resolver commits a real source change while returning the old reference. The externally asserted commit and final snapshot refusal must both occur."
+    },
+    {
+      "name": "empty-source admission refuses last-revalidate-source-change before its final projection",
+      "discriminator": "The last external revalidate commits a real source change but returns true. The final canonical projection still refuses the old digest."
+    },
+    {
+      "name": "empty-source admission refuses last-revalidate-revocation before its final projection",
+      "discriminator": "The last external revalidate finishes the real private UI lease. The guard returns false, with the request inaccessible; no unauthorized second projection."
+    },
+    {
+      "name": "empty-source admission refuses authority revoked by its final authentication callback",
+      "discriminator": "The second canonical authentication first observes its real principal, then changes the real Request authorization header to revoked while requestFor still exposes the lease, and returns the observed principal. A third revalidation, inside the final transaction and before projectPlannerSource, must revoke the private lease and refuse admission; the test never calls ui.finish."
+    },
+    {
+      "name": "empty-source admission refuses mismatched scope, projection fields, digest and source period",
+      "discriminator": "Re-digested installation/project/surface/record/fields/projection/period/year mismatches and invalid ref digest are denied, followed by a valid original control."
+    },
+    {
+      "name": "nonempty operations retain the canonical target verifier and never write the real source",
+      "discriminator": "The original three real replaces use the canonical coverage/environment path; an invalid month target is rejected. Full official snapshot digest is identical before and after."
+    }
+  ],
+  "sourceInspection": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "sha256": "724cabc70e417a23f740c5ccd8f15e71c49a2caca17e0c84d0b97faf98905100"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "sha256": "05d1f9c62a415c881bd6b36802abd68a5956cfab2fa4c173d5a0dc63cb53876d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+      "blob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "sha256": "a04c007eeb6505ed778b6f319cf131552b8a87d66dad370ae46430bccd9b646c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "blob": "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+      "sha256": "1e684c6899ccc4c9eb889a8c07e6ff52fcd1eb56a5d670b6b4c58ef52ac7972f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "sha256": "0485d078d1920a333287f4621882c8370cb6cc42b7901a49013c396120735321"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "blob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "blob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "sha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf"
+    }
+  ],
+  "rootStaticCorrection": {
+    "finding": "The bootstrap baselineScenario has one replace operation; empty-source tests must construct their strict empty request explicitly.",
+    "resolution": "Added sourceOnlyRequest(fixture)={baseRef:baselineScenario.baseRef,operations:[],assumptions:[]} only in the new test. The three selected operations and all existing history assertions remain unchanged.",
+    "schemaInspection": "sfOperationInputSchemas.sf_scenario_simulate requires baseRef,operations,assumptions. decodeSfOperationInput.valid rejects a missing required property before calling a producer; confirmed by source inspection, not execution."
+  },
+  "independentStaticFinding": {
+    "reviewer": "/root/ci_reconciliation",
+    "parentAuthorization": "/root approved the final authentication egress fence before projection, preserving external source-CAS callback order.",
+    "finding": "The prior scratch observer awaited authenticate after the final external revalidate. authenticate could revoke external authorization while returning the old principal; synchronous requestFor alone would not reauthorize.",
+    "resolution": "observe(final=false) adds revalidate only for final=true after authenticate and before projection. Existing revalidate #2 source CAS stays outside the transaction. Success/source races observe 3 revalidations; external revocation ends at 2; a new real-header negative observes invalidation on #3.",
+    "execution": "No local product tests or typecheck; hosted results required."
+  }
+}

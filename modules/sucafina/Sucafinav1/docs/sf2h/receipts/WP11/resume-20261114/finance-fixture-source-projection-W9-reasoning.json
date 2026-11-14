@@ -1,0 +1,175 @@
+{
+  "schema": "sf-wp11-source-projection-fixture-reasoning-v1",
+  "status": "STATIC_REVIEW_COMPLETE_HOSTED_PROOF_PENDING",
+  "preparedAtUtc": "2026-11-14T11:23:07.628438+00:00",
+  "authoringBoundary": "Only scratch proposals were authored by this reviewer. During preparation the shared worktree changed to match both exact candidate blobs; no repository write was performed by this reviewer. No local product test/typecheck ran.",
+  "baseProductSha": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "base": {
+        "gitBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+        "sha256": "d550cf3e4c24b89f8eb224071f72f0f39bc3d7b0446eb790231fcdb3b92d7209",
+        "bytes": 24863
+      },
+      "candidate": {
+        "gitBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+        "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+        "bytes": 25216
+      },
+      "changes": [
+        "Construct one canonical source Planner over the existing operational source host.",
+        "Pass only that source Planner into createStoredPlannerScenarioHost.",
+        "Keep the original classified planner/sources on mutations, preview, comparison, criteria, baseline coverage and all test assertions."
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "base": {
+        "gitBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+        "sha256": "92117e4ca3c542ed2308d42100a35f31e1cf163e5e90c08065d155a1ed737600",
+        "bytes": 14130
+      },
+      "candidate": {
+        "gitBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+        "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129",
+        "bytes": 14461
+      },
+      "changes": [
+        "Construct one canonical source Planner over the existing operational source host.",
+        "Pass only that source Planner into createStoredPlannerScenarioHost.",
+        "Keep the original classified planner/sources on mutations, preview, comparison, criteria, baseline coverage and all test assertions."
+      ]
+    }
+  ],
+  "inspectedRuntimeSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "gitBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "sha256": "724cabc70e417a23f740c5ccd8f15e71c49a2caca17e0c84d0b97faf98905100"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "gitBlob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "sha256": "90ec6a2211bd8753f1a7d850e06c311b49cf056cc9430521179d980c97a64636"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "gitBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "sha256": "51c9b83256825e90e3a8a8b49c11d73339527edcb1a67da4d98ce6e8bf17e143"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "gitBlob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "sha256": "e14759041d8b0c7854d1e5f3317e7780c69a6ae72950c10a2759762467eea674"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "gitBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "gitBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "gitBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "sha256": "0bc0d34e79bac608968b088030d38ba3bf75ca6a49e388acef6b6b9e8b55705f"
+    }
+  ],
+  "change": "Create one canonical Planner over the existing operationSources, and pass it only to createStoredPlannerScenarioHost for its compareForecast source projection. Keep original classified Planner/sources in judgment, preview, simulation, criteria, mutation and baseline coverage.",
+  "consumedValue": {
+    "actual": "FinancialAnalysis.baseline is a canonical DomainProjection containing components/amounts/evidenceState, missing data, monthly forecast/currency values, scope and engineVersion. It is not merely geometry. All values still come from buildPlannerFinancialProjection.",
+    "discarded": "FinancialAnalysis.comparison, knownDifference, completeDifference, gaps, explanation, candidate and coverage-derived comparison status are not consumed by stored-scenarios.",
+    "dependency": "port.ts builds baseline from current authenticated source/ref/period before computing coverage completeness. C10 changes the envelope, not that baseline projection."
+  },
+  "preservedChecks": {
+    "projection": [
+      "same live host request/UI authority and schema/currency/period admission",
+      "same source resolver, refDigest, installation/project, record identity, exact fields and period",
+      "real persistence and authenticate/roleMap checks for the same actor",
+      "canonical ingress/egress projection digest and current source/authority revalidation",
+      "no cache across calls"
+    ],
+    "storedScenario": [
+      "real store read/readHistoricalScenario and real case.read before/after",
+      "single current alternative matching exact request/result digests",
+      "same original costCoverage basis and source identity",
+      "full result and case equality at egress",
+      "returned result/basis remain the persisted values"
+    ],
+    "judgment": [
+      "compareScenarios retains classified sources and checks coverageRef/basis/assessment exactly at ingress and egress, including after criterion evaluation",
+      "comparePlannerScenarios retains plannerCoverageComplete and full component/missing/confirmed/source proof",
+      "complete difference still requires complete persisted results, reconciled totals, confirmed components and matching canonical projection"
+    ],
+    "previewAndThreshold": [
+      "comparePlannerPreview retains classified source/coverage checks and classified simulateScenario",
+      "transient preview remains conditioned with total:null",
+      "units retain real case/result/evidence and projection/source observations",
+      "exact threshold and interval remain canonical domain producers"
+    ]
+  },
+  "fixtureSpecific": {
+    "renewal": "operationSources dynamically delegates to current.sources and keeps its raw pending source coverage. Three original replace operations remain unchanged.",
+    "human": "operationSources uses the same live human UI-bound source resolver and its existing coverage-unavailable response. That discarded envelope never substitutes for the stored assessment."
+  },
+  "review": {
+    "reviewer": "ci_reconciliation",
+    "status": "NO_STATIC_BLOCKER_FOUND",
+    "basis": "Independent inspection confirmed baseline construction independence, preserved double source/authority projection checks and the classified C10 paths.",
+    "claim": "Static review only; no elapsed-time or runtime PASS inference."
+  },
+  "limits": [
+    "180000ms wall/test budgets and every assertion remain unchanged.",
+    "No formula, confirmation or source identity is supplied by this patch.",
+    "This reduces fixture wiring fanout; installed-host performance is not proved.",
+    "Other repeated source/C08 reads remain. Passing H2 cannot be predicted from source review.",
+    "H2/W8 failure remains;250000,15000,interval and collaborator restart require hosted completion."
+  ],
+  "unchangedInputsAndTests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "gitBlob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "sha256": "e1245f8cce8f39a460b49ddd43cd266fb851fabff9f348b094ce653202acd5c4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "gitBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "sha256": "3235d1d73b2ff62c4f6d0120b8f043babd3539b5b4f2921b7685a0b997456f7c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "gitBlob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "sha256": "c2e64202f5d7b474b572bd7e6323e4ff2ade0892014b25e1aa6fc26a76471ce6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "gitBlob": "39c8b0e9138c36d5bd4a92726279633f69381cf6",
+      "sha256": "5e15c7381a9eae5cc3d0b7f90928c25a075658bc146c9a4859812e666a154906"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "gitBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "sha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449"
+    }
+  ],
+  "metadataChecks": {
+    "currentWorktreeMatchesBothCandidateBlobs": true,
+    "previewComparisonMutationCaseResultRuleAndUnitLinesRetained": true,
+    "productTests": "NOT_RUN_LOCALLY",
+    "typecheck": "NOT_RUN_LOCALLY"
+  }
+}

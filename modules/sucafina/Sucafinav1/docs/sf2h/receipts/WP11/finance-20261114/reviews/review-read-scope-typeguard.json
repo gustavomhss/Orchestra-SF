@@ -1,0 +1,28 @@
+{
+  "reviewer": "current_choice_s14_repair",
+  "independentOfAuthor": true,
+  "scope": "One-line optional transactionAll capability guard authored by root",
+  "verdict": "NO_STATIC_BLOCKER_RUNTIME_AND_TYPECHECK_PENDING",
+  "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+  "beforeBlob": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+  "candidateBlob": "803a9a3154a2dcf99a8118253216bf97efb2e8f5",
+  "sha256": "bbd5494b1b38c4342819bf14e2dd033fe58648d5f5fda38840b8ccab3b5da653",
+  "testCases": {
+    "before": 3,
+    "after": 3
+  },
+  "expectCalls": {
+    "before": 9,
+    "after": 9
+  },
+  "timeoutChanges": false,
+  "productExecution": false,
+  "findings": [],
+  "reasoning": [
+    "A missing cross-surface transaction capability now throws before either existing call; the test cannot skip snapshots or pass through a fallback.",
+    "createRenewalSourceFixture returns the actual openLocalStore store; its implementation exposes transactionAll. The capability remains optional at its interface, explaining the hosted TS2722/TS18048 diagnostics.",
+    "The same before/after snapshots and all nine assertions across all three cases remain byte-identical: nonmutation, later canonical source edit, and UI revocation inside awaited source callback.",
+    "The guard is within the existing try/finally, retaining cleanup on failure. No producer, scope implementation, source adapter, UI lease, monetary operation or timeout changed."
+  ],
+  "verificationNeeded": "Parent must run package bun typecheck and the three tests on Actions on a commit containing this exact blob; S19 predates this type guard."
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "astra-finance-s13-timeline-visibility-v1",
+  "status": "FILES_READY_STATIC_REVIEW_REQUESTED_NOT_RUN",
+  "baselineProduct": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+  "baselineTree": "26843c698c3cf7b923d364434fae443a63efafaa",
+  "sourceRun": {
+    "id": 43589341922,
+    "jobId": 132430554445,
+    "productSha": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+    "snapshotSha": "bd50d55e7613e9571e0e9ffaf71ce7a5ba8d9531",
+    "result": "failure",
+    "tests": 1,
+    "pass": 0,
+    "fail": 1,
+    "expectCalls": 80,
+    "caseMilliseconds": 158571.55,
+    "testTimeoutMilliseconds": 180000,
+    "clickTimeoutMilliseconds": 10000,
+    "failedStage": "after training: training-origin",
+    "observedError": "role=button SVG group for training:11 found at index46 but element is not visible"
+  },
+  "cause": "The interactive SVG group contained only a horizontal line with y1===y2. Its object geometry has zero height despite a visible stroke; a real pointer click was refused as not visible. No viewBox clipping or dropped component is required to explain the failure.",
+  "change": "Add a transparent positive rectangle inside each interactive group, with20units height and at least20units width clamped inside0..600. Preserve the financial data, all marks, line positions, source identity, role/label/tabindex and existing click/Enter/Space handlers.",
+  "filesReady": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "beforeBlob": "4a4edc6549684202b3d5ddab4933d6ff56e0aa59",
+      "afterBlob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "beforeSha256": "d5722e162aa06670cd20e214ee7cc2d25b34e535cbacdd1fde818bae32d342c6",
+      "afterSha256": "73aa057a8ed81927d9bfe59e883edfcb0e544e3a8c4548e58f60773f6873f748",
+      "bytes": 17612,
+      "filesReady": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "beforeBlob": "c939c5e39c80f3cdbc08fd700cd017a7b0ed50b4",
+      "afterBlob": "68b68ee4b6638b6c4d0d4ab5624abcf32b0774ef",
+      "beforeSha256": "546a5bf18a4bd61bdf9d340cbe5d0bac16b75ff3d52ba2e78a511dda4be0291b",
+      "afterSha256": "0db3bc4a63e64b59378b54c487031ad29b4da91eacd09a46c2b18ed30403453e",
+      "bytes": 16828,
+      "filesReady": true
+    }
+  ],
+  "verification": {
+    "baselineMatchedRemoteState": true,
+    "existingExpectationLinesPreserved": true,
+    "oldStaticExpectLines": 68,
+    "newStaticExpectLines": 69,
+    "existingTimeoutsPreserved": true,
+    "forceClicksAdded": false,
+    "productCodeExecutedLocally": false,
+    "bunExecuted": false,
+    "ciDispatched": false,
+    "remoteMutations": false
+  },
+  "selectedTests": [
+    "Sucafinav1/test/product/wp05/choice-history-bi.test.ts"
+  ],
+  "additionalAssertions": [
+    "Every rendered interactive timeline group has a positive browser bounding width and height. Existing exact count covers all source-backed components before and after training."
+  ],
+  "independentReviewer": "/root/bi_timeline_review",
+  "patchSha256": "1beea4ceac5ffaecc35455a37b571ded845cf97239d0f7fbf3090a2f4f17e433",
+  "limits": [
+    "Static source diagnosis and guarded edit only; Actions must prove visibility and the existing pointer/keyboard/table flow at published bytes.",
+    "Previous80expect calls demonstrate progress of S13 only; the run is failed and not attributed as a pass to these candidates.",
+    "No browser mounted shell/native authority, C/D, final epic or global readiness claimed.",
+    "No foreign UI, host, shared artifact-store, formula, authorization or financial policy was changed."
+  ]
+}

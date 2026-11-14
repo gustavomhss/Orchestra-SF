@@ -1,0 +1,247 @@
+{
+  "log": "ci-analysis/wp11-W12-F2-tests.log",
+  "logSha256": "b0a7a16457c5d2652485f4a0829411f07be3123d0a7c6be237d3a880568da93d",
+  "metadata": {
+    "productSha": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+    "productTree": "88a9ea457363fc14d4c9a3735d70f06f10655493",
+    "snapshotSha": "15dcbde28b62ee6b43f723a9b38e6cbf5c668131",
+    "snapshotTree": "159976bd51266bc70a488bea61a3962e28ed3248",
+    "branch": "ci-run-linux-astra-wp11-1fa71a6-3c63cb5a-f2",
+    "requestSha256": "3c63cb5a7d572ae8368225b1c3ca7d014e0a8d94f2468af8081ff4ff87456765",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "db724d328d3380a8ed83be7f4e999833591cdc4d",
+    "runIds": [
+      43592791648
+    ]
+  },
+  "summary": {
+    "pass": 11,
+    "fail": 1,
+    "tests": 12,
+    "files": 2,
+    "durationSeconds": 10.11
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "94b9a8230fa6ad875ff4c596dc431496"
+    ],
+    "observedVerdicts": [
+      "omni positive control [94b9a8230fa6ad875ff4c596dc431496]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [94b9a8230fa6ad875ff4c596dc431496]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+    "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+    "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "reportedTests": 6,
+      "counts": {
+        "pass": 5,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 420.32,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "line": 810,
+        "timestamp": "2026-11-14T12:03:02.2200707Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "pass",
+        "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+        "line": 834,
+        "timestamp": "2026-11-14T12:03:02.7647426Z",
+        "durationMs": 107.34
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "reportedTests": 6,
+      "counts": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 9545.43,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "line": 836,
+        "timestamp": "2026-11-14T12:03:02.7648134Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "pass",
+        "name": "source-only promotion refuses case-change between coverage observation and commit",
+        "line": 842,
+        "timestamp": "2026-11-14T12:03:12.3151061Z",
+        "durationMs": 754.62
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+    "status": "pass",
+    "name": "source-only promotion refuses case-change between coverage observation and commit",
+    "line": 842,
+    "timestamp": "2026-11-14T12:03:12.3151061Z",
+    "durationMs": 754.62
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 11,
+    "fail": 1,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+      "line": 811,
+      "timestamp": "2026-11-14T12:03:02.4644843Z",
+      "durationMs": 120.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+      "line": 830,
+      "timestamp": "2026-11-14T12:03:02.5043955Z",
+      "durationMs": 39.51
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+      "line": 831,
+      "timestamp": "2026-11-14T12:03:02.5397306Z",
+      "durationMs": 35.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+      "line": 832,
+      "timestamp": "2026-11-14T12:03:02.5815257Z",
+      "durationMs": 41.85
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic read refuses an old draft replaced during its last source callback",
+      "line": 833,
+      "timestamp": "2026-11-14T12:03:02.6573475Z",
+      "durationMs": 75.81
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+      "line": 834,
+      "timestamp": "2026-11-14T12:03:02.7647426Z",
+      "durationMs": 107.34
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotions establish current coverage proofs in source order 0-1",
+      "line": 837,
+      "timestamp": "2026-11-14T12:03:06.0047566Z",
+      "durationMs": 3235.14
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotions establish current coverage proofs in source order 1-0",
+      "line": 838,
+      "timestamp": "2026-11-14T12:03:08.9589628Z",
+      "durationMs": 2953.23
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses missing-proof between coverage observation and commit",
+      "line": 839,
+      "timestamp": "2026-11-14T12:03:10.1012297Z",
+      "durationMs": 1143.21
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses revoke between coverage observation and commit",
+      "line": 840,
+      "timestamp": "2026-11-14T12:03:10.8431146Z",
+      "durationMs": 741.87
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses source-change between coverage observation and commit",
+      "line": 841,
+      "timestamp": "2026-11-14T12:03:11.5604970Z",
+      "durationMs": 717.36
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses case-change between coverage observation and commit",
+      "line": 842,
+      "timestamp": "2026-11-14T12:03:12.3151061Z",
+      "durationMs": 754.62
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+      "line": 830,
+      "timestamp": "2026-11-14T12:03:02.5043955Z",
+      "durationMs": 39.51
+    }
+  ],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

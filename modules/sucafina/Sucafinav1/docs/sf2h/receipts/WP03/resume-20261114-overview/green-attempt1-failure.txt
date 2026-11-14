@@ -1,0 +1,27 @@
+First full selection failed; this is not GREEN evidence. Exact run 43535212218 / job 132262432260.
+2026-11-14T00:37:42.7664727Z Sucafinav1/test/product/wp03/overview.test.ts:
+2026-11-14T00:37:42.8653215Z 454 | ): string {
+2026-11-14T00:37:42.8661221Z 455 |   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><style>${STYLE}</style></head><body data-surface="${surface}"><a class="skip" href="#content">Skip to content</a><aside class="sidebar"><header><strong>Sucafina</strong><span>${esc(title)}</span></header><nav aria-label="${esc(title)}">${nav}</nav>${sidebarControls}</aside><div id="content" class="content"><header class="workspace-bar"><span>Sucafina workspace</span><div role="navigation" aria-label="Applications">${[["dashboard", "Dashboard"], ["planner", "Budget Planner"], ["procurement", "Procurement"]].map(([key, label]) => `<a href="./${key}"${surface === key ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</div>${surface === "signed-out" ? "" : '<div class="workspace-tools"><!--local-tools--><button type="button" data-logout>Sign out</button></div>'}</header>${main}${aside}<p id="notice" role="status" aria-live="polite"></p></div><scri
+2026-11-14T00:37:42.8667414Z 456 | }
+2026-11-14T00:37:42.8667757Z 457 | 
+2026-11-14T00:37:42.8668280Z 458 | export function esc(value: string): string {
+2026-11-14T00:37:42.8669013Z 459 |   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+2026-11-14T00:37:42.8669486Z                ^
+2026-11-14T00:37:42.8669886Z TypeError: undefined is not an object (evaluating 'value.replace')
+2026-11-14T00:37:42.8670659Z       at esc (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/src/screen-shell.ts:459:10)
+2026-11-14T00:37:42.8671692Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts:117:87)
+2026-11-14T00:37:42.8672308Z       at map (1:11)
+2026-11-14T00:37:42.8673229Z       at identity (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts:117:71)
+2026-11-14T00:37:42.8674838Z       at renderContext (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts:118:48)
+2026-11-14T00:37:42.8676097Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts:103:232)
+2026-11-14T00:37:42.8676713Z       at map (1:11)
+2026-11-14T00:37:42.8677528Z       at renderPlannerOverviewDrilldowns (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts:103:54)
+2026-11-14T00:37:42.8678658Z       at renderPlannerOverview (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/planner/overview.ts:65:376)
+2026-11-14T00:37:42.8679663Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp03/overview.test.ts:23:18)
+2026-11-14T00:37:42.8680678Z (fail) Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct [96.70ms]
+
+2026-11-14T00:37:45.2841019Z omni positive control [ee7c1a0bf04bf22e4adcde621b25e406]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T00:37:45.2844703Z  169 pass
+2026-11-14T00:37:45.2845149Z  1 fail
+2026-11-14T00:37:45.2845612Z  2634 expect() calls
+2026-11-14T00:37:45.2846155Z Ran 170 tests across 31 files. [44.41s]

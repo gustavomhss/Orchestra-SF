@@ -1,0 +1,342 @@
+{
+  "schema": "sf-finance-receipt-consistency-review-v1",
+  "agent": "receipt_consistency_final",
+  "reviewedAt": "2026-11-14T11:55:54.030808+00:00",
+  "status": "DOCUMENTATION_FINDINGS_CORRECTED_STATICALLY_NO_PRODUCT_ACCEPTANCE",
+  "productObservation": {
+    "head": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "tree": "8325d52877c8fdd5bf317b244b81b0bb45736fce"
+  },
+  "scope": "Read-only review of staged receipt documents and existing metadata at W26. Root continues CI and may publish later corrections; this review does not assert their completion.",
+  "findings": [
+    {
+      "id": "DOC-01",
+      "severity": "MEDIUM",
+      "kind": "current-status-contradiction",
+      "state": "CORRECTED_IN_STAGED_DOCUMENTS_STATICALLY_VERIFIED",
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md"
+      ],
+      "locations": [
+        "headings/paragraphs at lines3–9"
+      ],
+      "observed": "The leading reconciliation identifies itself as current, pins Compose35b9/Interface0c3d, and says advantageComparisonRef still requires the selection delta. The new central source inspection records that Composeed10 adopted the parser and strengthened the host/options; only affected validation remains pending.",
+      "impact": "A reader following a per-WP handoff can treat an adopted owner delta as still missing or reapply an obsolete patch.",
+      "requestedChange": "Prepend the current external reconciliation pointer and label the COMPOSE6 block historical; preserve the old body, pins and original evidence.",
+      "newEvidence": "WP11/finance-20261114/external-reconciliation.json:composeHead/findings and reviews/latest-external-refresh.md; source inspection only, not a new runtime PASS."
+    },
+    {
+      "id": "DOC-02",
+      "severity": "MEDIUM",
+      "kind": "legacy-current-field-ambiguity",
+      "state": "CORRECTED_IN_STAGED_DOCUMENTS_STATICALLY_VERIFIED",
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria.json"
+      ],
+      "jsonPointers": [
+        "WP05:/current_product_sha",
+        "WP05:/current_tree_sha",
+        "WP05:/current_test_followup",
+        "WP05:/current_external_dependencies",
+        "WP05:/latest_reported_check",
+        "WP11:/publication/current_implementation_sha",
+        "WP11:/publication/pending_parent_pin",
+        "WP11:/bounded_external_deltas",
+        "WP11:/check_evidence"
+      ],
+      "observed": "WP05 retains W14 in current_product_sha, an S4 in-progress statement and COMPOSE4306 dependency descriptions. WP11 retains W10 as current implementation and old generic C17/WP13 gaps. Both group_evidence objects correctly point to W26 and current ledgers, but the old fields lack an explicit precedence/historical boundary.",
+      "impact": "Machine or human consumers may select contradictory current pins or stale pending findings despite the accurate group_evidence.",
+      "requestedChange": "Keep historical contents intact but label legacy snapshot fields explicitly; make group_evidence and current external reconciliation the authoritative current metadata. Do not change any canonical criterion ID/text or the frozen W21 task map.",
+      "newEvidence": "group_evidence.product_head=0c4a2545a63b4903c7eedb00d3f0989eb74ed398; current external central pins Composeed10 and Interfacecccd/drift4bd1."
+    },
+    {
+      "id": "DOC-03",
+      "severity": "LOW",
+      "kind": "historical-document-entrypoint",
+      "state": "CORRECTED_IN_STAGED_DOCUMENTS_STATICALLY_VERIFIED",
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md"
+      ],
+      "locations": [
+        "advantage-selection-proposal.md:3",
+        "README introductory scope and external-gaps sections"
+      ],
+      "observed": "The proposal still opens PROPOSED_NOT_APPLIED_TO_OWNER at its old a1e9 pin without a historical banner. The two READMEs retain earlier current/pending language for COMPOSE4306, W4/S4 and WP13/C17. These are historical records rather than proof of the newest source.",
+      "impact": "Opening a legacy entrypoint alone can obscure the new disposition even though the group handoff is accurate.",
+      "requestedChange": "Add a short historical-snapshot/precedence banner pointing to group-handoff and external-reconciliation, without rewriting the historical claims or patch."
+    }
+  ],
+  "verified": {
+    "criteria": [
+      {
+        "wp": "WP03",
+        "criteria": 112,
+        "literalEqual": 112,
+        "taskCount": 5,
+        "canonicalTasksEqual": true,
+        "contractAndScopeArraysEqual": true,
+        "integralAcceptance": 0,
+        "mapSha256": "e213936f7450b301d185f9a2408f2a43a47508655b8c45294832c5361d038ca8"
+      },
+      {
+        "wp": "WP05",
+        "criteria": 108,
+        "literalEqual": 108,
+        "taskCount": 5,
+        "canonicalTasksEqual": true,
+        "contractAndScopeArraysEqual": true,
+        "integralAcceptance": 0,
+        "mapSha256": "0f82433eb7537f2e19e71eb4b83b34ac563a0d4c5050a99f02a8083c503ee01b"
+      },
+      {
+        "wp": "WP11",
+        "criteria": 83,
+        "literalEqual": 83,
+        "taskCount": 4,
+        "canonicalTasksEqual": true,
+        "contractAndScopeArraysEqual": true,
+        "integralAcceptance": 0,
+        "mapSha256": "92735892d8edad07d20638f13a2d875ff55a53dea06e1a1d07565d3dde7128b6"
+      }
+    ],
+    "taskMap": {
+      "productSource": {
+        "commit": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+        "tree": "77bef954682387ac0fdd3c01e7dd51b9201d2aac"
+      },
+      "tasks": 14,
+      "criteria": 303,
+      "oracles": 16,
+      "sourceSnapshotStatus": "W21_PUBLISHED_SOURCE_MAP_WITH_EXPLICIT_EXTERNAL_PINS_NOT_GLOBAL_ACCEPTANCE",
+      "W21AuditedBytesUnchanged": true
+    },
+    "origins": {
+      "unique": 41,
+      "increments": 26,
+      "latestAdditionalParent": "65509f0b8c435b88fb0ec9949299571f011d2347",
+      "sourceCommitListsEqual": true
+    },
+    "ci": {
+      "runCount": 17,
+      "allRecordedRequestAndLogHashesMatch": true,
+      "s16": {
+        "runId": 43591377679,
+        "jobId": 132436624540,
+        "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+        "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "error": 0
+        },
+        "expectCalls": 86,
+        "reported": {
+          "tests": 1,
+          "files": 1,
+          "duration": 128.13,
+          "unit": "s"
+        },
+        "omni": {
+          "nonce": "9993b7eb7dbc25de6243c8baab577f25",
+          "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      },
+      "s17": {
+        "runId": 43591635600,
+        "jobId": null,
+        "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+        "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+        "conclusion": null
+      },
+      "scope": "No remote query performed; existing exact log and normalized requests verified as data."
+    },
+    "checks": {
+      "count": 12,
+      "last": {
+        "runId": 43591637037,
+        "jobId": 132437420539,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591637037",
+        "source": {
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "productTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+          "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+          "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+        },
+        "conclusion": "failure",
+        "typecheck": {
+          "command": "bun typecheck",
+          "directory": "modules/sucafina",
+          "conclusion": "failure",
+          "diagnostics": 131,
+          "attribution": {
+            "WP03": 0,
+            "WP05": 0,
+            "WP11": 0,
+            "external": 131
+          }
+        },
+        "guards": {
+          "command": "bun run check:guards --base origin/dev",
+          "directory": ".",
+          "conclusion": "success",
+          "rules": 78,
+          "changedPaths": 962,
+          "warnings": 13,
+          "errors": 0
+        },
+        "rawMcpLogSha256": "a5f4755871e2d5a4f8a8b31ca2b3d4c5cb6edde505c351e92b2d17a10bd91af2",
+        "artifact": {
+          "id": 14113180076,
+          "sha256": "6c0f163cd5d24199703bf9e212bcbe68038fdc5e136337c1d6eabd06d77e6555",
+          "downloadedAndHashVerified": true,
+          "members": [
+            {
+              "name": "guards.log",
+              "sha256": "4a7e91dd618e2a7980ba723e1cf8a9ecee35382d8c79083ab0fc83cff0195191"
+            },
+            {
+              "name": "source.json",
+              "sha256": "d75a2300572d20d385eb43f8ce4e4402af58bc734573f01751d43be2f979a545"
+            },
+            {
+              "name": "typecheck.log",
+              "sha256": "9d3b98c754286f19770057ade1cc4a169ed04b15bdf243eb77a8eeeab6654563"
+            }
+          ]
+        },
+        "productTests": false
+      },
+      "localArtifactMemberHashesEqual": true,
+      "typecheckIsFailure": true
+    },
+    "external": {
+      "compose": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "interface": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+      "laterInterface": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+      "globalAcceptance": "NOT_ACCEPTED",
+      "historicalInspectionsRetained": true
+    },
+    "relativeLinks": {
+      "markdownFiles": 42,
+      "relativeLinks": 51,
+      "broken": 0,
+      "sourcePathOccurrences": 420,
+      "locallyAbsentExternalPinnedOccurrences": 45,
+      "absenceNotTreatedAsRemoteMissing": true
+    }
+  },
+  "inputHashes": {
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md": "63e36988b32259f3db49c43364af1b7736a684d7c7c0daafa703b0f90961fa29",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-obligations.json": "e470eed573d3e252132fd6d86be1ef29b84e3032b4b2599b686a201b981bc714",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.json": "b2b51c07b11ddc7061a65ceef4ec6256c5342b41981a1649770fccec8badbfd9",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.md": "926c478416db1d5b74df3dd5c030ff389ba3607fcf5ceec523ebd5d30d838070",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria-map-audit.json": "adf35fa70b36ccc00b6e093debb8d7183dc3dd406046cef5fb885ee32307ec43",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/product-tests.json": "eaacad86fe2f59e03f0fcea7f1c4fa3e4d83f52578c51b26a0df011a74ace0ed",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/hosted-checks.json": "57cc0f4475131efebe7ddc34328b21305d31e80045ee57d82c8068b7a3fd0757",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/published-increments.json": "6397fbbe956ad12ed3cae1277532cc0ce5670e68db34de13dd0be973bf6e07c4",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/remote-reconciliation.json": "af06a1857aa8219789b49e29b8b9fa1b1b8c8d108a1b5ffeb85ed3786644a574",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.json": "5b71465a3a2a489a1f9575bbc5eced4ca023f707e48d749257767c40ab09db32",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md": "9035bf050495d3c859441fdf895a4c422d7072e9533e498395e1ce19dc827751",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria-verification.json": "1c40d59d5677fc68047c6bab3bf9a2fe2fc5f949cceb245294bf195f6b011f68"
+  },
+  "independentLinkSubreview": {
+    "agent": "receipt_links",
+    "artifact": "receipt-link-audit.json",
+    "sha256": "ab87ccd103ee0eacc7acd347293bb3ab21efc4eb785e9f77c3f850731f2fb7fb"
+  },
+  "preservation": {
+    "canonicalTextEdited": false,
+    "taskMapEdited": false,
+    "repositoryFilesEdited": false,
+    "productImported": false,
+    "productTestsRun": false,
+    "bunCommands": false,
+    "ciDispatch": false,
+    "remoteQueries": false,
+    "remoteWrites": false
+  },
+  "acceptance": {
+    "integralCriterionAcceptance": false,
+    "nativeProof": false,
+    "C": false,
+    "D": false,
+    "READY": false,
+    "DONE": false
+  },
+  "requiredFollowup": "Root publishes exact reviewed documentary bytes or records any later metadata refresh separately; S17 actual outcome and later pins remain owned by the execution ledger. No product/native/C/D acceptance is granted.",
+  "correctionReview": {
+    "observedAt": "2026-11-14T11:58:42.339020+00:00",
+    "scope": "Nine local staged receipt files; no publication or runtime asserted",
+    "allThreeFindingsAddressedStatically": true,
+    "sixHistoricalMarkdownBodiesGitBlobEqualToPublishedOriginal": true,
+    "legacyJsonSectionsEqualToW24PublishedCapture": true,
+    "criterionIdsTextsAndW21TaskMapUntouched": true,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+        "blob": "0e735dc0fa3f01f3a770c3b222a2d62e53a8827f",
+        "sha256": "19e8102951740a6af901f6bb36ba45f0eac218f3771afb004bf830199b6c7ece",
+        "originalBodyBlobPreserved": "c09de288f8f6684c0c81f5cf4459747985638f2c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+        "blob": "6f1fa5623e1568056c7bd261764eb21cbf2386ad",
+        "sha256": "29b9376b26295132b9f8cd6e42c61bbd4001e8e12bb7d4a658da31918f7081e7",
+        "originalBodyBlobPreserved": "b026aa848d20cd32e4cb86224f0c3e37134357a9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+        "blob": "1a708ab1a76e7020791df1d6015821e50c7a3acd",
+        "sha256": "7bb0b2403a23d2f24c4430ddc42ba6b327988b7d7d6f65eb2431675433b363b0",
+        "originalBodyBlobPreserved": "c1a8201235858edf23659b9d381388d6c690463b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+        "blob": "0a94a69187b8679ecef000f8ec9d1dc836ff9cfd",
+        "sha256": "04a47672b9d07ec0dee54e5ab4eef83a3c9b7bfca980aeab82da21535a550a8f",
+        "originalBodyBlobPreserved": "0b4331b358ded62a441023cd89d52b3387211d32"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+        "blob": "501396fdaaebd183b5ef2361d2890b84f3c288ba",
+        "sha256": "a3e58ef8b057fd97b0620e1e6fea2c47cab4ebc8c2095319903571cb1a407a20",
+        "originalBodyBlobPreserved": "49d6a6bd7686efeeec0d54eb5301f9d5a774a808"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+        "blob": "861b453d2f7e4fdde3f4568bc25c38a690ddee70",
+        "sha256": "43ede850634519b1b5c94ec657e088b77bf1a1532c12542353452fd13d1f9a22",
+        "originalBodyBlobPreserved": "58d4b92491841a2ab0a6217a2549e3cb4bda1baa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/criteria.json",
+        "blob": "6748e6cdd5146079f57c83eb7e759f7b3ce84626",
+        "sha256": "bd3813444c9d7062c7db9f7e060b689a4ef5280c21f3c109e51422092f9909cb",
+        "historicalMetadataPreserved": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "blob": "1f302a3b5e4ba58836c9e7b402160b9287e6812e",
+        "sha256": "7700effa1bb374b709c7671a12ea2fa09262991932dccd286aa69e38c529284f",
+        "historicalMetadataPreserved": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria.json",
+        "blob": "90d153582fe2e14831ae8bde2fef982f4f7f8ab9",
+        "sha256": "33cd2d7496a16e18da452192fcaae8bf2ff3fb023cf2bef01e8f56ecf37fc7a4",
+        "historicalMetadataPreserved": true
+      }
+    ],
+    "relativeLinksAfterCorrection": {
+      "markdownFiles": 42,
+      "relativeLinks": 57,
+      "broken": 0
+    }
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "schema": "astra-finance-independent-bi-timeline-review-v1",
+  "reviewer": "/root/bi_timeline_review",
+  "productAuthor": "/root/bi_timeline_visibility",
+  "oracleStrengtheningAuthor": "/root",
+  "createdAtUtc": "2026-11-14T11:31:48.563984+00:00",
+  "status": "STATIC_REVIEW_COMPLETE_REMOTE_VALIDATION_PENDING",
+  "verdict": {
+    "newBlockingFindings": 0,
+    "productFix": "consistent_with_observed_zero_height_interaction_failure",
+    "productPassClaimed": false,
+    "globalAcceptanceClaimed": false
+  },
+  "baseline": {
+    "label": "W22",
+    "commit": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+    "tree": "26843c698c3cf7b923d364434fae443a63efafaa",
+    "originalCopiesMatchPinnedBlobs": true,
+    "remoteManifestProvenance": "Reviewer verified originals against remote-state.json before root advanced that mutable manifest to candidate blobs; final checks use the captured W22 pins."
+  },
+  "candidate": {
+    "publishedCommit": null,
+    "publishedTree": null,
+    "identity": "Exact reviewed blobs; root associates later product commit/tree and CI snapshot receipt.",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+        "before": {
+          "bytes": 16959,
+          "blob": "4a4edc6549684202b3d5ddab4933d6ff56e0aa59",
+          "sha256": "d5722e162aa06670cd20e214ee7cc2d25b34e535cbacdd1fde818bae32d342c6"
+        },
+        "after": {
+          "bytes": 17612,
+          "blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+          "sha256": "73aa057a8ed81927d9bfe59e883edfcb0e544e3a8c4548e58f60773f6873f748"
+        },
+        "addedLines": 11,
+        "removedLines": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+        "before": {
+          "bytes": 16368,
+          "blob": "c939c5e39c80f3cdbc08fd700cd017a7b0ed50b4",
+          "sha256": "546a5bf18a4bd61bdf9d340cbe5d0bac16b75ff3d52ba2e78a511dda4be0291b"
+        },
+        "after": {
+          "bytes": 16901,
+          "blob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+          "sha256": "9c2ea2c79875277a48d36d60921eee93d8b1ec3b84e0967a4777d66e3b138735"
+        },
+        "addedLines": 8,
+        "removedLines": 0
+      }
+    ]
+  },
+  "sourceFailure": {
+    "runId": 43589341922,
+    "jobId": 132430554445,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589341922/job/132430554445",
+    "productCommit": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+    "snapshotCommit": "bd50d55e7613e9571e0e9ffaf71ce7a5ba8d9531",
+    "result": "failure",
+    "pass": 0,
+    "fail": 1,
+    "expectCalls": 80,
+    "caseMs": 158571.55,
+    "caseTimeoutMs": 180000,
+    "clickTimeoutMs": 10000,
+    "phase": "after training / training-origin",
+    "component": "training:11",
+    "locatorIndex": 46,
+    "error": "TimeoutError: click: Timeout 10000ms exceeded; element is not visible",
+    "omniPositiveControl": "not applicable",
+    "omniNonce": "3d21058b4e85c6534eab78778d16753a",
+    "logs": [
+      {
+        "path": "/workspace/scratch/a97ca4c53050/test13.log",
+        "bytes": 85987,
+        "blob": "51ef0288264b77cbcf557e55830da1398d95cda9",
+        "sha256": "9a82c70776bd8301ae7fe233465fc51b394e65f016ef7deac477c00263b8771f"
+      },
+      {
+        "path": "/workspace/scratch/a97ca4c53050/test13-clean.log",
+        "bytes": 83149,
+        "blob": "3c964b61028cfe3d1568208f32694b38bce64c36",
+        "sha256": "5e0e0b7f24d98747c08c95ecdda8374a5489a1e1a2d9e5662bf392d9d074a32e"
+      }
+    ],
+    "logProvenance": "Parent supplied Actions log downloaded through GitHub MCP. Reviewer inspected its content and independently recomputed hashes; no reviewer remote fetch."
+  },
+  "findings": [
+    {
+      "id": "BI-TL-01",
+      "severity": "P2",
+      "classification": "observed_baseline_product_bug",
+      "status": "fix_present_remote_execution_pending",
+      "finding": "Interactive group held only a horizontal SVG line; equal y1/y2 produce zero-height object geometry. This is consistent with the observed visibility refusal. Existing dynamic viewBox and resolved index46 do not establish vertical clipping.",
+      "resolution": "Transparent rect inside same group, positive height20 and width>=20, horizontal clamp within0..600, same handlers and SourceRef."
+    },
+    {
+      "id": "BI-TL-02",
+      "severity": "P3",
+      "classification": "preexisting_test_oracle_weakness",
+      "status": "resolved_in_reviewed_candidate_execution_pending",
+      "finding": "Table source assertion could retain data-source left by Enter.",
+      "resolution": "Root resets dataset.source immediately before table click; same exact SourceRef assertion retained.",
+      "resolvedTestBlob": "cf93dff4919989322c28a3a04fd6380629f3caa1"
+    }
+  ],
+  "checks": {
+    "oldExpectLines": 68,
+    "newExpectLines": 69,
+    "oldExpectLinesPreservedByteForByteInOrder": true,
+    "allTargetsHavePositiveBoundsAssertionAdded": true,
+    "exactAllComponentsCountAndTableAssertionsPreserved": true,
+    "pointerEnterTableExactSourceRefAssertionsPreserved": true,
+    "enterAndTableObservationResets": true,
+    "forceClickAdded": false,
+    "timeoutsRelaxed": false,
+    "financialFormulasChanged": false,
+    "authorizationChanged": false,
+    "canonicalSourcesChanged": false,
+    "sharedStoreHostContractsChangedByPatch": false,
+    "newComponentCapOrSlice": false,
+    "supportingUnchangedSources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/geometry.ts",
+        "bytes": 5840,
+        "blob": "cd80e819efc282d58aceb957c6f914187dc07752",
+        "sha256": "0635c29ee81ecd302eec6a71932e2a4d0f37335ae9558db74a1fca4e1244bacc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+        "bytes": 6731,
+        "blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6",
+        "sha256": "5521b06aef001830175f1192db3b731d92178789b2813f43c35a224f68853a28"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts",
+        "bytes": 3117,
+        "blob": "4f5a9f1068ca99b2c81dfe428bce4e89ec954bae",
+        "sha256": "59cbdd81f7ac081c40982354cdaf5ba590fddf3c09fc045afa13d1cde95c1a38"
+      }
+    ],
+    "geometryReasoning": "Valid0<=x1<=x2<=600 gives20<=hitWidth<=600. Clamped x keeps x+width<=600. Rect i spans[24i,24i+20], contains line at24i+10 and leaves4units before next row. Last rect bottom24n-4 fits existing viewBox upper bound>=24n+5. This covers all48 valid fixture marks without a fixed cap."
+  },
+  "execution": {
+    "localProductTests": 0,
+    "bunCommands": 0,
+    "browserRuns": 0,
+    "ciDispatches": 0,
+    "remoteWrites": 0,
+    "productOrTestEditsByReviewer": 0,
+    "performed": [
+      "source and log inspection",
+      "Git blob/SHA256 recomputation",
+      "diff and assertion comparison",
+      "coordinate-bound reasoning"
+    ]
+  },
+  "requiredNextEvidence": [
+    "Associate reviewed blobs with published W/tree and envelope S.",
+    "Run exact Sucafinav1/test/product/wp05/choice-history-bi.test.ts via CI.md/GitHub MCP with deduplication; inspect final result, pointer/Enter/table origins and final choice preservation.",
+    "Associate applicable package typecheck and AGENTS guards with delivered product.",
+    "Installed shell/native proof, full C17 producer/transport integration, C/D and S0 final epic remain separate required evidence."
+  ],
+  "risks": [
+    "S13 is failed;80 observed expect calls and canonical250000/-10000 progress are not acceptance.",
+    "S13 consumed158571.55ms of180000ms, including failed10000ms click; later final-case read was not reached. Candidate runtime margin is unproven.",
+    "All-target bounding boxes are not pointer execution for each target. Representative training:11 retains a real unforced click; source mapping and complete loop remain unchanged.",
+    "Fixture mounts renderBiView and records callbacks; it alone proves neither installed-shell navigation, full C17 authorization transport, native execution, touch target conformance nor all-browser accessibility.",
+    "Existing omission of invalid or entirely out-of-horizon SVG geometry is unchanged; list/table retain details.",
+    "Review applies only to pinned blobs; material later changes require affected review/validation."
+  ],
+  "diff": "--- a/modules/sucafina/Sucafinav1/product/analytics/decision-view.ts\n+++ b/modules/sucafina/Sucafinav1/product/analytics/decision-view.ts\n@@ -40,6 +40,17 @@\n         group.setAttribute(\"role\", \"button\")\n         group.setAttribute(\"data-bi-focus\", source.id)\n         group.setAttribute(\"aria-label\", `${component.id}: ${component.period.start} – ${component.period.end}; abrir origem ${source.id}`)\n+        // A horizontal SVG line has zero geometric height even when its stroke is\n+        // painted. Keep a positive hit area so the whole group is pointer-accessible.\n+        const hit = document.createElementNS(chart.namespaceURI, \"rect\")\n+        const hitWidth = Math.max(20, mark.x2 - mark.x1)\n+        hit.setAttribute(\"x\", String(Math.max(0, Math.min(mark.x1, 600 - hitWidth))))\n+        hit.setAttribute(\"y\", String(index * 24))\n+        hit.setAttribute(\"width\", String(hitWidth))\n+        hit.setAttribute(\"height\", \"20\")\n+        hit.setAttribute(\"fill\", \"transparent\")\n+        hit.setAttribute(\"pointer-events\", \"all\")\n+        group.append(hit)\n         group.addEventListener(\"click\", () => openSource(source))\n         group.addEventListener(\"keydown\", (event) => {\n           if (event instanceof KeyboardEvent && (event.key === \"Enter\" || event.key === \" \")) {\n\n--- a/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts\n+++ b/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts\n@@ -131,6 +131,13 @@\n     expect(rows).toEqual(decision.scenario.components.map((component) => [component.id, component.amount === null || component.evidenceState === \"absent\" ? \"Indisponível\" : String(component.amount), component.currency, `${component.period.start} – ${component.period.end}`, component.evidenceState]))\n     const timeline = page.locator('svg[aria-label=\"Períodos no horizonte selecionado; os detalhes estão na lista seguinte\"] [role=\"button\"]')\n     expect(await timeline.count()).toBe(decision.scenario.components.filter((component) => component.sourceRefs.length).length)\n+    // Every period, including the last rows, must expose real pointer geometry;\n+    // stroke on a zero-height SVG group is not a usable interaction target.\n+    const timelineTargets = await timeline.evaluateAll((marks) => marks.map((mark) => {\n+      const bounds = mark.getBoundingClientRect()\n+      return { width: bounds.width, height: bounds.height }\n+    }))\n+    expect(timelineTargets.every((bounds) => bounds.width > 0 && bounds.height > 0)).toBe(true)\n     const text = await page.locator(\"body\").innerText()\n     expect(text).toContain(`Comparação de custos: alternativa ${decision.comparison.alternativeResultRef} menos referência ${decision.comparison.baselineResultRef}.`)\n     expect(text).toContain(\"Diferença negativa indica custo conhecido menor da alternativa; positiva indica custo conhecido maior.\")\n@@ -176,6 +183,7 @@\n       await page.keyboard.press(\"Enter\")\n       expect(JSON.parse(await page.locator(\"body\").getAttribute(\"data-source\") ?? \"null\")).toEqual(component.sourceRefs[0])\n       const trainingRow = table.getByRole(\"row\").filter({ has: page.getByRole(\"cell\", { name: \"training:11\", exact: true }) })\n+      await page.evaluate(() => { delete document.body.dataset.source })\n       await trainingRow.getByRole(\"button\").first().click()\n       expect(JSON.parse(await page.locator(\"body\").getAttribute(\"data-source\") ?? \"null\")).toEqual(component.sourceRefs[0])\n     }\n",
+  "markdown": {
+    "path": "/workspace/scratch/a97ca4c53050/review-bi-timeline.md",
+    "bytes": 8050,
+    "blob": "8b259a4019d4d6f49ce571e6a785df86cc6eafe0",
+    "sha256": "e097ea0572769d67b5f7b10e1868264183bc50b91a0156562dc20014587f3de9"
+  }
+}

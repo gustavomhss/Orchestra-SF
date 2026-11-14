@@ -1,0 +1,268 @@
+{
+  "schema": "sf-finance-procurement-owner-dependency-v1",
+  "status": "OWNER_FIX_PRESENT_NOT_APPLIED_BY_FINANCE",
+  "owner": "astra-compose consumes published Procurement owner sources",
+  "composeHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "financeHeadAtInspection": "5e4c2b288665113e58162a616a9965c03e397e19",
+  "financeTreeAtInspection": "64510c36da425ed2ec0da67836bfcd691fd1f625",
+  "observedFailure": {
+    "runId": 43587138878,
+    "jobId": 132423963070,
+    "productSha": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+    "snapshotSha": "0faf62c7f5e10f5ae17037bb6bd8eb512396f2fd",
+    "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "case": "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+    "observedError": "Procurement source unavailable",
+    "elapsedMs": 20.5,
+    "interpretation": "Observed error is source issuance failure. Field mismatch cause is a separate static source inference, not the literal log reason."
+  },
+  "cause": {
+    "issuerBlob": "7dd93cea781ad68d6db66e2d08e320c1d395d123",
+    "projectorBlob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+    "mismatch": "Issuer procurement-record-v1 selector.fields includes approvalStage; the old integration projector compares against a fixed list without approvalStage and returns undefined.",
+    "currentOwner": "COMPOSE6 adapter delegates to the Procurement owner projector with shared procurementRequestFields and an explicit legacy field form."
+  },
+  "minimalStaticClosure": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "gitBlob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sha256": "4be293f1b2ab1ea2deefa7ebbef633cb71b9c9a6abe4a4d83a99929e5b6259cc",
+      "bytes": 233,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "financePublishedBlob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+      "actionForOwner": "replace-old-adapter-with-exact-owner-delegation",
+      "appliedByFinance": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "gitBlob": "ab9814817d11c0b477636ee54d1b2763d365f405",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sha256": "c16c6d976d21f4a4f9b166315ad0e0c7fae138262f82aef8fda9df46ed73d4ac",
+      "bytes": 4973,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "financePublishedBlob": null,
+      "actionForOwner": "consume-existing-published-canonical-dependency",
+      "appliedByFinance": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "gitBlob": "a1e45e803105e76f147e695a7e92246257de9b16",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sha256": "9429d9206907eeea57c593fd75b287981caafa87f15234cf6dc0928b40eb8d71",
+      "bytes": 5889,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "financePublishedBlob": null,
+      "actionForOwner": "consume-existing-published-canonical-dependency",
+      "appliedByFinance": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "gitBlob": "5ed7b1c7e8f140c2820d9e3095a7427374d10f69",
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "sha256": "b49699f8d77b33e172da91004acc96735ac00911f87a527799752b77df044cd3",
+      "bytes": 5912,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "financePublishedBlob": null,
+      "actionForOwner": "consume-existing-published-canonical-dependency",
+      "appliedByFinance": false
+    }
+  ],
+  "existingSupport": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "financePublishedBlob": "7dd93cea781ad68d6db66e2d08e320c1d395d123",
+      "sha256": "0f6b9d46e5602b9d372fd07e7861e68591ea8557a2c0e629807f2afb89259e7c",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "financePublishedBlob": "c28a167575bf2713590f97798e463ccb33dc50c8",
+      "sha256": "68477e9a97c4f5aeb74fa1896f2fea8768a9de160d71c9a9d828cc5be4904765",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "financePublishedBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "financePublishedBlob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "sha256": "0a4c301845f53c4895b9279f0aebd708a17c1ee5fdb1140effc5ab4282b94a97",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "financePublishedBlob": "01682191a1ee15ba53f7f6d004a1ebd120686017",
+      "sha256": "ffbed4af1b4d49882be043e072955656923d6bbaffdc20ac5323417dded56f12",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "financePublishedBlob": "9f43fa7285f5d8a7527a01e34af698b238720c71",
+      "sha256": "2888bd19004f6ae106c2a39d2ee0fa7dcf956493353e6a23cc3ebcc8ab7d753e",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "financePublishedBlob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "sha256": "bdeb9ff9943d0c1785dfe7f56d450093fcffc09a9aecbe63e079d3851a78d13b",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+      "financePublishedBlob": "12c7c92b109f1653e9bc9db79566a2e380868827",
+      "sha256": "749162b5b3d77a517663c2804bd2d3929f59c92eb33e445dec43f37918c884d6",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "financePublishedBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "financePublishedBlob": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+      "sha256": "2fe8236bd56162cb9e5398b1155320057fd12f5f51f3700eb46aee2a8d7b1b15",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "financePublishedBlob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289",
+      "sourceHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+      "role": "existing-import-dependency-not-modified"
+    }
+  ],
+  "relativeImports": [
+    {
+      "from": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "suppliedBy": "owner-closure"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/src/nav.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "suppliedBy": "owner-closure"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "to": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "to": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "suppliedBy": "owner-closure"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "to": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "suppliedBy": "existing-finance-support"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "to": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "suppliedBy": "existing-finance-support"
+    }
+  ],
+  "notRequiredForThisStaticClosure": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "currentOwnerBlob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "reason": "The exported digestProcurementSource function is byte-identical between Finance and COMPOSE6; existing Finance resolver accepts approvalStage already. Replacing the complete source resolver is not necessary merely to satisfy the adapter imports/field list, but owners must choose a compatible full producer composition."
+    }
+  ],
+  "constraints": [
+    "Do not edit or recreate monetary formulas, policy, source-field authorization or a fake projector in Finance.",
+    "The monetary.ts entry is a dependency on an already published canonical producer, not an approval to change financial policy.",
+    "No foreign source was applied. Source pin/import validation is not package typecheck, product execution or proof of whole-producer compatibility.",
+    "The W19 three-case cross-domain file remains canonical and unweakened. Consume the external closure before a new affected run; do not rerun unchanged mismatched sources.",
+    "No native human/identity, C/D or final integrated bundle proof is claimed."
+  ],
+  "targetedOwnerValidation": [
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Current Procurement source/projector/confirmation tests selected by the owner",
+    "bun typecheck in the appropriate package and root guards on the composed exact head"
+  ],
+  "productRunsByThisAgent": 0,
+  "externalSourceWrites": 0
+}

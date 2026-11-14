@@ -1,0 +1,9 @@
+{
+  "scope": "Static independent review of two fixture initialization calls authored by parent",
+  "file": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+  "blob": "1014fdc4461211ae3310e4d9f5ddafea22786713",
+  "sha256": "2f563730c256d10100e57165c046dff2745b4bf01e965f646f5741228779e1d9",
+  "finding": "No static blocker. Canonical source lifecycle requires Dashboard registry before C08 seed and Procurement registry before cross-surface apply; plannerFixture initialized only Planner. Calls are inside existing try/finally. No tests performed.",
+  "assertionOrTimeoutChanges": false,
+  "testRunRequired": true
+}

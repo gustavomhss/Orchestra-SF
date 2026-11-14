@@ -1,0 +1,40 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts
+@@ -38,7 +38,9 @@
+     const previousDigest = digestSfValue(previous)
+     const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: revision.name } }, environment)
+     if (!copied.ok || copied.value !== versionId) throw new Error(`Planner copy rejected: ${JSON.stringify(copied)}`)
+-    const added = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: revision.lineId, version: snapshot.versions[`${versionId}:lines:${revision.lineId}`]?.version ?? 0, values: revision.lineId === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f10: revision.amount } : { versionId, f10: revision.amount } }, environment)
++    // This synthetic quote confirms one November charge and zero charges in the
++    // other months. A null forecast would remain an estimated budget fallback.
++    const added = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: revision.lineId, version: snapshot.versions[`${versionId}:lines:${revision.lineId}`]?.version ?? 0, values: revision.lineId === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f: Array.from({ length: 12 }, (_, month) => month === 10 ? revision.amount : 0) } : { versionId, f10: revision.amount } }, environment)
+     if (!added.ok) throw new Error(`Planner quote rejected: ${JSON.stringify(added)}`)
+     if (digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== previousDigest) throw new Error("Copy changed the original source")
+     const projection = projectPlannerSource(snapshot, reader, versionId)
+--- a/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts
+@@ -69,6 +69,11 @@
+     expect(afterPhase.caseRef.id).toBe(history.before.caseRef.id)
+     expect(afterPhase.caseRef.incarnation).toBe(history.before.caseRef.incarnation)
+     expect(afterPhase.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
++    // Completeness must already belong to the canonical source result. BI may
++    // not turn an estimated budget fallback into a confirmed monthly quote.
++    expect(afterPhase.scenario).toEqual({ baseRef: "transition-confirmed", operations: [], assumptions: [] })
++    expect(afterPhase.projection.components.filter((component) => component.id.startsWith("training:")).map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, evidenceState: component.evidenceState }))).toEqual(Array.from({ length: 12 }, (_, month) => ({ id: `training:${month + 1}`, amount: month === 10 ? 40000 : 0, currency: "USD", evidenceState: "confirmed" })))
++    expect(afterPhase.selectedResult).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete" } })
+     const afterReader = consumer(afterPhase, history.fixture.host, await persistAdvantage(afterPhase, history.fixture.context))
+     const after = await afterReader.read(afterReader.selection, history.fixture.context)
+     expect(after.status).toBe("ok")
+--- a/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts
+@@ -104,7 +104,9 @@
+     const originalDigest = digestSfValue(previous)
+     const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: `Confirmed ${kind} quote` } }, environment)
+     if (!copied.ok || copied.value !== versionId) throw new Error("Canonical source copy rejected")
+-    const saved = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f10: amount } : { versionId, f10: amount } }, environment)
++    // The supplied training quote confirms one November charge and explicitly
++    // no charges in the other months; omitted forecasts are not confirmed zeros.
++    const saved = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) } : { versionId, f10: amount } }, environment)
+     if (!saved.ok || digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== originalDigest) throw new Error("Canonical quote revision changed its original source")
+     const projection = projectPlannerSource(snapshot, reader, versionId)
+     if (!projection) throw new Error("Revised source unavailable")

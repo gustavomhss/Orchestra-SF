@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h-wp05-check-followup-v1",
+  "product_sha": "9913b0c622aa09da7914f231bd9f2ff54d872634",
+  "product_tree": "f43b8e39733c6d93048c4d48001af8d0f398ac5d",
+  "run_id": 43582252267,
+  "job_id": 132409273397,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582252267",
+  "typecheck": {
+    "overall": "failure",
+    "diagnostics_total": 134,
+    "diagnostics_external": 131,
+    "diagnostics_wp05": 3,
+    "wp05_product_diagnostics": 0,
+    "locations": [
+      {
+        "file": "test/product/wp05/planner-origins.test.ts",
+        "line": 124,
+        "code": "TS2769"
+      },
+      {
+        "file": "test/product/wp05/planner-origins.test.ts",
+        "line": 125,
+        "code": "TS2769"
+      },
+      {
+        "file": "test/product/wp05/planner-origins.test.ts",
+        "line": 128,
+        "code": "TS2769"
+      }
+    ]
+  },
+  "cause": "BiSelection.reference is nullable and generic; the fixture promises a Planner record but did not narrow that promise before equality assertions. Optional origin lookup also allowed an undefined expected ID.",
+  "fix": {
+    "file": "test/product/wp05/planner-origins.test.ts",
+    "status": "PUBLISHED_AND_TYPECHECKED_NO_OWNED_DIAGNOSTICS",
+    "description": "Require a non-null record reference and an existing authorized source identity with runtime guards, then retain full ref/currentRef equality and exact recordId assertion. No cast or suppression; no assertion or timeout relaxation.",
+    "product_changed": false,
+    "tests_executed_locally": false,
+    "new_ci_dispatched": false,
+    "commit": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+    "tree": "8a6ffb4527f8a2d4f7dbd522280048a95636ecb3"
+  },
+  "guards": {
+    "outcome": "pass",
+    "rules": 78,
+    "paths": 766,
+    "warnings": 13,
+    "gate_findings": 0,
+    "errors": 0
+  },
+  "cleaned_log_sha256": "ed3ff2b22341cd9b4efa636211c91eb5cc6f1ed81dc815096e080b84ef4d00aa",
+  "raw_mcp_log_sha256": "ea2cbcf9dd023036653327188e3839fa6a2e2248aa50f4a98d76740f03f8e46d",
+  "followup": {
+    "runId": 43584229925,
+    "productSha": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+    "ownedDiagnostics": 0,
+    "externalDiagnostics": 131,
+    "overall": "failure",
+    "guards": "success"
+  }
+}

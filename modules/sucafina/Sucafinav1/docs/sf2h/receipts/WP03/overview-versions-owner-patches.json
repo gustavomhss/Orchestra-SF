@@ -1,0 +1,111 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "baseRef": "8f91131ad3357c94fa135392b6829908356d82e5",
+  "repository": "gustavomhss/Orchestra-SF",
+  "producerRequired": "WP03 exports at 8f91131ad3357c94fa135392b6829908356d82e5 or later",
+  "patchOrder": [
+    "wp00-overview-versions-contract.patch",
+    "wp10-overview-versions-composition.patch",
+    "wp01-overview-versions-interface.patch"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "owner": "WP00",
+      "baseBlob": "fa0d39f3dfc23bfce751d91b00ae6c8fc2a87686",
+      "proposedBlob": "92e00c36399534087f0f58718d79a1ead2f9789a",
+      "patch": "wp00-overview-versions-contract.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "owner": "WP10",
+      "baseBlob": "ad72a4d73e2b31003deb028a6f761e164b7a860d",
+      "proposedBlob": "1272c1c9fed06b44c50c98bf94626abe83e5ad8b",
+      "patch": "wp10-overview-versions-composition.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "owner": "WP10",
+      "baseBlob": "9a2da03da92ce07fc8506c72dc1f4139143a7615",
+      "proposedBlob": "e19e053b423565020e271ad768a0588350786fe6",
+      "patch": "wp10-overview-versions-composition.patch"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "owner": "WP10",
+      "baseBlob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+      "proposedBlob": "06b12941c202b8327e3febd5f7bd36b9e7db00b1",
+      "patch": "wp10-overview-versions-composition.patch"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "owner": "WP10",
+      "baseBlob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+      "proposedBlob": "4ed309a62f23523ddbb5cae11624dfd0b99447b7",
+      "patch": "wp10-overview-versions-composition.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "owner": "WP01",
+      "baseBlob": "5a144bc373395a1ad2ce9eb7de256bcd94d0ed18",
+      "proposedBlob": "76bf05b0759a9ff60c1d720ba6b0998c2e6e7324",
+      "patch": "wp01-overview-versions-interface.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+      "owner": "WP01",
+      "baseBlob": "34a1a5045e33a23edb5ca0f49dcced8532580c6f",
+      "proposedBlob": "a2faa2f2d2fced0a87cd352171ddfa9b2c50d81e",
+      "patch": "wp01-overview-versions-interface.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/html.ts",
+      "owner": "WP01",
+      "baseBlob": "e97f2b64609001264be11d1b2a5f972932ec439f",
+      "proposedBlob": "ee650b4dbd74b41a710bf840782069f4d4aac157",
+      "patch": "wp01-overview-versions-interface.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "owner": "WP01",
+      "baseBlob": "08baa1c47ee42650b1ec3dad20ebdb480881046e",
+      "proposedBlob": "fe6b005852a9ab275016a3169549743f18c49b5a",
+      "patch": "wp01-overview-versions-interface.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/planner-overview-versions-http.ts",
+      "owner": "WP01",
+      "baseBlob": null,
+      "proposedBlob": "b19777161ed9a2f7d6e6667affe3662b36e364c5",
+      "patch": "wp01-overview-versions-interface.patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/planner-overview-versions.ts",
+      "owner": "WP01",
+      "baseBlob": null,
+      "proposedBlob": "e5a4adad8ae86b58d353e9f01db3f88653b30151",
+      "patch": "wp01-overview-versions-interface.patch"
+    }
+  ],
+  "patches": [
+    {
+      "path": "wp00-overview-versions-contract.patch",
+      "sha256": "c849220a0266406fb7595a7b5be384a6b0648ad7eff2137e470fefc2627db33e"
+    },
+    {
+      "path": "wp10-overview-versions-composition.patch",
+      "sha256": "6749adfa8baecd493e27359eab7e449cd121886049eb5207209156403a601c83"
+    },
+    {
+      "path": "wp01-overview-versions-interface.patch",
+      "sha256": "c58d06652cda7d2ed0c2f25f1fe00c9b17f15fe4682f096c2306d82355344193"
+    }
+  ],
+  "validation": {
+    "structuralApplyCheck": "passed against separate copies of the observed MCP source blobs",
+    "appliedToOwnerFiles": false,
+    "typecheck": "not-run",
+    "browser": "not-run",
+    "native": "not-proven"
+  }
+}

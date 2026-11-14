@@ -1,0 +1,314 @@
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+index 5a144bc373395a1ad2ce9eb7de256bcd94d0ed18..76bf05b0759a9ff60c1d720ba6b0998c2e6e7324 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -9,6 +9,7 @@
+ import { isSfPeriod } from "../contracts/validation.ts"
+ import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
+ import { handleSfPlannerMonthly } from "./planner-http.ts"
++import { handleSfPlannerVersions } from "./planner-overview-versions-http.ts"
+ import { handleSfForecastInput } from "./forecast-http.ts"
+ import { forecastAnalysisForm, forecastAnalysisScript } from "../ui/forecast-analysis.ts"
+ import { decisionEditForm, decisionEditScript } from "../ui/decision-edit.ts"
+@@ -21,7 +22,7 @@
+ 
+ /** Mount in the existing authenticated application; authority remains private to the host. */
+ export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
+-  const modes = ["workbench", "workbench-case", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-views"] as const
++  const modes = ["workbench", "workbench-case", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-planner-versions", "workbench-forecast", "workbench-views"] as const
+   return async (request: Request, surface: string): Promise<Response | undefined> => {
+     const url = new URL(request.url)
+     const mode = url.searchParams.get("sf")
+@@ -33,6 +34,10 @@
+     if (mode === "workbench-analysis") {
+       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
+       return handleSfAnalysis(request, input.origin, runtime)
++    }
++    if (mode === "workbench-planner-versions") {
++      if (surface !== "planner" || [...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
++      return handleSfPlannerVersions(request, input.origin, runtime)
+     }
+     if (mode === "workbench-planner") {
+       if (surface !== "planner" || [...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
+diff --git a/modules/sucafina/Sucafinav1/product/interface/personal-views.ts b/modules/sucafina/Sucafinav1/product/interface/personal-views.ts
+index 34a1a5045e33a23edb5ca0f49dcced8532580c6f..a2faa2f2d2fced0a87cd352171ddfa9b2c50d81e 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/personal-views.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/personal-views.ts
+@@ -6,7 +6,7 @@
+ import type { SfProductStatePort } from "../contracts/state.ts"
+ import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV } from "../../src/nav.ts"
+ 
+-export type SfViewSelectionKey = "year" | "own" | "execYear" | "opsYear" | "secYear" | "month" | "executiveMonth" | "operationsMonth" | "securityMonth" | "version" | "owner" | "class" | "mode" | "filter" | "status" | "topicStatus" | "memberStatus" | "opsMonth" | "request" | "supplier"
++export type SfViewSelectionKey = "year" | "own" | "execYear" | "opsYear" | "secYear" | "month" | "executiveMonth" | "operationsMonth" | "securityMonth" | "version" | "baseVersion" | "owner" | "class" | "mode" | "filter" | "status" | "topicStatus" | "memberStatus" | "opsMonth" | "request" | "supplier"
+ export type SfPersonalView = { id: string; title: string; surface: "dashboard" | "planner" | "procurement"; page: string; period?: Period; currency?: string; density?: "comfortable" | "compact"; filters?: { query?: string; selections?: Partial<Record<SfViewSelectionKey, string>> } }
+ export type SfPersonalViewRecord = { view: SfPersonalView; version: number }
+ export type SfPersonalViewSave = { view: SfPersonalView; expectedVersion: number | null }
+@@ -28,8 +28,8 @@
+     return pages[page] ? [...new Set([...shared, ...pages[page]])] : []
+   }
+   if (surface === "planner") {
+-    const pages: Record<string, readonly SfViewSelectionKey[]> = { "Overview": ["year", "version", "filter"], "OPEX": ["year", "version", "owner", "class", "mode"], "CAPEX": ["year", "version", "owner", "class", "mode"], "Headcount": ["year", "version"], "Entities & allocations": ["year", "version"], "FX rates": ["year", "version"], "Versions": ["year"] }
+-    return pages[page] ? [...new Set([...shared, ...pages[page]])] : []
++    const pages: Record<string, readonly SfViewSelectionKey[]> = { "Overview": ["year", "version", "baseVersion", "filter"], "OPEX": ["year", "version", "owner", "class", "mode"], "CAPEX": ["year", "version", "owner", "class", "mode"], "Headcount": ["year", "version"], "Entities & allocations": ["year", "version"], "FX rates": ["year", "version"], "Versions": ["year", "version"] }
++    return pages[page] ? [...new Set([...shared, "baseVersion" as const, ...pages[page]])] : []
+   }
+   const pages: Record<string, readonly SfViewSelectionKey[]> = { "Dashboard": ["year"], "Requests": ["year", "filter", "request"], "My approvals": ["year"], "Suppliers": ["year", "status", "supplier"], "Settings": ["year"] }
+   return pages[page] ? [...new Set([...shared, ...pages[page]])] : []
+@@ -129,7 +129,7 @@
+     if (!item.filters || typeof item.filters !== "object" || Array.isArray(item.filters) || Object.keys(item.filters).some((key) => !["query", "selections"].includes(key)) || "query" in item.filters && (typeof item.filters.query !== "string" || item.filters.query.length > 500 || !sfViewQueryAllowed(item.surface as SfPersonalView["surface"], item.page as string))) return false
+     if ("selections" in item.filters) {
+       const selections = item.filters.selections
+-      if (!selections || typeof selections !== "object" || Array.isArray(selections) || Object.entries(selections).some(([key, value]) => !sfViewSelectionKeys(item.surface as SfPersonalView["surface"], item.page as string).some((allowed) => allowed === key) || typeof value !== "string" || value.length > 500 || (["year", "own", "execYear", "opsYear", "secYear"].includes(key) && value !== "" && !/^202[4-7]$/.test(value)) || (["month", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"].includes(key) && value !== "" && !/^([1-9]|1[0-2])$/.test(value)))) return false
++      if (!selections || typeof selections !== "object" || Array.isArray(selections) || Object.entries(selections).some(([key, value]) => !sfViewSelectionKeys(item.surface as SfPersonalView["surface"], item.page as string).some((allowed) => allowed === key) || typeof value !== "string" || value.length > 500 || (["year", "own", "execYear", "opsYear", "secYear"].includes(key) && value !== "" && !(item.surface === "planner" && key === "year" ? /^20(?:0[1-9]|[1-9][0-9])$/.test(value) : /^202[4-7]$/.test(value))) || (["month", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"].includes(key) && value !== "" && !/^([1-9]|1[0-2])$/.test(value)))) return false
+     }
+   }
+   return true
+diff --git a/modules/sucafina/Sucafinav1/product/interface/html.ts b/modules/sucafina/Sucafinav1/product/interface/html.ts
+index e97f2b64609001264be11d1b2a5f972932ec439f..ee650b4dbd74b41a710bf840782069f4d4aac157 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/html.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/html.ts
+@@ -1,3 +1,4 @@
++import { plannerOverviewVersionsScript, plannerOverviewWidget, plannerVersionsWidget } from "../ui/planner-overview-versions.ts"
+ import { plannerMonthlyScript } from "../ui/planner-monthly.ts"
+ import { personalViewsScript, personalViewsWidget } from "../ui/personal-views.ts"
+ import { importPreviewScript, importPreviewWidget } from "../ui/import-preview.ts"
+@@ -6,6 +7,6 @@
+ /** Decorate only a document the host has already authorized and rendered. */
+ export function decorateSfProductHtml(html: string, surface: string, page: string) {
+   if (!["dashboard", "planner", "procurement"].includes(surface)) return html
+-  const script = `;(() => { const initialize = () => {${personalViewsScript}${documentEvidenceScript}${surface === "planner" && (page === "OPEX" || page === "CAPEX") ? plannerMonthlyScript : ""}${surface === "planner" || surface === "dashboard" ? importPreviewScript : ""}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
+-  return html.replace('<div class="workspace-tools">', '<div class="workspace-tools"><a href="?sf=workbench">Workbench</a>').replace("</main>", `${personalViewsWidget({ surface, page })}${documentEvidenceWidget}${surface === "planner" || surface === "dashboard" ? importPreviewWidget : ""}</main>`).replace("</body>", `<script>${script}</script></body>`)
++  const script = `;(() => { const initialize = () => {${personalViewsScript}${documentEvidenceScript}${surface === "planner" && (page === "Overview" || page === "Versions") ? plannerOverviewVersionsScript : ""}${surface === "planner" && (page === "OPEX" || page === "CAPEX") ? plannerMonthlyScript : ""}${surface === "planner" || surface === "dashboard" ? importPreviewScript : ""}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
++  return html.replace('<div class="workspace-tools">', '<div class="workspace-tools"><a href="?sf=workbench">Workbench</a>').replace("</main>", `${surface === "planner" && page === "Overview" ? plannerOverviewWidget : surface === "planner" && page === "Versions" ? plannerVersionsWidget : ""}${personalViewsWidget({ surface, page })}${documentEvidenceWidget}${surface === "planner" || surface === "dashboard" ? importPreviewWidget : ""}</main>`).replace("</body>", `<script>${script}</script></body>`)
+ }
+diff --git a/modules/sucafina/Sucafinav1/src/screen-shell.ts b/modules/sucafina/Sucafinav1/src/screen-shell.ts
+index 08baa1c47ee42650b1ec3dad20ebdb480881046e..fe6b005852a9ab275016a3169549743f18c49b5a 100644
+--- a/modules/sucafina/Sucafinav1/src/screen-shell.ts
++++ b/modules/sucafina/Sucafinav1/src/screen-shell.ts
+@@ -78,12 +78,25 @@
+ }
+ function attach() {
+   const current = new URL(location.href)
+-  const stateKeys = ["year", "execYear", "opsYear", "secYear", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"]
++  const stateKeys = ["year", "execYear", "opsYear", "secYear", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth", ...(document.body.dataset.surface === "planner" ? ["version", "baseVersion"] : [])]
+   document.querySelectorAll('nav a[href*="?page="]').forEach((anchor) => {
+     const target = new URL(anchor.href)
+     for (const key of stateKeys) if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
+     target.searchParams.delete("own")
+     anchor.href = target.toString()
++    if (document.body.dataset.surface === "planner" && !anchor.dataset.plannerStateBound) {
++      anchor.dataset.plannerStateBound = "true"
++      anchor.addEventListener("click", () => {
++        const current = new URL(location.href)
++        const target = new URL(anchor.href)
++        if (target.origin !== current.origin || target.pathname !== current.pathname) return
++        for (const key of stateKeys) {
++          if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
++          else target.searchParams.delete(key)
++        }
++        anchor.href = target.toString()
++      })
++    }
+     if (target.searchParams.get("page") === document.querySelector("main")?.dataset.page) anchor.setAttribute("aria-current", "page")
+   })
+   document.querySelectorAll("[data-notifications]").forEach((menu) => {
+diff --git a/modules/sucafina/Sucafinav1/product/interface/planner-overview-versions-http.ts b/modules/sucafina/Sucafinav1/product/interface/planner-overview-versions-http.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b19777161ed9a2f7d6e6667affe3662b36e364c5
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/product/interface/planner-overview-versions-http.ts
+@@ -0,0 +1,59 @@
++import type { SfHostServices } from "../contracts/host-context.ts"
++import type { PortResult } from "../contracts/ports.ts"
++import { isSfPeriod } from "../contracts/validation.ts"
++import type { PlannerOverviewRequest } from "../planner/overview-host.ts"
++import { renderPlannerOverview } from "../planner/overview.ts"
++import { validPlannerVersionRequest } from "../planner/versions.ts"
++import type { PlannerVersionRequest } from "../planner/versions.ts"
++
++type Input = { action: "overview"; input: PlannerOverviewRequest }
++  | { action: "versions"; input: { selectedId?: string } }
++  | { action: "preview" | "apply"; input: PlannerVersionRequest }
++
++/** Private human transport. The producer owns source resolution and financial output. */
++export async function handleSfPlannerVersions(request: Request, origin: string, runtime: SfHostServices) {
++  const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
++  if (request.method !== "POST") return reply({ status: "denied" }, 405)
++  if (new URL(request.url).origin !== origin || request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
++  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json") || !/^[A-Za-z0-9._:-]{8,128}$/.test(request.headers.get("idempotency-key") ?? "")) return reply({ status: "invalid" }, 400)
++  const body = await request.text()
++  if (new TextEncoder().encode(body).byteLength > 65536) return reply({ status: "invalid" }, 413)
++  const parsed = decode(await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined))
++  if (!parsed) return reply({ status: "invalid" }, 400)
++  if (parsed.action === "overview" ? !runtime.plannerOverview : !runtime.plannerVersions) return reply({ status: "unavailable" }, 503)
++  const action = parsed.action === "overview" || parsed.action === "versions" ? "planner.read" : parsed.action === "preview" ? "planner.preview" : "planner.apply"
++  const admitted = await runtime.human.admit(request, action, parsed.input)
++  if (admitted.status !== "ok") return reply({ status: admitted.status }, admitted.status === "unavailable" ? 503 : 403)
++  const respond = async (result: PortResult<unknown> | undefined, html?: string) => {
++    if (!result) return reply({ status: "unavailable" }, 503)
++    if (result.status !== "ok") return reply(result, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
++    if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
++    return reply({ status: "ok", value: result.value, ...(html === undefined ? {} : { html }) }, 200)
++  }
++  try {
++    if (parsed.action === "overview") {
++      const result = await runtime.plannerOverview!.read(admitted.value, parsed.input).catch(() => undefined)
++      return await respond(result, result?.status === "ok" ? renderPlannerOverview(result.value) : undefined)
++    }
++    if (parsed.action === "versions") return await respond(await runtime.plannerVersions!.read(admitted.value, parsed.input).catch(() => undefined))
++    return await respond(await runtime.plannerVersions![parsed.action](admitted.value, parsed.input).catch(() => undefined))
++  } finally { runtime.human.finish(admitted.value) }
++}
++
++function record(value: unknown): value is Record<string, unknown> {
++  return !!value && typeof value === "object" && !Array.isArray(value)
++}
++
++function decode(value: unknown): Input | undefined {
++  if (!record(value) || Object.keys(value).length !== 2 || Object.keys(value).some((key) => key !== "action" && key !== "input") || !record(value.input)) return undefined
++  const input = value.input
++  if (value.action === "overview") {
++    if (Object.keys(input).length !== 3 || Object.keys(input).some((key) => !["baseVersionId", "candidateVersionId", "period"].includes(key)) || typeof input.baseVersionId !== "string" || !input.baseVersionId.trim() || typeof input.candidateVersionId !== "string" || !input.candidateVersionId.trim() || !isSfPeriod(input.period)) return undefined
++    return { action: "overview", input: { baseVersionId: input.baseVersionId, candidateVersionId: input.candidateVersionId, period: input.period } }
++  }
++  if (value.action === "versions") {
++    if (Object.keys(input).some((key) => key !== "selectedId") || input.selectedId !== undefined && (typeof input.selectedId !== "string" || !input.selectedId.trim())) return undefined
++    return { action: "versions", input: typeof input.selectedId === "string" ? { selectedId: input.selectedId } : {} }
++  }
++  return (value.action === "preview" || value.action === "apply") && validPlannerVersionRequest(input) ? { action: value.action, input } : undefined
++}
+diff --git a/modules/sucafina/Sucafinav1/product/ui/planner-overview-versions.ts b/modules/sucafina/Sucafinav1/product/ui/planner-overview-versions.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..e5a4adad8ae86b58d353e9f01db3f88653b30151
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/product/ui/planner-overview-versions.ts
+@@ -0,0 +1,129 @@
++export const plannerOverviewWidget = '<section data-planner-comparison-control><h2>Compare plan versions</h2><p>Choose a baseline and a candidate for the same fiscal year. The comparison keeps changes from baseline separate from budget variances.</p><form data-planner-comparison-form><label>Baseline version<select name="baseVersion" required><option value="">Choose a baseline</option></select></label><label>Candidate version<select name="version" required><option value="">Choose a candidate</option></select></label><button type="submit">Compare versions</button></form><p data-planner-status role="status" aria-live="polite">Loading authorized versions…</p><div data-planner-comparison-result></div></section>'
++
++export const plannerVersionsWidget = '<section data-planner-version-review><h2>Review version changes</h2><p>Version changes are previewed before you apply them. Your entries remain available when a conflict requires review.</p><p data-planner-status role="status" aria-live="polite">Loading authorized versions…</p></section>'
++
++/** Attach to the existing authorized Planner pages and retain the original revision. */
++export const plannerOverviewVersionsScript = String.raw`
++(() => {
++  const send = async (action, input, key = crypto.randomUUID()) => {
++    const url = new URL(location.href); url.search = '?sf=workbench-planner-versions'
++    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify({ action, input }) })
++    const result = await response.json()
++    if (!response.ok || result.status !== 'ok') throw new Error(result.reason || result.status || 'unavailable')
++    return result
++  }
++  const selectUrl = (values) => {
++    const url = new URL(location.href)
++    Object.entries(values).forEach(([key, value]) => { if (value) url.searchParams.set(key, value); else url.searchParams.delete(key) })
++    history.replaceState(null, '', url)
++  }
++  document.querySelectorAll('[data-planner-comparison-control]').forEach((section) => {
++    if (section.dataset.sfPlannerReady) return; section.dataset.sfPlannerReady = 'true'
++    const form = section.querySelector('form'); const status = section.querySelector('[data-planner-status]'); const output = section.querySelector('[data-planner-comparison-result]')
++    const base = form.elements.baseVersion; const candidate = form.elements.version; const button = form.querySelector('button')
++    const wanted = new URL(location.href).searchParams
++    let versions = []
++    button.disabled = true
++    send('versions', {}).then(({ value }) => {
++      if (!section.isConnected) return
++      versions = value.versions
++      ;[base, candidate].forEach((select) => {
++        versions.forEach((version) => { const option = document.createElement('option'); option.value = version.id; option.textContent = version.name + ' · ' + version.year + ' · ' + version.state; select.append(option) })
++        const selected = wanted.get(select.name)
++        if (selected && !versions.some((version) => version.id === selected)) { const missing = document.createElement('option'); missing.value = selected; missing.textContent = 'Saved selection unavailable'; select.append(missing) }
++        select.value = selected || ''
++      })
++      button.disabled = false
++      status.textContent = [base, candidate].some((select) => select.value && !versions.some((version) => version.id === select.value)) ? 'A saved selection is unavailable. Choose an accessible version to compare.' : 'Choose both versions, then compare.'
++    }).catch(() => { status.textContent = 'Version discovery is unavailable. Existing selections have not been replaced.' })
++    form.addEventListener('change', () => { output.replaceChildren(); selectUrl({ baseVersion: base.value, version: candidate.value }) })
++    form.addEventListener('submit', async (event) => {
++      event.preventDefault()
++      const selected = versions.find((version) => version.id === candidate.value)
++      const baseline = versions.find((version) => version.id === base.value)
++      output.replaceChildren()
++      if (!selected || !baseline || selected.year !== baseline.year) { status.textContent = 'Choose accessible versions in the same fiscal year.'; return }
++      const request = { baseVersionId: baseline.id, candidateVersionId: selected.id, period: { start: selected.year + '-01-01', end: selected.year + '-12-31' } }
++      selectUrl({ baseVersion: baseline.id, version: selected.id, year: String(selected.year) })
++      button.disabled = true; base.disabled = true; candidate.disabled = true; status.textContent = 'Checking current sources…'
++      try {
++        const result = await send('overview', request)
++        if (!section.isConnected || typeof result.html !== 'string') return
++        output.innerHTML = result.html
++        status.textContent = 'Comparison loaded from the current authorized sources.'
++      } catch { status.textContent = 'Comparison is unavailable or its sources changed. Your selections are preserved.' }
++      finally { button.disabled = false; base.disabled = false; candidate.disabled = false }
++    })
++  })
++  document.querySelectorAll('[data-planner-version-review]').forEach((section) => {
++    const status = section.querySelector('[data-planner-status]')
++    if (!section.dataset.sfPlannerReady) {
++      section.dataset.sfPlannerReady = 'true'
++      const selectedId = new URL(location.href).searchParams.get('version')
++      send('versions', selectedId ? { selectedId } : {}).then(({ value }) => {
++        if (!section.isConnected) return
++        const selected = value.versions.find((version) => version.id === value.selectedId)
++        status.textContent = value.selectionState === 'unavailable' ? 'The saved version selection is unavailable.' : selected ? 'Selected version: ' + selected.name + ' · ' + selected.year + '.' : 'Choose Manage on a version to preview a change.'
++      }).catch(() => { status.textContent = 'Version discovery is unavailable.' })
++    }
++    document.querySelectorAll('form[data-page="Versions"][data-command]').forEach((form) => {
++      if (form.dataset.sfVersionBound) return; form.dataset.sfVersionBound = 'true'
++      form.addEventListener('submit', async (event) => {
++        event.preventDefault(); event.stopImmediatePropagation()
++        const action = form.dataset.command; const id = form.dataset.record; const revision = Number(form.dataset.version)
++        if (!['save', 'copy', 'lock', 'unlock', 'official', 'delete'].includes(action) || !Number.isSafeInteger(revision) || revision < 0) return
++        const original = Object.fromEntries(new FormData(form))
++        const fingerprint = JSON.stringify(original)
++        const submit = form.querySelector('button[type=submit]')
++        const previousDirty = form.dataset.dirty
++        form.dataset.dirty = 'true'; submit.disabled = true
++        form.querySelector('[data-sf-version-review]')?.remove()
++        const box = document.createElement('div'); box.dataset.sfVersionReview = 'true'
++        const message = document.createElement('p'); message.setAttribute('role', 'status'); message.setAttribute('aria-live', 'polite'); message.textContent = 'Preparing preview…'; box.append(message); form.append(box)
++        const details = (title, value) => { const heading = document.createElement('p'); heading.textContent = title; const body = document.createElement('pre'); body.textContent = JSON.stringify(value, null, 2); box.append(heading, body) }
++        const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'Keep editing'; box.append(cancel)
++        cancel.addEventListener('click', () => { box.remove(); submit.disabled = false; if (previousDirty) form.dataset.dirty = previousDirty; else delete form.dataset.dirty })
++        try {
++          const current = (await send('versions', id ? { selectedId: id } : {})).value
++          const metadata = current.versions.find((version) => version.id === id)
++          const create = action === 'save' && !id
++          if (create ? !current.create.allowed : !metadata || metadata.actions[action] !== true) throw new Error('unavailable')
++          if (create ? revision !== current.create.revision : revision !== (action === 'official' ? metadata.officialRevision : metadata.revision)) { message.textContent = 'This version changed. Your draft is preserved. Refresh and compare before retrying.'; if (metadata) details('Current stored version', metadata); return }
++          const request = create ? { action: 'create', revision }
++            : action === 'save' ? { action: 'save', id, revision, name: String(original.name || ''), ...(Object.hasOwn(original, 'year') ? { year: Number(original.year) } : {}) }
++            : action === 'copy' ? { action: 'copy', id, revision, name: metadata.name + ' — Copy' }
++            : { action, id, revision }
++          if (id) selectUrl({ version: id })
++          const result = (await send('preview', request)).value
++          if (!box.isConnected) return
++          details('Your requested change', result.request)
++          if (!result.outcome.ok) { message.textContent = 'Preview was refused. Your entries are preserved.'; if (result.outcome.stored) details('Current stored version', result.outcome.stored); return }
++          details('Preview only', result.preview)
++          message.textContent = 'Review the change before applying it.'
++          const apply = document.createElement('button'); apply.type = 'button'; apply.textContent = 'Apply version change'; box.append(apply)
++          const applyKey = crypto.randomUUID()
++          const invalidate = () => { apply.disabled = true; message.textContent = 'Your entries changed. Keep editing and preview again.' }
++          form.addEventListener('input', invalidate, { once: true }); form.addEventListener('change', invalidate, { once: true })
++          apply.addEventListener('click', async () => {
++            if (!form.isConnected || !box.isConnected || JSON.stringify(Object.fromEntries(new FormData(form))) !== fingerprint) { invalidate(); return }
++            apply.disabled = true; cancel.disabled = true; message.textContent = 'Applying the reviewed change…'
++            try {
++              const applied = (await send('apply', request, applyKey)).value
++              if (!applied.outcome.ok) { message.textContent = 'The change was refused or conflicts with a newer version. Your draft remains here.'; if (applied.outcome.stored) details('Current stored version', applied.outcome.stored); cancel.disabled = false; return }
++              delete form.dataset.dirty
++              form.closest('dialog')?.close()
++              document.activeElement?.blur()
++              if (typeof window.sucafinaRefresh === 'function') await window.sucafinaRefresh()
++              else location.reload()
++            } catch {
++              message.textContent = 'The result could not be confirmed. Reload Versions and reconcile the result before another apply.'
++              const reload = document.createElement('button'); reload.type = 'button'; reload.textContent = 'Reload Versions'; reload.addEventListener('click', () => { delete form.dataset.dirty; location.reload() }); box.append(reload)
++            }
++          })
++          apply.focus()
++        } catch { message.textContent = 'Preview is unavailable. Your entries are preserved; keep editing or refresh.' }
++      }, { capture: true })
++    })
++  })
++})()
++`

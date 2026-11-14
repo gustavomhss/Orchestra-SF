@@ -1,0 +1,25 @@
+{
+  "kind": "metadata-parser-unit-normalization",
+  "reason": "Hosted Bun F3 emitted [765.00ms]; the former parser recognized only seconds.",
+  "change": "Accept ms and s in the final Bun summary and convert milliseconds to durationSeconds.",
+  "preservedPreviousParser": {
+    "path": "parse-hosted-test-log-before-ms.py",
+    "sha256": "c9e5f0ca447115dba3d00ede2350d32c1606185dcb4c763f183daafd7c3cd23a"
+  },
+  "currentParser": {
+    "path": "parse-hosted-test-log.py",
+    "sha256": "e8055e8bbcf9b994052e0f4d2af69542c17ee5aca12d27ce4dcddef499061726"
+  },
+  "verification": {
+    "input": "wp11-W13-F3-tests.log",
+    "inputSha256": "b135db3ac46b7031b977b539fbac3fc17f6c3d66563203ccd3ca9f2bdde5ffb3",
+    "observedSummary": {
+      "pass": 6,
+      "fail": 0,
+      "tests": 6,
+      "files": 1,
+      "durationSeconds": 0.765
+    }
+  },
+  "boundary": "Only hosted log metadata parsing ran locally; product code, tests and typecheck were not executed. Existing prior run receipts and raw logs remain unchanged."
+}

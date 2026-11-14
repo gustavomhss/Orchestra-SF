@@ -1,0 +1,163 @@
+{
+  "log": "ci-analysis/wp11-W13-F3-tests.log",
+  "logSha256": "b135db3ac46b7031b977b539fbac3fc17f6c3d66563203ccd3ca9f2bdde5ffb3",
+  "metadata": {
+    "productSha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "productTree": "e6831add3e891e020d34540234bd685a7dd05e01",
+    "snapshotSha": "5d386ed8b4b44db080342995dec263772481538b",
+    "snapshotTree": "dc80dd9e548419e1bc0353d467fccecc75517175",
+    "branch": "ci-run-linux-astra-wp11-d7775d6-18f4fe6c-f3",
+    "requestSha256": "18f4fe6c8fe126711efa35337d9a03437ab2e13bf8f851d62a47bb9385b315c6",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "862022f0c03ffda0c99b1a6fbd21f12c2c483ddf",
+    "runIds": [
+      43593540746
+    ]
+  },
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "tests": 6,
+    "files": 1,
+    "durationSeconds": 0.765
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "97290ea6f0b235169e477ca85a65dd2b"
+    ],
+    "observedVerdicts": [
+      "omni positive control [97290ea6f0b235169e477ca85a65dd2b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [97290ea6f0b235169e477ca85a65dd2b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "reportedTests": 6,
+      "counts": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 540.08,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "line": 829,
+        "timestamp": "2026-11-14T12:12:29.3956757Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "pass",
+        "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+        "line": 835,
+        "timestamp": "2026-11-14T12:12:30.1460110Z",
+        "durationMs": 118.49
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+    "status": "pass",
+    "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+    "line": 835,
+    "timestamp": "2026-11-14T12:12:30.1460110Z",
+    "durationMs": 118.49
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 6,
+    "fail": 0,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+      "line": 830,
+      "timestamp": "2026-11-14T12:12:29.7797708Z",
+      "durationMs": 173.93
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+      "line": 831,
+      "timestamp": "2026-11-14T12:12:29.8251753Z",
+      "durationMs": 45.35
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+      "line": 832,
+      "timestamp": "2026-11-14T12:12:29.8697299Z",
+      "durationMs": 44.58
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+      "line": 833,
+      "timestamp": "2026-11-14T12:12:29.9085610Z",
+      "durationMs": 38.83
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic read refuses an old draft replaced during its last source callback",
+      "line": 834,
+      "timestamp": "2026-11-14T12:12:30.0274595Z",
+      "durationMs": 118.9
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+      "line": 835,
+      "timestamp": "2026-11-14T12:12:30.1460110Z",
+      "durationMs": 118.49
+    }
+  ],
+  "failures": [],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

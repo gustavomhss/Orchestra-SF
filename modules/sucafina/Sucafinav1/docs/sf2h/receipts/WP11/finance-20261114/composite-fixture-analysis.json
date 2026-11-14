@@ -1,0 +1,218 @@
+{
+  "schema": "astra-finance-composite-fixture-cost-v1",
+  "status": "IMPLEMENTED_STATICALLY_VERIFIED_HOSTED_VALIDATION_PENDING",
+  "scope": "two owned test files; no product source changed",
+  "sourceEvidence": {
+    "runId": 43589528126,
+    "jobId": 132431103700,
+    "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+    "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
+    "rawLogSha256": "e0f7acd17f9d69d2fa982921db80ed06ed9638c69f192e5df03f4a76e06d00fb",
+    "file": "test/product/wp11/composite-coverage.test.ts",
+    "firstCase": {
+      "result": "pass",
+      "durationMs": 61629.59
+    },
+    "secondCase": {
+      "result": "timeout",
+      "durationMs": 204791.75,
+      "timeoutMs": 180000
+    }
+  },
+  "causeDemonstrated": "The comparison/coverage tests created five complete sensitivity fixtures. Each construction ran persistent.evaluateAndStore; the tests never consumed saved, persistent, or exactCalls. This is demonstrable unconsumed work, not a measured attribution of every millisecond or a runtime diagnosis of a financial producer.",
+  "change": "Create a shared comparison fixture containing unchanged canonical Planner/C08/criterion/comparison preparation. Keep the original sensitivity factory as a wrapper that evaluates and persists sensitivity and returns a required saved result, cleaning up on failure. Only composite-coverage opts into the comparison factory.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "previousBlob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+      "candidateBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "bytes": 22570
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "previousBlob": "3196d7885a6cecbc4afff9b3044857400753280a",
+      "candidateBlob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "sha256": "94a2083facbde659e3cee6db56597016517e7c45ac1d85b12e1be91f7606adf0",
+      "bytes": 7661
+    }
+  ],
+  "metadataChecks": {
+    "scope": [
+      "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts"
+    ],
+    "originalTestCount": 2,
+    "finalTestCount": 2,
+    "assertionLinesEqual": true,
+    "assertionLineCount": 29,
+    "timeouts": [
+      180000,
+      180000
+    ],
+    "fourVariantLoopUnchanged": true,
+    "allTestBytesExceptFactoryIdentifierEqual": true,
+    "canonicalComparisonPreparationBytesUnchanged": true,
+    "fullSensitivityWrapperSavedRequired": true,
+    "fullSensitivityWrapperCleanupOnFailure": true,
+    "compositeConsumedFixtureProperties": [
+      "baselineRef",
+      "basis",
+      "caseRef",
+      "cleanup",
+      "comparison",
+      "context",
+      "decision",
+      "exact",
+      "issuer",
+      "preview",
+      "rules",
+      "scenario",
+      "selectedRef",
+      "selectedResult",
+      "sensitivityRequest"
+    ],
+    "removedUnconsumedPrecomputationsPerFile": 5,
+    "relativeImportPathsExist": true,
+    "productExecution": false,
+    "localTypecheck": false,
+    "remoteWrite": false,
+    "ciDispatch": false
+  },
+  "consumers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "kind": "type-only",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "kind": "runtime",
+      "function": "createWp05ComparisonFixture",
+      "contract": "persisted-comparison-without-unconsumed-sensitivity-bootstrap"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "kind": "type-only",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "kind": "runtime",
+      "function": "createWp05SensitivityFixture",
+      "contract": "unchanged-required-saved"
+    }
+  ],
+  "preservedOracles": {
+    "testCount": 2,
+    "timeoutPerTestMs": 180000,
+    "variants": [
+      "bundled",
+      "omitted",
+      "null",
+      "zero",
+      "confirmed"
+    ],
+    "knownSubtotals": [
+      210000,
+      250000
+    ],
+    "knownDifferences": [
+      -30000,
+      10000
+    ],
+    "thresholds": [
+      55000,
+      15000
+    ],
+    "parameterBounds": {
+      "minimum": 10000,
+      "maximum": 70000,
+      "parameterRef": "implementation:11"
+    },
+    "negativeOracles": [
+      "revoked supporting statement",
+      "missing N/A classification",
+      "duplicate interval component",
+      "missing training coverage",
+      "unsupported guessed-zero N/A justification",
+      "missing N/A evidence",
+      "duplicate included component reference",
+      "duplicate canonical component"
+    ]
+  },
+  "independentReview": {
+    "status": "PENDING",
+    "reason": "All four live slots occupied when candidate froze; author metadata review is not independent review."
+  },
+  "validationRecommendation": {
+    "productSelection": [
+      "test/product/wp11/composite-coverage.test.ts"
+    ],
+    "reason": "Exact affected consumer retains both cases, all four sequential variants and its original deadlines. Optional full wrapper smoke should reuse one already planned consumer, not repeat unchanged batches.",
+    "typecheck": "Root-hosted bun typecheck plus guards under existing protocol.",
+    "notRun": [
+      "local product imports",
+      "local Bun or tests",
+      "local typecheck",
+      "CI dispatch",
+      "remote mutation"
+    ]
+  },
+  "limitations": [
+    "No duration improvement is measured yet.",
+    "No product performance claim follows from reducing test setup.",
+    "The fixture still uses explicit synthetic authority/evidence callbacks as before; it is not native execution or a human-installed UI proof.",
+    "No criterion is accepted and no READY/DONE status is claimed."
+  ]
+}

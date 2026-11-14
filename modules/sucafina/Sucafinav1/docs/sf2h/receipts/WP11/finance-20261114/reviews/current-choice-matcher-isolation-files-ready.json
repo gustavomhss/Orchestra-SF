@@ -1,0 +1,24 @@
+{
+  "kind": "fixture-matcher-observation-isolation",
+  "triggerRun": 43593276333,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "beforeBlob": "35d562e6686b27f5fdad5c88584391d7649571df",
+      "candidateBlob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "sha256": "d8aa020d994c2ed6aa489a9b4968c44cfd3c0be4f3d76caaefc8b0b7470b6f4d",
+      "bytes": 27779
+    }
+  ],
+  "preserved": {
+    "oldExpects": 40,
+    "expects": 41,
+    "timeout": 180000,
+    "newIO": 0,
+    "newPlannerReplay": 0,
+    "productionChanges": 0
+  },
+  "changes": "Existing training toMatchObject/arrayContaining assertion now observes an exact structuredClone of the entry instead of the canonical assessment entry shared with the source entry list; classification has cloned entries. New canonical digest invariant proves the producer assessment unchanged by the matcher. Minimal one-line matcher metadata captures any corruption of the observation for an Actions witness. No coverage basis, canonical guard, operations, expected financial output, or source fence changed.",
+  "evidence": "S18 proves DataCloneError inside entry observation and undefined reassessment after all3source resolutionsfresh; potential asymmetric matcher mutation not declared demonstrated until next log.",
+  "supersedesUnpublishedCandidate": "d72602ffb5667472620b116c0f7fc55104dda991"
+}

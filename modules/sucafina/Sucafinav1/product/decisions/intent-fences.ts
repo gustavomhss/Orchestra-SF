@@ -1,7 +1,7 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../contracts/sf-execution.ts"
 
-type Action = "decisions.edit" | "decisions.coverage" | "decisions.criteria" | "decisions.select-portfolio" | "decisions.accept-analysis" | "decisions.apply" | "decisions.promote-alternative" | "decisions.prepare-changes" | "decisions.choose" | "decisions.promote-portfolio" | "decisions.prepare-portfolio"
+type Action = "decisions.edit" | "decisions.coverage" | "decisions.criteria" | "decisions.select-portfolio" | "decisions.accept-analysis" | "decisions.apply" | "decisions.promote-alternative" | "decisions.prepare-changes" | "decisions.choose" | "decisions.promote-portfolio" | "decisions.prepare-portfolio" | "decisions.add-question" | "decisions.answer-question" | "decisions.draft-hot-topic" | "decisions.promote-analysis"
 type SourceFences = { dashboard: string; planner: string; procurement: string }
 
 /** Capture one authenticated intent and the preflight source revisions for its locked write. */

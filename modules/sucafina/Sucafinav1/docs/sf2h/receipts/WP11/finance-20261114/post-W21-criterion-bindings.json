@@ -1,0 +1,816 @@
+{
+  "schema": "sf-finance-post-w21-criterion-bindings-v1",
+  "scope": "ADDITIVE_EXACT_PROPERTY_BINDINGS_NOT_FULL_ACCEPTANCE",
+  "author": "/root/post_w21_criterion_bindings",
+  "sourceObservation": {
+    "financeHead": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "financeTree": "82ea6bff11f9647d14cac30587ccd2feb80c6950",
+    "codeScope": "W31: W30 plus the explicit transactionAll capability guard in renewal-read-scope.test.ts",
+    "taskMapAuditedSnapshot": "W21",
+    "taskMapEdited": false
+  },
+  "criteriaSource": {
+    "path": "criteria.json",
+    "literalCriterionCount": 83,
+    "mappedCriterionCount": 12,
+    "literalIdTextPairsSha256": "47c43180b4dd3d7fd75266b4a9dd5f240e2063a2fd08e81d28ac25e00cd5bdf6",
+    "literalTextsCopiedExactly": true
+  },
+  "files": [
+    {
+      "id": "current-choice-lifecycle",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "test_path": "test/product/wp11/current-choice-lifecycle.test.ts",
+      "blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "sha256": "d8aa020d994c2ed6aa489a9b4968c44cfd3c0be4f3d76caaefc8b0b7470b6f4d",
+      "bytes": 27779,
+      "literal_expect_calls": 41,
+      "explicit_timeout_ms": 180000
+    },
+    {
+      "id": "choice-prepared-execution",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "test_path": "test/product/wp11/choice-prepared-execution.test.ts",
+      "blob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "sha256": "1366f702b3c6667b3a268b46642b79990e77e982948a397c6b44c222523e081c",
+      "bytes": 28885,
+      "literal_expect_calls": 35,
+      "explicit_timeout_ms": 180000
+    },
+    {
+      "id": "hot-topic-snapshot",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "test_path": "test/product/wp11/hot-topic-snapshot.test.ts",
+      "blob": "447ae83e4a49175f6751138d44d3221f364b0731",
+      "sha256": "8954fcb3f99e0d00fcf36fd23de0663eb3a804ab8044c1067ca490698cd7b87f",
+      "bytes": 20581,
+      "literal_expect_calls": 53,
+      "explicit_timeout_ms": null
+    },
+    {
+      "id": "promotion-coverage-proof",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "test_path": "test/product/wp11/promotion-coverage-proof.test.ts",
+      "blob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "sha256": "e8ab9f17cb78bf127e2091ada9b70bdc931d22e410f95f5cccb11c5fb17e3c70",
+      "bytes": 22853,
+      "literal_expect_calls": 39,
+      "explicit_timeout_ms": null
+    },
+    {
+      "id": "renewal-choice-revision",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "test_path": "test/product/wp11/renewal-choice-revision.test.ts",
+      "blob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "sha256": "c2e64202f5d7b474b572bd7e6323e4ff2ade0892014b25e1aa6fc26a76471ce6",
+      "bytes": 9923,
+      "literal_expect_calls": 44,
+      "explicit_timeout_ms": 180000
+    },
+    {
+      "id": "renewal-read-scope",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+      "test_path": "test/product/wp11/renewal-read-scope.test.ts",
+      "blob": "803a9a3154a2dcf99a8118253216bf97efb2e8f5",
+      "sha256": "bbd5494b1b38c4342819bf14e2dd033fe58648d5f5fda38840b8ccab3b5da653",
+      "bytes": 3329,
+      "literal_expect_calls": 9,
+      "explicit_timeout_ms": null
+    }
+  ],
+  "bindings": [
+    {
+      "binding_id": "WP11.POSTW21.01",
+      "criterion_id": "WP11.DOD.01",
+      "criterion_text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+      "test_path": "test/product/wp11/current-choice-lifecycle.test.ts",
+      "test_blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "property_under_test": "Persistência e reabertura do mesmo caso com a escolha original e o resultado promovido separadamente.",
+      "authored_oracles": [
+        "Após dispose/openLocalStore, caso v4 e estado reconsidering são lidos de C08.",
+        "ChoiceRecord original e seu digest permanecem iguais; o ledger contém uma única choice-recorded.",
+        "Retry da promoção após reabertura devolve o recibo anterior e não altera o caso."
+      ],
+      "real_consumer_paths": [
+        "product/planner/current-choice.ts#createCurrentPlannerChoice",
+        "product/decisions/current-choice-preview.ts#createCurrentChoicePreview",
+        "product/decisions/current-choice-promotion.ts#createCurrentChoicePromotion",
+        "product/decisions/result-store.ts#createSfDecisionResultStore"
+      ],
+      "remaining_full_criterion_gap": "Não demonstra compartilhamento entre identidades diferentes, reinício do provider instalado ou cadeia residente/nativa.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.02",
+      "criterion_id": "WP11.INV.01",
+      "criterion_text": "Escolha não é aprovação e simulação não grava em fonte oficial.",
+      "test_path": "test/product/wp11/current-choice-lifecycle.test.ts",
+      "test_blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "property_under_test": "Reavaliação e promoção humana de uma alternativa não aplicam as operações Planner da escolha histórica.",
+      "authored_oracles": [
+        "O cenário histórico conserva suas três operações.",
+        "O snapshot Planner após a cotação permanece idêntico depois da promoção e após reabertura/retry.",
+        "preparedChanges e receipts de domínio continuam vazios."
+      ],
+      "real_consumer_paths": [
+        "product/planner/current-choice.ts#createCurrentPlannerChoice",
+        "product/decisions/current-choice-preview.ts#createCurrentChoicePreview",
+        "product/decisions/current-choice-promotion.ts#createCurrentChoicePromotion",
+        "product/decisions/result-store.ts#createSfDecisionResultStore"
+      ],
+      "remaining_full_criterion_gap": "Não cobre aprovações PR/PO nem as demais superfícies oficiais; não demonstra aplicação de ChoiceRecord.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.03",
+      "criterion_id": "WP11.T03.CHK.01",
+      "criterion_text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+      "test_path": "test/product/wp11/current-choice-lifecycle.test.ts",
+      "test_blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "property_under_test": "Nova cotação e promoção da reavaliação preservam a base financeira e o ChoiceRecord anterior.",
+      "authored_oracles": [
+        "Escolha original conserva subtotal210000, totalnull e training ausente.",
+        "Reavaliação produz subtotal250000, cobertura completa, comparação conditioned e totalnull; o cenário histórico continua hipotético.",
+        "Escolhas e digest original permanecem idênticos após a promoção."
+      ],
+      "real_consumer_paths": [
+        "product/planner/current-choice.ts#createCurrentPlannerChoice",
+        "product/decisions/current-choice-preview.ts#createCurrentChoicePreview",
+        "product/decisions/current-choice-promotion.ts#createCurrentChoicePromotion",
+        "product/decisions/result-store.ts#createSfDecisionResultStore"
+      ],
+      "remaining_full_criterion_gap": "Esta jornada promove uma alternativa reavaliada; não registra uma nova escolha. A nova operação humana de escolha é coberta separadamente por renewal-choice-revision.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.04",
+      "criterion_id": "WP11.T03.CMP.01",
+      "criterion_text": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+      "test_path": "test/product/wp11/current-choice-lifecycle.test.ts",
+      "test_blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "property_under_test": "Concessão separada, digest e versão atuais cercam a promoção da reavaliação.",
+      "authored_oracles": [
+        "Preview sem autorização e alternativa versão9 são recusados.",
+        "Promoção sem confirmação humana, digest adulterado e fonte recusada não passam.",
+        "Mudança concorrente do caso torna a promoção antiga stale; novo preview precede a promoção permitida."
+      ],
+      "real_consumer_paths": [
+        "product/planner/current-choice.ts#createCurrentPlannerChoice",
+        "product/decisions/current-choice-preview.ts#createCurrentChoicePreview",
+        "product/decisions/current-choice-promotion.ts#createCurrentChoicePromotion",
+        "product/decisions/result-store.ts#createSfDecisionResultStore"
+      ],
+      "remaining_full_criterion_gap": "Não cobre todos os modos de escolher/manter/substituir/rejeitar proposta nem os transportes UI/native/MCP instalados.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.05",
+      "criterion_id": "WP11.T03.DOD.01",
+      "criterion_text": "Escolha humana gera propostas revisáveis que chegam aos consumidores reais de cada domínio.",
+      "test_path": "test/product/wp11/choice-prepared-execution.test.ts",
+      "test_blob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "property_under_test": "ChoiceRecord criado pela operação humana real origina proposta revisável consumida pelo Planner canônico.",
+      "authored_oracles": [
+        "Nenhuma escolha ou mudança é pré-semeada; recordChoice registra o resultado condicionado1200→1142.",
+        "prepareChanges gera destino planner/v1, comando save/f0=42 e vínculo à escolha.",
+        "O produtor real aplica a mudança somente depois da revisão e da concessão de aplicação."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/planner/prepared-review.ts#createPlannerPreparedReview",
+        "product/planner/prepared.ts#preparePlannerMutation",
+        "product/decisions/prepared-apply.ts#createSfPreparedApply",
+        "product/decisions/apply.ts#createPreparedExecution"
+      ],
+      "remaining_full_criterion_gap": "Cobre apenas o domínio Planner em harness; os consumidores instalados de todos os domínios e o caso parcial cross-domain permanecem separados.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.06",
+      "criterion_id": "WP11.T03.CHK.02",
+      "criterion_text": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+      "test_path": "test/product/wp11/choice-prepared-execution.test.ts",
+      "test_blob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "property_under_test": "Escolher, preparar e aplicar exigem operações humanas distintas, sem efeito oficial antecipado.",
+      "authored_oracles": [
+        "Concessão de leitura não escolhe; concessão de escolha não prepara.",
+        "Escolha e preparo preservam integralmente o snapshot oficial observado.",
+        "Usar a concessão de preparo para aplicar é recusado antes do dispatch; concessão própria decisions.apply permite o comando."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/planner/prepared-review.ts#createPlannerPreparedReview",
+        "product/planner/prepared.ts#preparePlannerMutation",
+        "product/decisions/prepared-apply.ts#createSfPreparedApply",
+        "product/decisions/apply.ts#createPreparedExecution"
+      ],
+      "remaining_full_criterion_gap": "Não executa aprovação PR/PO nem criação de Hot Topic; as provas desses destinos e a interação instalada continuam necessárias.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.07",
+      "criterion_id": "WP11.T03.QLT.01",
+      "criterion_text": "Cada proposta mostra alteração, motivo, destino e estado; a justificativa continua vinculada aos números debatidos.",
+      "test_path": "test/product/wp11/choice-prepared-execution.test.ts",
+      "test_blob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "property_under_test": "A proposta e a revisão mantêm destino, vínculo à escolha e alteração financeira produzida canonicamente.",
+      "authored_oracles": [
+        "Mudança planejada preserva choiceId, destino planner/v1, comando e preview idêntico ao resultado da escolha.",
+        "Revisão canônica mostra line:1:forecast, before100, after42 e moedaUSD.",
+        "Review digest vincula escolha, versão do caso, mudança, campos e fonte à concessão aplicada."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/planner/prepared-review.ts#createPlannerPreparedReview",
+        "product/planner/prepared.ts#preparePlannerMutation",
+        "product/decisions/prepared-apply.ts#createSfPreparedApply",
+        "product/decisions/apply.ts#createPreparedExecution"
+      ],
+      "remaining_full_criterion_gap": "Não qualifica a apresentação instalada de todas as propostas, motivos e estados, nem todos os destinos de domínio.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.08",
+      "criterion_id": "WP11.INV.02",
+      "criterion_text": "Não há transação global presumida nem efeito repetido em retry.",
+      "test_path": "test/product/wp11/choice-prepared-execution.test.ts",
+      "test_blob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "property_under_test": "Retry de uma aplicação Planner com receipt conhecido não repete o efeito.",
+      "authored_oracles": [
+        "Receipt real é anexado à mudança aplicada e ao caso.",
+        "Retries de execute/recordChoice/prepareChanges devolvem os resultados anteriores.",
+        "Contador envolve o produtor real: dispatch permanece1 e snapshot final permanece idêntico."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/planner/prepared-review.ts#createPlannerPreparedReview",
+        "product/planner/prepared.ts#preparePlannerMutation",
+        "product/decisions/prepared-apply.ts#createSfPreparedApply",
+        "product/decisions/apply.ts#createPreparedExecution"
+      ],
+      "remaining_full_criterion_gap": "Não injeta resposta perdida nem falha parcial entre domínios; não demonstra reconciliação de resultado desconhecido ou transação global.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.09",
+      "criterion_id": "WP11.T03.CHK.02",
+      "criterion_text": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+      "test_path": "test/product/wp11/hot-topic-snapshot.test.ts",
+      "test_blob": "447ae83e4a49175f6751138d44d3221f364b0731",
+      "property_under_test": "Draft humano de Hot Topic permanece privado e não cria ou altera automaticamente o registro oficial.",
+      "authored_oracles": [
+        "Register sem concessão adequada é recusado.",
+        "Draft autorizado persiste somente seus campos privados; casos, confirmações, receipts e resultados permanecem iguais.",
+        "Read/list/retry conservam campos, target e versão; registros oficiais permanecem idênticos."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/hot-topic-draft.ts#createHotTopicDraftStore",
+        "runtime/dashboard-people.ts#DashboardPeople.domain.execute",
+        "product/host-binding/state-provider.ts#createSfProductState"
+      ],
+      "remaining_full_criterion_gap": "Esta jornada é de rascunho, não de ChoiceRecord aplicado; aprovação PR/PO e aplicação oficial de Hot Topic não são exercitadas.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.10",
+      "criterion_id": "WP11.T03.CMP.01",
+      "criterion_text": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+      "test_path": "test/product/wp11/hot-topic-snapshot.test.ts",
+      "test_blob": "447ae83e4a49175f6751138d44d3221f364b0731",
+      "property_under_test": "Conflitos de fonte/caso/autoridade e substituição tardia do draft impedem retorno ou commit de um draft antigo.",
+      "authored_oracles": [
+        "A corrida de fonte exige commit real do comando Dashboard e exatamente um snapshot Dashboard verificado.",
+        "Mudança de fonte/caso/autoridade conserva ausência de preferências, receipts e transação de draft indevida.",
+        "Substituição no último callback de fonte de readCurrent ou no último authorizeCase de list retorna stale; versão nova continua acessível."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/hot-topic-draft.ts#createHotTopicDraftStore",
+        "runtime/dashboard-people.ts#DashboardPeople.domain.execute",
+        "product/host-binding/state-provider.ts#createSfProductState"
+      ],
+      "remaining_full_criterion_gap": "Não abrange todos os modos de escolha/retenção/rejeição de propostas, nem transporte ou usuário instalado.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.11",
+      "criterion_id": "WP11.T02.DOD.20",
+      "criterion_text": "Alternativa persistida entrega cálculo WP03 e cobertura C10 reais a todos os consumidores nomeados.",
+      "test_path": "test/product/wp11/promotion-coverage-proof.test.ts",
+      "test_blob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "property_under_test": "Promoção persistida consome cálculo Planner e prova C10 atual mesmo quando o cenário não contém operações.",
+      "authored_oracles": [
+        "Duas ordens de fonte exercitam a entrada de cobertura e reassessment mesmo quando o assessment inicial coincide com o baseline.",
+        "O resultado persistido conserva componentes/fontes canônicos e digest exato da prova de commit.",
+        "Retry não reavalia nem grava de novo."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/decisions/baseline-coverage.ts#createDecisionBaselineCoverage",
+        "product/decisions/cost-coverage.ts#reassessScenarioCoverage",
+        "product/planner/product.ts#createPlannerProduct"
+      ],
+      "remaining_full_criterion_gap": "Não demonstra todos os consumidores UI, BI, crítica e portfólio; o total permanece condicionado e não é convertido em completude financeira.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.12",
+      "criterion_id": "WP11.T02.INV.01",
+      "criterion_text": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+      "test_path": "test/product/wp11/promotion-coverage-proof.test.ts",
+      "test_blob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "property_under_test": "Promoções source-only e com operação hipotética permanecem sem aplicação oficial.",
+      "authored_oracles": [
+        "Resultados source-only têm subtotal1200/2400 e totalnull.",
+        "Variante replace42 preserva componente hypothetical, restrição preview-not-applied e totalnull.",
+        "Escolhas, preparedChanges e receipts permanecem vazios; snapshots oficiais são conservados."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/decisions/baseline-coverage.ts#createDecisionBaselineCoverage",
+        "product/decisions/cost-coverage.ts#reassessScenarioCoverage",
+        "product/planner/product.ts#createPlannerProduct"
+      ],
+      "remaining_full_criterion_gap": "Não cobre todos os ramos de ausência/FX/zero nem todos os comandos de compra; não comprova execução aplicada.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.13",
+      "criterion_id": "WP11.T02.CMP.20",
+      "criterion_text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+      "test_path": "test/product/wp11/promotion-coverage-proof.test.ts",
+      "test_blob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "property_under_test": "Prova ausente, autoridade revogada e fonte alterada entre observação e commit não autorizam promoção.",
+      "authored_oracles": [
+        "Os quatro negativos missing-proof/revoke/source-change/case-change recusam resultado e valor.",
+        "Não se persistem alternativas, resultados ou transação da promoção recusada.",
+        "Na corrida de fonte, o comando canônico e a auditoria mudam a fonte; o resultado recusado não a desfaz."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/decisions/baseline-coverage.ts#createDecisionBaselineCoverage",
+        "product/decisions/cost-coverage.ts#reassessScenarioCoverage",
+        "product/planner/product.ts#createPlannerProduct"
+      ],
+      "remaining_full_criterion_gap": "Este arquivo cobre somente as negativas de proof/autoridade/fonte e caso; inventário ausente, N/A sem suporte, zero e custo inversor requerem suas outras provas.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.14",
+      "criterion_id": "WP11.T03.CHK.01",
+      "criterion_text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+      "test_path": "test/product/wp11/renewal-choice-revision.test.ts",
+      "test_blob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "property_under_test": "Após nova cotação, novas operações humanas substituem e mantêm uma escolha sem reescrever escolhas anteriores.",
+      "authored_oracles": [
+        "Escolha original condicionada210000/totalnull/pending training é conservada por igualdade e digest.",
+        "A cotação gera resultado250000 completo; nova escolha de renewal registra240000 e comparação inversa−10000 sem rebind silencioso do critério.",
+        "Terceira escolha conserva os números da segunda e registra nova razão; ledger/digests e três identidades de operação permanecem distintos."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-choice-fixture.ts#createRenewalChoiceHistory",
+        "test/product/wp11/renewal-human-choice-fixture.ts#createRenewalHumanChoices",
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/integration/human-authority.ts#createSfHumanAuthority"
+      ],
+      "remaining_full_criterion_gap": "Não demonstra as mesmas ações em UI instalada, outras identidades ou novo provider; não aplica as escolhas.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.15",
+      "criterion_id": "WP11.T03.CHK.20",
+      "criterion_text": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+      "test_path": "test/product/wp11/renewal-choice-revision.test.ts",
+      "test_blob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "property_under_test": "Treinamento confirmado altera a alternativa atual, preservando a escolha condicionada e exigindo nova decisão humana.",
+      "authored_oracles": [
+        "Mesmo id/incarnation de caso; resultado atual250000 completo e comparação de custo orientada em+10000 com critério failed.",
+        "Antes da substituição humana, o digest do ChoiceRecord original permanece igual.",
+        "Nova escolha e retenção usam concessões/payloads próprios; nenhuma alteração oficial é causada pelas escolhas."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-choice-fixture.ts#createRenewalChoiceHistory",
+        "test/product/wp11/renewal-human-choice-fixture.ts#createRenewalHumanChoices",
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/integration/human-authority.ts#createSfHumanAuthority"
+      ],
+      "remaining_full_criterion_gap": "A orientação+10000 é o custo selecionado menos a base; a escolha inversa usa−10000 canônico. Este teste não calcula nem prova o threshold15000, a apresentação BI ou uma aplicação de domínio.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.16",
+      "criterion_id": "WP11.T03.CMP.01",
+      "criterion_text": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+      "test_path": "test/product/wp11/renewal-choice-revision.test.ts",
+      "test_blob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "property_under_test": "Escolher, substituir e manter com nova razão possuem intenção, identidade e idempotência próprias.",
+      "authored_oracles": [
+        "Origem HTTP não confiável é recusada.",
+        "Concessões antigas não autorizam payloads de substituição/retenção; reutilizar a identidade com novo payload retorna idempotency-content-changed.",
+        "Retries das três escolhas devolvem seus receipts C08 e não criam uma quarta escolha; snapshots Planner ficam iguais após cada escolha."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-choice-fixture.ts#createRenewalChoiceHistory",
+        "test/product/wp11/renewal-human-choice-fixture.ts#createRenewalHumanChoices",
+        "product/decisions/mutations.ts#createDecisionMutations",
+        "product/integration/human-authority.ts#createSfHumanAuthority"
+      ],
+      "remaining_full_criterion_gap": "Não cobre rejeição de proposta nem conflito da fonte durante dispatch; as corridas de fonte são vínculos separados, não prova implícita deste caso.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.17",
+      "criterion_id": "WP11.T02.INV.01",
+      "criterion_text": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+      "test_path": "test/product/wp11/renewal-read-scope.test.ts",
+      "test_blob": "803a9a3154a2dcf99a8118253216bf97efb2e8f5",
+      "property_under_test": "Verificação de cenário com operações e alternativa source-only não altera snapshots duráveis.",
+      "authored_oracles": [
+        "Capacidade real transactionAll é exigida; sua ausência falha em vez de pular a prova.",
+        "O verificador canônico aceita ambos os cenários e os três snapshots persistidos antes/depois são integralmente iguais."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-operation-verifier.ts#createRenewalOperationVerifier",
+        "product/planner/operation-verifier.ts#createPlannerOperationVerifier",
+        "product/planner/port.ts#createPlannerPort",
+        "runtime/local-store.ts#openLocalStore"
+      ],
+      "remaining_full_criterion_gap": "É uma fronteira de verificação em fixture; não cobre todos os estados de ausência/zero/hipótese nem provas nativas ou aplicação oficial.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW21.18",
+      "criterion_id": "WP11.T02.CMP.20",
+      "criterion_text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+      "test_path": "test/product/wp11/renewal-read-scope.test.ts",
+      "test_blob": "803a9a3154a2dcf99a8118253216bf97efb2e8f5",
+      "property_under_test": "Uma nova invocação observa fonte editada e a autorização continua revogável durante um callback aguardado.",
+      "authored_oracles": [
+        "Comando OPEX canônico muda implementation para46000; nova verificação recusa a referência anterior.",
+        "Revogar a concessão UI durante o segundo callback de fonte faz a verificação falhar e a revalidação do host retornarfalse."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-operation-verifier.ts#createRenewalOperationVerifier",
+        "product/planner/operation-verifier.ts#createPlannerOperationVerifier",
+        "product/planner/port.ts#createPlannerPort",
+        "runtime/local-store.ts#openLocalStore"
+      ],
+      "remaining_full_criterion_gap": "Não qualifica todos os cenários de inventário/N/A/zero/custo inversor nem a freshness após liberar o lock. Não emite fontes scoped e não prova a cadeia residente.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    }
+  ],
+  "acceptance": {
+    "criterionFullyAccepted": false,
+    "nativeProof": null,
+    "C": null,
+    "D": null,
+    "installedProviderProof": false
+  },
+  "executionPolicy": [
+    "These bindings identify authored assertions and actual consumer paths; they do not assert that a test passed.",
+    "Resolve current outcomes by exact selected file, product W, snapshot S and cases in product-tests.json. Historical successes and later different blobs must remain distinct.",
+    "S19/S20 and subsequent affected runs may update the central ledger without rewriting this static map. No pending run is promoted to success here.",
+    "An isolated canonical harness result does not close full multi-domain, installed/native, C/D or S0 bundle obligations."
+  ],
+  "untouchedSources": {
+    "criteriaJsonSha256AtRead": "33cd2d7496a16e18da452192fcaae8bf2ff3fb023cf2bef01e8f56ecf37fc7a4",
+    "auditedTaskMapFiles": {
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.md": "926c478416db1d5b74df3dd5c030ff389ba3607fcf5ceec523ebd5d30d838070",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.json": "b2b51c07b11ddc7061a65ceef4ec6256c5342b41981a1649770fccec8badbfd9"
+    }
+  },
+  "verification": {
+    "allCriterionIdsExist": true,
+    "allLiteralCriterionTextsEqual": true,
+    "allTestBlobsMatchPublishedManifestAtRead": true,
+    "allConsumerPathsExist": true,
+    "productExecution": false,
+    "remoteMutation": false,
+    "originalCriteriaEdited": false,
+    "auditedTaskMapEdited": false
+  },
+  "executionReceiptAtFreeze": {
+    "path": "product-tests.json",
+    "sha256": "8665249d44a068624dc65da110ef920639055f04e497a44afcce6319a1d5b815",
+    "observedLinks": [
+      {
+        "test_path": "test/product/wp11/current-choice-lifecycle.test.ts",
+        "test_blob_observed": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+        "selection": 19,
+        "runId": 43594791351,
+        "jobId": 132446885026,
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+        "conclusion": "success",
+        "caseCount": 1,
+        "cases": [
+          {
+            "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+            "status": "pass",
+            "milliseconds": 52028.22
+          }
+        ],
+        "fullCriterionAccepted": false
+      },
+      {
+        "test_path": "test/product/wp11/choice-prepared-execution.test.ts",
+        "test_blob_observed": "326a262f17914de6675657dd1e6f82baec31e5c3",
+        "selection": 19,
+        "runId": 43594791351,
+        "jobId": 132446885026,
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+        "conclusion": "success",
+        "caseCount": 1,
+        "cases": [
+          {
+            "name": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+            "status": "pass",
+            "milliseconds": 4155.33
+          }
+        ],
+        "fullCriterionAccepted": false
+      },
+      {
+        "test_path": "test/product/wp11/hot-topic-snapshot.test.ts",
+        "test_blob_observed": "447ae83e4a49175f6751138d44d3221f364b0731",
+        "selection": 19,
+        "runId": 43594791351,
+        "jobId": 132446885026,
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+        "conclusion": "success",
+        "caseCount": 6,
+        "cases": [
+          {
+            "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+            "status": "pass",
+            "milliseconds": 111.1
+          },
+          {
+            "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+            "status": "pass",
+            "milliseconds": 32.11
+          },
+          {
+            "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+            "status": "pass",
+            "milliseconds": 111.28
+          },
+          {
+            "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+            "status": "pass",
+            "milliseconds": 32.17
+          },
+          {
+            "name": "hot-topic read refuses an old draft replaced during its last source callback",
+            "status": "pass",
+            "milliseconds": 86.5
+          },
+          {
+            "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+            "status": "pass",
+            "milliseconds": 86.08
+          }
+        ],
+        "fullCriterionAccepted": false
+      },
+      {
+        "test_path": "test/product/wp11/promotion-coverage-proof.test.ts",
+        "test_blob_observed": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+        "selection": 19,
+        "runId": 43594791351,
+        "jobId": 132446885026,
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+        "conclusion": "success",
+        "caseCount": 6,
+        "cases": [
+          {
+            "name": "source-only promotions establish current coverage proofs in source order 0-1",
+            "status": "pass",
+            "milliseconds": 3056.59
+          },
+          {
+            "name": "source-only promotions establish current coverage proofs in source order 1-0",
+            "status": "pass",
+            "milliseconds": 3089.16
+          },
+          {
+            "name": "source-only promotion refuses missing-proof between coverage observation and commit",
+            "status": "pass",
+            "milliseconds": 714.51
+          },
+          {
+            "name": "source-only promotion refuses revoke between coverage observation and commit",
+            "status": "pass",
+            "milliseconds": 702.27
+          },
+          {
+            "name": "source-only promotion refuses source-change between coverage observation and commit",
+            "status": "pass",
+            "milliseconds": 735.78
+          },
+          {
+            "name": "source-only promotion refuses case-change between coverage observation and commit",
+            "status": "pass",
+            "milliseconds": 785.31
+          }
+        ],
+        "fullCriterionAccepted": false
+      },
+      {
+        "test_path": "test/product/wp11/renewal-choice-revision.test.ts",
+        "test_blob_observed": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+        "selection": 19,
+        "runId": 43594791351,
+        "jobId": 132446885026,
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+        "conclusion": "success",
+        "caseCount": 1,
+        "cases": [
+          {
+            "name": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+            "status": "pass",
+            "milliseconds": 124684.11
+          }
+        ],
+        "fullCriterionAccepted": false
+      },
+      {
+        "test_path": "test/product/wp11/renewal-read-scope.test.ts",
+        "test_blob_observed": "803a9a3154a2dcf99a8118253216bf97efb2e8f5",
+        "selection": 21,
+        "runId": 43595579525,
+        "jobId": 132449221370,
+        "productSha": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+        "snapshotSha": "6c98bd185ed3041ecd6b1c9d6c3eb169968cd410",
+        "conclusion": "success",
+        "caseCount": 3,
+        "cases": [
+          {
+            "name": "renewal admission verifies operations and source-only alternatives without changing any durable snapshot",
+            "status": "pass",
+            "milliseconds": 107.48
+          },
+          {
+            "name": "a later renewal admission observes a canonical source edit instead of reusing the earlier read scope",
+            "status": "pass",
+            "milliseconds": 46.67
+          },
+          {
+            "name": "renewal admission refuses a UI lease revoked during an awaited source callback inside the read scope",
+            "status": "pass",
+            "milliseconds": 39.34
+          }
+        ],
+        "fullCriterionAccepted": false
+      }
+    ],
+    "note": "This is a bounded observation of the parent-verified receipt after S19/S21 completed. Future outcomes still resolve through the central ledger; no full criterion acceptance follows."
+  }
+}

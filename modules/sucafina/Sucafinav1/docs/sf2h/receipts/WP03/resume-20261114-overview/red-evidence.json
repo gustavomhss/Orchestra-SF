@@ -1,0 +1,56 @@
+{
+  "schema": "wp03-overview-red-evidence-v1",
+  "scope": "Sucafina / WP03",
+  "resumed_from": "bc8342d0955de936873e7e1250f5bb8d3e091b79",
+  "product_sha": "79e770f0c400d77c47fbb30479fb09c592ea0cde",
+  "product_tree": "27c1e6138fab513c442833337a0a214e55e560f8",
+  "snapshot_sha": "be474e2ac23eceec5c81d661d329af6276309b46",
+  "snapshot_tree": "fa041f797b5dd4ed1a40eca135ba5acc1737d08c",
+  "production_code_equals_resumed_head": true,
+  "product_delta": [
+    "Added test/product/wp03/overview-drilldown.test.ts; no production change"
+  ],
+  "snapshot_delta": [
+    {
+      "path": ".ci-run.json",
+      "status": "added"
+    }
+  ],
+  "request_file": "red-ci-request.json",
+  "request_sha256": "a843366863729f832c365466f2a563f7e5be26ba1c7e734608a9a94b0b7c645f",
+  "run_id": 43534889692,
+  "job_id": 132261371579,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534889692",
+  "conclusion": "failure",
+  "run_attempt": 1,
+  "tests": {
+    "total": 7,
+    "pass": 0,
+    "fail": 7,
+    "files": 1,
+    "assertions": 34,
+    "duration_seconds": 0.524
+  },
+  "failures": [
+    "Overview opens each canonical total into the correct record, monthly measure and version",
+    "Overview drills into the separately selected official budget and only the requested months",
+    "Overview leaves an unselected official unavailable instead of reusing candidate records",
+    "Overview keeps known budget, missing outlook, numeric zero and structural additions or removals distinct",
+    "Overview distinguishes original EUR inputs from converted USD measures and missing conversion",
+    "Overview preserves opaque record identities and escapes HTML without cross-selecting records",
+    "Overview retains published totals but exposes incomplete or divergent detail composition"
+  ],
+  "failure_cause": "Missing data-overview-metric disclosure controls on the previous renderer; fixture setup and the preceding canonical metric assertions completed.",
+  "omni": {
+    "nonce": "b1f6239f9226105347130f07a6c83eb4",
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "spawn": false,
+    "delegated": false,
+    "native_proof": false
+  },
+  "limits": [
+    "RED exits at each first failing assertion; later detail assertions are not claimed until GREEN.",
+    "HTMLRewriter parses the real contribution output; no installed browser interaction was performed.",
+    "No missing import, fixture initialization, timeout or infrastructure error caused these failures."
+  ]
+}

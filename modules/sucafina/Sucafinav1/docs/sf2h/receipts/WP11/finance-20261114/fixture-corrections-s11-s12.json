@@ -1,0 +1,55 @@
+{
+  "schema": "astra-finance-s11-s12-fixture-corrections-v1",
+  "baseHead": "5e4c2b288665113e58162a616a9965c03e397e19",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "previousBlob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+      "sha": "310435389682b2892fc255a0eb60030ae7dda6a6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "previousBlob": "fe8e2173a1291efd8bed0305c8ef6b5c3e725a94",
+      "sha": "90333c12d277942667810d6ed802e019e799f837"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "sha": "856381de3f333ca79b302483d3b8893d55f00441",
+      "previousBlob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "sha": "c939c5e39c80f3cdbc08fd700cd017a7b0ed50b4",
+      "previousBlob": "40fbaf6eb4a7b88c3f4feb54773961188cd007da"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "sha": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "previousBlob": "fb973752979eb98ba2e1c3c9002ade471443b728"
+    }
+  ],
+  "causes": [
+    {
+      "selection": 11,
+      "runId": 43586902727,
+      "cause": "Training quote supplied November only; 11 absent forecast months made zero-budget fallbacks estimated. Canonical total=null was correct. Fixture now explicitly confirms 11 zero charges and November40000; all old assertions remain."
+    },
+    {
+      "selection": 12,
+      "runId": 43587138878,
+      "test": "calculation-history.test.ts",
+      "cause": "Revocation permanently removes the UI admission. Restoring upstream access does not restore that lease. Renew the real consumed admission and Request, assert the retired lease stays denied, then exercise source/incarnation negatives."
+    },
+    {
+      "selection": 12,
+      "runId": 43587138878,
+      "test": "case-import-incarnation.test.ts",
+      "cause": "Successful HTTP delete increments dataset CAS from1to2. Confirmed restore must use the current dataset revision; stale1 still rejected."
+    }
+  ],
+  "tests": "PENDING_ACTIONS",
+  "timeoutsChanged": false,
+  "assertionsWeakened": false,
+  "productionChanged": false,
+  "nativeProof": null
+}
