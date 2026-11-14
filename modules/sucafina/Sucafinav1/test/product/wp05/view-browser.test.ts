@@ -28,6 +28,7 @@ test("chart and equivalent table preserve selection through keyboard and period 
     await expect(page.getByRole("row").filter({ hasText: "jan" })).toContainText("0")
     await expect(page.getByRole("row").filter({ hasText: "feb" })).toContainText("Indisponível")
     const mark = page.getByRole("button", { name: /jan: 0/ })
+    await expect(mark).toHaveAttribute("aria-label", /2027-01-01 – 2027-01-31/)
     await mark.focus()
     await page.keyboard.press("Enter")
     const selected = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
@@ -54,7 +55,8 @@ test("chart and equivalent table preserve selection through keyboard and period 
     await page.getByRole("button", { name: "Abrir origem" }).click()
     const brushed = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
     expect(brushed.valueId).toBe("feb")
-    expect(brushed.context.period).toEqual({ start: "2027-02-01", end: "2027-02-28" })
+    expect(brushed.context.period).toEqual(period)
+    expect(brushed.visualPeriod).toEqual({ start: "2027-02-01", end: "2027-02-28" })
     expect(brushed.reference.refId).toBe("ref")
     await page.evaluate(async (input) => {
       const module = await import(input.url)
@@ -71,7 +73,7 @@ test("chart and equivalent table preserve selection through keyboard and period 
       document.body.append(container)
       const portfolioModule = await import(input.portfolioUrl)
       const combination = { id: "with-analysis", caseRefs: [], components: [], costCoverageRefs: ["coverage"], conflicts: [], restrictions: [], eligibility: "conditioned", comparisonStatus: "conditioned" }
-      const portfolio = portfolioModule.renderPortfolioView({ combinations: [{ ...combination, analysis: { scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison } }, { ...combination, id: "legacy" }], limitations: [], evidenceRefs: [] })
+      const portfolio = portfolioModule.renderPortfolioView({ combinations: [{ ...combination, analysis: { scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison } }, { ...combination, id: "legacy" }], limitations: [], evidenceRefs: [] }, undefined, undefined, undefined, undefined, undefined, (ref: string) => { document.body.dataset.portfolioResult = ref })
       portfolio.id = "portfolio-view"
       document.body.append(portfolio)
     }, { url: decisionUrl, portfolioUrl })
@@ -80,8 +82,47 @@ test("chart and equivalent table preserve selection through keyboard and period 
     await expect(page.locator("#unlabelled-sensitivity")).toContainText("Pergunta: question-1")
     await expect(page.locator("#portfolio-view")).toContainText("Cenário: scenario-ref; comparação: comparison-ref")
     await expect(page.locator("#portfolio-view")).toContainText("subtotal conhecido: 210000")
+    await page.locator("#portfolio-view").getByRole("button", { name: "Abrir resultado comparison-ref" }).click()
+    expect(await page.locator("body").getAttribute("data-portfolio-result")).toBe("comparison-ref")
     await expect(page.locator("#portfolio-view")).toContainText("Análise de cenário e comparação indisponível")
     await expect(page.locator("#decision-view")).toContainText("Eixo X: USD; eixo Y: USD")
+    await page.evaluate(async (input) => {
+      const module = await import(input.url)
+      const horizon = input.projection.context.period
+      const scenario = { id: "s", version: 1, components: [], currency: "USD", horizon, sourceRefs: [], unresolvedConditions: ["training"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 1, total: null, costCoverage: { basisId: "b", basisVersion: 1, alternativeId: "s", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [], coverageState: "pending", entries: [{ status: "pending", categoryId: "training", reason: "missing", questionRef: "question-ref" }], derivedMissingCategoryIds: [] } }
+      const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-ref"], criterionResults: [], unresolvedConditions: ["training"], comparisonStatus: "conditioned", knownDifference: 1, completeDifference: null }
+      const decision = { kind: "scenario", scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison }
+      const element = module.renderBiView({ viewId: "BI09", selectionRef: "selection", period: horizon }, { ...input.projection, decision, values: [] }, () => {}, undefined, { openResult: (ref: string) => { document.body.dataset.decision = `result:${ref}` }, openCoverage: (ref: string) => { document.body.dataset.decision = `coverage:${ref}` }, openQuestion: (ref: string) => { document.body.dataset.decision = `question:${ref}` } })
+      element.id = "canonical-decision"
+      document.body.append(element)
+    }, { url, projection })
+    const question = page.locator("#canonical-decision").getByRole("button", { name: "Abrir pergunta sobre training" })
+    await question.focus()
+    await page.keyboard.press("Enter")
+    expect(await page.locator("body").getAttribute("data-decision")).toBe("question:question-ref")
+    await page.locator("#canonical-decision").getByRole("button", { name: "Abrir cobertura coverage-ref" }).click()
+    expect(await page.locator("body").getAttribute("data-decision")).toBe("coverage:coverage-ref")
+    const focused = await page.evaluate(async (moduleUrl) => {
+      const module = await import(moduleUrl)
+      const container = document.querySelector("#canonical-decision")
+      return container ? module.restoreBiFocus(container, "question-ref") : false
+    }, url)
+    expect(focused).toBe(true)
+    await expect(question).toBeFocused()
+    await page.locator("#canonical-decision").getByRole("button", { name: "Abrir resultado scenario-ref" }).click()
+    expect(await page.locator("body").getAttribute("data-decision")).toBe("result:scenario-ref")
+    await page.evaluate(async (input) => {
+      const module = await import(input.url)
+      const values = [{ id: "planned", value: "2027-01-15", unit: "date", period: { start: "2027-01-15", end: "2027-01-15" }, granularity: "record", sourceRefs: [], drilldown: null, evidenceState: "confirmed" }, { id: "undated", value: null, unit: "date", period: { start: "2027-02-01", end: "2027-02-01" }, granularity: "record", sourceRefs: [], drilldown: null, evidenceState: "absent" }]
+      const timeline = { viewId: "BI08", series: [{ id: "milestones", label: "Marcos", unit: "date", role: "planned", valueIds: ["planned", "undated"] }], limitations: [], timeline: { items: [{ label: "Previsto", dateValueId: "planned", state: "planned" }, { label: "Sem data", dateValueId: "undated", state: "unknown" }] } }
+      const element = module.renderBiView({ viewId: "BI08", selectionRef: "selection", period: input.projection.context.period }, { ...input.projection, values }, () => {}, timeline)
+      element.id = "timeline-with-undated"
+      document.body.append(element)
+    }, { url, projection })
+    const timeline = page.locator("#timeline-with-undated")
+    await timeline.getByLabel("Fim do período", { exact: true }).fill("2027-01-31")
+    await timeline.getByRole("button", { name: "Aplicar filtro" }).click()
+    await expect(timeline).toContainText("Sem data: unknown; data indisponível")
     const sensitivityMark = page.locator('#decision-view svg g[role="button"]')
     await sensitivityMark.focus()
     await page.keyboard.press("Enter")

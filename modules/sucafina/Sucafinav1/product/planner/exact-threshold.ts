@@ -2,25 +2,27 @@ import { outlookMonth, plannerKnownSubtotal, plannerMonthlyAmount, usdAmount } f
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ScenarioResult } from "../contracts/decisions.ts"
-import type { SensitivityRequest } from "../contracts/operations.ts"
+import type { ScenarioRequest, SensitivityRequest } from "../contracts/operations.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { plannerComponentDigest } from "./comparison.ts"
 import type { comparePlannerPreview } from "./preview-comparison.ts"
 import type { createPlannerSensitivityUnits } from "./sensitivity-units.ts"
 
-/** For an open non-HR USD month, the shared save, outlook and conversion primitives preserve the input. Ordered IEEE additions of fixed finite components and subtraction of a fixed baseline are monotone, including plateaus. */
+/** For an open non-HR USD month, the shared save, outlook and conversion primitives preserve the input. Other operations stay fixed; ordered IEEE additions and subtraction of a fixed baseline are monotone, including plateaus. */
 export function createPlannerExactThreshold(input: { units: ReturnType<typeof createPlannerSensitivityUnits>; preview: (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => ReturnType<typeof comparePlannerPreview> }) {
-  return async (request: SensitivityRequest, baselineRef: string, context: TrustedDomainContext): Promise<PortResult<{ value: number; evidenceRefs: readonly BusinessEvidenceRef[] }>> => {
+  return async (incoming: SensitivityRequest, baselineRef: string, context: TrustedDomainContext): Promise<PortResult<{ value: number; evidenceRefs: readonly BusinessEvidenceRef[] }>> => {
+    const request = structuredClone(incoming)
     const bounds = request.parameterBounds
     if (!Number.isFinite(bounds.minimum) || !Number.isFinite(bounds.maximum) || bounds.minimum >= bounds.maximum || !Number.isFinite(request.criterion.value) || !["gte", "lte"].includes(request.criterion.operator)) return { status: "unavailable", reason: "exact-threshold-domain-unproven" }
-    const issued = await input.units.issue({ scenarioRef: request.scenarioRef, baselineRef, parameterRef: bounds.parameterRef }, context)
+    const issued = structuredClone(await input.units.issue({ scenarioRef: request.scenarioRef, baselineRef, parameterRef: bounds.parameterRef }, context))
     if (issued.status !== "ok") return issued
     const scenario = issued.value.scenario
-    const operation = scenario.operations[0]
-    if (!issued.value.units.sourceRefs.length || issued.value.units.engineVersion !== "planner-runtime-v1" || issued.value.units.parameterUnit !== "USD" || issued.value.units.resultUnit !== "USD" || scenario.assumptions.length || scenario.operations.length !== 1 || !operation || operation.kind !== "replace" || operation.targetRef !== bounds.parameterRef || operation.targetRef.startsWith("HR:") || operation.currency !== "USD" || operation.replacementRef !== undefined) return { status: "unavailable", reason: "exact-threshold-domain-unproven" }
-    const evaluate = (amount: number) => input.preview({ baselineRef, scenario: { ...scenario, operations: [{ ...operation, amount }] } }, context)
-    const [lower, upper] = await Promise.all([evaluate(bounds.minimum), evaluate(bounds.maximum)])
+    const operation = plannerDirectUsdParameter(scenario, bounds.parameterRef)
+    if (!issued.value.units.sourceRefs.length || issued.value.units.engineVersion !== "planner-runtime-v1" || issued.value.units.parameterUnit !== "USD" || issued.value.units.resultUnit !== "USD" || !operation) return { status: "unavailable", reason: "exact-threshold-domain-unproven" }
+    const evaluate = (amount: number) => input.preview(structuredClone({ baselineRef, scenario: { ...scenario, operations: scenario.operations.map((item) => item.targetRef === operation.targetRef ? { ...item, amount } : item) } }), context)
+    const lower = structuredClone(await evaluate(bounds.minimum))
+    const upper = structuredClone(await evaluate(bounds.maximum))
     if (lower.status !== "ok") return lower
     if (upper.status !== "ok") return upper
     const left = lower.value
@@ -39,7 +41,7 @@ export function createPlannerExactThreshold(input: { units: ReturnType<typeof cr
     const probe = async (key: bigint) => {
       const amount = fromOrdered(key)
       if (!Number.isFinite(amount) || plannerMonthlyAmount(amount) !== amount || usdAmount(amount, "USD", 1).usd !== amount || outlookMonth(0, 0, null, amount, 0) !== amount) return undefined
-      const result = await evaluate(amount)
+      const result = structuredClone(await evaluate(amount))
       if (result.status !== "ok" || result.value.metric.engineVersion !== issued.value.units.engineVersion || result.value.metric.unit !== "USD" || result.value.metric.value === null || !Number.isFinite(result.value.metric.value) || !exactComponents(result.value.sample, bounds.parameterRef, amount) || digestSfValue(result.value.sample.components.map((component) => component.id)) !== digestSfValue(left.sample.components.map((component) => component.id)) || plannerComponentDigest(result.value.sample.components.filter((component) => component.id !== bounds.parameterRef)) !== plannerComponentDigest(left.sample.components.filter((component) => component.id !== bounds.parameterRef))) return undefined
       refs.push(...result.value.metric.evidenceRefs)
       return satisfies(result.value.metric.value)
@@ -61,12 +63,22 @@ export function createPlannerExactThreshold(input: { units: ReturnType<typeof cr
     const rightProof = await probe(high)
     if (leftProof !== lowerState || rightProof !== upperState) return { status: "unavailable", reason: "exact-threshold-certificate-unavailable" }
     const again = await input.units.issue({ scenarioRef: request.scenarioRef, baselineRef, parameterRef: bounds.parameterRef }, context)
-    if (again.status !== "ok" || again.value.metadataDigest !== issued.value.metadataDigest) return { status: "stale", reason: "exact-threshold-source-changed" }
+    if (again.status !== "ok" || again.value.metadataDigest !== issued.value.metadataDigest || digestSfValue(again.value.scenario) !== digestSfValue(scenario)) return { status: "stale", reason: "exact-threshold-source-changed" }
     return { status: "ok", value: { value: fromOrdered(request.criterion.operator === "gte" ? high : low), evidenceRefs: refs.filter((ref, index) => refs.findIndex((item) => item.refDigest === ref.refDigest) === index) } }
   }
 }
 
-function exactComponents(scenario: ScenarioResult, target: string, amount: number) {
+/** The parameter is one direct write; a defer destination must not write it indirectly. */
+export function plannerDirectUsdParameter(scenario: ScenarioRequest, target: string) {
+  if (scenario.assumptions.length || new Set(scenario.operations.map((operation) => operation.targetRef)).size !== scenario.operations.length) return undefined
+  const selected = scenario.operations.filter((operation) => operation.targetRef === target)
+  const operation = selected[0]
+  if (selected.length !== 1 || !operation || operation.kind !== "replace" || operation.targetRef.startsWith("HR:") || operation.currency !== "USD" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount)) return undefined
+  if (scenario.operations.some((item) => item.kind === "defer" && item.period && `${item.targetRef.slice(0, item.targetRef.lastIndexOf(":"))}:${Number(item.period.start.slice(5, 7))}` === target)) return undefined
+  return operation
+}
+
+export function exactComponents(scenario: ScenarioResult, target: string, amount: number) {
   const targetComponents = scenario.components.filter((component) => component.id === target)
   if (targetComponents.length !== 1 || targetComponents[0]!.amount !== amount || scenario.knownSubtotal === null || !Number.isFinite(scenario.knownSubtotal)) return false
   if (scenario.components.some((component) => component.currency !== "USD" || component.amount === null || !Number.isFinite(component.amount) || component.evidenceState === "absent" || !component.sourceRefs.length)) return false

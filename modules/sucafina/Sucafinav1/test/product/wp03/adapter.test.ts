@@ -5,6 +5,7 @@ import { simulatePlannerOperations } from "../../../product/planner/scenario.ts"
 import { prepareMonthlyDrafts, previewMonthlyDrafts } from "../../../product/planner/monthly-edit.ts"
 import { createPlannerCapabilities } from "../../../product/planner/capabilities.ts"
 import { projectPlannerSource } from "../../../product/planner/port.ts"
+import { domain } from "../../../runtime/planner.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -25,6 +26,42 @@ test("preview reuses Planner rules without mutating the source", () => {
   expect(snapshot).toEqual(before)
   const version = (result.view.data.versions as { summary: { outlook: number[] } }[])[0]
   expect(version.summary.outlook.slice(0, 3)).toEqual([0, 42, 100])
+})
+
+test("projection and simulation accept a deeply frozen snapshot and preserve audit, sequences and every source version", () => {
+  const snapshot = fixture()
+  const originalVersion = (snapshot.data.versions as Record<string, unknown>[])[0]!
+  snapshot.data.versions = [originalVersion, { ...structuredClone(originalVersion), id: "untouched", year: 2028 }]
+  snapshot.data.officials = { "2028": "untouched" }
+  snapshot.versions.retained = { version: 7, by: "prior-editor" }
+  snapshot.sequences.CPX = 42
+  snapshot.audit = [{ who: "prior-editor", at: environment.at, record: "retained", was: { name: "Before" }, became: { name: "After" } }]
+  const before = structuredClone(snapshot)
+  const freeze = (value: unknown): void => {
+    if (!value || typeof value !== "object" || Object.isFrozen(value)) return
+    for (const child of Object.values(value)) freeze(child)
+    Object.freeze(value)
+  }
+  freeze(snapshot)
+  expect(Object.isFrozen(snapshot)).toBe(true)
+  expect(Object.isFrozen(originalVersion.lines)).toBe(true)
+  expect(Object.isFrozen((originalVersion.lines as Record<string, unknown>[])[0]!.f)).toBe(true)
+  expect(Object.isFrozen(snapshot.audit[0]!.became)).toBe(true)
+  const command = { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v1", f1: 42 } }
+  const projected = projectPlanner(snapshot, actor, environment)
+  const simulated = simulatePlannerCommand(snapshot, actor, command, environment)
+  const isolated = structuredClone(before)
+  const executed = domain.execute(isolated, actor, command, environment)
+  expect(simulated.result).toEqual(executed)
+  expect(simulated.result).toMatchObject({ ok: true })
+  expect(simulated.view).toEqual(projectPlanner(isolated, actor, environment))
+  expect((simulated.view.data.versions as { id: string; summary: { outlook: number[] } }[]).find((version) => version.id === "v1")!.summary.outlook[1]).toBe(42)
+  expect(projectPlanner(snapshot, actor, environment)).toEqual(projected)
+  expect(simulatePlannerCommand(snapshot, { id: "viewer", roles: ["viewer"], canWrite: false }, command, environment).result).toMatchObject({ ok: false, status: 403 })
+  expect(snapshot).toEqual(before)
+  expect(snapshot.audit).toEqual(before.audit)
+  expect(snapshot.sequences).toEqual(before.sequences)
+  expect(snapshot.versions).toEqual(before.versions)
 })
 
 test("projection preserves missing FX warnings and redacts individual salary", () => {

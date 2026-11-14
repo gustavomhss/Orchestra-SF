@@ -8,6 +8,8 @@ import { createDecisionChoiceResultLookup } from "./choice-result-lookup.ts"
 import { createChangeProposalStore } from "./change-proposal-store.ts"
 import { createChangeProposalService } from "./proposals.ts"
 import { createDecisionChoiceCatalog } from "./choice-catalog.ts"
+import { createCurrentChoicePreview } from "./current-choice-preview.ts"
+import { createCurrentChoicePromotion } from "./current-choice-promotion.ts"
 import { createDecisionCoverageCatalog } from "./coverage-catalog.ts"
 import { createDecisionComparisonService } from "./comparison.ts"
 import { createCriterionComparisonBindings } from "./criterion-comparison.ts"
@@ -39,6 +41,10 @@ export function createDecisionProduct(input: Common & Evidence & {
   management: Omit<Parameters<typeof createDecisionCaseManagement>[0], Shared>
   mutations: Omit<Parameters<typeof createDecisionMutations>[0], Shared | "planner" | "sources" | "resolveHotTopicDraft">
   promotion: Omit<Parameters<typeof createAnalysisAlternativePromotion>[0], Shared | "sources" | "createId" | "now">
+  currentChoice: {
+    preview: Omit<Parameters<typeof createCurrentChoicePreview>[0], Shared | "sources" | "results" | "writes">
+    promotion: Omit<Parameters<typeof createCurrentChoicePromotion>[0], Shared | "sources" | "now">
+  }
   acceptance: Omit<Parameters<typeof createAnalysisAcceptance>[0], Shared>
   application: Omit<Parameters<typeof createPreparedExecution>[0], Shared>
   criteria: Omit<Parameters<typeof createCriterionRuleRegistry>[0], Shared | keyof Evidence>
@@ -54,6 +60,8 @@ export function createDecisionProduct(input: Common & Evidence & {
   const hotTopicDraft = createHotTopicDraftStore({ ...input.hotTopic, ...common, ...evidence, createId: input.mutations.createId })
   const mutations = createDecisionMutations({ ...input.mutations, ...common, planner: input.planner, sources: input.sources, resolveHotTopicDraft: hotTopicDraft.readCurrent })
   const promoteAnalysis = createAnalysisAlternativePromotion({ ...input.promotion, ...common, sources: input.sources, createId: input.mutations.createId, now: input.now })
+  const currentChoicePreview = createCurrentChoicePreview({ ...input.currentChoice.preview, ...common, sources: input.sources, results: input.results, writes: input.proposalCoverageWrites })
+  const promoteCurrentChoice = createCurrentChoicePromotion({ ...input.currentChoice.promotion, ...common, sources: input.sources, now: input.now, verifyProvenance: async (request, choice, result, context) => (await currentChoicePreview.read(request, context)).status === "ok" && await input.currentChoice.promotion.verifyProvenance(request, choice, result, context) })
   const accept = createAnalysisAcceptance({ ...input.acceptance, ...common })
   const apply = createPreparedExecution({ ...input.application, ...common })
   const criteria = createCriterionRuleRegistry({ ...input.criteria, ...common, ...evidence })
@@ -69,5 +77,5 @@ export function createDecisionProduct(input: Common & Evidence & {
   const compare = createDecisionComparisonService({ cases: input.cases, state: input.state, host: input.host, results: input.results, planner: input.planner })
   const selection = createDecisionPortfolioSelection({ ...input.selection, ...common, ...evidence, compare })
   const portfolioBindings = createPortfolioResultBindings({ ...input.portfolioBindings, ...common, ...evidence, selection, results: input.results })
-  return { baseline, management, mutations, accept, promoteAnalysis, apply, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings, coverageCatalog, choiceCatalog, reviewChange, history, changeStore, changeProposal, hotTopicDraft }
+  return { baseline, management, mutations, accept, promoteAnalysis, currentChoicePreview, promoteCurrentChoice, apply, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings, coverageCatalog, choiceCatalog, reviewChange, history, changeStore, changeProposal, hotTopicDraft }
 }

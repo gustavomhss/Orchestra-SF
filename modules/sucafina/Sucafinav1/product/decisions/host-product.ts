@@ -14,7 +14,7 @@ type Checks = Parameters<typeof createDecisionEvidenceChecks>[0]
 type MutationAction = "decisions.promote-alternative" | "decisions.prepare-changes" | "decisions.choose" | "decisions.promote-portfolio" | "decisions.prepare-portfolio" | "decisions.add-question" | "decisions.answer-question"
 
 /** Wire authority and current evidence once; domain-specific producers remain explicit inputs. */
-export function createDecisionHostProduct(input: Omit<Product, "management" | "baseline" | "criteria" | "selection" | "acceptance" | "application" | "mutations" | "hotTopic" | "promotion"> & {
+export function createDecisionHostProduct(input: Omit<Product, "management" | "baseline" | "criteria" | "selection" | "acceptance" | "application" | "mutations" | "hotTopic" | "promotion" | "currentChoice"> & {
   human: Intent["human"]
   ui: Intent["ui"]
   reviewAdmission: ReturnType<typeof createDecisionReviewAdmission>
@@ -26,6 +26,12 @@ export function createDecisionHostProduct(input: Omit<Product, "management" | "b
   recomputeMetric: Checks["recomputeMetric"]
   verifyPromotionSourcesLocked: Product["promotion"]["verifySnapshot"]
   promotion: Omit<Product["promotion"], "authorizePromotion" | "verifySnapshot">
+  currentChoice: {
+    preview: Omit<Product["currentChoice"]["preview"], "authorizePreview" | "verifySnapshot">
+    promotion: Omit<Product["currentChoice"]["promotion"], "authorizePromotion" | "verifySnapshot">
+  }
+  verifyCurrentChoicePreviewSourcesLocked: Product["currentChoice"]["preview"]["verifySnapshot"]
+  verifyCurrentChoicePromotionSourcesLocked: Product["currentChoice"]["promotion"]["verifySnapshot"]
   verifyHotTopicSourcesLocked: Product["hotTopic"]["verifySnapshot"]
   hotTopic: Omit<Product["hotTopic"], "authorizeDraft" | "verifySnapshot">
   verifyRuleSource: Product["criteria"]["verifyEvidence"]
@@ -62,6 +68,10 @@ export function createDecisionHostProduct(input: Omit<Product, "management" | "b
   return createDecisionProduct({
     ...input,
     promotion: { ...input.promotion, authorizePromotion: (request, context) => intent.authorize(context, "decisions.promote-analysis", request), verifySnapshot: (snapshot, request, output, run, context) => intent.verify(context, "decisions.promote-analysis", request) && input.verifyPromotionSourcesLocked(snapshot, request, output, run, context) },
+    currentChoice: {
+      preview: { ...input.currentChoice.preview, authorizePreview: (request, context) => intent.authorize(context, "decisions.promote-alternative", request), verifySnapshot: (snapshot, request, binding, context) => intent.verify(context, "decisions.promote-alternative", request) && input.verifyCurrentChoicePreviewSourcesLocked(snapshot, request, binding, context) },
+      promotion: { ...input.currentChoice.promotion, authorizePromotion: (request, context) => intent.authorize(context, "decisions.promote-alternative", request), verifySnapshot: (snapshot, request, choice, result, context) => intent.verify(context, "decisions.promote-alternative", request) && input.verifyCurrentChoicePromotionSourcesLocked(snapshot, request, choice, result, context) },
+    },
     hotTopic: { ...input.hotTopic, authorizeDraft: (request, context) => intent.authorize(context, "decisions.draft-hot-topic", request), verifySnapshot: (snapshot, request, draft, context) => intent.verify(context, "decisions.draft-hot-topic", request) && input.verifyHotTopicSourcesLocked(snapshot, request, draft, context) },
     management: { ...input.management, authorizeEdit: (request, context) => intent.authorize(context, "decisions.edit", request), verifyEvidence: evidence.refs, verifyEdit: (snapshot, before, after, context) => matchesCaptured(context, "decisions.edit") && input.verifyEditSourcesLocked(snapshot, before, after, context) },
     baseline: { ...input.baseline, authorizeCoverage: (request, context) => intent.authorize(context, "decisions.coverage", request), resolveEvidence: (refs, context) => input.evidence.context({ refs }, context), verifySnapshot: (snapshot, request, record, context) => baselineFence(snapshot, request, record, context) },

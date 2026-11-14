@@ -3,19 +3,20 @@ import { object, rows, text } from "../../runtime/contract.ts"
 import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import { domain } from "../../runtime/procurement.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import { isSfPeriod } from "../contracts/validation.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ProductContext } from "../contracts/context.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfScopedSourceIdentity } from "../integration/source-lifecycle.ts"
 import type { SfScopedSourcePort, SfSourceScope } from "../integration/source-lifecycle.ts"
-import { projectSfProcurementScope } from "../integration/procurement-projections.ts"
+import { projectProcurementScope, procurementRequestFields, procurementSupplierFields } from "./source-projection.ts"
 import { procurementKeys } from "../../src/nav.ts"
 
 /** Individual selectors identify persisted scopes; they never confer authority. */
 export function createProcurementSourceResolver(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>> }) {
   type Evidence = Extract<BusinessEvidenceRef, { kind: "record" }>
-  const matches = (context: ProductContext, binding: TrustedDomainContext) => context.surface === "procurement" && context.installationId === binding.binding.installationId && context.projectId === binding.binding.projectId && context.principalRef === binding.binding.principalRef && context.accessRevision === binding.binding.accessRevision && context.policyVersion === binding.binding.policyVersion
+  const matches = (context: ProductContext, binding: TrustedDomainContext) => isSfPeriod(context.period) && /^[A-Z]{3}$/.test(context.currency) && context.surface === "procurement" && context.installationId === binding.binding.installationId && context.projectId === binding.binding.projectId && context.principalRef === binding.binding.principalRef && context.accessRevision === binding.binding.accessRevision && context.policyVersion === binding.binding.policyVersion
   const authenticate = async (request: Request, binding: TrustedDomainContext, snapshot: Snapshot, fields: readonly string[], period: ProductContext["period"], currency: string) => {
     const principal = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
     if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:")) return undefined
@@ -51,7 +52,7 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
       const actor: Actor = { id: binding.binding.principalRef, roles: Array.isArray(selected.roles) ? selected.roles.filter((role): role is string => typeof role === "string") : [], canWrite: selected.canWrite === true, assigned: [], domains: [] }
       const view = domain.view(snapshot, actor, environment)
       const identity = sfScopedSourceIdentity(snapshot, current.scope)
-      return { commit: false, value: text(object(view.data.formSettings).currency) === context.value.currency && digestSfValue(projectSfProcurementScope("procurement", snapshot, current.scope)) === current.inputDigest && identity?.incarnation === current.incarnation && identity.version === current.version }
+      return { commit: false, value: text(object(view.data.formSettings).currency) === context.value.currency && digestSfValue(projectProcurementScope("procurement", snapshot, current.scope)) === current.inputDigest && identity?.incarnation === current.incarnation && identity.version === current.version }
     }, { signal: request.signal })
     if (!fresh) return { status: "stale", reason: "Source changed" }
     const again = await input.scopedSources.resolveScopedSource("procurement", incarnation, (snapshot, scope) => authorize(request, binding, snapshot, scope, context.value))
@@ -67,7 +68,7 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
     const context = await input.contextFor(binding)
     if (context.status !== "ok") return context
     if (!matches(context.value, binding)) return { status: "denied", reason: "Source authority mismatch" }
-    const fields = kind === "procurement-request" ? ["status", "holder", "approvalStage", "stageEnteredAt", "ageDays", "baseAmount", "submittedAmount", "submittedCurrency", "submittedFxRate", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "subject", "reason", "nextStep", "sourcing"] : ["number", "legalName", "status", "categories", "taxId"]
+    const fields = kind === "procurement-request" ? [...procurementRequestFields] : [...procurementSupplierFields]
     const selector = await input.host.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: await authenticate(request, binding, snapshot, fields, context.value.period, context.value.currency) }), { signal: request.signal })
     if (!selector) return { status: "denied", reason: "Current authority unavailable" }
     const scope: SfSourceScope = { principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, recordType: kind, recordId: id, selector }
@@ -103,7 +104,7 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
         const prior = records.filter((entry) => entry.incarnation === target.incarnation && entry.scope.recordType === kind && entry.scope.recordId === target.recordId && entry.version >= target.version && digestSfValue(object(entry.scope.selector).fields) === digestSfValue(target.fields) && digestSfValue(object(entry.scope.selector).period) === digestSfValue(target.period))
         const selected = records.filter((entry) => entry.alive && entry.incarnation === current.value.evidence.target.incarnation && digestSfValue(entry.scope) === digestSfValue(current.value.scope))
         const identity = sfScopedSourceIdentity(snapshot, current.value.scope)
-        if (prior.length !== 1 || selected.length !== 1 || prior[0]!.sourceIncarnation !== selected[0]!.sourceIncarnation || identity?.incarnation !== current.value.evidence.target.incarnation || identity.version !== current.value.evidence.target.version || identity.inputDigest !== digestSfValue(projectSfProcurementScope("procurement", snapshot, current.value.scope))) return { commit: false, value: "unavailable" as const }
+        if (prior.length !== 1 || selected.length !== 1 || prior[0]!.sourceIncarnation !== selected[0]!.sourceIncarnation || identity?.incarnation !== current.value.evidence.target.incarnation || identity.version !== current.value.evidence.target.version || identity.inputDigest !== digestSfValue(projectProcurementScope("procurement", snapshot, current.value.scope))) return { commit: false, value: "unavailable" as const }
         if (options?.requireCurrent && !prior[0]!.alive) return { commit: false, value: "unavailable" as const }
         if (options?.requireCurrent && prior[0]!.version !== target.version) return { commit: false, value: "stale" as const }
         return { commit: false, value: "current" as const }
@@ -127,12 +128,13 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
         const prior = entries.filter((entry) => entry.alive && entry.incarnation === original.target.incarnation && entry.version === original.target.version && entry.scope.recordType === original.target.recordType && entry.scope.recordId === original.target.recordId)
         const present = entries.filter((entry) => entry.alive && entry.incarnation === current.target.incarnation && entry.version === current.target.version && digestSfValue(entry.scope) === digestSfValue(selected.value.scope))
         if (prior.length !== 1 || present.length !== 1 || prior[0]!.sourceIncarnation !== present[0]!.sourceIncarnation) return false
-        return [original, current].every((evidence, index) => {
+        const materialCurrent = [original, current].every((evidence, index) => {
           const entry = index === 0 ? prior[0]! : present[0]!
           const identity = sfScopedSourceIdentity(snapshot, entry.scope)
-          const projection = projectSfProcurementScope("procurement", snapshot, entry.scope)
+          const projection = projectProcurementScope("procurement", snapshot, entry.scope)
           return identity?.incarnation === evidence.target.incarnation && identity.version === evidence.target.version && identity.inputDigest === digestSfValue(projection) && object(projection).privateDependencyDigest === evidence.target.projectionDigest && digestSfValue(object(entry.scope.selector).fields) === digestSfValue(evidence.target.fields) && digestSfValue(object(entry.scope.selector).period) === digestSfValue(evidence.target.period)
         })
+        return materialCurrent && await input.host.revalidate(binding)
       }
       const prepared = await input.host.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: await check(snapshot) }), { signal: request.signal })
       if (!prepared) return { status: "unavailable", reason: "material-scope-unavailable" }
@@ -146,7 +148,7 @@ export function createProcurementSourceResolver(input: { host: DomainPortHost; s
       if (matches.length !== 1 || evidence.refId !== `sf-procurement:${encodeURIComponent(evidence.target.incarnation)}:${evidence.target.version}`) return false
       const scope = matches[0]!.scope
       const identity = sfScopedSourceIdentity(snapshot, scope)
-      const projection = projectSfProcurementScope("procurement", snapshot, scope)
+      const projection = projectProcurementScope("procurement", snapshot, scope)
       return !!identity && identity.incarnation === evidence.target.incarnation && identity.version === evidence.target.version && identity.inputDigest === digestSfValue(projection) && object(projection).privateDependencyDigest === evidence.target.projectionDigest && digestSfValue(object(scope.selector).fields) === digestSfValue(evidence.target.fields) && digestSfValue(object(scope.selector).period) === digestSfValue(evidence.target.period)
     },
   }
@@ -159,7 +161,7 @@ export function createProcurementCollectionRegistry(input: { host: DomainPortHos
   type Entry = { scope: SfSourceScope; value: Selection; expiresAt: number }
   const entries = new Map<string, Entry>()
   const members = new Map<string, { entry: Entry; evidence: Evidence }>()
-  const matches = (context: ProductContext, binding: TrustedDomainContext) => context.surface === "procurement" && context.installationId === binding.binding.installationId && context.projectId === binding.binding.projectId && context.principalRef === binding.binding.principalRef && context.accessRevision === binding.binding.accessRevision && context.policyVersion === binding.binding.policyVersion
+  const matches = (context: ProductContext, binding: TrustedDomainContext) => isSfPeriod(context.period) && /^[A-Z]{3}$/.test(context.currency) && context.surface === "procurement" && context.installationId === binding.binding.installationId && context.projectId === binding.binding.projectId && context.principalRef === binding.binding.principalRef && context.accessRevision === binding.binding.accessRevision && context.policyVersion === binding.binding.policyVersion
   const selector = async (request: Request, binding: TrustedDomainContext, snapshot: Snapshot) => {
     const principal = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
     if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:")) return undefined
@@ -187,7 +189,7 @@ export function createProcurementCollectionRegistry(input: { host: DomainPortHos
       if (!source) return { status: "unavailable", reason: "Collection inventory unavailable" }
       const environment = await input.host.environment(request)
       const result = await input.host.persistence.transaction<PortResult<{ selection: Evidence; requests: Evidence[]; statuses: string[] }>>("procurement", async (snapshot) => {
-        if (!await authorize(request, binding, snapshot, scope) || digestSfValue(projectSfProcurementScope("procurement", snapshot, scope)) !== source.inputDigest) return { commit: false, value: { status: "stale", reason: "Selection changed" } }
+        if (!await authorize(request, binding, snapshot, scope) || digestSfValue(projectProcurementScope("procurement", snapshot, scope)) !== source.inputDigest) return { commit: false, value: { status: "stale", reason: "Selection changed" } }
         const actor: Actor = { id: binding.binding.principalRef, roles: admitted.roles, canWrite: admitted.canWrite, assigned: [], domains: [] }
         const view = domain.view(snapshot, actor, environment)
         if (text(object(view.data.formSettings).currency) !== context.value.currency) return { commit: false, value: { status: "stale", reason: "Currency context changed" } }
@@ -196,7 +198,7 @@ export function createProcurementCollectionRegistry(input: { host: DomainPortHos
           const ref: Evidence = { schema: "sf-evidence-v1", kind: "record", refId: crypto.randomUUID(), installationId: context.value.installationId, projectId: context.value.projectId, refDigest: "", evidenceLevel: "observed", target: { surface: "procurement", recordType, recordId, incarnation: source.incarnation, version: source.version, fields, period: context.value.period, projectionDigest } }
           return { ...ref, refDigest: digestSfEvidenceRef(ref) }
         }
-        const requests = records.map((record) => make("procurement-request", text(record.number), digestProcurementSource(record, view.data.formSettings), ["status", "holder", "approvalStage", "stageEnteredAt", "ageDays", "baseAmount", "submittedAmount", "submittedCurrency", "submittedFxRate", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "subject", "reason", "nextStep", "sourcing"]))
+        const requests = records.map((record) => make("procurement-request", text(record.number), digestProcurementSource(record, view.data.formSettings), [...procurementRequestFields]))
         const known = ["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled"]
         return { commit: false, value: { status: "ok", value: { selection: make("procurement-request-selection", "all", source.inputDigest, ["status"]), requests, statuses: records.map((record) => known.includes(text(record.status)) ? text(record.status) : "unknown") } } }
       }, { signal: request.signal })
@@ -215,6 +217,14 @@ export function createProcurementCollectionRegistry(input: { host: DomainPortHos
       for (const [status, selection] of Object.entries(statusSelections)) entries.set(selection.refId, { scope, expiresAt, value: { context: context.value, selection, requests: result.value.requests.filter((_, index) => result.value.statuses[index] === status), statusSelections: { [status]: selection } } })
       for (const evidence of result.value.requests) members.set(evidence.refId, { entry, evidence })
       return { status: "ok", value: entry.value.selection.refId }
+    },
+    /** Dispose one host-owned view and its children without releasing another equivalent selection. */
+    releaseSelection(ref: string) {
+      const selected = entries.get(ref)
+      if (!selected) return false
+      for (const [key, entry] of entries) if (entry.scope === selected.scope) entries.delete(key)
+      for (const [key, member] of members) if (member.entry.scope === selected.scope) members.delete(key)
+      return true
     },
     async resolveRequestCollection(ref: string, binding: TrustedDomainContext): Promise<PortResult<Selection>> {
       const entry = entries.get(ref)

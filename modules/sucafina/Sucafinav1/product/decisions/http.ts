@@ -13,6 +13,8 @@ import type { HotTopicDraftRequest, createHotTopicDraftStore } from "./hot-topic
 import type { createChangeProposalStore } from "./change-proposal-store.ts"
 import type { createPortfolioHistory } from "./portfolio-history.ts"
 import type { createDecisionChoiceCatalog } from "./choice-catalog.ts"
+import type { CurrentChoicePreviewRequest, createCurrentChoicePreview } from "./current-choice-preview.ts"
+import type { CurrentChoicePromotion, createCurrentChoicePromotion } from "./current-choice-promotion.ts"
 import type { createDecisionCoverageCatalog } from "./coverage-catalog.ts"
 import type { createDecisionComparisonService } from "./comparison.ts"
 import type { BaselineCoverageRequest, createDecisionBaselineCoverage } from "./baseline-coverage.ts"
@@ -65,6 +67,8 @@ export function createDecisionHttp(input: {
   management: ReturnType<typeof createDecisionCaseManagement>
   mutations: ReturnType<typeof createDecisionMutations>
   promoteAnalysis: ReturnType<typeof createAnalysisAlternativePromotion>
+  currentChoicePreview: ReturnType<typeof createCurrentChoicePreview>
+  promoteCurrentChoice: ReturnType<typeof createCurrentChoicePromotion>
   accept: ReturnType<typeof createAnalysisAcceptance>
   apply: ReturnType<typeof createPreparedExecution>
   bindAdmittedApply: (context: TrustedUiContext, request: AdmittedApply) => void
@@ -80,7 +84,7 @@ export function createDecisionHttp(input: {
       if (admitted.status !== "ok") return response(admitted)
       try { return response(await input.management.list(admitted.value)) } finally { input.human.finish(admitted.value) }
     }
-    const operations = { "decision-promote-analysis": "decisions.promote-analysis", "decision-hot-topic-draft": "decisions.draft-hot-topic", "decision-hot-topic-drafts": "decisions.portfolio.read", "decision-hot-topic-draft-read": "decisions.portfolio.read", "decision-add-question": "decisions.add-question", "decision-answer-question": "decisions.answer-question", "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-change-proposal-read": "decisions.portfolio.read", "decision-portfolio-history": "decisions.portfolio.read", "decision-portfolio-history-read": "decisions.portfolio.read", "decision-choice-catalog": "decisions.portfolio.read", "decision-coverage-catalog": "decisions.portfolio.read", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
+    const operations = { "decision-choice-preview": "decisions.promote-alternative", "decision-choice-promote": "decisions.promote-alternative", "decision-promote-analysis": "decisions.promote-analysis", "decision-hot-topic-draft": "decisions.draft-hot-topic", "decision-hot-topic-drafts": "decisions.portfolio.read", "decision-hot-topic-draft-read": "decisions.portfolio.read", "decision-add-question": "decisions.add-question", "decision-answer-question": "decisions.answer-question", "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-change-proposal-read": "decisions.portfolio.read", "decision-portfolio-history": "decisions.portfolio.read", "decision-portfolio-history-read": "decisions.portfolio.read", "decision-choice-catalog": "decisions.portfolio.read", "decision-coverage-catalog": "decisions.portfolio.read", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
     if (!action || action !== "decision-compare" && action !== "decision-portfolio-selection" && !Object.hasOwn(operations, action)) return undefined
     if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return response({ status: "needs-input", reason: "invalid-content-type" }, 415)
@@ -95,6 +99,8 @@ export function createDecisionHttp(input: {
       try {
         const context = admitted.value
         const dispatch = async (): Promise<Response> => {
+        if (action === "decision-choice-preview") return response(await input.currentChoicePreview.prepare(payload as CurrentChoicePreviewRequest, context))
+        if (action === "decision-choice-promote") return response(await input.promoteCurrentChoice(payload as CurrentChoicePromotion, context))
         if (action === "decision-promote-analysis") return response(await input.promoteAnalysis(payload as AnalysisPromotionRequest, context))
         if (action === "decision-hot-topic-draft") return response(await input.hotTopicDraft.register(payload as HotTopicDraftRequest, context))
         if (action === "decision-hot-topic-drafts") return response(await input.hotTopicDraft.list(payload as { caseRef: CaseRef }, context))
@@ -143,7 +149,7 @@ export function createDecisionHttp(input: {
         return result.status === "ok" ? response({ status: "ok", value: { receiptId: result.value.id, surface: result.value.surface, version: result.value.version } }) : response(result)
         }
         if (!object(payload) || !caseRef(payload.caseRef)) return await dispatch()
-        const allowHistoricalRetry = ["decision-promote-analysis", "decision-add-question", "decision-answer-question", "decision-edit", "decision-promote", "decision-prepare-changes", "decision-choose", "decision-accept-analysis", "decision-apply"].includes(action)
+        const allowHistoricalRetry = ["decision-choice-promote", "decision-promote-portfolio", "decision-prepare-portfolio", "decision-promote-analysis", "decision-add-question", "decision-answer-question", "decision-edit", "decision-promote", "decision-prepare-changes", "decision-choose", "decision-accept-analysis", "decision-apply"].includes(action)
         const scoped = await input.withCase(context, payload.caseRef, { allowHistoricalRetry }, async () => ({ status: "ok", value: await dispatch() }))
         return scoped.status === "ok" ? scoped.value : response(scoped)
       } finally { input.human.finish(admitted.value) }
@@ -166,6 +172,11 @@ function valid(action: string, value: unknown) {
   if (!object(value)) return false
   if (action === "decision-portfolio-catalog") return closed(value, ["purpose", "caseRefs"], ["purpose", "caseRefs"]) && value.purpose === "catalog" && Array.isArray(value.caseRefs) && value.caseRefs.length > 0 && value.caseRefs.length <= 64 && value.caseRefs.every(caseRef) && new Set(value.caseRefs.map((ref) => JSON.stringify([ref.id, ref.incarnation, ref.version]))).size === value.caseRefs.length
   if (!caseRef(value.caseRef)) return false
+  if (action === "decision-choice-preview" || action === "decision-choice-promote") {
+    const extra = action === "decision-choice-promote" ? ["choiceDigest", "resultRef", "resultDigest", "scenario"] : []
+    const fields = ["caseRef", "choiceId", "alternativeRef", "coverageRef", ...extra]
+    return closed(value, fields, fields) && text(value.choiceId) && text(value.coverageRef) && object(value.alternativeRef) && closed(value.alternativeRef, ["id", "version"], ["id", "version"]) && text(value.alternativeRef.id) && version(value.alternativeRef.version) && (action === "decision-choice-preview" || text(value.resultRef) && typeof value.choiceDigest === "string" && /^[a-f0-9]{64}$/.test(value.choiceDigest) && typeof value.resultDigest === "string" && /^[a-f0-9]{64}$/.test(value.resultDigest) && decodeSfOperationInput("sf_scenario_simulate", value.scenario).ok)
+  }
   if (action === "decision-promote-analysis") return closed(value, ["caseRef", "outputRef", "runRef", "outputDigest", "rationale"], ["caseRef", "outputRef", "runRef", "outputDigest", "rationale"]) && text(value.outputRef) && text(value.runRef) && typeof value.outputDigest === "string" && /^[a-f0-9]{64}$/.test(value.outputDigest) && text(value.rationale)
   if (action === "decision-hot-topic-drafts") return closed(value, ["purpose", "caseRef"], ["purpose", "caseRef"]) && value.purpose === "hot-topic-drafts"
   if (action === "decision-hot-topic-draft-read") return closed(value, ["purpose", "caseRef", "draftRef"], ["purpose", "caseRef", "draftRef"]) && value.purpose === "hot-topic-draft-read" && text(value.draftRef)

@@ -1,0 +1,66 @@
+name: Astra WP11 scoped checks
+
+on:
+  push:
+    branches: [astra-check-wp11]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: astra-wp11-check
+  cancel-in-progress: false
+
+jobs:
+  wp11-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact product commit
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Record product and guard base
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor ff99e4b4de56bbf6e7ef36daf5d3eb749779017a HEAD
+          git cat-file -e origin/dev^{commit}
+          export SF_WP11_CHECK_EVIDENCE="$RUNNER_TEMP/astra-wp11-evidence"
+          echo "SF_WP11_CHECK_EVIDENCE=$SF_WP11_CHECK_EVIDENCE" >> "$GITHUB_ENV"
+          mkdir -p "$SF_WP11_CHECK_EVIDENCE"
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process'
+          import { writeFileSync } from 'node:fs'
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
+          const source = { productSha: process.env.GITHUB_SHA, productTree: git('rev-parse', 'HEAD^{tree}'), guardBase: git('rev-parse', 'origin/dev'), mergeBase: git('merge-base', 'HEAD', 'origin/dev'), seed: 'ff99e4b4de56bbf6e7ef36daf5d3eb749779017a' }
+          writeFileSync(process.env.SF_WP11_CHECK_EVIDENCE + '/source.json', JSON.stringify(source, null, 2) + '\n')
+          process.stdout.write(JSON.stringify(source) + '\n')
+          NODE
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+      - name: Typecheck Sucafina package
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        working-directory: modules/sucafina
+        run: |
+          set -o pipefail
+          bun typecheck 2>&1 | tee "$SF_WP11_CHECK_EVIDENCE/typecheck.log"
+      - name: Guardrails against origin/dev
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$SF_WP11_CHECK_EVIDENCE/guards.log"
+      - name: Upload exact check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: astra-wp11-checks-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/astra-wp11-evidence
+          if-no-files-found: error
+          retention-days: 14
