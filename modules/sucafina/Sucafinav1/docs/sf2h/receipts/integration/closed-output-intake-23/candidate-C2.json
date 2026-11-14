@@ -1,0 +1,96 @@
+{
+  "schema": "sf2-product-candidate-identity-v1",
+  "candidate_id": "C2",
+  "commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+  "tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "mission": 23,
+  "state": "FROZEN_IDENTITY_UNQUALIFIED",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "scope": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18
+  },
+  "previous_candidate": {
+    "id": "C",
+    "commit": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+    "tree": "6336a25ac2bd505f4135b9292d1b061ab90ad8e4",
+    "unchanged": true
+  },
+  "initial_head": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "composition": [
+    {
+      "role": "authority ACK",
+      "commit": "0d5d2e56448bf22ed3fbbf44d8d0e1a52cc3d4b7",
+      "tree": "5911cd631db7d2251bbc0bb45d62b4616996c31c"
+    },
+    {
+      "role": "C12 + Finance18",
+      "commit": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+      "tree": "72d2a3c443233017dec3820d1a6987c4934e39f6",
+      "manifest": "increment-01.json",
+      "source_paths": 36
+    },
+    {
+      "role": "Memory13",
+      "commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+      "manifest": "increment-02.json",
+      "source_paths": 56
+    }
+  ],
+  "source_counts": {
+    "paths": 92,
+    "product_files": 8,
+    "test_helper_files": 15,
+    "original_receipts": 69,
+    "exact_source_blobs": 91,
+    "adapted_files": 1
+  },
+  "proof_state": {
+    "local_tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "epic": "NOT_RUN",
+    "native_AM01_AM06": "NOT_RUN",
+    "independent_final_reviews": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "required_s0_gates": [
+    "CI-SF",
+    "CI-CLI",
+    "CI-APP-SRC",
+    "CI-APP-BROWSER",
+    "CI-ATLAS-BUSINESS",
+    "CI-UI-OPERATIONS",
+    "CI-UI-DECISIONS",
+    "CI-UI-REPORTS",
+    "canonical generated/typecheck/spawn/guard coverage",
+    "AM01-AM06",
+    "three independent FINAL reviews on exact candidate",
+    "C/G7 and D/G8 requirements"
+  ],
+  "open_findings": [
+    "FIN-IND-005",
+    "C12 / Finance legacy test-oracle compatibility",
+    "Memory MI07 full history and C17/X29",
+    "WP13 semantic union and CurrentChoice",
+    "C05 installed closure",
+    "Operations/Decisions/Reports nominal proof and shared assemblies",
+    "all inherited pending-owners criteria"
+  ],
+  "next_material_change": "Decisions20 terminal output has arrived. Any admission of its product/tests/shared mount creates C3; this C2 identity remains immutable.",
+  "record_policy": "Later record-only checkpoints do not relabel product candidate and are not D/G8 without required gates.",
+  "final_dispatcher": "S0",
+  "final_acceptance": "S0",
+  "global_release": false
+}
