@@ -1,0 +1,98 @@
+{
+  "schema": "operations-assembly-proposal-v1",
+  "consumer": "session23 sole sf2-stack integrator",
+  "input_commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "product_commit": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+  "state": "READY_PATCH_PENDING_SESSION23_ASSEMBLY_AND_ACTIONS_QUALIFICATION",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "preimage_blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "postimage_blob": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "preimage_file": "preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "preimage_blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "postimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "preimage_file": "preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "preimage_blob": null,
+      "postimage_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "own_source_path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "own_source_path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+    }
+  ],
+  "scanner": {
+    "source": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+    "source_blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+    "environment": "SF_OPERATIONS_CLAMD_PORT",
+    "host": "127.0.0.1",
+    "mode": "Existing approved ClamD endpoint only. No install or service launch. Missing endpoint fails closed.",
+    "pending": "No observed real Actions scanner endpoint yet."
+  },
+  "proof_boundaries": [
+    "Five nominal browser journeys remain distinct from the five assembly regressions.",
+    "No native Sessions/provider authority/C06 material/human timing proof.",
+    "No shared postimage may be applied outside session23.",
+    "Mutation Requests in mount-boundary.test.ts exercise HTTP authorization as regression tests; they do not replace required browser UI actions."
+  ],
+  "static_peer_review": {
+    "documents_dispose": "Feature-detect source39 dispose; composed d8ab factory has no dispose. business.dispose runs in finally.",
+    "fixture_cleanup": "Register each resource immediately and attempt every closer; collect failures.",
+    "tests_executed": false
+  },
+  "bounded_input_inventory": "input-subtrees.json",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "cases": 5,
+      "scope": "real installation/authentication/SQLite/HTTP regression; does not qualify UI journeys",
+      "execution": "PENDING"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "cases": 2,
+      "scope": "canonical request and existing host prerequisite selection; requires session23 shared postimage",
+      "execution": "NOT_RUN_PENDING_SHARED_PATCH"
+    }
+  ],
+  "application_order": [
+    "Preserve current sf2-stack and verify the exact shared preimage blobs. Only session23 applies shared changes.",
+    "Intake the own source files by path/blob from this PR23 delivery, preserving the five original scenario bodies/assertions.",
+    "Apply assembly/shared.patch, which changes only wp04/host.ts and wp04/selection.ts and calls the installed real helper.",
+    "Reconcile an already approved real ClamD service through the existing CI environment. This payload does not install/start a service and cannot claim positive upload without it.",
+    "Run both exact regression files through existing Actions and then the unchanged five-case nominal request on the resulting committed composition; no inherited green."
+  ],
+  "source_helpers": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "postimage_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "postimage_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "postimage_blob": "d60be2f87aa210c9700fba276932a6f443264e4f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "postimage_blob": "508f4580d0decb1d5c97208fed650f51d8566045"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "postimage_blob": "See committed Git tree"
+    }
+  ]
+}
