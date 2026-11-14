@@ -1,0 +1,139 @@
+{
+  "schema": "sf-c12-composed-patches-v1",
+  "mission": 32,
+  "baseSha": "402a091485e11d60dff433049c7dedd7fcead687",
+  "baseTree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+  "targetSha": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+  "targetTree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
+  "sourceHead": "6f61cc332b4ebfa4a45313cd69da9dd99d4ab4fe",
+  "sourceApplyPostimage": "605ad1fbd9167b8234aa614a01638724e87f36f5",
+  "composedApplyPostimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
+  "complete": true,
+  "format": "git unified patch, full hunks from exact GitHub compare",
+  "productReplacementForbidden": true,
+  "patches": [
+    {
+      "name": "bundle-product.patch",
+      "sha256": "7b28a6edce5627d7eb14b5865e414805e0cc96a5fc45b764c67165568af77bb8",
+      "gitBlob": "3a0b18e0cd1e2c36af5bab659e0154623eb0edc0",
+      "bytes": 10760,
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "preimage": "6ad51e47b22eca073a0a81731575c463d98673e4",
+          "postimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "preimage": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "postimage": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+          "status": "modified"
+        }
+      ]
+    },
+    {
+      "name": "bundle-tests.patch",
+      "sha256": "38947723e50391ca8748d376ae827f482b9d4a49a3fb74393437cf597f55ab80",
+      "gitBlob": "4121a6ce13aff9003bc4109885f50fa5ad5af8fe",
+      "bytes": 39626,
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+          "preimage": null,
+          "postimage": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+          "preimage": null,
+          "postimage": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+          "preimage": null,
+          "postimage": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+          "preimage": null,
+          "postimage": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+          "preimage": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+          "postimage": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "preimage": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+          "postimage": "4528a2c390110b3bf010cc77884e204139b50c09",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "preimage": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+          "postimage": "76bf7963d30dde72eb369616dfcd0fee61948803",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+          "preimage": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+          "postimage": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+          "status": "modified"
+        }
+      ]
+    }
+  ],
+  "integrity": {
+    "method": "static reconstruction of every complete patch hunk over pinned preimage bytes, then Git blob comparison",
+    "verifiedPaths": 10,
+    "productTestsExecutedLocally": false,
+    "results": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "postimage": "65d2a0518427b1454aa665ef744bce7564ed8049"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "postimage": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+        "postimage": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+        "postimage": "e8b6d8a9c0c02670269f38336e4a9446b8133647"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+        "postimage": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+        "postimage": "c2fca3a7aed03776072cd059cd361df98ac9cf28"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+        "postimage": "fc9b0e4d52fca55921aa619687f41b8953954c7e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+        "postimage": "4528a2c390110b3bf010cc77884e204139b50c09"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+        "postimage": "76bf7963d30dde72eb369616dfcd0fee61948803"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+        "postimage": "65876bfc65f8682ad19723cd3bc1589803118b9b"
+      }
+    ]
+  }
+}

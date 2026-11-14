@@ -1,0 +1,586 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts
+@@ -0,0 +1,90 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { object, rows } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createC12Fixture, prepareC12Change, readReviewDigest } from "../c12-receipt-recovery/fixture.ts"
++import { observeC12 } from "../c12-receipt-recovery/consumer.ts"
++
++test("C12 recovery refuses a material choice edit after canonical admission but before executor capture", async () => {
++  const fixture = await createC12Fixture("c12-composed-admission-choice-race", "https://local.invalid")
++  try {
++    const prepared = await prepareC12Change(fixture)
++    const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(reviewed.response.status).toBe(200)
++    const applied = await fixture.http("decision-apply", {
++      ...prepared.request, reviewDigest: readReviewDigest(reviewed.body),
++    }, "alice", "c12-admission-original-application")
++    expect(applied.response.status).toBe(200)
++    const committed = await observeC12(fixture)
++    expect(committed.receipts).toHaveLength(1)
++    expect(committed.decision.receipts).toEqual(committed.receipts)
++    const originalChoice = committed.decision.choices.find((choice) => choice.id === prepared.request.choiceId)!
++    const materialChoice = {
++      ...originalChoice,
++      reason: "Choice materially replaced after the original intent was admitted",
++      scenario: { ...originalChoice.scenario, operations: originalChoice.scenario.operations.map((operation) => ({ ...operation, amount: 900 })) },
++    }
++    const reads = fixture.receiptReads.count
++    // Read1 is the host's receipt preflight after readApplicationIntent has
++    // validated the original choice. The executor has not captured its case yet.
++    fixture.afterReceiptRead(async () => {
++      const current = await fixture.storedCase()
++      const changed = {
++        ...current.value,
++        version: current.value.version + 1,
++        objective: "Concurrent admission-window edit remains visible",
++        choices: current.value.choices.map((choice) => choice.id === materialChoice.id ? materialChoice : choice),
++      }
++      const saved = await fixture.authority.state.transaction(fixture.request(), {
++        namespace: "cases", expectedStorageVersion: current.storageVersion,
++        targetRef: changed.id, targetIncarnation: changed.incarnation,
++        idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed),
++      }, async (state) => {
++        state.cases[changed.id] = changed
++        return { commit: true, value: true }
++      })
++      expect(saved.status).toBe("ok")
++    }, 1)
++    const recovery = await fixture.http("decision-recover", {
++      purpose: "recover", ...prepared.request,
++      caseRef: { id: committed.decision.id, incarnation: committed.decision.incarnation, version: committed.decision.version },
++    }, "alice", "c12-admission-race-recovery")
++    const recoveryReads = fixture.receiptReads.count - reads
++    const observed = await observeC12(fixture)
++    expect(fixture.receiptReads.interleavings).toBe(1)
++    expect(fixture.receiptCommits).toHaveLength(1)
++    expect(observed.domain).toEqual(committed.domain)
++    expect(object(observed.domain.request.pr).estAmount).toBe(150)
++    expect(observed.domain.version).toEqual({ version: 1, by: "alice" })
++    expect(rows(observed.domain.request.history)).toHaveLength(1)
++    expect(rows(observed.domain.request.history)[0]).toMatchObject({ action: "Saved", by: "alice" })
++    expect(observed.receipts).toEqual(committed.receipts)
++    expect(observed.receipts[0]!.principalRef).toBe("alice")
++    expect(observed.decision.version).toBe(committed.decision.version + 1)
++    expect(observed.decision.objective).toBe("Concurrent admission-window edit remains visible")
++    expect(observed.decision.choices.find((choice) => choice.id === originalChoice.id)).toEqual(materialChoice)
++    expect(observed.decision.ledger).toEqual(committed.decision.ledger)
++    expect(observed.decision.preparedChanges).toEqual(committed.decision.preparedChanges)
++    expect(observed.decision.receipts).toEqual(committed.decision.receipts)
++    console.info("SF_C12_ADMISSION_INTERLEAVING_OBSERVED", JSON.stringify({
++      status: recovery.response.status, result: recovery.body,
++      receiptReads: recoveryReads, interleavings: fixture.receiptReads.interleavings,
++      effects: fixture.receiptCommits.length, receipts: observed.receipts.length,
++      beforeCaseVersion: committed.decision.version, afterCaseVersion: observed.decision.version,
++      choicePreserved: digestSfValue(observed.decision.choices.find((choice) => choice.id === originalChoice.id)) === digestSfValue(materialChoice),
++    }))
++    expect(recovery.response.status).toBe(403)
++    expect(recovery.body).toEqual({ status: "denied", reason: "case-access-unavailable" })
++    expect(recovery.body.value).toBeUndefined()
++    expect(JSON.stringify(recovery.body)).not.toContain(committed.receipts[0]!.id)
++    expect(recoveryReads).toBe(1)
++    const durable = await fixture.durable()
++    const repeated = await fixture.http("decision-recover", { purpose: "recover", ...prepared.request })
++    expect(repeated.response.status).toBe(409)
++    expect(repeated.body).toEqual({ status: "conflict", reason: "application-intent-mismatch" })
++    expect(await fixture.durable()).toEqual(durable)
++    expect(await observeC12(fixture)).toEqual(observed)
++    expect(fixture.receiptCommits).toHaveLength(1)
++  } finally { await fixture.dispose() }
++}, 90_000)
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..e8b6d8a9c0c02670269f38336e4a9446b8133647
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts
+@@ -0,0 +1,95 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { object, rows } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createC12Fixture, prepareC12Change, readReviewDigest } from "../c12-receipt-recovery/fixture.ts"
++import { interruptC12AfterCommit, observeC12 } from "../c12-receipt-recovery/consumer.ts"
++
++for (const kind of ["choice", "prepared-change"] as const) {
++  test(`C12 recovery refuses a duplicate ${kind} identity before admission without linking or redispatching`, async () => {
++    const fixture = await createC12Fixture(`c12-duplicate-${kind}-admission`, "https://local.invalid")
++    try {
++      const prepared = await prepareC12Change(fixture)
++      const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++      expect(reviewed.response.status).toBe(200)
++      interruptC12AfterCommit(fixture)
++      const interrupted = await fixture.http("decision-apply", {
++        ...prepared.request, reviewDigest: readReviewDigest(reviewed.body),
++      }, "alice", `c12-duplicate-${kind}-original`)
++      expect(interrupted.response.status).toBe(503)
++      expect(interrupted.body).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
++      const committed = await observeC12(fixture)
++      expect(fixture.receiptCommits).toHaveLength(1)
++      expect(committed.receipts).toHaveLength(1)
++      expect(committed.receipts[0]!.principalRef).toBe("alice")
++      expect(committed.receipts[0]!.result.ok).toBe(true)
++      expect(committed.decision.receipts).toEqual([])
++      expect(committed.decision.preparedChanges).toEqual([prepared.change])
++      expect(object(committed.domain.request.pr).estAmount).toBe(150)
++      expect(committed.domain.version).toEqual({ version: 1, by: "alice" })
++      expect(rows(committed.domain.request.history)).toHaveLength(1)
++      expect(rows(committed.domain.request.history)[0]).toMatchObject({ action: "Saved", by: "alice" })
++      const current = await fixture.storedCase()
++      const originalChoice = current.value.choices.find((choice) => choice.id === prepared.request.choiceId)!
++      const duplicateChoice = {
++        ...originalChoice,
++        reason: "A second entry reuses the original choice identity with a different amount",
++        scenario: { ...originalChoice.scenario, operations: originalChoice.scenario.operations.map((operation) => ({ ...operation, amount: 900 })) },
++      }
++      const duplicateChange = {
++        ...prepared.change,
++        operation: { ...prepared.change.operation, command: {
++          ...prepared.change.operation.command, values: { pr: { estAmount: 900 } },
++        } },
++      }
++      // Corrupt-input setup through real C08: preserve the valid first entry so
++      // find() cannot distinguish this ambiguous identity from the original intent.
++      const changed = {
++        ...current.value, version: current.value.version + 1,
++        choices: kind === "choice" ? [...current.value.choices, duplicateChoice] : current.value.choices,
++        preparedChanges: kind === "prepared-change" ? [...current.value.preparedChanges, duplicateChange] : current.value.preparedChanges,
++      }
++      const saved = await fixture.authority.state.transaction(fixture.request(), {
++        namespace: "cases", expectedStorageVersion: current.storageVersion,
++        targetRef: changed.id, targetIncarnation: changed.incarnation,
++        idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed),
++      }, async (state) => {
++        state.cases[changed.id] = changed
++        return { commit: true, value: true }
++      })
++      expect(saved.status).toBe("ok")
++      const before = await observeC12(fixture)
++      expect(before.decision).toEqual(changed)
++      expect(before.decision.choices[0]).toEqual(originalChoice)
++      expect(before.decision.preparedChanges[0]).toEqual(prepared.change)
++      expect(before.decision.choices.filter((choice) => choice.id === originalChoice.id)).toHaveLength(kind === "choice" ? 2 : 1)
++      expect(before.decision.preparedChanges.filter((change) => change.id === prepared.change.id)).toHaveLength(kind === "prepared-change" ? 2 : 1)
++      const durable = await fixture.durable()
++      const recovery = await fixture.http("decision-recover", {
++        purpose: "recover", ...prepared.request,
++        caseRef: { id: changed.id, incarnation: changed.incarnation, version: changed.version },
++      }, "alice", `c12-duplicate-${kind}-recovery`)
++      const observed = await observeC12(fixture)
++      console.info("SF_C12_DUPLICATE_IDENTITY_OBSERVED", JSON.stringify({
++        kind, status: recovery.response.status, result: recovery.body,
++        effects: fixture.receiptCommits.length, receipts: observed.receipts.length,
++        linkedReceipts: observed.decision.receipts.length,
++        initialCaseVersion: changed.version, observedCaseVersion: observed.decision.version,
++        choiceCount: observed.decision.choices.length, preparedChangeCount: observed.decision.preparedChanges.length,
++      }))
++      expect(recovery.response.status).toBe(409)
++      expect(recovery.body).toEqual({ status: "stale", reason: "prepared-case-changed" })
++      expect(recovery.body.value).toBeUndefined()
++      expect(JSON.stringify(recovery.body)).not.toContain(committed.receipts[0]!.id)
++      expect(await fixture.durable()).toEqual(durable)
++      expect(observed).toEqual(before)
++      expect(observed.domain).toEqual(committed.domain)
++      expect(observed.receipts).toEqual(committed.receipts)
++      expect(observed.decision.objective).toBe(committed.decision.objective)
++      expect(observed.decision.ledger).toEqual(committed.decision.ledger)
++      expect(observed.decision.receipts).toEqual([])
++      expect(observed.decision.preparedChanges.every((change) => change.state === "planned" && change.receipt === undefined)).toBe(true)
++      expect(fixture.receiptCommits).toHaveLength(1)
++    } finally { await fixture.dispose() }
++  }, 90_000)
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c45757c67769a7654f9ae1ecbbeb2f55f93e6acd
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts
+@@ -0,0 +1,117 @@
++import { expect, test } from "bun:test"
++import { object, rows } from "../../../runtime/contract.ts"
++import { createC12Fixture, prepareC12Change, readReviewDigest } from "../c12-receipt-recovery/fixture.ts"
++import { editC12Case, interleaveC12CaseEdit, observeC12 } from "../c12-receipt-recovery/consumer.ts"
++
++// Bundle-only proof: uses the integrated Finance executor through real business services.
++// The origin's older executor intentionally does not claim this fresh-reconciliation behavior.
++test("C12 composed Apply reconciles an unrelated case edit with one original effect and receipt", async () => {
++  const fixture = await createC12Fixture("c12-composed-fresh-reconciliation", "https://local.invalid")
++  try {
++    const prepared = await prepareC12Change(fixture)
++    const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(reviewed.response.status).toBe(200)
++    const application = { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) }
++    const before = await observeC12(fixture)
++    interleaveC12CaseEdit(fixture)
++    const first = await fixture.http("decision-apply", application, "alice", "c12-fresh-original-application")
++    expect(first.response.status).toBe(200)
++    const applied = await observeC12(fixture)
++    expect(fixture.receiptCommits).toHaveLength(1)
++    expect(applied.receipts).toHaveLength(1)
++    const receipt = applied.receipts[0]!
++    expect(receipt).toMatchObject({
++      principalRef: "alice", surface: "procurement", version: 1,
++      targetIncarnation: prepared.change.target.incarnation,
++      idempotencyKey: prepared.change.idempotencyKey,
++      commandDigest: prepared.change.operation.commandDigest,
++    })
++    expect(receipt.result.ok).toBe(true)
++    expect(first.body).toEqual({ status: "ok", value: { receiptId: receipt.id, surface: "procurement", version: 1, outcome: "applied" } })
++    expect(object(applied.domain.request.pr).estAmount).toBe(150)
++    expect(applied.domain.version).toEqual({ version: 1, by: "alice" })
++    expect(rows(applied.domain.request.history)).toHaveLength(1)
++    expect(rows(applied.domain.request.history)[0]).toMatchObject({ action: "Saved", by: "alice" })
++    expect(applied.decision.version).toBe(before.decision.version + 2)
++    expect(applied.decision.objective).toBe("Concurrent authorized case edit")
++    expect(applied.decision.choices).toEqual(before.decision.choices)
++    expect(applied.decision.ledger).toEqual(before.decision.ledger)
++    expect(applied.decision.participants).toEqual(before.decision.participants)
++    expect(applied.decision.alternatives).toEqual(before.decision.alternatives)
++    expect(applied.decision.criteria).toEqual(before.decision.criteria)
++    expect(applied.decision.assumptions).toEqual(before.decision.assumptions)
++    expect(applied.decision.questions).toEqual(before.decision.questions)
++    expect(applied.decision.state).toBe("applied")
++    expect(applied.decision.receipts).toEqual([receipt])
++    expect(applied.decision.preparedChanges).toEqual([{ ...prepared.change, state: "applied", receipt }])
++    const durable = await fixture.durable()
++    const retry = await fixture.http("decision-apply", application, "alice", "c12-fresh-original-application")
++    expect(retry.response.status).toBe(200)
++    expect(retry.body).toEqual(first.body)
++    expect(await observeC12(fixture)).toEqual(applied)
++    expect(await fixture.durable()).toEqual(durable)
++    const recovery = await fixture.http("decision-recover", {
++      purpose: "recover", ...prepared.request,
++      caseRef: { id: applied.decision.id, incarnation: applied.decision.incarnation, version: applied.decision.version },
++    }, "alice", "c12-fresh-explicit-recovery")
++    expect(recovery.response.status).toBe(200)
++    expect(recovery.body).toEqual(first.body)
++    expect(await observeC12(fixture)).toEqual(applied)
++    expect(await fixture.durable()).toEqual(durable)
++    expect(fixture.receiptCommits).toHaveLength(1)
++    console.info("SF_C12_FRESH_RECONCILIATION", JSON.stringify({
++      firstStatus: first.response.status, retryStatus: retry.response.status, recoveryStatus: recovery.response.status,
++      originalCaseVersion: before.decision.version, reconciledCaseVersion: applied.decision.version,
++      receiptId: receipt.id, domainVersion: receipt.version, effectCount: fixture.receiptCommits.length,
++      choicePreserved: true, concurrentEditPreserved: true, replayDurableMutations: 0,
++    }))
++  } finally { await fixture.dispose() }
++}, 90_000)
++
++test("C12 composed first dispatch requires human review and the current case version", async () => {
++  const fixture = await createC12Fixture("c12-composed-normal-apply-cas", "https://local.invalid")
++  try {
++    const prepared = await prepareC12Change(fixture)
++    const before = await fixture.durable()
++    // This is syntactically valid, not a producer-issued review proof. It cannot create review authority.
++    const unreviewed = await fixture.http("decision-apply", { ...prepared.request, reviewDigest: "a".repeat(64) })
++    expect(unreviewed.response.status).toBe(403)
++    expect(unreviewed.body).toEqual({ status: "denied", reason: "prepared-review-required" })
++    expect(await fixture.durable()).toEqual(before)
++    expect(fixture.receiptCommits).toEqual([])
++    const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(reviewed.response.status).toBe(200)
++    const application = { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) }
++    const current = await observeC12(fixture)
++    await editC12Case(fixture, "Authorized edit before the first dispatch")
++    const edited = await observeC12(fixture)
++    expect(edited.decision.version).toBe(current.decision.version + 1)
++    expect(edited.decision.choices).toEqual(current.decision.choices)
++    expect(edited.decision.ledger).toEqual(current.decision.ledger)
++    const durable = await fixture.durable()
++    const stale = await fixture.http("decision-apply", application)
++    expect(stale.response.status).toBe(409)
++    expect(stale.body).toEqual({ status: "stale", reason: "prepared-case-changed" })
++    expect(await fixture.durable()).toEqual(durable)
++    // A genuine review digest plus historical case version still cannot recover a receipt that never existed.
++    const missing = await fixture.http("decision-recover", application)
++    expect(missing.response.status).toBe(503)
++    expect(missing.body).toEqual({ status: "unavailable", reason: "original-receipt-unavailable" })
++    expect(await fixture.durable()).toEqual(durable)
++    expect(await observeC12(fixture)).toEqual(edited)
++    expect(edited.decision.objective).toBe("Authorized edit before the first dispatch")
++    expect(edited.decision.receipts).toEqual([])
++    expect(edited.receipts).toEqual([])
++    expect(edited.decision.preparedChanges).toEqual([prepared.change])
++    expect(object(edited.domain.request.pr).estAmount).toBe(100)
++    expect(edited.domain.version).toEqual({ version: 0, by: "alice" })
++    expect(rows(edited.domain.request.history)).toEqual([])
++    expect(fixture.receiptCommits).toEqual([])
++    console.info("SF_C12_FIRST_DISPATCH_FENCES", JSON.stringify({
++      unreviewedStatus: unreviewed.response.status, staleApplyStatus: stale.response.status,
++      missingRecoveryStatus: missing.response.status, effects: 0, receipts: 0,
++      caseVersion: edited.decision.version, concurrentEditPreserved: true,
++    }))
++  } finally { await fixture.dispose() }
++}, 90_000)
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c2fca3a7aed03776072cd059cd361df98ac9cf28
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts
+@@ -0,0 +1,77 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { object, rows } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createC12Fixture, prepareC12Change, readReviewDigest } from "../c12-receipt-recovery/fixture.ts"
++import { observeC12 } from "../c12-receipt-recovery/consumer.ts"
++
++// The amount inside the accepted choice is material to the reviewed application.
++// A real C08 edit after the domain commit must not be treated as an unrelated objective edit.
++test("C12 composed reconciliation refuses a material choice replacement after the domain committed", async () => {
++  const fixture = await createC12Fixture("c12-composed-material-choice-race", "https://local.invalid")
++  try {
++    const prepared = await prepareC12Change(fixture)
++    const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
++    expect(reviewed.response.status).toBe(200)
++    const before = (await fixture.storedCase()).value
++    const originalChoice = before.choices.find((choice) => choice.id === prepared.request.choiceId)!
++    const materialChoice = {
++      ...originalChoice,
++      reason: "Concurrent material choice now requests 900, not the reviewed 150",
++      scenario: { ...originalChoice.scenario, operations: originalChoice.scenario.operations.map((operation) => ({ ...operation, amount: 900 })) },
++    }
++    fixture.afterReceiptCommit(async () => {
++      const current = await fixture.storedCase()
++      const changed = {
++        ...current.value,
++        version: current.value.version + 1,
++        objective: "Concurrent authorized edit must survive the rejected reconciliation",
++        choices: current.value.choices.map((choice) => choice.id === materialChoice.id ? materialChoice : choice),
++      }
++      const saved = await fixture.authority.state.transaction(fixture.request(), {
++        namespace: "cases", expectedStorageVersion: current.storageVersion,
++        targetRef: changed.id, targetIncarnation: changed.incarnation,
++        idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed),
++      }, async (state) => {
++        state.cases[changed.id] = changed
++        return { commit: true, value: true }
++      })
++      expect(saved.status).toBe("ok")
++    })
++    const first = await fixture.http("decision-apply", {
++      ...prepared.request, reviewDigest: readReviewDigest(reviewed.body),
++    }, "alice", "c12-composed-material-race")
++    const observed = await observeC12(fixture)
++    // These effect/history checks precede the expected refusal so a red diagnostic
++    // still distinguishes committed domain work from a pre-dispatch fixture failure.
++    expect(fixture.receiptCommits).toHaveLength(1)
++    expect(observed.receipts).toHaveLength(1)
++    expect(observed.receipts[0]!.principalRef).toBe("alice")
++    expect(observed.receipts[0]!.result.ok).toBe(true)
++    expect(object(observed.domain.request.pr).estAmount).toBe(150)
++    expect(observed.domain.version).toEqual({ version: 1, by: "alice" })
++    expect(rows(observed.domain.request.history)).toHaveLength(1)
++    expect(rows(observed.domain.request.history)[0]).toMatchObject({ action: "Saved", by: "alice" })
++    expect(observed.decision.choices.find((choice) => choice.id === originalChoice.id)).toEqual(materialChoice)
++    expect(observed.decision.objective).toBe("Concurrent authorized edit must survive the rejected reconciliation")
++    expect(observed.decision.ledger).toEqual(before.ledger)
++    console.info("SF_C12_MATERIAL_INTERLEAVING_OBSERVED", JSON.stringify({
++      status: first.response.status, result: first.body,
++      effects: fixture.receiptCommits.length, authoritativeReceipts: observed.receipts.length,
++      linkedReceipts: observed.decision.receipts.length,
++      initialCaseVersion: before.version, observedCaseVersion: observed.decision.version,
++      materialChoicePreserved: digestSfValue(observed.decision.choices.find((choice) => choice.id === originalChoice.id)) === digestSfValue(materialChoice),
++    }))
++    expect(first.response.status).toBe(409)
++    expect(first.body).toEqual({ status: "stale", reason: "prepared-choice-changed" })
++    expect(observed.decision.version).toBe(before.version + 1)
++    expect(observed.decision.receipts).toEqual([])
++    expect(observed.decision.preparedChanges).toEqual(before.preparedChanges)
++    const recovery = await fixture.http("decision-recover", { purpose: "recover", ...prepared.request })
++    expect(recovery.response.status).toBe(409)
++    expect(recovery.body).toEqual({ status: "conflict", reason: "application-intent-mismatch" })
++    expect(await observeC12(fixture)).toEqual(observed)
++    expect(fixture.receiptCommits).toHaveLength(1)
++  } finally { await fixture.dispose() }
++}, 90_000)
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts
+index 80e4b8f5eba72f95ba94f906c982e4d4ad902907..fc9b0e4d52fca55921aa619687f41b8953954c7e 100644
+--- a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts
++++ b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts
+@@ -57,6 +57,15 @@ export function interleaveC12CaseEdit(fixture: Awaited<ReturnType<typeof createC
+   fixture.afterReceiptCommit(() => editC12Case(fixture, "Concurrent authorized case edit"))
+ }
+ 
++// The receipt and effect have really committed. Fail only their return path so
++// neither executor can reconcile the case before the caller explicitly recovers.
++export function interruptC12AfterCommit(fixture: Awaited<ReturnType<typeof createC12Fixture>>) {
++  fixture.afterReceiptCommit(async () => {
++    await editC12Case(fixture, "Concurrent authorized case edit")
++    throw new Error("C12 fixture interrupted the response after the durable domain commit")
++  })
++}
++
+ export async function editC12Case(fixture: Awaited<ReturnType<typeof createC12Fixture>>, objective: string) {
+   const current = await fixture.storedCase()
+   const changed = { ...current.value, version: current.value.version + 1, objective }
+@@ -73,3 +82,4 @@ export async function observeC12(fixture: Awaited<ReturnType<typeof createC12Fix
+   return { domain: await fixture.material(), decision: (await fixture.storedCase()).value, receipts: receipts.value }
+ }
+ 
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts
+index f1b39878522b5c154b6e250bb2fd1c93e2428025..4528a2c390110b3bf010cc77884e204139b50c09 100644
+--- a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts
+@@ -1,20 +1,21 @@
+ import { expect, test } from "bun:test"
+ import { object } from "../../../runtime/contract.ts"
+ import { createC12Fixture, prepareC12Change, readReviewDigest } from "./fixture.ts"
+-import { editC12Case, interleaveC12CaseEdit, observeC12 } from "./consumer.ts"
++import { editC12Case, interruptC12AfterCommit, observeC12 } from "./consumer.ts"
+ 
+ // This control intentionally keeps the ordinary Apply CAS rejection separate
+ // from recovery-ui.test.ts, which proves receipt-only recovery succeeds.
+-test("C12 normal Apply keeps rejecting the historical case version after the domain committed", async () => {
++test("C12 normal Apply rejects the historical case version after an interrupted domain response", async () => {
+   const fixture = await createC12Fixture("c12-normal-apply-cas", "https://local.invalid")
+   try {
+     const prepared = await prepareC12Change(fixture)
+     const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
+     expect(reviewed.response.status).toBe(200)
+     const application = { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) }
+-    interleaveC12CaseEdit(fixture)
++    interruptC12AfterCommit(fixture)
+     const first = await fixture.http("decision-apply", application, "alice", "unchanged-apply-intention")
+-    expect(first.response.status).toBe(409)
++    expect(first.response.status).toBe(503)
++    expect(first.body).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
+     const committed = await observeC12(fixture)
+     expect(committed.receipts).toHaveLength(1)
+     expect(object(committed.domain.request.pr).estAmount).toBe(150)
+@@ -33,16 +34,16 @@ test("C12 receipt recovery refuses a second case edit during reconciliation and
+     const prepared = await prepareC12Change(fixture)
+     const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
+     expect(reviewed.response.status).toBe(200)
+-    interleaveC12CaseEdit(fixture)
+-    expect((await fixture.http("decision-apply", { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) })).response.status).toBe(409)
++    interruptC12AfterCommit(fixture)
++    expect((await fixture.http("decision-apply", { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) })).response.status).toBe(503)
+     const committed = await observeC12(fixture)
+-    // First read is host preflight; second read follows the executor's captured case.
+-    // The edit uses the real C08 transaction after its receipt read lock is released.
+-    fixture.afterReceiptRead(() => editC12Case(fixture, "Second authorized edit during recovery"), 2)
++    // Host preflight, executor lookup and classification precede the fresh case read.
++    // The fourth receipt read confirms that capture; edit only after its lock releases.
++    fixture.afterReceiptRead(() => editC12Case(fixture, "Second authorized edit during recovery"), 4)
+     const rejected = await fixture.http("decision-recover", { purpose: "recover", ...prepared.request })
+     expect(fixture.receiptReads.interleavings).toBe(1)
+-    expect(rejected.response.status).toBe(409)
+-    expect(rejected.body).toEqual({ status: "stale", reason: "case-changed-after-application" })
++    expect(rejected.response.status).toBe(503)
++    expect(rejected.body).toEqual({ status: "unavailable", reason: "case-reconciliation-pending" })
+     const concurrent = await observeC12(fixture)
+     expect(concurrent.decision.objective).toBe("Second authorized edit during recovery")
+     expect(concurrent.decision.version).toBe(committed.decision.version + 1)
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts
+index 15aaff1ae0406f9b495c9f60b81b18d9c8174e64..76bf7963d30dde72eb369616dfcd0fee61948803 100644
+--- a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts
+@@ -4,7 +4,7 @@ import { object, rows } from "../../../runtime/contract.ts"
+ import { digestSfValue } from "../../../product/contracts/canonical.ts"
+ import type { PreparedChange } from "../../../product/contracts/decisions.ts"
+ import { createC12Fixture, prepareC12Change, readReviewDigest, changedReviewDigest } from "./fixture.ts"
+-import { interleaveC12CaseEdit, observeC12 } from "./consumer.ts"
++import { interruptC12AfterCommit, observeC12 } from "./consumer.ts"
+ import { appendPendingPlannerChange } from "./partial.ts"
+ 
+ type Fixture = Awaited<ReturnType<typeof createC12Fixture>>
+@@ -80,8 +80,10 @@ test("C12 recovery rejects altered digest payload principal case and target iden
+     const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
+     expect(reviewed.response.status).toBe(200)
+     const application = { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) }
+-    interleaveC12CaseEdit(fixture)
+-    expect((await fixture.http("decision-apply", application, "alice", "c12-original")).response.status).toBe(409)
++    interruptC12AfterCommit(fixture)
++    const interrupted = await fixture.http("decision-apply", application, "alice", "c12-original")
++    expect(interrupted.response.status).toBe(503)
++    expect(interrupted.body).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
+     const committed = await observeC12(fixture)
+     expect(committed.receipts).toHaveLength(1)
+     const before = await fixture.durable()
+@@ -181,11 +183,22 @@ test("C12 recovery rechecks revocation after its receipt read and rejects a repl
+     expect(object(allowed.body.value).receiptId).toBe(committed.receipts[0]!.id)
+     expect(await observeC12(fixture)).toEqual(committed)
+ 
++    const recover = fixture.business.procurementDecisions.recover
++    const retentionResults: Awaited<ReturnType<typeof recover>>[] = []
++    // Observe the real producer return without replacing its value. The composed
++    // withCase boundary must still reauthorize before disclosing that response.
++    fixture.business.procurementDecisions.recover = async (...args) => {
++      const result = await recover(...args)
++      retentionResults.push(structuredClone(result))
++      return result
++    }
+     fixture.beforeRetentionReadReturn(() => fixture.revoke("alice"))
+     const lastReadRevoked = await fixture.http("decision-recover", { purpose: "recover", ...prepared.request })
++      .finally(() => { fixture.business.procurementDecisions.recover = recover })
+     expect(fixture.receiptReads.finalReadInterleavings).toBe(1)
+-    expect(lastReadRevoked.response.status).toBe(503)
+-    expect(lastReadRevoked.body).toEqual({ status: "unavailable", reason: "receipt-authority-changed" })
++    expect(retentionResults).toEqual([{ status: "unavailable", reason: "receipt-authority-changed" }])
++    expect(lastReadRevoked.response.status).toBe(403)
++    expect(lastReadRevoked.body).toEqual({ status: "denied", reason: "case-selection-authority-changed" })
+     expect(JSON.stringify(lastReadRevoked.body)).not.toContain(committed.receipts[0]!.id)
+     expect(await fixture.durable()).toEqual(before)
+     fixture.restoreFixtureAccess("alice")
+@@ -208,7 +221,7 @@ test("C12 recovery rechecks revocation after its receipt read and rejects a repl
+     expect(rejected.body.value).toBeUndefined()
+     expect(await fixture.durable()).toEqual(replacement)
+     expect(fixture.receiptCommits).toHaveLength(1)
+-    console.info("SF_C12_REVOKED_OR_REPLACED", JSON.stringify({ revocationAfterReceiptRead: true, revokedStatus: revoked.response.status, lastStateReadRevocation: lastReadRevoked.response.status, finalReadInterleavings: fixture.receiptReads.finalReadInterleavings, reauthorizedStatus: finalAllowed.response.status, replacementStatus: rejected.response.status, duplicateEffects: 0 }))
++    console.info("SF_C12_REVOKED_OR_REPLACED", JSON.stringify({ revocationAfterReceiptRead: true, revokedStatus: revoked.response.status, lastStateReadRevocation: lastReadRevoked.response.status, retentionResult: retentionResults[0], egressReason: lastReadRevoked.body.reason, finalReadInterleavings: fixture.receiptReads.finalReadInterleavings, reauthorizedStatus: finalAllowed.response.status, replacementStatus: rejected.response.status, duplicateEffects: 0 }))
+   } finally { await fixture.dispose() }
+ }, 90_000)
+ 
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts
+index 5bad0ed7698de7a75ce394773e7ec6d629ea3c10..65876bfc65f8682ad19723cd3bc1589803118b9b 100644
+--- a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts
+@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test"
+ import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+ import { object, rows } from "../../../runtime/contract.ts"
+ import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
+-import { createC12Consumer, interleaveC12CaseEdit, observeC12 } from "./consumer.ts"
++import { createC12Consumer, interruptC12AfterCommit, observeC12 } from "./consumer.ts"
+ import { readReviewDigest } from "./fixture.ts"
+ 
+ /** Read the real response before the production script receives it and reloads. */
+@@ -50,10 +50,11 @@ test("C12 UI recovers the original receipt after lost response concurrent edit r
+     const proof = readReviewDigest(consumer.traffic.find((item) => item.mode === "decision-review")!.result)
+     await confirm.check()
+     const choiceBefore = structuredClone((await observeC12(consumer.current())).decision.choices)
+-    interleaveC12CaseEdit(consumer.current())
++    interruptC12AfterCommit(consumer.current())
+ 
+-    // The real request reaches HTTP, C08 and SQLite. Only its completed wire
+-    // response is dropped; no receipt, status or domain response is fabricated.
++    // The real domain commits before its return path is interrupted, leaving a
++    // genuinely unlinked receipt. Drop the completed HTTP response as a second
++    // transport failure; no receipt, status or domain response is fabricated.
+     const lost = Promise.withResolvers<number>()
+     await page.route(/\/sf\/procurement\?sf=decision-apply$/, async (route) => {
+       try {
+@@ -66,13 +67,13 @@ test("C12 UI recovers the original receipt after lost response concurrent edit r
+     const failed = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "decision-apply" })
+     await apply.click()
+     await failed
+-    expect(await lost.promise).toBe(409)
++    expect(await lost.promise).toBe(503)
+     const retry = article.getByRole("button", { name: "Retry same application", exact: true })
+     await retry.waitFor()
+     await article.locator("[data-apply-change]:enabled").waitFor()
+     const first = consumer.traffic.find((item) => item.mode === "decision-apply")!
+     expect(JSON.parse(first.body)).toEqual({ ...consumer.prepared.request, reviewDigest: proof })
+-    expect(first.result).toEqual({ status: "stale", reason: "case-changed-after-application" })
++    expect(first.result).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
+     expect(first.key).toBeTruthy()
+     const committed = await observeC12(consumer.current())
+     expect(object(committed.domain.request.pr).estAmount).toBe(150)

@@ -4,7 +4,7 @@ import { object, rows } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { PreparedChange } from "../../../product/contracts/decisions.ts"
 import { createC12Fixture, prepareC12Change, readReviewDigest, changedReviewDigest } from "./fixture.ts"
-import { interleaveC12CaseEdit, observeC12 } from "./consumer.ts"
+import { interruptC12AfterCommit, observeC12 } from "./consumer.ts"
 import { appendPendingPlannerChange } from "./partial.ts"
 
 type Fixture = Awaited<ReturnType<typeof createC12Fixture>>
@@ -80,8 +80,10 @@ test("C12 recovery rejects altered digest payload principal case and target iden
     const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
     expect(reviewed.response.status).toBe(200)
     const application = { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) }
-    interleaveC12CaseEdit(fixture)
-    expect((await fixture.http("decision-apply", application, "alice", "c12-original")).response.status).toBe(409)
+    interruptC12AfterCommit(fixture)
+    const interrupted = await fixture.http("decision-apply", application, "alice", "c12-original")
+    expect(interrupted.response.status).toBe(503)
+    expect(interrupted.body).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
     const committed = await observeC12(fixture)
     expect(committed.receipts).toHaveLength(1)
     const before = await fixture.durable()
@@ -181,11 +183,22 @@ test("C12 recovery rechecks revocation after its receipt read and rejects a repl
     expect(object(allowed.body.value).receiptId).toBe(committed.receipts[0]!.id)
     expect(await observeC12(fixture)).toEqual(committed)
 
+    const recover = fixture.business.procurementDecisions.recover
+    const retentionResults: Awaited<ReturnType<typeof recover>>[] = []
+    // Observe the real producer return without replacing its value. The composed
+    // withCase boundary must still reauthorize before disclosing that response.
+    fixture.business.procurementDecisions.recover = async (...args) => {
+      const result = await recover(...args)
+      retentionResults.push(structuredClone(result))
+      return result
+    }
     fixture.beforeRetentionReadReturn(() => fixture.revoke("alice"))
     const lastReadRevoked = await fixture.http("decision-recover", { purpose: "recover", ...prepared.request })
+      .finally(() => { fixture.business.procurementDecisions.recover = recover })
     expect(fixture.receiptReads.finalReadInterleavings).toBe(1)
-    expect(lastReadRevoked.response.status).toBe(503)
-    expect(lastReadRevoked.body).toEqual({ status: "unavailable", reason: "receipt-authority-changed" })
+    expect(retentionResults).toEqual([{ status: "unavailable", reason: "receipt-authority-changed" }])
+    expect(lastReadRevoked.response.status).toBe(403)
+    expect(lastReadRevoked.body).toEqual({ status: "denied", reason: "case-selection-authority-changed" })
     expect(JSON.stringify(lastReadRevoked.body)).not.toContain(committed.receipts[0]!.id)
     expect(await fixture.durable()).toEqual(before)
     fixture.restoreFixtureAccess("alice")
@@ -208,7 +221,7 @@ test("C12 recovery rechecks revocation after its receipt read and rejects a repl
     expect(rejected.body.value).toBeUndefined()
     expect(await fixture.durable()).toEqual(replacement)
     expect(fixture.receiptCommits).toHaveLength(1)
-    console.info("SF_C12_REVOKED_OR_REPLACED", JSON.stringify({ revocationAfterReceiptRead: true, revokedStatus: revoked.response.status, lastStateReadRevocation: lastReadRevoked.response.status, finalReadInterleavings: fixture.receiptReads.finalReadInterleavings, reauthorizedStatus: finalAllowed.response.status, replacementStatus: rejected.response.status, duplicateEffects: 0 }))
+    console.info("SF_C12_REVOKED_OR_REPLACED", JSON.stringify({ revocationAfterReceiptRead: true, revokedStatus: revoked.response.status, lastStateReadRevocation: lastReadRevoked.response.status, retentionResult: retentionResults[0], egressReason: lastReadRevoked.body.reason, finalReadInterleavings: fixture.receiptReads.finalReadInterleavings, reauthorizedStatus: finalAllowed.response.status, replacementStatus: rejected.response.status, duplicateEffects: 0 }))
   } finally { await fixture.dispose() }
 }, 90_000)
 

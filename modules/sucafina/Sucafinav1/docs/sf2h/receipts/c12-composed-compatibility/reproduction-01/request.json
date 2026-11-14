@@ -1,0 +1,44 @@
+{
+  "schema": "sf2h-c12-composed-reproduction-v1",
+  "mission": 32,
+  "source_head": "3e9a1aac3cf713c9dfc95b57e439f923d4aab0c6",
+  "bundle_base": "402a091485e11d60dff433049c7dedd7fcead687",
+  "bundle_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+  "W": "7fd76f647a57e9b9bc1415a4d516791e13b719b4",
+  "W_tree": "cc0f152ea021431b5f27562a01f5311876d31ec6",
+  "S": "ca03f3f48e19b16acdea15e2b46976180208c139",
+  "S_tree": "c642657fa0cfddf1f739292855516c9a601a14ae",
+  "snapshot_delta": "W adds only test/product/c12-composed-compatibility/material-race.test.ts; existing normal-retry oracles and all product dependencies unchanged. W is a detached diagnostic child of the published bundle, not an integration commit. S is direct child W and adds only .ci-run.json. Source ACK authorizes this exact observation without writing sf2-stack.",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+  },
+  "ref": "ci-run-linux-astra-c12-32-7fd76f64-repro-01",
+  "run": 43642218184,
+  "job": 132592073292,
+  "status": "RUNNING_RESULT_NOT_YET_OBSERVED",
+  "dedup": {
+    "equivalent_run": null,
+    "other_live_run": 43641724503,
+    "other_selection": "playwright decisions.spec.ts mission31; unrelated",
+    "prior_source_runs": [
+      43635717762,
+      43636531401
+    ],
+    "source_pass_not_transferred": true
+  },
+  "no_acceptance": true
+}

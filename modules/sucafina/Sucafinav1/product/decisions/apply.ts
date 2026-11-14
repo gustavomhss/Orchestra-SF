@@ -31,8 +31,11 @@ export function createPreparedExecution(input: {
     if (current.status !== "ok") return failure(current)
     const value = current.value
     if (!value || value.incarnation !== request.caseRef.incarnation || !value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
-    const change = value.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
-    if (!change || !value.choices.some((choice) => choice.id === request.choiceId)) return { status: "unavailable", reason: "prepared-change-unavailable" }
+    const selectedChanges = value.preparedChanges.filter((item) => item.id === request.changeId)
+    const change = selectedChanges[0]
+    const choices = value.choices.filter((choice) => choice.id === request.choiceId)
+    const choiceDigest = digestSfValue(choices)
+    if (selectedChanges.length !== 1 || !change || change.choiceId !== request.choiceId || choices.length !== 1) return { status: "unavailable", reason: "prepared-change-unavailable" }
     if (value.version < request.caseRef.version) return { status: "stale", reason: "case-changed" }
     if (change.state !== "planned" && !change.receipt) return { status: "conflict", reason: "change-not-applicable" }
     if (!await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
@@ -112,6 +115,10 @@ export function createPreparedExecution(input: {
     // The producer may have advanced the cases namespace while committing its receipt.
     // Reopen it after the domain result and preserve unrelated, versioned case edits.
     const reconciliation = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[value.id] : undefined).catch(() => undefined)
+    // Fresh storage may preserve unrelated edits, but cannot bind the original
+    // receipt to a materially replaced or duplicated historical choice.
+    if (reconciliation?.status === "ok" && reconciliation.value && digestSfValue(reconciliation.value.choices.filter((choice) => choice.id === request.choiceId)) !== choiceDigest) return { status: "stale", reason: "prepared-choice-changed" }
+    if (reconciliation?.status === "ok" && reconciliation.value && reconciliation.value.preparedChanges.filter((item) => item.id === change.id).length !== 1) return { status: "stale", reason: "prepared-change-changed" }
     if (!reconciliation || reconciliation.status !== "ok" || !reconciliation.value) return { status: "unavailable", reason: "case-reconciliation-pending" }
     const fresh = reconciliation.value
     const selected = fresh.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId)
@@ -166,3 +173,4 @@ function failure(value: SfStateResult<unknown>): PortResult<never> {
   if ("reason" in value) return { status: value.status, reason: value.reason }
   return { status: "unavailable", reason: "case-reconciliation-pending" }
 }
+

@@ -57,6 +57,15 @@ export function interleaveC12CaseEdit(fixture: Awaited<ReturnType<typeof createC
   fixture.afterReceiptCommit(() => editC12Case(fixture, "Concurrent authorized case edit"))
 }
 
+// The receipt and effect have really committed. Fail only their return path so
+// neither executor can reconcile the case before the caller explicitly recovers.
+export function interruptC12AfterCommit(fixture: Awaited<ReturnType<typeof createC12Fixture>>) {
+  fixture.afterReceiptCommit(async () => {
+    await editC12Case(fixture, "Concurrent authorized case edit")
+    throw new Error("C12 fixture interrupted the response after the durable domain commit")
+  })
+}
+
 export async function editC12Case(fixture: Awaited<ReturnType<typeof createC12Fixture>>, objective: string) {
   const current = await fixture.storedCase()
   const changed = { ...current.value, version: current.value.version + 1, objective }
@@ -72,4 +81,5 @@ export async function observeC12(fixture: Awaited<ReturnType<typeof createC12Fix
   if (receipts.status !== "ok") throw new Error("Authoritative receipt namespace unavailable")
   return { domain: await fixture.material(), decision: (await fixture.storedCase()).value, receipts: receipts.value }
 }
+
 
