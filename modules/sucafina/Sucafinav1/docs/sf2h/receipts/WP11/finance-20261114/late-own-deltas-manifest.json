@@ -1,0 +1,64 @@
+{
+  "status": "FROZEN_FOR_INDEPENDENT_REVIEW_NOT_RUN",
+  "baseHead": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+  "foreignHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "deltas": [
+    {
+      "id": "WP11-NOOP-PROMOTION-COVERAGE",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "gitBlob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+          "sha256": "da9865c8903e9e3f159bded7f4a1604a531df3be8ba5bb337b6cdf5e61fc6f0d",
+          "bytes": 39192
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "gitBlob": "1c2d45332907483ec7c816ebdc64ea81ee8b215e",
+          "sha256": "0d91264ba30f755f5c8853e826ee940f125c83150053f7444fc446110e368d4e",
+          "bytes": 18773
+        }
+      ]
+    },
+    {
+      "id": "WP11-HOT-TOPIC-DOMAIN",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+          "gitBlob": "5e0b80a470958dd201db4283bde96d594935e68d",
+          "sha256": "fcb53e92873f59aa9da18c9c06b44508e34cbf753ef21c8dea6be9afdaee0f36",
+          "bytes": 18280
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "gitBlob": "d75d700de4a9a607550691382dc0e14237c289a0",
+          "sha256": "6132ff97b7bf12577d43dd05b511fdfe47cf46bb8ac701c6d49007cef85b94e3",
+          "bytes": 9218
+        }
+      ]
+    }
+  ],
+  "support": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "gitBlob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "sha256": "82f97205f8a1758a71cb4a2708baeee88abbef2e74ef261094c34a483790fd45",
+      "bytes": 10440,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "gitBlob": "f8914c141ba5c72439f5fdba50e9153c4cd477d4",
+      "sha256": "066292b447d006f9f442e96ec95875a0c1cad6e43deedd3373e3bf829da7a574",
+      "bytes": 37573,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f"
+    }
+  ],
+  "checks": {
+    "manifestFiles": 10,
+    "hashesMatched": true,
+    "localProductExecutions": 0,
+    "remoteProductExecutionsByThisAgent": 0
+  },
+  "boundary": "Tests use real Planner/C08/local-store/coverage producers; human grants and commit-proof callbacks are synthetic host boundaries. Installed authority/BI/Atlas consumption remains unproved here."
+}

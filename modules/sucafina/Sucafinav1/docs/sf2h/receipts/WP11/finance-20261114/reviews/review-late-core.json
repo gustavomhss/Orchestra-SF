@@ -1,0 +1,282 @@
+{
+  "schema": "astra-independent-review-v1",
+  "reviewer": "/root/review_late_core",
+  "author": "/root/late_composition_review",
+  "createdAt": "2026-11-14T11:12:54.611109+00:00",
+  "status": "STATIC_REVIEW_COMPLETE_REMOTE_VALIDATION_PENDING",
+  "conclusion": "No additional blocking defect found in the four frozen paths. This is static source/test review, not product execution, CI, native evidence or global acceptance.",
+  "baseline": {
+    "head": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+    "tree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+    "label": "W18",
+    "pinSource": "parent task; mutation bytes captured in finance-W18-changes.json; hot-topic bytes matched W18 remote-state blob from review-660db9a copy"
+  },
+  "reviewedHead": null,
+  "publication": "The reviewed files are frozen local blobs; the parent must record the published commit/tree that contains exactly these blobs.",
+  "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "files": [
+    {
+      "deltaId": "WP11-NOOP-PROMOTION-COVERAGE",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "gitBlob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+      "sha256": "da9865c8903e9e3f159bded7f4a1604a531df3be8ba5bb337b6cdf5e61fc6f0d",
+      "bytes": 39192,
+      "baseline": {
+        "gitBlob": "81513bbca0d087211e4d3d46afe805941bb98a6c",
+        "sha256": "d7348a65355b38db23b65586e64c81744a329c0b1b229d1fb004160c6b5f44ce",
+        "bytes": 39049
+      },
+      "change": "modified",
+      "unifiedDiff": "--- W18/modules/sucafina/Sucafinav1/product/decisions/mutations.ts\n+++ reviewed/modules/sucafina/Sucafinav1/product/decisions/mutations.ts\n@@ -109,9 +109,11 @@\n       const attributed: ScenarioResult = scenario.value.comparisonStatus === \"complete\" ? { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } } : { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }\n       const basis = coverage.value.basis\n       const reassessed = digestSfValue(scenario.value.costCoverage) !== digestSfValue(coverage.value.assessment)\n-      const entries = reassessed && input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined\n+      // The current producer prepares the commit proof even for an unchanged\n+      // source observation. Equal assessments do not establish authorization.\n+      const entries = input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined\n       if (entries && entries.status !== \"ok\") return entries\n-      const result = !reassessed ? attributed : input.coverageEvidence && entries?.status === \"ok\" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : undefined\n+      const result = input.coverageEvidence && entries?.status === \"ok\" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : !reassessed ? attributed : undefined\n       if (!result) return { status: \"unavailable\", reason: \"scenario-coverage-reassessment-unavailable\" }\n       const coverageError = validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)\n       if (coverageError) return { status: \"conflict\", reason: coverageError }\n"
+    },
+    {
+      "deltaId": "WP11-NOOP-PROMOTION-COVERAGE",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "gitBlob": "1c2d45332907483ec7c816ebdc64ea81ee8b215e",
+      "sha256": "0d91264ba30f755f5c8853e826ee940f125c83150053f7444fc446110e368d4e",
+      "bytes": 18773,
+      "baseline": null,
+      "change": "new-test",
+      "unifiedDiff": "--- /dev/null\n+++ reviewed/modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts\n@@ -0,0 +1,226 @@\n+import { expect, test } from \"bun:test\"\n+import { chmod, mkdtemp, realpath, rm } from \"node:fs/promises\"\n+import { tmpdir } from \"node:os\"\n+import { join } from \"node:path\"\n+import { digestSfEvidenceRef, digestSfValue } from \"../../../product/contracts/canonical.ts\"\n+import type { BusinessEvidenceRef, BusinessEvidenceResolution } from \"../../../product/contracts/business-context.ts\"\n+import { RENEWAL_TRANSITION_CATEGORIES } from \"../../../product/contracts/decisions.ts\"\n+import type { CostCoverageAssessment, CostCoverageBasis, CostCoverageEntry, DecisionCase, ScenarioResult } from \"../../../product/contracts/decisions.ts\"\n+import type { ScenarioRequest } from \"../../../product/contracts/operations.ts\"\n+import type { DomainPortHost, PlannerSourceHost } from \"../../../product/contracts/ports.ts\"\n+import type { TrustedDomainContext } from \"../../../product/contracts/sf-execution.ts\"\n+import { assessCostCoverage, reassessScenarioCoverage } from \"../../../product/decisions/cost-coverage.ts\"\n+import { classifyCoverage, supportsCoverageClassification } from \"../../../product/decisions/coverage-classification.ts\"\n+import type { CoverageClassification } from \"../../../product/decisions/coverage-classification.ts\"\n+import { createDecisionMutations } from \"../../../product/decisions/mutations.ts\"\n+import { createSfProductState } from \"../../../product/host-binding/state-provider.ts\"\n+import { createSfUiAuthority } from \"../../../product/integration/ui-authority.ts\"\n+import { createPlannerPort, projectPlannerSource } from \"../../../product/planner/port.ts\"\n+import { openLocalStore } from \"../../../runtime/local-store.ts\"\n+import { object, type Snapshot } from \"../../../runtime/contract.ts\"\n+import { resolve } from \"../../../src/identity.ts\"\n+\n+const horizon = { start: \"2027-01-01\", end: \"2027-12-31\" }\n+const at = \"2026-11-14T00:00:00Z\"\n+type Fault = \"entries\" | \"source\" | \"case\" | \"authority\" | \"abort\"\n+type RecordEvidence = Extract<BusinessEvidenceRef, { kind: \"record\" }>\n+\n+/** Real Planner, coverage classification/reassessment and C08. The human grant and\n+ * exact-result proof callback are synthetic host boundaries, not installed authorization. */\n+async function fixture() {\n+  const directory = await mkdtemp(join(await realpath(tmpdir()), \"sf-source-promotion-\"))\n+  await chmod(directory, 0o700)\n+  const store = await openLocalStore(directory)\n+  const control = { allowed: true, human: true, operation: \"source-promotion\", entries: 0, commits: 0, fault: undefined as Fault | undefined }\n+  const abort = new AbortController()\n+  const request = new Request(\"https://example.test/promotion\", { headers: { \"x-fixture\": \"promotion\" }, signal: abort.signal })\n+  const observer = new Request(\"https://example.test/read\", { headers: { \"x-fixture\": \"promotion\" } })\n+  const identity = { installationId: \"install\", projectId: \"project\", principalRef: \"finance\", policyVersion: \"policy\", accessRevision: \"access\" }\n+  const authorize = async (incoming: Request) => control.allowed && !incoming.signal.aborted && incoming.headers.get(\"x-fixture\") === \"promotion\" ? identity : undefined\n+  const ui = createSfUiAuthority({ authorize, commandIdentity: async () => \"source-promotion-ui\", createId: () => \"source-promotion-ui\", now: () => Date.parse(at) })\n+  const observation: ScenarioRequest = { baseRef: \"alpha\", operations: [], assumptions: [] }\n+  const admitted = await ui.admit(request, \"sf_scenario_simulate\", digestSfValue(observation))\n+  if (admitted.status !== \"ok\" || !await ui.validate(admitted.value, \"sf_scenario_simulate\", digestSfValue(observation))) throw new Error(\"Fixture UI admission unavailable\")\n+  const context = admitted.value\n+  const actor = { id: \"finance\", roles: [\"finance\"], canWrite: true, assigned: [], domains: [] }\n+  const host: DomainPortHost = {\n+    persistence: store, requestFor: (call) => call.kind === \"ui\" ? ui.requestFor(call) : undefined,\n+    revalidate: (call) => call.kind === \"ui\" ? ui.revalidate(call) : Promise.resolve(false),\n+    authenticate: async (_request, input) => resolve(\"finance\", [...input!.roleMap], (group) => group === \"finance-group\"),\n+    environment: async () => ({ at, id: () => \"unused\", directory: [] }),\n+  }\n+  const cleanup = async () => { ui.finish(context); await store.dispose(); await rm(directory, { recursive: true, force: true }) }\n+  try {\n+    const version = (id: string, amount: number) => ({ id, year: 2027, closed: 0,\n+      lines: [{ id: \"service\", sec: \"opex\", el: \"licenses\", cur: \"USD\", b: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0), a: Array(12).fill(null), f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) }],\n+      fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} })\n+    await store.transaction(\"planner\", async (snapshot) => {\n+      snapshot.data = { roleMap: [{ surface: \"planner\", role: \"finance\", entra: \"finance-group\", version: 1, by: \"admin\" }], versions: [version(\"alpha\", 100), version(\"beta\", 200)] }\n+      return { commit: true, value: true }\n+    })\n+    const sourceRefs = await store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: [\"alpha\", \"beta\"].map((id): RecordEvidence => {\n+      const projection = projectPlannerSource(snapshot, actor, id)\n+      if (!projection) throw new Error(`Missing fixture source ${id}`)\n+      const unsigned: RecordEvidence = { schema: \"sf-evidence-v1\", kind: \"record\", refId: id, installationId: \"install\", projectId: \"project\", refDigest: \"\", evidenceLevel: \"observed\", target: { surface: \"planner\", recordType: \"planner-version\", recordId: id, incarnation: `planner-${id}`, version: 1, fields: Object.keys(projection), period: horizon, projectionDigest: digestSfValue({ versionId: id, projection }) } }\n+      return { ...unsigned, refDigest: digestSfEvidenceRef(unsigned) }\n+    }) }))\n+    const basis: CostCoverageBasis = { id: \"source-promotion-basis\", version: 1, decisionType: \"renewal-transition-v1\", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs }\n+    const caseRef = { id: \"promotion-case\", incarnation: \"promotion-case-inc\", version: 1 }\n+    const state = createSfProductState({ persistence: store, authorize, createId: () => \"promotion-state-inc\", resolveTarget: async () => ({ incarnation: caseRef.incarnation }) })\n+    const decision: DecisionCase = { ...caseRef, state: \"comparing\", objective: \"Compare two explicitly classified source bundles\", currency: \"USD\", horizon, criteria: [], participants: [identity.principalRef], sourceRefs, alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }\n+    const seeded = await state.transaction(observer, { namespace: \"cases\", expectedStorageVersion: 0, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: \"seed\", commandDigest: digestSfValue(decision) }, async (value) => { value.cases[caseRef.id] = decision; return { commit: true, value: true } })\n+    if (seeded.status !== \"ok\") throw new Error(\"Fixture C08 seed unavailable\")\n+    const assessments = new Map<string, CostCoverageAssessment>()\n+    const classifications = new Map<string, CoverageClassification>()\n+    const sourceFence = (snapshot: Snapshot) => sourceRefs.every((ref) => digestSfValue({ versionId: ref.target.recordId, projection: projectPlannerSource(snapshot, actor, ref.target.recordId) }) === ref.target.projectionDigest)\n+    const currentSources = () => store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: sourceFence(snapshot) }))\n+    const evidence = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext): Promise<readonly BusinessEvidenceResolution[]> => {\n+      const fresh = await host.revalidate(call) && await currentSources()\n+      return refs.map((ref) => ({ state: fresh && sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref)) ? \"fresh\" : \"unavailable\", ref, accessRevision: call.binding.accessRevision, checkedAt: at }))\n+    }\n+    const supports = (entry: Exclude<CostCoverageEntry, { status: \"pending\" }>, resolutions: readonly BusinessEvidenceResolution[]) => {\n+      const classification = classifications.get(entry.evidenceRefs[0]!.refId)\n+      return !!classification && supportsCoverageClassification(classification, entry, resolutions)\n+    }\n+    const sources: PlannerSourceHost = {\n+      resolveForecastSource: async (reference) => {\n+        const source = sourceRefs.find((ref) => ref.refId === reference)\n+        return source && await currentSources() ? { status: \"ok\", value: { versionId: reference, evidence: source } } : { status: \"unavailable\", reason: \"source-unavailable\" }\n+      },\n+      resolveForecastCoverage: async (reference) => {\n+        if (!sourceRefs.some((ref) => ref.refId === reference)) return { status: \"unavailable\", reason: \"coverage-unavailable\" }\n+        const assessment = assessments.get(reference) ?? { basisId: basis.id, basisVersion: basis.version, alternativeId: reference, alternativeVersion: 1, currency: \"USD\", horizon, evaluatedSourceRefs: sourceRefs, coverageState: \"pending\" as const, entries: [], derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES], issues: [] }\n+        return { status: \"ok\", value: { coverageRef: reference, basis, assessment } }\n+      },\n+    }\n+    const planner = createPlannerPort({ host, sources })\n+    for (const source of sourceRefs) {\n+      const projected = await planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: horizon, currency: \"USD\" }, context)\n+      if (projected.status !== \"ok\") throw new Error(`Fixture projection: ${JSON.stringify(projected)}`)\n+      const components = projected.value.candidate.components\n+      const entries: CostCoverageEntry[] = RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: \"included\", componentRefs: components.map((component) => component.id), evidenceRefs: [source], scopeNote: `Synthetic all-inclusive bundle expressly includes ${categoryId}; shared components are priced once.` }))\n+      const classification = classifyCoverage({ caseRef, source, basis, entries, expectedVersion: 0 }, projected.value.candidate, 1)\n+      classifications.set(source.refId, classification)\n+      // Source-first order differs from basis order for beta, as in real source classification.\n+      const ordered = [source, ...sourceRefs.filter((ref) => ref.refId !== source.refId)]\n+      assessments.set(source.refId, assessCostCoverage({ basis, alternativeId: source.refId, alternativeVersion: 1, currency: \"USD\", horizon, entries, components, evidence: await evidence(ordered, context), supports }))\n+    }\n+    let proof: ScenarioResult | undefined\n+    let sequence = 0\n+    const inspect = async () => {\n+      const read = await state.read(observer, \"cases\", (value) => ({ decision: value.cases[caseRef.id]!, results: value.decisionResults ?? {} }))\n+      if (read.status !== \"ok\") throw new Error(`Fixture state read: ${JSON.stringify(read)}`)\n+      return read\n+    }\n+    const mutateAfterEvidence = async () => {\n+      const fault = control.fault\n+      control.fault = undefined\n+      if (fault === \"authority\") control.allowed = false\n+      if (fault === \"abort\") abort.abort()\n+      if (fault === \"source\") await store.transaction(\"planner\", async (snapshot) => {\n+        const versions = snapshot.data.versions\n+        if (!Array.isArray(versions)) throw new Error(\"Missing source versions\")\n+        const lines = object(versions[0]).lines\n+        if (!Array.isArray(lines)) throw new Error(\"Missing source line\")\n+        const forecast = object(lines[0]).f\n+        if (!Array.isArray(forecast)) throw new Error(\"Missing source forecast\")\n+        forecast[10] = 101\n+        return { commit: true, value: true }\n+      })\n+      if (fault === \"case\") {\n+        const before = await inspect()\n+        const changed = await state.transaction(observer, { namespace: \"cases\", expectedStorageVersion: before.storageVersion, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: \"concurrent-case\", commandDigest: digestSfValue({ objective: \"Concurrent revision\" }) }, async (value) => {\n+          value.cases[caseRef.id] = { ...value.cases[caseRef.id]!, version: 2, objective: \"Concurrent revision\" }\n+          return { commit: true, value: true }\n+        })\n+        if (changed.status !== \"ok\") throw new Error(\"Concurrent case edit unavailable\")\n+      }\n+    }\n+    const mutations = createDecisionMutations({ state, host, planner, sources,\n+      authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call),\n+      authorizeMutation: async () => { proof = undefined; return control.human }, verifyMutation: () => control.human,\n+      operationIdentity: () => control.operation, confirmChoice: async () => false, confirmAnswer: async () => false,\n+      resolveQuestion: async () => ({ status: \"unavailable\", reason: \"not-requested\" }), resolveAnswer: async () => ({ status: \"unavailable\", reason: \"not-requested\" }),\n+      resolveChoiceValues: async () => ({ status: \"unavailable\", reason: \"not-requested\" }), prepareDomainCommands: async () => ({ status: \"unavailable\", reason: \"not-requested\" }),\n+      coverageEvidence: {\n+        entries: async (scenario, baseline, call) => {\n+          control.entries++\n+          if (control.fault === \"entries\") return { status: \"unavailable\", reason: \"producer-proof-unavailable\" }\n+          const entries = structuredClone(baseline.entries)\n+          proof = await reassessScenarioCoverage({ scenario, basis, baseline, entries, resolveEvidence: (refs) => evidence(refs, call), supports })\n+          return proof ? { status: \"ok\", value: entries } : { status: \"unavailable\", reason: \"producer-proof-unavailable\" }\n+        },\n+        resolve: async (refs, call) => { const values = await evidence(refs, call); await mutateAfterEvidence(); return values }, supports,\n+        verifySnapshot: (snapshot, result, candidateBasis) => { control.commits++; return !!proof && control.allowed && !request.signal.aborted && digestSfValue(result) === digestSfValue(proof) && digestSfValue(candidateBasis) === digestSfValue(basis) && sourceFence(snapshot) },\n+      },\n+      createId: () => `promoted-${++sequence}`, now: () => at,\n+    })\n+    return { directory, store, state, context, host, request, observer, control, caseRef, sourceRefs, planner, assessments, mutations, inspect, cleanup }\n+  } catch (error) { await cleanup(); throw error }\n+}\n+\n+test(\"source-only promotions prepare the exact coverage proof for both source orders and persist without creating a choice or applying commands\", async () => {\n+  const f = await fixture()\n+  try {\n+    const before = await f.store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))\n+    let caseRef = f.caseRef\n+    for (const baseRef of [\"alpha\", \"beta\"]) {\n+      const scenario: ScenarioRequest = { baseRef, operations: [], assumptions: [] }\n+      const observed = await f.planner.simulateScenario(scenario, f.context)\n+      if (observed.status !== \"ok\") throw new Error(`Source observation: ${JSON.stringify(observed)}`)\n+      expect(observed.value.comparisonStatus).toBe(\"complete\")\n+      expect(observed.value.costCoverage).toEqual(f.assessments.get(baseRef)!)\n+      expect(observed.value.costCoverage.evaluatedSourceRefs[0]!.refId).toBe(baseRef)\n+      f.control.operation = `promote-${baseRef}`\n+      const input = { caseRef, title: baseRef, scenario, coverageRef: baseRef }\n+      const promoted = await f.mutations.addAlternative(input, f.context)\n+      if (promoted.status !== \"ok\") throw new Error(`Source promotion: ${JSON.stringify(promoted)}`)\n+      const saved = (await f.inspect()).value\n+      const alternative = saved.decision.alternatives.find((item) => item.title === baseRef)!\n+      expect(alternative.result).toMatchObject({ comparisonStatus: \"complete\", currency: \"USD\", horizon, knownSubtotal: observed.value.knownSubtotal, total: observed.value.total })\n+      expect(alternative.result.components).toEqual(observed.value.components)\n+      expect(alternative.result.costCoverage.evaluatedSourceRefs).toEqual(f.sourceRefs)\n+      expect(saved.results[promoted.value.resultRef!]?.result).toEqual(alternative.result)\n+      expect(saved.decision.choices).toEqual([])\n+      expect(saved.decision.preparedChanges).toEqual([])\n+      expect(saved.decision.receipts).toEqual([])\n+      const calls = f.control.entries\n+      expect(await f.mutations.addAlternative(input, f.context)).toEqual(promoted)\n+      expect(f.control.entries).toBe(calls)\n+      caseRef = promoted.value.caseRef\n+    }\n+    expect(f.control.entries).toBe(2)\n+    expect(f.control.commits).toBe(2)\n+    expect(await f.store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(before)\n+  } finally { await f.cleanup() }\n+}, 60000)\n+\n+test(\"a changed scenario still consumes coverage proof without upgrading hypothetical total\", async () => {\n+  const f = await fixture()\n+  try {\n+    const scenario: ScenarioRequest = { baseRef: \"alpha\", operations: [{ kind: \"replace\", targetRef: \"service:11\", amount: 75, currency: \"USD\", period: { start: \"2027-11-01\", end: \"2027-11-30\" } }], assumptions: [] }\n+    const promoted = await f.mutations.addAlternative({ caseRef: f.caseRef, title: \"Changed\", scenario, coverageRef: \"alpha\" }, f.context)\n+    if (promoted.status !== \"ok\") throw new Error(`Changed promotion: ${JSON.stringify(promoted)}`)\n+    const saved = (await f.inspect()).value.decision.alternatives[0]!\n+    expect(saved.result).toMatchObject({ comparisonStatus: \"conditioned\", knownSubtotal: 75, total: null })\n+    expect(saved.result.components.find((component) => component.id === \"service:11\")?.evidenceState).toBe(\"hypothetical\")\n+    expect(f.control.entries).toBe(1)\n+    expect(f.control.commits).toBe(1)\n+  } finally { await f.cleanup() }\n+}, 60000)\n+\n+for (const fault of [\"entries\", \"source\", \"case\", \"authority\", \"abort\"] as const) test(`source promotion rejects ${fault} changes before commit without a partial alternative or result`, async () => {\n+  const f = await fixture()\n+  try {\n+    f.control.fault = fault\n+    const promoted = await f.mutations.addAlternative({ caseRef: f.caseRef, title: \"Blocked\", scenario: { baseRef: \"alpha\", operations: [], assumptions: [] }, coverageRef: \"alpha\" }, f.context)\n+    expect(promoted.status).not.toBe(\"ok\")\n+    expect(f.control.entries).toBe(1)\n+    f.control.allowed = true\n+    const saved = (await f.inspect()).value\n+    expect(saved.decision.alternatives).toEqual([])\n+    expect(saved.results).toEqual({})\n+    expect(saved.decision.version).toBe(fault === \"case\" ? 2 : 1)\n+    if (fault === \"source\") expect(f.control.commits).toBe(1)\n+  } finally { await f.cleanup() }\n+}, 60000)\n"
+    },
+    {
+      "deltaId": "WP11-HOT-TOPIC-DOMAIN",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "gitBlob": "5e0b80a470958dd201db4283bde96d594935e68d",
+      "sha256": "fcb53e92873f59aa9da18c9c06b44508e34cbf753ef21c8dea6be9afdaee0f36",
+      "bytes": 18280,
+      "baseline": {
+        "gitBlob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+        "sha256": "ba2291fdcb64f5f4d8503da6c6dfa12c1bf268364b15bc576fa5519ea862d9fe",
+        "bytes": 18278
+      },
+      "change": "modified",
+      "unifiedDiff": "--- W18/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts\n+++ reviewed/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts\n@@ -105,7 +105,7 @@\n         return { commit: true, value: { draftRef, version } }\n       }\n       input.proposalCoverageWrites.add(work)\n-      const saved = await input.state.transaction(source, { namespace: \"preferences\", domainSurface: \"planner\", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: \"cases\", expectedStorageVersion: current.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `hot-topic-draft:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.proposalCoverageWrites.delete(work))\n+      const saved = await input.state.transaction(source, { namespace: \"preferences\", domainSurface: \"dashboard\", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: \"cases\", expectedStorageVersion: current.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `hot-topic-draft:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.proposalCoverageWrites.delete(work))\n       if (saved.status !== \"ok\" || !saved.value) return { status: saved.status === \"conflict\" || saved.status === \"preview\" ? \"conflict\" : \"unavailable\", reason: \"hot-topic-draft-unavailable\" }\n       const checked = await readCurrent({ caseRef: request.caseRef, draftRef: saved.value.draftRef }, context)\n       if (checked.status !== \"ok\" || !await input.authorizeDraft(request, context)) return { status: \"unavailable\", reason: \"hot-topic-draft-unavailable\" }\n"
+    },
+    {
+      "deltaId": "WP11-HOT-TOPIC-DOMAIN",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "gitBlob": "d75d700de4a9a607550691382dc0e14237c289a0",
+      "sha256": "6132ff97b7bf12577d43dd05b511fdfe47cf46bb8ac701c6d49007cef85b94e3",
+      "bytes": 9218,
+      "baseline": null,
+      "change": "new-test",
+      "unifiedDiff": "--- /dev/null\n+++ reviewed/modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts\n@@ -0,0 +1,96 @@\n+import { expect, test } from \"bun:test\"\n+import { chmod, mkdtemp, realpath, rm } from \"node:fs/promises\"\n+import { tmpdir } from \"node:os\"\n+import { join } from \"node:path\"\n+import { digestSfEvidenceRef, digestSfValue } from \"../../../product/contracts/canonical.ts\"\n+import type { DecisionCase } from \"../../../product/contracts/decisions.ts\"\n+import type { SfProductStatePort } from \"../../../product/contracts/state.ts\"\n+import type { TrustedDomainContext } from \"../../../product/contracts/sf-execution.ts\"\n+import { createHotTopicDraftStore } from \"../../../product/decisions/hot-topic-draft.ts\"\n+import type { HotTopicDraftRequest } from \"../../../product/decisions/hot-topic-draft.ts\"\n+import { createSfProductState } from \"../../../product/host-binding/state-provider.ts\"\n+import { createSfUiAuthority } from \"../../../product/integration/ui-authority.ts\"\n+import { openLocalStore } from \"../../../runtime/local-store.ts\"\n+import { object, type Snapshot } from \"../../../runtime/contract.ts\"\n+\n+/** Real C08/local-store surface selection. Grants and the source verifier are\n+ * explicit fixture boundaries; this does not exercise installed human authority. */\n+test(\"Hot Topic drafts verify the Dashboard snapshot, persist once without domain application and reject a source race\", async () => {\n+  const directory = await mkdtemp(join(await realpath(tmpdir()), \"sf-hot-topic-draft-domain-\"))\n+  await chmod(directory, 0o700)\n+  const store = await openLocalStore(directory)\n+  const at = \"2026-11-14T00:00:00Z\"\n+  const period = { start: \"2027-01-01\", end: \"2027-12-31\" }\n+  const request = new Request(\"https://example.test/hot-topic\")\n+  const identity = { installationId: \"install\", projectId: \"project\", principalRef: \"leader\", policyVersion: \"policy\", accessRevision: \"access\" }\n+  const ui = createSfUiAuthority({ authorize: async (source) => source === request ? identity : undefined, commandIdentity: async () => \"hot-topic-ui\", createId: () => \"hot-topic-ui\", now: () => Date.parse(at) })\n+  const caseRef = { id: \"hot-topic-case\", incarnation: \"hot-topic-case-inc\", version: 1 }\n+  const admission = await ui.admit(request, \"sf_case_read\", digestSfValue({ caseRef: \"fixture\" }))\n+  if (admission.status !== \"ok\" || !await ui.validate(admission.value, \"sf_case_read\", digestSfValue({ caseRef: \"fixture\" }))) throw new Error(\"Fixture UI admission unavailable\")\n+  const context = admission.value\n+  const host = { requestFor: (call: TrustedDomainContext) => call.kind === \"ui\" ? ui.requestFor(call) : undefined, revalidate: (call: TrustedDomainContext) => call.kind === \"ui\" ? ui.revalidate(call) : Promise.resolve(false) }\n+  const writes = new WeakSet<object>()\n+  const control = { human: false, race: false, operation: \"draft-once\", checks: 0, ids: 0 }\n+  const original = { id: \"topic\", action: \"Review transition\", owner: \"leader\", due: \"2027-11-01\", priority: \"normal\", notes: \"Original Dashboard source\" }\n+  const current = (snapshot: Snapshot) => {\n+    const topics = snapshot.data.hotTopics\n+    return Array.isArray(topics) && topics.filter((value) => object(value).id === original.id).length === 1 && digestSfValue(topics.find((value) => object(value).id === original.id)) === digestSfValue(original)\n+  }\n+  try {\n+    await store.transaction(\"dashboard\", async (snapshot) => { snapshot.data.hotTopics = [original]; return { commit: true, value: true } })\n+    // This deliberately different row makes selecting Planner fail the source verifier.\n+    await store.transaction(\"planner\", async (snapshot) => { snapshot.data.hotTopics = [{ ...original, notes: \"Unrelated Planner content\" }]; return { commit: true, value: true } })\n+    const persisted = createSfProductState({ persistence: store, proposalCoverageWrites: writes,\n+      authorize: async (source) => source === request && await host.revalidate(context) ? identity : undefined,\n+      resolveTarget: async () => ({ incarnation: caseRef.incarnation }), createId: () => \"hot-topic-state-inc\" })\n+    const state: SfProductStatePort = { ...persisted, transaction: async (source, command, work) => {\n+      if (control.race && command.idempotencyKey.startsWith(\"hot-topic-draft:\")) {\n+        control.race = false\n+        await store.transaction(\"dashboard\", async (snapshot) => { snapshot.data.hotTopics = [{ ...original, notes: \"Concurrent Dashboard update\" }]; return { commit: true, value: true } })\n+      }\n+      return persisted.transaction(source, command, work)\n+    } }\n+    const decision: DecisionCase = { ...caseRef, state: \"draft\", objective: \"Review an explicit Hot Topic draft\", currency: \"USD\", horizon: period, criteria: [], participants: [identity.principalRef], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }\n+    const seeded = await state.transaction(request, { namespace: \"cases\", expectedStorageVersion: 0, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: \"case-seed\", commandDigest: digestSfValue(decision) }, async (value) => { value.cases[caseRef.id] = decision; return { commit: true, value: true } })\n+    if (seeded.status !== \"ok\") throw new Error(\"Fixture C08 seed unavailable\")\n+    const target: HotTopicDraftRequest[\"target\"] = { surface: \"dashboard\", type: \"hotTopics\", id: original.id, incarnation: \"topic-inc\", version: 1, fields: [\"action\", \"owner\", \"due\", \"priority\", \"notes\"], period, observedAt: at }\n+    const unsigned: HotTopicDraftRequest[\"targetEvidence\"] = { schema: \"sf-evidence-v1\", kind: \"record\", refId: \"topic-evidence\", installationId: \"install\", projectId: \"project\", refDigest: \"\", evidenceLevel: \"observed\", target: { surface: \"dashboard\", recordType: \"hotTopics\", recordId: original.id, incarnation: target.incarnation, version: target.version, fields: target.fields, period, projectionDigest: digestSfValue(original) } }\n+    const targetEvidence = { ...unsigned, refDigest: digestSfEvidenceRef(unsigned) }\n+    const input: HotTopicDraftRequest = { caseRef, target, targetEvidence, fields: { action: \"Prepare revised transition\", owner: \"leader\", due: \"2027-11-30\", priority: \"high\", notes: \"Prepared, not applied\" }, sourceRefs: [targetEvidence], expectedVersion: 0 }\n+    const drafts = createHotTopicDraftStore({ state, host, proposalCoverageWrites: writes,\n+      authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call),\n+      authorizeDraft: async () => control.human,\n+      verifySources: async (draft, call) => digestSfValue(draft.targetEvidence) === digestSfValue(targetEvidence) && await host.revalidate(call) && await store.transaction(\"dashboard\", async (snapshot) => ({ commit: false, value: current(snapshot) })),\n+      verifySnapshot: (snapshot) => { control.checks++; return !!store.currentSnapshots?.() && current(snapshot) },\n+      operationIdentity: () => control.operation, createId: () => `hot-topic-${++control.ids}`, now: () => at,\n+    })\n+    const plannerBefore = await store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))\n+    expect((await drafts.register(input, context)).status).toBe(\"denied\")\n+    expect(control.checks).toBe(0)\n+    control.human = true\n+    const saved = await drafts.register(input, context)\n+    if (saved.status !== \"ok\") throw new Error(`Dashboard draft: ${JSON.stringify(saved)}`)\n+    expect(control.checks).toBe(1)\n+    const restored = await drafts.readCurrent({ caseRef, draftRef: saved.value.draftRef }, context)\n+    if (restored.status !== \"ok\") throw new Error(\"Persisted draft unavailable\")\n+    expect(restored.value.fields).toEqual(input.fields)\n+    expect(restored.value.target).toEqual(target)\n+    expect(await drafts.register(input, context)).toEqual(saved)\n+    expect(control.checks).toBe(1)\n+    const before = await state.read(request, \"preferences\", (value) => value.preferences)\n+    if (before.status !== \"ok\") throw new Error(\"Saved draft metadata unavailable\")\n+    expect(Object.keys(before.value).filter((key) => key.startsWith(\"sf:proposal-coverage:hot-topic:\"))).toHaveLength(2)\n+    expect(await store.transaction(\"dashboard\", async (snapshot) => ({ commit: false, value: current(snapshot) }))).toBe(true)\n+    expect(await store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(plannerBefore)\n+    control.operation = \"draft-race\"\n+    control.race = true\n+    const rejected = await drafts.register({ ...input, fields: { ...input.fields, notes: \"Must not persist\" } }, context)\n+    expect(rejected.status).not.toBe(\"ok\")\n+    expect(control.checks).toBe(2)\n+    const after = await state.read(request, \"preferences\", (value) => ({ preferences: value.preferences, decision: value.cases[caseRef.id] }))\n+    if (after.status !== \"ok\") throw new Error(\"Draft metadata after race unavailable\")\n+    expect(after.value.preferences).toEqual(before.value)\n+    expect(after.value.decision).toEqual(decision)\n+    expect(await store.transaction(\"planner\", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(plannerBefore)\n+  } finally { ui.finish(context); await store.dispose(); await rm(directory, { recursive: true, force: true }) }\n+}, 60000)\n"
+    }
+  ],
+  "canonicalSupport": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "gitBlob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "sha256": "82f97205f8a1758a71cb4a2708baeee88abbef2e74ef261094c34a483790fd45",
+      "bytes": 10440,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "localPath": "/workspace/scratch/a97ca4c53050/review-compose6-support/portfolio-coverage.ts",
+      "independentlyHashVerified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "gitBlob": "f8914c141ba5c72439f5fdba50e9153c4cd477d4",
+      "sha256": "066292b447d006f9f442e96ec95875a0c1cad6e43deedd3373e3bf829da7a574",
+      "bytes": 37573,
+      "sourceHead": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "localPath": "/workspace/scratch/a97ca4c53050/review-compose6-support/dashboard-decisions.ts",
+      "independentlyHashVerified": true
+    }
+  ],
+  "unchangedSupportRead": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "gitBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "bytes": 11922,
+      "matchesRemoteStateMapAtReview": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "gitBlob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "sha256": "cb070d0628e3b6e0024015e860387d4956dbb4c24487bd3d4f573acc96d5ad2c",
+      "bytes": 4495,
+      "matchesRemoteStateMapAtReview": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+      "gitBlob": "43e1de8c347faea2953ff5baa2919b3b061fc4e4",
+      "sha256": "e4333de8a421c8f82e71d024ca0b7e5eeaa7743af6ad5ac71ab1762aef3325e5",
+      "bytes": 14152,
+      "matchesRemoteStateMapAtReview": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "gitBlob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe",
+      "bytes": 12807,
+      "matchesRemoteStateMapAtReview": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "gitBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd",
+      "bytes": 17443,
+      "matchesRemoteStateMapAtReview": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "gitBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+      "bytes": 24537,
+      "matchesRemoteStateMapAtReview": true
+    }
+  ],
+  "reviewScope": [
+    "WP11 addAlternative entries/reassessment proof ordering",
+    "WP11 Hot Topic draft C08 domain snapshot selection",
+    "new WP11 discriminating tests and their declared fixture boundaries",
+    "source/case/authority/abort fences and CAS",
+    "C10 absent-vs-zero/shared semantics preserved by unchanged canonical reassessment",
+    "AlternativeDraft acceptance/provenance path remains separate and unchanged"
+  ],
+  "findings": [
+    {
+      "id": "LATE-CORE-01",
+      "severity": "P1",
+      "state": "FIX_PRESENT_IN_REVIEWED_CODE_PENDING_ACTIONS",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "lines": [
+        112,
+        116
+      ],
+      "cause": "An equal assessment previously skipped entries although canonical entries is the only proofs.set and verifySnapshot always requires its proof.",
+      "assessment": "The fix calls entries whenever a coverageEvidence provider exists and reuses canonical reassessScenarioCoverage with returned entries. This is required for exact full-result equality including evaluatedSourceRefs order. Errors remain propagated; sourceFence, verifyMutation, validation and CAS remain intact. Exact replay exits before new work and does not create a new result.",
+      "remainingEvidence": "Run the two-source no-op ordering tests and canonical host promotion consumers at the published matching blobs."
+    },
+    {
+      "id": "LATE-CORE-02",
+      "severity": "P1",
+      "state": "FIX_PRESENT_IN_REVIEWED_CODE_PENDING_ACTIONS",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "lines": [
+        108,
+        108
+      ],
+      "cause": "The only valid target is Dashboard/hotTopics, but the old transaction selected the Planner snapshot for the canonical Dashboard source verifier.",
+      "assessment": "The only product edit is planner -> dashboard in domainSurface. Human authorizeDraft, case/namespace authority, source verification, protected writes, expected versions and idempotency remain unchanged. Local-store transaction dashboard still captures all three surfaces for currentSnapshots under the lock.",
+      "remainingEvidence": "Run the new real-C08 discriminant and the installed Dashboard draft consumer at the exact published blobs."
+    },
+    {
+      "id": "LATE-CORE-OBS-NA",
+      "severity": "P2",
+      "state": "EXTERNAL_EXISTING_CONSTRAINT_NOT_CHANGED",
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "sourceBlob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "lines": [
+        86,
+        89
+      ],
+      "observation": "The canonical baseline promotion provider explicitly rejects any baseline entry with status not-applicable. The owned no-op fix preserves that behavior. The new fixture uses all-inclusive included mappings and therefore does not prove N/A acceptance through this canonical consumer.",
+      "owner": "astra-compose / integration",
+      "nextAction": "Demonstrate the canonical route intended for N/A or submit a bounded owner delta with applicability proof. Do not remove this guard in WP11 or claim these tests qualify N/A."
+    }
+  ],
+  "invariants": {
+    "authority": "No grant or financial policy is copied/added. UI-only promotion, authorizeMutation, authorizeCase, host revalidation, verifyMutation and synchronous provider verifySnapshot are unchanged.",
+    "c10": "The unchanged canonical reassessment preserves components, knownSubtotal, currency and horizon, preserves derived missing categories, validates evidence, and leaves total null for a conditioned scenario. No amount, FX, tax or threshold formula added.",
+    "shared": "A component can cover several categories in the unchanged canonical classification without creating a second monetary component. The fixture explicitly labels its all-inclusive classification synthetic.",
+    "na": "The owned fix does not alter applicability approval or canonical producer refusal; N/A integration remains separately unproved here.",
+    "provenance": "analysis-promotion.ts remains blob 43e1de8c347faea2953ff5baa2919b3b061fc4e4. Its AlternativeDraft/outputDigest/run and human promotion checks were not replaced by addAlternative. This review does not newly qualify native provenance end to end.",
+    "choicesAndApplication": "These paths persist an alternative/result or draft. They do not record a ChoiceRecord, create domain receipts or apply prepared commands. New tests assert empty choices/preparedChanges/receipts or unchanged case/domain rows.",
+    "fences": "Provider error aborts before save. Source verification remains synchronous inside real C08. State/authority/incarnation/expected-storage-version fences and namespace-write protection remain in place.",
+    "replay": "Existing exact retry paths remain before work; new tests assert no second entries/verifySnapshot call or duplicate draft. No broader receipt/reconciliation approval is inferred."
+  },
+  "testSourceReview": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "declaredCases": 7,
+      "declaredTimeoutMs": 60000,
+      "covered": [
+        "source-only alpha/beta exact reassessment and differing source-ref order",
+        "durable result equal to promoted alternative",
+        "exact replay does not rerun entries",
+        "changed scenario remains hypothetical/conditioned with total null",
+        "entries refusal",
+        "source change after evidence before commit",
+        "case CAS change",
+        "authority revocation",
+        "request abort",
+        "no partial alternative/result or domain application"
+      ],
+      "realComponents": [
+        "Planner port",
+        "coverage classification",
+        "coverage reassessment",
+        "C08 state provider",
+        "local-store",
+        "UI lease registry"
+      ],
+      "syntheticBoundaries": [
+        "human authorization",
+        "record source lookup/evidence resolver",
+        "exact-result proof callback"
+      ],
+      "execution": "NOT_RUN_BY_REVIEWER"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "declaredCases": 1,
+      "declaredTimeoutMs": 60000,
+      "covered": [
+        "Dashboard and Planner contain discriminating different source rows",
+        "human denial before verifier",
+        "durable draft and exact retry",
+        "two protected draft records only",
+        "Dashboard source race between verification and C08 commit",
+        "no partial draft/case update",
+        "Planner unchanged"
+      ],
+      "realComponents": [
+        "Hot Topic draft store",
+        "C08 state provider",
+        "local-store",
+        "UI lease registry"
+      ],
+      "syntheticBoundaries": [
+        "human authorization",
+        "Dashboard source verifier"
+      ],
+      "execution": "NOT_RUN_BY_REVIEWER"
+    }
+  ],
+  "executedChecks": {
+    "productTests": 0,
+    "bunCommands": 0,
+    "ciRuns": 0,
+    "productMutations": 0,
+    "remoteWrites": 0,
+    "metadataOnly": [
+      "Read applicable AGENTS and WP11/CI handoff",
+      "Independently verified Git blob SHA1 and SHA256/byte count for four frozen paths and two canonical support copies",
+      "Verified baseline blobs and generated exact unified diffs",
+      "Read and traced canonical producer/C08/local-store control flow"
+    ]
+  },
+  "notProven": [
+    "GitHub Actions execution of these new tests",
+    "package typecheck and guards for the future published candidate",
+    "installed human authority and canonical producer wiring in a native/composed host",
+    "BI C17/Atlas consumers after real promotion",
+    "N/A through the baseline portfolio-coverage provider",
+    "threshold 55000 and all sensitivity scenarios",
+    "complete WP03/WP05/WP11 criteria, native evidence, C/D or final bundle epic"
+  ],
+  "nextActions": [
+    "Parent publishes the exact reviewed blobs and records head/tree.",
+    "Parent runs or reuses one compatible surgical Actions request containing the two new WP11 test files, under CI.md; no duplicate run.",
+    "Integration exercises actual canonical promotion/Dashboard consumers and records source pins and outcomes.",
+    "Retain the external N/A constraint and global/native pending evidence in the handoff."
+  ],
+  "limitations": "Read-only static review of bounded deltas. No READY/DONE statement, no CI/native/global PASS, and no inference from older unrelated greens.",
+  "markdownArtifact": {
+    "path": "/workspace/scratch/a97ca4c53050/review-late-core.md",
+    "sha256": "760b757aa637c7a936e072068fc47c05708a0659ac6a2304cc8bdf7500bdab74"
+  }
+}
