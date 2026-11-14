@@ -2,6 +2,7 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import type { ConfirmationValidityProjection, DomainProjection, Period, PreservedReview } from "../contracts/context.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { routineProjectionMaterial } from "./material.ts"
 
 /** The host resolves the selection, confirmation, and any selected prior review under the caller's current authority. */
 export type ReviewPreparationHost = {
@@ -35,6 +36,8 @@ type AvailableTopic = {
   freshness: TopicFreshness | null
   confirmationReason: ConfirmationValidityProjection["reason"] | null
   recordCount: number | null
+  /** Source observation dates are separate from a later human confirmation. */
+  sourceObservedAt: readonly string[]
 }
 
 type HiddenTopic = { state: "unavailable"; reason: "source-unavailable" | "period-mismatch" }
@@ -65,6 +68,7 @@ export type ReviewDraft = {
     evaluatedAt: string | null
     missing: DomainProjection["missing"]
   }[]
+  coverage: { selectedTopics: number; includedTopics: number; unavailableTopics: number; omittedTopics: number; includedRecordCount: number | null }
 }
 
 /** C06 state and scope fingerprint decide the charge. evaluatedSourceVersion is not compared with a global version. */
@@ -92,6 +96,10 @@ export async function prepareFactualReview(input: {
   if (!await input.host.revalidate(egressRefs, input.context)) return { status: "denied", reason: "access-changed" } as const
   const currentReview = await loadPreviousReview(input)
   if (currentReview.status === "denied" || currentReview.currentDigest !== previousReview.currentDigest || digestSfValue(currentReview.value) !== digestSfValue(previousReview.value)) return { status: "denied", reason: "access-changed" } as const
+  const currentTopics = await Promise.all([...new Set(input.topicRefs)].map((topicRef) => readPreparedTopic(topicRef, input)))
+  if (currentTopics.some((topic, index) => topics[index]?.state === "available" && topic.state === "unavailable")) return { status: "denied", reason: "access-changed" } as const
+  if (currentTopics.some((topic, index) => topicMaterialDigest(topic) !== topicMaterialDigest(topics[index]!))) return { status: "stale", reason: "review-source-changed" } as const
+  if (!await input.host.revalidate(egressRefs, input.context)) return { status: "denied", reason: "access-changed" } as const
   return { status: "ok", value: { topics, draft: draftFrom(topics, input.period, previousReview.value), synthesisIncluded: false as const } } as const
 }
 
@@ -114,6 +122,7 @@ async function readPreparedTopic(topicRef: string, input: { period?: Period; hos
     freshness: freshness(result.value.confirmation),
     confirmationReason: result.value.confirmation && result.value.confirmation.state !== "unavailable" ? result.value.confirmation.reason : null,
     recordCount: Number.isSafeInteger(result.value.recordCount) && (result.value.recordCount ?? -1) >= 0 ? result.value.recordCount! : null,
+    sourceObservedAt: [...new Set(redacted.current.context?.sourceRefs.map((ref) => ref.observedAt) ?? [])].sort(),
   }
 }
 
@@ -133,6 +142,7 @@ async function loadPreviousReview(input: { currentReviewRef?: string; previousRe
 
 function draftFrom(topics: readonly PreparedTopic[], period: Period | undefined, previousReview: AuthorizedPriorReview): ReviewDraft {
   const available = topics.flatMap((topic) => topic.state === "available" ? [topic] : [])
+  const included = available.filter((topic) => !!(period ?? topic.projection.context?.period ?? coveredPeriod(topic.projection)))
   return {
     kind: "review-draft",
     previousReview,
@@ -160,7 +170,12 @@ function draftFrom(topics: readonly PreparedTopic[], period: Period | undefined,
         missing: topic.missing,
       }]
     }),
+    coverage: { selectedTopics: topics.length, includedTopics: included.length, unavailableTopics: topics.length - available.length, omittedTopics: available.length - included.length, includedRecordCount: included.some((topic) => topic.recordCount === null) ? null : included.reduce((sum, topic) => sum + topic.recordCount!, 0) },
   }
+}
+
+function topicMaterialDigest(topic: PreparedTopic) {
+  return digestSfValue(topic.state === "available" ? { ...topic, projection: routineProjectionMaterial(topic.projection), sourceObservedAt: [], freshness: topic.freshness ? { ...topic.freshness, evaluatedAt: "" } : null } : topic)
 }
 
 /** Compare matching domain values without deriving a cause or adding an absent number as zero. Callers must pass already redacted projections. */
@@ -202,3 +217,4 @@ function freshness(confirmation: ConfirmationValidityProjection | null): TopicFr
   if (!scopeFingerprint) return { evaluatedAt: confirmation.evaluatedAt, evaluatedSourceVersion: confirmation.evaluatedSourceVersion }
   return { evaluatedAt: confirmation.evaluatedAt, evaluatedSourceVersion: confirmation.evaluatedSourceVersion, scopeFingerprint }
 }
+

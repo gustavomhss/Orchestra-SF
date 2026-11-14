@@ -33,6 +33,7 @@ test("all six routine operations use the consumed UI lease through the common di
     prepareWatch: async () => mark({ caseRef: "case", conditionRef: "condition", recurrence: "daily", state: "prepared" as const }),
     authority,
     revalidateOutput: (context) => authority.revalidateDomainContext(context),
+    resolveResult: async (result) => ({ status: "ok", value: result }),
     requiredAuthority: { sf_routine_catalog: [], sf_routine_prepare: [], sf_routine_run: [], sf_routine_status: [], sf_routine_result: [], sf_watch_prepare: [] },
   })
   const cases = [
@@ -71,3 +72,4 @@ test("all six routine operations use the consumed UI lease through the common di
   expect(revoked.status).toBe("denied")
   expect(JSON.stringify(revoked)).not.toContain("Review")
 })
+

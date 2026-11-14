@@ -40,3 +40,4 @@ test("schedule update fails closed when its authorized recipe binding is unavail
   const { api } = fixture()
   expect(await api.update({ scheduleRef: "schedule-1", expectedVersion: 1, recurrence: "daily", timezone: "America/Sao_Paulo" }, context)).toEqual({ status: "unavailable", reason: "authorized-schedule-recipe-unavailable" })
 })
+

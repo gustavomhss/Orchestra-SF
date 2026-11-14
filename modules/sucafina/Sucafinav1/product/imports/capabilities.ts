@@ -9,13 +9,14 @@ import type { ImportFileHost, ParsedImport } from "./files.ts"
  * The host persists the private command separately from the authorized manifest view. */
 export type ImportPreviewHost = {
   files: ImportFileHost
-  prepare: (input: { parsed: ParsedImport; options: ImportPreviewRequest["options"] }, context: TrustedDomainContext) => Promise<PortResult<StoredImportManifest>>
+  prepare?: (input: { parsed: ParsedImport; options: ImportPreviewRequest["options"] }, context: TrustedDomainContext) => Promise<PortResult<StoredImportManifest>>
   save: (manifest: StoredImportManifest, context: TrustedDomainContext) => Promise<PortResult<ImportManifest>>
   revalidate: (context: TrustedDomainContext) => Promise<boolean>
 }
 
 export async function previewImport(request: ImportPreviewRequest, context: TrustedDomainContext, host: ImportPreviewHost): Promise<PortResult<ImportManifest>> {
   if (!await host.revalidate(context)) return { status: "denied", reason: "authority-unavailable" }
+  if (typeof host.prepare !== "function") return { status: "unavailable", reason: "domain-adapter-unavailable" }
   const parsed = await parseAdmittedImport(request, context, host.files)
   if (parsed.status !== "ok") return parsed
   const prepared = await host.prepare({ parsed: parsed.value, options: request.options }, context)

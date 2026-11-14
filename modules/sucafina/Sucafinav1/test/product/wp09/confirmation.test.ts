@@ -33,3 +33,4 @@ test("confirmation lookup rejects a scope changed during discovery", async () =>
   })
   expect(await lookup(request, context)).toEqual({ status: "stale", reason: "confirmation-scope-changed" })
 })
+

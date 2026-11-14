@@ -5,6 +5,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { compareProjections, confirmationCharge, type ProjectionChange } from "./review.ts"
+import { routineProjectionMaterial } from "./material.ts"
 
 export type ForecastResponsibility = { readonly valueId: string; readonly responsibleRef: string; readonly evidenceRefs: readonly BusinessEvidenceRef[] }
 export type ForecastRecordedReason = { readonly valueId: string; readonly reason: string | null; readonly evidenceRefs: readonly BusinessEvidenceRef[] }
@@ -73,6 +74,20 @@ export async function prepareForecastReview(input: { request: ForecastCompareReq
   if (assignment.status !== "ok") return assignment
   const justifications = await justificationsFor(input.host, input.request, input.context, changes, facts.status === "ok" ? facts.value.inheritedBudget.map((entry) => entry.valueId) : [])
   if (justifications.status !== "ok") return justifications
+  const currentComparison = await input.host.planner.compareForecast(input.request, input.context)
+  if (currentComparison.status !== "ok") return currentComparison
+  const comparisonDigest = (value: FinancialAnalysis) => digestSfValue({ ...value, baseline: routineProjectionMaterial(value.baseline), candidate: routineProjectionMaterial(value.candidate) })
+  if (comparisonDigest(currentComparison.value) !== comparisonDigest(comparison.value)) return { status: "stale", reason: "forecast-source-changed" } as const
+  const currentConfirmations = await input.host.confirmations(input.request, input.context)
+  if (currentConfirmations.status !== "ok") return currentConfirmations
+  if (currentConfirmations.value.some((entry) => confirmationCharge(entry) === "unavailable")) return { status: "unavailable", reason: "review-source-unavailable" } as const
+  const confirmationDigest = (values: readonly ConfirmationValidityProjection[]) => digestSfValue(values.map((entry) => ({ ...entry, evaluatedAt: "" })).sort((left, right) => left.confirmationId.localeCompare(right.confirmationId)))
+  if (confirmationDigest(currentConfirmations.value) !== confirmationDigest(confirmations.value)) return { status: "stale", reason: "confirmation-source-changed" } as const
+  const currentAssignment = await assignmentFor(facts.status === "ok" ? { ...input.host, responsibles: async () => ({ status: "ok", value: facts.value.responsibles }) } : input.host, input.request, input.context, changes)
+  if (currentAssignment.status !== "ok") return currentAssignment
+  const currentJustifications = await justificationsFor(input.host, input.request, input.context, changes, facts.status === "ok" ? facts.value.inheritedBudget.map((entry) => entry.valueId) : [])
+  if (currentJustifications.status !== "ok") return currentJustifications
+  if (digestSfValue(currentAssignment.value) !== digestSfValue(assignment.value) || digestSfValue(currentJustifications.value) !== digestSfValue(justifications.value)) return { status: "stale", reason: "forecast-context-changed" } as const
   if (facts.status === "ok" && (!input.host.revalidateFacts || !await input.host.revalidateFacts(input.request, facts.value, input.context))) return { status: "denied", reason: "access-changed" } as const
   if (!await input.host.revalidate(input.request, input.context)) return { status: "denied", reason: "access-changed" } as const
   const gaps = classifyGaps(comparison.value)
@@ -82,6 +97,7 @@ export async function prepareForecastReview(input: { request: ForecastCompareReq
       comparison: comparison.value,
       confirmations: confirmations.value,
       pendingConfirmationIds: [...new Set(confirmations.value.flatMap((entry) => entry.state === "stale" ? [entry.confirmationId] : []))],
+      reviewState: confirmations.value.length === 0 ? "unconfirmed" as const : confirmations.value.some((entry) => entry.state === "stale") ? "pending" as const : "confirmed" as const,
       measured: {
         differenceAgainstBase: comparison.value.knownDifference,
         completeDifference: comparison.value.completeDifference,
@@ -172,3 +188,4 @@ function changeId(change: ProjectionChange) {
 function unique(values: readonly string[]) {
   return [...new Set(values)].sort()
 }
+

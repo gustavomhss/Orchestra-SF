@@ -20,3 +20,4 @@ test("a missing producer or unavailable scope never becomes a fresh review reque
   expect(result.status === "ok" && result.value.topics[0]).toEqual({ state: "unavailable", reason: "source-unavailable" })
   expect(JSON.stringify(result)).not.toContain("private")
 })
+

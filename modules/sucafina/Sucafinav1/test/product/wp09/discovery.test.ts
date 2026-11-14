@@ -39,3 +39,4 @@ test("run discovery reads C08, deduplicates references and suppresses revoked ou
   allowed = false
   expect(await product.discoverRuns(context)).toEqual({ status: "denied", reason: "routine-access-unavailable" })
 })
+

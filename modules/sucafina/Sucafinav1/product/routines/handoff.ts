@@ -18,19 +18,21 @@ export function createFollowupHandoff<T, U = T>(input: {
   revalidateUpdate?: (topic: HotTopic, source: BusinessEvidenceRef, context: TrustedDomainContext) => Promise<boolean>
 }) {
   return {
-    async prepare(selection: FollowupSelection, context: TrustedDomainContext): Promise<PortResult<HandoffRequest>> {
+    async prepare(incoming: FollowupSelection, context: TrustedDomainContext): Promise<PortResult<HandoffRequest>> {
+      const selection = structuredClone(incoming)
       if (!selection.noteId.trim() || !selection.sourceRef.trim() || !selection.action.trim() || !selection.owner.trim() || !selection.due.trim() || !["critical", "high", "normal"].includes(selection.priority)) return { status: "needs-input", reason: "followup-fields-required" }
       const source = await input.resolveNote(selection.sourceRef, selection.noteId, context)
       if (source.status !== "ok") return source
       if (source.value.sourceRef !== selection.sourceRef || source.value.evidence.refId !== selection.sourceRef || !source.value.stableSourceKey.trim()) return { status: "stale", reason: "followup-source-changed" }
       const correlation = digestSfValue({ sourceIdentity: source.value.stableSourceKey, noteId: selection.noteId })
-      return { status: "ok", value: { sourceRef: selection.sourceRef, relationKey: `routine-handoff:${correlation}`, ...(selection.recipientRef ? { recipientRef: selection.recipientRef } : {}), intent: { correlationKey: `routine-action:${correlation}`, sourceRefs: [source.value.evidence], action: selection.action, owner: selection.owner, due: selection.due, priority: selection.priority, notes: selection.notes } } }
+      return { status: "ok", value: { sourceRef: selection.sourceRef, relationKey: `routine-handoff:${correlation}`, ...(selection.recipientRef ? { recipientRef: selection.recipientRef } : {}), intent: { correlationKey: `routine-action:${correlation}`, sourceRefs: [structuredClone(source.value.evidence)], action: selection.action, owner: selection.owner, due: selection.due, priority: selection.priority, notes: selection.notes } } }
     },
     async confirm(request: HandoffRequest, context: TrustedDomainContext): Promise<PortResult<T>> {
       if (context.kind !== "ui") return { status: "denied", reason: "human-handoff-required" }
       return input.handoff.create(request, context)
     },
-    async prepareUpdate(selection: { noteId: string; sourceRef: string; topicId: string; values: UpdateValues; recipientRef?: string }, context: TrustedDomainContext) {
+    async prepareUpdate(incoming: { noteId: string; sourceRef: string; topicId: string; values: UpdateValues; recipientRef?: string }, context: TrustedDomainContext) {
+      const selection = structuredClone(incoming)
       if (!input.readTopic || !input.revalidateUpdate || !input.handoff.update) return { status: "unavailable", reason: "handoff-update-unavailable" } as const
       if (!selection.noteId.trim() || !selection.sourceRef.trim() || !selection.topicId.trim() || !selection.values || typeof selection.values !== "object" || Array.isArray(selection.values) || !Object.keys(selection.values).length || Object.values(selection.values).some((value) => typeof value !== "string" || !value.trim()) || (selection.values.priority !== undefined && !["critical", "high", "normal"].includes(selection.values.priority)) || Object.keys(selection.values).some((key) => !["action", "owner", "due", "priority"].includes(key))) return { status: "needs-input", reason: "followup-fields-required" } as const
       const source = await input.resolveNote(selection.sourceRef, selection.noteId, context)
@@ -38,10 +40,11 @@ export function createFollowupHandoff<T, U = T>(input: {
       if (source.value.sourceRef !== selection.sourceRef || source.value.evidence.refId !== selection.sourceRef || !source.value.stableSourceKey.trim()) return { status: "stale", reason: "followup-source-changed" } as const
       const topic = await input.readTopic(selection.topicId, source.value.evidence, context)
       if (topic.status !== "ok") return topic
-      if (topic.value.id !== selection.topicId || !await input.revalidateUpdate(topic.value, source.value.evidence, context)) return { status: "denied", reason: "handoff-access-unavailable" } as const
-      const correlation = digestSfValue({ sourceIdentity: source.value.stableSourceKey, noteId: selection.noteId, topicId: topic.value.id, version: topic.value.version })
-      const request: HandoffUpdate = { topicId: topic.value.id, expectedVersion: topic.value.version, idempotencyKey: `routine-update:${correlation}`, values: { ...selection.values }, sourceRefs: [source.value.evidence], sourceRef: selection.sourceRef, ...(selection.recipientRef ? { recipientRef: selection.recipientRef } : {}), relationKey: `routine-update-link:${correlation}` }
-      return { status: "ok", value: { before: topic.value, after: { ...topic.value, ...request.values }, request } } as const
+      const before = structuredClone(topic.value)
+      if (before.id !== selection.topicId || !Number.isSafeInteger(before.version) || before.version < 0 || !await input.revalidateUpdate(before, source.value.evidence, context)) return { status: "denied", reason: "handoff-access-unavailable" } as const
+      const correlation = digestSfValue({ sourceIdentity: source.value.stableSourceKey, noteId: selection.noteId, topicId: before.id, version: before.version })
+      const request: HandoffUpdate = { topicId: before.id, expectedVersion: before.version, idempotencyKey: `routine-update:${correlation}`, values: { ...selection.values }, sourceRefs: [structuredClone(source.value.evidence)], sourceRef: selection.sourceRef, ...(selection.recipientRef ? { recipientRef: selection.recipientRef } : {}), relationKey: `routine-update-link:${correlation}` }
+      return { status: "ok", value: { before, after: { ...before, ...request.values }, request } } as const
     },
     async confirmUpdate(request: HandoffUpdate, context: TrustedDomainContext): Promise<PortResult<U>> {
       if (context.kind !== "ui") return { status: "denied", reason: "human-handoff-required" }
@@ -50,3 +53,4 @@ export function createFollowupHandoff<T, U = T>(input: {
     },
   }
 }
+

@@ -33,18 +33,25 @@ test("real Relay publication supplies exact document and version; unpublished dr
       const host = { publication: port, authorize: async () => true, authorSession: async () => undefined }
       const catalog = createRoutinePublicationCatalog({ host, resolvePlan: async (recipe) => recipe.documentId === draft.id && recipe.publishedVersion === draft.versionId ? { state: "ready", planRevisionId: "real-plan-ref", writeScope: ["scope"] } : { state: "excluded" } })
       expect((yield* Effect.promise(() => catalog("review", context)))).toEqual({ status: "ok", value: [] })
-      const before = yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, parameters: {}, writePaths: ["scope"] }))
+      const before = yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, expectedPublishedVersion: draft.versionId, parameters: {}, writePaths: ["scope"] }))
       expect(before.status).toBe("unavailable")
       yield* store.publish(draft.id, draft.versionId)
       const listed = yield* Effect.promise(() => catalog("review", context))
       expect(listed).toEqual({ status: "ok", value: [{ documentId: draft.id, publishedVersion: draft.versionId, title: "Review", planRevisionId: "real-plan-ref", writeScope: ["scope"] }] })
-      const acquired = yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, parameters: {}, writePaths: ["scope"] }))
+      const acquired = yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, expectedPublishedVersion: draft.versionId, parameters: {}, writePaths: ["scope"] }))
       expect(acquired.status).toBe("ok")
       if (acquired.status === "ok") expect(acquired.value.definition.publication).toMatchObject({ documentID: draft.id, activeVersionID: draft.versionId })
+      const next = yield* store.save({ id: draft.id, expectedVersion: draft.versionId, body: { ...graph, name: "Review revised" } })
+      yield* store.publish(draft.id, next.versionId)
+      const stale = yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, expectedPublishedVersion: draft.versionId, parameters: {}, writePaths: ["scope"] }))
+      expect(stale).toEqual({ status: "stale", reason: "published-version-changed" })
+      const current = yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, expectedPublishedVersion: next.versionId, parameters: {}, writePaths: ["scope"] }))
+      expect(current.status).toBe("ok")
       yield* store.unpublish(draft.id)
-      expect((yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, parameters: {}, writePaths: ["scope"] }))).status).toBe("unavailable")
+      expect((yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, expectedPublishedVersion: next.versionId, parameters: {}, writePaths: ["scope"] }))).status).toBe("unavailable")
     })))
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
 })
+

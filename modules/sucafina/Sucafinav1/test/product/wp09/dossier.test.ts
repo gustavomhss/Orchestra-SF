@@ -72,3 +72,4 @@ test("procurement evidence does not implicitly select a document for the dossier
   })
   expect(result.status === "ok" && result.value.documents).toEqual([])
 })
+

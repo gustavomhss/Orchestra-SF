@@ -53,3 +53,22 @@ test("update previews the authorized version and forwards the same payload for h
   expect(await handoff.confirmUpdate(prepared.value.request, ui)).toEqual({ status: "ok", value: "receipt" })
   expect(calls).toEqual([prepared.value.request])
 })
+
+test("selection and before values cannot drift while the authorized source is being resolved", async () => {
+  const topic = { id: "action", version: 3, action: "Before", owner: "person", due: "2027-01-31", status: "open", priority: "normal", notes: "" }
+  const selected = { noteId: "n1", sourceRef: "review", action: "Chosen", owner: "person", due: "2027-01-31", priority: "normal" as const, notes: "" }
+  const handoff = createFollowupHandoff({
+    resolveNote: async (sourceRef) => {
+      selected.action = "Unselected mutation"
+      return { status: "ok", value: { sourceRef, stableSourceKey: "review:incarnation", evidence } }
+    },
+    readTopic: async () => ({ status: "ok", value: topic }),
+    revalidateUpdate: async () => { topic.action = "Concurrent update"; topic.version = 4; return true },
+    handoff: { create: async () => ({ status: "unavailable", reason: "unused" }), update: async () => ({ status: "unavailable", reason: "unused" }) },
+  })
+  const prepared = await handoff.prepare(selected, ui)
+  expect(prepared).toMatchObject({ status: "ok", value: { intent: { action: "Chosen" } } })
+  const update = await handoff.prepareUpdate({ noteId: "n1", sourceRef: "review", topicId: "action", values: { action: "After" } }, ui)
+  expect(update).toMatchObject({ status: "ok", value: { before: { action: "Before", version: 3 }, after: { action: "After", version: 3 }, request: { expectedVersion: 3 } } })
+})
+
