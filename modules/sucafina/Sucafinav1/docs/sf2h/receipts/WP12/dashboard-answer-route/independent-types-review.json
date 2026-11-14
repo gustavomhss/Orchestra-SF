@@ -1,0 +1,208 @@
+{
+  "schema": "sf-wp12-dashboard-answer-independent-type-and-request-review-v1",
+  "reviewer": "compose_typecheck",
+  "status": "PASS_BOUNDED_STATIC_REVIEW_NOT_RUN",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts",
+    "bytes": 40732,
+    "sha256": "94e0aa7f90cf50da056fb444970ebb282024ca56f94b008e0964a3caba7acfa8",
+    "blob": "e7bdf4d8e2da41b8f3bdf05aa8f1384873d2d7a0"
+  },
+  "authorManifest": {
+    "path": "resume-input/criteria/dashboard-answer/manifest.json",
+    "bytes": 5371,
+    "sha256": "7f5ec60c727cdb44d96430e38542d2d3dd84ba4f45360761be4611ed9a960f87",
+    "blob": "4144a372c71f292ef36982410d4b599d51e723db"
+  },
+  "scope": [
+    "Read all 501 source lines and the final digest-binding delta.",
+    "Bounded API, discriminant narrowing, Request admission and receipt/input/result shapes; independent semantic review belongs to own_review_resume.",
+    "Verified exact bytes for all 21 source payloads; no source substitution or shared helper change."
+  ],
+  "findings": [],
+  "observations": [
+    {
+      "id": "ANSWER-TYPE-01",
+      "detail": "Capability dispatch results use the status discriminant and result; sf_answer_read and sf_question_prepare pass through their closed decoders before field access. UI results retain their real receipt."
+    },
+    {
+      "id": "ANSWER-TYPE-02",
+      "detail": "ToolStateCompleted at published schema62aeee3e exposes input and structured as records; assistant/tool/completed guards precede access. The audit binds native receipt inputDigest and resultDigest to the actual Session state input and structured result, then binds exact case/answer/question inputs."
+    },
+    {
+      "id": "ANSWER-TYPE-03",
+      "detail": "The canonical QuestionProposal payload has caseRef, evidenceRefs, expectedCaseVersion and optional criterionRef/recipientRef. Its reconstruction uses those actual fields, not a fabricated receipt or response."
+    },
+    {
+      "id": "ANSWER-TYPE-04",
+      "detail": "Product requests go through context.request with the installed WeakSet admission. The one raw Request is the explicit unadmitted negative. Persistence uses transaction(commit:false), not a nonexistent read method."
+    },
+    {
+      "id": "ANSWER-TYPE-05",
+      "detail": "Return values from conditional native branches are explicitly narrowed before consumers; actual consumed question/thread validators guard durable shapes. No new concrete type or API mismatch was identified in this bounded reading."
+    }
+  ],
+  "syntax": {
+    "scope": "Node TypeScript erasure and syntax parse only; generated module was never imported or executed",
+    "erasedSha256": "1621b8c08a27df924a40f338cbe83c9f22d835543a9c403c6511a5ba549235e8",
+    "exitCode": 0,
+    "productExecuted": false,
+    "typecheckExecuted": false
+  },
+  "verifiedSourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "blob": "7d8396e2f6b07dbb41fd4a1694da6fab32bb25d0",
+      "sha256": "4afff123a457f0b077fb61d7038d0710b745825680115585ca0fdaa0f5da41b2",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "blob": "4a1ebe9298dd62d2846a45f294aa1b6331343040",
+      "sha256": "75ac70777d1e386284e6a5c7a9a394ad579884afeea155f63b3eed5152070569",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "sha256": "b3c0cd0bb9221b980fe30b8dcd3a2a856bed4ec5dd79220d14c4d2fd6803f7d1",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/question-consumer.ts",
+      "blob": "ddccfdf46810117fb49e123140c8411373b387e9",
+      "sha256": "c1c1f7a664bb7d91706c81c8a3607e4b2036f8e59c2e9436e74de6767371c823",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/question-preparations.ts",
+      "blob": "fc9930cbaac82fe7f61ea7c1ade656a4cd00350b",
+      "sha256": "82666cde078451cd5db83025647ca4e8455ea4f5bb15d75e4eb15c35d533d542",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+      "blob": "5c8b811692c3e8aea1859b2f346096f0410e82f8",
+      "sha256": "98689fe1f533c6419b702d1a37d498426c6a1ffe3dda5634a93160e632079eb2",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "blob": "fefdb4b7814be4953e1a5e7f12e2385e0a6a03c4",
+      "sha256": "d618dae472d8ed550e0d50c0b2e884c98a3e3c9b3f1e162f374f4a6b7b865074",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-question.ts",
+      "blob": "10d95e014c71c6c6f9600a2c1c52fa3532aee68a",
+      "sha256": "585d678b56466810afcf9def3a6fb3371d81a0823aee839fae685c763454be9c",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+      "blob": "d37b26367f9f2670d6187e253c5c5ed14348a330",
+      "sha256": "fb71fb2afa4ac9af7708f81466906db428f50271b8aeb299a97b69e2e74abed8",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-manifest.ts",
+      "blob": "f20da93b3f74018871cb1aa29693b52986148a5b",
+      "sha256": "b64faaeff0375d586cecb1162c0ee95c4f9d2f6bbbd2019f65f46e4ddc329e35",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "blob": "4925fedacd8c81f4abe6b85c514ddfccd91eb171",
+      "sha256": "241e6e4601aa0b6c86ffd22f2a2ac3b647b853f072559b3984904549d38d20f0",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "sha256": "82f97205f8a1758a71cb4a2708baeee88abbef2e74ef261094c34a483790fd45",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+      "sha256": "1ff25c69a32523eed1d1aadaf9f94d42c54ca416f345dfe309254b7d5d83aa04",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "blob": "58c34db271485752fa1dd89f6af5adddd405b22f",
+      "sha256": "e84bbd0bd1b7b08aaeb69aa004a9af8cc09c2b76245416897e4d739fb74e9cd3",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "packages/core/src/session/schema.ts",
+      "blob": "7f9d46d97a61d7e661f319ec2eb5c47e663d64cd",
+      "sha256": "7837a31cc28b1ffd5da074398c915d8ecba47beb534ee13bc541712c3af9e05b",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "packages/schema/src/session.ts",
+      "blob": "8319d3369ebf6ac5952dd390b3ff8844e995b280",
+      "sha256": "79fb348dc00ce9e06fc01fb595df8c05730bb3cbdd604b55c7b57e6d8321cdfa",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "packages/core/src/session/message.ts",
+      "blob": "2ebbdd92ca92b56c81c57669e5edb4a38ceda36c",
+      "sha256": "a183a3e5141e192b13a507bbefe19684fb63e8c55e60811453d7f77960b1a1d3",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    },
+    {
+      "path": "packages/schema/src/session-message.ts",
+      "blob": "62aeee3e61a1a2c3dcb0b6de15711357093f7e79",
+      "sha256": "abcc5bf88ad6763156d9bea5499a9d552567cfc84a6d7005722c0d7d692aaec8",
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "verifiedBytes": true
+    }
+  ],
+  "limits": [
+    "No TypeScript typecheck, product import, test, build or CI execution occurred. Hosted full-package C29 remains required.",
+    "No inference or native acceptance is observed. Empty model catalog retains only UI preparation/consumer and refusal evidence.",
+    "This review does not repair the separate Planner answer-scope finding, confirm pending training, or certify runtime completion."
+  ],
+  "sourceEdits": false,
+  "remoteMutation": false
+}
