@@ -12,10 +12,10 @@ const retained = {
     policyVersion: "policy-1", accessRevision: "access-1", providerGeneration: 2 },
   caseRef: { id: "case-fixture", incarnation: "case-incarnation-fixture", version: 2 },
   publishedRecipeRef: "sf-review-fixture", inputRefs: ["selected-source-fixture"],
-  parameters: { selectedPeriod: "2027-01" },
+  parameters: { period: { start: "2027-01-01", end: "2027-01-31" } },
   sourceRefs: [{ surface: "dashboard", type: "project", id: "source-fixture", incarnation: "source-incarnation-fixture",
     version: 3, fields: ["status"], period: { start: "2027-01-01", end: "2027-01-31" }, observedAt: "2026-11-14T00:00:00Z" }],
-}
+} as const
 
 function fromParameters(parameters: Record<string, string>) {
   const plan = fixturePlan(parentID, true, parameters)
@@ -53,6 +53,7 @@ test("retained native metadata refuses other owners, publication, invalid case/s
     { ...retained, sourceRefs: [{ ...retained.sourceRefs[0], version: -1 }] },
     { ...retained, planRevisionId: "evt_forged_plan" },
     { ...retained, inputDigest: "0".repeat(64) },
+    { ...retained, parameters: { selectedPeriod: "2027-01" } },
   ]
   for (const value of invalid) {
     expect(readSfRoutineNativeInput(fromParameters({ [SF_ROUTINE_INPUT_PARAMETER]: JSON.stringify(value) }))).toBeUndefined()

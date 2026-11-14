@@ -14,6 +14,7 @@ import { SessionStore } from "@orchestra/core/session/store"
 import { SessionTable } from "@orchestra/core/session/sql"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { GovernanceRecordsV2 } from "../../../../../maestro/coordination/src/v2/governance/records.ts"
+import type { NativePlan } from "../../../../../../apps/cli/src/sucafina-product/routine-native-records.ts"
 
 /** Real SQLite, durable EventV2 and SessionStore; synthetic rows are not an installed-host AM06 witness. */
 const layer = () => AppNodeBuilder.build(
@@ -50,6 +51,8 @@ export const seedSession = Effect.fn("SfRoutineFixture.seedSession")(function* (
 })
 
 /** The engine's own closed schema and stable hash build every synthetic retained plan. */
+export function fixturePlan(sessionID: string, workflow?: true, parameters?: Record<string, string>): NativePlan
+export function fixturePlan(sessionID: string, workflow: false, parameters?: Record<string, string>): Schema.Schema.Type<typeof MaestroEvent.PlanRevision.RecordedV3.data> & { id: EventV2.ID }
 export function fixturePlan(sessionID: string, workflow = true, parameters: Record<string, string> = { selectedCase: "case-fixture" }) {
   const body = {
     sessionID, admissionMessageID: "msg_sf_owner", methodVersion: "plan-v1", revision: "v3" as const,
@@ -66,7 +69,11 @@ export function fixturePlan(sessionID: string, workflow = true, parameters: Reco
     } } : {}),
   }
   const revisionHash = GovernanceRecordsV2.hash(body)
-  return Schema.decodeUnknownSync(MaestroEvent.PlanRevision.RecordedV3.data)({
+  const decoded = Schema.decodeUnknownSync(MaestroEvent.PlanRevision.RecordedV3.data)({
     ...body, id: `evt_maestro_plan_revision_${revisionHash}`, revisionHash, createdAt: 1_700_000_000_000,
   })
+  const id = EventV2.ID.make(decoded.id)
+  if (!workflow) return { ...decoded, id }
+  if (!decoded.workflowBinding) throw new Error("Native fixture workflow definition is missing")
+  return { ...decoded, id, workflowBinding: decoded.workflowBinding }
 }

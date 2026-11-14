@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test"
-import { eq } from "drizzle-orm"
 import { Effect } from "effect"
 import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
@@ -54,8 +53,10 @@ for (const variant of ["body", "record-id", "aggregate", "extra-field", "event-t
         : variant === "aggregate" ? { aggregate_id: "ses_wrong_owner" }
         : variant === "extra-field" ? { data: { ...selected, fabricatedApproval: true } }
         : { type: EventV2.versionedType(MaestroEvent.Admission.Decided.type, 1) }
-      yield* database.db.update(EventV2.EventTable).set(change).where(eq(EventV2.EventTable.id, EventV2.ID.make(selected.id)))
-        .run().pipe(Effect.orDie)
+      // The native Database exposes its parameterized SqlClient; this package does not depend on drizzle-orm.
+      if ("data" in change && change.data !== undefined) yield* database.db.$client`UPDATE event SET data = ${JSON.stringify(change.data)} WHERE id = ${selected.id}`.pipe(Effect.orDie)
+      else if ("aggregate_id" in change && change.aggregate_id !== undefined) yield* database.db.$client`UPDATE event SET aggregate_id = ${change.aggregate_id} WHERE id = ${selected.id}`.pipe(Effect.orDie)
+      else if ("type" in change && change.type !== undefined) yield* database.db.$client`UPDATE event SET type = ${change.type} WHERE id = ${selected.id}`.pipe(Effect.orDie)
       expect(yield* Effect.promise(() => readers.readPlan(selected.id).catch(() => undefined))).toBeUndefined()
       // A retained malformed native event is not repaired or rewritten by the reader.
       const rows = yield* database.db.select().from(EventV2.EventTable).all().pipe(Effect.orDie)

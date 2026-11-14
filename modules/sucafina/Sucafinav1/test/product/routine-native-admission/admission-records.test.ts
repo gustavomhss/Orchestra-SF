@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test"
 import { createHash } from "node:crypto"
-import { eq } from "drizzle-orm"
 import { Effect } from "effect"
 import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
@@ -116,7 +115,8 @@ for (const variant of ["validation-held", "placement-changed", "grant-changed", 
         : variant === "placement-changed" ? { data: { ...seeded.context, directory: `${directory}-another-location` } }
         : variant === "grant-changed" ? { data: { ...seeded.authorization, grantHash: "3".repeat(64) } }
         : { aggregate_id: "ses_wrong_validation_owner" }
-      yield* database.db.update(EventV2.EventTable).set(change).where(eq(EventV2.EventTable.id, id)).run().pipe(Effect.orDie)
+      if ("data" in change && change.data !== undefined) yield* database.db.$client`UPDATE event SET data = ${JSON.stringify(change.data)} WHERE id = ${id}`.pipe(Effect.orDie)
+      else if (change.aggregate_id !== undefined) yield* database.db.$client`UPDATE event SET aggregate_id = ${change.aggregate_id} WHERE id = ${id}`.pipe(Effect.orDie)
       const result = yield* Effect.promise(() => readers.readAdmission(authorizationID).catch(() => undefined))
       expect(result).toBeUndefined()
       const rows = yield* database.db.select().from(EventV2.EventTable).all().pipe(Effect.orDie)

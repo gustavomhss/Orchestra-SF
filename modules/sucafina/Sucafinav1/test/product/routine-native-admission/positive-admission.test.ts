@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test"
-import { eq } from "drizzle-orm"
 import { DateTime, Effect, Schema } from "effect"
 import { Database } from "@orchestra/core/database/database"
 import { EventV2 } from "@orchestra/core/event"
@@ -182,9 +181,9 @@ test("human message, Task parameters and native arm provenance are required even
     const seeded = yield* completeAdmissionFixture(directory)
     const readers = createSfRoutineNativeRecords({ database, store, relayFor: async () => undefined })
     expect((yield* Effect.promise(() => readers.readAdmission(authorizationID)))?.state).toBe("admitted")
-    const human = yield* database.db.select().from(SessionMessageTable).where(eq(SessionMessageTable.id, humanID)).get().pipe(Effect.orDie)
+    const human = (yield* database.db.select().from(SessionMessageTable).all().pipe(Effect.orDie)).find((message) => message.id === humanID)
     if (!human) return yield* Effect.die("Fixture human message is missing")
-    yield* database.db.delete(SessionMessageTable).where(eq(SessionMessageTable.id, humanID)).run().pipe(Effect.orDie)
+    yield* database.db.$client`DELETE FROM session_message WHERE id = ${humanID}`.pipe(Effect.orDie)
     expect(yield* Effect.promise(() => readers.readAdmission(authorizationID).then(() => "accepted", (error: Error) => error.message)))
       .toContain("HUMAN_APPROVAL_UNBOUND")
     yield* database.db.insert(SessionMessageTable).values(human).run().pipe(Effect.orDie)
@@ -194,13 +193,11 @@ test("human message, Task parameters and native arm provenance are required even
         structured: {}, content: [],
       },
     }] })
-    yield* database.db.update(SessionMessageTable).set({ data: Schema.encodeSync(SessionMessage.Message)(changedTask) })
-      .where(eq(SessionMessageTable.id, taskMessageID)).run().pipe(Effect.orDie)
+    yield* database.db.$client`UPDATE session_message SET data = ${JSON.stringify(Schema.encodeSync(SessionMessage.Message)(changedTask))} WHERE id = ${taskMessageID}`.pipe(Effect.orDie)
     expect(yield* Effect.promise(() => readers.readAdmission(authorizationID).then(() => "accepted", (error: Error) => error.message)))
       .toContain("TASK_INPUT_MISMATCH")
-    yield* database.db.update(SessionMessageTable).set({ data: Schema.encodeSync(SessionMessage.Message)(seeded.taskMessage) })
-      .where(eq(SessionMessageTable.id, taskMessageID)).run().pipe(Effect.orDie)
-    yield* database.db.delete(EventV2.EventTable).where(eq(EventV2.EventTable.id, armRowID)).run().pipe(Effect.orDie)
+    yield* database.db.$client`UPDATE session_message SET data = ${JSON.stringify(Schema.encodeSync(SessionMessage.Message)(seeded.taskMessage))} WHERE id = ${taskMessageID}`.pipe(Effect.orDie)
+    yield* database.db.$client`DELETE FROM event WHERE id = ${armRowID}`.pipe(Effect.orDie)
     expect(yield* Effect.promise(() => readers.readAdmission(authorizationID).then(() => "accepted", (error: Error) => error.message)))
       .toContain("NATIVE_ARM_UNBOUND")
   })))

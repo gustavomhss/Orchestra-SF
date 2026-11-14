@@ -8,7 +8,7 @@ import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import { ToolSafety } from "@orchestra/core/tool-safety"
 import { TaskGovernance } from "@orchestra/core/tool/task-governance"
-import { ArmState } from "@orchestra/relay/arm/state"
+import { ArmState } from "../../../../modules/relay/src/arm/state.ts"
 import { MaestroGovernanceV2 } from "../../../../modules/maestro/coordination/src/v2/governance.ts"
 import { GovernanceRecordsV2 } from "../../../../modules/maestro/coordination/src/v2/governance/records.ts"
 import { WriteRootsV2 } from "../../../../modules/maestro/coordination/src/v2/governance/write-roots.ts"
@@ -208,6 +208,7 @@ export function createSfRoutineNativeGovernance(input: {
   const relayNode = {
     ...Relay.node,
     dependencies: [...Relay.node.dependencies, Database.node],
+    // The tuple provide overload accepts LayerNode's erased implementation without a cast or new graph.
     implementation: Layer.effect(Relay.Service, Effect.gen(function* () {
       const original = yield* Relay.Service
       const database = yield* Database.Service
@@ -249,7 +250,7 @@ export function createSfRoutineNativeGovernance(input: {
       relays.add(service)
       yield* Effect.addFinalizer(() => Effect.sync(() => { active = false; relays.delete(service) }))
       return service
-    })).pipe(Layer.provide(Relay.node.implementation!)),
+    })).pipe(Layer.provide([Relay.node.implementation!])),
   }
   const contribution: Host.Contribution = {
     id: "sucafina/routine-native-governance",

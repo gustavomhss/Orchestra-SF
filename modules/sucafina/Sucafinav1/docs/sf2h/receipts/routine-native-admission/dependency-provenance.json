@@ -271,9 +271,23 @@
         ]
       }
     ],
-    "decision": "No new dependency or manifest/lock mutation is required for the exact 9cc composition target. Preserve its existing root workspace dependencies and package exports. CLI support follows the existing source imports.",
+    "decision": "No package or lock mutation is made. The exact 9cc composition target already supplies its root workspace dependencies and must preserve them. The source-head hosted typecheck exposed that relay/schema aliases are not resolvable from CLI at source 1998ac; owned adapter support therefore uses explicit relative paths to the same existing workspace source modules instead of adding shared dependencies.",
     "package_patch_required_for_target": false,
-    "source_runtime_resolution": "Not asserted by static inspection. The surgical source-head GitHub Actions result is authoritative; no local install, module-resolution execution or typecheck was run.",
+    "source_runtime_resolution": "Hosted run 43643108377 job 132594812686 failed typecheck, including owned unresolved alias imports. Those owned imports are being adapted to the actual workspace source paths; the corrected commit still requires hosted revalidation. No local install, module-resolution execution or typecheck was run.",
+    "source_compatibility_correction": {
+      "trigger": {
+        "run_id": 43643108377,
+        "job_id": 132594812686,
+        "result": "FAIL",
+        "governance_errors": [
+          "TS2307: @orchestra/relay/arm/state is not resolvable from CLI at the source pin",
+          "TS2769: the single-layer Layer.provide overload does not accept LayerNode's erased Layer.Any"
+        ]
+      },
+      "governance_import": "../../../../modules/relay/src/arm/state.ts",
+      "layer_adaptation": "Layer.provide([Relay.node.implementation!]) uses the supported tuple overload and preserves the exact original native layer without any cast or a new service graph.",
+      "verification": "Correction prepared; no PASS claimed until the corrected hosted run completes."
+    },
     "changed_package_files": []
   },
   "assembly_dependencies": {

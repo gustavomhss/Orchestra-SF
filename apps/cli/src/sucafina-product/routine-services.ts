@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
-import type { RelayArm } from "@orchestra/schema/relay-arm"
+import type { RelayArm } from "../../../../packages/schema/src/relay-arm.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { RoutineResult, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BusinessPorts, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
