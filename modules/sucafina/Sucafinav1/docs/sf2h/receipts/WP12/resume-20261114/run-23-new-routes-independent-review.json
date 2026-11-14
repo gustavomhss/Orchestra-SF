@@ -1,0 +1,187 @@
+{
+  "schema": "sf-wp12-independent-runtime-receipt-review-v1",
+  "reviewer": "own_review_resume",
+  "author": "root",
+  "status": "PASS_BOUNDED_RECEIPT_REVIEW",
+  "reviewed_at_utc": "2026-11-14T17:28:30.374777+00:00",
+  "reviewed_receipt": {
+    "path": "resume-input/w28-runtime/run-23-new-routes.json",
+    "bytes": 52817,
+    "sha256": "6c2c17eb93d590ac6901f3dae1796ef581aca82f1725f477c63f16003ce0bc62",
+    "blob": "34c2baa7de7d398e988a7ad909e3574fd402492d"
+  },
+  "product": {
+    "sha": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+    "tree": "60950d5e873a4f5a05a2284ffbd56d5f041f013b",
+    "checkRun": 43619106397,
+    "checkResult": "PASS"
+  },
+  "snapshot": {
+    "sha": "b5eb330f9b914953bf19fa7e265e9db11762cfd2",
+    "tree": "6894c48cb770f558dea28fc534098862f0c92848",
+    "directParent": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+    "onlyDelta": ".ci-run.json"
+  },
+  "runId": 43619631569,
+  "testJobId": 132522137649,
+  "cleanupJobId": 132525145347,
+  "findings": [],
+  "method": "Independent parsing and hashing of the already saved exact GitHub MCP job log, terminal metadata, request and publication/dispatch proofs; read the relevant branches/assertions in the five pinned source files. No log/source refetch, product imports, test execution, typecheck, Actions call or mutation.",
+  "verified": {
+    "log": {
+      "path": "evidence/resume-23-new-routes.log",
+      "bytes": 103580,
+      "sha256": "6d2fdf8e0b1030ac78159d5851f0fd09f4c95049f222b26fc2f177bcb487e118",
+      "blob": "395ce7b5e99d17b18d57a96e5f320a5913f5ffc4"
+    },
+    "logLineCount": 1023,
+    "transportBytesExact": true,
+    "markerCount": 53,
+    "markerPrefixCount": 17,
+    "markerLineNumbersAndDecodedValuesExact": true,
+    "cases": [
+      {
+        "name": "native Finance checks a human-selected budget KPI without replacing forecast delta or inventing comparable currency",
+        "ms": 14259.75,
+        "line": 861
+      },
+      {
+        "name": "native contextual BI uses publicly saved and selected artifact handles with real case isolation and consumers after reload",
+        "ms": 231362.7,
+        "line": 913
+      },
+      {
+        "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+        "ms": 254350.31,
+        "line": 987
+      }
+    ],
+    "summary": {
+      "pass": 3,
+      "fail": 0,
+      "filteredOut": 1,
+      "assertions": 367,
+      "files": 3,
+      "tests": 3,
+      "seconds": 501.28,
+      "logLines": [
+        989,
+        993
+      ],
+      "filteredOutTest": "native executive work list matches its selected real Hot Topic review and reopens the existing human action",
+      "filteredIsNotFailedOrPassed": true
+    },
+    "omni": {
+      "status": "PASS_FOCUSED_NO_DECLARING_TEST_RAN",
+      "nonce": "dc6a9d1ea34b05ddf4af4f5dad486f4c",
+      "spawns": 174,
+      "delegated": 0,
+      "line": 994
+    },
+    "sourcePinsExact": 5,
+    "questionWorkPhasePairsExact": 10,
+    "terminalMetadataExact": true,
+    "zeroArtifactsConfirmed": true,
+    "productSnapshotRequestDistinguished": true,
+    "singleFileChildOfProduct": true,
+    "request": {
+      "path": "resume-input/w28-ci/new-forecast-bi-question.ci-run.json",
+      "bytes": 730,
+      "sha256": "fdf783b550ff5843b129a14e50c68a66d97d443b8bb86833136cfb100864ab50",
+      "blob": "3a7936b3f26b1db1e120195ba8714582c7a00b4c"
+    },
+    "checkGate": {
+      "status": "PASSED",
+      "runId": 43619106397,
+      "jobId": 132520532225,
+      "snapshot": "6479e6e746388948b48698761899c9f0aa135575",
+      "tree": "4e6cc81d39521eba22dfc9863f421856c61c9961",
+      "receipt": {
+        "path": "resume-input/w28-check/run-23-checks.json",
+        "bytes": 5911,
+        "sha256": "8b983a87c47727044733f84e36687b3a0ebcd5affef137bb537cd6b3b8bf649c",
+        "blob": "c7409ec9bfd36f568f85210321408e03a07fd0a7"
+      }
+    }
+  },
+  "semantic_assessment": [
+    {
+      "case": "Forecast auxiliary KPI",
+      "accepted_scope": "Real human-selected Budget Overview source in the same case/period, typed Forecast input, authenticated UI KPI receipt, reopen, source withdrawal refusal and unchanged Planner domain.",
+      "observed_values": {
+        "knownForecastDifference": 6000,
+        "forecastCurrency": "USD",
+        "completeDifference": null,
+        "auxiliaryBudget": 600000,
+        "auxiliaryCurrency": "unspecified",
+        "crossProducerComparison": "comparison-basis-unavailable"
+      },
+      "limits": "The auxiliary KPI is not added to FinancialAnalysis evidence. No FinancialAnalysis contribution, native KPI/Forecast tool call, import route or autonomous discovery was observed."
+    },
+    {
+      "case": "Public BI selection",
+      "accepted_scope": "Actual artifact save/read and public durable human selection, case isolation with an unchanged preference revision on refusal, typed ContextualBIInput, matching persisted artifact/input digests and public consumers after reload, then actual source-withdrawal refusal.",
+      "consumer_refs": [
+        "bi-selection-read",
+        "bi-artifact-read",
+        "bi-data",
+        "bi-source"
+      ],
+      "limits": "No ContextualBIProposal, native tool receipt, native contribution consumption, autonomous handle discovery or principal ACL revocation was observed. Marker equality and the executed unconditional source assertions support the UI/domain consumer claim."
+    },
+    {
+      "case": "Question Work",
+      "accepted_scope": "Actual one-alternative C10 case with explicit human pending training, current public Work selection and Question input, fresh-host prior-selector refusal/reselection, real Work/UI consumers and idempotent existing C06 action, then source loss refusal. All ten logged phases returned before the test PASS.",
+      "timing": {
+        "reportedMs": 254350.31,
+        "completionMarkerElapsedMs": 254345,
+        "declaredDeadlineMs": 360000
+      },
+      "limits": "No predecessor answer was selected in this branch; questionRef, native output, native receipt and new thread remain null. The input is not re-prepared after reload, as explicitly stated. This does not close answer_read, confirmed-answer reuse, native QuestionProposal or the omitted-category proof. The earlier source/run timeout is retained, not retroactively changed."
+    }
+  ],
+  "native_boundary": {
+    "catalogObservations": 6,
+    "allCatalogsActuallyReportedEmpty": true,
+    "nativeUnavailableObservations": 3,
+    "inferenceExecutedObserved": 0,
+    "nativeToolReceiptsObserved": 0,
+    "nativeOutputsObserved": 0,
+    "nativeConsumersObserved": 0,
+    "gnativeAccepted": false,
+    "scope": "The host/catalog bootstrap is real according to the pinned harness; its observed available/supported/published/intersection arrays are all empty. The three test PASS results cover their executed UI/domain branches. Omni174 spawns are not evidence of native inference."
+  },
+  "timing_and_selection": {
+    "aggregateSeconds": 501.28,
+    "passesWithinDeclaredDeadlines": true,
+    "noLateQuestionCallbacksObservedAfterItsPass": true,
+    "qualification": "This is one observed execution of the corrected sources, not a controlled benchmark, universal duration guarantee or permission to increase deadlines. The receipt preserves that distinction.",
+    "filteredOut": "Exactly one Executive Work case in the selected Work source file is filtered out by the anchored three-name request. It is not a fourth pass, failure, skipped runtime proof, or new Executive result."
+  },
+  "publication_limit": "The five source bytes match the recorded W28 manifest and saved publication lineage. The dispatch compare has one commit, exact parent W28 and only .ci-run.json added. This review used those existing MCP proofs rather than requesting another snapshot/source/log download.",
+  "independent_review_limits": [
+    "No independent execution of the product or the three tests.",
+    "No reuse of this result as the result for the newly authored Dashboard/CAPEX Answer driver.",
+    "No promotion of source-withdrawal negatives to principal ACL-revocation proof.",
+    "No broad WP12, all18-skill, inherited campaign or model-configuration acceptance.",
+    "The parent-reported single original log fetch is consistent with the saved transport; this review itself makes zero remote fetches."
+  ],
+  "crosscheck": {
+    "path": "resume-input/own-review/run-23-new-routes/crosscheck.json",
+    "bytes": 7928,
+    "sha256": "585d75e51f165aedd12ae34b407b37102ff57030c3f5520e4577e6898dc50789",
+    "blob": "21bba6536d35f107dda64255c7d168a635b21abd"
+  },
+  "activities": {
+    "receiptEdited": false,
+    "sourceEdited": false,
+    "remoteCalls": false,
+    "logRefetched": false,
+    "sourceRefetched": false,
+    "productImported": false,
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false
+  },
+  "conclusion": "No material discrepancy found between run-23-new-routes.json, the exact saved log, terminal metadata, request and recorded source lineage. The three scoped UI/domain successes and the zero-native boundary are accurately reported."
+}
