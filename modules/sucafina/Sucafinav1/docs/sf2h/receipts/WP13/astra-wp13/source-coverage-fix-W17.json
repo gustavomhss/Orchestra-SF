@@ -1,0 +1,120 @@
+{
+  "schema": "wp13-owned-fixture-correction-v1",
+  "status": "FROZEN_STATIC_REVIEW_NO_RUNTIME_PROOF",
+  "owner": "WP13",
+  "author": "/root/wp13_findings",
+  "date": "2026-11-14",
+  "subject": "S13 raw forecast source coverage routing and canonical criterion preview",
+  "observedFailure": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/tests-S13-SourceSelectionFix1.json",
+    "productHead": "eb5d411292b8892673cff751b3492a14146b7785",
+    "productTree": "2fd4176a9779c23394b6d4c62f55cb3956295904",
+    "snapshotHead": "17927d81ded3bd6304744d5103a791ba59071fbe",
+    "snapshotTree": "d5126c211f5d41f4579128883f1ff8703d51c42a",
+    "runId": 43597811942,
+    "testJobId": 132455959494,
+    "requestSha256": "944944e3a746b2d20f730899bc783ef2326cadf4ffa59d112fd795ca5f23f5ca",
+    "result": "FAIL: 0 passed, 1 failed, 14 expect calls",
+    "caseDurationMs": 33897.88,
+    "suiteDurationSeconds": 34.04,
+    "failure": "Baseline product.port.evaluate returned needs-input / invalid-coverage-reference at the original test line 41, after the W16 explicit comparison adapter advanced past the S9 duplicate-C08 lookup failure.",
+    "control": "Focused N/A accepted; no omni or native proof",
+    "log": {
+      "path": "reference/wp13-S13-SourceSelectionFix1-tests.log.txt",
+      "sha256": "dde03ade487658ef0f80d56e9eed02c040544158c807d48650784f5cb95af3bf",
+      "bytes": 71629
+    },
+    "acceptedFileProof": false
+  },
+  "ownedChange": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+    "before": {
+      "productHead": "eb5d411292b8892673cff751b3492a14146b7785",
+      "gitBlob": "122db9855836ab4f713696c34549ab56c8c98f80",
+      "sha256": "2189b4016b628d86c43c673815ca1f74c70c4943e91e6d344d4af126122304e3",
+      "bytes": 34092,
+      "archive": "reference/wp13-W17-before/modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts"
+    },
+    "after": {
+      "gitBlob": "a2cf45f6c343c384c37a36e0c36437e379178b43",
+      "sha256": "142f0914b7e83eae13810b9281a9338f62523e4fa3dece5234054feec7f1f233",
+      "bytes": 42213
+    },
+    "authorshipBoundary": "Only this WP13 test fixture composition changed. No financial producer, contract, engine, grant, case history, C08 envelope or foreign source was authored or rewritten by this correction."
+  },
+  "cause": [
+    "createDecisionCoverageAccess accepts case-coverage selectors. W16 wired it as the entire resolveForecastCoverage provider, but Planner.simulateScenario also asks for the bare forecast baseRef.",
+    "Attaching the old baseline registry alone would remain stale: the own ceiling criterion is added after owner bootstrap, and baseline caseScopeDigest includes criteria. Re-registering separately would advance durable coverage versions without advancing the owner fixture private coverageVersions Map used by resolveTraining."
+  ],
+  "composition": [
+    "Keep case-coverage selectors on the real createDecisionCoverageAccess reader. For a bare source, require exactly one pinned phase baseline/selected observation and fresh source authorization.",
+    "For a persisted source-only alternative, require operations=[] and assumptions=[], exact current case identity/incarnation/version, exact C08 request/result/envelope and alternative matching, full source identity/version/projection digest, and exact basis/assessment from canonical stored-scenario and case-coverage readers. Numerical equality alone cannot establish this route.",
+    "For the initial selected alternative with three replace operations, delegate to the original raw source provider and require its real pending assessment and matching basis. Do not promote its hypothetical C08 coverage into source coverage or fall back to pending after a source-only authentication failure.",
+    "Use a separate real projectionPlanner whose coverage provider explicitly returns unavailable only for source projection. Stored-scenario admission calls its canonical compareForecast; it cannot recurse into the coverage router.",
+    "Compose the own criterion metric with real comparePlannerPreview, routed sources, canonical stored scenarios and a separate real Planner simulation without criteria. Keep the phase units issuer and actual rule registry. Initial unknown must arise from conditioned -30000, not stale bootstrap metric-unavailable.",
+    "After source/evidence/host callbacks, compare one final joint case+C08 snapshot and full detached digests. Synchronous requestFor identity, binding, request selector and abort-signal checks fence the return."
+  ],
+  "preservation": {
+    "testCases": 1,
+    "expectSourceLinesBefore": 64,
+    "expectSourceLinesAfter": 72,
+    "allPriorExpectSourceLinesPreservedVerbatim": true,
+    "testBudgetMs": 180000,
+    "budgetChanged": false,
+    "oracles": [
+      "USD 240000 complete baseline; initial known USD 210000 with total=null and training missing",
+      "Canonical -30000 difference; explicit 240000 ceiling and 20000 advantage criteria",
+      "Same case/id/incarnation and actual ChoiceRecord; training40000 yields total250000 and +10000, both criteria failed",
+      "N-A/shared declarations and no duplicate implementation/migration price",
+      "Real comparison, portfolio binding, durable read/retry and immutable historical C08/choice",
+      "No prepared application or command receipt; substituted baseline and source revocation refused",
+      "W16 default ambiguous-C08 refusal and explicit-reference comparison/final joint snapshot remain intact"
+    ],
+    "addedDiscriminants": [
+      "Canonical metric equals -30000 USD with conditioned state; both unknown rule reasons are criterion-metric-conditioned",
+      "Initial hypothetical source retains the real source-coverage reference, pending state and missing training",
+      "Unselected source and unadmitted context are refused",
+      "A substituted source version returned after the real stored-scenario resolver is refused as stale; original resolver is restored",
+      "Existing real baseline source/evidence revocation also refuses the bare-source coverage route"
+    ],
+    "countLimit": "64 and 72 count source lines containing expect, not hosted executed expect calls."
+  },
+  "independentReview": {
+    "path": "reference/wp13-S13-coverage-routing-review.json",
+    "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+    "gitBlob": "44f27caad79bc02cb1f5b3f6ec2d3152e4c05634",
+    "sha256": "bafe07ed14f0208e1302129966f823acb0f21f708914e6eb76d6b2ed9c3b8fc4",
+    "bytes": 12075,
+    "conclusion": "No concrete static blocker found for the frozen a2cf45f6 draft in types, recursion, source/C08/C10 correlation or final observation fencing. Root separately reviewed the full W16 diff."
+  },
+  "separateOwnerInputs": {
+    "caseReader": {
+      "owner": "WP11",
+      "commit": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "preparedBy": "/root",
+      "receipt": "reference/wp13-W17-case-pin-preparation.json",
+      "exactBlobs": {
+        "product/decisions/case-port.ts": "e646386af209978f2a931a10a070061ba0c97cbe",
+        "test/product/wp11/case-read-fence.test.ts": "67b8b179a3fba332933d8ad00820df82b7ab258e"
+      },
+      "purpose": "Full current case digest after final callbacks, including membership/criteria/ledger; separate exact owner intake, no WP13 authorship."
+    },
+    "finance": {
+      "status": "NO_NEW_INTAKE_BY_THIS_FIX",
+      "review": "reference/wp13-W17-owner-intake-review.json",
+      "unappliedCandidateOwnerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "limit": "Owner source-only admission late-callback correction requires a compatible isolated helper or reviewed broader Planner closure. It is not applied or resolved by this fixture routing fix. Existing published Finance producers remain unchanged."
+    }
+  },
+  "validationAndNextAction": {
+    "localProductTestsRun": false,
+    "localTypecheckRun": false,
+    "remoteOperationsByThisTask": false,
+    "newDraftHostedProof": "NOT_RUN",
+    "runtimeWithin180s": "NOT_PROVEN",
+    "installedConsumerProof": false,
+    "ready": false,
+    "boundary": "Explicit phase selection and raw-source coverage routing are controlled own fixture composition, not installed WP10 host discovery or GNATIVE adoption. No source/C10 assessment is fabricated and no absence is converted to zero.",
+    "nextAction": "Root may publish these frozen bytes in W17 with the separately reviewed exact case-reader pins, run the hosted package check, and dispatch the focused source test only after S12 terminates. Preserve S13 failure and all prior proof pins; do not transfer W16 S12 proof to a changed dependency closure without review."
+  }
+}

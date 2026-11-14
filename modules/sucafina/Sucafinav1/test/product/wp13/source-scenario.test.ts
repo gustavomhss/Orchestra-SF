@@ -17,6 +17,7 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { createPlannerResultPersistence } from "../../../product/planner/persistence.ts"
 import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
 import { createPlannerPort } from "../../../product/planner/port.ts"
+import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
 import { createPortfolioAnalysis } from "../../../product/portfolio/analysis.ts"
 import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
@@ -53,6 +54,7 @@ test("portfolio replays the USD 240000 ceiling and USD 20000 advantage in the sa
     expect(original.components.some((component) => component.id.startsWith("training:"))).toBe(false)
     if (!original.analysis) throw new Error("Portfolio comparison was not persisted")
     expect(original.analysis.comparison.criterionResults).toEqual(policyCriteria.map((criterionId) => expect.objectContaining({ criterionId, state: "unknown" })))
+    expect(original.analysis.comparison.criterionResults).toEqual(policyCriteria.map((criterionId) => expect.objectContaining({ criterionId, reason: "criterion-metric-conditioned" })))
     expect((await history.before.results.read({ kind: "comparison", resultRef: original.analysis.comparisonRef }, history.fixture.context)).status).toBe("ok")
     const originalBinding = await before.comparisonBindings.read({ caseRef: history.before.caseRef, resultRef: original.analysis.comparisonRef }, history.fixture.context)
     if (originalBinding.status !== "ok") throw new Error("Both policy criteria were not bound to the original C08 comparison")
@@ -140,6 +142,7 @@ test("portfolio replays the USD 240000 ceiling and USD 20000 advantage in the sa
     expect(readsAfterRule).toBeGreaterThan(0)
     expect((await after.persistent.read(confirmed.value.portfolioResultRef, history.fixture.context)).status).not.toBe("ok")
     expect(revokedBaselineReads).toBeGreaterThan(readsAfterRule)
+    expect((await after.coverageFor(phase.baselineScenario.baseRef, history.fixture.context)).status).not.toBe("ok")
   } finally { await history.cleanup() }
 }, 180000)
 
@@ -172,14 +175,62 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
   if (baseline.status !== "ok" || baseline.value.kind !== "scenario" || digestSfValue(baseline.value.caseRef) !== digestSfValue(phase.caseRef) || baseline.value.requestDigest !== digestSfValue(phase.baselineScenario) || baseline.value.resultDigest !== digestSfValue(phase.baselineResult) || baseline.value.result.total !== 240000 || baseline.value.result.comparisonStatus !== "complete" || baseline.value.result.costCoverage.coverageState !== "complete" || !baseline.value.sourceRefs.length || !await evidenceCurrent(baseline.value.sourceRefs, context)) throw new Error("The ceiling requires the exact complete USD 240000 C08 baseline and current evidence")
   expect(baseline.value.result).toMatchObject({ knownSubtotal: 240000, total: 240000, currency: "USD", comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } })
   expect(baseline.value.result.sourceRefs).toEqual(phase.baselineResult.sourceRefs)
-  const sources: PlannerSourceHost = {
-    resolveForecastSource: async (reference, trusted) => {
-      const source = phase.sourceRefs.find((ref) => ref.kind === "record" && ref.refId === reference && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
-      return source?.kind === "record" && await evidenceCurrent([source], trusted) ? { status: "ok", value: { versionId: source.target.recordId, evidence: source } } : { status: "unavailable", reason: "planner-source-unavailable" }
-    },
-    resolveForecastCoverage: createDecisionCoverageAccess({ state, host, authorizeCase, verifyEvidence: (basis, assessment, trusted) => evidenceCurrent([...basis.sourceRefs, ...assessment.evaluatedSourceRefs], trusted) }),
+  const resolveSource: PlannerSourceHost["resolveForecastSource"] = async (reference, trusted) => {
+    const source = phase.sourceRefs.find((ref) => ref.kind === "record" && ref.refId === reference && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+    return source?.kind === "record" && await evidenceCurrent([source], trusted) ? { status: "ok", value: { versionId: source.target.recordId, evidence: source } } : { status: "unavailable", reason: "planner-source-unavailable" }
   }
-  const scenarios = createStoredPlannerScenarioHost({ store: phase.results, cases: phase.cases, planner: phase.planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+  const caseCoverage = createDecisionCoverageAccess({ state, host, authorizeCase, verifyEvidence: (basis, assessment, trusted) => evidenceCurrent([...basis.sourceRefs, ...assessment.evaluatedSourceRefs, ...assessment.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)], trusted) })
+  // This port produces only the canonical source projection for stored-scenario admission.
+  // It cannot enter this fixture's coverage router or the owner's earlier criterion scope.
+  const projectionPlanner = createPlannerPort({ host, sources: { resolveForecastSource: resolveSource, resolveForecastCoverage: async () => ({ status: "unavailable", reason: "coverage-not-needed-for-source-projection" }) } })
+  const scenarios = createStoredPlannerScenarioHost({ store: phase.results, cases: phase.cases, planner: projectionPlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+  const observations = structuredClone([
+    { scenario: phase.baselineScenario, resultRef: phase.baselineRef, result: phase.baselineResult },
+    { scenario: phase.scenario, resultRef: phase.selectedRef, result: phase.selectedResult },
+  ])
+  const forecastCoverage: PlannerSourceHost["resolveForecastCoverage"] = async (reference, trusted) => {
+    const matches = observations.filter((observation) => observation.scenario.baseRef === reference)
+    if (matches.length !== 1) return { status: "unavailable", reason: "fixture-source-selection-unavailable" }
+    const observation = matches[0]!
+    const sourceOnly = !observation.scenario.operations.length && !observation.scenario.assumptions.length
+    const http = host.requestFor(trusted)
+    const authority = digestSfValue([trusted.kind, trusted.binding])
+    if (!http || http.signal.aborted || !await host.revalidate(trusted)) return { status: "denied", reason: "fixture-source-coverage-access-unavailable" }
+    const source = structuredClone(await resolveSource(reference, trusted))
+    if (source.status !== "ok") return source
+    const readScope = () => state.read(http, "cases", (value, admitted) => admitted.principalRef === trusted.binding.principalRef && admitted.policyVersion === trusted.binding.policyVersion && admitted.accessRevision === trusted.binding.accessRevision
+      ? { decision: value.cases[phase.caseRef.id], stored: value.decisionResults?.[observation.resultRef] } : undefined)
+    const before = structuredClone(await readScope())
+    if (before.status !== "ok" || !before.value?.decision || !before.value.stored || !await authorizeCase(before.value.decision, trusted)) return { status: "denied", reason: "fixture-source-coverage-access-unavailable" }
+    const { decision, stored } = before.value
+    const alternatives = decision.alternatives.filter((alternative) => digestSfValue(alternative.scenario) === digestSfValue(observation.scenario) && digestSfValue(alternative.result) === digestSfValue(observation.result))
+    if (digestSfValue({ id: decision.id, incarnation: decision.incarnation, version: decision.version }) !== digestSfValue(phase.caseRef) ||
+      stored.kind !== "scenario" || stored.resultRef !== observation.resultRef || digestSfValue(stored.caseRef) !== digestSfValue(phase.caseRef) ||
+      stored.requestDigest !== digestSfValue(observation.scenario) || stored.resultDigest !== digestSfValue(observation.result) || digestSfValue(stored.result) !== stored.resultDigest || alternatives.length !== 1)
+      return { status: "stale", reason: "fixture-source-coverage-selection-changed" }
+    // Only an authenticated source-only C08 may supply coverage for the bare source.
+    // A hypothetical alternative uses the real raw inventory, which stays pending.
+    const resolved = sourceOnly ? structuredClone(await scenarios.resolve(observation.resultRef, trusted)) : undefined
+    if (resolved && resolved.status !== "ok") return resolved
+    const expectedRef = decisionCoverageRef(phase.caseRef, alternatives[0]!.id, alternatives[0]!.version)
+    if (resolved?.status === "ok" && (resolved.value.coverageRef !== expectedRef || digestSfValue(resolved.value.source) !== digestSfValue(source.value.evidence) || digestSfValue(resolved.value.result) !== stored.resultDigest))
+      return { status: "stale", reason: "fixture-source-coverage-proof-changed" }
+    const coverage = structuredClone(await (sourceOnly ? caseCoverage(expectedRef, trusted) : history.fixture.sources.resolveForecastCoverage(reference, trusted)))
+    if (coverage.status !== "ok") return coverage
+    if (resolved?.status === "ok" ? coverage.value.coverageRef !== expectedRef || digestSfValue(coverage.value.basis) !== digestSfValue(resolved.value.basis) || digestSfValue(coverage.value.assessment) !== digestSfValue(resolved.value.result.costCoverage)
+      : coverage.value.assessment.coverageState !== "pending" || coverage.value.basis.id !== stored.result.costCoverage.basisId || coverage.value.basis.version !== stored.result.costCoverage.basisVersion)
+      return { status: "stale", reason: "fixture-source-coverage-assessment-changed" }
+    const refs = [...coverage.value.basis.sourceRefs, ...coverage.value.assessment.evaluatedSourceRefs, ...coverage.value.assessment.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+    const sourceAgain = structuredClone(await resolveSource(reference, trusted))
+    if (digestSfValue(sourceAgain) !== digestSfValue(source) || !await evidenceCurrent(refs, trusted) || !await host.revalidate(trusted)) return { status: "stale", reason: "fixture-source-coverage-evidence-changed" }
+    // A single final snapshot fences case and exact C08 after every awaited producer callback.
+    const after = await readScope()
+    if (after.status !== "ok" || digestSfValue(after.value) !== digestSfValue(before.value) || http.signal.aborted || host.requestFor(trusted) !== http || digestSfValue([trusted.kind, trusted.binding]) !== authority)
+      return { status: "stale", reason: "fixture-source-coverage-scope-changed" }
+    return { status: "ok", value: coverage.value }
+  }
+  const sources: PlannerSourceHost = { resolveForecastSource: resolveSource, resolveForecastCoverage: (reference, trusted) => reference.startsWith("case-coverage:") ? caseCoverage(reference, trusted) : forecastCoverage(reference, trusted) }
+  const previewPlanner = createPlannerPort({ host, sources, evidence: phase.evidence })
   const fence = await history.fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) }))
   const verifySnapshot = (snapshot: Snapshot) => sfRunSourceFence(snapshot) === fence
   const caseFor = async () => ({ status: "ok" as const, value: phase.caseRef })
@@ -188,12 +239,29 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
   // difference metric; <= 0 is equivalent to the ceiling only for the pinned complete 240000 baseline.
   const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
   const rules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async (request, trusted) => trusted.kind === "ui" && request.criterionId === criterion.id && request.metricRef === "planner:known-subtotal-difference" && request.operator === "lte" && request.value === 0 && request.unit === "USD" && request.sensitivity?.baselineRef === phase.baselineRef && await host.revalidate(trusted), verifyEvidence: (rule, trusted) => evidenceCurrent(rule.evidenceRefs, trusted), verifySnapshot, readMetric: (request, trusted) => { if (!metrics.read) throw new Error("Canonical criterion metric not composed"); return metrics.read(request, trusted) }, verifyMetric: (metric, trusted) => evidenceCurrent(metric.evidenceRefs, trusted), operationIdentity: () => `source-ceiling-rule-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
-  metrics.read = createPlannerCriterionMetric({ host, rules, units: phase.issuer, preview: phase.preview })
+  metrics.read = createPlannerCriterionMetric({ host, rules, units: phase.issuer, preview: (request, trusted) => comparePlannerPreview({ host, sources, scenarios, planner: previewPlanner }, request, trusted) })
   if (!phase.rule.sensitivity) throw new Error("Canonical rule units unavailable")
   const registered = await rules.register({ caseRef: phase.caseRef, criterionId: criterion.id, metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", period: phase.selectedResult.horizon, evidenceRefs: phase.rule.sensitivity.sourceRefs, sensitivity: phase.rule.sensitivity, expectedRuleVersion: expectedCeilingRuleVersion }, context)
   if (registered.status !== "ok") throw new Error(`Ceiling policy registration: ${JSON.stringify(registered)}`)
   const ceiling = await rules.resolve({ caseRef: phase.caseRef, criterionId: criterion.id }, context)
   if (ceiling.status !== "ok") throw new Error("Persisted ceiling policy unavailable")
+  if (expectedCeilingRuleVersion === 0) {
+    const metric = await metrics.read({ caseRef: phase.caseRef, criterionId: criterion.id, ruleRef: ceiling.value.ruleRef, ruleVersion: ceiling.value.version, scenarioRef: phase.selectedRef, baselineRef: phase.baselineRef, metricRef: "planner:known-subtotal-difference" }, context)
+    expect(metric).toMatchObject({ status: "ok", value: { value: -30000, state: "conditioned", unit: "USD" } })
+    const pending = await forecastCoverage(phase.scenario.baseRef, context)
+    expect(pending).toMatchObject({ status: "ok", value: { coverageRef: `source-coverage:${phase.scenario.baseRef}`, assessment: { coverageState: "pending" } } })
+    if (pending.status !== "ok") throw new Error("Raw source inventory unavailable")
+    expect(pending.value.assessment.derivedMissingCategoryIds).toContain("training")
+    expect((await forecastCoverage("unselected-source", context)).status).not.toBe("ok")
+    expect((await forecastCoverage(phase.baselineScenario.baseRef, { ...context, binding: { ...context.binding, accessRevision: "unadmitted-revision" } })).status).not.toBe("ok")
+    const resolve = scenarios.resolve
+    scenarios.resolve = async (reference, trusted) => {
+      const value = await resolve(reference, trusted)
+      return value.status === "ok" ? { status: "ok", value: { ...value.value, source: { ...value.value.source, target: { ...value.value.source.target, version: value.value.source.target.version + 1 } } } } : value
+    }
+    try { expect((await forecastCoverage(phase.baselineScenario.baseRef, context)).status).toBe("stale") }
+    finally { scenarios.resolve = resolve }
+  }
   const planner = createPlannerPort({ host, sources, scenarios, evidence: phase.evidence, criteria: { evaluate: (request, trusted) => rules.evaluate({ caseRef: phase.caseRef, ...request }, trusted) } })
   const comparisonBindings = createCriterionComparisonBindings({ state, host, rules, results: phase.results, authorizeCase, verifyBinding: async (binding, result, trusted) => {
     const compared = await planner.compareScenarios(binding.request, trusted)
@@ -301,5 +369,5 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
     if (!choice) throw new Error("Both-policy choice was not persisted")
     return { caseRef: recorded.value.caseRef, choice: structuredClone(choice), retry: () => mutations.recordChoice(choiceRequest, context) }
   }
-  return { product, persistent: product.persistent, request, comparisonBindings, planner, rules, ceilingRule: ceiling.value, choose, baselineCandidateRef: portfolioCandidateRef({ caseRef: encodeCaseRef(phase.caseRef), caseVersion: phase.caseRef.version, alternativeId: "baseline", alternativeVersion: phase.baselineResult.costCoverage.alternativeVersion }) }
+  return { product, persistent: product.persistent, request, comparisonBindings, planner, rules, ceilingRule: ceiling.value, choose, coverageFor: sources.resolveForecastCoverage, baselineCandidateRef: portfolioCandidateRef({ caseRef: encodeCaseRef(phase.caseRef), caseVersion: phase.caseRef.version, alternativeId: "baseline", alternativeVersion: phase.baselineResult.costCoverage.alternativeVersion }) }
 }
