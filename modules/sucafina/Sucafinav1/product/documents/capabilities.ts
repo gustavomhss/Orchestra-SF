@@ -158,19 +158,25 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
   const matches: EvidenceSearchResult["matches"][number][] = []
   const seen = new Set<string>()
   const sources = new Map<string, () => Promise<boolean>>()
-  for (const record of records.slice(0, 100)) {
+  for (const record of records) {
     if (matches.length >= request.limit) break
     const installationId = record.schema === "sf-document-v1" ? record.evidence.ref.installationId : record.installationId
     const projectId = record.schema === "sf-document-v1" ? record.evidence.ref.projectId : record.projectId
     if (installationId !== context.binding.installationId || projectId !== context.binding.projectId) continue
     const documentId = record.schema === "sf-document-v1" ? record.evidence.ref.target.documentId : record.snapshot.documentRef
+    const sourceKey = digestSfValue([installationId, projectId, documentId, record.snapshot.incarnation, record.snapshot.revision, record.snapshot.blobDigest])
+    if (sources.has(sourceKey)) continue
     const reader = input.reader ?? (record.schema === "sf-document-v1" ? createSfDocumentEvidenceAdapter(async (_documentId, call) => {
       const current = await readDocumentEvidence(record.evidence.id, call, { state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate })
       return current.status === "ok" ? { status: "ok", snapshot: current.value.snapshot } : { status: "unavailable", accessRevision: call.binding.accessRevision }
     }, input.documents, input.parser) : undefined)
     if (!reader) continue
     const document = await reader(documentId, context, undefined, record.schema === "sf-document-v1" ? record.evidence.ref : undefined)
-    if (document.status !== "ok") continue
+    if (document.status !== "ok" || document.accessRevision !== context.binding.accessRevision || document.incarnation !== record.snapshot.incarnation || document.revision !== record.snapshot.revision || document.blobDigest !== record.snapshot.blobDigest || !(await document.revalidate().catch(() => false))) continue
+    // Field candidates and RAG revisions of the same authorized document share one scan slot.
+    sources.set(sourceKey, document.revalidate)
+    // Keep the overflow witness in the egress fence: it is the source of the limit metadata.
+    if (sources.size > 100) break
     const hits = await withStore(document.store, () => searchWords(record.snapshot.ragRevision.id, request.query))
     for (const chunk of hits) {
       if (matches.length >= request.limit) break
@@ -185,11 +191,10 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
       if (!(await document.revalidate()) || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
       seen.add(checkedRef.refId)
       matches.push({ documentRef: checkedRef, text: request.query, lexicalScore: 1 })
-      sources.set(documentId, document.revalidate)
     }
   }
   if ((await Promise.all([...sources.values()].map((revalidate) => revalidate().catch(() => false)))).some((current) => !current) || hostRequest.signal.aborted || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
-  return { status: "ok", value: { matches, limitations: ["lexical-exact-match", ...(records.length > 100 ? ["document-scan-limited"] : [])] } }
+  return { status: "ok", value: { matches, limitations: ["lexical-exact-match", ...(sources.size > 100 ? ["document-scan-limited"] : [])] } }
 }
 
 export async function listDocumentEvidence(documentRef: string, context: TrustedDomainContext, input: DocumentEvidenceHost): Promise<PortResult<readonly DocumentEvidence[]>> {
