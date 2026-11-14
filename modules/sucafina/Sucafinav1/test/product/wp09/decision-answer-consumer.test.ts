@@ -4,15 +4,22 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { randomUUID } from "node:crypto"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { rows } from "../../../runtime/contract.ts"
+import { resolve } from "../../../src/identity.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { RoutineResult } from "../../../product/contracts/context.ts"
-import type { PortResult } from "../../../product/contracts/ports.ts"
+import type { DomainPortHost, PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
+import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
+import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
+import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
+import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
+import { createSfDashboardRecordSourceAccess } from "../../../product/decision-memory/source-access.ts"
 import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { answerDecisionRoutine, readDecisionRoutine } from "../../../product/routines/decision.ts"
@@ -33,19 +40,37 @@ test("routine answer uses the real versioned case command and a replay cannot cr
     const gate = { active: true, starts: 0, preparations: 0 }
     const at = "2026-11-13T00:00:00Z"
     const caseRef = { id: "case", incarnation: "case-inc", version: 1 }
-    const answer: BusinessEvidenceRef = { schema: "sf-evidence-v1", kind: "record", refId: "answer", installationId: "installation", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "dashboard", recordType: "projects", recordId: "project", incarnation: "source-inc", version: 1, fields: ["notes"], projectionDigest: "b".repeat(64) } }
     const decision: DecisionCase = { ...caseRef, state: "investigating", objective: "Review the quote", horizon: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD", criteria: [{ id: "cost", description: "Quoted cost", required: true }], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [{ id: "question", text: "Confirm the quoted cost", state: "open" }], choices: [], preparedChanges: [], receipts: [], ledger: [] }
-    const mutation = { caseRef, questionId: "question", answerRef: answer.refId }
     const operation = "sf-human:decision-answer"
-    const ui = createSfUiAuthority({ authorize: async () => gate.active ? { installationId: "installation", projectId: "project", principalRef: "person", policyVersion: "policy", accessRevision: "access" } : undefined, commandIdentity: async (_request, _operation, digest) => digest, createId: randomUUID, now: () => Date.parse(at), privateCommands: [operation] })
-    const request = new Request("https://example.test/answer", { method: "POST", headers: { origin: "https://example.test" } })
+    const identity = (request: Request) => gate.active && request.headers.get("actor") === "person" ? { installationId: "installation", projectId: "project", principalRef: "person", policyVersion: "policy", accessRevision: "access" } : undefined
+    const ui = createSfUiAuthority({ authorize: async (request) => identity(request), commandIdentity: async (_request, _operation, digest) => digest, createId: randomUUID, now: () => Date.parse(at), privateCommands: [operation] })
+    const request = new Request("https://example.test/answer", { method: "POST", headers: { origin: "https://example.test", actor: "person" } })
+    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
+    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+    await persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.roleMap = [{ surface: "dashboard", role: "domain leader", entra: "leaders", version: 1, by: "fixture" }]
+      snapshot.data.hotTopics = [{ id: "quote-evidence", action: "Quoted cost", owner: "Selected Person", due: "2026-12-01", status: "open", priority: "normal", notes: "The quoted cost is 42 USD" }]
+      return { commit: true, value: undefined }
+    })
+    const host: DomainPortHost = {
+      persistence,
+      authenticate: async (request, options) => identity(request) ? resolve("person", [...options!.roleMap], (group) => group === "leaders") : null,
+      environment: async () => ({ at, id: randomUUID, directory: [{ id: "person", name: "Selected Person" }] }),
+      requestFor: (value) => value.kind === "ui" ? ui.requestFor(value) : undefined,
+      revalidate: async (value) => value.kind === "ui" && await ui.revalidate(value),
+    }
+    const readDigest = digestSfValue({ runRef: "run" })
+    const read = available(await ui.admit(request, "sf_routine_status", readDigest))
+    if (!await ui.validate(read, "sf_routine_status", readDigest)) throw new Error("Source read admission unavailable")
+    const records = createDashboardRecordEvidenceHost({ host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: persistence }) })
+    const answer = available(await records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "quote-evidence", fields: ["notes"], period: { start: at.slice(0, 10), end: at.slice(0, 10) } }, read))
+    const mutation = { caseRef, questionId: "question", answerRef: answer.refId }
     const context = available(await ui.admit(request, operation, digestSfValue(mutation)))
     if (!await ui.validate(context, operation, digestSfValue(mutation))) throw new Error("Answer admission unavailable")
-    const host = { requestFor: (value: TrustedDomainContext) => value.kind === "ui" ? ui.requestFor(value) : undefined, revalidate: async (value: TrustedDomainContext) => value.kind === "ui" && await ui.revalidate(value) }
-    const state = createSfProductState({ persistence: store, createId: randomUUID, authorize: async () => gate.active ? { principalRef: "person", policyVersion: "policy", accessRevision: "access" } : undefined, resolveTarget: async () => ({ incarnation: caseRef.incarnation }) })
+    const state = createSfProductState({ persistence, createId: randomUUID, authorize: async (request) => identity(request), resolveTarget: async (_request, _snapshot, _namespace, target) => target === caseRef.id ? { incarnation: caseRef.incarnation } : undefined })
     const initial = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "initial", commandDigest: digestSfValue(decision) }, async (current) => { current.cases[caseRef.id] = decision; return { commit: true, value: null } })
     expect(initial.status).toBe("ok")
-    const evidence = createSfBusinessContext({ revalidate: host.revalidate, resolveSource: async (ref, binding) => ({ state: gate.active ? "fresh" : "unavailable", ref, accessRevision: binding.binding.accessRevision, checkedAt: at }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
+    const evidence = createSfBusinessContext({ revalidate: host.revalidate, resolveSource: createSfDashboardRecordSourceAccess({ host, records }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
     const operationIdentity = (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined
     const authorizeCase = async (value: DecisionCase, binding: TrustedDomainContext) => gate.active && value.participants.includes(binding.binding.principalRef)
     const cases = createDecisionCasePort({ state, host, evidence, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity, authorizeCase, createId: randomUUID, now: () => at })
@@ -55,7 +80,7 @@ test("routine answer uses the real versioned case command and a replay cannot cr
       authorizeMutation: async (name, payload, binding) => name === "answer-question" && binding.kind === "ui" && ui.matchesIntent(binding, operation, digestSfValue(payload)) && await ui.revalidate(binding),
       verifyMutation: (_snapshot, name, payload, binding) => gate.active && name === "answer-question" && binding.kind === "ui" && ui.matchesIntent(binding, operation, digestSfValue(payload)),
       confirmAnswer: async (ref, questionId, answerRef, binding) => binding.kind === "ui" && ui.matchesIntent(binding, operation, digestSfValue({ caseRef: ref, questionId, answerRef })),
-      resolveAnswer: async (ref) => ref === answer.refId && gate.active ? { status: "ok", value: answer } : { status: "denied", reason: "answer-unavailable" },
+      resolveAnswer: (ref, binding) => records.resolve(ref, binding),
       confirmChoice: async () => false, resolveQuestion: unused, resolveChoiceValues: unused, prepareDomainCommands: unused, createId: randomUUID, now: () => at,
     })
     // This native metadata fixture tests the case consumer; it does not qualify a Relay run.
@@ -80,13 +105,16 @@ test("routine answer uses the real versioned case command and a replay cannot cr
     expect(available(await answerDecisionRoutine(input))).toEqual(first)
     const current = available(await cases.read({ caseRef: encodeCaseRef(caseRef) }, context)).case
     expect(current.version).toBe(2)
-    expect(current.questions).toEqual([{ id: "question", text: "Confirm the quoted cost", state: "answered", answerRef: "answer" }])
+    expect(current.questions).toEqual([{ id: "question", text: "Confirm the quoted cost", state: "answered", answerRef: answer.refId }])
     expect(current.sourceRefs).toEqual([answer])
     expect(current.alternatives).toEqual([])
     expect(current.choices).toEqual([])
     expect(gate.starts).toBe(0)
     expect(gate.preparations).toBe(0)
     expect((await readDecisionRoutine({ admissionRef: "admission", runRef: "run", caseRef, context, host: routineHost })).status).toBe("stale")
+    await persistence.transaction("dashboard", async (snapshot) => { rows(snapshot.data.hotTopics)[0]!.notes = "A new quote supersedes this evidence"; return { commit: true, value: undefined } })
+    expect(await cases.read({ caseRef: encodeCaseRef(caseRef) }, context)).toEqual({ status: "unavailable", reason: "case-evidence-unavailable" })
+    expect((await answerDecisionRoutine(input)).status).toBe("unavailable")
     gate.active = false
     expect((await answerDecisionRoutine(input)).status).toBe("denied")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }

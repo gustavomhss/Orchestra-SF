@@ -61,7 +61,8 @@ test("a changed native result pin during recovery is stale and absent artifacts 
   const access = createRoutineResultAccess({ ...f.dependencies,
     readArtifact: async () => { f.state.run = { ...f.state.run, resultRef: "new-result" }; return { status: "ok", value: f.state.output } } })
   expect(await access.readResult("child-session", f.context)).toEqual({ status: "stale", reason: "routine-result-changed" })
-  f.state.run = { ...f.state.run, resultRef: undefined }
+  const { resultRef: _completedResult, ...pending } = f.state.run
+  f.state.run = pending
   expect(await access.readResult("child-session", f.context)).toEqual({ status: "needs-input", reason: "result-not-ready" })
 })
 

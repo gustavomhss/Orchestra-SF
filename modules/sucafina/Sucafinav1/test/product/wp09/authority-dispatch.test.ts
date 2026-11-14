@@ -21,10 +21,11 @@ test("all six routine operations use the consumed UI lease through the common di
   const native = createSfExecutionBindingRegistry({ authenticateAndResolve: async () => undefined, revalidateAdmission: async () => false })
   const authority = createSfDomainAuthority({ ui, native })
   const run = { documentId: "recipe", publishedVersion: "v1", principalRef: "person", projectId: "project", admission: "admitted", admissionRef: "admission", admissionVersion: 3, runRef: "run", resultRef: "result", correlationId: "correlation", sourceRefs: [], pending: [] } as const
+  const { resultRef, ...pendingRun } = run
   const mark = <T>(value: T) => { state.invoked++; return Promise.resolve({ status: "ok" as const, value }) }
   const routines = {
     catalog: async () => { if (state.revokedDuringRead) state.allowed = false; return mark([{ documentId: "recipe", publishedVersion: "v1", planRevisionId: "plan", writeScope: [], title: "Review" }]) },
-    prepareAdmission: async () => mark(run), readAdmission: async () => mark(run), readRun: async () => mark(state.pendingResult ? { ...run, resultRef: undefined } : run), run: async () => mark(run),
+    prepareAdmission: async () => mark(run), readAdmission: async () => mark(run), readRun: async () => mark(state.pendingResult ? pendingRun : run), run: async () => mark(run),
   } satisfies BusinessPorts["routines"]
   const descriptors = createRoutineCapabilities({
     routines,
