@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -22,6 +23,7 @@ import { sfPlannerProjectionSelector } from "../integration/source-projections.t
 import { sfPlannerSourceSelector } from "../integration/planner-sources.ts"
 import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
 import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
+import { sfRunSourceFence } from "../ai/run-store.ts"
 
 type CaptureSelection = Parameters<BusinessContextService["recall"]>[0]
 type CaptureObservation = {
@@ -310,13 +312,30 @@ export function createSfAtlasBusiness(input: {
     if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable()
     return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
   }
+  // The installed host locates captures through memory.readOriginal. Only this
+  // private callback may use the integrity reader without resolving its own
+  // historical source again. An overlapping public call cannot inherit it.
+  const captureLookup = new AsyncLocalStorage<{ call: TrustedDomainContext; digest: string; active: boolean; stable: () => boolean }>()
   const readOriginalCapture = async (digest: string, call: TrustedDomainContext) => {
-    const selected = await input.caseForEvidence(digest, call)
+    const request = input.host.requestFor(call)
+    const lease = call.lease
+    const binding = digestSfValue([call.kind, call.binding])
+    const headers = request && digestSfValue([...request.headers.entries()])
+    const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
+      binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()])
+    if (!stable()) return undefined
+    const lookup = { call, digest, active: true, stable }
+    const selected = await captureLookup.run(lookup, async () => {
+      try { return await input.caseForEvidence(digest, call) }
+      finally { lookup.active = false }
+    })
+    if (!stable()) return undefined
     const refs = !selected ? [] : Array.isArray(selected) ? selected : [selected]
     if (!refs.length || refs.length > 500) return undefined
     const found = await mapSfEvidenceInOrder(refs, (ref) => memory.readOriginalCapture(ref, digest, call))
     const originals = found.filter((capture): capture is NonNullable<typeof capture> => !!capture)
-    return originals.length && originals.every((ref) => digestSfValue(ref) === digestSfValue(originals[0])) && await input.host.revalidate(call) ? originals[0] : undefined
+    return stable() && originals.length && originals.every((ref) => digestSfValue(ref) === digestSfValue(originals[0])) &&
+      await input.host.revalidate(call) && stable() ? originals[0] : undefined
   }
   const readOriginal = async (digest: string, call: TrustedDomainContext) => (await readOriginalCapture(digest, call))?.ref
   const recordHistory = createSfRecordHistory({ host: input.host, readOriginalCapture, now: input.now,
@@ -417,8 +436,80 @@ export function createSfAtlasBusiness(input: {
   const context = assembled.service
   resolveAncestry = assembled.resolveAncestry
   const canonicalMemory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
-  const memory = { ...canonicalMemory, recall: (ref: { id: string; incarnation: string }, call: TrustedDomainContext) =>
-    recallScope ? recallScope.recall(ref, call, () => canonicalMemory.recall(ref, call)) : canonicalMemory.recall(ref, call) }
+  const memory = {
+    ...canonicalMemory,
+    recall: (ref: { id: string; incarnation: string }, call: TrustedDomainContext) =>
+      recallScope ? recallScope.recall(ref, call, () => canonicalMemory.recall(ref, call)) : canonicalMemory.recall(ref, call),
+    async readOriginal(ref: { id: string; incarnation: string }, digest: string, call: TrustedDomainContext): Promise<BusinessEvidenceRef | undefined> {
+      try {
+        const selected = structuredClone(ref)
+        const lookup = captureLookup.getStore()
+        if (lookup) {
+          if (!lookup.active || lookup.call !== call || lookup.digest !== digest || !lookup.stable()) return undefined
+          const capture = await canonicalMemory.readOriginalCapture(selected, digest, call)
+          return lookup.active && lookup.stable() && digestSfValue(ref) === digestSfValue(selected) ? capture?.ref : undefined
+        }
+        const request = input.host.requestFor(call)
+        const lease = call.lease
+        const binding = digestSfValue([call.kind, call.binding])
+        const headers = request && digestSfValue([...request.headers.entries()])
+        const observations: { value: unknown; identity: string }[] = []
+        const pin = (value: unknown) => { observations.push({ value, identity: digestSfValue(value) }) }
+        const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
+          binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
+          digestSfValue(ref) === digestSfValue(selected) && observations.every((item) => digestSfValue(item.value) === item.identity)
+        if (!stable() || !await input.host.revalidate(call) || !stable()) return undefined
+        const capture = await canonicalMemory.readOriginalCapture(selected, digest, call)
+        if (!capture || !stable()) return undefined
+        pin(capture)
+        const owner = deriveSfMemoryOwner(call.kind === "ui" ? { ...call.binding, kind: "ui" } : { ...call.binding, kind: "native" }, selected)
+        if (!owner || !request) return undefined
+        const before = await input.state.read(request, "atlas", (state) => ({ partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[selected.id] }))
+        if (before.status !== "ok" || !stable()) return undefined
+        pin(before.value)
+        // Canonical recall validates the complete case and every dependency of
+        // every linked record, including captures other than the requested one.
+        const read = () => canonicalMemory.readOriginalRecords(selected, digest, call)
+        const recalled = await (recallScope ? recallScope.recall(selected, call, read) : read())
+        if (recalled.status !== "ok" || !stable()) return undefined
+        pin(recalled.records)
+        if (!recalled.records.some((record) => record.resolutions.some((source) => digestSfValue(source.ref) === digestSfValue(capture.ref)))) return undefined
+        const current = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
+        if (current.status !== "ok" || !stable() || recalled.records.some((record) => digestSfValue(record.case.case) !== digestSfValue(current.value.case))) return undefined
+        pin(current.value)
+        const sourceFences = () => {
+          const snapshots = input.host.persistence.currentSnapshots?.()
+          return snapshots && { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) }
+        }
+        // Readers may issue source metadata. Fence their completed observations
+        // before the final source round, outside any enclosing write scope.
+        const sourceBefore = await input.state.read(request, "atlas", (state) => ({ sources: sourceFences(), sourceState: digestSfValue(state) }))
+        if (sourceBefore.status !== "ok" || !sourceBefore.value.sources || !stable()) return undefined
+        pin(sourceBefore.value)
+        const identity = (source: BusinessEvidenceResolution) => digestSfValue({ state: source.state, ref: source.ref, currentRef: source.currentRef,
+          accessRevision: source.accessRevision, differences: source.differences,
+          projection: source.state === "fresh" && source.authorizedProjection && "values" in source.authorizedProjection
+            ? currentProjectionIdentity(source.authorizedProjection) : source.authorizedProjection })
+        // A fresh observation after the case await must still describe the same
+        // source. Historical projections remain the immutable captured bytes.
+        for (const record of recalled.records) for (const source of record.resolutions) {
+          const again = await context.resolve(structuredClone(source.ref), call)
+          if (!stable() || identity(again) !== identity(source)) return undefined
+          pin(again)
+        }
+        const recaptured = await canonicalMemory.readOriginalCapture(selected, digest, call)
+        if (!recaptured || !stable() || digestSfValue(recaptured) !== digestSfValue(capture)) return undefined
+        pin(recaptured)
+        const after = await input.state.read(request, "atlas", async (state) => {
+          if (!await input.host.revalidate(call) || !stable()) return undefined
+          return { value: { partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[selected.id] }, fence: { sources: sourceFences(), sourceState: digestSfValue(state) } }
+        })
+        if (after.status !== "ok" || !after.value || !stable() || digestSfValue(after.value.value) !== digestSfValue(before.value) ||
+          digestSfValue(after.value.fence) !== digestSfValue(sourceBefore.value)) return undefined
+        return structuredClone(capture.ref)
+      } catch { return undefined }
+    },
+  }
   const readContext = context.context
   context.context = async (selection, call) => {
     const request = input.host.requestFor(call)
@@ -696,3 +787,4 @@ function recordDifferences(original: RecordRef, current: RecordRef, before: Doma
   }
   return differences
 }
+
