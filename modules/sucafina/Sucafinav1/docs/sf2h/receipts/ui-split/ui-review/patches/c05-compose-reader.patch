@@ -1,0 +1,263 @@
+# NOT_APPLIED: owner proposal; no shared source file was modified.
+diff --git a/apps/cli/src/sucafina-product/dashboard-services.ts b/apps/cli/src/sucafina-product/dashboard-services.ts
+index 0891d178833165fff098e3c05f3a64c5f5b35043..9084d0d376a5135aa5804b002d8068ac09f89f83 100644
+--- a/apps/cli/src/sucafina-product/dashboard-services.ts
++++ b/apps/cli/src/sucafina-product/dashboard-services.ts
+@@ -1,6 +1,6 @@
+ import { randomUUID } from "node:crypto"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+-import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { Period, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { DashboardPort, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+@@ -20,6 +20,8 @@
+ import type { ReviewHost, ReviewSection } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
+ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
++import { createSfReviewHistory } from "./review-history.ts"
++import { protectSfReviewReads } from "./review-read-integrity.ts"
+ 
+ export type DashboardAgendaSection = { id: string; title: string; selectionRef: string; topic: string; period: Period; recordRefs?: readonly string[] }
+ export type DashboardAgendaRequest = { sections: readonly DashboardAgendaSection[] }
+@@ -33,6 +35,7 @@
+   sources: ReturnType<typeof createDashboardSourceHost>
+   records: ReturnType<typeof createDashboardRecordEvidenceHost>
+   dashboardHostWrites: WeakSet<object>
++  evidence?: BusinessContextService
+ }) {
+   const { host, state, creationTarget, human } = input.authority
+   const agenda = createDashboardAgendaSelector({ host, dashboard: input.dashboard, sources: input.sources, recordEvidence: input.records })
+@@ -87,7 +90,7 @@
+         throw new Error("SF_DASHBOARD_REVIEW_SOURCE_CHANGED")
+       return result
+     }) }
+-  const reviews = createReviewPort({ state: reviewState, creationTarget,
++  const reviewHost: ReviewHost = { state: reviewState, creationTarget,
+     authorizeOutcomeComparison: async (_context, values) => values.length === 0,
+     authorizeOutcome: async (_context, values) => values.length === 0,
+     authorizeDecision: async (_context, values) => values.length === 0,
+@@ -95,7 +98,35 @@
+     select, authorizeSections: (context, sections) => revalidateSources(context, sections.flatMap((section) => section.sourceRefs)),
+     authorizeComments: async (_context, comments) => comments.length === 0,
+     authorizeSensitivity: async (_context, sensitivity) => sensitivity.length === 0,
+-    revalidate: revalidateSources, revalidateEvidence: (context, refs) => resolveEvidence(refs, context) })
++    revalidate: revalidateSources, revalidateEvidence: (context, refs) => resolveEvidence(refs, context) }
++  const reviews = createReviewPort(reviewHost)
++  // Preview and preservation keep the source-current writer above. Historical reads
++  // reopen an exact C08-captured body under the current ACL and source incarnation.
++  const reviewHistory = input.evidence ? createSfReviewHistory({ authority: input.authority, persistence: input.scopedSources, evidence: input.evidence }) : undefined
++  const historicalSources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
++    if (!reviewHistory || !await host.revalidate(context)) return false
++    const sources = new Map(refs.map((ref) => [digestSfValue(ref), structuredClone(ref)]))
++    const checked = await Promise.all([...sources.values()].map((ref) => ref.surface === "dashboard" && reviewHistory.historicalSource(ref, context)))
++    return checked.every(Boolean) && await host.revalidate(context)
++  }
++  const historicalReviews = reviewHistory ? createReviewPort({ ...reviewHost,
++    authorizeSections: (context, sections) => historicalSources(context, sections.flatMap((section) => section.sourceRefs)),
++    revalidate: historicalSources,
++    revalidateEvidence: async (context, refs) => {
++      if (!await host.revalidate(context)) return false
++      const references = new Map(refs.map((ref) => [digestSfValue(ref), structuredClone(ref)]))
++      const checked = await Promise.all([...references].map(async ([expected, ref]) => {
++        if (ref.kind !== "record" || ref.target.surface !== "dashboard") return false
++        const result = await reviewHistory.evidence.resolve(ref, context)
++        return (result.state === "fresh" || result.state === "historical") && result.accessRevision === context.binding.accessRevision && digestSfValue(result.ref) === expected
++      }))
++      return checked.every(Boolean) && await host.revalidate(context)
++    },
++  }) : reviews
++  protectSfReviewReads({ authority: input.authority, reviews: historicalReviews })
++  // Previous-review links and exact retries also reopen the protected capture;
++  // preserve still selects and commits only current source projections.
++  reviews.read = historicalReviews.read.bind(historicalReviews)
+   const readCapture = async (captureId: string, context: TrustedDomainContext): Promise<PortResult<DashboardHistoricalCapture>> => {
+     const request = host.requestFor(context)
+     if (!request || !await host.revalidate(context)) return { status: "denied", reason: "historical-capture-unavailable" }
+@@ -193,7 +224,7 @@
+         .filter((review) => review.sections.every((section) => object(object(section.content).context).principalRef === authority.principalRef))
+         .sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 100).map((review) => review.id) : [])
+       if (savedReviews.status === "ok") for (const id of savedReviews.value) {
+-        const current = await reviews.read(id, context)
++        const current = await historicalReviews.read(id, context)
+         if (current.status === "ok") historyOptions.push({ kind: "review", ref: id, label: `${current.value.sections.map((section) => section.title).join(", ")} · ${current.value.createdAt.slice(0, 10)}` })
+       }
+       const actions = await input.authority.humanActions(source)
+@@ -231,7 +262,7 @@
+         expectedStorageVersion: current.status === "ok" ? current.storageVersion : 0, idempotencyKey: `dashboard-review:${operation}`, targetIncarnation: creationTarget.incarnation }, context)
+       return result
+     },
+-    readReview: reviews.read.bind(reviews),
++    readReview: historicalReviews.read.bind(historicalReviews),
+     capture: async (incoming: { sourceRef: string }, context: TrustedDomainContext): Promise<PortResult<{ captureId: string }>> => {
+       const request = structuredClone(incoming)
+       if (context.kind !== "ui" || !await human.authorize(context, "reviews.preserve", request)) return { status: "denied", reason: "human-capture-authority-required" }
+diff --git a/apps/cli/src/sucafina-product/review-read-integrity.ts b/apps/cli/src/sucafina-product/review-read-integrity.ts
+index 2bd1fbd753e38f38ef58e4d71f364972ac22703e..2a04d86546c1c5361ec523a5f7c7189b5a8d2d65 100644
+--- a/apps/cli/src/sucafina-product/review-read-integrity.ts
++++ b/apps/cli/src/sucafina-product/review-read-integrity.ts
+@@ -1,18 +1,67 @@
++import { AsyncLocalStorage } from "node:async_hooks"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { SfProductState } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+ import type { createReviewPort } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
++
++type ReviewResult = PortResult<PreservedReview>
++type ReadProof = { fence: string; result: ReviewResult }
++type ReadScope = { request: Request; open: boolean; calls: WeakMap<TrustedDomainContext, Map<string, ReadProof>>;
++  delegated: WeakMap<TrustedDomainContext, Set<string>> }
+ 
+ /** Every consumer reopens the body's own C08 receipt, in addition to producer ACL checks. */
+ export function protectSfReviewReads(input: {
+   authority: ReturnType<typeof createSfProductAuthority>
+   reviews: ReturnType<typeof createReviewPort>
++  /** Only the default installation readers have their entire authority in these snapshots. */
++  localSnapshotReaders?: boolean
+ }) {
+   const { authority, reviews } = input
++  const host = authority.host
+   const read = reviews.read.bind(reviews)
+-  reviews.read = async (id: string, call: TrustedDomainContext): Promise<PortResult<PreservedReview>> => {
++  const execution = new AsyncLocalStorage<ReadScope>()
++  const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => scope.open &&
++    execution.getStore() === scope && host.requestFor(call) === scope.request && !scope.request.signal.aborted &&
++    digestSfValue([call.kind, call.binding]) === binding
++  const receiptDigest = (state: Readonly<SfProductState>, id: string, digest: string) => {
++    if (!state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return undefined
++    const receipts = Object.values(state.transactions).filter((receipt) => {
++      if (receipt.namespace !== "reviews" || !receipt.principalRef.trim() || receipt.targetRef !== authority.creationTarget.ref ||
++        receipt.targetIncarnation !== authority.creationTarget.incarnation || !receipt.value || typeof receipt.value !== "object" || Array.isArray(receipt.value)) return false
++      const value = receipt.value
++      if ("schema" in value) return value.schema === "sf-review-receipt-v1" && Object.keys(value).length === 3 &&
++        "reviewRef" in value && value.reviewRef === id && "reviewDigest" in value && value.reviewDigest === digest
++      return "id" in value && value.id === id && digestSfValue(value) === digest
++    })
++    return receipts.length ? digestSfValue(receipts) : undefined
++  }
++  const snapshot = async (id: string, call: TrustedDomainContext, scope: ReadScope, binding: string) => {
++    if (!sameCall(scope, call, binding) || !await host.revalidate(call) || !sameCall(scope, call, binding)) return undefined
++    const checked = await authority.state.read(scope.request, "reviews", async (state, actor) => {
++      if (!sameCall(scope, call, binding) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
++        actor.policyVersion !== call.binding.policyVersion) return undefined
++      const snapshots = host.persistence.currentSnapshots?.()
++      const review = state.reviews[id]
++      if (!snapshots || !review) return undefined
++      const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest)
++      if (!receipt) return undefined
++      // Reauthenticate the actual domain principals as well as the C08 reader.
++      // Full snapshots include unversioned case/body/receipt changes and source metadata.
++      const principals = await Promise.all((["dashboard", "planner", "procurement"] as const).map(async (surface) =>
++        [surface, await host.authenticate(scope.request, { surface, roleMap: roleMap(snapshots[surface], surface) })] as const))
++      const at = (await host.environment(scope.request)).at
++      if (!Number.isFinite(Date.parse(at)) || !await host.revalidate(call) || !sameCall(scope, call, binding) ||
++        digestSfValue(host.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return undefined
++      return { digest, fence: digestSfValue({ snapshots, actor, principals, binding, day: new Date(at).toISOString().slice(0, 10), id, digest, receipt }) }
++    })
++    // C08 reauthorizes after its callback. Do not await again after that fence.
++    return checked.status === "ok" && sameCall(scope, call, binding) ? checked.value : undefined
++  }
++  const legacyRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
+     const denied = (): PortResult<PreservedReview> => ({ status: "denied", reason: "review-integrity-unavailable" })
+     try {
+       const request = authority.host.requestFor(call)
+@@ -25,16 +74,7 @@
+         if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
+           !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return undefined
+         // The original writer may differ from the current authorized reader.
+-        // Current read rights are still checked by the real Review producer.
+-        const receipts = Object.values(state.transactions).filter((receipt) => {
+-          if (receipt.namespace !== "reviews" || !receipt.principalRef.trim() || receipt.targetRef !== authority.creationTarget.ref ||
+-            receipt.targetIncarnation !== authority.creationTarget.incarnation || !receipt.value || typeof receipt.value !== "object" || Array.isArray(receipt.value)) return false
+-          const value = receipt.value
+-          if ("schema" in value) return value.schema === "sf-review-receipt-v1" && Object.keys(value).length === 3 &&
+-            "reviewRef" in value && value.reviewRef === id && "reviewDigest" in value && value.reviewDigest === digest
+-          return "id" in value && value.id === id && digestSfValue(value) === digest
+-        })
+-        return receipts.length ? digestSfValue(receipts) : undefined
++        return receiptDigest(state, id, digest)
+       })
+       const before = await proof()
+       if (before.status !== "ok" || !before.value) return denied()
+@@ -45,4 +85,77 @@
+       return first
+     } catch { return denied() }
+   }
++  const protectedRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
++    const scope = execution.getStore()
++    if (!scope || !input.localSnapshotReaders) return legacyRead(id, call)
++    const denied = (): ReviewResult => ({ status: "denied", reason: "review-integrity-unavailable" })
++    const binding = digestSfValue([call.kind, call.binding])
++    try {
++      if (!sameCall(scope, call, binding)) return denied()
++      let proofs = scope.calls.get(call)
++      if (!proofs) { proofs = new Map(); scope.calls.set(call, proofs) }
++      const prior = proofs.get(id)
++      const before = await snapshot(id, call, scope, binding)
++      if (before && prior?.fence === before.fence) return structuredClone(prior.result)
++      proofs.delete(id)
++      // A canonical producer can materialize scoped source metadata. Never invoke
++      // it from the final read-only C08 group when its complete proof has changed.
++      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
++      let first = before
++      for (let attempt = 0; attempt < 2; attempt++) {
++        const result = structuredClone(await read(id, call))
++        const after = await snapshot(id, call, scope, binding)
++        if (!sameCall(scope, call, binding)) return denied()
++        if (first && after?.fence === first.fence && (result.status !== "ok" ||
++          digestSfValue(result.value) === after.digest && snapshotBoundReview(result.value))) {
++          proofs.set(id, { fence: after.fence, result: structuredClone(result) })
++          return result
++        }
++        if (result.status !== "ok") return result
++        if (!snapshotBoundReview(result.value)) {
++          let delegated = scope.delegated.get(call)
++          if (!delegated) { delegated = new Set(); scope.delegated.set(call, delegated) }
++          delegated.add(id)
++          return legacyRead(id, call)
++        }
++        first = after
++      }
++      return denied()
++    } catch { return denied() }
++  }
++  reviews.read = protectedRead
++  return {
++    run: async <Value>(request: Request, work: () => Promise<Value>): Promise<Value> => {
++      const current = execution.getStore()
++      if (current?.open && current.request === request) return work()
++      const scope: ReadScope = { request, open: true, calls: new WeakMap(), delegated: new WeakMap() }
++      return execution.run(scope, async () => { try { return await work() } finally { scope.open = false } })
++    },
++    prepare: async (references: readonly string[], call: TrustedDomainContext) => {
++      // Finish source materialization before the atomic group. A second pass
++      // observes one common fence if a later predecessor first opened a scope.
++      for (let pass = 0; pass < 2; pass++) for (const id of references) await protectedRead(id, call)
++    },
++  }
+ }
++
++/** External/native outcomes, comments and document readers retain the full producer path. */
++function snapshotBoundReview(review: PreservedReview) {
++  if (review.comments.length) return false
++  let remaining = 20_000
++  const visit = (value: unknown, depth = 0): boolean => {
++    if (depth > 24 || --remaining < 0) return false
++    if (!value || typeof value !== "object") return true
++    if (Array.isArray(value)) return value.every((entry) => visit(entry, depth + 1))
++    if ("reviewOutcome" in value || "reviewOutcomeComparison" in value ||
++      "reviewCommentRefs" in value && (!Array.isArray(value.reviewCommentRefs) || value.reviewCommentRefs.length > 0) ||
++      "reviewChart" in value && value.reviewChart && typeof value.reviewChart === "object" && "sensitivity" in value.reviewChart) return false
++    if ("decision" in value && value.decision !== undefined && (!value.decision || typeof value.decision !== "object" ||
++      !("kind" in value.decision) || value.decision.kind !== "portfolio")) return false
++    if ("schema" in value && value.schema === "sf-evidence-v1" &&
++      (!("kind" in value) || value.kind !== "record" || !("target" in value) || !value.target || typeof value.target !== "object" ||
++       !("surface" in value.target) || !["dashboard", "planner", "procurement"].includes(String(value.target.surface)))) return false
++    return Object.values(value).every((entry) => visit(entry, depth + 1))
++  }
++  return visit(review)
++}

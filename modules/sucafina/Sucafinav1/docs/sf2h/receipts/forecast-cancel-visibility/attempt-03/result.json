@@ -1,0 +1,939 @@
+{
+  "finding": "WP10-U30-CANCEL-VISIBILITY",
+  "phase": "REVOCATION_RECHECK",
+  "status": "PASS",
+  "W": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+  "W_tree": "dad99c523acce16873331fae2df3f10b82451695",
+  "S": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3",
+  "S_tree": "f0c03f75267521533a47c28377b3d2a00f8df9b0",
+  "run": 43633471899,
+  "job": 132565053859,
+  "cleanup_job": 132565530848,
+  "conclusion": "success",
+  "results": {
+    "pass": 4,
+    "fail": 0,
+    "expects": 65,
+    "tests": 4,
+    "files": 3,
+    "duration_seconds": 11.93
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "request_sha256": "9d0debce63f9ca353fc6abd2d0ef5f800ba066d573c890792cde1ed9344e8444",
+  "envelope": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+    "head": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/765a9a5b86c21791ed59152098971b2dfbe8398e"
+    },
+    "merge_base_commit": {
+      "sha": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/765a9a5b86c21791ed59152098971b2dfbe8398e"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 15,
+        "deletions": 0,
+        "changes": 15,
+        "previous_filename": null
+      }
+    ]
+  },
+  "selected_files": [
+    "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+    "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "omni": {
+    "nonce": "27cf0d5e078080cb85e0445445004959",
+    "verdict": "pass",
+    "declared": 1,
+    "spawns": 1,
+    "delegated": 0
+  },
+  "browser_driver": {
+    "consumer": "wp01-shared-pool",
+    "clientRuntime": {
+      "name": "bun",
+      "version": "1.3.14",
+      "pid": 4048
+    },
+    "driverRuntime": {
+      "name": "node",
+      "version": "24.22.2",
+      "pid": 4068
+    },
+    "playwrightVersion": "1.59.1",
+    "browserVersion": "157.0.8103.50",
+    "browserPid": 4083,
+    "transport": "playwright-unix-pipe-node-websocket",
+    "spawnBoundary": "AppProcess",
+    "browserStdioCount": 5,
+    "browserUsesPipe": true,
+    "browserPipeOwner": "node",
+    "bridge": {
+      "framing": "json-nul",
+      "acceptedClients": 1,
+      "framesToBrowser": 65,
+      "framesFromBrowser": 160,
+      "peakQueuedBytes": 2013,
+      "peakBufferedBytes": 1575,
+      "maxFrameBytes": 16777216,
+      "maxQueuedBytes": 33554432,
+      "directoryMode": 448,
+      "socketMode": 384
+    },
+    "lifecycle": {
+      "remainingContexts": 0,
+      "connected": false,
+      "nodeExitCode": 0,
+      "browserExitCode": 0,
+      "browserSignal": null,
+      "bridgeClosed": true,
+      "listenerClosed": true,
+      "socketClosed": true,
+      "pipeEnded": true,
+      "webSocketOpened": true,
+      "webSocketClosed": true,
+      "webSocketCloseCode": 1000,
+      "webSocketCloseWasClean": true,
+      "pendingFrameBytes": 0,
+      "queuedWriteBytes": 0,
+      "socketRemoved": true,
+      "directoryRemoved": true
+    }
+  },
+  "artifacts": {
+    "artifacts": []
+  },
+  "raw_log_sha256": "e17356ecdc8a2099cd6dc8f47b51aed7bf8cbf1a2206ed9abb0e205de52f0d40",
+  "observations": [
+    {
+      "scenario": "revocation-http-403",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "revocation-http-403",
+      "phase": "active-before-revoke",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "revocation-http-403",
+      "phase": "revoked",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis access changed. Reopen the decision with your current access.",
+        "cancel": null,
+        "retry": null,
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "",
+        "resultBodies": 0,
+        "matchedDisplayRules": []
+      }
+    },
+    {
+      "scenario": "revocation-shell-event",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "revocation-shell-event",
+      "phase": "ready-before-revoke",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "ready",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: ready.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 1,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    }
+  ],
+  "detached_revoked_view": {
+    "source": "shell-event",
+    "detached": {
+      "connected": false,
+      "status": "Analysis access changed. Reopen the decision with your current access.",
+      "cancelCount": 0,
+      "retryCount": 0,
+      "startDisabled": true,
+      "config": null,
+      "currency": "",
+      "fields": [
+        {
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "disabled": true,
+          "value": ""
+        },
+        {
+          "disabled": true,
+          "value": ""
+        }
+      ],
+      "historyConnected": false,
+      "historyCase": null,
+      "historyText": "",
+      "historyOutputs": 0
+    }
+  },
+  "matrix_proofs": [
+    {
+      "name": "revocation-http-403",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "active-before-revoke",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "revoked",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis access changed. Reopen the decision with your current access.",
+            "cancel": null,
+            "retry": null,
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "",
+            "resultBodies": 0,
+            "matchedDisplayRules": []
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "revocation-shell-event",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "ready-before-revoke",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "ready",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: ready.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 1,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "output",
+          "payload": {
+            "action": "output",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        }
+      ]
+    }
+  ],
+  "previous_failure": "Run43633001171 stays FAIL 14/1. Its shell-event test expected the old form to remain connected. This recheck confirms the real shell replacement and that controller scrubbing happened before detachment.",
+  "reattachment": {
+    "source_W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+    "source_S": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+    "source_run": 43633001171,
+    "target_W": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+    "source_run_conclusion": "FAIL 14/1; individual passes only reattached, not an aggregate green",
+    "changed_nonreceipt_files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+        "status": "modified",
+        "additions": 49,
+        "deletions": 7,
+        "changes": 56,
+        "previous_filename": null
+      }
+    ],
+    "unchanged_product_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+        "sha256": "59d9c86ef6cf885b6529cfa9f8c8b5828ddaf8761a6b96b9a86ef30b625048ab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "blob": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747",
+        "sha256": "3a59606e892ff67c0cfde99ed292e571add4b055de0a1aa9879054ab4f523fd5"
+      }
+    ],
+    "unaffected_test_and_helper_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/controls.ts",
+        "blob": "c72f26d769276275d2124b39723bdf287eb9ebdc",
+        "size": 1722
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/fixture.ts",
+        "blob": "3f7fdbc50bd1e879a84008a5cf7acc95a2e5d346",
+        "size": 4534
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+        "blob": "aa2ddcd4f4fb405739f90ebf48a1d17fe15d6ab1",
+        "size": 12100
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/journey.ts",
+        "blob": "bb70fd8e7da9db90fdd4851078beade6191ad507",
+        "size": 7508
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+        "blob": "7ee91814cd7e538611a9dec559df2b4b6612f27c",
+        "size": 4160
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+        "blob": "7c5af7447ab003acc6019305585dea507cceadba",
+        "size": 3211
+      }
+    ],
+    "basis": "Compare source_W..target_W modifies only revocation.test.ts and adds append-only receipts. Startup, lifecycle, browser driver, renderer, controller, shell, resident catalog, all other fixtures/config/environment and three passing test files remain byte-identical.",
+    "reattached_passes": [
+      "U30 click positive and Enter409",
+      "all six terminal cases and three active states",
+      "status read retry before/after running",
+      "cancel confirmed",
+      "503 cancellation status reconciliation"
+    ],
+    "rechecked": "Entire revocation.test.ts plus required browser startup/lifecycle",
+    "not_claimed": "Do not report 15/0 for the 14/1 run, or report the complete selection executed on target_W."
+  },
+  "limits": {
+    "real": [
+      "forecastAnalysisForm",
+      "forecastAnalysisScript",
+      "documentHtml/pageMain shell",
+      "distributed resident catalog",
+      "Chromium and existing WP01/WP02 browser pool"
+    ],
+    "fixture": [
+      "case and evidence data",
+      "model catalog",
+      "HTTP prepare/start/read/output responses"
+    ],
+    "not_claimed": [
+      "financial producer",
+      "native model or Session",
+      "AM01-AM06",
+      "GLOBAL_RELEASE"
+    ],
+    "additional": [
+      "503 after fixture cancellation is not a physical network/process loss",
+      "No deliberately delayed read/output response across revocation was executed",
+      "HTTP403 is an explicit response fixture; authentication and authorization are not exercised",
+      "Viewport/focus matrix and native financial production remain outside this proof"
+    ]
+  }
+}

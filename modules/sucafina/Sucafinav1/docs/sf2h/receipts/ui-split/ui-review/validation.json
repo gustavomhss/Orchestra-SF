@@ -1,0 +1,442 @@
+{
+  "schema": "sf-ui-review-validation-v1",
+  "status": "PARTIAL_OWNER_INTEGRATION_REQUIRED",
+  "releaseClaim": "NONE",
+  "sourceBranch": "ui-review",
+  "targetPR": {
+    "number": 45,
+    "base": "interface-resume",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/45"
+  },
+  "runs": [
+    {
+      "label": "original-positive-published-wp10",
+      "scope": "Unchanged original WholeReview positive on the published WP10 product.",
+      "W": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "WTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+      "S": "d86464da2f8792afda72867073fe65c0d788ab7b",
+      "STree": "168c1e705785db126b079b651401092ac8076c04",
+      "request": "requests/original-positive.json",
+      "requestSha256": "f08a82192abdc2bd4b4502f1174948a64a80ebcab2a65d3e4235a9db1ec87ddf",
+      "run": {
+        "id": 43619653668,
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "d86464da2f8792afda72867073fe65c0d788ab7b",
+        "head_branch": "ci-run-linux-ui-review-c05-a1434e7e-f08a8219-1",
+        "event": "push",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619653668",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:10:30Z",
+        "updated_at": "2026-11-14T17:12:21Z"
+      },
+      "jobId": 132522203465,
+      "delta": {
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added",
+            "additions": 16,
+            "deletions": 0
+          }
+        ]
+      },
+      "result": {
+        "pass": 1,
+        "fail": 0,
+        "assertions": 38,
+        "tests": [
+          "(pass) C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content [6031.16ms]"
+        ],
+        "omniControl": "2026-11-14T17:12:10.2015037Z omni positive control [2bb0ee553da7d2b680656c3f49777c7b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "excerpt": "logs/original-positive.log"
+    },
+    {
+      "label": "ui-review-initial-counterproof",
+      "scope": "Actual ui-review base with original owned tests. Functional failures and own test issues remain recorded.",
+      "W": "a08d2c6a4251c391036143fe06666a5b9f629a7b",
+      "WTree": "76b434c9bcadf1878ab16a1df244098c52b38c13",
+      "S": "22256892b1aeec870ec8badb9871e96117087fee",
+      "STree": "4e97784270d86dfdd1447d42970c00fcdb641a37",
+      "request": "requests/ui-review-consumers.json",
+      "requestSha256": "35f622ef2ca34dcbdb5645f168d75b9ed05dca98082f75c9ba693c37cee566ec",
+      "run": {
+        "id": 43620401922,
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "22256892b1aeec870ec8badb9871e96117087fee",
+        "head_branch": "ci-run-linux-ui-review-a08d2c6a-35f622ef-1",
+        "event": "push",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620401922",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:18:42Z",
+        "updated_at": "2026-11-14T17:23:42Z"
+      },
+      "jobId": 132524594140,
+      "delta": {
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added",
+            "additions": 17,
+            "deletions": 0
+          }
+        ]
+      },
+      "result": {
+        "pass": 3,
+        "fail": 4,
+        "assertions": 74,
+        "tests": [
+          "(pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [1561.99ms]",
+          "(fail) C05 UI renders the exact section context issued from the real preserved review reader [77651.31ms]",
+          "(fail) C05 UI preserves the issued section context after a legitimate financial change and a fresh read admission [28591.33ms]",
+          "(pass) C05 UI cannot reuse a preserved review pin after current read access is revoked [28557.39ms]",
+          "(fail) WholeReview UI reopens 1300 after reload and explicitly preserves a distinct 2400 observation [32227.77ms]",
+          "(fail) WholeReview UI removes preserved material when the real history route revokes access [30359.27ms]",
+          "(pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [85.33ms]"
+        ],
+        "omniControl": "2026-11-14T17:23:34.0202570Z omni positive control [1189a44097fc470d133dbe5166a8372b]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.",
+        "browser": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4740
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4760
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4777,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 78,
+            "framesFromBrowser": 232,
+            "peakQueuedBytes": 165953,
+            "peakBufferedBytes": 799,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      "excerpt": "logs/ui-review-initial.log"
+    },
+    {
+      "label": "ui-review-corrected-consumers",
+      "scope": "Only corrected pin/scope cases and browser revocation. Historical counterproofs and already-green reader revocation excluded on this unchanged reader.",
+      "W": "4183ebdb53b17b8e4efe9c8835ff2b0012e98624",
+      "WTree": "ec4fac7620aa27bf79f2af671838fd5a1c1db639",
+      "S": "4324becfe50e203b255ab2aac3748191054c4ff5",
+      "STree": "5e9053d877ebbaf2e5ae55ce0361d41c50bab0c8",
+      "request": "requests/ui-review-correction.json",
+      "requestSha256": "7d771c208ae5e3456c34cc1a39893c08aec8ef58305c88054f36b6637283e10d",
+      "run": {
+        "id": 43621128874,
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "4324becfe50e203b255ab2aac3748191054c4ff5",
+        "head_branch": "ci-run-linux-ui-review-4183ebdb-7d771c20-1",
+        "event": "push",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621128874",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:26:36Z",
+        "updated_at": "2026-11-14T17:31:03Z"
+      },
+      "jobId": 132526833852,
+      "delta": {
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added",
+            "additions": 17,
+            "deletions": 0
+          }
+        ]
+      },
+      "result": {
+        "pass": 6,
+        "fail": 0,
+        "assertions": 53,
+        "tests": [
+          "(pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [10068.64ms]",
+          "(pass) C05 UI renders the exact section context issued from the real preserved review reader [33626.13ms]",
+          "(pass) C05 UI rejects changed review version, digest and section against the real reader [38591.02ms]",
+          "(pass) C05 UI rejects a changed source version or incarnation for a real preserved section [33834.50ms]",
+          "(pass) WholeReview UI removes preserved material when the real history route revokes access [25454.65ms]",
+          "(pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [54.49ms]"
+        ],
+        "omniControl": "2026-11-14T17:30:55.9675388Z omni positive control [1701b1efa43e57b0722a5874182235ef]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.",
+        "browser": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4083
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4103
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4118,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 42,
+            "framesFromBrowser": 120,
+            "peakQueuedBytes": 165953,
+            "peakBufferedBytes": 941,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      "excerpt": "logs/ui-review-correction.log"
+    },
+    {
+      "label": "published-wp10-consumer-probe",
+      "scope": "Published WP10 production plus exactly the six owned test blobs from ui-review; not the ui-review candidate.",
+      "upstreamParent": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "upstreamDelta": {
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/browser-steps.ts",
+            "status": "added",
+            "additions": 30,
+            "deletions": 0
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/meeting-fixture.ts",
+            "status": "added",
+            "additions": 70,
+            "deletions": 0
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context-history.test.ts",
+            "status": "added",
+            "additions": 59,
+            "deletions": 0
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts",
+            "status": "added",
+            "additions": 62,
+            "deletions": 0
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts",
+            "status": "added",
+            "additions": 76,
+            "deletions": 0
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts",
+            "status": "added",
+            "additions": 45,
+            "deletions": 0
+          }
+        ]
+      },
+      "W": "ba85e0c6fd873026e1b7456214d125f340b170bf",
+      "WTree": "4cf22cac0f1fc9007b985fcc07fbd3c80e01e7ba",
+      "S": "7e902b570d1b422b469d5b64253c99c1de97d1b8",
+      "STree": "f46eea16e3176ab0f18e6474c9f2e6e4c7253a65",
+      "request": "requests/wp10-consumers.json",
+      "requestSha256": "26b2b154f1afc0d57c2b6101dd3a35267e2f67513132ffffbeb307c0535bc342",
+      "run": {
+        "id": 43621543227,
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "7e902b570d1b422b469d5b64253c99c1de97d1b8",
+        "head_branch": "ci-run-linux-ui-review-wp10-ba85e0c6-26b2b154-1",
+        "event": "push",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621543227",
+        "run_attempt": 1,
+        "created_at": "2026-11-14T17:31:14Z",
+        "updated_at": "2026-11-14T17:33:44Z"
+      },
+      "delta": {
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added",
+            "additions": 19,
+            "deletions": 0
+          }
+        ]
+      },
+      "result": {
+        "pass": 4,
+        "fail": 2,
+        "assertions": 81,
+        "tests": [
+          "(pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [10908.31ms]",
+          "(pass) WholeReview UI reopens 1300 after reload and explicitly preserves a distinct 2400 observation [20818.39ms]",
+          "(pass) WholeReview UI removes preserved material when the real history route revokes access [4476.88ms]",
+          "(pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [61.33ms]"
+        ],
+        "omniControl": "2026-11-14T17:33:34.9806193Z omni positive control [747f6256e6505c569f17d6d643423b40]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.",
+        "browser": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4064
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4086
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4101,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 133,
+            "framesFromBrowser": 316,
+            "peakQueuedBytes": 165954,
+            "peakBufferedBytes": 790,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        "importErrors": 2,
+        "unloadedFiles": [
+          "review-context.test.ts",
+          "review-context-history.test.ts"
+        ]
+      },
+      "jobId": 132528119418,
+      "excerpt": "logs/wp10-consumers.log"
+    }
+  ],
+  "checks": "static-checks.json",
+  "blobEquality": "consumer-blob-equality.json",
+  "inputPins": "input-pins.json",
+  "ownerFindings": "owner-findings.json",
+  "ownerProposals": "patches/manifest.json",
+  "constraints": {
+    "localProductTests": 0,
+    "sharedProductionWrites": 0,
+    "originalMeetingTestModified": false,
+    "deadlinesRelaxed": false,
+    "epicSuiteRun": false,
+    "agentsSpawned": 0,
+    "remoteOperations": "GitHub MCP only",
+    "globalCriteriaReduced": false,
+    "existingForeignProductBranchesModified": false,
+    "temporaryCIBranchesCreated": 4,
+    "businessChecksRetained": true
+  },
+  "publicationReconciliation": "publication-reconciliation.json",
+  "contextIntakeProposal": "patches/c05-context-intake.json",
+  "omniControlVerification": "omni-control-checks.json"
+}

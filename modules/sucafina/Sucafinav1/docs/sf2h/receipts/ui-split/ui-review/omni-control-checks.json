@@ -1,0 +1,31 @@
+{
+  "implementation": "script/test-ci-request.ts",
+  "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "source": "Only nonce/verdict-containing lines extracted unchanged from fetched job logs; every matching line retained.",
+  "results": [
+    {
+      "label": "original",
+      "job": 132522203465,
+      "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "evidence": "2026-11-14T17:12:03.3683986Z \u001b[36;1mecho \"omni control nonce: $nonce\"\u001b[0m\n2026-11-14T17:12:03.4103257Z omni control nonce: 2bb0ee553da7d2b680656c3f49777c7b\n2026-11-14T17:12:10.2015037Z omni positive control [2bb0ee553da7d2b680656c3f49777c7b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    },
+    {
+      "label": "ui-review-initial",
+      "job": 132524594140,
+      "verdict": "omni positive control: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.",
+      "evidence": "2026-11-14T17:20:14.2689172Z \u001b[36;1mecho \"omni control nonce: $nonce\"\u001b[0m\n2026-11-14T17:20:14.3097261Z omni control nonce: 1189a44097fc470d133dbe5166a8372b\n2026-11-14T17:23:34.0202570Z omni positive control [1189a44097fc470d133dbe5166a8372b]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated."
+    },
+    {
+      "label": "ui-review-correction",
+      "job": 132526833852,
+      "verdict": "omni positive control: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.",
+      "evidence": "2026-11-14T17:28:33.8306070Z \u001b[36;1mecho \"omni control nonce: $nonce\"\u001b[0m\n2026-11-14T17:28:33.8648437Z omni control nonce: 1701b1efa43e57b0722a5874182235ef\n2026-11-14T17:30:55.9675388Z omni positive control [1701b1efa43e57b0722a5874182235ef]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated."
+    },
+    {
+      "label": "wp10-consumers",
+      "job": 132528119418,
+      "verdict": "omni positive control: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.",
+      "evidence": "2026-11-14T17:32:58.1383804Z \u001b[36;1mecho \"omni control nonce: $nonce\"\u001b[0m\n2026-11-14T17:32:58.1717317Z omni control nonce: 747f6256e6505c569f17d6d643423b40\n2026-11-14T17:33:34.9806193Z omni positive control [747f6256e6505c569f17d6d643423b40]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated."
+    }
+  ]
+}

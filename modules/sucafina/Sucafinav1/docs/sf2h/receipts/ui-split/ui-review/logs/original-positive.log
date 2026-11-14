@@ -1,0 +1,33 @@
+2026-11-14T17:12:03.4173135Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=solid "${unit[@]}" "${common[@]}" || status=$?[0m
+2026-11-14T17:12:03.4174545Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?[0m
+2026-11-14T17:12:03.4175904Z [36;1m    GITHUB_ACTIONS=false bun test "${args[@]}"[0m
+2026-11-14T17:12:03.4322253Z bun test v1.3.14 (0d9b296a)
+2026-11-14T17:12:03.4432403Z 
+2026-11-14T17:12:03.4433273Z Sucafinav1/test/product/wp01/meeting-number.test.ts:
+2026-11-14T17:12:10.1981411Z SF_WP01_C05_HISTORICAL_REVIEW {
+2026-11-14T17:12:10.1982567Z   reviewId: "dashboard-review:3d8f14a6ac61686e121262fc7c704c367feb5b81109a238f1fd4acb328a34b9b",
+2026-11-14T17:12:10.1983639Z   originalCreatedAt: "2026-11-14T17:12:04.889Z",
+2026-11-14T17:12:10.1984244Z   originalTotal: 1300,
+2026-11-14T17:12:10.1984776Z   currentTotal: 2400,
+2026-11-14T17:12:10.1985323Z   sameSourceIncarnation: true,
+2026-11-14T17:12:10.1985882Z   httpStatus: 200,
+2026-11-14T17:12:10.1986359Z   resultStatus: "ok",
+2026-11-14T17:12:10.1986833Z   reason: undefined,
+2026-11-14T17:12:10.1987295Z }
+2026-11-14T17:12:10.2008466Z (pass) C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content [6031.16ms]
+2026-11-14T17:12:10.2012503Z 
+2026-11-14T17:12:10.2012703Z  1 pass
+2026-11-14T17:12:10.2013038Z  1 filtered out
+2026-11-14T17:12:10.2013385Z  0 fail
+2026-11-14T17:12:10.2013718Z  38 expect() calls
+2026-11-14T17:12:10.2014065Z Ran 1 test across 1 file. [6.77s]
+2026-11-14T17:12:10.2015037Z omni positive control [2bb0ee553da7d2b680656c3f49777c7b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T17:12:10.3090959Z Post job cleanup.
+2026-11-14T17:12:10.3094981Z ##[start-action display=Setup Bun;id=__b5555485-f8a4-4e70-adf1-be0ed64910a3.__oven-sh_setup-bun]
+2026-11-14T17:12:10.3131477Z Post job cleanup.
+2026-11-14T17:12:10.4964777Z ##[end-action id=__b5555485-f8a4-4e70-adf1-be0ed64910a3.__oven-sh_setup-bun;outcome=success;conclusion=success;duration_ms=186]
+2026-11-14T17:12:10.4968009Z ##[start-action display=Setup Node;id=__b5555485-f8a4-4e70-adf1-be0ed64910a3.__actions_setup-node]
+2026-11-14T17:12:10.5013689Z Post job cleanup.
+2026-11-14T17:12:10.6376204Z (node:4778) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T17:12:10.6377334Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T17:12:10.6515539Z ##[end-action id=__b5555485-f8a4-4e70-adf1-be0ed64910a3.__actions_setup-node;outcome=success;conclusion=success;duration_ms=154]
