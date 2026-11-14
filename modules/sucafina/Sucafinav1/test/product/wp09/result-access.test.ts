@@ -83,6 +83,15 @@ test("failed and cancelled native executions never open an artifact even with a 
   }
 })
 
+test("terminal receipt metadata cannot carry undeclared output bytes", async () => {
+  const f = fixture()
+  Object.assign(f.state.execution, { privateDiagnostic: { content: "private-receipt-sentinel" } })
+  const result = await f.access.readResult("child-session", f.context)
+  expect(result).toEqual({ status: "unavailable", reason: "routine-execution-unverified" })
+  expect(f.state.reads).toBe(0)
+  expect(JSON.stringify(result)).not.toContain("private-receipt-sentinel")
+})
+
 test("terminal state changes during artifact recovery invalidate the whole return", async () => {
   const f = fixture()
   const access = createRoutineResultAccess({ ...f.dependencies, readArtifact: async () => {

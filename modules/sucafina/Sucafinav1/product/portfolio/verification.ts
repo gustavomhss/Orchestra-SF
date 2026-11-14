@@ -17,6 +17,7 @@ import type { createPlannerSensitivity } from "./planner-sensitivity.ts"
 import type { CriterionComparisonBinding } from "../decisions/criterion-comparison.ts"
 import { createProductionPortfolio } from "./production.ts"
 import { portfolioResultDigest } from "./result-store.ts"
+import { plannerSensitivityScenario, validatePlannerThreshold, type KnownSubtotalThreshold } from "./threshold-proof.ts"
 
 /** Reproduce a bound portfolio or comparison using only authorized reads and Planner previews. */
 export function createPortfolioProofVerifier(input: {
@@ -94,44 +95,54 @@ export function createPortfolioProofVerifier(input: {
     const initial = await input.readSourceFences(context)
     if (!initial) return false
     const initialFence = digestSfValue(initial)
-    const issued = await input.units.resolve(binding.request, context)
+    const issued = structuredClone(await input.units.resolve(binding.request, context))
     if (issued.status !== "ok" || issued.value.ruleRef !== binding.ruleRef || issued.value.ruleVersion !== binding.ruleVersion || digestSfValue(issued.value.caseRef) !== digestSfValue(binding.caseRef)) return false
     const unitBinding = issued.value
-    const source = await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context)
-    const baseline = await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context)
-    if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.requestDigest !== digestSfValue(unitBinding.scenario)) return false
-    const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean }[] = []
-    const exact: { value?: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] } } = {}
+    const source = structuredClone(await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context))
+    const baseline = structuredClone(await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context))
+    if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.resultRef !== binding.request.scenarioRef || baseline.value.resultRef !== unitBinding.baselineRef || source.value.requestDigest !== digestSfValue(unitBinding.scenario) || [source.value, baseline.value].some((value) => value.resultDigest !== digestSfValue(value.result) || value.caseRef.id !== binding.caseRef.id || value.caseRef.incarnation !== binding.caseRef.incarnation || value.caseRef.version > binding.caseRef.version)) return false
+    const sourceScenario = source.value.result
+    const baselineScenario = baseline.value.result
+    const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; quantified: boolean }[] = []
+    const exact: { value?: KnownSubtotalThreshold } = {}
+    const certify = (certificate: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] }, trusted: TrustedDomainContext) => validatePlannerThreshold({ request: binding.request, binding: unitBinding, source: sourceScenario, baseline: baselineScenario, certificate, preview: input.sensitivityPreview, context: trusted })
     const evaluate = createSensitivityEvaluator({
       sample: async (_request, value, trusted) => {
         const point = expectedResult.evaluated[samples.length]
         if (!point || point.parameterValue !== value) return { status: "stale", reason: "sensitivity-sample-changed" }
-        const scenario = { ...unitBinding.scenario, operations: unitBinding.scenario.operations.map((operation) => operation.targetRef === binding.request.parameterBounds.parameterRef ? { ...operation, amount: value } : operation) }
+        const scenario = plannerSensitivityScenario(unitBinding, binding.request.parameterBounds.parameterRef, value)
         const saved = await input.results.read({ kind: "scenario", resultRef: point.resultRef }, trusted)
         if (saved.status !== "ok") return saved
         const preview = await input.sensitivityPreview({ baselineRef: unitBinding.baselineRef, scenario }, trusted)
         if (preview.status !== "ok") return preview
         if (saved.value.kind !== "scenario" || digestSfValue(saved.value.caseRef) !== digestSfValue(binding.caseRef) || saved.value.requestDigest !== digestSfValue(scenario) || plannerScenarioDigest(saved.value.result) !== plannerScenarioDigest(preview.value.sample) || preview.value.metric.metricRef !== "planner:known-subtotal-difference" || preview.value.metric.state !== "conditioned" || !preview.value.metric.evidenceRefs.length || digestSfValue(preview.value.metric.period) !== digestSfValue(preview.value.sample.horizon) || digestSfValue(preview.value.comparison.costCoverageRefs) !== digestSfValue([unitBinding.baselineCoverageRef]) || preview.value.comparison.comparisonStatus === "incompatible" || preview.value.comparison.comparisonStatus === "unavailable" || preview.value.metric.unit !== unitBinding.resultUnit || preview.value.metric.engineVersion !== unitBinding.engineVersion || preview.value.metric.value !== point.value || preview.value.comparison.knownDifference !== point.value || preview.value.comparison.baselineResultRef !== unitBinding.baselineRef || preview.value.comparison.alternativeResultRef !== preview.value.sample.id) return { status: "stale", reason: "sensitivity-sample-changed" }
-        samples.push({ resultRef: point.resultRef, coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions, complete: preview.value.comparison.comparisonStatus === "complete" && preview.value.sample.costCoverage.coverageState === "complete" })
+        samples.push({ resultRef: point.resultRef, coverageRefs: preview.value.comparison.costCoverageRefs, conditions: preview.value.comparison.unresolvedConditions, quantified: preview.value.metric.value !== null && Number.isFinite(preview.value.metric.value) })
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.kind !== "scenario" || source.value.kind !== "scenario" || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || samples.some((sample) => !sample.quantified) || baselineScenario.knownSubtotal === null || sourceScenario.knownSubtotal === null) return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = await input.exactThreshold(binding.request, unitBinding, trusted)
-        if (result.status === "ok") exact.value = result.value
-        return result
+        if (result.status !== "ok") return result
+        const certificate = await certify(result.value, trusted)
+        if (certificate.status === "ok") exact.value = certificate.value
+        return certificate
       },
       revalidate: async (_samples, _threshold, trusted) => {
         if (!await input.units.revalidate(unitBinding, trusted) || samples.length !== expectedResult.evaluated.length) return false
+        const currentSource = await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, trusted)
+        const currentBaseline = await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, trusted)
+        if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
         if (!exact.value) return true
         if (!input.exactThreshold) return false
         const current = await input.exactThreshold(binding.request, unitBinding, trusted)
-        return current.status === "ok" && digestSfValue(current.value) === digestSfValue(exact.value)
+        if (current.status !== "ok") return false
+        const certificate = await certify(current.value, trusted)
+        return certificate.status === "ok" && digestSfValue(certificate.value) === digestSfValue(exact.value)
       },
     })
     const sampled = await evaluate(binding.request, context)
     if (sampled.status !== "ok") return false
-    const result = finalizePlannerSensitivity({ request: binding.request, binding: unitBinding, result: sampled.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exact.value })
+    const result = finalizePlannerSensitivity({ request: binding.request, binding: unitBinding, result: sampled.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exact.value, originalScenarios: [{ resultRef: binding.request.scenarioRef, scenario: sourceScenario, coverageRef: unitBinding.scenarioCoverageRef }, { resultRef: unitBinding.baselineRef, scenario: baselineScenario, coverageRef: unitBinding.baselineCoverageRef }] })
     return result.status === "ok" && digestSfValue(result.value) === stored.resultDigest && await capture(binding, context, initialFence)
   }
   const verifySnapshot = (snapshot: Snapshot, binding: PortfolioBinding | CriterionComparisonBinding | CriterionResultBinding, context: TrustedDomainContext) => {

@@ -104,7 +104,9 @@ export function createRoutineResultAccess(input: {
 }
 
 function completedExecution(execution: RoutineExecutionSnapshot, run: RoutineResult): Exclude<PortResult<never>, { status: "ok" }> | undefined {
-  if (!execution || execution.runRef !== run.runRef || !execution.revision?.trim())
+  if (!execution || typeof execution !== "object" || Array.isArray(execution) || ![Object.prototype, null].includes(Object.getPrototypeOf(execution)) ||
+    Reflect.ownKeys(execution).some((key) => typeof key !== "string" || !["runRef", "resultRef", "state", "revision", "outputDigest"].includes(key)) ||
+    execution.runRef !== run.runRef || typeof execution.revision !== "string" || !execution.revision.trim())
     return { status: "unavailable", reason: "routine-execution-unverified" }
   if (execution.state === "failed" || execution.state === "cancelled")
     return { status: "denied", reason: "routine-result-unavailable" }

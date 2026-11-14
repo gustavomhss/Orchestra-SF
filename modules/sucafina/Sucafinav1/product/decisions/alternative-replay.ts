@@ -1,5 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DecisionCasePort, DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
+import type { ScenarioResult } from "../contracts/decisions.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createDecisionProposalService } from "./proposals.ts"
 import type { AlternativeCapabilityProvenance } from "./alternative-provenance.ts"
@@ -38,7 +39,9 @@ export function createAlternativeReadOnlyReplay(input: {
       const previous = current.value.case.alternatives.find((item) => item.id === evaluated.costCoverage.alternativeId)
       const provisional = evaluated.costCoverage.alternativeVersion !== (previous?.version ?? 0) + 1 || current.value.case.alternatives.some((item) => item.result.id === evaluated.id)
       const identity = provisional ? { alternativeId: `proposal:${digestSfValue({ caseRef: record.request.caseRef, request: record.request, scenario: resolved.value.scenario })}`, alternativeVersion: 1 } : { alternativeId: evaluated.costCoverage.alternativeId, alternativeVersion: evaluated.costCoverage.alternativeVersion }
-      const result = { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
+      const result: ScenarioResult = evaluated.comparisonStatus === "complete"
+        ? { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
+        : { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
       if (validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)) return { status: "stale", reason: "alternative-coverage-changed" }
       const proposal = { id: identity.alternativeId, version: identity.alternativeVersion, title: record.request.proposal.title, scenario: resolved.value.scenario, result }
       if (!await input.authorizeProposal(record.request, proposal, coverage.value.basis, context)) return { status: "denied", reason: "alternative-access-unavailable" }

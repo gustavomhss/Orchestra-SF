@@ -24,7 +24,7 @@ export function createSfAnalysisHost(input: {
     execution: input.execution,
     analysis: input.analysis,
     routines: input.routines,
-    readRun: input.store.read,
+    readRun: input.store.readLifecycle,
     withRunContext: input.withRunContext,
     revalidate: async (context, request) => {
       const loaded = await input.store.read(request.runRef, context)

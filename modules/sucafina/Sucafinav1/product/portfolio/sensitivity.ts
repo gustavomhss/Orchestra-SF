@@ -12,7 +12,7 @@ export type SensitivitySampledResult = SensitivityLegacyResult & { parameterUnit
 export type SensitivityHost = {
   sample: (request: SensitivityRequest, parameterValue: number, context: TrustedDomainContext) => Promise<PortResult<SensitivitySample>>
   // Only a domain-proven exact threshold may be returned here; sampling alone is not proof.
-  exactThreshold: (request: SensitivityRequest, context: TrustedDomainContext) => Promise<PortResult<{ value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }>>
+  exactThreshold: (request: SensitivityRequest, context: TrustedDomainContext) => Promise<PortResult<{ value: number | null; evidenceRefs: readonly BusinessEvidenceRef[]; scope?: "known-subtotal" }>>
   revalidate: (samples: readonly SensitivitySample[], thresholdEvidence: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
 }
 
@@ -42,7 +42,9 @@ export function createSensitivityEvaluator(host: SensitivityHost) {
     const incomplete = samples.some((sample) => sample.scenario.comparisonStatus !== "complete" || sample.criterionValue === null || sample.scenario.costCoverage.coverageState !== "complete" || sample.scenario.unresolvedConditions.length > 0 || sample.scenario.costCoverage.issues.length > 0 || sample.scenario.costCoverage.entries.length === 0 || sample.scenario.costCoverage.evaluatedSourceRefs.length === 0 || sample.scenario.costCoverage.entries.some((entry) => entry.evidenceRefs.length === 0) || sample.scenario.components.some((component) => component.amount === null || !Number.isFinite(component.amount) || component.evidenceState !== "confirmed" || component.sourceRefs.length === 0))
     const unavailable = samples.some((sample) => sample.scenario.comparisonStatus === "unavailable")
     const incompatible = samples.some((sample) => sample.scenario.comparisonStatus === "incompatible")
-    const threshold = incomplete || unavailable || incompatible ? null : proposedThreshold
+    const quantified = samples.every((sample) => sample.criterionValue !== null && Number.isFinite(sample.criterionValue))
+    const certifiedSubtotal = exact.status === "ok" && exact.value.scope === "known-subtotal" && quantified
+    const threshold = unavailable || incompatible || (incomplete && !certifiedSubtotal) ? null : proposedThreshold
     const conditions: UnresolvedCondition[] = samples.flatMap((sample) => [...sample.scenario.unresolvedConditions, ...(sample.scenario.costCoverage.coverageState === "complete" ? [] : [`coverage:${sample.scenario.costCoverage.coverageState}`]), ...sample.scenario.costCoverage.issues, ...sample.scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`${entry.categoryId}:${entry.reason}`] : []), ...sample.scenario.costCoverage.derivedMissingCategoryIds.map((id) => `missing-category:${id}`)].map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: sample.scenario.sourceRefs })))
     for (const sample of samples) {
       if (sample.criterionValue === null) conditions.push({ id: `${sample.resultRef}:criterion-unavailable`, category: "quantification", reason: "Criterion value is unavailable.", evidenceRefs: sample.scenario.sourceRefs })

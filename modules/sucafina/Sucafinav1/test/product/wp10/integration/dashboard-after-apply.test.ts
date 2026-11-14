@@ -74,7 +74,7 @@ test("composed C12 preserves the original, receipt and case read after apply and
     const prepared = await human("decisions.prepare-changes", prepareRequest, (call) => f.business.dashboardDecisions.prepare(prepareRequest, call))
     if (prepared.status !== "ok") throw new Error(`Prepare failed: ${prepared.reason}`)
     const reviewed = await read((call) => f.business.dashboardDecisions.review(prepared.value, call))
-    if (reviewed.status !== "ok") throw new Error(`Review failed: ${"reason" in reviewed ? reviewed.reason : reviewed.status}`)
+    if (reviewed.status !== "ok") throw new Error(`Review failed: ${reviewed.reason}`)
     expect(reviewed.value.fields).toContainEqual({ field: "action", before: "Original action", after: "Applied action" })
     const applyRequest = { ...prepared.value, reviewDigest: reviewed.value.reviewDigest }
     const applied = await human("decisions.apply", applyRequest, (call) => f.business.dashboardDecisions.apply(applyRequest, call), "apply-once")

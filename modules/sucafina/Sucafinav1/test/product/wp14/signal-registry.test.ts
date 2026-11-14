@@ -80,17 +80,20 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     expect(again.status).toBe("ok")
     if (again.status === "ok") expect(again.records[0]?.signalState).toEqual(next)
     // The comparison is a fixture; C08, the case, source reads and the list producer are real.
+    let observations = 0
     const materiality = createSfMaterialityAccess({ load: async (id, context) => {
       const bindings = await registry.list(caseRef, context)
       const found = bindings.status === "ok" ? bindings.records.find((item) => item.id === id) : undefined
       if (!found) return undefined
-      return { condition: { id, source: found.selection.source, fields: found.selection.fields, period: found.selection.period, criterionId: found.selection.criterionId, choice }, change: { source, fields: ["status"], period, before: [issued.value], after: [issued.value], availability: "available" as const, comparison: { before: comparison, after: { ...comparison, criterionResults: [{ criterionId: "cost", state: "failed" as const, reason: "changed" }] }, resultBefore: result, resultAfter: result } } }
+      observations += 1
+      return { condition: { id, source: found.selection.source, fields: found.selection.fields, period: found.selection.period, criterionId: found.selection.criterionId, choice }, change: { source: { ...source, observedAt: new Date(Date.parse(at) + observations * 1000).toISOString() }, fields: ["status"], period, before: [issued.value], after: [issued.value], availability: "available" as const, comparison: { before: comparison, after: { ...comparison, criterionResults: [{ criterionId: "cost", state: "failed" as const, reason: "changed" }] }, resultBefore: result, resultAfter: result } } }
     }, authorizeEvidence: async (refs, context) => (await Promise.all(refs.map((ref) => sourceAccess(ref, context)))).every((item) => item.state === "fresh"), revalidate: host.revalidate })
     const listSignals = createSfAuthorizedSignalList({ host, cases, registry, materiality })
     const output = await listSignals(caseRef, call)
     expect(output.status).toBe("ok")
     if (output.status === "ok") { expect(output.signals).toHaveLength(1); expect(Object.keys(output.signals[0]!).sort()).toEqual(["action", "impact", "label"]) }
     const repeated = await listSignals(caseRef, call)
+    expect(repeated.status).toBe("ok")
     if (repeated.status === "ok") expect(repeated.signals[0]?.action).toBe("none")
     // C16 selection is a fixture; source and C08 state remain real.
     const issueWorkRef = createSfWorkRefIssuer({ key: new Uint8Array(32).fill(7), revalidate: host.revalidate })

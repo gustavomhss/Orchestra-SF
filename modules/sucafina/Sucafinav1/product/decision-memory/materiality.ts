@@ -16,10 +16,23 @@ export type MaterialChangeEvent = {
 export type MaterialCondition = { id: string; source: SourceRef; fields: readonly string[]; period: Period; criterionId: string; choice: ChoiceRecord }
 export type ReconsiderationSignal = { correlationKey: string; conditionId: string; choiceId: string; severity: "reconsider" | "unknown"; reason: string; source: SourceRef; before: { comparison: ScenarioComparison; result: ScenarioResult } | undefined; after: { comparison: ScenarioComparison; result: ScenarioResult } | undefined; originalReason: string; impact: ChangeImpact }
 
+function sourceIdentity(source: SourceRef) { return { ...source, observedAt: "", fields: [...source.fields].sort() } }
+function ordered<T>(values: readonly T[]) { return [...values].sort((left, right) => digestSfValue(left).localeCompare(digestSfValue(right))) }
+function scenarioIdentity(result: ScenarioResult) {
+  const coverage = result.costCoverage
+  return { ...result, components: result.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(sourceIdentity) })),
+    costCoverage: { ...coverage, evaluatedSourceRefs: ordered(coverage.evaluatedSourceRefs), derivedMissingCategoryIds: [...coverage.derivedMissingCategoryIds].sort(),
+      entries: ordered(coverage.entries.map((entry) => entry.status === "pending" ? entry : { ...entry, evidenceRefs: ordered(entry.evidenceRefs), ...(entry.status === "included" ? { componentRefs: [...entry.componentRefs].sort() } : {}) })) } }
+}
+
 function materialChangeIdentity(change: MaterialChangeEvent) {
-  const sourceIdentity = (source: SourceRef) => ({ ...source, observedAt: "", fields: [...source.fields].sort() })
-  const scenarioIdentity = (result: ScenarioResult) => ({ ...result, components: result.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(sourceIdentity) })) })
   return { ...change, source: sourceIdentity(change.source), fields: [...change.fields].sort(), ...(change.comparison ? { comparison: { ...change.comparison, resultBefore: scenarioIdentity(change.comparison.resultBefore), resultAfter: scenarioIdentity(change.comparison.resultAfter) } } : {}) }
+}
+
+/** Consumer rereads use the same identity rules as classification; clocks grant no access. */
+export function sfReconsiderationFingerprint(signal: ReconsiderationSignal, impact: ChangeImpact) {
+  const snapshot = (value: ReconsiderationSignal["before"]) => value ? { ...value, result: scenarioIdentity(value.result) } : undefined
+  return digestSfValue([{ ...signal, source: sourceIdentity(signal.source), before: snapshot(signal.before), after: snapshot(signal.after) }, impact])
 }
 
 export function classifySfMaterialChange(condition: MaterialCondition, change: MaterialChangeEvent): { impact: ChangeImpact; signal?: ReconsiderationSignal } {
@@ -79,14 +92,14 @@ export function createSfMaterialityAccess(input: {
         if (!value || value.condition.id !== conditionId) return undefined
         const choice = value.condition.choice
         const refs = [...choice.evidenceRefs, ...choice.result.sourceRefs, ...choice.scenario.assumptions.flatMap((item) => item.evidenceRefs), ...choice.costCoverage.evaluatedSourceRefs, ...choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...choice.result.costCoverage.evaluatedSourceRefs, ...choice.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...value.change.before, ...value.change.after, ...(value.change.comparison?.resultAfter.sourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.evaluatedSourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs) ?? [])]
-        if (refs.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(refs, call)) return undefined
+        if (refs.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(structuredClone(refs), call)) return undefined
         return value
       }
       const first = await read()
       if (!first || !await input.revalidate(call)) return { status: "unavailable" as const }
       const result = classifySfMaterialChange(first.condition, first.change)
       const second = await read()
-      if (!second || digestSfValue({ condition: first.condition, change: materialChangeIdentity(first.change) }) !== digestSfValue({ condition: second.condition, change: materialChangeIdentity(second.change) }) || digestSfValue([call.kind, call.binding]) !== binding || !await input.revalidate(call)) return { status: "unavailable" as const }
+      if (!second || digestSfValue({ condition: first.condition, change: materialChangeIdentity(first.change) }) !== digestSfValue({ condition: second.condition, change: materialChangeIdentity(second.change) }) || !await input.revalidate(call) || digestSfValue([call.kind, call.binding]) !== binding) return { status: "unavailable" as const }
       return { status: "ok" as const, ...result, snapshot: { condition: first.condition, change: first.change }, scope: { source: first.condition.source, fields: first.condition.fields, period: first.condition.period, criterionId: first.condition.criterionId, choiceId: first.condition.choice.id } }
     } catch {
       return { status: "unavailable" as const }

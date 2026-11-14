@@ -18,7 +18,9 @@ import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
 
 const root = path.resolve(import.meta.dir, "../../../product/ai")
 const discovery = Layer.succeed(SkillDiscovery.Service, SkillDiscovery.Service.of({ pull: () => Effect.succeed([]) }))
-const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, LocationServiceMap.node]), [
+// Location Task services capture this process-global executor from the root's exports.
+// Keeping it only as a private dependency of SessionV2 does not export the service.
+const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionExecution.node, LocationServiceMap.node]), [
   [SessionExecution.node, SessionExecutionLocal.node],
   [SkillDiscovery.node, discovery],
 ])

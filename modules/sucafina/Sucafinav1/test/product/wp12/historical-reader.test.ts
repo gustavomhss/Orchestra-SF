@@ -7,7 +7,7 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
-import { sfRunFixture } from "./run-fixture.ts"
+import { sfCaseFixture, sfRunFixture } from "./run-fixture.ts"
 
 test("historical contribution survives SQLite reopen and requires current access to case and sources", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-historical-output-"))
@@ -32,7 +32,7 @@ test("historical contribution survives SQLite reopen and requires current access
     const first = await open()
     try {
       expect((await first.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "case", commandDigest: "1".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (state) => {
-        state.cases.case = { ...fixture.caseRef, participants: [authority.principalRef] } as typeof state.cases[string]
+        state.cases.case = sfCaseFixture(fixture.caseRef, [authority.principalRef])
         return { commit: true, value: true }
       })).status).toBe("ok")
       expect((await first.state.transaction(request, { namespace: "contributions", expectedStorageVersion: 0, idempotencyKey: "result", commandDigest: "2".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (state) => {
