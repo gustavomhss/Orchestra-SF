@@ -1,4 +1,5 @@
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
 import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -74,5 +75,30 @@ export function createRenewalOperationVerifier(host: DomainPortHost, sources: Pl
       const latest = await observe(true)
       return latest && !request.signal.aborted && host.requestFor(context) === request && digestSfValue(context.binding) === bindingDigest
     })
+  }
+}
+
+/** A case reader may verify several alternatives in one immutable source snapshot.
+ * This fixture's adapters are read-only: an attempted nested write poisons the
+ * real LocalStore transaction and is refused. Every later invocation opens a new
+ * scope; no source, financial result or authority observation is retained.
+ */
+export function createRenewalCaseOperationVerifier(host: DomainPortHost, sources: PlannerSourceHost, trace?: ReturnType<typeof createWp11FixtureTrace>) {
+  const verify = createRenewalOperationVerifier(host, sources, trace)
+  return async (decision: Pick<DecisionCase, "alternatives">, context: TrustedDomainContext) => {
+    const request = host.requestFor(context)
+    if (!request || request.signal.aborted || !await host.revalidate(context)) return false
+    const bindingDigest = digestSfValue(context.binding)
+    const scenarios = structuredClone(decision.alternatives.map((alternative) => alternative.scenario))
+    const accepted = await host.persistence.transaction("planner", async () => {
+      // Await every sibling even if one refuses/throws, so no nested reader can
+      // outlive this scope. LocalStore still refuses a poisoned root transaction.
+      const verified = await Promise.all(scenarios.map((scenario) => verify(scenario, context).catch(() => false)))
+      // Keep the final asynchronous authority callback inside the protected
+      // snapshot. A callback cannot change a source and then return a stale yes.
+      return { commit: false, value: verified.every(Boolean) && !request.signal.aborted && await host.revalidate(context) &&
+        host.requestFor(context) === request && digestSfValue(context.binding) === bindingDigest }
+    }, { signal: request.signal }).catch(() => false)
+    return accepted && !request.signal.aborted && host.requestFor(context) === request && digestSfValue(context.binding) === bindingDigest
   }
 }
