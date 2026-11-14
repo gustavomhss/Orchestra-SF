@@ -1,7 +1,8 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, ProjectionValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
@@ -9,10 +10,15 @@ import { createPlannerCalculationEvidence } from "../../../../modules/sucafina/S
 import { createPlannerPort } from "../../../../modules/sucafina/Sucafinav1/product/planner/port.ts"
 import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import type { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
+import { createSfPlannerCalculationHistory } from "./planner-calculation-history.ts"
+import type { SfCalculationCaseScope } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
 
 type SourceFences = { dashboard: string; planner: string; procurement: string }
 type ProducerInput = Parameters<typeof createScenarioRequestStore>[0]
 type Persist = ReturnType<typeof createPlannerResultPersistence>
+type CalculationVerifier = ReturnType<typeof createPlannerCalculationEvidence>
+type StoredScenario = Parameters<CalculationVerifier["verifyCalculationSources"]>[0]
+type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
 
 /** Bind persisted Planner outputs and every ancestor to the installation's canonical replay. */
 export function createSfPlannerCalculationServices(input: {
@@ -28,14 +34,22 @@ export function createSfPlannerCalculationServices(input: {
   persist: Persist
   readSourceFences: (call: TrustedDomainContext) => Promise<SourceFences | undefined>
   lockedSourceFences: () => SourceFences | undefined
-  withCalculationCase: <T>(call: TrustedDomainContext, caseRef: { id: string; incarnation: string; version: number }, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
+  withCalculationCase: SfCalculationCaseScope
+  withHistoricalCalculationCase: SfCalculationCaseScope
+  resolveHistoricalForecastCoverage: PlannerSourceHost["resolveForecastCoverage"]
 }) {
   const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences }>()
-  const replaying = new Map<string, Set<string>>()
+  // Track ancestors of one invocation; parallel readers of the same real run
+  // must not be mistaken for a persisted cycle or borrow each other's proof.
+  const replaying = new AsyncLocalStorage<{ call: TrustedDomainContext; request: Request; binding: string; runs: ReadonlySet<string>; open: boolean }>()
   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
     authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
     verifyRequestSources: async (request, stored, call): Promise<boolean> => {
-      const checked = await input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value: await calculation.verifyCalculationRequestSources(request, stored, call) }))
+      const records = plannerRecordSources(stored)
+      const checked = await input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value:
+        !request.assumptions.length && !request.operations.some((operation) => operation.replacementRef) && records
+          ? await recordCalculation.verifyCalculationRequestSources(request, stored, call) && await freshRecordSources(records, call)
+          : await calculation.verifyCalculationRequestSources(request, stored, call) }))
       return checked.status === "ok" && checked.value
     },
     authorizeProducer: async (request, resultRef, engineVersion, call) => {
@@ -53,9 +67,9 @@ export function createSfPlannerCalculationServices(input: {
   })
   // Keep the conservative producer lane available. Nested issuance uses the actual
   // Planner product below, including its input resolvers and live evidence service.
-  const recordOnly = createPlannerPort({ host: input.host, sources: { ...input.sources,
+  const recordOnlyFor = (coverageFor: PlannerSourceHost["resolveForecastCoverage"]) => createPlannerPort({ host: input.host, sources: { ...input.sources,
     resolveForecastCoverage: async (reference, call) => {
-      const coverage = await input.sources.resolveForecastCoverage(reference, call)
+      const coverage = await coverageFor(reference, call)
       if (coverage.status !== "ok") return coverage
       const refs = [...coverage.value.basis.sourceRefs, ...coverage.value.assessment.evaluatedSourceRefs,
         ...coverage.value.assessment.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
@@ -64,6 +78,34 @@ export function createSfPlannerCalculationServices(input: {
       return coverage
     },
   } })
+  const recordOnly = recordOnlyFor(input.sources.resolveForecastCoverage)
+  const historicalRecordOnly = recordOnlyFor(input.resolveHistoricalForecastCoverage)
+  const historical = createSfPlannerCalculationHistory({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, evidence: input.evidence,
+    replayRecordOnly: historicalRecordOnly.simulateScenario, withCalculationCase: input.withHistoricalCalculationCase, lockedSourceFences: input.lockedSourceFences })
+  const recordCalculation = createPlannerCalculationEvidence({ host: input.host,
+    loadRecordOnlyRequest: requests.read,
+    readForCalculation: (request, call) => request.kind === "scenario"
+      ? input.results.readForCalculation({ resultRef: request.resultRef }, call)
+      : Promise.resolve({ status: "unavailable", reason: "calculation-result-kind-unsupported" }),
+    replayRecordOnly: recordOnly.simulateScenario,
+  })
+  const freshRecordSources = async (refs: readonly PlannerRecord[], call: TrustedDomainContext): Promise<boolean> => {
+    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), selected = digestSfValue(refs)
+    if (!request || request.signal.aborted || call.binding.principalRef.startsWith("local:") || !await input.host.revalidate(call)) return false
+    const before = await input.readSourceFences(call)
+    if (!before) return false
+    // These are actual source admissions, not saved authorization decisions.
+    // The source reader brackets its current projection and compares the full
+    // reference digest; mixed/nested closures keep the full BCS verifier below.
+    for (const ref of refs) {
+      const current = await input.sources.resolveForecastSource(ref.refId, call)
+      if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref) || input.host.requestFor(call) !== request ||
+        request.signal.aborted || binding !== digestSfValue([call.kind, call.binding]) || selected !== digestSfValue(refs)) return false
+    }
+    const after = await input.readSourceFences(call)
+    return !!after && digestSfValue(after) === digestSfValue(before) && await input.host.revalidate(call) && input.host.requestFor(call) === request && !request.signal.aborted &&
+      binding === digestSfValue([call.kind, call.binding]) && selected === digestSfValue(refs)
+  }
   const calculation = createPlannerCalculationEvidence({ host: input.host,
     loadRecordOnlyRequest: requests.read,
     readForCalculation: (request, call) => request.kind === "scenario"
@@ -73,23 +115,28 @@ export function createSfPlannerCalculationServices(input: {
     nested: { replayScenario: input.replayScenario, evidence: input.evidence },
   })
   const verifyCalculationSources: typeof calculation.verifyCalculationSources = async (stored, refs, call) => {
-    const checked = await input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value: await calculation.verifyCalculationSources(stored, refs, call) }))
+    const records = plannerRecordSources(stored)
+    const checked = await input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value: records
+      ? await recordCalculation.verifyCalculationSources(stored, refs, call) && await freshRecordSources(records, call)
+      : await calculation.verifyCalculationSources(stored, refs, call) }))
     return checked.status === "ok" && checked.value
   }
   const issue: typeof calculation.issue = async (runId, call) => {
     if (typeof runId !== "string" || !runId.trim()) return { status: "denied", reason: "calculation-authority-unavailable" }
     // The first request read can itself resolve a persisted calculation ancestor,
     // before the producer's own replay guard has started. Bound that admission too.
-    const key = digestSfValue([call.kind, call.binding])
-    const active = replaying.get(key) ?? new Set<string>()
-    if (active.has(runId) || active.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
-    active.add(runId)
-    replaying.set(key, active)
-    try {
-      const binding = await requests.read(runId, call)
-      return binding.status === "ok" ? await input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
-    } catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
-    finally { active.delete(runId); if (!active.size) replaying.delete(key) }
+    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), parent = replaying.getStore()
+    if (!request || request.signal.aborted) return { status: "denied", reason: "calculation-authority-unavailable" }
+    const ancestors = parent?.open && parent.call === call && parent.request === request && parent.binding === binding ? parent.runs : new Set<string>()
+    if (ancestors.has(runId) || ancestors.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
+    const scope = { call, request, binding, runs: new Set([...ancestors, runId]), open: true }
+    return replaying.run(scope, async (): ReturnType<typeof calculation.issue> => {
+      try {
+        const selected = await requests.read(runId, call)
+        return selected.status === "ok" ? await input.withCalculationCase(call, selected.value.caseRef, () => calculation.issue(runId, call)) : selected
+      } catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
+      finally { scope.open = false }
+    })
   }
   const persist: Persist = async (incoming, callId, call, comparisonReplay) => {
     if (incoming.kind !== "scenario") return input.persist(incoming, callId, call, comparisonReplay)
@@ -159,5 +206,12 @@ export function createSfPlannerCalculationServices(input: {
       return { state: "fresh", ref, currentRef: issued.value, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
     } catch { return unavailable() }
   }
-  return { persist, issue, resolveEvidence, verifyCalculationSources, requests: { read: requests.read } }
+  return { persist, issue, resolveEvidence, resolveHistoricalEvidence: historical.resolve, verifyCalculationSources, requests: { read: requests.read } }
+}
+
+function plannerRecordSources(stored: StoredScenario): readonly PlannerRecord[] | undefined {
+  const refs = [...stored.sourceRefs, ...stored.result.sourceRefs, ...stored.result.costCoverage.evaluatedSourceRefs,
+    ...stored.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+  if (!refs.length || !refs.every((ref): ref is PlannerRecord => ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version")) return undefined
+  return refs.filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
 }
