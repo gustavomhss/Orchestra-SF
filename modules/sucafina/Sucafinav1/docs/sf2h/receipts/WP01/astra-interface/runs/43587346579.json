@@ -1,0 +1,3974 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43587346579,
+  "job_id": 132424575339,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587346579",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587346579/job/132424575339",
+  "conclusion": "failure",
+  "cleanup_job_id": 132425576332,
+  "cleanup_conclusion": "success",
+  "source": "GitHub MCP existing run/jobs/logs and exact snapshot .ci-run.json; no run initiated by auditor",
+  "product_sha": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+  "product_tree": "5c236ef687871149e9150630a16c4ce0ac70c2a7",
+  "snapshot_sha": "91938040fb95c0e2fdfd3e0e8f149a9ec05ae19e",
+  "snapshot_tree": "39d5b35aa65c9372aa8f10fe3ee815baaa55e49b",
+  "snapshot_branch": "ci-run-linux-astra-interface-0c3d98dd12-1c23d76834-1",
+  "request_sha256": "1c23d7683439a71e1a1bc198675efda4bd321d384f8f47574959bc1be01d28f8",
+  "request_blob": "108c713aa9682343f8f49dbe913ed0c14510efff",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "./Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "envelope_proof": {
+    "equalExceptCiRun": true,
+    "source": "Parent GitHub MCP comparison of W/S root trees; auditor independently fetched exact S request."
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "attempt": 1,
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43587346579.log",
+    "bytes": 126127,
+    "sha256": "938bd4bc836aef4723e41e35f57187e296f18778d2f18563db881c54cd8bc5a1"
+  },
+  "summary": {
+    "pass": 33,
+    "fail": 1,
+    "observations": 34,
+    "files_observed": 6,
+    "files_selected": 6,
+    "expect_calls": 550,
+    "elapsed_seconds": 151.21,
+    "bun_summary_present": true,
+    "before_all_failures": 0,
+    "named_test_bodies_entered": 34,
+    "named_consumer_tests": 32,
+    "infrastructure_failure_observations": 0,
+    "real_product_failure_observations": 1,
+    "failure_families": {
+      "c12_real_composition_discovery_after_committed_lost_response_reload": 1
+    },
+    "thread_scopes": {
+      "real_C03_C08": {
+        "selected": 6,
+        "pass": 6,
+        "fail": 0
+      },
+      "transport_contract": {
+        "selected": 12,
+        "pass": 12,
+        "fail": 0
+      }
+    }
+  },
+  "omni": {
+    "nonce": "20206491e6568f856e826c4abe175ff2",
+    "status": "pass",
+    "spawns": 6,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "pass_observations": 18,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "pass_observations": 3,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "pass_observations": 6,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "pass_observations": 4,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    }
+  ],
+  "observations": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "status": "pass",
+      "duration_ms": 11904.46,
+      "log_line": 884,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_HARNESS",
+      "proof_kind": "BROWSER_HARNESS",
+      "scope": "This selection proves its own bounded startup/final physical shared-browser lifecycle, not business/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation read deadline includes an unfinished body and restores the unsent reply controls",
+      "status": "pass",
+      "duration_ms": 14732.23,
+      "log_line": 892,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation recovers a real C03 reply after body timeout with the same C08 effect and frozen request",
+      "status": "pass",
+      "duration_ms": 22248.34,
+      "log_line": 893,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_REPLY_RECOVERY_THEN_EXPLICIT_C06_C08_CONFIRMATION",
+      "scope": "Real reply timeout/replay preserves exact request, C08 state and one message. It then proves no automatic answer preparation/effect, and an explicit click obtains the published selector and confirms that same message once through C06/C08. The negative without selector/complete identity remains a separate passing test. Full decision attachment is explicitly unmounted in this C03 component."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation keeps a real committed reply uncertain when delivery replaces the producer result with an empty acknowledgement",
+      "status": "pass",
+      "duration_ms": 1322.95,
+      "log_line": 894,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation obtains its first answer selector from the real issuer and recovers one C06 C08 confirmation after lost delivery",
+      "status": "pass",
+      "duration_ms": 13497.79,
+      "log_line": 895,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_FIRST_SELECTOR_C03_C06_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation without a selector or complete current message keeps confirmation disabled after a reply preflight failure",
+      "status": "pass",
+      "duration_ms": 373.55,
+      "log_line": 896,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation reviews a real first C08 conflict before issuing a new reply identity and storage version",
+      "status": "pass",
+      "duration_ms": 1562.08,
+      "log_line": 897,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation preserves the same uncertain reply when a later real C08 conflict cannot establish the earlier outcome",
+      "status": "pass",
+      "duration_ms": 1182.33,
+      "log_line": 898,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation refuses a different prepared answer and does not attach or confirm an older recipient message",
+      "status": "pass",
+      "duration_ms": 371.44,
+      "log_line": 899,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation purges an uncertain real reply on authenticated session revocation without another domain effect",
+      "status": "pass",
+      "duration_ms": 10846.76,
+      "log_line": 900,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation and decision attachment keep producer observation and exact transport bodies independently",
+      "status": "pass",
+      "duration_ms": 488.09,
+      "log_line": 901,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation reopens an edited first answer before requesting another server-issued selector",
+      "status": "pass",
+      "duration_ms": 461.52,
+      "log_line": 902,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation reviews a first rejected decision attachment and changes only its case version and request identity",
+      "status": "pass",
+      "duration_ms": 483.95,
+      "log_line": 903,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation keeps an uncertain attachment exact when its retry reports that the decision changed",
+      "status": "pass",
+      "duration_ms": 369.58,
+      "log_line": 904,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation treats stale product-state-changed according to its commit boundary",
+      "status": "pass",
+      "duration_ms": 363.24,
+      "log_line": 905,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation treats stale answer-scope-changed according to its commit boundary",
+      "status": "pass",
+      "duration_ms": 400.59,
+      "log_line": 906,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-thread-read and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 367.66,
+      "log_line": 907,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-thread-reply and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 383.51,
+      "log_line": 908,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-answer-confirm and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 353.25,
+      "log_line": 909,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "a removed plan produces a sanitized personal placeholder and can be explicitly replaced with the authorized current page",
+      "status": "pass",
+      "duration_ms": 1529.1,
+      "log_line": 936,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_PERSONAL_VIEW_AUTHORITY_COMPONENT",
+      "scope": "Real auth/SQLite and published personal-view authority. Exact replacement/removal/revocation assertions PASS. The preferred removal test holds the real subsequent list body and still requires zero markers immediately after acknowledged removal; the previous assertion is preserved and strengthened."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "an unavailable preferred destination is never opened automatically and its private preference can be removed",
+      "status": "pass",
+      "duration_ms": 550.02,
+      "log_line": 1047,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_PERSONAL_VIEW_AUTHORITY_COMPONENT",
+      "scope": "Real auth/SQLite and published personal-view authority. Exact replacement/removal/revocation assertions PASS. The preferred removal test holds the real subsequent list body and still requires zero markers immediately after acknowledged removal; the previous assertion is preserved and strengthened."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "an earlier real saved-view response cannot restore private labels after the session is revoked",
+      "status": "pass",
+      "duration_ms": 611.45,
+      "log_line": 1216,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_PERSONAL_VIEW_AUTHORITY_COMPONENT",
+      "scope": "Real auth/SQLite and published personal-view authority. Exact replacement/removal/revocation assertions PASS. The preferred removal test holds the real subsequent list body and still requires zero markers immediately after acknowledged removal; the previous assertion is preserved and strengthened."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "name": "real host protects metadata writes and captures under the all-surface C08 lock",
+      "status": "pass",
+      "duration_ms": 393.68,
+      "log_line": 1240,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_METHODS_COMPONENT",
+      "scope": "Real host methods, BusinessServices, C08 and published HTTP contracts including C12 receipt reconciliation consume Operations apply4bdd. The six named assertions pass; they do not close the failed browser reload/discovery path or native/global gates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "name": "ReviewHost.select consumes real Performance item lifecycle and preserves an authorized subset",
+      "status": "pass",
+      "duration_ms": 698.75,
+      "log_line": 1241,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_METHODS_COMPONENT",
+      "scope": "Real host methods, BusinessServices, C08 and published HTTP contracts including C12 receipt reconciliation consume Operations apply4bdd. The six named assertions pass; they do not close the failed browser reload/discovery path or native/global gates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "name": "C12 host persists the real draft and prepared binding, applies once, and reconciles its receipt",
+      "status": "pass",
+      "duration_ms": 2251.68,
+      "log_line": 1242,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_METHODS_COMPONENT",
+      "scope": "Real host methods, BusinessServices, C08 and published HTTP contracts including C12 receipt reconciliation consume Operations apply4bdd. The six named assertions pass; they do not close the failed browser reload/discovery path or native/global gates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "name": "prepared host refuses replaced choice and forged metadata before touching the target or receipt",
+      "status": "pass",
+      "duration_ms": 1400.99,
+      "log_line": 1243,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_METHODS_COMPONENT",
+      "scope": "Real host methods, BusinessServices, C08 and published HTTP contracts including C12 receipt reconciliation consume Operations apply4bdd. The six named assertions pass; they do not close the failed browser reload/discovery path or native/global gates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "name": "HTTP consumer checks origin, payload, action grant and never admits caller-supplied commands",
+      "status": "pass",
+      "duration_ms": 54.47,
+      "log_line": 1244,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_METHODS_COMPONENT",
+      "scope": "Real host methods, BusinessServices, C08 and published HTTP contracts including C12 receipt reconciliation consume Operations apply4bdd. The six named assertions pass; they do not close the failed browser reload/discovery path or native/global gates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "name": "changing protected prepared content or its digest cannot substitute a C12 command",
+      "status": "pass",
+      "duration_ms": 1158.76,
+      "log_line": 1245,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_METHODS_COMPONENT",
+      "scope": "Real host methods, BusinessServices, C08 and published HTTP contracts including C12 receipt reconciliation consume Operations apply4bdd. The six named assertions pass; they do not close the failed browser reload/discovery path or native/global gates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "name": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+      "status": "pass",
+      "duration_ms": 6352.93,
+      "log_line": 1266,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_RECOVERY_COMPONENT",
+      "scope": "Real BusinessServices/authority/C08 and browser consumer at the named draft/egress/source-incarnation/case-access boundary. No acceptance of the separate failed lost-apply reload or generic no-ID outcome lookup is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "name": "Dashboard retains the exact draft attempt when its first response is denied after the real host commits",
+      "status": "pass",
+      "duration_ms": 3527.7,
+      "log_line": 1285,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_RECOVERY_COMPONENT",
+      "scope": "Real BusinessServices/authority/C08 and browser consumer at the named draft/egress/source-incarnation/case-access boundary. No acceptance of the separate failed lost-apply reload or generic no-ID outcome lookup is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "name": "Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable",
+      "status": "pass",
+      "duration_ms": 5281.97,
+      "log_line": 1304,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_RECOVERY_COMPONENT",
+      "scope": "Real BusinessServices/authority/C08 and browser consumer at the named draft/egress/source-incarnation/case-access boundary. No acceptance of the separate failed lost-apply reload or generic no-ID outcome lookup is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "name": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+      "status": "pass",
+      "duration_ms": 7117.05,
+      "log_line": 1323,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_DASHBOARD_HOST_RECOVERY_COMPONENT",
+      "scope": "Real BusinessServices/authority/C08 and browser consumer at the named draft/egress/source-incarnation/case-access boundary. No acceptance of the separate failed lost-apply reload or generic no-ID outcome lookup is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "status": "fail",
+      "duration_ms": 37811.07,
+      "log_line": 1354,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:56:30.1143651Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"node-import\",\"elapsedMs\":31,\"driverPid\":5811}\n2026-11-14T10:56:30.4326808Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"node-imported\",\"elapsedMs\":349,\"driverPid\":5811}\n2026-11-14T10:56:30.4448047Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"chromium-launch\",\"elapsedMs\":361,\"driverPid\":5811}\n2026-11-14T10:56:30.4451035Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {\"consumer\":\"host-response-recovery\",\"event\":\"launch-diagnostic\",\"runtime\":\"node\",\"pid\":5811,\"elapsedMs\":1,\"resources\":{\"FSReqPromise\":1,\"PipeWrap\":3},\"rss\":101535744,\"children\":[],\"debugFileConfigured\":false,\"protocol\":{\"sent\":0,\"received\":0,\"malformed\":0,\"pending\":[]}}\n2026-11-14T10:56:30.5942346Z SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC {\"consumer\":\"host-response-recovery\",\"event\":\"launch-diagnostic\",\"runtime\":\"node\",\"pid\":5811,\"elapsedMs\":149,\"resources\":{\"PipeWrap\":7,\"ProcessWrap\":1,\"TCPServerWrap\":1},\"rss\":103518208,\"children\":[{\"pid\":5826,\"parent\":5811,\"name\":\"chrome\",\"state\":\"S (sleeping)\",\"wait\":\"poll_schedule_timeout.constprop.0\"}],\"debugFileConfigured\":false,\"protocol\":{\"sent\":2,\"received\":2,\"malformed\":0,\"lastSent\":\"Target.setAutoAttach\",\"lastReceived\":\"Target.setAutoAttach\",\"pending\":[]}}\n2026-11-14T10:56:30.5945390Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"chromium-launched\",\"elapsedMs\":510,\"driverPid\":5811}\n2026-11-14T10:56:30.5946672Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"node-ready\",\"elapsedMs\":511,\"driverPid\":5811,\"browserPid\":5826}\n2026-11-14T10:56:30.5947878Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"pipe-verify\",\"elapsedMs\":511,\"driverPid\":5811,\"browserPid\":5826}\n2026-11-14T10:56:30.5949057Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"browser-connect\",\"elapsedMs\":511,\"driverPid\":5811,\"browserPid\":5826}\n2026-11-14T10:56:30.6479177Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"browser-connected\",\"elapsedMs\":564,\"driverPid\":5811,\"browserPid\":5826}\n2026-11-14T10:57:07.4271812Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"node-closed\",\"elapsedMs\":37343,\"driverPid\":5811}\n2026-11-14T10:57:07.8541108Z SF_BROWSER_DRIVER_PHASE {\"consumer\":\"host-response-recovery\",\"phase\":\"app-process-exited\",\"elapsedMs\":37770,\"driverPid\":5811,\"exitCode\":0}\n2026-11-14T10:57:07.8568947Z 381 |     await page.reload()\n2026-11-14T10:57:07.8570012Z 382 |     await page.locator(\"[data-dashboard-workbench-panel] > summary\").click()\n2026-11-14T10:57:07.8571358Z 383 |     await panel.getByText(\"Há uma tentativa anterior para conferir.\", { exact: false }).waitFor()\n2026-11-14T10:57:07.8572242Z 384 |     expect(await panel.getByRole(\"button\", { name: \"Repetir mesma tentativa\", exact: true }).isVisible()).toBe(false)\n2026-11-14T10:57:07.8573641Z 385 |     await panel.getByRole(\"button\", { name: \"Carregar opções\", exact: true }).click()\n2026-11-14T10:57:07.8577160Z 386 |     await panel.getByText(\"Opções atualizadas com seu acesso atual.\", { exact: false }).waitFor()\n2026-11-14T10:57:07.8578249Z                                                                                              ^\n2026-11-14T10:57:07.8579317Z TimeoutError: for: Timeout 30000ms exceeded.\n2026-11-14T10:57:07.8580154Z Call log:\n2026-11-14T10:57:07.8581321Z   - waiting for locator('[data-dashboard-workbench]').getByText('Opções atualizadas com seu acesso atual.') to be visible\n2026-11-14T10:57:07.8582157Z \n2026-11-14T10:57:07.8582942Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts:386:88\n2026-11-14T10:57:07.8584095Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:57:07.8585355Z (fail) Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads [37811.07ms]",
+      "test_body_entered": true,
+      "whole_named_test_passed": false,
+      "failure_family": "c12_real_composition_discovery_after_committed_lost_response_reload",
+      "proof_completion": "FAILED_REAL_HOST_COMPOSITION",
+      "product_failure_inferred": true,
+      "browser_journey_reached": true,
+      "source_assertion_line": 386,
+      "scope": "The real C12 request committed with HTTP200, one case receipt, applied state and domain action before delivery was lost. Opaque body/key survived reload and retry remained hidden until discovery. After Carregar opções the required authorized-options status did not appear within30s. This is an executed real composition recovery failure; the complete named test is FAIL, with no partial PASS from earlier assertions.",
+      "observed_before_failure": [
+        "HTTP200 from real apply before transport loss",
+        "one case receipt and prepared change applied",
+        "real target action committed",
+        "opaque request body/key retained without private text in history",
+        "reload offers prior-attempt notice and hides retry before current discovery"
+      ],
+      "not_proven": [
+        "authorized discovery after application/reload",
+        "same receipt replay after reload",
+        "unchanged case/domain version after recovered replay",
+        "clearing pending state after successful recovery"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "status": "pass",
+      "duration_ms": 68.57,
+      "log_line": 1386,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_HARNESS",
+      "proof_kind": "BROWSER_HARNESS",
+      "scope": "This selection proves its own bounded startup/final physical shared-browser lifecycle, not business/native acceptance."
+    }
+  ],
+  "proof_records": {
+    "SF_BROWSER_DRIVER_PHASE": [
+      {
+        "log_line": 852,
+        "observed_at": "2026-11-14T10:54:37.0684324Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 853,
+        "observed_at": "2026-11-14T10:54:37.4877130Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-imported",
+          "elapsedMs": 422
+        }
+      },
+      {
+        "log_line": 854,
+        "observed_at": "2026-11-14T10:54:37.4975330Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-service",
+          "elapsedMs": 431
+        }
+      },
+      {
+        "log_line": 855,
+        "observed_at": "2026-11-14T10:54:37.4976711Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawn",
+          "elapsedMs": 431
+        }
+      },
+      {
+        "log_line": 856,
+        "observed_at": "2026-11-14T10:54:37.5105389Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawned",
+          "elapsedMs": 444,
+          "driverPid": 4277
+        }
+      },
+      {
+        "log_line": 857,
+        "observed_at": "2026-11-14T10:54:37.5399225Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-import",
+          "elapsedMs": 474,
+          "driverPid": 4277
+        }
+      },
+      {
+        "log_line": 858,
+        "observed_at": "2026-11-14T10:54:37.8673189Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-imported",
+          "elapsedMs": 801,
+          "driverPid": 4277
+        }
+      },
+      {
+        "log_line": 859,
+        "observed_at": "2026-11-14T10:54:37.8871908Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launch",
+          "elapsedMs": 821,
+          "driverPid": 4277
+        }
+      },
+      {
+        "log_line": 872,
+        "observed_at": "2026-11-14T10:54:48.8014291Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launched",
+          "elapsedMs": 11735,
+          "driverPid": 4277
+        }
+      },
+      {
+        "log_line": 873,
+        "observed_at": "2026-11-14T10:54:48.8016062Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-ready",
+          "elapsedMs": 11735,
+          "driverPid": 4277,
+          "browserPid": 4292
+        }
+      },
+      {
+        "log_line": 874,
+        "observed_at": "2026-11-14T10:54:48.8018008Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "pipe-verify",
+          "elapsedMs": 11735,
+          "driverPid": 4277,
+          "browserPid": 4292
+        }
+      },
+      {
+        "log_line": 875,
+        "observed_at": "2026-11-14T10:54:48.8019700Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connect",
+          "elapsedMs": 11736,
+          "driverPid": 4277,
+          "browserPid": 4292
+        }
+      },
+      {
+        "log_line": 876,
+        "observed_at": "2026-11-14T10:54:48.8630665Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connected",
+          "elapsedMs": 11796,
+          "driverPid": 4277,
+          "browserPid": 4292
+        }
+      },
+      {
+        "log_line": 1248,
+        "observed_at": "2026-11-14T10:56:07.8069427Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1249,
+        "observed_at": "2026-11-14T10:56:07.8070751Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "playwright-imported",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1250,
+        "observed_at": "2026-11-14T10:56:07.8093825Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "app-process-service",
+          "elapsedMs": 2
+        }
+      },
+      {
+        "log_line": 1251,
+        "observed_at": "2026-11-14T10:56:07.8095787Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "app-process-spawn",
+          "elapsedMs": 3
+        }
+      },
+      {
+        "log_line": 1252,
+        "observed_at": "2026-11-14T10:56:07.8117689Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "app-process-spawned",
+          "elapsedMs": 5,
+          "driverPid": 5157
+        }
+      },
+      {
+        "log_line": 1253,
+        "observed_at": "2026-11-14T10:56:07.8409473Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "node-import",
+          "elapsedMs": 34,
+          "driverPid": 5157
+        }
+      },
+      {
+        "log_line": 1254,
+        "observed_at": "2026-11-14T10:56:08.1731662Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "node-imported",
+          "elapsedMs": 364,
+          "driverPid": 5157
+        }
+      },
+      {
+        "log_line": 1255,
+        "observed_at": "2026-11-14T10:56:08.1806418Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "chromium-launch",
+          "elapsedMs": 374,
+          "driverPid": 5157
+        }
+      },
+      {
+        "log_line": 1258,
+        "observed_at": "2026-11-14T10:56:08.3316281Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "chromium-launched",
+          "elapsedMs": 525,
+          "driverPid": 5157
+        }
+      },
+      {
+        "log_line": 1259,
+        "observed_at": "2026-11-14T10:56:08.3330505Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "node-ready",
+          "elapsedMs": 526,
+          "driverPid": 5157,
+          "browserPid": 5172
+        }
+      },
+      {
+        "log_line": 1260,
+        "observed_at": "2026-11-14T10:56:08.3351689Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "pipe-verify",
+          "elapsedMs": 526,
+          "driverPid": 5157,
+          "browserPid": 5172
+        }
+      },
+      {
+        "log_line": 1261,
+        "observed_at": "2026-11-14T10:56:08.3353945Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "browser-connect",
+          "elapsedMs": 526,
+          "driverPid": 5157,
+          "browserPid": 5172
+        }
+      },
+      {
+        "log_line": 1262,
+        "observed_at": "2026-11-14T10:56:08.3904422Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "browser-connected",
+          "elapsedMs": 583,
+          "driverPid": 5157,
+          "browserPid": 5172
+        }
+      },
+      {
+        "log_line": 1263,
+        "observed_at": "2026-11-14T10:56:14.0966781Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "node-closed",
+          "elapsedMs": 6290,
+          "driverPid": 5157
+        }
+      },
+      {
+        "log_line": 1264,
+        "observed_at": "2026-11-14T10:56:14.1098213Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "phase": "app-process-exited",
+          "elapsedMs": 6303,
+          "driverPid": 5157,
+          "exitCode": 0
+        }
+      },
+      {
+        "log_line": 1267,
+        "observed_at": "2026-11-14T10:56:14.1525038Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1268,
+        "observed_at": "2026-11-14T10:56:14.1526471Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "playwright-imported",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1269,
+        "observed_at": "2026-11-14T10:56:14.1536060Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "app-process-service",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "log_line": 1270,
+        "observed_at": "2026-11-14T10:56:14.1537539Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "app-process-spawn",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "log_line": 1271,
+        "observed_at": "2026-11-14T10:56:14.1555146Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "app-process-spawned",
+          "elapsedMs": 3,
+          "driverPid": 5292
+        }
+      },
+      {
+        "log_line": 1272,
+        "observed_at": "2026-11-14T10:56:14.1853705Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "node-import",
+          "elapsedMs": 33,
+          "driverPid": 5292
+        }
+      },
+      {
+        "log_line": 1273,
+        "observed_at": "2026-11-14T10:56:14.5019438Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "node-imported",
+          "elapsedMs": 349,
+          "driverPid": 5292
+        }
+      },
+      {
+        "log_line": 1274,
+        "observed_at": "2026-11-14T10:56:14.5144177Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "chromium-launch",
+          "elapsedMs": 362,
+          "driverPid": 5292
+        }
+      },
+      {
+        "log_line": 1277,
+        "observed_at": "2026-11-14T10:56:14.6649100Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "chromium-launched",
+          "elapsedMs": 511,
+          "driverPid": 5292
+        }
+      },
+      {
+        "log_line": 1278,
+        "observed_at": "2026-11-14T10:56:14.6650826Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "node-ready",
+          "elapsedMs": 511,
+          "driverPid": 5292,
+          "browserPid": 5307
+        }
+      },
+      {
+        "log_line": 1279,
+        "observed_at": "2026-11-14T10:56:14.6652987Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "pipe-verify",
+          "elapsedMs": 511,
+          "driverPid": 5292,
+          "browserPid": 5307
+        }
+      },
+      {
+        "log_line": 1280,
+        "observed_at": "2026-11-14T10:56:14.6654889Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "browser-connect",
+          "elapsedMs": 512,
+          "driverPid": 5292,
+          "browserPid": 5307
+        }
+      },
+      {
+        "log_line": 1281,
+        "observed_at": "2026-11-14T10:56:14.7279302Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "browser-connected",
+          "elapsedMs": 575,
+          "driverPid": 5292,
+          "browserPid": 5307
+        }
+      },
+      {
+        "log_line": 1282,
+        "observed_at": "2026-11-14T10:56:17.6329356Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "node-closed",
+          "elapsedMs": 3480,
+          "driverPid": 5292
+        }
+      },
+      {
+        "log_line": 1283,
+        "observed_at": "2026-11-14T10:56:17.6445146Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "phase": "app-process-exited",
+          "elapsedMs": 3492,
+          "driverPid": 5292,
+          "exitCode": 0
+        }
+      },
+      {
+        "log_line": 1286,
+        "observed_at": "2026-11-14T10:56:17.6812623Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1287,
+        "observed_at": "2026-11-14T10:56:17.6813525Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "playwright-imported",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1288,
+        "observed_at": "2026-11-14T10:56:17.6822410Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "app-process-service",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "log_line": 1289,
+        "observed_at": "2026-11-14T10:56:17.6824681Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "app-process-spawn",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "log_line": 1290,
+        "observed_at": "2026-11-14T10:56:17.6841595Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "app-process-spawned",
+          "elapsedMs": 3,
+          "driverPid": 5429
+        }
+      },
+      {
+        "log_line": 1291,
+        "observed_at": "2026-11-14T10:56:17.7134914Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "node-import",
+          "elapsedMs": 32,
+          "driverPid": 5429
+        }
+      },
+      {
+        "log_line": 1292,
+        "observed_at": "2026-11-14T10:56:18.0371019Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "node-imported",
+          "elapsedMs": 356,
+          "driverPid": 5429
+        }
+      },
+      {
+        "log_line": 1293,
+        "observed_at": "2026-11-14T10:56:18.0470384Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "chromium-launch",
+          "elapsedMs": 366,
+          "driverPid": 5429
+        }
+      },
+      {
+        "log_line": 1296,
+        "observed_at": "2026-11-14T10:56:18.1984680Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "chromium-launched",
+          "elapsedMs": 516,
+          "driverPid": 5429
+        }
+      },
+      {
+        "log_line": 1297,
+        "observed_at": "2026-11-14T10:56:18.1996275Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "node-ready",
+          "elapsedMs": 517,
+          "driverPid": 5429,
+          "browserPid": 5444
+        }
+      },
+      {
+        "log_line": 1298,
+        "observed_at": "2026-11-14T10:56:18.1997800Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "pipe-verify",
+          "elapsedMs": 517,
+          "driverPid": 5429,
+          "browserPid": 5444
+        }
+      },
+      {
+        "log_line": 1299,
+        "observed_at": "2026-11-14T10:56:18.1999159Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "browser-connect",
+          "elapsedMs": 518,
+          "driverPid": 5429,
+          "browserPid": 5444
+        }
+      },
+      {
+        "log_line": 1300,
+        "observed_at": "2026-11-14T10:56:18.2509123Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "browser-connected",
+          "elapsedMs": 570,
+          "driverPid": 5429,
+          "browserPid": 5444
+        }
+      },
+      {
+        "log_line": 1301,
+        "observed_at": "2026-11-14T10:56:22.9132549Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "node-closed",
+          "elapsedMs": 5232,
+          "driverPid": 5429
+        }
+      },
+      {
+        "log_line": 1302,
+        "observed_at": "2026-11-14T10:56:22.9258785Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "phase": "app-process-exited",
+          "elapsedMs": 5245,
+          "driverPid": 5429,
+          "exitCode": 0
+        }
+      },
+      {
+        "log_line": 1305,
+        "observed_at": "2026-11-14T10:56:22.9715495Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1306,
+        "observed_at": "2026-11-14T10:56:22.9717337Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "playwright-imported",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1307,
+        "observed_at": "2026-11-14T10:56:22.9729487Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "app-process-service",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "log_line": 1308,
+        "observed_at": "2026-11-14T10:56:22.9731312Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "app-process-spawn",
+          "elapsedMs": 2
+        }
+      },
+      {
+        "log_line": 1309,
+        "observed_at": "2026-11-14T10:56:22.9750805Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "app-process-spawned",
+          "elapsedMs": 4,
+          "driverPid": 5673
+        }
+      },
+      {
+        "log_line": 1310,
+        "observed_at": "2026-11-14T10:56:23.0045270Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "node-import",
+          "elapsedMs": 33,
+          "driverPid": 5673
+        }
+      },
+      {
+        "log_line": 1311,
+        "observed_at": "2026-11-14T10:56:23.3305520Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "node-imported",
+          "elapsedMs": 358,
+          "driverPid": 5673
+        }
+      },
+      {
+        "log_line": 1312,
+        "observed_at": "2026-11-14T10:56:23.3371444Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "chromium-launch",
+          "elapsedMs": 365,
+          "driverPid": 5673
+        }
+      },
+      {
+        "log_line": 1315,
+        "observed_at": "2026-11-14T10:56:23.4818105Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "chromium-launched",
+          "elapsedMs": 509,
+          "driverPid": 5673
+        }
+      },
+      {
+        "log_line": 1316,
+        "observed_at": "2026-11-14T10:56:23.4823908Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "node-ready",
+          "elapsedMs": 511,
+          "driverPid": 5673,
+          "browserPid": 5688
+        }
+      },
+      {
+        "log_line": 1317,
+        "observed_at": "2026-11-14T10:56:23.4825842Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "pipe-verify",
+          "elapsedMs": 511,
+          "driverPid": 5673,
+          "browserPid": 5688
+        }
+      },
+      {
+        "log_line": 1318,
+        "observed_at": "2026-11-14T10:56:23.4843322Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "browser-connect",
+          "elapsedMs": 513,
+          "driverPid": 5673,
+          "browserPid": 5688
+        }
+      },
+      {
+        "log_line": 1319,
+        "observed_at": "2026-11-14T10:56:23.5362085Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "browser-connected",
+          "elapsedMs": 565,
+          "driverPid": 5673,
+          "browserPid": 5688
+        }
+      },
+      {
+        "log_line": 1320,
+        "observed_at": "2026-11-14T10:56:30.0303470Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "node-closed",
+          "elapsedMs": 7059,
+          "driverPid": 5673
+        }
+      },
+      {
+        "log_line": 1321,
+        "observed_at": "2026-11-14T10:56:30.0436783Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "phase": "app-process-exited",
+          "elapsedMs": 7072,
+          "driverPid": 5673,
+          "exitCode": 0
+        }
+      },
+      {
+        "log_line": 1324,
+        "observed_at": "2026-11-14T10:56:30.0837501Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1325,
+        "observed_at": "2026-11-14T10:56:30.0839081Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "playwright-imported",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 1326,
+        "observed_at": "2026-11-14T10:56:30.0852928Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "app-process-service",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "log_line": 1327,
+        "observed_at": "2026-11-14T10:56:30.0854462Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "app-process-spawn",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "log_line": 1328,
+        "observed_at": "2026-11-14T10:56:30.0866750Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "app-process-spawned",
+          "elapsedMs": 3,
+          "driverPid": 5811
+        }
+      },
+      {
+        "log_line": 1329,
+        "observed_at": "2026-11-14T10:56:30.1143651Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "node-import",
+          "elapsedMs": 31,
+          "driverPid": 5811
+        }
+      },
+      {
+        "log_line": 1330,
+        "observed_at": "2026-11-14T10:56:30.4326808Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "node-imported",
+          "elapsedMs": 349,
+          "driverPid": 5811
+        }
+      },
+      {
+        "log_line": 1331,
+        "observed_at": "2026-11-14T10:56:30.4448047Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "chromium-launch",
+          "elapsedMs": 361,
+          "driverPid": 5811
+        }
+      },
+      {
+        "log_line": 1334,
+        "observed_at": "2026-11-14T10:56:30.5945390Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "chromium-launched",
+          "elapsedMs": 510,
+          "driverPid": 5811
+        }
+      },
+      {
+        "log_line": 1335,
+        "observed_at": "2026-11-14T10:56:30.5946672Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "node-ready",
+          "elapsedMs": 511,
+          "driverPid": 5811,
+          "browserPid": 5826
+        }
+      },
+      {
+        "log_line": 1336,
+        "observed_at": "2026-11-14T10:56:30.5947878Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "pipe-verify",
+          "elapsedMs": 511,
+          "driverPid": 5811,
+          "browserPid": 5826
+        }
+      },
+      {
+        "log_line": 1337,
+        "observed_at": "2026-11-14T10:56:30.5949057Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "browser-connect",
+          "elapsedMs": 511,
+          "driverPid": 5811,
+          "browserPid": 5826
+        }
+      },
+      {
+        "log_line": 1338,
+        "observed_at": "2026-11-14T10:56:30.6479177Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "browser-connected",
+          "elapsedMs": 564,
+          "driverPid": 5811,
+          "browserPid": 5826
+        }
+      },
+      {
+        "log_line": 1339,
+        "observed_at": "2026-11-14T10:57:07.4271812Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "node-closed",
+          "elapsedMs": 37343,
+          "driverPid": 5811
+        }
+      },
+      {
+        "log_line": 1340,
+        "observed_at": "2026-11-14T10:57:07.8541108Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "phase": "app-process-exited",
+          "elapsedMs": 37770,
+          "driverPid": 5811,
+          "exitCode": 0
+        }
+      },
+      {
+        "log_line": 1365,
+        "observed_at": "2026-11-14T10:57:07.9141660Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-closed",
+          "elapsedMs": 150848,
+          "driverPid": 4277
+        }
+      },
+      {
+        "log_line": 1366,
+        "observed_at": "2026-11-14T10:57:07.9281273Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-exited",
+          "elapsedMs": 150862,
+          "driverPid": 4277,
+          "exitCode": 0
+        }
+      }
+    ],
+    "SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC": [
+      {
+        "log_line": 860,
+        "observed_at": "2026-11-14T10:54:37.8876825Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 99438592,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 861,
+        "observed_at": "2026-11-14T10:54:38.8894587Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 1003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99700736,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 862,
+        "observed_at": "2026-11-14T10:54:39.8896197Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 2003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99700736,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "do_mprotect_pkey"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 863,
+        "observed_at": "2026-11-14T10:54:40.8909609Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 3005,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99700736,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 864,
+        "observed_at": "2026-11-14T10:54:41.8919228Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 4006,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 865,
+        "observed_at": "2026-11-14T10:54:42.8922210Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 5006,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 866,
+        "observed_at": "2026-11-14T10:54:43.8938174Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 6007,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 867,
+        "observed_at": "2026-11-14T10:54:44.8942557Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 7008,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 868,
+        "observed_at": "2026-11-14T10:54:45.8950508Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 8009,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 869,
+        "observed_at": "2026-11-14T10:54:46.8962025Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 9010,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 870,
+        "observed_at": "2026-11-14T10:54:47.8963520Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 10010,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 871,
+        "observed_at": "2026-11-14T10:54:48.8010282Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 10915,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 101429248,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1256,
+        "observed_at": "2026-11-14T10:56:08.1810935Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5157,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101728256,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1257,
+        "observed_at": "2026-11-14T10:56:08.3307086Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5157,
+          "elapsedMs": 149,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103841792,
+          "children": [
+            {
+              "pid": 5172,
+              "parent": 5157,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1275,
+        "observed_at": "2026-11-14T10:56:14.5148435Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5292,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 99708928,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1276,
+        "observed_at": "2026-11-14T10:56:14.6645654Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5292,
+          "elapsedMs": 148,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 101560320,
+          "children": [
+            {
+              "pid": 5307,
+              "parent": 5292,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1294,
+        "observed_at": "2026-11-14T10:56:18.0475672Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5429,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101195776,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1295,
+        "observed_at": "2026-11-14T10:56:18.1976911Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5429,
+          "elapsedMs": 149,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103309312,
+          "children": [
+            {
+              "pid": 5444,
+              "parent": 5429,
+              "name": "chrome",
+              "state": "R (running)",
+              "wait": "0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1313,
+        "observed_at": "2026-11-14T10:56:23.3374903Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5673,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101974016,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1314,
+        "observed_at": "2026-11-14T10:56:23.4806759Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5673,
+          "elapsedMs": 144,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103825408,
+          "children": [
+            {
+              "pid": 5688,
+              "parent": 5673,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1332,
+        "observed_at": "2026-11-14T10:56:30.4451035Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5811,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101535744,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1333,
+        "observed_at": "2026-11-14T10:56:30.5942346Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5811,
+          "elapsedMs": 149,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103518208,
+          "children": [
+            {
+              "pid": 5826,
+              "parent": 5811,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "SF_WP02_BROWSER_DRIVER_PROOF": [
+      {
+        "log_line": 1265,
+        "observed_at": "2026-11-14T10:56:14.1195752Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5157
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5172,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 76,
+            "framesFromBrowser": 216,
+            "peakQueuedBytes": 3941,
+            "peakBufferedBytes": 3608,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1284,
+        "observed_at": "2026-11-14T10:56:17.6473081Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5292
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5307,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 33,
+            "framesFromBrowser": 124,
+            "peakQueuedBytes": 3965,
+            "peakBufferedBytes": 3633,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1303,
+        "observed_at": "2026-11-14T10:56:22.9292340Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5429
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5444,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 79,
+            "framesFromBrowser": 278,
+            "peakQueuedBytes": 2459,
+            "peakBufferedBytes": 783,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1322,
+        "observed_at": "2026-11-14T10:56:30.0466718Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5673
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5688,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 47,
+            "framesFromBrowser": 139,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1385,
+        "observed_at": "2026-11-14T10:57:07.9313107Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4277
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4292,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 453,
+            "framesFromBrowser": 1416,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1307,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Each observation belongs only to the exact product/snapshot/request recorded here. No prior green is transferred.",
+    "Hook failures do not execute test bodies. Named failures require explicit inspection of the failed stage before attributing a product defect.",
+    "Driver cleanup, Omni spawning and UI assertions have separate scopes. Native model/skill proof and S0 global gates remain separate.",
+    "The C12 lost-response/reload named test is a real composition FAIL; earlier commit/receipt assertions are not complete-test PASS.",
+    "All18 thread observations pass, with6real domain components separate from12transport contracts; decision attachment in the C03 fixture is explicitly unavailable.",
+    "All3 unavailable-view tests pass, including delayed post-removal list and late authorized response after revocation.",
+    "The first lost new-draft response followed by reload before learning any draftRef still requires an authorized producer lookup; the passing known-identity test does not imply that seam.",
+    "C05 whole-review, F04 write-only authority withdrawal and the13legacy complement are not selected here.",
+    "No native/resident/full-host/global gate is accepted by this receipt. No later increment receives credit."
+  ],
+  "final_run_metadata": {
+    "id": 43587346579,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKJgIgkw",
+    "head_branch": "ci-run-linux-astra-interface-0c3d98dd12-1c23d76834-1",
+    "head_sha": "91938040fb95c0e2fdfd3e0e8f149a9ec05ae19e",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "ci: validate interface W10 six affected consumers",
+    "run_number": 434,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 416464764,
+    "check_suite_id": 118020395780,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbepBTBA",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587346579",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587346579",
+    "pull_requests": [],
+    "created_at": "2026-11-14T10:52:49Z",
+    "updated_at": "2026-11-14T10:57:17Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T10:52:49Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587346579/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587346579/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118020395780",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587346579/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587346579/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587346579/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "91938040fb95c0e2fdfd3e0e8f149a9ec05ae19e",
+      "tree_id": "39d5b35aa65c9372aa8f10fe3ee815baaa55e49b",
+      "message": "ci: validate interface W10 six affected consumers",
+      "timestamp": "2026-11-14T10:52:36Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "final_job_metadata": [
+    {
+      "id": 132424575339,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43587346579,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132425576332,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43587346579,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "cleanup_job_log": {
+    "file": "product-43587346579.cleanup.log",
+    "bytes": 2320,
+    "sha256": "54040d7e21a4ba6deb003dd9dbebfb65f443ed598a05a9ffd85523f7f9c73a16"
+  },
+  "cleanup_scope": "Workflow ref cleanup132425576332 succeeded; physical process proof is recorded separately.",
+  "physical_lifecycle": {
+    "shared_pool": {
+      "status": "PASS",
+      "log_line": 1385,
+      "observed_at": "2026-11-14T10:57:07.9313107Z",
+      "value": {
+        "consumer": "wp01-shared-pool",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4256
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4277
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4292,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 453,
+          "framesFromBrowser": 1416,
+          "peakQueuedBytes": 2458,
+          "peakBufferedBytes": 1307,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      "pool": {
+        "launches": 1,
+        "acquisitions": 2,
+        "releases": 2,
+        "contexts": 0,
+        "activeLease": false,
+        "disconnected": true,
+        "driverClosed": true,
+        "processExited": true
+      }
+    },
+    "independent_full_proofs": [
+      {
+        "log_line": 1265,
+        "observed_at": "2026-11-14T10:56:14.1195752Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5157
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5172,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 76,
+            "framesFromBrowser": 216,
+            "peakQueuedBytes": 3941,
+            "peakBufferedBytes": 3608,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1284,
+        "observed_at": "2026-11-14T10:56:17.6473081Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5292
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5307,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 33,
+            "framesFromBrowser": 124,
+            "peakQueuedBytes": 3965,
+            "peakBufferedBytes": 3633,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1303,
+        "observed_at": "2026-11-14T10:56:22.9292340Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5429
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5444,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 79,
+            "framesFromBrowser": 278,
+            "peakQueuedBytes": 2459,
+            "peakBufferedBytes": 783,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1322,
+        "observed_at": "2026-11-14T10:56:30.0466718Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4256
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5673
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5688,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 47,
+            "framesFromBrowser": 139,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ],
+    "independent_failed_consumer": {
+      "consumer": "host-response-recovery",
+      "driverPid": 5811,
+      "browserPid": 5826,
+      "observed": "node-closed and AppProcess exit0 at raw1339–1340",
+      "full_physical_proof_emitted": false,
+      "scope": "No full JSON proof was emitted after the failed test; partial closure phases are not promoted to one."
+    }
+  },
+  "startup_diagnostic": {
+    "poolBudgetMs": 15000,
+    "namedStartupTestBudgetMs": 20000,
+    "driverPid": 4277,
+    "browserPid": 4292,
+    "browserConnectedElapsedMs": 11796,
+    "startupNamedTestDurationMs": 11904.46,
+    "observations": [
+      {
+        "log_line": 860,
+        "observed_at": "2026-11-14T10:54:37.8876825Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 99438592,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 861,
+        "observed_at": "2026-11-14T10:54:38.8894587Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 1003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99700736,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 862,
+        "observed_at": "2026-11-14T10:54:39.8896197Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 2003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99700736,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "do_mprotect_pkey"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 863,
+        "observed_at": "2026-11-14T10:54:40.8909609Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 3005,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99700736,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 864,
+        "observed_at": "2026-11-14T10:54:41.8919228Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 4006,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 865,
+        "observed_at": "2026-11-14T10:54:42.8922210Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 5006,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 866,
+        "observed_at": "2026-11-14T10:54:43.8938174Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 6007,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 867,
+        "observed_at": "2026-11-14T10:54:44.8942557Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 7008,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 868,
+        "observed_at": "2026-11-14T10:54:45.8950508Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 8009,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 869,
+        "observed_at": "2026-11-14T10:54:46.8962025Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 9010,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 870,
+        "observed_at": "2026-11-14T10:54:47.8963520Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 10010,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 99831808,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 871,
+        "observed_at": "2026-11-14T10:54:48.8010282Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4277,
+          "elapsedMs": 10915,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 101429248,
+          "children": [
+            {
+              "pid": 4292,
+              "parent": 4277,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1256,
+        "observed_at": "2026-11-14T10:56:08.1810935Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5157,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101728256,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1257,
+        "observed_at": "2026-11-14T10:56:08.3307086Z",
+        "value": {
+          "consumer": "host-draft-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5157,
+          "elapsedMs": 149,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103841792,
+          "children": [
+            {
+              "pid": 5172,
+              "parent": 5157,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1275,
+        "observed_at": "2026-11-14T10:56:14.5148435Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5292,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 99708928,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1276,
+        "observed_at": "2026-11-14T10:56:14.6645654Z",
+        "value": {
+          "consumer": "host-egress-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5292,
+          "elapsedMs": 148,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 101560320,
+          "children": [
+            {
+              "pid": 5307,
+              "parent": 5292,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1294,
+        "observed_at": "2026-11-14T10:56:18.0475672Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5429,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101195776,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1295,
+        "observed_at": "2026-11-14T10:56:18.1976911Z",
+        "value": {
+          "consumer": "host-source-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5429,
+          "elapsedMs": 149,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103309312,
+          "children": [
+            {
+              "pid": 5444,
+              "parent": 5429,
+              "name": "chrome",
+              "state": "R (running)",
+              "wait": "0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1313,
+        "observed_at": "2026-11-14T10:56:23.3374903Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5673,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101974016,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1314,
+        "observed_at": "2026-11-14T10:56:23.4806759Z",
+        "value": {
+          "consumer": "host-access-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5673,
+          "elapsedMs": 144,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103825408,
+          "children": [
+            {
+              "pid": 5688,
+              "parent": 5673,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1332,
+        "observed_at": "2026-11-14T10:56:30.4451035Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5811,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101535744,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 1333,
+        "observed_at": "2026-11-14T10:56:30.5942346Z",
+        "value": {
+          "consumer": "host-response-recovery",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 5811,
+          "elapsedMs": 149,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103518208,
+          "children": [
+            {
+              "pid": 5826,
+              "parent": 5811,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "poll_schedule_timeout.constprop.0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "observed_boundary": "Browser.getVersion still pending at10010ms; ready diagnostic at10915ms has2sent/2received, no pending. Chrome was observed in disk sleep/folio_wait_bit_common in multiple samples.",
+    "scope": "This real launch exceeded the former10s acquisition budget and completed inside15s. That is evidence for the admitted bounded budget in this run, not proof of a unique root cause or a universal stall fix.",
+    "normative_review": {
+      "file": "w8c-startup-budget-review.md",
+      "bytes": 4943,
+      "sha256": "f465916c402d6f2850a9c627ad1ecee1409082dc8646c27685c9561a6608a773"
+    }
+  },
+  "consumed_operations_input": {
+    "pullRequest": 34,
+    "publishedHead": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+    "scope": "Exact published owner module consumed. Its method-level tests pass, while the real Dashboard lost-apply reload composition still fails; no full producer closure inferred."
+  },
+  "static_reference": {
+    "runId": 43587348649,
+    "jobId": 132424581177,
+    "productSha": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+    "conclusion": "success",
+    "receipt": {
+      "file": "static-43587348649.receipt.json",
+      "bytes": 28119,
+      "sha256": "384a355422574a2bae6600c33aeb6609afe51875c87ce912698cfbf8eabdba31"
+    }
+  }
+}

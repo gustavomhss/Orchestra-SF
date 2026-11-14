@@ -2,6 +2,10 @@ import { describe, expect, test } from "bun:test"
 import { createPortfolioPort } from "../../../product/portfolio/port.ts"
 import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
+import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
+import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { ProjectionComponent } from "../../../product/contracts/context.ts"
+import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
 import type { PortfolioRequest } from "../../../product/contracts/operations.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
@@ -65,8 +69,17 @@ describe("portfolio composition", () => {
 
   test("preserves the domain's failed ceiling after coverage resolves", async () => {
     const input = host()
-    const complete: ScenarioResult = { ...scenario, comparisonStatus: "complete", knownSubtotal: 250000, total: 250000, costCoverage: { ...scenario.costCoverage, coverageState: "complete", entries: [], derivedMissingCategoryIds: [], issues: [] } }
-    input.evaluate = async () => ({ status: "ok", value: { scenario: complete, costCoverageRefs: ["coverage-v2"], constraints: [{ ref: "ceiling", state: "failed", reason: "250000 exceeds 240000" }] } })
+    const evidence: BusinessEvidenceRef = { schema: "sf-evidence-v1", kind: "record", refId: "service-quote", installationId: "install", projectId: "project", evidenceLevel: "observed", refDigest: "a".repeat(64), target: { surface: "planner", recordType: "quote", recordId: "service", incarnation: "service-inc", version: 1, fields: ["amount"], period, projectionDigest: "b".repeat(64) } }
+    const component: ProjectionComponent = { id: "service", amount: 250000, currency: "USD", period, evidenceState: "confirmed", sourceRefs: [{ surface: "planner", type: "quote", id: "service", incarnation: "service-inc", version: 1, fields: ["amount"], period, observedAt: "2026-11-13T00:00:00Z" }] }
+    const coverage = assessCostCoverage({ basis: { id: "renewal", version: 1, decisionType: "renewal-transition-v1", categoryIds: RENEWAL_TRANSITION_CATEGORIES, sourceRefs: [evidence], additionalCategoryIds: [] }, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon: period,
+      entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service" ? { status: "included", categoryId, componentRefs: [component.id], evidenceRefs: [evidence], scopeNote: "Quoted service cost" } : { status: "not-applicable", categoryId, evidenceRefs: [evidence], justification: "Reviewed scope excludes this cost" }),
+      components: [component], evidence: [{ ref: evidence, state: "fresh", accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }], supports: () => true })
+    expect(coverage.coverageState).toBe("complete")
+    if (coverage.coverageState !== "complete") throw new Error("complete coverage fixture required")
+    const complete: ScenarioResult = { ...scenario, components: [component], sourceRefs: [evidence], comparisonStatus: "complete", knownSubtotal: 250000, total: 250000, costCoverage: coverage }
+    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-v2"], criterionResults: [{ criterionId: "ceiling", state: "failed", reason: "250000 exceeds 240000" }], unresolvedConditions: [], comparisonStatus: "complete", knownDifference: 40000, completeDifference: 40000 } as const
+    input.resolveCandidate = async (ref) => ({ status: "ok", value: { ref, caseRef: `case-${ref}`, operations: [{ kind: "replace", targetRef: ref }], scenario: { baseRef: "base", operations: [{ kind: "replace", targetRef: ref }], assumptions: [] }, result: complete } })
+    input.evaluate = async () => ({ status: "ok", value: { scenario: complete, costCoverageRefs: ["coverage-v2"], analysis: { scenarioResultRef: "scenario-ref", scenario: complete, comparisonRef: "comparison-ref", comparison }, constraints: [{ ref: "ceiling", state: "failed", reason: "250000 exceeds 240000" }] } })
     const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)
     expect(result.status).toBe("ok")
     if (result.status !== "ok") return
@@ -110,12 +123,14 @@ describe("portfolio composition", () => {
 
   test("retains validated canonical analysis and rejects a mismatched scenario reference", async () => {
     const input = host()
-    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-a"], criterionResults: [], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
+    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-a"], criterionResults: [{ criterionId: "ceiling", state: "satisfied", reason: "subtotal" }], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
     const analysis = { scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison }
     input.evaluate = async () => ({ status: "ok", value: { scenario, costCoverageRefs: ["coverage-a"], analysis, constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } })
     const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)
     expect(result.status).toBe("ok")
     if (result.status === "ok") expect(result.value.combinations[0].analysis).toEqual(analysis)
+    input.evaluate = async () => ({ status: "ok", value: { scenario, costCoverageRefs: ["coverage-a"], analysis: { ...analysis, comparison: { ...comparison, criterionResults: [] } }, constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } })
+    expect(await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)).toEqual({ status: "unavailable", reason: "comparison-criteria-incomplete" })
     input.evaluate = async () => ({ status: "ok", value: { scenario, costCoverageRefs: ["coverage-a"], analysis: { ...analysis, scenarioResultRef: "other" }, constraints: [] } })
     expect(await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)).toEqual({ status: "unavailable", reason: "analysis-reference-mismatch" })
   })

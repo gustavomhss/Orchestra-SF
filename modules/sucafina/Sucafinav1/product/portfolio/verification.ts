@@ -100,6 +100,8 @@ export function createPortfolioProofVerifier(input: {
     const source = await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context)
     const baseline = await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context)
     if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.requestDigest !== digestSfValue(unitBinding.scenario)) return false
+    const sourceScenario = source.value.result
+    const baselineScenario = baseline.value.result
     const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean }[] = []
     const exact: { value?: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] } } = {}
     const evaluate = createSensitivityEvaluator({
@@ -116,7 +118,7 @@ export function createPortfolioProofVerifier(input: {
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baselineScenario.costCoverage.coverageState !== "complete" || sourceScenario.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = await input.exactThreshold(binding.request, unitBinding, trusted)
         if (result.status === "ok") exact.value = result.value
         return result

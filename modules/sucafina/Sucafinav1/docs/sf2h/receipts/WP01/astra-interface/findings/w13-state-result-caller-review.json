@@ -1,0 +1,42 @@
+{
+  "host": {
+    "pin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+    "lines": [
+      368,
+      398,
+      457,
+      615,
+      630
+    ]
+  },
+  "document": {
+    "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+    "blob": "6b655187d4444cff5b8966e868ba163191adfc42",
+    "lines": [
+      71,
+      72
+    ]
+  },
+  "executedFailure": {
+    "runId": 43590727281,
+    "jobId": 132434661801,
+    "productSha": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+    "locations": [
+      "host-context.ts:193",
+      "host-context.ts:225",
+      "host-context.ts:281",
+      "host-context.ts:404",
+      "host-context.ts:420",
+      "product/documents/capabilities.ts:71"
+    ]
+  },
+  "finding": "The six locations correspond to type narrowing of the combined successful state-result member status:ok|preview. Retained callers already fail closed for preview at runtime. Published owner callers reconstruct reason-bearing failures. Splitting the two success union members with identical fields is a type-only compatibility proposal; no check was executed and no source was imported or edited.",
+  "limits": [
+    "No runtime defect newly inferred from these six type diagnostics.",
+    "ReviewHost four-field closure is a separate issue owned by sibling review.",
+    "Latest host contains other functional changes and must not be copied just for this narrowing repair."
+  ]
+}

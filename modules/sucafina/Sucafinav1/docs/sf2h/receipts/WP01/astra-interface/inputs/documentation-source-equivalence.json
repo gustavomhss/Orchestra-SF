@@ -1,0 +1,283 @@
+{
+  "schema": "astra-interface-documentation-source-equivalence-v1",
+  "observed_at": "2026-11-14T12:57:06.241609+00:00",
+  "method": "Read-only Git metadata and hashes; no product import, test, typecheck or guard executed locally.",
+  "remote_ref_reconciliation": {
+    "observed_at": "2026-11-14 12:50:54 UTC",
+    "method": "Read-only GitHub MCP get_pr_info/fetch",
+    "refs": [
+      {
+        "key": "pr21",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/21",
+        "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "state": "open"
+      },
+      {
+        "key": "pr25",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/25",
+        "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "state": "open"
+      },
+      {
+        "key": "pr31",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31",
+        "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "state": "open"
+      },
+      {
+        "key": "astra-check-interface",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/astra-check-interface",
+        "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7"
+      },
+      {
+        "key": "sf2-stack",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/sf2-stack",
+        "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+      }
+    ],
+    "original_heads_and_base_unchanged": true,
+    "publication_uses_compare_and_swap": true
+  },
+  "product": {
+    "W": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "S": "3260f74d7620098a91f1f47c703f247893b930f9",
+    "snapshot_tree": "654b008393c8e81cd4012780883d25840348d99e",
+    "request_sha256": "c32f762df6e6290db31ff676a439e956520be61ef8b6ca8b5b42659c97510039",
+    "run_id": 43594796100,
+    "job_id": 132446899144,
+    "pass": 4,
+    "fail": 0,
+    "scoped_consumer_pass": 2,
+    "harness_pass": 2
+  },
+  "publication": {
+    "kind": "documentation-only",
+    "parent": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "commit_identity": "The containing Git commit is D; its exact head/tree are reported in PR #31 and the final handoff comment.",
+    "allowed_prefixes": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/"
+    ],
+    "only_added_files": true,
+    "unchanged_outside_prefixes": true,
+    "unchanged_entry_count": 15498,
+    "canonical_entry_format": "Sorted path\\tmode\\ttype\\tobject_id\\n, UTF-8, excluding the two own receipt prefixes.",
+    "w16_entries_sha256": "722e42482114f74a0e072ffe4c2c2de708d3fa39472654e6f3fdc7d57959bd74",
+    "staged_entries_sha256": "722e42482114f74a0e072ffe4c2c2de708d3fa39472654e6f3fdc7d57959bd74",
+    "payload_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/README.md",
+        "status": "A",
+        "bytes": 26018,
+        "git_blob": "54cf6b4c35d19f8ee39b0ca5ab1a697e476342eb",
+        "sha256": "d932997669db16004a4ad4e6e938e680bc77974cf18752e524cedfae04393656"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/WP01.json",
+        "status": "A",
+        "bytes": 181274,
+        "git_blob": "1ba016f1c65d25082e92a5da4e934a4bcc2d58a8",
+        "sha256": "8186b088f031bc58af394395a8ed71fa33981664cdbc316588b988677a3cc727"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/audit.json",
+        "status": "A",
+        "bytes": 2040,
+        "git_blob": "1846c1f5103d8cdea6dd259028b9d5a5752e0f13",
+        "sha256": "7c56fde7672331f0a62846108a561437f7903c6a77c7e04636632aab4a0cabed"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/complete.md",
+        "status": "A",
+        "bytes": 156219,
+        "git_blob": "cd3fd7184f3abc19791fb5ce9423a4a9c875063f",
+        "sha256": "63247ef72821726e52775115e6179fac9722950b75ca9a44c6fb380006d8c863"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/editorial-corrections.json",
+        "status": "A",
+        "bytes": 6532,
+        "git_blob": "690043d8652dce436f663d481ee618bf8763bf80",
+        "sha256": "59253a73db91e0a675ab46c28e87a55df50ed3bff7051545d45c34245205062f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/editorial-corrections.md",
+        "status": "A",
+        "bytes": 2300,
+        "git_blob": "41d229c8a479814ffede5adc16091b32ee9412fb",
+        "sha256": "786333f4d121402f1cd35837d5f0b51a37227c8c2f034e7e80c48d9701a9d5d3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/evidence-catalog.json",
+        "status": "A",
+        "bytes": 1227202,
+        "git_blob": "4d8c0956619de59c622abcf27c23d12cd316bcd2",
+        "sha256": "bd9cc6a28f0e1aaf8f1da40147ff70e1cbf2c8075b3f35a295ede65ccd1970ee"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/run-index.json",
+        "status": "A",
+        "bytes": 36747,
+        "git_blob": "a713743295c74a30e810d2315be596781af75c55",
+        "sha256": "90c9284cebfe1525ac60a156776acce97a906d5a66e898da9672cbabc5b93644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/case-selection-known-cas.owner-only.json",
+        "status": "A",
+        "bytes": 5249,
+        "git_blob": "ea142627af65afe44c2f50e2dbc39db4b1dde3ce",
+        "sha256": "bb157c128251193df0847502ea810cc9b904842db394675165da6af504094cca"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/case-selection-known-cas.owner-only.patch",
+        "status": "A",
+        "bytes": 1285,
+        "git_blob": "f1a8351f99e75d5336fcef8f5b5dfea0f02c406a",
+        "sha256": "ea315fc86d2e58d79a534b6994a98de4e17d96098d56fff110167b454d8329f9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/case-selection-known-cas.peer-read.json",
+        "status": "A",
+        "bytes": 4364,
+        "git_blob": "c7e677f6da6738adde663a5640a223d7a61210ca",
+        "sha256": "be1494ffa77053e38efab3f9616155db4ed30025d765d350e959d16e055ca389"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/selection-known-conflict-assessment.json",
+        "status": "A",
+        "bytes": 8401,
+        "git_blob": "2faab53c8b2c03ee3e2d209d6794c4440b92eee0",
+        "sha256": "789f9dbbaf126deb0ab99b50bc3c98d15cc197959d6a1b71dbe1c4c96fd7e290"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/selection-known-conflict-assessment.md",
+        "status": "A",
+        "bytes": 5124,
+        "git_blob": "9b1f0496e629bc5dc2f6692e96e7367ad7b9873a",
+        "sha256": "41c44faee49e5b19fea864391f16d5fdc0d5ff5d09de39d496740f8a578cf718"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-independent-metadata-audit-v1-superseded.json",
+        "status": "A",
+        "bytes": 9125,
+        "git_blob": "032756353cc5fd345f23ed33d7112cfc478218e7",
+        "sha256": "6240516a8b0cd0349960338d32bfe4ee6a1d64071a7705d78a5465fa63681a15"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-independent-metadata-audit.json",
+        "status": "A",
+        "bytes": 26071,
+        "git_blob": "9c719fd43d0b63dee00f29d353a746544e9d1c12",
+        "sha256": "992a65f184341207080f69abc82d12207155834ae8f631e973320a0bb27af264"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer-v1-superseded.json",
+        "status": "A",
+        "bytes": 5657,
+        "git_blob": "232c174c66d53bc9f721e7e77290ff11bc57aaf3",
+        "sha256": "f07155db55b1564483025e2946938b2402f8e80b877de1d2128a9314e732a91d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer-v1-superseded.md",
+        "status": "A",
+        "bytes": 2349,
+        "git_blob": "167f6c6804a88ab0803640900abba4582068193f",
+        "sha256": "b033501f85c615f7426d4a2d5d281005e79676240734f3cf329818afe827ba14"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer.json",
+        "status": "A",
+        "bytes": 12077,
+        "git_blob": "5e18a98376cddd141a5c7e3c52121a473b48159b",
+        "sha256": "3dfacd66dcb4f32875e98a9b77d2b3b22e6e7477d7fb2218688267299d84a3fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer.md",
+        "status": "A",
+        "bytes": 4529,
+        "git_blob": "ce8f5dd7e9a4e689c6beadb6a41fa399b0a5b648",
+        "sha256": "293794f2effd57ef4cee8cb2c7c96dc7131cc2abcb230f4853c94b991637d790"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-upstream-reconcile.json",
+        "status": "A",
+        "bytes": 5332,
+        "git_blob": "2d410fc52a5bad3656d595c7fd3ccf4b874628e5",
+        "sha256": "e5ff308b57e8931cbcfbdd8351e1c0426401fba1da83c198a97075a523c4d0b3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w16-independent-metadata-audit.json",
+        "status": "A",
+        "bytes": 4625,
+        "git_blob": "7345ee8fd7213357f926571b3add9baffb5b59a5",
+        "sha256": "ed21f2737bc7cfcdbb729a7971f721360249b2bfcffcacd1571027e54e7eedbb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w16-preservation-addendum.json",
+        "status": "A",
+        "bytes": 31333,
+        "git_blob": "0e455a15d381f54a8b935a7f90bf1aa540c6afb8",
+        "sha256": "b2fd3d47fdf5e8adce89793191c5ba6a03ec7b056e320ea03cf37520ae96392d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w16-preservation-addendum.md",
+        "status": "A",
+        "bytes": 3191,
+        "git_blob": "cff44c49477efb977b2a212638d8df1a4659b02c",
+        "sha256": "a9b5f6baeebfac61fe5d390526bae04c0df7226f5522bfd72a9a529249a8309d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594796100.json",
+        "status": "A",
+        "bytes": 60120,
+        "git_blob": "ff92bee43a9a757d7ca3a422da72b53450635fe8",
+        "sha256": "5b3fc914f3537a0d245c078a17a6a51254c890c14deeab88ae9b0f3b38d523f1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594796100.md",
+        "status": "A",
+        "bytes": 5683,
+        "git_blob": "4cb4a237373f35c62d2d695cf6fd406722a884ad",
+        "sha256": "0e6d09afe2583f7fa0cf436bad84c31e89360879ce1ca1d594a8b20e873e25b0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594796100.request.json",
+        "status": "A",
+        "bytes": 426,
+        "git_blob": "d7c054359403c12bc8d891b4eb25b1c7c40ad39e",
+        "sha256": "c32f762df6e6290db31ff676a439e956520be61ef8b6ca8b5b42659c97510039"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594797507.static.json",
+        "status": "A",
+        "bytes": 40168,
+        "git_blob": "bc23a5e5df0c7b1cfa29cf318b323627b2a604b4",
+        "sha256": "5d059f58ef58f8402862d8a783e79f9adf7892110eaa6342d4c86d8ea32ea871"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/criteria/WP02.json",
+        "status": "A",
+        "bytes": 149232,
+        "git_blob": "37d6e626bab524cdf37c3665c1f5d52d4ea06c37",
+        "sha256": "5da57592309873b63e639633c74e73171817fefe3f706284f4f009a56e3589fc"
+      }
+    ],
+    "self_reference_exclusion": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/documentation-source-equivalence.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/documentation-source-equivalence.md"
+    ]
+  },
+  "proof_limits": [
+    "No new product execution or acceptance is inferred from this documentation publication.",
+    "All runtime, product source, tests, workflow/configuration and foreign inputs are byte-identical to W16.",
+    "The two recipient tests have their own W16 PASS; startup and lifecycle results remain harness-only.",
+    "The failure-only cancellation-cleanup branch was not exercised by the successful W16 run.",
+    "Historical receipts, observations and failed journeys remain preserved; final metadata corrections only repair current-versus-historical narrative relationships.",
+    "The final static Actions check executes bun typecheck in both packages and guards against origin/dev at D. Its result is reported in PR #31, outside the frozen 31-run catalog.",
+    "S0 retains native/global acceptance and the epic after all group work; neither WP is declared DONE."
+  ]
+}

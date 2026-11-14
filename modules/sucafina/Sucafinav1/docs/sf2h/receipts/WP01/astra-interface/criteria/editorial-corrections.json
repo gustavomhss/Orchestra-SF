@@ -1,0 +1,140 @@
+{
+  "schema": "astra.interface.final-editorial-corrections.v3",
+  "testedProduct": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "pr": 31,
+    "branch": "astra-interface",
+    "base": "sf2-stack",
+    "increment": "W16"
+  },
+  "frozenBaseCatalog": {
+    "file": "interface-evidence-catalog-w16.json",
+    "bytes": 1158756,
+    "sha256": "c63b2b7d95c255e84983f5a9011f0fdf2e1bb9b37f1a4efa404ee168e2be5eb7",
+    "local_name_is_optional_provenance": true
+  },
+  "correctedFinalCatalog": {
+    "file": "interface-evidence-catalog-final.json",
+    "bytes": 1227202,
+    "sha256": "bd9cc6a28f0e1aaf8f1da40147ff70e1cbf2c8075b3f35a295ede65ccd1970ee",
+    "local_name_is_optional_provenance": true
+  },
+  "observationsPreservedExactly": 1272,
+  "historicalNotesPreservedVerbatim": true,
+  "runsPreservedExactly": 31,
+  "newProductOrExecutionCredit": false,
+  "corrections": [
+    {
+      "id": "FINAL-EDITORIAL-01",
+      "sourceCatalog": {
+        "file": "interface-evidence-catalog-w16.json",
+        "bytes": 1158756,
+        "sha256": "c63b2b7d95c255e84983f5a9011f0fdf2e1bb9b37f1a4efa404ee168e2be5eb7",
+        "local_name_is_optional_provenance": true,
+        "resolution": "OPTIONAL_PROVENANCE_ONLY_ALL_REQUIRED_EVIDENCE_INLINE_OR_PUBLIC",
+        "evidence_resolution": "Canonical criterion text and complete source/test/observation records are embedded. This earlier local derivation is not required for evidence resolution."
+      },
+      "field": "limits",
+      "incorrectPriorText": "W16 hook observation is stored once with sourceRef and affectedTestRefs. The two blocked named attempts point to that same actual Bun event; no extra Bun observations or synthetic test titles are created.",
+      "sourceNarrativeWasIncorrect": true,
+      "currentText": "W16 has exactly four named passing Bun observations, no hook failure and no blocked recipient body. The single W15 hook event remains historical and links its two unexecuted named attempts without creating synthetic observations.",
+      "scope": "The previous generic note used the current increment name on the historical W15 hook path. W16 observations themselves already correctly contained four named PASS and no hook. No observation was changed."
+    },
+    {
+      "id": "FINAL-EDITORIAL-02-T-fa55a222dab6",
+      "testRef": "T-fa55a222dab6",
+      "movedCurrentField": "candidateAttemptScopeRef",
+      "retainedHistoricalScopeRef": "N-3b9c096f2de9",
+      "retainedAttemptRef": "O-9ee821ae4b66",
+      "currentNamedObservationRef": "O-0d11709cacd2",
+      "scope": "Move the W15 attempt scope out of current candidate metadata; retain its original note and actual hook relationship."
+    },
+    {
+      "id": "FINAL-EDITORIAL-02-T-c1e1b7846143",
+      "testRef": "T-c1e1b7846143",
+      "movedCurrentField": "candidateAttemptScopeRef",
+      "retainedHistoricalScopeRef": "N-3b9c096f2de9",
+      "retainedAttemptRef": "O-9ee821ae4b66",
+      "currentNamedObservationRef": "O-95bf77e03824",
+      "scope": "Move the W15 attempt scope out of current candidate metadata; retain its original note and actual hook relationship."
+    },
+    {
+      "id": "FINAL-EDITORIAL-03",
+      "criteriaAffected": 153,
+      "currentRefsMovedToHistoricalLimitRefs": [
+        "N-2cce0146c2b1",
+        "N-39b559af02d3",
+        "N-3a65c66eac9b",
+        "N-4dbe620c2e3f",
+        "N-ce2e8221ca73",
+        "N-d0e71eb33454",
+        "N-aa1be3a9a98e",
+        "N-6bae1bf7b56b",
+        "N-9dadf3437aee",
+        "N-67559815594b",
+        "N-34a1806953c1",
+        "N-8421af450b79",
+        "N-7b4d81e0314a"
+      ],
+      "currentReplacementScopeRefs": [
+        "N-e4ebcaed563e",
+        "N-62a3aa287ff1",
+        "N-7e20c8177030",
+        "N-2bb8cb82235f",
+        "N-84156c7916fb",
+        "N-900dea84c2ab"
+      ],
+      "scope": "Old notes are retained verbatim and remain available to their original history. Only current criterion limit relationships are updated."
+    },
+    {
+      "id": "FINAL-EDITORIAL-04-decision_consumers",
+      "consumerRef": "decision_consumers",
+      "retainedHistoricalScopeRef": "N-8871f49f4ad6",
+      "currentScopeRef": "N-0661ab0bfe6a",
+      "scope": "Replace an earlier increment summary in the current component scope while preserving its original note and all supporting test/run references."
+    },
+    {
+      "id": "FINAL-EDITORIAL-04-review_digest_consumer",
+      "consumerRef": "review_digest_consumer",
+      "retainedHistoricalScopeRef": "N-5a029465ff58",
+      "currentScopeRef": "N-1c45c804b590",
+      "scope": "Replace an earlier increment summary in the current component scope while preserving its original note and all supporting test/run references."
+    },
+    {
+      "id": "FINAL-EDITORIAL-04-browser_harness",
+      "consumerRef": "browser_harness",
+      "retainedHistoricalScopeRef": "N-de9613bc8407",
+      "currentScopeRef": "N-7ab7294aa6e3",
+      "scope": "Replace an earlier increment summary in the current component scope while preserving its original note and all supporting test/run references."
+    },
+    {
+      "id": "FINAL-EDITORIAL-05",
+      "historicalNextActionRefs": [
+        "A_W6D_VIEWS_TIMEOUT",
+        "A_W6D_SHARED_POOL_CLEANUP",
+        "A_W7_SHARED_POOL_STARTUP"
+      ],
+      "originalActionTextUnchanged": true,
+      "currentCriterionReferences": 0,
+      "scope": "Old action entities and their text remain intact with explicit historical/superseded labels. No obsolete rerun instruction is a current criterion action."
+    },
+    {
+      "id": "FINAL-EDITORIAL-06",
+      "findingRef": "G02_DASHBOARD_LOST_REPLY",
+      "movedField": "new_patch_scope",
+      "historicalField": "historicalPatchScopes",
+      "nextActionRef": "A_G02_DASHBOARD_LOST_REPLY",
+      "scope": "Move the early unexecuted-review statement into history and align the current action with the four completed cases and three distinct remaining boundaries."
+    },
+    {
+      "id": "FINAL-EDITORIAL-07",
+      "findingRef": "D08_REVIEW_LATE_DELIVERY_COUNTERPROOF",
+      "historicalDescriptionField": "historicalDescriptionW16",
+      "currentObservationRef": "O-99506616e526",
+      "historicalObservationRef": "O-9a253e8ebf57",
+      "scope": "Make the already recorded W14 PASS explicit in the current description; preserve the old conditional description and W13 incomplete observation."
+    }
+  ],
+  "scope": "Current labels/relationships only. W16 frozen catalog, original notes and all observation/run entities are preserved."
+}

@@ -1,0 +1,94 @@
+{
+  "schema": "astra.interface.owner-only-proposal.v1",
+  "findingId": "WP01-SELECTION-KNOWN-CAS-REJECTION",
+  "status": "OWNER_REVIEW_REQUIRED_NOT_APPLIED_NOT_EXECUTED",
+  "target": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+  "preimage": {
+    "publishedCommit": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "publishedBlob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+    "sha256": "f10165f3da65d1f6431567f84d1ef2737a9ec66fe6ad4e7c1a670c291381410b",
+    "bytes": 19528,
+    "verifiedVia": "GitHub MCP fetch_file at immutable commit; exact blob equals W16 admitted tree"
+  },
+  "proposedPostimage": {
+    "blob": "89c1336eac4faace1790530c78fce5f160f7ac90",
+    "sha256": "410a7a70ada42572f3445c0de924f27b386ac03ce53738b961440982b80335fe",
+    "bytes": 19605
+  },
+  "patch": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/wp01-case-selection-known-cas-owner-only.patch",
+    "sha256": "ea315fc86d2e58d79a534b6994a98de4e17d96098d56fff110167b454d8329f9",
+    "bytes": 1285,
+    "addedLines": 1,
+    "removedLines": 1
+  },
+  "precommitBasis": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "publishedCommit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "publishedBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "lines": [
+        72,
+        87
+      ],
+      "fact": "Durable prior is checked first. Prior content/incarnation/scope mismatch returns idempotency-content-changed, unchanged by this proposal. A valid prior returns ok. Only a later namespace-version mismatch returns product-state-changed with commit:false before work() is invoked."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "lines": [
+        88,
+        96
+      ],
+      "fact": "Preview remains the existing known-rejection route. The proposal adds only the specific earlier CAS refusal, not other conflicts or unavailable responses."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "lines": [
+        128,
+        137
+      ],
+      "fact": "Outstanding SQLite transaction is rolled back on exit unless explicitly committed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "lines": [
+        257,
+        274
+      ],
+      "fact": "The snapshot is written and SQLite COMMIT executed only when result.commit is true."
+    }
+  ],
+  "replayRiskAndBoundary": [
+    "The patch changes only result presentation after a specific real C08 precommit refusal; it creates no write, new key, retry or receipt.",
+    "idempotency-content-changed, target-replaced, denied, cancelled and other unavailable/conflict reasons retain their original handling.",
+    "A prior successful durable receipt is resolved before version checking; it is not reclassified as this conflict.",
+    "A previously uncertain UI attempt must continue with its original key/body even if a later response is this409. Existing case-work-selection.ts pending.uncertain condition preserves that distinction; this source is unchanged.",
+    "Future owner changes to C08 outcome semantics require renewed review; this proposal is pinned to the cited provider."
+  ],
+  "futureRealCounterproof": [
+    "Use the existing browser transport gate only to hold the first create request after its current-case and version reads.",
+    "Send a second, canonical authenticated create POST using the same current expected version, a distinct key and a separately identifiable period; assert its real200/selection receipt and one committed competing effect.",
+    "Forward the original browser request unchanged to actual HTTP; require real409 and exact conflict/selection-not-committed envelope.",
+    "Read durable state through the real authority: competing selection remains one; the rejected key has no transaction receipt/effect.",
+    "Require preserved record/period values locked, Save disabled, explicit Review rejected selection visible, Retry same selection absent, and no automatic new create request.",
+    "Click Review rejected selection; observe current authorized case read and storage-version read; assert no create request and unchanged durable effect count.",
+    "Click Save explicitly; require the new request has a new key and current expectedStorageVersion while retaining the selected references/period; assert real200.",
+    "Assert precisely one effect for that new intent plus the separately counted competing effect, no effect for the first rejected key, no automatic replay, and browser page errors empty."
+  ],
+  "preservation": {
+    "foreignSourceApplied": false,
+    "ownProductChanged": false,
+    "existingTestBodiesChanged": 0,
+    "existingTestBodiesPreserved": 5,
+    "assertionsRemoved": 0,
+    "timeoutsChanged": 0,
+    "newTestsAdded": 0,
+    "productOrChecksExecuted": false
+  },
+  "limits": [
+    "This is an owner-only patch proposal, not a publication or test result.",
+    "No code was changed in the repository by this task.",
+    "The existing runtime proof gap remains until a compatible owner publication is admitted and the exact counterproof executes in GitHub Actions."
+  ]
+}

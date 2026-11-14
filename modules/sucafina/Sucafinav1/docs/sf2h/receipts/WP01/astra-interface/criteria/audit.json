@@ -1,0 +1,64 @@
+{
+  "canonicalCriteria": 153,
+  "wp01": 75,
+  "wp02": 78,
+  "tasks": 9,
+  "generalClauses": 36,
+  "exactTextsAndIds": true,
+  "allTypedReferencesResolve": true,
+  "noDone": true,
+  "historicalW12ObservationsPreservedExactly": 1132,
+  "immediateBaseIncrement": "W16",
+  "immediateBaseObservationsPreservedExactly": 1272,
+  "catalogTests": 435,
+  "catalogObservations": 1272,
+  "catalogSources": 186,
+  "catalogRuns": 31,
+  "candidate": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "pr": 31,
+    "branch": "astra-interface",
+    "base": "sf2-stack",
+    "increment": "W16"
+  },
+  "candidateStatic": "FAIL",
+  "candidateExecutions": {
+    "NOT_SELECTED_AT_W16": 431,
+    "PASS_HARNESS": 2,
+    "PASS_SCOPED": 2
+  },
+  "latestScopedEvidence": {
+    "PASS_AT_RECORDED_SHA": 352,
+    "NO_NAMED_EXECUTION_OBSERVATION": 80,
+    "FAIL_OR_INCONCLUSIVE_AT_RECORDED_SHA": 3
+  },
+  "catalog": {
+    "file": "interface-evidence-catalog-final.json",
+    "bytes": 1227202,
+    "sha256": "bd9cc6a28f0e1aaf8f1da40147ff70e1cbf2c8075b3f35a295ede65ccd1970ee",
+    "local_name_is_optional_provenance": true
+  },
+  "readableMap": {
+    "file": "interface-criteria-final-complete.md",
+    "bytes": 156219,
+    "sha256": "63247ef72821726e52775115e6179fac9722950b75ca9a44c6fb380006d8c863",
+    "local_name_is_optional_provenance": true
+  },
+  "parcels": [
+    {
+      "file": "interface-criteria-final-WP01.compact.json",
+      "bytes": 181274,
+      "sha256": "8186b088f031bc58af394395a8ed71fa33981664cdbc316588b988677a3cc727",
+      "local_name_is_optional_provenance": true
+    },
+    {
+      "file": "interface-criteria-final-WP02.compact.json",
+      "bytes": 149232,
+      "sha256": "5da57592309873b63e639633c74e73171817fefe3f706284f4f009a56e3589fc",
+      "local_name_is_optional_provenance": true
+    }
+  ],
+  "localFilesRequiredForEvidenceResolution": false,
+  "scope": "Metadata, pinned Git source, hashes and reference validation only; no product, typecheck, guards or CI calls."
+}

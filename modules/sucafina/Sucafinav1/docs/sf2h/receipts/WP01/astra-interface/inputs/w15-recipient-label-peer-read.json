@@ -1,0 +1,93 @@
+{
+  "schema": "astra.interface.peer-read.v1",
+  "increment": "W15",
+  "status": "NO_NEW_CONCRETE_BLOCKER_READ_ONLY",
+  "reviewer": "ci_reconcile",
+  "baseWorkCommit": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+  "baseWorkTree": "294c7bd28795119a014190c34a643fe85616e0ac",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "before": {
+        "blob": "031770797872f4bca0985ac881515539614f5201",
+        "sha256": "b44e26f770ff03768798b1b457262e1dca6132d0653faa9c64b067160e845175",
+        "bytes": 35645
+      },
+      "after": {
+        "blob": "99e0d4a9f8c265688e7488ece05ab30edf070658",
+        "sha256": "12c7bd303c59d2d57e5eec249f207bcbbc1fd6b8935d9d498a547c418631f4aa",
+        "bytes": 35900
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "before": {
+        "blob": "4add02f35383c09355b0e4966dbb85fc625be1d4",
+        "sha256": "2b07b9ce3263583ca87dfb10dcfa443b6ea31578dd643a58771c69bdada40ef8",
+        "bytes": 5134
+      },
+      "after": {
+        "blob": "b47b29497f2ec9a2673bfbb299829191de32622f",
+        "sha256": "274d9f7f2c4ec17ba61818a2e484089392800d6df0bb13570dd402f00a3f3f9d",
+        "bytes": 6471
+      }
+    }
+  ],
+  "priorFailure": {
+    "run": 43592240575,
+    "job": 132439232458,
+    "lines": [
+      25,
+      53
+    ],
+    "state": "Both named cases failed at exact Recipient label selectOption after real directory200 and DOM option presence. Entire cases remain FAIL."
+  },
+  "causalSource": {
+    "repository": "microsoft/playwright",
+    "version": "v1.59.1",
+    "path": "packages/injected/src/selectorUtils.ts",
+    "blob": "6466e1b7b02a3cf2be2973e9a96013d9a571c77b",
+    "url": "https://github.com/microsoft/playwright/blob/v1.59.1/packages/injected/src/selectorUtils.ts",
+    "immutableBlobUrl": "https://api.github.com/repos/microsoft/playwright/git/blobs/6466e1b7b02a3cf2be2973e9a96013d9a571c77b",
+    "retrieval": "Independently fetched through GitHub MCP by this reviewer.",
+    "reasoning": "getElementLabels uses associated label elements and elementText recursively includes descendants. The old label contained the select and its option text, so its normalized full text was not exactly Recipient. External associated labels contain only the stable literal."
+  },
+  "typeSource": {
+    "path": "packages/playwright-core/types/types.d.ts",
+    "blob": "2fbe9ef02a9c7411f94aea147f1dab9c031ffef1",
+    "url": "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/types/types.d.ts",
+    "review": "Locator.evaluate declares generic E extends SVGElement|HTMLElement; the new HTMLSelectElement callbacks fit that declared parameter. This is source inspection, not an executed typecheck."
+  },
+  "preservation": {
+    "oldAssertionLines": 25,
+    "newAssertionLines": 34,
+    "allOriginalTestLinesRemainInOrder": true,
+    "allOriginalAssertionLinesRetainedExactly": true,
+    "allModuleCodeAfterCaseQuestionFormUnchanged": true,
+    "timeoutsUnchanged": true,
+    "fixtureUnchanged": true,
+    "foreignProducerUnchanged": true,
+    "httpRoutePayloadAndAsyncControlsUnchanged": true
+  },
+  "review": [
+    "Record and Recipient each have explicit label for/id associations; UUID per rendered form prevents cross-form ID collision.",
+    "The untrusted source labels/context remain escaped as before; generated IDs contain no private source or principal data.",
+    "Option replacement preserves the select element and its ID; the added tests require stable label text and ID after authorized directory loading.",
+    "Existing exact getByLabel/selectOption/inputValue, question preservation, no-write, obsolete404, real logout403 and purge assertions remain.",
+    "The consumer uses form.elements namedItem and unchanged names, so additional layout wrappers do not alter request data or control lookup.",
+    "No native, host composition or full criterion acceptance follows from this static review."
+  ],
+  "recommendedSelection": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/wp01/question-recipients.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "selectionRationale": "Only the caseQuestionForm label association and its real consumer assertions changed; native shared scripts, selection, destination, documents and other W14 consumers are byte-identical in the scoped diff. Mandatory browser acquisition/finalizer surround the affected file.",
+  "validation": {
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "guardsRun": false,
+    "remoteActionsDispatched": false
+  },
+  "nextAction": "Publish these exact blobs and run the affected real recipient file through the authorized surgical Actions request. Keep both W14 cases failed until new complete assertions execute."
+}

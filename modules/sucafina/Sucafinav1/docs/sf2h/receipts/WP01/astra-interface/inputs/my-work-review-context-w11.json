@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h-interface-owned-increment-v1",
+  "increment": "W11",
+  "state": "LOCAL_READY_FOR_PUBLICATION_TESTS_NOT_RUN",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-interface",
+  "base": {
+    "head": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+    "tree": "5c236ef687871149e9150630a16c4ce0ac70c2a7"
+  },
+  "owned_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+      "bytes": 3180,
+      "blob": "a13f85982fa441086971d2b86af355f96c854bbd",
+      "sha256": "0a6f4df2b8e61115750544d0303d93e9bf39e82ed00c31b8788fc967cd9c12a3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "bytes": 24234,
+      "blob": "b85285f6b4718b0e184cfaeeb11de115240715c0",
+      "sha256": "640cc2a1a51d5a0af0f9d7c9d4559d1345c2895bc0a318121d4d2ffc3653cc19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-review-context-render.test.ts",
+      "bytes": 6548,
+      "blob": "a70f13ccd6fd4ad08a00569fde4f05ddbd8362b5",
+      "sha256": "b08bd6413be8a3d7be607861ca4a3826817c2f1e39c1333de896782686106270"
+    },
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "bytes": 19077,
+      "blob": "dd99caa87592d6ade4b93cca21e44cde9dcfde81",
+      "sha256": "7af5cfb912d45eab216e7ff2484d1364b2595c962ff06e627a00cf38975e059a"
+    }
+  ],
+  "foreign_files_written": [],
+  "published_formats_inspected": {
+    "head": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "pr": 33,
+    "source": "GitHub MCP fetch_file",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+        "blob": "a01b11e23e650ffb218fd0a64640110fbc2f8710",
+        "consumed_as_code_in_this_increment": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/work-review-context.ts",
+        "blob": "323ad234b37a4005a10a7bf5bfd185cb23831fab",
+        "consumed_as_code_in_this_increment": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+        "blob": "caf603047af112cf4e11130601fb5e171403d8ab",
+        "consumed_as_code_in_this_increment": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "blob": "993d8fed23f398c4317dc6ed63bed05a5b79fd08",
+        "consumed_as_code_in_this_increment": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+        "consumed_as_code_in_this_increment": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "blob": "f37a2c540b009a8c5bed90365c267b95303e646b",
+        "consumed_as_code_in_this_increment": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+        "blob": "de76611be141d599b9eecc96e1173559e06be26d",
+        "consumed_as_code_in_this_increment": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+        "blob": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+        "consumed_as_code_in_this_increment": false
+      }
+    ]
+  },
+  "integration_reconciled": {
+    "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "pr": 32,
+    "work_port_blob": "22a2a7fab04757667fcfed82147b7676d6928fee",
+    "review_application_blob": "9a508eea9d01cdebc28ee2fed72a279782c0ba79",
+    "business_services_blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+    "host_context_blob": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532",
+    "status": "REVIEW_CONTEXT_PROVIDERS_AND_HTTP_MOUNT_PENDING"
+  },
+  "component_proof": {
+    "test_file": "modules/sucafina/Sucafinav1/test/product/wp01/work-review-context-render.test.ts",
+    "actions_selection": [
+      "./Sucafinav1/test/product/wp01/work-review-context-render.test.ts"
+    ],
+    "declared_tests": 8,
+    "status": "NOT_RUN",
+    "scope": "Actual production renderer only; no simulated host or authorization, no C05/C06/C08 acceptance",
+    "browser_required": false
+  },
+  "criteria_partial": [
+    "WP01.T04.INV.01",
+    "WP01.T04.SUC.01",
+    "WP02.T04.INV.02"
+  ],
+  "finding": {
+    "path": "analysis/my-work-review-context-w11.md",
+    "bytes": 9167,
+    "blob": "955c5b2124833c8cae64fed74d15edf714e71503",
+    "sha256": "f41334cdb529095f62ff6bc738f12a71b717c83e81bceac7ee37b472aad6fb11"
+  },
+  "limits": [
+    "No digest rendering, no fabricated title, recipient, authority or destination",
+    "No automatic preparation, creation, confirmation or navigation",
+    "Old producer without optional metadata remains unchanged",
+    "C05 whole-review recovery and full host integration remain pending",
+    "Published review-answer confirmation scope is unavailable; no C06 review claim",
+    "No local product tests, typecheck, guards or CI queries/dispatch by this agent",
+    "No Protocol or Server HttpApi change"
+  ]
+}

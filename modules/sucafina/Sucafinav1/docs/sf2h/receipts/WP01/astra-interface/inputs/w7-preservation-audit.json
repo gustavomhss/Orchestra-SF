@@ -1,0 +1,141 @@
+{
+  "schema": "astra-interface-preservation-audit-v1",
+  "audit_kind": "Read-only preservation metadata for an increment authored by this group; not independent final review, product execution or native acceptance.",
+  "recorded_at": "2026-11-14T10:17:24.026351+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "recovery_head": "23bfad4341008f33fde050bd0d66506fb4035d20",
+  "w7_head": "5886df8aaedb4db179f336e474e123c30a1d1193",
+  "w7_tree": "ec4e9503c452ac724e2b6c9b0b049ccb40377c65",
+  "w7_parent": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+  "method": "Read local Git objects pinned to the published W7 and compare with retained GitHub-MCP source manifests. No product code evaluated; no checks, tests, CI dispatch or polling.",
+  "recovery_manifest": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/recovery.json",
+    "blob": "c268498408c94b1d201ea5d9bf0009cdbc7f8f80",
+    "prior_verification_head": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+    "audit_extends_verification_to": "5886df8aaedb4db179f336e474e123c30a1d1193"
+  },
+  "recovered_history": {
+    "sources": [
+      {
+        "pr": 25,
+        "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "tree": "514e64f2d5bf25cb2bc2cf0caeeeb2526d77e2b6",
+        "recovered_commit_count": 10,
+        "missing_ancestors": [],
+        "historical_receipt_count": 10
+      },
+      {
+        "pr": 21,
+        "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "tree": "4a4d1736b051785f22493ba43d116020821e73be",
+        "recovered_commit_count": 14,
+        "missing_ancestors": [],
+        "historical_receipt_count": 22
+      }
+    ],
+    "unique_recovered_commits": 24,
+    "historical_receipts": 32,
+    "receipt_mode_type_blob_mismatches": [],
+    "comparison_revisions": "Original PR source head, recovery merge and W7."
+  },
+  "ownership": {
+    "recovery_to_w7_paths": 74,
+    "categories": {
+      "scoped_ci_workflow": 1,
+      "exact_foreign_input": 8,
+      "owned_guide": 1,
+      "new_receipt_or_finding": 29,
+      "owned_interface_or_dashboard": 12,
+      "owned_test_or_fixture": 23
+    },
+    "unclassified_paths": [],
+    "deleted_paths": [],
+    "post_recovery_commits": 8,
+    "post_recovery_merge_commits": [],
+    "protected_path_changes": [],
+    "foreign_inputs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+        "w7_blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+        "exact": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+        "w7_blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+        "w7_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "d7f4199cc20f8e02290107bc64034d3956b42692",
+        "w7_blob": "d7f4199cc20f8e02290107bc64034d3956b42692",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "w7_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+        "w7_blob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "source_commit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+        "source_blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "w7_blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "exact": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/personal-view-authority.ts",
+        "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+        "source_blob": "ab705bc54819ab4c6a41d83b6c6170ada2859a9d",
+        "w7_blob": "ab705bc54819ab4c6a41d83b6c6170ada2859a9d",
+        "exact": true
+      }
+    ]
+  },
+  "w7_test_delta_review": {
+    "paths_changed": 23,
+    "existing_test_files": [
+      "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts"
+    ],
+    "removed_existing_test_declarations": [],
+    "new_test_files": [
+      "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts"
+    ],
+    "relevant_assertions_removed": false,
+    "evidence": [
+      "edit-recovery changes only authorized-renderer fixture attributes and transport acknowledgement shape; no expect assertion removed.",
+      "unavailable-views retains logout204 and both private-label/control purge assertions. The logout assertion is bounded without changing expected status; additional producer200/private body, revoked403, late200 and exact-body assertions are present.",
+      "The two new decision/thread suites are additive. Real C03/C08 cases remain distinct from declared confirmation transport cases."
+    ],
+    "limits": "This statement concerns W7 delta versus50906. No claim that static or product runs passed; their current outcomes are owned by the CI agent."
+  },
+  "preservation_blockers": [],
+  "limitations": [
+    "This audit does not re-query original remote branch heads; root owns GitHub reconciliation and publication.",
+    "Foreign bytes are compared to retained producer-pin metadata, not claimed as complete host closure.",
+    "Source-free decision fixture, initial answer selector, BI positive consumer, native witnesses and global/S0 gates retain their separately documented scope.",
+    "Static errors reported after W7 publication are corrected in a later working-tree increment; this metadata remains fixed to W7."
+  ]
+}

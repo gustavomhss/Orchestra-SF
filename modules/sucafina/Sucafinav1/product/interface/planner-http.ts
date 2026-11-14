@@ -9,6 +9,9 @@ export async function handleSfPlannerMonthly(request: Request, origin: string, r
   const body = await request.text()
   if (new TextEncoder().encode(body).byteLength > 65536) return reply({ status: "invalid" }, 413)
   const parsed: unknown = await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined)
+  // WP03/WP00 have not published extended operations in the composed host contract.
+  // Reject them before admission instead of pretending an operation/entity is a MonthlyDraft.
+  if (record(parsed) && record(parsed.input) && ("operation" in parsed.input || "entity" in parsed.input)) return reply({ status: "needs-input", reason: "planner-operation-not-published" }, 400)
   if (!record(parsed) || (parsed.action !== "preview" && parsed.action !== "apply") || Object.keys(parsed).some((key) => !["action", "input"].includes(key)) || !monthlyInput(parsed.input)) return reply({ status: "invalid" }, 400)
   if (!runtime.plannerMonthly) return reply({ status: "unavailable" }, 503)
   const admitted = await runtime.human.admit(request, `planner.${parsed.action}`, parsed.input)
@@ -27,10 +30,11 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 function monthlyInput(value: unknown): value is SfPlannerMonthlyInput {
-  return record(value) && Object.keys(value).every((key) => ["page", "versionId", "drafts"].includes(key)) &&
-    (value.page === "OPEX" || value.page === "CAPEX") && typeof value.versionId === "string" && Array.isArray(value.drafts) && value.drafts.length > 0 && value.drafts.length <= 500 &&
+  if (!record(value) || Object.keys(value).some((key) => !["page", "versionId", "drafts"].includes(key)) || (value.page !== "OPEX" && value.page !== "CAPEX") || typeof value.versionId !== "string" || !value.versionId.trim()) return false
+  return Array.isArray(value.drafts) && value.drafts.length > 0 && value.drafts.length <= 500 &&
     value.drafts.every((draft: unknown) => record(draft) && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) &&
-      typeof draft.rowId === "string" && typeof draft.revision === "number" && Number.isSafeInteger(draft.revision) && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 &&
+      typeof draft.rowId === "string" && !!draft.rowId.trim() && typeof draft.revision === "number" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 &&
       draft.cells.every((cell: unknown) => record(cell) && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) &&
-        (cell.measure === "budget" || cell.measure === "actual" || cell.measure === "forecast") && typeof cell.month === "number" && typeof cell.text === "string"))
+        (cell.measure === "budget" || cell.measure === "actual" || cell.measure === "forecast") && typeof cell.month === "number" && Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12 && typeof cell.text === "string"))
 }
+

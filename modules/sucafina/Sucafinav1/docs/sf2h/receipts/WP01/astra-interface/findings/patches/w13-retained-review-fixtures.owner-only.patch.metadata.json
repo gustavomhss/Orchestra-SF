@@ -1,0 +1,26 @@
+{
+  "schema": "astra-owner-only-patch-v1",
+  "status": "PROPOSED_NOT_APPLIED_NOT_EXECUTED",
+  "candidateHead": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+  "description": "Add only the required ReviewHost fields to the retained W13 WP07 fixture; preserve its SQLite path, original assertions and all tests. Unsupported nonempty snapshots fail closed; forged authority fixture stays denied.",
+  "artifact": "w13-retained-review-fixtures.owner-only.patch",
+  "artifactBytes": 3839,
+  "artifactSha256": "5a0952d0b46f12b8b930c0286d99ab12bb39eeedad3e5bd6ae12844df0c72d51",
+  "artifactBlob": "bd9ddaf5a019765574760f7dd93e5d8f58699488",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "baseBlob": "0b10585a9ea34b26a132816a4e56670ac5de23a8",
+      "proposedBlob": "2c73273188b74f0ae4c22dd4717da7c86e405b38",
+      "baseBytes": 37253,
+      "proposedBytes": 38494,
+      "baseSha256": "dbf1894cc8722b160494d2fe94a4fc9bf18fcf93ff5938a9e82c6a2bab1ac416",
+      "proposedSha256": "24dbecf470b66925a4921ac82420cba3197cef93e97eb500bd2f02f9a466ee8e",
+      "originalAssertionLines": 82,
+      "proposedAssertionLines": 82,
+      "assertionLineSequencePreserved": true,
+      "testTitleSequencePreserved": true
+    }
+  ],
+  "validationScope": "Static text construction, pinned Git blob and assertion-line comparison only; no product test, typecheck, guard or CI operation was executed."
+}

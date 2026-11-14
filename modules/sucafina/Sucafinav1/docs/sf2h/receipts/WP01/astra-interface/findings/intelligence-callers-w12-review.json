@@ -1,0 +1,380 @@
+{
+  "schema": "astra-interface-foreign-caller-review-v1",
+  "scope": "Read-only static review; no product/check/local/remote execution and no foreign input imported or edited. W12 receipts remain frozen.",
+  "pins": {
+    "preserved": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+    "compose": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "intelligence": "c21a990c57b714cd60bb7f915beb6be51acbafdb"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "snapshots": {
+        "preserved": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "head": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+          "blob": "0ffe2ce818f32f40662fd0c56ea8ca778644f7db",
+          "sha256": "d80b02dd90933c084874cd6765da48fcf58762aec18fd25f8368281bd906226e",
+          "bytes": 5362,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cccd00c568aea65bb0c1b5cb4a82c2a236c7e775/modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "testTitles": [
+            "portfolio resolves a persisted decision alternative and respects revocation"
+          ],
+          "expectLineCount": 6
+        },
+        "compose": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+          "blob": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad",
+          "sha256": "b895fc9f981c08ebb64651f48103880e666b66f474c75e020f82d6374930ef69",
+          "bytes": 5416,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "testTitles": [
+            "portfolio resolves a persisted decision alternative and respects revocation"
+          ],
+          "expectLineCount": 6
+        },
+        "intelligence": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+          "blob": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad",
+          "sha256": "b895fc9f981c08ebb64651f48103880e666b66f474c75e020f82d6374930ef69",
+          "bytes": 5416,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "testTitles": [
+            "portfolio resolves a persisted decision alternative and respects revocation"
+          ],
+          "expectLineCount": 6
+        }
+      },
+      "verificationExecuted": false,
+      "assertionPreservation": "All original test names, bodies and assertions are byte-identical after removing the sole added verifier property.",
+      "verifier": {
+        "kind": "ACCESS_BOOLEAN_ONLY",
+        "realSemanticProducer": false,
+        "failClosedForNonemptyOperations": false,
+        "seedHasNonemptyOperations": true
+      },
+      "intakeDecision": "Do not treat the new boolean callback as proof of operation verification. Seek an owner-published real verifier for nonempty scenarios; for the empty stored-output fixture an explicit empty-operation rejection policy could preserve its narrow scope."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "snapshots": {
+        "preserved": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "head": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+          "blob": "2aa8d065edd25c94a90b84a64839c0fc72dce5c2",
+          "sha256": "92c9807b27502a65898bb15384c67b105527ece0caeebe9cb6ce5cebbcde9ebf",
+          "bytes": 35687,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cccd00c568aea65bb0c1b5cb4a82c2a236c7e775/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "testTitles": [
+            "real Planner units and selected comparison preserve EUR/USD metadata and reject criterion drift",
+            "real persisted Portfolio retains conditioned EUR coverage across retry, HTTP consumption and proof replay",
+            "real cross-case Portfolio rejects duplicate targets and becomes stale after a contributing case changes",
+            "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08"
+          ],
+          "expectLineCount": 74
+        },
+        "compose": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+          "blob": "f81469e41928f9fe1d2fbc2303158cfe4e5b5809",
+          "sha256": "655d02b1de8b0f87cfab0d3c12db4887b772369f4912c1ba9e04b89863e5871d",
+          "bytes": 31860,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "testTitles": [
+            "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08"
+          ],
+          "expectLineCount": 75
+        },
+        "intelligence": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+          "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+          "sha256": "0e03b416666ab55a81c618ed4d1c2091479b93e42425dfaa8647344cbcd270ca",
+          "bytes": 32356,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "testTitles": [
+            "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08"
+          ],
+          "expectLineCount": 75
+        }
+      },
+      "verificationExecuted": false,
+      "assertionPreservation": "Four separately named preserved tests are collapsed into one upstream test. All substantive old assertion expressions have equivalents: five are variable-renamed, initialPortfolio is the same already-written portfolioSaved check, and two independently scoped ID-no-mutation assertions are combined around all three verifiers. Old 74 expect-bearing lines become 75; three negative checks are added. This is not byte-preserving and loses per-test isolation and three original titles.",
+      "verifier": {
+        "kind": "ACCESS_BOOLEAN_ONLY",
+        "realSemanticProducer": false,
+        "failClosedForNonemptyOperations": false,
+        "seedHasNonemptyOperations": true
+      },
+      "intakeDecision": "Do not overwrite the four preserved tests with the upstream monolith. Owner should publish an additive compatibility patch retaining each test and a real Planner operation verifier."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+      "snapshots": {
+        "preserved": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+          "head": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+          "blob": "ec3969a0f9585a6bf02a8037d13c21ffaf78fed9",
+          "sha256": "42e2fdfbc1d2d542b2a2f4c691b88983ce849f792510c266e9c9e9beb1093915",
+          "bytes": 9024,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cccd00c568aea65bb0c1b5cb4a82c2a236c7e775/modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+          "testTitles": [
+            "production factory keeps an unbound Planner preview conditional"
+          ],
+          "expectLineCount": 13
+        },
+        "compose": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+          "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+          "blob": "af3d903b5cf476649d213a417ea673f8114071ee",
+          "sha256": "cc4bf63646bc421bd8e5e4b8b6b7f6de185bbd273a6e6244e58f8096fdd130cd",
+          "bytes": 9078,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+          "testTitles": [
+            "production factory keeps an unbound Planner preview conditional"
+          ],
+          "expectLineCount": 13
+        },
+        "intelligence": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+          "head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+          "blob": "af3d903b5cf476649d213a417ea673f8114071ee",
+          "sha256": "cc4bf63646bc421bd8e5e4b8b6b7f6de185bbd273a6e6244e58f8096fdd130cd",
+          "bytes": 9078,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+          "testTitles": [
+            "production factory keeps an unbound Planner preview conditional"
+          ],
+          "expectLineCount": 13
+        }
+      },
+      "verificationExecuted": false,
+      "assertionPreservation": "All original test names, bodies and assertions are byte-identical after removing the sole added verifier property.",
+      "verifier": {
+        "kind": "ACCESS_BOOLEAN_ONLY",
+        "realSemanticProducer": false,
+        "failClosedForNonemptyOperations": false,
+        "seedHasNonemptyOperations": true
+      },
+      "intakeDecision": "Do not treat the new boolean callback as proof of operation verification. Seek an owner-published real verifier for nonempty scenarios; for the empty stored-output fixture an explicit empty-operation rejection policy could preserve its narrow scope."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "snapshots": {
+        "preserved": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "head": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+          "blob": "78e958d481319c3fdaf5871945be1898c88aa67f",
+          "sha256": "726de00d74f309783e3e7ab6141fef54945cc81af1a7be5896aa4c91a88ee518",
+          "bytes": 5102,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cccd00c568aea65bb0c1b5cb4a82c2a236c7e775/modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "testTitles": [
+            "stored contribution survives reopen and remains case-authorized"
+          ],
+          "expectLineCount": 4
+        },
+        "compose": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+          "blob": "601af4ad1f504c9c7be47dce4e72d84587a38856",
+          "sha256": "9d8b480cfa03c6b3e907c4c79104c7a3b22babdaee4a933df82b4059b48f2ac4",
+          "bytes": 5154,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "testTitles": [
+            "stored contribution survives reopen and remains case-authorized"
+          ],
+          "expectLineCount": 4
+        },
+        "intelligence": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+          "blob": "601af4ad1f504c9c7be47dce4e72d84587a38856",
+          "sha256": "9d8b480cfa03c6b3e907c4c79104c7a3b22babdaee4a933df82b4059b48f2ac4",
+          "bytes": 5154,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "testTitles": [
+            "stored contribution survives reopen and remains case-authorized"
+          ],
+          "expectLineCount": 4
+        }
+      },
+      "verificationExecuted": false,
+      "assertionPreservation": "All original test names, bodies and assertions are byte-identical after removing the sole added verifier property.",
+      "verifier": {
+        "kind": "ACCESS_BOOLEAN_ONLY",
+        "realSemanticProducer": false,
+        "failClosedForNonemptyOperations": false,
+        "seedHasNonemptyOperations": false
+      },
+      "intakeDecision": "Do not treat the new boolean callback as proof of operation verification. Seek an owner-published real verifier for nonempty scenarios; for the empty stored-output fixture an explicit empty-operation rejection policy could preserve its narrow scope."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "snapshots": {
+        "preserved": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "head": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+          "blob": "259cdbcdb90627d57a6ad10b6b323fe0b14bcdb1",
+          "sha256": "1e8fa0ec0d991bd541c25cf10ba2f9918e7d8018e74728d37f62ceb63f2fd5ac",
+          "bytes": 11080,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cccd00c568aea65bb0c1b5cb4a82c2a236c7e775/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "testTitles": [
+            "protected Atlas original binds cross-principal continuity after store reopen"
+          ],
+          "expectLineCount": 14
+        },
+        "compose": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+          "blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+          "sha256": "ca0613ba62a4f48fdf311e73fa364b231af1bc060ef1813e1cf07add032f3bb0",
+          "bytes": 16864,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "testTitles": [
+            "protected Atlas original binds cross-principal continuity after store reopen"
+          ],
+          "expectLineCount": 28
+        },
+        "intelligence": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+          "blob": "d44e2088e04ba96fa5eb88256f0ffc0a4517b463",
+          "sha256": "8c06998cc9ce65d8ed57d0d995b026f4da326717b47c7c748388f1e57769ce42",
+          "bytes": 44000,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "testTitles": [
+            "protected Atlas original binds cross-principal continuity after store reopen",
+            "confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation"
+          ],
+          "expectLineCount": 90
+        }
+      },
+      "verificationExecuted": false,
+      "assertionPreservation": "The original test title and twelve of fourteen original expect-bearing lines are preserved verbatim. The old version truthiness check is strengthened to an actual pinned scanner --version process with nonempty output/exit zero. The original commit expectation is moved to committed.status for a nested ledger event; old cross-principal read/continuity, forgery, revocation and recall assertions remain. Upstream adds nested ancestry/receipt replay and a new process restart. Intelligence additionally adds native scoped callbacks/races and a second real C17 document test.",
+      "verifier": {
+        "kind": "EXPLICIT_EMPTY_OPERATION_ONLY",
+        "realSemanticProducer": false,
+        "failClosedForNonemptyOperations": true,
+        "seedHasNonemptyOperations": false
+      },
+      "newFactory": {
+        "requires": [
+          "state",
+          "authorizeCase",
+          "authorizeEvidence"
+        ],
+        "authorizeCase": "Persisted participant membership; latest Intelligence also host.revalidate.",
+        "authorizeEvidence": "Real Dashboard/case-event resolution, ancestor tracking and fresh-or-historical result admission; evidence revocation flag fails closed."
+      },
+      "intakeDecision": "Compose fixture has compatible factory but depends on an absent restart helper whose Compose version omits the mandatory verifier. Latest Intelligence helper fixes that narrowly. Latest Intelligence test additionally requires source-access e4e648 (authorizeRecallCase) and C17 dependencies; do not mix the test alone with Compose source-access41741c."
+    }
+  ],
+  "producerFacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "lines": [
+        20,
+        80,
+        85
+      ],
+      "fact": "verifyScenarioOperations is mandatory and called on both protected case reads."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "lines": [
+        177,
+        200
+      ],
+      "fact": "Case-event factory requires state, authorizeCase, authorizeEvidence; no authorizeRecallCase parameter."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "pin": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+      "lines": [
+        177,
+        183,
+        207
+      ],
+      "fact": "Adds optional authorizeRecallCase bound to exact native precedent identity plus request/binding fences."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "lines": [
+        24
+      ],
+      "fact": "Already supports optional authorizeCase."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "9268b8797955057559bf22c0625b3b302c49cfe5",
+      "lines": [
+        53
+      ],
+      "fact": "Required subprocess helper is absent at W12 and omits mandatory verifyScenarioOperations; type incompatibility and unavailable case-read follow statically."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "pin": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "blob": "f4fcfa9f961f5087eead1e4ce54296625c93172d",
+      "lines": [
+        74,
+        83,
+        90
+      ],
+      "fact": "Publishes explicit empty-operation verifier, state/evidence authorizers and production Atlas ACL. This closes the Compose helper callback omission in the narrow empty-operation scope, subject to its remaining imported versions."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-features.ts",
+      "pin": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "fact": "Direct dependency of new WP14 fixture/helper; absent at W12."
+    }
+  ],
+  "limits": [
+    "No run result inferred from static review.",
+    "No native SessionV2/actual-model witness inferred from synthetic identity or registry fields.",
+    "All foreign callbacks must be scoped in evidence; an access boolean cannot prove semantic admission of nonempty scenario operations.",
+    "This five-caller review is not a complete C12 transitive closure. Additional latest WP14 C17 dynamic imports are inventoried below."
+  ],
+  "wp14AdditionalImports": {
+    "compose": [
+      "../../../../../../packages/core/test/fixture/omni-expect.ts",
+      "../../../product/decision-memory/case-features.ts",
+      "../../../product/decision-memory/case-recall.ts",
+      "@orchestra/core/backend-toolkit",
+      "@orchestra/core/effect/layer-node",
+      "@orchestra/core/process",
+      "effect",
+      "effect/unstable/process"
+    ],
+    "intelligence": [
+      "../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+      "../../../../../../apps/cli/src/sucafina-product/document-authority.ts",
+      "../../../../../../apps/cli/src/sucafina-product/document-services.ts",
+      "../../../../../../packages/core/test/fixture/omni-expect.ts",
+      "../../../product/decision-memory/case-features.ts",
+      "../../../product/decision-memory/case-recall.ts",
+      "../../../product/host-binding/business-context.ts",
+      "../../../product/integration/ledger-outbox.ts",
+      "../../../product/integration/product-authority.ts",
+      "../../../runtime/assets.ts",
+      "../../../runtime/contract.ts",
+      "../wp06/runtime-fixture.ts",
+      "@orchestra/core/backend-toolkit",
+      "@orchestra/core/effect/layer-node",
+      "@orchestra/core/process",
+      "effect",
+      "effect/unstable/process"
+    ]
+  }
+}

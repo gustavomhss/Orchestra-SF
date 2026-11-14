@@ -1,0 +1,139 @@
+{
+  "schema": "astra-interface-consumer-intake-v1",
+  "increment": "W9",
+  "status": "IMPLEMENTED_TEST_PENDING",
+  "integrated_acceptance": "NOT_DECLARED_DONE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "producer": {
+    "pull_request": 33,
+    "head": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "tree": "8535b4ffdbbeee8549bc8820fec2551fa6cf9d09",
+    "reconciled_via": "GitHub MCP"
+  },
+  "own_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "git_blob": "957a260b2f10ab23b04445824fa9c614ed41ded5",
+      "sha256": "5e9b813451101865800e02c01d815255b7ff14b070cdf6730b14c619b3c63059",
+      "bytes": 33927
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts",
+      "git_blob": "d239f1056f97a85f4caafac772ee79921806289a",
+      "sha256": "7a63a854ce062e62cbfb07c62852d015c5e5dae964718c7a5c6f3f462669409a",
+      "bytes": 25526
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "git_blob": "3d1d82dd1f01d0d2615b21eb46bde2733a6cfda0",
+      "sha256": "6e89183f4fda848a86aaeb0fa60aa2a4ef5ad3e1c135b9312f9cfad2755fa80b",
+      "bytes": 48482
+    }
+  ],
+  "foreign_intake": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "git_blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "sha256": "b3c0cd0bb9221b980fe30b8dcd3a2a856bed4ec5dd79220d14c4d2fd6803f7d1",
+      "bytes": 18198,
+      "source_commit": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "expected_blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "intake": "verbatim by root; no producer edit"
+    }
+  ],
+  "published_sources_not_intaken": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+      "git_blob": "8e43041300f452a83d6b8f1895e73188a81138a3",
+      "source_commit": "ea5a6f965c803d436202934872c3650ab8f8eb19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+      "git_blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+      "source_commit": "ea5a6f965c803d436202934872c3650ab8f8eb19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "git_blob": "5d69b45569067afc682b4ec48c026e4e4dd4ceab",
+      "source_commit": "ea5a6f965c803d436202934872c3650ab8f8eb19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+      "git_blob": "87ac92b71e5b715a595368460f01fed97694f80e",
+      "source_commit": "ea5a6f965c803d436202934872c3650ab8f8eb19"
+    }
+  ],
+  "preserved_real_producers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/evidence.ts",
+      "git_blob": "e458ea2cdc12e838eebbb8dd7989c82c91f70a79",
+      "sha256": "c2b65437e02cbd2d133e93c97103afa3dc09f7f8752c093eee25f6041080cd27",
+      "bytes": 6500
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "git_blob": "71028485ed9adadd209706369cca65d99c6cbdc8",
+      "sha256": "aa0632bb383774e415bd7118a0820d4ce8eaa8bbf9a0b3e36e8d3ecb16aeb1d5",
+      "bytes": 13147
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "git_blob": "fefdb4b7814be4953e1a5e7f12e2385e0a6a03c4",
+      "sha256": "d618dae472d8ed550e0d50c0b2e884c98a3e3c9b3f1e162f374f4a6b7b865074",
+      "bytes": 27317
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "git_blob": "c4032971e6c15b281bb55bd68474029a4e6fb8c4",
+      "sha256": "6cc21ef9a0934111596d8142fa13aaafe09ea089be96bd7da01ef025d78ac8fc",
+      "bytes": 13320
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "git_blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "sha256": "9e9c6a91d75479a65f6fa09775d45a8b360c52cb60523773f28e9799b6e4f495",
+      "bytes": 4062
+    }
+  ],
+  "counterproofs": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+    "observations": 18,
+    "real_C03_C08_components": 6,
+    "of_which_real_C06_answer_confirmation": 1,
+    "contract_transport_components": 12,
+    "new_cases": [
+      "conversation obtains its first answer selector from the real issuer and recovers one C06 C08 confirmation after lost delivery",
+      "conversation reopens an edited first answer before requesting another server-issued selector",
+      "conversation reviews a first rejected decision attachment and changes only its case version and request identity",
+      "conversation keeps an uncertain attachment exact when its retry reports that the decision changed"
+    ]
+  },
+  "preserved_prior_assertions": true,
+  "local_product_execution": false,
+  "actions_dispatch_by_this_agent": false,
+  "limits": [
+    "Thin declared HTTP envelopes, not the complete collaboration HTTP/host mount.",
+    "Presentation-only DecisionCase in C03 fixture; decision attachment explicitly unavailable.",
+    "Recipient distinct from creator, read-only scopes, native/Atlas/global proofs remain separate.",
+    "No W9 result is inferred from W8 partial execution."
+  ],
+  "causal_W8_fixes": {
+    "run": 43585122170,
+    "job": 132417843606,
+    "product_head": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+    "product_tree": "de52a224e9468ce70ed442d5b6ccefe03cd6cfc1",
+    "failures_addressed": [
+      "real enrollment redirect target /sucafina/dashboard was not routed to authorized component GET",
+      "cardinality assertion observed buttons before async read painted; wait added without weakening count/negative assertions"
+    ]
+  },
+  "criteria_contribution": [
+    "WP01.T03.CHK.01",
+    "WP01.T03.CHK.02",
+    "WP01.T03.DOD.01",
+    "WP01.T03.INV.01",
+    "WP01.T03.CMP.01",
+    "WP01.T03.SUC.01",
+    "WP01.T05.CMP.01"
+  ]
+}

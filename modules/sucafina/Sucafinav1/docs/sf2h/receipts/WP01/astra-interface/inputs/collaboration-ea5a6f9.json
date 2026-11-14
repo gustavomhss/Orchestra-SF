@@ -1,0 +1,36 @@
+{
+  "schema": "astra-interface-input-v1",
+  "producer": {
+    "pr": 33,
+    "branch": "astra-collaboration",
+    "head": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "tree": "8535b4ffdbbeee8549bc8820fec2551fa6cf9d09"
+  },
+  "consumed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "mode": "100644",
+      "status": "exact-published-blob-no-owner-edits"
+    }
+  ],
+  "producerRoute": {
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+    "blob": "8e43041300f452a83d6b8f1895e73188a81138a3",
+    "mode": "collaboration-answer-prepare-message",
+    "request": [
+      "questionId",
+      "messageId",
+      "incarnation",
+      "version"
+    ],
+    "authority": "collaboration.answer.prepare",
+    "scope": "Public route contract read from published owner; full host closure not copied into this branch."
+  },
+  "limits": [
+    "Browser fixture composes the real C03 answer evidence/reuse, C06 observer and C08 state/auth with a thin HTTP envelope. It does not qualify the owner full HTTP mount.",
+    "First answerRef is issued by the server producer; no selector synthesis in UI.",
+    "Owner CI results are not automatically evidence for the interface candidate.",
+    "S0/compose retain shared host and contracts; no integration of sf2-control."
+  ]
+}

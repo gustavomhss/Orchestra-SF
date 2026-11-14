@@ -1,0 +1,574 @@
+{
+  "schema": "wp02-ci-evidence-v1",
+  "status": "SURGICAL_TESTS_PASS_PACKAGE_TYPECHECK_BLOCKED",
+  "product": {
+    "sha": "38d340a8857b96904f7246320091c14c051f1929",
+    "tree": "86f34811d3d4fcbec8145c4fbbed499ad9cc1d9b",
+    "parent": "abe64592bb08858b55495b9f4710289bd357d64a"
+  },
+  "snapshot": {
+    "sha": "f238adf0cce5693a2583f719c72a9b402b291571",
+    "tree": "52ae4e8b0a4f0edc3706ffdfacba6266891ed495",
+    "parent": "38d340a8857b96904f7246320091c14c051f1929",
+    "only_changed_paths": [
+      ".ci-run.json"
+    ]
+  },
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp02/agenda.test.ts",
+      "./Sucafinav1/test/product/wp02/bi-category.test.ts",
+      "./Sucafinav1/test/product/wp02/bi-metadata.test.ts",
+      "./Sucafinav1/test/product/wp02/capabilities-e2e.test.ts",
+      "./Sucafinav1/test/product/wp02/commands.test.ts",
+      "./Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "./Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "./Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+      "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "./Sucafinav1/test/product/wp02/import-format.test.ts",
+      "./Sucafinav1/test/product/wp02/imports.test.ts",
+      "./Sucafinav1/test/product/wp02/keyed-update.test.ts",
+      "./Sucafinav1/test/product/wp02/kpi-comparison.test.ts",
+      "./Sucafinav1/test/product/wp02/port.test.ts",
+      "./Sucafinav1/test/product/wp02/prepared.test.ts",
+      "./Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+      "./Sucafinav1/test/product/wp02/record-evidence.test.ts",
+      "./Sucafinav1/test/product/wp02/review.test.ts",
+      "./Sucafinav1/test/product/wp02/scope.test.ts",
+      "./Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+      "./Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "./Sucafinav1/test/product/wp02/signals.test.ts",
+      "./Sucafinav1/test/product/wp02/sources.test.ts",
+      "./Sucafinav1/test/dashboard-budget-runtime.test.ts",
+      "./Sucafinav1/test/dashboard-operations-runtime.test.ts",
+      "./Sucafinav1/test/dashboard-people-runtime.test.ts",
+      "./Sucafinav1/test/dashboard-portfolio-runtime.test.ts",
+      "./Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "./Sucafinav1/test/product/wp02/backup-consumer.test.ts",
+      "./Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+      "./Sucafinav1/test/product/wp02/prepared-review.test.ts",
+      "./Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "./Sucafinav1/test/product/wp02/security-observation.test.ts",
+      "./Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {},
+    "sha256": "5205ae350a8661ad280ac8291f6d47a70aaa86e5e26958b700ca783c37755760",
+    "blob": "b87f31df5dca0c1125b7610b6df0fb76b53c9bb2"
+  },
+  "test_run": {
+    "id": 43516062361,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43516062361",
+    "head_sha": "f238adf0cce5693a2583f719c72a9b402b291571",
+    "conclusion": "success",
+    "job_id": 132198194307,
+    "passed": 169,
+    "failed": 0,
+    "assertions": 1389,
+    "files": 34,
+    "selected_order_matches_request": true,
+    "local_product_execution": false,
+    "log_sha256": "b49d0965c1e6cce3ba197ca70d663bcc256d05340ac5ab7647605d9461f0853b",
+    "canonical_read_request_step": "success",
+    "request_blob_retrieved_from_S_matches": true,
+    "artifacts": [],
+    "artifact_requirement": "Existing Bun workflow does not upload the Playwright evidence artifact; nonempty job logs and canonical request-step success were verified.",
+    "omni": {
+      "nonce": "b2c7c7c445d2b03c685156499a3abc11",
+      "verdict": "not applicable",
+      "line": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "note": "No declaring test or omni spawn ran; this is not native execution proof."
+    }
+  },
+  "check_run": {
+    "id": 43516071214,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43516071214",
+    "head_sha": "38d340a8857b96904f7246320091c14c051f1929",
+    "conclusion": "failure",
+    "job_id": 132198225475,
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "conclusion": "failure",
+      "diagnostics": 131,
+      "wp02_diagnostics": 0,
+      "external_files": 46,
+      "details": "typecheck-blockers.json"
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "conclusion": "success",
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "rules": 78,
+      "changed_paths": 584,
+      "gate": 0,
+      "warn": 11,
+      "errors": 0
+    },
+    "log_sha256": "2d67cf329e0f2b52faa5e40db932c3f708ef27b0a704fa872c16c30f771550f4"
+  },
+  "selected_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda.test.ts",
+      "git_blob_sha": "e965ffd47f69455c9a02a06d7e30f7ce608d4470",
+      "sha256": "76ceea01c605c22bfa528ef86bd4217eb619dc97d3f52f434f2401cf87ec92d3",
+      "observed_tests": [
+        "agenda resolves all, a selected project, and an explicit empty selection through real sources"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/bi-category.test.ts",
+      "git_blob_sha": "5a290e4370d2abbb4931fe85e0b6712a5b1ca8fd",
+      "sha256": "7d7104e44930ce2dbc6548455bcd098d9a65ebba7ca260528a6ce44b5612a959",
+      "observed_tests": [
+        "BI07 preserves category delimiters and keeps distinct categories separate"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/bi-metadata.test.ts",
+      "git_blob_sha": "2fd8eb9a6545df311ba499f910b3c77db3490b75",
+      "sha256": "4bc1b3718868a68d2ec897c6f2e93599fe44709d75b3fd998e72d22484a841c9",
+      "observed_tests": [
+        "BI selections use producer fields and enforce their period",
+        "BI presentation binds source and declares budget semantics without inventing currency",
+        "ticket and milestone views use the producer's explicit semantics"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/capabilities-e2e.test.ts",
+      "git_blob_sha": "5e8406beb0ab57c42afec15a324a9360f71b025d",
+      "sha256": "dbfd226a062bc5065a74907bb1541aae048b448158c69441e6c4e4cb05c590ce",
+      "observed_tests": [
+        "all published dashboard pages read through scoped sources and current authority"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/commands.test.ts",
+      "git_blob_sha": "86fe5820ef97d56470d1cd588cdd4d9cb890a9f2",
+      "sha256": "611fed5424403889a85d7c5c8490a1f2791b8958fdef89f696b37b5bb124f315",
+      "observed_tests": [
+        "preview and apply use the same commands without writing the preview base",
+        "preview does not authorize a contributor to edit a financial line",
+        "year amount and annual entry follow the stored line grant",
+        "conflict preview does not expose fields omitted by the domain view",
+        "preview ignores unrelated directory changes but rejects changed effective roles",
+        "preview ignores unrelated private changes but detects replacement of a visible record"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "git_blob_sha": "49bf7727502b2ddf154cd75bc3e043ceaa62e1e7",
+      "sha256": "a9bf0d34e3a51eb7ff60cc0339d508d433417e32b00989da1075ba2f4412c7e2",
+      "observed_tests": [
+        "C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "git_blob_sha": "524c46284dffbe1c58d78a76d6d6fbe5362c05ef",
+      "sha256": "7a12199f13034dd0fc17a9f43fae661d58c265b819cba6b359344cbe155135e2",
+      "observed_tests": [
+        "historical record reissue permits material changes and a new day but rejects replacement",
+        "historical dated entries keep the original competence after the observation year changes",
+        "historical security captures revalidate current observation fields after the year changes"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+      "git_blob_sha": "0009b76e621dd171cf5db02ab4c67f8f410f5227",
+      "sha256": "ea96a56e32622e6e2650005e7769c626981cbd8bd1897aae5db284289cf53dbe",
+      "observed_tests": [
+        "receipt version comes from one actor-visible canonical topic and domain version",
+        "draft preview uses reissued scoped identity and rejects stale or revoked authority"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "git_blob_sha": "ba4cf28643bafd3e4d3afb19a1dbac95579a69e4",
+      "sha256": "3e23a96b96b335e77cda35a9f408e43aec94960a74ca0880ac0338aa20def46f",
+      "observed_tests": [
+        "canonical hot topic retries once, detects changed intent and follows completion",
+        "action input is fixed before asynchronous host authorization",
+        "ambiguous normalized topic IDs cannot be read or updated"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/import-format.test.ts",
+      "git_blob_sha": "0815f602759ae25590faa770da201b6469e96194",
+      "sha256": "73d04538d349a803f5911e281391c5570ccf3e943bd4a7b570170c613c6052be",
+      "observed_tests": [
+        "unknown import formats are rejected while supported formats use the domain simulator"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/imports.test.ts",
+      "git_blob_sha": "23c9165e0e46f72f878f2b9fe7c3ed9814f071ca",
+      "sha256": "6f988c5b7a6a6644498b958655bc115cf4418ce0dc9439afeafb24bad5ba145a",
+      "observed_tests": [
+        "prepared Dashboard imports preview the same domain mutation and reject a changed base",
+        "format mismatch and unauthorized actor never produce a successful import preview"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/keyed-update.test.ts",
+      "git_blob_sha": "db4cbad9fda4972d583e48c3248024587f0c82d6",
+      "sha256": "892c5377a703b61726c738f45bb6c44e71c5908955af00e4afb9a4545edf5cf0",
+      "observed_tests": [
+        "existing YTD owner record is fenced and updated without binding another owner"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/kpi-comparison.test.ts",
+      "git_blob_sha": "ace7d4d74177035ad618abe4f093d75ff770edc3",
+      "sha256": "802415739bcf64e82a7b16223e318e9881d8680247afb85aa8759e8c1095ee24",
+      "observed_tests": [
+        "KPI comparison reauthorizes both registered metrics and keeps separate evidence"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/port.test.ts",
+      "git_blob_sha": "683bb915553bc93ba1dcfe432d104dc01bc5d764",
+      "sha256": "883adf638ce46d0310b2eb85b12af4e19866f8a77a191a1987d432ea18279901",
+      "observed_tests": [
+        "dashboard port reads canonical effective budget and rejects stale and unauthorized sources",
+        "dashboard views remove restricted talent and deny invalid pages",
+        "every published page uses its authorized domain view",
+        "hot topic projection does not read unrelated talent records",
+        "ticket register projection preserves period, absent cells and BI roles",
+        "milestones retain missing dates and never invent completed dates",
+        "executive measurements preserve month, year-to-date and annual periods",
+        "milestone dates can be selected historically without claiming historical status"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/prepared.test.ts",
+      "git_blob_sha": "f660231b54967d45f3fdfca3acab8abd8524df34",
+      "sha256": "9bc4f93116aecf9d8317bd2682cc64ecb4042b4a04890d6076b3d95e9dfec4ce",
+      "observed_tests": [
+        "one record reference cannot authorize a multi-record budget mutation",
+        "other dashboard mutations stay unavailable without a proven complete footprint",
+        "actual staged footprint requires every changed record and month",
+        "annual write applies only with an authorized scope for every generated entry",
+        "real budget commands expose monthly, annual-YTD and deletion footprints",
+        "monthly, year-amount and cascading delete use real scoped grants",
+        "keyed budget maps produce isolated logical records",
+        "keyed dashboard record identities retain their real time scope"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+      "git_blob_sha": "63bec4fc787f8dcf9ee6697b00c7b5a2e8bd4143",
+      "sha256": "cdf333c2af74ccaf088b600ede76dc5dd98bdcde59bbc18b5a492120443bb704",
+      "observed_tests": [
+        "dashboard producer does not emit restricted content or its private dependency digest"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/record-evidence.test.ts",
+      "git_blob_sha": "a28d0c772643605f08d95123f422329f5a605d76",
+      "sha256": "afa17fa37b21b26608e5047a49de2580004832d831b0766e4acea0e91a89c258",
+      "observed_tests": [
+        "record evidence uses authorized scoped identity and revalidates each reference"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review.test.ts",
+      "git_blob_sha": "0ef6475ad4f98316549917d2150db2e191e8f117",
+      "sha256": "46451e382ebc4ef9d3ef788f4be1b477d9e83dc68c9190f9f80ff9600d12f2ad",
+      "observed_tests": [
+        "portfolio project links retain the current selection filters",
+        "executive operations link carries its selected year and month",
+        "budget month edits are contextual and broad operations describe their scope"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/scope.test.ts",
+      "git_blob_sha": "811c2c42656e7e58540993ce0cd4d127fbf5d6bd",
+      "sha256": "609038323047a3a393ee5538ddfc8dec3c46617a16f3d889ba497f72d2d3a449",
+      "observed_tests": [
+        "scoped budget projection ignores restricted unrelated content and detects compensating components",
+        "scope filters unrelated months and does not incorporate ungranted security inputs",
+        "February headcount scope excludes annual and other-month changes",
+        "monthly budget series ignores other months while binding annual fallback",
+        "monthly budget overrides exclude unused annual budgets from the scope",
+        "milestone date scope isolates the selected dates and omits current private fields",
+        "milestone status is observed only in a period containing today"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+      "git_blob_sha": "26a86a4e80af5a7ee2dbd68c1ba32ced1ca414cb",
+      "sha256": "1b0d2e01c4e604ad3a4bebc38c31cfe7ebbd50995d494fe192eba1c23a4cb0f6",
+      "observed_tests": [
+        "executive signals open authorized canonical records and fail closed without evidence"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "git_blob_sha": "3ceb705f4ef43c224245c8e73a20dfa5b88cd434",
+      "sha256": "72d9e4b3cc13057272a125a06eb1440462db165198ffd542cea53fd5cd671be8",
+      "observed_tests": [
+        "signals omit ambiguous IDs within each authorized collection only",
+        "unavailable pages emit no signals"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals.test.ts",
+      "git_blob_sha": "7c6fdce453b3d90d4a96828fccaeb67bf8ece64e",
+      "sha256": "403955648722b26589887e63fea3c2b6021477cf4d9625e01d351aaf6ed08419",
+      "observed_tests": [
+        "signals use only authorized source pages and explicit eligibility"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/sources.test.ts",
+      "git_blob_sha": "dc87225d6b6c0088eb97211131d9af033280e886",
+      "sha256": "e86d93e49b055dde19d5d2d8823dfc129e829330e9349f7d5be69285920332bc",
+      "observed_tests": [
+        "scoped source binds fields, period and current authenticated authority"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-budget-runtime.test.ts",
+      "git_blob_sha": "489f822e054fd246d22640a8eca8ebf288a5c1c4",
+      "sha256": "372012d26dec483303f10872993ee23a0071449d2721b9cc5a229e0c9b79346e",
+      "observed_tests": [
+        "dashboard-budget required pages contain functional controls or nonempty read views",
+        "dashboard-budget direct write without canWrite fails atomically",
+        "OPEX stores monthly zero, keeps annual fallback and sums all twelve actuals",
+        "year amount remainder and clear preserve stored months",
+        "per-record CAS allows independent owners and rejects stale update without audit",
+        "domain leader uses stored allowlist, never domain or contributor assignment",
+        "annual entry has no final remainder; year amount current month is server stored",
+        "import matches first case-insensitive owner, rounds whole monthly fallback and preserves actuals",
+        "owner deletion spans years while leaving YTD/deviations; CAPEX deletion leaves PMO",
+        "budget overview uses singleton CAS and displays effective and flat-reference budgets",
+        "view never exposes talent or unrelated private data; invalid actions do not mutate",
+        "bulk entry conflict rolls back earlier prepared writes and YTD hint",
+        "executive users zero, fallback month, yearly benchmark and selected-year attrition",
+        "CAPEX create/edit status and annual field are independent from PMO",
+        "executive derived ops, SLA, security and performance expose no raw records",
+        "deviation writes original collection with record CAS and escaped display",
+        "OPEX import uses file boundary and hidden versions, without a JSON editor",
+        "changing current month only marks YTD stale and singleton versions span years",
+        "monthly departures require Terminated for current and selected years",
+        "Executive backlog requires initial balances and distinguishes net flow",
+        "aggregate member reads audit every member and reveal no talent or change versions",
+        "CAPEX legacy parent cannot be overridden to bypass stored allowlist",
+        "monthly upsert without id retains existing actual and forecast before applying defaults",
+        "render month fallback matches execution December past and January future",
+        "utilization preserves excess and overview renders effective monthly distribution",
+        "same-id budget grants isolate both collections in server mutations and rendered controls",
+        "raw legacy budget grants fail closed while admin needs no grants",
+        "executive labels each period without implying one historical snapshot",
+        "detail distinguishes a missing entry from an observed zero",
+        "invalid year amount cannot silently clear an existing value",
+        "missing current collections remain unavailable while empty collections are zero",
+        "zero and missing budgets have distinct utilization explanations"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-operations-runtime.test.ts",
+      "git_blob_sha": "46f384e8117100f4bb0f7b8b3d1cb6cd7a117b4b",
+      "sha256": "4fe8684521caeb407784b08d62841e6954cc45e11f50884dd4dd0ab11941598a",
+      "observed_tests": [
+        "dashboard-operations required pages contain functional controls or nonempty read views",
+        "dashboard-operations direct write without canWrite fails atomically",
+        "monthly writes replace values, preserve other months, audit and reject stale writes atomically",
+        "authorization precedes validation; contributor assignment and domain leader limits",
+        "import is a confirmed atomic whole-month replacement and shares monthly CAS",
+        "security entries distinguish blank and zero; derived closure and strict phishing render",
+        "mandatory incident and campaign inputs, dates, finite numbers and unknown fields fail atomically",
+        "actions have only text/done, incident lifecycle, per-record conflicts and delete",
+        "view returns only authorized owned data and versions without private payload; rendering escapes and heat thresholds",
+        "ticket category keys match source, counts default zero, heatmap upserts and monthly CAS applies across blocks",
+        "heatmap renders each exact boundary and leaves absent cells uncolored",
+        "form JSON fields decode at server, malformed input is atomic, categories are conflict protected",
+        "import changing configured lists requires their versions and audits the additions",
+        "monthly entry blank save replaces by year/month and prior year is isolated",
+        "viewer summary reads are restricted; contributor security writes never imply Operations assignment",
+        "all rendered command actions exist, deletions act on real records, malformed import objects fail"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-people-runtime.test.ts",
+      "git_blob_sha": "15a403d69350dc7d68a9f834523b675959db9e03",
+      "sha256": "4210cd22d5169c91491da2d295392f8f358ca8067f1efeed62a2c390e4786050",
+      "observed_tests": [
+        "dashboard-people required pages contain functional controls or nonempty read views",
+        "dashboard-people direct write without canWrite fails atomically",
+        "hot topics persist, reject stale updates and reject unknown commands atomically",
+        "talent stays admin only even with supplied identity joins; reads audit every member",
+        "member import confirmation and name matching preserve nonempty fields, clear talent, audit export",
+        "leader deletion clears members with independent versions and audit",
+        "contributor assignment never grants people or hot topics; unknown pages fail closed",
+        "viewer summaries expose only public member fields and never salary",
+        "domain leaders may save hot topics but team ownership remains unresolved",
+        "cascade delete conflict returns stored member and leaves all records unchanged",
+        "late invalid import rolls back earlier valid rows and audit",
+        "confirmed replacement audits deletion and creation without touching leaders",
+        "member changes and CIO singleton persist with audited versions",
+        "headcount preserves active-only leader talent versus all-member talent and calendar ratio",
+        "render escapes topic and member input; talent defaults to Active",
+        "form JSON rows and hidden versions use the same import boundary as direct commands",
+        "original workbook date headers import and blank dates preserve stored values",
+        "nonadmin view preserves hot-topic notes while stripping member talent notes",
+        "people controls use workbook upload, real download and submitted GET filters",
+        "numeric artifact IDs survive edits, views, audits and leader deletion",
+        "numeric member IDs match workbook imports without coercing numeric names",
+        "readonly Talent Review defaults to active members and applies explicit status filters"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-portfolio-runtime.test.ts",
+      "git_blob_sha": "fd436c62f6473ff8f0c7d573b1ca1dc3bf23930d",
+      "sha256": "c3daded868b66ca9b663b439ccc33e791125fd939cd015155deed0317d7ecd8d",
+      "observed_tests": [
+        "dashboard portfolio runtime > risk factors retain six, blank becomes one; derived fields are not stored",
+        "dashboard portfolio runtime > denied actors and missing ownership predicate never mutate or audit",
+        "dashboard portfolio runtime > assigned contributors edit only the matching module; stale CAS returns stored and author",
+        "dashboard portfolio runtime > project details, milestones and independent capex survive save and imports",
+        "dashboard portfolio runtime > stakeholder priority keys override tier, category and missing owner warning",
+        "dashboard portfolio runtime > performance overallocated owners requires confirmation; weight warning permits save",
+        "dashboard portfolio runtime > contract deletion returns private deletion keys only from stored documents",
+        "dashboard portfolio runtime > views expose only authorized collections and their versions; all pages have escaped usable forms",
+        "contract terms use original field names and blank amount becomes zero",
+        "a stale member of an import batch leaves the entire draft and audit unchanged",
+        "workbook rows import using per-project versions without touching unrelated rows",
+        "milestone actions audit and conflict at the parent project version",
+        "performance keeps unknown original fields and excludes absent scores from weighting",
+        "risk tier edges, stakeholder priority override and empty input defaults",
+        "legacy numeric IDs match commands and version references without losing fields",
+        "imports use workbook boundary, filters are GET forms and legacy ids are hidden",
+        "weight tolerance permits small differences; owner overage above tolerance needs confirmation",
+        "invalid import batch writes no audit and only first homonym requires a version",
+        "review signal destinations anchor visible source rows"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "git_blob_sha": "34c36dec7eeadf38d4809542056d9df5f3eb1388",
+      "sha256": "4ceb010722e0d3aea658c136903198c218997a2898d16820807ad83404aba629",
+      "observed_tests": [
+        "operations agenda subsets retain only the chosen monthly register and its missing cells",
+        "operations agenda cannot attribute duplicate monthly values to one physical record",
+        "operations agenda revalidates source changes and current role access",
+        "executive agenda retains its selected aggregate fields and explicitly subsets signal sources",
+        "performance item projection uses real unique IDs and preserves source privacy and current period",
+        "performance agenda fails closed when the host has no physical item lifecycle"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/backup-consumer.test.ts",
+      "git_blob_sha": "436f3e1e86724cf2bb84ebf8c71a3949ac946a26",
+      "sha256": "bcfb1b16dfd1d70afd2a62298c0e7ebd55f433d4c7549b34ce8efc1e8ac80a8e",
+      "observed_tests": [
+        "WP06 JSON producer preview and domain apply agree while preserving trusted installation state",
+        "JSON preview rejects private state injection, file-reference forgery and unauthorized replacement"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+      "git_blob_sha": "f42a267f1f38147d033195b68701dcd25caee7f5",
+      "sha256": "4b2ab8a4fb888ffc04abb78fc789543868bd6d0ee99bb0225ed3045d64792ab0",
+      "observed_tests": [
+        "historical binding preserves the captured fact after material edits and rechecks current access and physical identity",
+        "a caller cannot alter a prepared historical capture and keep its authorization fence"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/prepared-review.test.ts",
+      "git_blob_sha": "9134ebc40bcc8546263609eddb321fef7b5e5a77",
+      "sha256": "a8ef3cc1b69a5d1d0f182c4720c37c38f5a599b5b77825a7507553357e043101",
+      "observed_tests": [
+        "C12 dashboard producer prepares, independently reviews and applies the canonical Hot Topic without reopening it",
+        "C12 review rejects a forged preview, changed source, revocation and changed private choice binding"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "git_blob_sha": "9f6f9fbb1f3f6356ce2c858f6e0d3edfae42b904",
+      "sha256": "bc7c6c42320593b2fc3d84e4675218956a9c6c21b386a7d3df30c84dc352f50e",
+      "observed_tests": [
+        "Portfolio reviews the canonical selection and drills into All Projects without exposing the register",
+        "Portfolio order exposes watch preference and recorded dates, retaining undated records",
+        "Portfolio cannot publish a record destination for missing or ambiguous physical IDs",
+        "Security presents facts while all mutation controls remain in closed contextual editors",
+        "Performance retains its read views and command scope with collapsed item and sub-item editing",
+        "historical KPI year does not relabel current security actions, campaigns or incident status"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/security-observation.test.ts",
+      "git_blob_sha": "0f7230d1f6f93adbb68fde536451039f1ef68680",
+      "sha256": "5ccccef11c17c8cfef8149db90b2feb5bc39014d03c45a173590008895a71370",
+      "observed_tests": [
+        "security state is a current observation and cannot be reissued as historical data"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+      "git_blob_sha": "6b0ba5a458e6b983fff2dfdf5e866ff7a281c9e1",
+      "sha256": "d39cbf9a781feb85d7d5afc6d7e8976824511a83f5b0965536719b9a4a9691f7",
+      "observed_tests": [
+        "preview preserves field validation and the submitted draft without mutating the source",
+        "apply returns the domain validation and conflicts expose only the authorized stored row"
+      ]
+    }
+  ],
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "product": {
+        "sha": "abe64592bb08858b55495b9f4710289bd357d64a",
+        "tree": "f5d20bfc5b26377100bdcf850fe1493d0de30c67",
+        "parent": "855c17f66fd71964d88a63ca53fd90240159eb08"
+      },
+      "snapshot": {
+        "sha": "5fc57bea16a897f6e4b87e9d5deb955826d485d8",
+        "tree": "2685c2c4b0eaae1c1bd041a20054ca70767dbfa5",
+        "parent": "abe64592bb08858b55495b9f4710289bd357d64a",
+        "only_changed_paths": [
+          ".ci-run.json"
+        ]
+      },
+      "test_run_id": 43515389741,
+      "check_run_id": 43515394127,
+      "tests": {
+        "passed": 168,
+        "failed": 1
+      },
+      "typecheck": {
+        "diagnostics": 142,
+        "wp02": 11,
+        "external": 131
+      },
+      "corrections": "Correct expected generic denial reason; narrow optional signal evidence; provide version author; explicitly type continuity transaction result; add literal 100/120 budget oracle."
+    },
+    {
+      "attempt": 2,
+      "test_run_id": 43516062361,
+      "check_run_id": 43516071214,
+      "tests": {
+        "passed": 169,
+        "failed": 0
+      },
+      "typecheck": {
+        "diagnostics": 131,
+        "wp02": 0,
+        "external": 131
+      }
+    }
+  ],
+  "acceptance": {
+    "integrated": "BLOCKED",
+    "native": "NOT_RUN",
+    "global_release": false
+  },
+  "runtime_setup_limit": "The required existing setup-bun action printed Saved lockfile. The immutable W-to-S comparison proves repository input identity; the workflow did not record a post-install lockfile digest, so no stronger dependency-lock immutability claim is made."
+}

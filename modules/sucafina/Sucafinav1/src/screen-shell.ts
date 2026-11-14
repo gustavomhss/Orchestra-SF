@@ -1,7 +1,10 @@
 // O botão mostra. Não decide. Sem rede, a escrita não ficou gravada, e o ecrã diz isso.
 // Não importa superfície. Não há localStorage.
 
-import { showPage } from "./nav.ts"
+import { shellStateScript } from "../product/ui/shell-state.ts"
+import { shellCommandScript } from "../product/ui/shell-command.ts"
+import { shellPreviewScript } from "../product/ui/shell-preview.ts"
+import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV, showPage } from "./nav.ts"
 
 export const UNSAVED = "A escrita não ficou gravada."
 
@@ -18,8 +21,9 @@ type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; st
 
 const SCRIPT = `
 const unsaved = ${JSON.stringify(UNSAVED)}
-const pending = { html: null, loading: false, focus: null, closed: false, controller: null, generation: 0, writing: 0, again: false }
-function notice(message) { (document.querySelector("dialog[open] [data-editor-status]") || document.getElementById("notice")).textContent = message }
+${shellStateScript}
+${shellCommandScript}
+${shellPreviewScript}
 function assignValue(target, name, value) {
   const path = name.replace(/\\[(\\d+)\\]/g, ".$1").split(".")
   if (path.some((part) => ["__proto__", "constructor", "prototype"].includes(part))) throw new Error("Invalid field")
@@ -45,10 +49,30 @@ async function valuesOf(form) {
   function compact(value) { if (Array.isArray(value)) return value.filter((entry) => entry !== undefined).map(compact); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, compact(entry)])); return value }
   return compact(values)
 }
-function showResult(result, attempt) {
-  if (result && result.status === 409) {
-    const describe = (value) => value && typeof value === "object" ? Object.entries(value).map(([key, item]) => key + ": " + (item == null ? "Not provided" : typeof item === "object" ? JSON.stringify(item) : String(item))).join(" · ") : String(value ?? "Not available")
-    notice("This record changed since you opened it. Your edits are still here. Current: " + describe(result.stored) + ". Your attempt: " + describe(attempt) + ". Review the current record before retrying.")
+function showResult(result, attempt, form, status = result?.status) {
+  if (form && Array.isArray(result?.fieldErrors)) {
+    let first
+    result.fieldErrors.forEach((error, index) => {
+      if (typeof error?.field !== "string" || typeof error.message !== "string") return
+      const inputs = [...(form.closest("section") || form).querySelectorAll("input,select,textarea")].filter((element) => element.name === error.field && !element.disabled)
+      if (inputs.length !== 1) return
+      const input = inputs[0]
+      const message = document.createElement("span")
+      message.id = "field-error-" + crypto.randomUUID() + "-" + index
+      message.dataset.fieldError = "true"
+      message.textContent = error.message
+      input.insertAdjacentElement("afterend", message)
+      input.setAttribute("aria-invalid", "true")
+      input.dataset.fieldInvalid = "true"
+      input.setAttribute("aria-describedby", [input.getAttribute("aria-describedby"), message.id].filter(Boolean).join(" "))
+      first ||= input
+    })
+    if (status !== 409) first?.focus()
+  }
+  if (status === 409) {
+    const describe = (value) => value == null ? "Not provided" : Array.isArray(value) ? value.map(describe).join("; ") : typeof value === "object" ? Object.entries(value).map(([key, item]) => key + ": " + describe(item)).join(" · ") : String(value)
+    notice("This record changed since you opened it. Your edits are still here. Current: " + describe(result?.stored) + ". Your attempt: " + describe(attempt) + ". Review the current record before retrying.")
+    offerLatestVersion(form)
     return
   }
   notice(result && result.errors ? result.errors.join(" · ") : unsaved)
@@ -59,16 +83,6 @@ function beginWrite() {
   pending.html = null
   return () => { pending.writing--; pending.generation++; pending.html = null }
 }
-async function send(command) {
-  const finish = beginWrite()
-  try {
-  const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(command) })
-  const result = await response.json()
-  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values); return false }
-  notice(result.warnings && result.warnings.length ? result.warnings.join(" · ") : "Saved.")
-  return true
-  } finally { finish() }
-}
 async function press(name) {
   if (name === "Import JSON" && !window.confirm("Substitui para toda a gente.")) return
   const post = window.sucafinaPost
@@ -78,13 +92,53 @@ async function press(name) {
 }
 function attach() {
   const current = new URL(location.href)
-  const stateKeys = ["year", "execYear", "opsYear", "secYear", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"]
+  const stateKeys = document.body.dataset.surface === "dashboard" ? ["year", "execYear", "opsYear", "secYear", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"] : document.body.dataset.surface === "planner" ? ["year", "version"] : []
+  const periodYear = document.body.dataset.surface === "dashboard" ? document.querySelector('main select[data-year="own"][data-query]')?.dataset.query : undefined
+  const periodMonth = { execYear: "executiveMonth", opsYear: "operationsMonth", secYear: "securityMonth" }[periodYear]
+  const scopedPeriod = periodMonth ? [periodYear, periodMonth] : undefined
+  if (scopedPeriod) {
+    if (current.searchParams.has("own") && !current.searchParams.has(scopedPeriod[0])) current.searchParams.set(scopedPeriod[0], current.searchParams.get("own"))
+    if (current.searchParams.has("month") && !current.searchParams.has(scopedPeriod[1])) current.searchParams.set(scopedPeriod[1], current.searchParams.get("month"))
+  }
   document.querySelectorAll('nav a[href*="?page="]').forEach((anchor) => {
     const target = new URL(anchor.href)
     for (const key of stateKeys) if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
     target.searchParams.delete("own")
     anchor.href = target.toString()
     if (target.searchParams.get("page") === document.querySelector("main")?.dataset.page) anchor.setAttribute("aria-current", "page")
+  })
+  document.querySelectorAll("[data-dashboard-signal-link]").forEach((anchor) => {
+    const target = new URL(anchor.href)
+    for (const key of stateKeys) if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
+    anchor.href = target.toString()
+  })
+  document.querySelectorAll("[data-dashboard-signals]").forEach((section) => {
+    if (section.dataset.bound) return
+    section.dataset.bound = "true"
+    const records = [...section.querySelectorAll("[data-signal-priority]")].map((button, index) => ({ button, row: button.closest("tr"), id: button.dataset.signalPriority, index }))
+    const authorized = new Set(records.map((item) => item.id))
+    const pinned = new Set(current.searchParams.getAll("signalPriority").filter((id) => authorized.has(id)))
+    const order = () => {
+      const sorted = [...records].sort((a, b) => Number(pinned.has(b.id)) - Number(pinned.has(a.id)) || a.index - b.index)
+      for (const item of sorted) {
+        item.row.parentElement.append(item.row)
+        item.button.setAttribute("aria-pressed", String(pinned.has(item.id)))
+        item.button.textContent = pinned.has(item.id) ? "Remove priority" : "Prioritize"
+        item.button.setAttribute("aria-label", (pinned.has(item.id) ? "Remove priority for " : "Prioritize ") + item.button.dataset.signalLabel)
+      }
+      section.querySelector("[data-signal-order]").textContent = pinned.size + " of " + records.length + " signals prioritized by you. Your priorities first, then recorded date; undated records follow. Priorities belong to this view and do not change the records."
+    }
+    for (const item of records) item.button.addEventListener("click", () => {
+      if (pinned.has(item.id)) pinned.delete(item.id)
+      else pinned.add(item.id)
+      const url = new URL(location.href)
+      url.searchParams.delete("signalPriority")
+      for (const id of pinned) url.searchParams.append("signalPriority", id)
+      history.replaceState(history.state, "", url)
+      order()
+      item.button.focus()
+    })
+    order()
   })
   document.querySelectorAll("[data-notifications]").forEach((menu) => {
     if (menu.dataset.bound) return
@@ -93,10 +147,12 @@ function attach() {
     const output = menu.querySelector("[data-notification-items]")
     const count = menu.querySelector("[data-notification-count]")
     const load = async () => {
+      if (pending.closed) return
       try {
         const response = await fetch(menu.dataset.notifications, { credentials: "same-origin", cache: "no-store" })
         if (!response.ok) throw new Error("Notifications unavailable")
         const result = await response.json()
+        if (pending.closed) return
         if (!Array.isArray(result.items)) throw new Error("Notifications unavailable")
         const unread = result.items.filter((item) => !item.read).length
         count.textContent = unread ? String(unread) : ""
@@ -138,6 +194,11 @@ function attach() {
     void load()
     setInterval(() => { void load() }, 30000)
   })
+  document.querySelectorAll("[data-refresh-view]").forEach((button) => {
+    if (button.dataset.bound) return
+    button.dataset.bound = "true"
+    button.addEventListener("click", () => void refresh())
+  })
   document.querySelectorAll("[data-logout]").forEach((button) => {
     if (button.dataset.bound) return
     button.dataset.bound = "true"
@@ -156,13 +217,37 @@ function attach() {
     button.dataset.bound = "true"
     const dialog = button.closest("td").querySelector("dialog")
     const form = dialog.querySelector("form[data-command]")
-    button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record]) : ""
-    button.addEventListener("click", () => dialog.showModal())
+    button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record, ...["year", "month"].map((name) => {
+      const input = [...form.elements].find((element) => element.name === name)
+      return input ? input.defaultValue ?? input.value : null
+    })]) : ""
+    dialog.id ||= "record-editor-" + crypto.randomUUID()
+    dialog.tabIndex = -1
+    button.setAttribute("aria-haspopup", "dialog")
+    button.setAttribute("aria-controls", dialog.id)
+    button.setAttribute("aria-expanded", "false")
+    button.addEventListener("click", () => {
+      dialog.showModal()
+      button.setAttribute("aria-expanded", "true")
+      const first = dialog.querySelector('input:not([type=hidden]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled)')
+      ;(first || dialog).focus()
+    })
+    dialog.addEventListener("close", () => {
+      button.setAttribute("aria-expanded", "false")
+      pending.focus = button.dataset.editorKey
+      button.focus()
+      applyRefresh()
+    })
     dialog.addEventListener("cancel", (event) => {
+      const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
+      if (active) { event.preventDefault(); commandBlocked(active); return }
       const dirty = dialog.querySelectorAll("form[data-dirty]")
-      if (!dirty.length) return
+      // Native Escape hides the dialog before its queued close event is delivered.
+      // Keep the opener's accessibility state in step with that permitted dismissal.
+      if (!dirty.length) { button.setAttribute("aria-expanded", "false"); return }
       if (!window.confirm("Discard unsaved changes?")) { event.preventDefault(); return }
-      dirty.forEach((form) => delete form.dataset.dirty)
+      dirty.forEach((form) => { delete form.dataset.dirty; discardDashboardPreview(form) })
+      button.setAttribute("aria-expanded", "false")
       setTimeout(() => void refresh(true), 0)
     })
     dialog.addEventListener("keydown", (event) => {
@@ -180,8 +265,10 @@ function attach() {
     button.dataset.bound = "true"
     button.addEventListener("click", () => {
       const dialog = button.closest("dialog")
+      const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
+      if (active) { commandBlocked(active); return }
       if (dialog.querySelector("form[data-dirty]") && !window.confirm("Discard unsaved changes?")) return
-      dialog.querySelectorAll("form[data-dirty]").forEach((form) => delete form.dataset.dirty)
+      dialog.querySelectorAll("form[data-dirty]").forEach((form) => { delete form.dataset.dirty; discardDashboardPreview(form) })
       dialog.close()
       void refresh(true)
     })
@@ -268,65 +355,39 @@ function attach() {
     form.dataset.bound = "true"
     form.addEventListener("submit", async (event) => {
       event.preventDefault()
+      if (pending.closed || form.dataset.saving === "true" || commandBlocked(form)) return
+      const errorScope = form.closest("section") || form
+      errorScope.querySelectorAll("[data-field-error]").forEach((message) => {
+        errorScope.querySelectorAll("[aria-describedby]").forEach((input) => {
+          const ids = input.getAttribute("aria-describedby").split(/\\s+/).filter((id) => id !== message.id)
+          if (ids.length) input.setAttribute("aria-describedby", ids.join(" ")); else input.removeAttribute("aria-describedby")
+          if (input.dataset.fieldInvalid) { input.removeAttribute("aria-invalid"); delete input.dataset.fieldInvalid }
+        })
+        message.remove()
+      })
       const confirmed = /import|delete|replace|restore/.test(form.dataset.command)
       if (confirmed && !window.confirm("Confirm this change?")) return
+      form.dataset.saving = "true"
       const buttons = [...form.querySelectorAll("button")]
       buttons.forEach((button) => button.disabled = true)
       try {
-        const values = await valuesOf(form)
+        const submitsEditor = document.body.dataset.surface === "procurement" && ["submit_pr", "submit_sourcing", "submit_po"].includes(form.dataset.command)
+        const editors = submitsEditor ? [...(form.closest("section") || form).querySelectorAll('form[data-command="save"]')].filter((editor) => editor.dataset.record === form.dataset.record && editor.dataset.page === form.dataset.page) : []
+        if (submitsEditor && editors.length !== 1) { notice("The current editor is unavailable. Reopen the record before submitting."); return }
+        if (submitsEditor && !editors[0].reportValidity()) return
+        const editorRevision = submitsEditor ? editors[0].dataset.previewRevision || "0" : undefined
+        const formRevision = form.dataset.previewRevision || "0"
+        const values = submitsEditor ? { ...await valuesOf(editors[0]), ...await valuesOf(form) } : await valuesOf(form)
         const command = { page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true }
         if (document.body.dataset.surface === "dashboard" && ["OPEX Detail", "CAPEX Projects"].includes(command.page) && ["year-amount", "annual-entry", "save-entry"].includes(command.action)) {
-          const revision = form.dataset.previewRevision || "0"
-          const finish = beginWrite()
-          try {
-            const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "preview-change", version: 0, values: { command: { ...command, confirmed: false } } }) })
-            const result = await response.json()
-            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values); return }
-            if ((form.dataset.previewRevision || "0") !== revision) { notice("The draft changed. Review a new preview."); return }
-            const preview = result.value
-            const panel = document.createElement("section")
-            panel.dataset.preview = "true"
-            panel.setAttribute("aria-label", "Review changes")
-            const heading = document.createElement("h3")
-            heading.textContent = "Review changes before applying"
-            panel.append(heading)
-            const format = (item) => item?.state === "absent" ? "Absent" : item?.state === "undefined" ? "Undefined" : item?.state === "value" ? (item.value == null ? "Not provided" : typeof item.value === "object" ? JSON.stringify(item.value) : String(item.value)) : "Unavailable"
-            const list = document.createElement("ul")
-            for (const change of preview.changes || []) { const row = document.createElement("li"); row.textContent = change.path + ": " + format(change.before) + " → " + format(change.after); list.append(row) }
-            if (!list.children.length) { const row = document.createElement("li"); row.textContent = "No changes."; list.append(row) }
-            panel.append(list)
-            for (const warning of preview.warnings || []) { const message = document.createElement("p"); message.textContent = warning; panel.append(message) }
-            if (preview.summary) { const summary = document.createElement("p"); summary.textContent = "Added: " + preview.summary.added + " · Updated: " + preview.summary.updated + " · Ignored: " + preview.summary.ignored; panel.append(summary) }
-            const apply = document.createElement("button")
-            apply.type = "button"
-            apply.textContent = "Confirm and apply"
-            apply.addEventListener("click", async () => {
-              if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The draft changed. Review a new preview."); return }
-              apply.disabled = true
-              const done = beginWrite()
-              try {
-                const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "apply-preview", version: 0, values: { previewRef: preview.previewRef } }) })
-                const result = await response.json()
-                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values); if (response.status === 409) panel.remove(); return }
-                if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The reviewed changes were saved. New edits remain unsaved; review them before applying."); return }
-                delete form.dataset.dirty
-                const dialog = form.closest("dialog")
-                if (dialog) { pending.focus = dialog.closest("td").querySelector("[data-open-editor]").dataset.editorKey; dialog.close() }
-                notice("Saved.")
-                pending.again = true
-              } catch { notice(unsaved) }
-              finally { done(); apply.disabled = false; if (pending.again) { pending.again = false; void refresh() } }
-            })
-            panel.append(apply)
-            form.querySelector("[data-preview]")?.remove()
-            form.append(panel)
-            heading.tabIndex = -1
-            heading.focus()
-          } finally { finish() }
+          await reviewDashboardCommand(form, command, formRevision)
           return
         }
-        const saved = await send(command)
+        const saved = await send(command, form)
         if (saved) {
+          if ((form.dataset.previewRevision || "0") !== formRevision) { form.dataset.dirty = "true"; notice("The submitted changes were saved. Later edits remain unsaved; review them before continuing."); return }
+          if (submitsEditor && (editors[0].dataset.previewRevision || "0") !== editorRevision) { notice("The submission was saved. Later edits remain unsaved; review them before continuing."); return }
+          if (submitsEditor) delete editors[0].dataset.dirty
           delete form.dataset.dirty
           const dialog = form.closest("dialog")
           if (dialog) {
@@ -339,7 +400,7 @@ function attach() {
           await refresh()
         }
       } catch { notice(unsaved) }
-      finally { buttons.forEach((button) => button.disabled = false) }
+      finally { delete form.dataset.saving; buttons.forEach((button) => button.disabled = false) }
     })
   })
   document.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", () => press(button.getAttribute("data-action"))))
@@ -353,11 +414,23 @@ function attach() {
   }) })
 }
 function applyRefresh() {
-  if (!pending.html || document.querySelector("form[data-dirty], dialog[open]") || document.activeElement && document.activeElement.closest("form")) return
+  if (pending.closed || pending.writing || !pending.html || document.querySelector("form[data-dirty], dialog[open], [data-sf-retain-view]") || document.activeElement && document.activeElement.closest("form")) return
   const next = new DOMParser().parseFromString(pending.html, "text/html")
   const main = next.querySelector("main")
   if (!main) { pending.html = null; return }
-  document.querySelector("main").replaceWith(main)
+  const current = document.querySelector("main")
+  // refresh() already checked the server response and access revision. A live
+  // reader may retain this same page only by claiming the event synchronously.
+  // The event grants no authority: that reader must reauthorize its own data,
+  // coalesce pending reads, and clear protected results when access is lost.
+  if (current?.dataset.page && current.dataset.page === main.dataset.page &&
+      current.dataset.drawn === "true" && main.dataset.drawn === "true" &&
+      next.body.dataset.surface === document.body.dataset.surface &&
+      !current.dispatchEvent(new CustomEvent("sucafina:main-refresh", { cancelable: true }))) {
+    pending.html = null
+    return
+  }
+  current?.replaceWith(main)
   pending.html = null
   attach()
   if (pending.focus !== null) {
@@ -367,7 +440,7 @@ function applyRefresh() {
   }
 }
 async function refresh(silent = false) {
-  if (pending.closed || pending.writing) return
+  if (pending.closed) return
   if (pending.loading) { if (!silent) pending.again = true; return }
   const generation = pending.generation
   pending.loading = true
@@ -375,24 +448,35 @@ async function refresh(silent = false) {
   const deadline = setTimeout(() => pending.controller?.abort(), 10000)
   try {
     const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: pending.controller.signal })
-    if (!response.ok) { if (!silent) notice(unsaved); return }
+    if (pending.closed) return
+    if (response.status === 401 || response.status === 403) { revokeAccess(response.status); return }
+    if (!response.ok) { if (!silent) notice("Could not refresh. Your current view and unsaved edits are unchanged. Try again."); return }
     const html = await response.text()
-    if (generation !== pending.generation || pending.writing || pending.closed) return
+    if (pending.closed) return
+    const next = new DOMParser().parseFromString(html, "text/html")
+    const revision = response.headers.get("X-SF-Access-Revision") || next.querySelector('meta[name="sf-access-revision"]')?.content || null
+    if (next.body.dataset.surface === "signed-out") { revokeAccess(401); return }
+    if (revision && revision !== pending.accessRevision) { revokeAccess(403); return }
+    if (next.querySelector('main[data-drawn="false"]')) { revokeAccess(403); return }
+    if (generation !== pending.generation || pending.writing) return
+    if (!next.querySelector("main")) { if (!silent) notice("Could not refresh. Your current view and unsaved edits are unchanged. Try again."); return }
     pending.html = html
+    if (!silent && document.querySelector("form[data-dirty]")) notice("Refresh received. Your unsaved edits are preserved; save or discard them before updating this view.")
     applyRefresh()
-  } catch { if (!silent && !pending.closed) notice(unsaved) }
+  } catch { if (!silent && !pending.closed) notice("Could not refresh. Your current view and unsaved edits are unchanged. Try again.") }
   finally { clearTimeout(deadline); pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
 }
-const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
+const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); if (!outstandingCommand(form)) discardDashboardPreview(form) } }
 document.addEventListener("input", markDirty)
 document.addEventListener("change", markDirty)
 const businessTimer = setInterval(() => { if (!document.hidden) void refresh(true) }, 30000)
-window.addEventListener("pagehide", () => { pending.closed = true; clearInterval(businessTimer); pending.controller?.abort() })
+window.addEventListener("pagehide", () => { pending.closed = true; clearInterval(businessTimer); pending.controller?.abort(); rememberView() })
 window.addEventListener("beforeunload", (event) => { if (document.querySelector("form[data-dirty]")) { event.preventDefault(); event.returnValue = "" } })
-window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
-window.sucafinaRefresh = refresh
+window.addEventListener("pageshow", (event) => { if (event.persisted) { location.reload(); return }; restoreView() })
+window.sucafinaRefresh = async () => { pending.generation++; pending.html = null; await refresh() }
 document.addEventListener("focusout", () => setTimeout(applyRefresh, 0))
 attach()
+void restoreDashboardPreviews()
 `
 
 export function press(
@@ -434,6 +518,28 @@ export function listed(keys: readonly string[], surface: Drawn["surface"]): { ke
 }
 
 export function links(nav: { key: string; index: number }[]): string {
+  const groups = nav.length && nav.every((item) => (DASHBOARD_PAGES as readonly string[]).includes(item.key)) ? [
+      { label: "Overview", pages: ["Executive Dashboard", "Hot Topics & Actions"] },
+      { label: "Budget and people", pages: ["Budget Overview", "OPEX Detail", "CAPEX Projects", "Headcount Overview", "Team Structure", "Talent Review"] },
+      { label: "Portfolio", pages: ["Portfolio Dashboard", "All Projects"] },
+      { label: "Operations and governance", pages: ["IT Operations", "IT Security KPIs", "IT Risks", "Vendor Contracts", "Stakeholder Management", "IT Performance Contract"] },
+    ] : nav.length && nav.every((item) => (PLANNER_TABS as readonly string[]).includes(item.key)) ? [
+      { label: "Review", pages: ["Overview", "Versions"] },
+      { label: "Plan costs and people", pages: ["OPEX", "CAPEX", "Headcount"] },
+      { label: "Planning references", pages: ["Entities & allocations", "FX rates"] },
+    ] : nav.length && nav.every((item) => (PROCUREMENT_NAV as readonly string[]).includes(item.key)) ? [
+      { label: "Work queue", pages: ["Dashboard", "Requests", "My approvals"] },
+      { label: "Suppliers and administration", pages: ["Suppliers", "Settings"] },
+    ] : []
+  if (groups.length) {
+    const remaining = nav.filter((item) => !groups.some((group) => group.pages.includes(item.key)))
+    if (remaining.length) groups.push({ label: "Other", pages: remaining.map((item) => item.key) })
+    return groups.map((group) => {
+      const items = nav.filter((item) => group.pages.includes(item.key))
+      if (!items.length) return ""
+      return `<span class="nav-section">${esc(group.label)}</span>${items.map((item) => `<a data-index="${item.index}" href="?page=${encodeURIComponent(item.key)}">${esc(item.key)}</a>`).join("")}`
+    }).join("")
+  }
   return nav
     .map((item) => `<a data-index="${item.index}" href="?page=${encodeURIComponent(item.key)}">${esc(item.key)}</a>`)
     .join("")
@@ -451,8 +557,9 @@ export function documentHtml(
   main: string,
   aside: string,
   sidebarControls = "",
+  accessRevision?: string,
 ): string {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><style>${STYLE}</style></head><body data-surface="${surface}"><a class="skip" href="#content">Skip to content</a><aside class="sidebar"><header><strong>Sucafina</strong><span>${esc(title)}</span></header><nav aria-label="${esc(title)}">${nav}</nav>${sidebarControls}</aside><div id="content" class="content"><header class="workspace-bar"><span>Sucafina workspace</span><div role="navigation" aria-label="Applications">${[["dashboard", "Dashboard"], ["planner", "Budget Planner"], ["procurement", "Procurement"]].map(([key, label]) => `<a href="./${key}"${surface === key ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</div>${surface === "signed-out" ? "" : '<div class="workspace-tools"><!--local-tools--><button type="button" data-logout>Sign out</button></div>'}</header>${main}${aside}<p id="notice" role="status" aria-live="polite"></p></div><script>${SCRIPT}</script></body></html>`
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${accessRevision ? `<meta name="sf-access-revision" content="${esc(accessRevision)}">` : ""}<style>${STYLE}</style></head><body data-surface="${esc(surface)}"><a class="skip" href="#content">Skip to content</a><aside class="sidebar"><header><strong>Sucafina</strong><span>${esc(title)}</span></header><nav aria-label="${esc(title)}">${nav}</nav>${sidebarControls}</aside><div id="content" class="content"><header class="workspace-bar"><span>Sucafina workspace</span><div role="navigation" aria-label="Applications">${[["dashboard", "Dashboard"], ["planner", "Budget Planner"], ["procurement", "Procurement"]].map(([key, label]) => `<a href="./${key}"${surface === key ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</div>${surface === "signed-out" ? "" : '<div class="workspace-tools"><!--local-tools--><button type="button" data-refresh-view>Refresh data</button><button type="button" data-logout>Sign out</button></div>'}</header>${surface === "signed-out" ? "" : '<p class="scope-note">Period and version filters apply to this application only.</p>'}${main}${aside}<p id="notice" role="status" aria-live="polite"></p></div><script>${SCRIPT}</script></body></html>`
 }
 
 export function esc(value: string): string {
@@ -464,7 +571,7 @@ const STYLE = `
 *{box-sizing:border-box}body{margin:0;display:grid;grid-template-columns:224px minmax(0,1fr);min-height:100vh}a{color:var(--green)}
 .sidebar{background:#143c2f;color:#edf4ef;padding:28px 14px;position:sticky;top:0;height:100dvh;overflow-y:auto}.sidebar header{padding:0 12px 24px;display:grid;gap:4px}.sidebar header strong{font-size:25px;letter-spacing:-.8px}.sidebar header span{font-size:12px;color:#b9cfc3}.sidebar label{color:#d4e4d8;margin:24px 12px 0;min-width:0}.sidebar select{width:100%;margin-top:4px}
 nav{display:grid;gap:3px}nav a{color:inherit;text-decoration:none;padding:9px 12px;border-radius:6px;font-size:12px;line-height:1.45}nav a:hover{background:#24513f}nav a[aria-current=page]{background:#32634c;color:white;box-shadow:inset 3px 0 #b6d59d}nav a:focus-visible{outline:2px solid #b6d59d;outline-offset:1px}.nav-section{color:#9fbeab;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin:20px 12px 5px}
-.content{padding:24px 28px 40px;min-width:0;width:100%;max-width:1680px;margin-inline:auto}main{min-width:0;container-type:inline-size}h1{font-size:26px;line-height:1.25;letter-spacing:-.7px;margin:0 0 24px;color:#173c2d}h2{font-size:17px;line-height:1.4;letter-spacing:-.2px;margin:28px 0 12px}h3{font-size:14px;margin:20px 0 10px}p{overflow-wrap:anywhere}section{margin-bottom:24px;min-width:0}.environment-banner{font-size:12px;line-height:1.4;margin:0 0 20px;padding:8px 12px;background:#f8f3e4;color:#776128;border:1px solid #e6ddc4;border-radius:6px}
+.scope-note{font-size:12px;color:var(--muted);margin:0 0 16px}summary:focus-visible,a:focus-visible{outline:2px solid #478564;outline-offset:2px}.product-scenario li{overflow-wrap:anywhere}.content{padding:24px 28px 40px;min-width:0;width:100%;max-width:1680px;margin-inline:auto}main{min-width:0;container-type:inline-size}h1{font-size:26px;line-height:1.25;letter-spacing:-.7px;margin:0 0 24px;color:#173c2d}h2{font-size:17px;line-height:1.4;letter-spacing:-.2px;margin:28px 0 12px}h3{font-size:14px;margin:20px 0 10px}p{overflow-wrap:anywhere}section{margin-bottom:24px;min-width:0}.environment-banner{font-size:12px;line-height:1.4;margin:0 0 20px;padding:8px 12px;background:#f8f3e4;color:#776128;border:1px solid #e6ddc4;border-radius:6px}
 body[data-surface=planner] main>h1+h2{display:none}figure{margin:24px 0;padding:16px;background:#fff;border:1px solid var(--border);border-radius:8px;min-width:0}figcaption{font-size:12px;font-weight:600;color:#4b6357;margin-bottom:12px}figure svg{display:block;width:100%;height:auto;max-height:240px}figure svg:empty{display:none}figure .table-scroll{margin-bottom:0}.period-selector{display:flex;flex-wrap:wrap;gap:12px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:16px 0}.period-selector label{flex:0 1 180px;min-width:120px}
 .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:16px 0 24px;align-items:stretch}.metric-grid--1{grid-template-columns:minmax(0,1fr)}.metric-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}.metric-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}.metric{display:inline-grid;align-content:space-between;gap:12px;min-width:160px;min-height:112px;background:white;border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:0 12px 16px 0;vertical-align:top}.metric span{color:var(--muted);font-size:12px;line-height:1.45;overflow-wrap:anywhere}.metric strong{font-size:28px;font-weight:650;letter-spacing:-.7px;line-height:1.15;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.metric-grid>.metric,.metric-grid>section>.metric{display:grid;min-width:0;width:100%;height:100%;margin:0}.metric-grid>section{margin:0;min-width:0}.metric-tile{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px 20px;min-width:0}.metric-tile .metric{display:grid;margin:0;padding:0;border:0;min-width:0;min-height:72px}.metric-tile p{margin:12px 0 0;font-size:12px;color:var(--muted)}[data-tone=red]>.metric,[data-tone=red].metric-tile{border-top:3px solid #b55e55}[data-tone=amber]>.metric,[data-tone=amber].metric-tile{border-top:3px solid #b9933d}[data-tone=green]>.metric,[data-tone=green].metric-tile{border-top:3px solid #478564}
 form{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px;margin:16px 0;display:flex;gap:14px;align-items:end;flex-wrap:wrap;min-width:0}label{font-size:12px;color:#4b6357;display:grid;gap:6px;min-width:140px;flex:1;max-width:100%}input,select,textarea{font:inherit;font-size:13px;line-height:20px;border:1px solid #bccdc0;border-radius:5px;padding:8px 10px;background:#fff;max-width:100%;min-width:0;min-height:38px}textarea{min-height:88px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid #478564;outline-offset:1px}input[type=checkbox],input[type=radio]{width:16px;height:16px;min-height:16px;padding:0;flex:none;accent-color:var(--green)}input[type=file]{width:100%;line-height:20px}button,.button{font:inherit;font-size:12px;line-height:20px;font-weight:600;background:var(--green);border:1px solid var(--green);color:#fff;border-radius:5px;padding:8px 14px;min-height:38px;max-width:100%;cursor:pointer;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;text-align:center;overflow-wrap:anywhere}button:disabled{opacity:.45;cursor:not-allowed}button:hover:not(:disabled){background:#174e37}button:focus-visible,.button:focus-visible{outline:2px solid #478564;outline-offset:2px}.filter-bar{padding:14px 16px;gap:12px}.filter-bar label{flex:0 1 180px;min-width:120px}.filter-bar button{margin-left:auto}.report-form{align-items:start}.report-form fieldset{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:10px 16px;flex-basis:100%;border:1px solid var(--border);border-radius:6px;min-width:0;padding:16px}.report-form fieldset label{display:flex;align-items:center;gap:8px;min-width:0;line-height:1.4}.report-form button{margin-left:auto}
@@ -483,3 +590,4 @@ form[method=get]:not(.report-form){display:flex;align-items:end;padding:16px;gap
 .chart-legend{display:flex;flex-wrap:wrap;gap:10px 20px;list-style:none;margin:12px 0 0;padding:0;font-size:12px;color:#4b6357}.chart-legend li{display:flex;align-items:center;gap:6px}.chart-legend span{display:inline-block;width:10px;height:10px;border-radius:2px}.chart-empty{padding:24px 12px;color:var(--muted);text-align:center;font-size:13px}.chart-axis{font-size:10px;fill:#62756c}.workspace-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.workspace-tools>button{background:#fff;color:#34583f;border-color:var(--border);min-height:32px;padding:5px 10px}.workspace-bar{flex-wrap:wrap}.workspace-tools details{position:relative;margin:0;padding:0;border:0;background:transparent}.workspace-tools summary{font-size:12px;font-weight:500;padding:7px 10px}.notification-popover{position:absolute;right:0;top:100%;z-index:20;width:min(360px,calc(100vw - 48px));background:#fff;border:1px solid var(--border);box-shadow:0 10px 32px #12352822;border-radius:8px;padding:12px;max-height:400px;overflow:auto}.notification-item{padding:12px 0;border-bottom:1px solid var(--border);font-size:12px}.notification-item:last-child{border:0}.notification-item a{padding:0;display:block}.notification-item small{color:var(--muted)}.notification-item button{background:#fff;color:var(--green);border-color:var(--border);font-size:11px;min-height:28px;padding:3px 8px;margin-top:8px}.notification-count{font-variant-numeric:tabular-nums;color:var(--green);font-weight:600}.utility-empty{background:#fff;border:1px solid var(--border);padding:24px;border-radius:8px;color:var(--muted)}
 @media(prefers-reduced-motion:no-preference){button,nav a{transition:background-color .15s}}
 `
+

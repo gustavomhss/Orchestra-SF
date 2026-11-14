@@ -1,0 +1,157 @@
+{
+  "schema": "astra.interface.known-selection-conflict-assessment.v1",
+  "candidate": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad"
+  },
+  "scope": "Read-only assessment of one unexecuted UI rejection/review branch; no global or native acceptance opinion.",
+  "findingId": "WP01-SELECTION-KNOWN-CAS-REJECTION",
+  "classification": "PUBLISHED_PRODUCER_MAPPING_DEPENDENCY_AND_SCOPED_PROOF_GAP",
+  "criteria": [
+    "WP01.T04.CMP.01",
+    "WP01.T04.CMP.02",
+    "WP01.T04.SUC.01",
+    "WP01.T03.CMP.01"
+  ],
+  "question": "Can the existing real HTTP/C08/SQLite fixture deterministically cause the first selection save to return 409 conflict/selection-not-committed using only transport ordering and a real concurrent mutation?",
+  "conclusion": "No suitable deterministic seam exists in the admitted fixture for that exact response. The ordinary real storage-version race returns a different producer response. No test or product code was changed.",
+  "facts": [
+    {
+      "source": "product/host-binding/state-provider.ts",
+      "lines": [
+        72,
+        87
+      ],
+      "detail": "Durable prior receipt is resolved before the expected namespace-version check. A version mismatch returns conflict/product-state-changed, not preview."
+    },
+    {
+      "source": "product/host-binding/state-provider.ts",
+      "lines": [
+        88,
+        96
+      ],
+      "detail": "preview is returned only after the real work callback returns commit:false and post-work authority/target checks remain valid."
+    },
+    {
+      "source": "product/collaboration/case-selection.ts",
+      "lines": [
+        151,
+        180
+      ],
+      "detail": "The producer reads the current case, prepares source/current-case fences and executes a preferences transaction. It maps only preview to conflict/selection-not-committed (HTTP409); any other non-ok result, including product-state-changed, becomes unavailable/selection-unavailable (HTTP503)."
+    },
+    {
+      "source": "product/ui/case-work-selection.ts",
+      "lines": [
+        48,
+        54
+      ],
+      "detail": "Only the exact 409 conflict/selection-not-committed envelope is a known precommit conflict."
+    },
+    {
+      "source": "product/ui/case-work-selection.ts",
+      "lines": [
+        117,
+        129
+      ],
+      "detail": "Explicit rejected-selection review re-reads authorized case and storage version before clearing rejected and generating a new key. It does not save."
+    },
+    {
+      "source": "product/ui/case-work-selection.ts",
+      "lines": [
+        166,
+        171
+      ],
+      "detail": "Only a first, not-previously-uncertain known precommit conflict enters rejected; any previously uncertain mutation remains an exact retry."
+    }
+  ],
+  "realOrderingsAvailable": [
+    {
+      "ordering": "Hold the initial browser create request; commit another real selection through canonical HTTP; continue the held request unchanged.",
+      "causalResult": "preferences expectedStorageVersion is stale; C08 returns conflict/product-state-changed; the selection producer maps it to HTTP503 selection-unavailable. This cannot validate the known409 review branch.",
+      "execution": "NOT_EXECUTED"
+    },
+    {
+      "ordering": "Hold the initial browser create request; commit a real case change; continue the held request unchanged.",
+      "causalResult": "The selection producer reads the newer case as its current case before constructing the stored identity. Existing fourth test covers successful acknowledgement with subsequent case-change warning; it is not the requested internal precommit409.",
+      "execution": "EXISTING_TEST_ONLY; no new execution"
+    },
+    {
+      "ordering": "Change case identity/storage state after the producer last verifies its case/fence but before its C08 work callback.",
+      "causalResult": "May return preview and then exact409 if authority remains valid. Existing fixture exposes no gate or observation for this internal window. Replacing or wrapping state/cases/fence to force the point would introduce a new producer seam; timing-only concurrent loops would be nondeterministic.",
+      "execution": "NOT_EXECUTED; NOT_ADDED"
+    }
+  ],
+  "ownerRecommendation": {
+    "owner": "Collaboration producer / integration owner; foreign path is not edited by Astra interface.",
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+    "proposal": "Consider translating C08 conflict/product-state-changed, as well as preview, to conflict/selection-not-committed. Review this in the producer and publish an exact blob before intake. Do not translate arbitrary unavailable/denied/idempotency or target failures.",
+    "reason": "C08 checks durable prior receipts before the version comparison, so the specific storage-version refusal is an observed precommit refusal. Our existing uncertain-retry branch still must not treat a later409 as a new intent.",
+    "futureCounterproof": "After owner publication, gate only browser transport, commit a second real canonical selection with current version and a distinct key, forward original unchanged, assert initial409/exact reason and no receipt/effect for rejected key, assert records/period locked and no retry/new POST until explicit review, reauthorize/read version, then explicitly save with new key/current version and assert one effect for the new intent in addition to the separately counted competing selection."
+  },
+  "preservation": {
+    "productFilesChanged": 0,
+    "testFilesChanged": 0,
+    "originalCasesPreserved": 5,
+    "assertionsRemoved": 0,
+    "timeoutsChanged": 0,
+    "foreignFilesChanged": 0
+  },
+  "limits": [
+    "No product, typecheck, guard, browser or CI execution was performed.",
+    "Static source analysis does not prove the unexecuted first-known409 UI branch.",
+    "Five existing real selection cases retain their prior W14 evidence; this assessment does not replace or rerun those observations.",
+    "No claim that case-bound work composition, native proofs or global gates are complete."
+  ],
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+      "blob": "3f76f17d51d09b86fa63a5c98c70cd4e77c91713",
+      "sha256": "af1e3caf4aa78885bee1a82518b88a01c5f7db9daf27c22ddb8feb0b7a03304e",
+      "bytes": 17851
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+      "blob": "3699a3c9c3206e86878770768a2399fc49d11618",
+      "sha256": "d5f6093df48d5e7c0bd7b897f8d51744f6fa18040813d835535dc4b624bba1e2",
+      "bytes": 14709
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "blob": "85ee6b0c7111023fc58576c1ad227907daed18a4",
+      "sha256": "42fb45aa9e7f3b85cad25da07f2037334f5f4641d118314b6d095fb117dc6c6b",
+      "bytes": 13566
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+      "blob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+      "sha256": "f10165f3da65d1f6431567f84d1ef2737a9ec66fe6ad4e7c1a670c291381410b",
+      "bytes": 19528
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/mutation-fence.ts",
+      "blob": "7580eafd0706aaa13506dfef31d4e877a71dc1ab",
+      "sha256": "20cf9a8d0c7d90e25e5222923c10ae230190fca91852a813ca8e693e3c31e184",
+      "bytes": 1964
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "bytes": 19836
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+      "bytes": 24537
+    }
+  ],
+  "ownerOnlyPatch": {
+    "manifest": "/workspace/scratch/080d03a98f2e/analysis/wp01-case-selection-known-cas-owner-only.json",
+    "manifestSha256": "bb157c128251193df0847502ea810cc9b904842db394675165da6af504094cca",
+    "patch": "/workspace/scratch/080d03a98f2e/analysis/wp01-case-selection-known-cas-owner-only.patch",
+    "patchSha256": "ea315fc86d2e58d79a534b6994a98de4e17d96098d56fff110167b454d8329f9",
+    "status": "NOT_APPLIED_NOT_EXECUTED"
+  }
+}

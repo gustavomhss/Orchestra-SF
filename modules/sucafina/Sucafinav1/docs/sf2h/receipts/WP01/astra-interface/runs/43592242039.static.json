@@ -1,0 +1,781 @@
+{
+  "schema": "astra-interface-static-receipt-v1",
+  "run_id": 43592242039,
+  "job_id": 132439236785,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592242039",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592242039/job/132439236785",
+  "product_sha": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+  "product_tree": "294c7bd28795119a014190c34a643fe85616e0ac",
+  "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "conclusion": "failure",
+  "checks": {
+    "sucafina_bun_typecheck": "failure",
+    "cli_bun_typecheck": "failure",
+    "guards": "success"
+  },
+  "diagnostics": [
+    {
+      "scope": "sucafina",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 193,
+      "column": 136,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 465
+    },
+    {
+      "scope": "sucafina",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 225,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 471
+    },
+    {
+      "scope": "sucafina",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 281,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 477
+    },
+    {
+      "scope": "sucafina",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 404,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 483
+    },
+    {
+      "scope": "sucafina",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "../../../apps/cli/src/sucafina-product/host-context.ts",
+      "line": 420,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 491
+    },
+    {
+      "scope": "sucafina",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "reported_path": "test/product/wp07/review-port.test.ts",
+      "line": 40,
+      "column": 35,
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "family": "FOREIGN_REVIEW_HOST_FIXTURE_CLOSURE",
+      "log_line": 499
+    },
+    {
+      "scope": "sucafina",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "reported_path": "test/product/wp07/review-port.test.ts",
+      "line": 45,
+      "column": 41,
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "family": "FOREIGN_REVIEW_HOST_FIXTURE_CLOSURE",
+      "log_line": 500
+    },
+    {
+      "scope": "sucafina",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "reported_path": "test/product/wp07/review-port.test.ts",
+      "line": 56,
+      "column": 37,
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "family": "FOREIGN_REVIEW_HOST_FIXTURE_CLOSURE",
+      "log_line": 501
+    },
+    {
+      "scope": "sucafina",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "reported_path": "test/product/wp07/review-port.test.ts",
+      "line": 221,
+      "column": 36,
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "family": "FOREIGN_REVIEW_HOST_FIXTURE_CLOSURE",
+      "log_line": 502
+    },
+    {
+      "scope": "cli",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "src/sucafina-product/host-context.ts",
+      "line": 193,
+      "column": 136,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 509
+    },
+    {
+      "scope": "cli",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "src/sucafina-product/host-context.ts",
+      "line": 225,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 515
+    },
+    {
+      "scope": "cli",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "src/sucafina-product/host-context.ts",
+      "line": 281,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 521
+    },
+    {
+      "scope": "cli",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "src/sucafina-product/host-context.ts",
+      "line": 404,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 527
+    },
+    {
+      "scope": "cli",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reported_path": "src/sucafina-product/host-context.ts",
+      "line": 420,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "family": "FOREIGN_STATE_RESULT_PREVIEW_NARROWING",
+      "log_line": 535
+    }
+  ],
+  "diagnostic_summary": {
+    "total": 14,
+    "unique_locations": 9,
+    "sucafina": 9,
+    "cli": 5,
+    "own_unique_locations": 0,
+    "foreign_unique_locations": 9,
+    "foreign_families": {
+      "host_context_preview_narrowing": 5,
+      "wp07_review_host_fixture": 4
+    }
+  },
+  "guard_summary": {
+    "rules": 78,
+    "changed_paths": 813,
+    "gate_findings": 0,
+    "warn_findings": 40,
+    "errors": 0
+  },
+  "guard_warnings": [
+    {
+      "path": "apps/cli/package.json",
+      "line": 37,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 549
+    },
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "line": 66,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 550
+    },
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "line": 67,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 551
+    },
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "line": 68,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 552
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "line": 17,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 553
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "line": 18,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 554
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "line": 19,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 555
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "line": 20,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 556
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "line": 21,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 557
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "line": 22,
+      "rule": "dep-new-added",
+      "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "log_line": 558
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "line": 113,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 559
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "line": 162,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 560
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "line": 144,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 561
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "line": 41,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 562
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "line": 158,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 563
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "line": 417,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 564
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "line": 605,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 565
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "line": 60,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 566
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "line": 78,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 567
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "line": 168,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 568
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "line": 321,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 569
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "line": 77,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 570
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "line": 87,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 571
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "line": 227,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 572
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "line": 60,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 573
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "line": 110,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 574
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "line": 67,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 575
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "line": 91,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 576
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "line": 121,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 577
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "line": 153,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 578
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "line": 449,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 579
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "line": 81,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 580
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "line": 124,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 581
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "line": 216,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 582
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "line": 228,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 583
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "line": 38,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 584
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+      "line": 106,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 585
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "line": 136,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 586
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "line": 262,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 587
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "line": 74,
+      "rule": "test-timeout-raised",
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "log_line": 588
+    }
+  ],
+  "log_sha256": "1100ddc07f9215897ca886441fd8d93945d6ff8a73cb31ba9b5a061fcdd866e7",
+  "log_bytes": 79567,
+  "final_run_metadata": {
+    "id": 43592242039,
+    "name": "astra-interface-check",
+    "node_id": "WFR_kwLOVsSYps8AAAAKJkzTdw",
+    "head_branch": "astra-check-interface",
+    "head_sha": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+    "path": ".github/workflows/astra-interface-check.yml",
+    "display_title": "feat(sucafina): save case work selections and recover access safely",
+    "run_number": 12,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 418153641,
+    "check_suite_id": 118033256190,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbe1SO_g",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43592242039",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592242039",
+    "pull_requests": [],
+    "created_at": "2026-11-14T11:54:45Z",
+    "updated_at": "2026-11-14T11:56:49Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T11:54:45Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43592242039/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43592242039/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118033256190",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43592242039/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43592242039/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43592242039/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/418153641",
+    "head_commit": {
+      "id": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+      "tree_id": "294c7bd28795119a014190c34a643fe85616e0ac",
+      "message": "feat(sucafina): save case work selections and recover access safely",
+      "timestamp": "2026-11-14T11:53:45Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "final_job_metadata": [
+    {
+      "id": 132439236785,
+      "name": "check",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43592242039,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Typecheck Sucafina package",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Typecheck consumed CLI authority",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6
+        },
+        {
+          "name": "Check guards against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        }
+      ]
+    }
+  ],
+  "source": "Existing GitHub MCP Actions metadata/logs only. No local product, typecheck or guard execution.",
+  "scope": "W14 package checks fail in nine retained foreign locations: five host-context return-narrowing locations and four WP07 ReviewHost fixtures. No OWN diagnostic remains in this executed static selection. Forty guard warnings are preserved; guard pass is not product/native/global acceptance.",
+  "resolved_since_W13": [
+    "The OWN missing dashboardRecords export and downstream unknown evidence diagnostic are absent after the real issuer fixture repair.",
+    "Dashboard-services ReviewHost and document capabilities narrowing diagnostics are absent after exact published input intake."
+  ],
+  "publication_destination": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592242039.static.json",
+    "scope": "Later documentation-only publication does not change the executed product SHA."
+  }
+}

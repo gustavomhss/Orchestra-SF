@@ -68,18 +68,56 @@ export async function extractDocumentEvidence(request: DocumentExtractRequest, c
     return [{ schema: "sf-document-v1" as const, snapshot, evidence, schemaRef: schema.value.id, schemaVersion: schema.value.version }]
   })
   const loaded = await input.state.read(hostRequest, "documents", (state) => documentAsset(state, request.documentRef))
-  if (loaded.status !== "ok") return { status: loaded.status === "preview" ? "unavailable" : loaded.status, reason: loaded.status === "preview" ? "state-preview" : loaded.reason }
+  if ("reason" in loaded) return { status: loaded.status, reason: loaded.reason }
+  if (loaded.status !== "ok") return { status: "unavailable", reason: "state-preview" }
   if (!loaded.value) return { status: "unavailable", reason: "document-unavailable" }
+  const previous = await Promise.all(records.map((record) => readDocumentEvidence(record.evidence.id, context, {
+    state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate,
+  })))
+  const reusable = previous.flatMap((result) => result.status === "ok" ? [result.value] : [])
+  if (reusable.length && (reusable.length !== records.length || reusable.some((record, index) => !sameExtraction(record, records[index]!))))
+    return { status: "conflict", reason: "candidate-schema-conflict" }
+  if (reusable.length) {
+    const reader = input.reader ?? createSfDocumentEvidenceAdapter(async (_id, call, candidateId) => {
+      if (!candidateId) return { status: "unavailable", accessRevision: call.binding.accessRevision }
+      const result = await readDocumentEvidence(candidateId, call, { state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate })
+      return result.status === "ok" ? { status: "ok", snapshot: result.value.snapshot } : { status: "unavailable", accessRevision: call.binding.accessRevision }
+    }, input.documents, input.parser)
+    const resolved = await Promise.all(reusable.map((record) => resolveSfDocumentEvidence(record.evidence.ref, context, reader)))
+    if (resolved.some((result, index) => result.state !== "fresh" || result.accessRevision !== context.binding.accessRevision ||
+      digestSfValue(result.authorizedProjection) !== digestSfValue(reusable[index]!.evidence))) return { status: "stale", reason: "candidate-source-changed" }
+  }
   if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, context))) return { status: "stale", reason: "document-changed" }
-  const saved = await input.state.transaction(hostRequest, { namespace: "documents", domainSurface: loaded.value.surface, expectedStorageVersion: loaded.storageVersion, idempotencyKey: operationId, commandDigest: digestSfValue({ request, document: document.value.blobDigest, schema: schema.value }), targetRef: document.value.documentId, targetIncarnation: document.value.incarnation }, async (state, authority, snapshot) => {
-    if (!documentSourceCurrent(state, snapshot, request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, loaded.value!.surface) || !await input.documents.revalidate(request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, context).catch(() => false) || authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !input.verifyFieldSchema(state, schema.value, request.documentRef, context) || records.some((record) => state.documents[record.evidence.id])) return { commit: false, value: null as DocumentEvidence | null }
+  const saved = await input.state.transaction<DocumentEvidence | null>(hostRequest, { namespace: "documents", domainSurface: loaded.value.surface, expectedStorageVersion: loaded.storageVersion, idempotencyKey: operationId, commandDigest: digestSfValue({ request, document: document.value.blobDigest, schema: schema.value }), targetRef: document.value.documentId, targetIncarnation: document.value.incarnation }, async (state, authority, snapshot) => {
+    if (!documentSourceCurrent(state, snapshot, request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, loaded.value!.surface) || !await input.documents.revalidate(request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, context).catch(() => false) || authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !input.verifyFieldSchema(state, schema.value, request.documentRef, context)) return { commit: false, value: null }
+    if (reusable.length) return { commit: false, value: reusable.every((record) => digestSfValue(state.documents[record.evidence.id]) === digestSfValue(record)) ? reusable[0]!.evidence : null }
+    if (records.some((record) => state.documents[record.evidence.id])) return { commit: false, value: null }
     records.forEach((record) => { state.documents[record.evidence.id] = record })
     return { commit: true, value: records[0]?.evidence ?? null }
   })
-  if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "document-state-not-committed" }
+  if (saved.status !== "ok" && saved.status !== "preview") return { status: "unavailable", reason: "document-state-not-committed" }
+  if ((saved.status === "preview" && !reusable.length) || !saved.value) return { status: "unavailable", reason: "document-state-not-committed" }
+  const current = await readDocumentEvidence(saved.value.id, context, { state: input.state, documents: input.documents, requestFor: input.host.requestFor, revalidate: input.host.revalidate })
+  if (current.status !== "ok" || !sameExtraction(current.value, records[0]!)) return { status: "stale", reason: "candidate-source-changed" }
   const currentSchema = await input.resolveFieldSchema(request.fieldSchemaRef, context, request.documentRef)
   if (currentSchema.status !== "ok" || digestSfValue(currentSchema.value) !== digestSfValue(schema.value) || !(await input.host.revalidate(context)) || !(await input.documents.revalidate(request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, context))) return { status: "stale", reason: "document-or-schema-changed" }
-  return { status: "ok", value: saved.value }
+  return { status: "ok", value: documentEvidenceAtCurrentConfirmation(current.value) }
+}
+
+/** A new parser run may open a different RAG revision of identical bytes. Reuse keeps the
+ * previously verified RAG reference and its human confirmation, never the regenerated one. */
+function sameExtraction(left: StoredDocumentEvidence, right: StoredDocumentEvidence) {
+  const identity = (record: StoredDocumentEvidence) => ({ schema: record.schema, schemaRef: record.schemaRef, schemaVersion: record.schemaVersion,
+    documentRef: record.snapshot.documentRef, incarnation: record.snapshot.incarnation, revision: record.snapshot.revision, blobDigest: record.snapshot.blobDigest,
+    evidence: { ...record.evidence, status: "extracted", ref: { ...record.evidence.ref, refDigest: "",
+      target: { ...record.evidence.ref.target, ragRevisionId: "", confirmationVersion: undefined } } } })
+  return ["extracted", "confirmed"].includes(left.evidence.status) && digestSfValue(identity(left)) === digestSfValue(identity(right))
+}
+
+function documentEvidenceAtCurrentConfirmation(record: StoredDocumentEvidence): DocumentEvidence {
+  if (record.evidence.status !== "confirmed") return record.evidence
+  const versioned = { ...record.evidence.ref, target: { ...record.evidence.ref.target, confirmationVersion: record.confirmationVersion }, refDigest: "" }
+  return { ...record.evidence, ref: { ...versioned, refDigest: digestSfEvidenceRef(versioned) } }
 }
 
 export async function confirmDocumentEvidence(id: string, context: TrustedDomainContext, input: DocumentEvidenceHost): Promise<PortResult<DocumentEvidence>> {
@@ -119,6 +157,7 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
   const records = loaded.value.filter((value): value is StoredDocumentEvidence | StoredDocumentIndex => !!value && typeof value === "object" && ((value as StoredDocumentEvidence).schema === "sf-document-v1" || (value as StoredDocumentIndex).schema === "sf-document-index-v1")).filter((record) => !!record.snapshot && (!request.documentRefs || request.documentRefs.includes(record.snapshot.documentRef)))
   const matches: EvidenceSearchResult["matches"][number][] = []
   const seen = new Set<string>()
+  const sources = new Map<string, () => Promise<boolean>>()
   for (const record of records.slice(0, 100)) {
     if (matches.length >= request.limit) break
     const installationId = record.schema === "sf-document-v1" ? record.evidence.ref.installationId : record.installationId
@@ -146,9 +185,10 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
       if (!(await document.revalidate()) || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
       seen.add(checkedRef.refId)
       matches.push({ documentRef: checkedRef, text: request.query, lexicalScore: 1 })
+      sources.set(documentId, document.revalidate)
     }
   }
-  if (!(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
+  if ((await Promise.all([...sources.values()].map((revalidate) => revalidate().catch(() => false)))).some((current) => !current) || hostRequest.signal.aborted || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
   return { status: "ok", value: { matches, limitations: ["lexical-exact-match", ...(records.length > 100 ? ["document-scan-limited"] : [])] } }
 }
 

@@ -1,0 +1,96 @@
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -16,8 +16,12 @@
+ import type { SfDocumentReader } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import { createDashboardPort } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts"
++import { createDashboardAgendaSelector } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/agenda.ts"
+ import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+ import { createDashboardRecordSourceIssuer, createDashboardSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
++import { createDashboardConfirmationIssuer, createDashboardConfirmationProjectionReader } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts"
++import { createDashboardConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts"
++import { createDashboardPreparedReview } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/prepared-review.ts"
+ import { createDashboardCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts"
+ import { createDecisionCasePort, encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+ import { createSfDecisionResultStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+@@ -92,6 +96,12 @@
+   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+     issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
++  const dashboardAgenda = createDashboardAgendaSelector({ host, dashboard, sources: dashboardSources, recordEvidence: dashboardRecords })
++  const dashboardConfirmationIssuer = createDashboardConfirmationIssuer({ host, scopedSources: input.persistence })
++  const dashboardConfirmations = createDashboardConfirmationObserver({ host, scopedSources: input.persistence,
++    readProjection: createDashboardConfirmationProjectionReader({ dashboard, records: dashboardRecords }) })
++  const bindDashboardPreparedReview = (verifyPreparedBinding: Parameters<typeof createDashboardPreparedReview>[0]["verifyPreparedBinding"]) =>
++    createDashboardPreparedReview({ host, issueSource: dashboardConfirmationIssuer, verifyPreparedBinding })
+   const evidence: { current?: BusinessContextService } = {}
+   const context: BusinessContextService = {
+     resolve: (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }),
+@@ -261,7 +271,7 @@
+     return { status: "ok" as const, value: { forecastComparison: result.value, selectedPeriod: wanted.period, currency: wanted.currency, sourceRefs: refs, registeredReasons: [] } }
+     })
+   } }
+-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
++  return { dashboard, dashboardAgenda, dashboardRecords, dashboardConfirmationIssuer, dashboardConfirmations, bindDashboardPreparedReview, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
+     dispose: () => { periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
+ }
+--- a/modules/sucafina/Sucafinav1/product/integration/source-inventory.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-inventory.ts
+@@ -9,6 +9,7 @@
+ import { DashboardPortfolio } from "../../runtime/dashboard-portfolio.ts"
+ import { publicSfData } from "./public-state.ts"
+ import { normalizeDashboardRecords } from "../dashboard/records.ts"
++import { dashboardPerformanceAgendaRecords } from "../dashboard/agenda.ts"
+ 
+ /** Private lifecycle inventory, not an authorized business projection or a calculation engine. */
+ export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readonly SfSourceIdentityInput[] {
+@@ -45,6 +46,7 @@
+     if (!logical) return []
+     return logical.map((record) => ({ recordType: collection, recordId: String(record.id), inputDigest: digestSfValue(record) }))
+   })
+-  return [...assets, { recordType: "dashboard-dataset", recordId: "all", inputDigest: digestSfValue(publicSfData(snapshot.data)) }, ...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
++  const performance = (dashboardPerformanceAgendaRecords(snapshot.data.itperf) ?? []).map((record) => ({ recordType: "itperf-item", recordId: String(record.id), inputDigest: digestSfValue(record) }))
++  return [...performance, ...assets, { recordType: "dashboard-dataset", recordId: "all", inputDigest: digestSfValue(publicSfData(snapshot.data)) }, ...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
+     .map((page) => ({ recordType: "dashboard-page", recordId: page, inputDigest: digestSfValue({ page, data: publicSfData(snapshot.data) }) }))]
+ }
+--- a/modules/sucafina/Sucafinav1/product/integration/source-projections.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-projections.ts
+@@ -12,6 +12,7 @@
+ import type { SfSourceScope } from "./source-lifecycle.ts"
+ import { projectSfProcurementScope } from "./procurement-projections.ts"
+ import { normalizeDashboardRecords } from "../dashboard/records.ts"
++import { dashboardPerformanceAgendaRecords } from "../dashboard/agenda.ts"
+ import { projectDashboardSource } from "../dashboard/port.ts"
+ import { publicSfData } from "./public-state.ts"
+ 
+@@ -48,6 +49,14 @@
+     if (scope.recordType === "dashboard-page" && scope.recordId === selector.page) return projectDashboardScope(snapshot, actor, { page: selector.page, fields: selector.fields, period: selector.period as Period }, asOf)
+     // Record scopes are admitted only through a page the same actor can view.
+     if (scope.recordType === "dashboard-page" || scope.recordId === "__singleton__") return undefined
++    if (scope.recordType === "itperf-item") {
++      if (selector.page !== "IT Performance Contract" || !dashboardPerformanceAgendaRecords(snapshot.data.itperf)) return undefined
++      const projection = projectDashboardScope(snapshot, actor, { page: selector.page, fields: ["itperf"], period: selector.period as Period }, asOf)
++      const records = projection && dashboardPerformanceAgendaRecords(projection.selected.itperf)
++      const matches = records?.filter((record) => String(record.id) === scope.recordId)
++      if (!matches || matches.length !== 1 || selector.fields.some((field) => !Object.hasOwn(matches[0]!, field))) return undefined
++      return Object.fromEntries([...selector.fields].sort().map((field) => [field, matches[0]![field]]))
++    }
+     const logical = ["budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear"].includes(scope.recordType)
+     const visible = logical ? projectDashboardSource(snapshot, actor, { at: asOf, id: () => "", directory: [] }, selector.page) : undefined
+     const projection = logical ? undefined : projectDashboardScope(snapshot, actor, { page: selector.page, fields: [scope.recordType], period: selector.period as Period }, asOf)
+--- a/modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts
+@@ -20,7 +20,11 @@
+       ids.push(id)
+       return id
+     } })
+-    if (preview.status !== "preview") return { commit: false, value: { ok: false, status: preview.status === "denied" ? 403 : preview.status === "conflict" ? 409 : 422, errors: [preview.reason] } }
++    if (preview.status !== "preview") return { commit: false, value: {
++      ok: false, status: preview.status === "denied" ? 403 : preview.status === "conflict" ? 409 : 422,
++      errors: preview.status === "invalid" && "errors" in preview ? [...preview.errors] : [preview.status === "conflict" ? "The stored record changed." : preview.reason],
++      ...(preview.status === "conflict" ? { by: preview.by, stored: preview.stored } : {}),
++    } }
+     const previewRef = environment.id()
+     if (!previewRef || ids.includes(previewRef) || snapshot.sfCommandPreviews?.[previewRef]) throw new Error("SF_PREVIEW_ID_COLLISION")
+     const expiresAt = new Date(Date.parse(environment.at) + 5 * 60_000).toISOString()

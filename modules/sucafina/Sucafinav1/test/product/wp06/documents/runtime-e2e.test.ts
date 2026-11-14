@@ -14,7 +14,8 @@ import { createSfSourcePersistence, sfSourceIdentity } from "../../../../product
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
-import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
+import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
+import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { resolveSfDocumentEvidence } from "../../../../product/documents/evidence-resolver.ts"
 import { createSfBusinessContext } from "../../../../product/host-binding/business-context.ts"
@@ -98,7 +99,7 @@ test("real host persists procurement document evidence and Planner import under 
     expect(candidate.value).toMatchObject({ fieldCandidate: "Price", value: 42, status: "extracted" })
     const pending = await uiCall("sf_evidence_get", { evidenceRef: candidate.value.ref }, (context) => business.resolve(candidate.value.ref, context))
     expect(pending.state).not.toBe("fresh")
-    const pendingDossier = await uiCall("sf_evidence_get", { evidenceRef: candidate.value.ref }, (context) => prepareDossierEvidence({ refs: [candidate.value.ref], context, reader: service.documents.reader, revalidate: async (_, call) => authority.host.revalidate(call) }))
+    const pendingDossier = await uiCall("sf_evidence_get", { evidenceRef: candidate.value.ref }, (context) => prepareDossierEvidence({ refs: [candidate.value.ref], context, reader: service.documents.reader, revalidate: async (_: readonly Extract<BusinessEvidenceRef, { kind: "document" }>[], call: TrustedDomainContext) => authority.host.revalidate(call) }))
     expect(pendingDossier).toMatchObject({ status: "ok", value: { entries: [{ state: "pending", evidence: { ref: candidate.value.ref } }] } })
     const confirmGrant = await authority.human.admit(request(), "documents.confirm", candidate.value)
     if (confirmGrant.status !== "ok") throw new Error(confirmGrant.reason)
@@ -111,7 +112,7 @@ test("real host persists procurement document evidence and Planner import under 
     const businessResolution = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => business.resolve(confirmed.value.ref, context))
     expect(businessResolution.state).toBe("fresh")
     expect(businessResolution.currentRef).toEqual(confirmed.value.ref)
-    const confirmedDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_, call) => authority.host.revalidate(call) }))
+    const confirmedDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_: readonly Extract<BusinessEvidenceRef, { kind: "document" }>[], call: TrustedDomainContext) => authority.host.revalidate(call) }))
     expect(confirmedDossier).toMatchObject({ status: "ok", value: { entries: [{ state: "confirmed", evidence: { ref: confirmed.value.ref } }] } })
     const documentHttp = createSfDocumentHttp({ origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, ...service }) })
     const openUrl = new URL(`${origin}/sucafina/dashboard`)
@@ -140,7 +141,10 @@ test("real host persists procurement document evidence and Planner import under 
       forged.target.period = { start: "2028-01-01", end: "2028-12-31" }
       forged.refDigest = digestSfEvidenceRef(forged)
       const valid = await store.transaction("planner", async (snapshot) => {
-        const actor = { id: principal.id, roles: principal.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: principal.canWrite, assigned: [], domains: [] }
+        const plannerPrincipal = await identity.authenticate(request("planner"), { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+        if (!plannerPrincipal) throw new Error("Planner operator unavailable")
+        const roles = plannerPrincipal.roles.filter((row) => row.surface === "planner").map((row) => row.role)
+        const actor = { id: plannerPrincipal.id, roles, canWrite: plannerPrincipal.canWrite && roles.some((role) => role !== "viewer"), assigned: [], domains: [] }
         return { commit: false, value: { original: roster.verifyRoster(snapshot, issued.value, actor, context), forged: roster.verifyRoster(snapshot, forged, actor, context) } }
       })
       expect(valid).toEqual({ original: true, forged: false })
@@ -250,7 +254,7 @@ test("real host persists procurement document evidence and Planner import under 
     expect(staleAfterABA.state).not.toBe("fresh")
     const businessAfterABA = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => business.resolve(confirmed.value.ref, context))
     expect(businessAfterABA.state).not.toBe("fresh")
-    const staleDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_, call) => authority.host.revalidate(call) }))
+    const staleDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_: readonly Extract<BusinessEvidenceRef, { kind: "document" }>[], call: TrustedDomainContext) => authority.host.revalidate(call) }))
     expect(staleDossier).toMatchObject({ status: "ok", value: { entries: [{ state: "unavailable" }] } })
     await store.transaction("procurement", async (snapshot) => {
       snapshot.data.assets = []
@@ -260,7 +264,7 @@ test("real host persists procurement document evidence and Planner import under 
     })
     const revoked = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => resolveSfDocumentEvidence(confirmed.value.ref, context, service.documents.reader))
     expect(revoked.state).not.toBe("fresh")
-    const revokedDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_, call) => authority.host.revalidate(call) }))
+    const revokedDossier = await uiCall("sf_evidence_get", { evidenceRef: confirmed.value.ref }, (context) => prepareDossierEvidence({ refs: [confirmed.value.ref], context, reader: service.documents.reader, revalidate: async (_: readonly Extract<BusinessEvidenceRef, { kind: "document" }>[], call: TrustedDomainContext) => authority.host.revalidate(call) }))
     expect(revokedDossier).toMatchObject({ status: "ok", value: { entries: [{ state: "unavailable" }] } })
     expect((await documentHttp(new Request(openUrl, { headers: { cookie } }), "dashboard"))?.status).not.toBe(200)
     const replaced = await store.transaction("procurement", async (snapshot, blobs) => {

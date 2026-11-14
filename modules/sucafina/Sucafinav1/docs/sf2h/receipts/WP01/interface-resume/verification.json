@@ -1,0 +1,85 @@
+{
+  "schema": "astra.interface-resume.metadata-verification.v1",
+  "productHead": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+  "productTree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+  "criteria": {
+    "WP01": {
+      "criteria": 75,
+      "newScopedContribution": 16,
+      "done": 0
+    },
+    "WP02": {
+      "criteria": 78,
+      "newScopedContribution": 25,
+      "done": 0
+    }
+  },
+  "criterionIdsUnique": true,
+  "canonicalIdsAndTextPreservedAgainstOriginalParcels": true,
+  "oldParcelsAndCatalogUnchanged": true,
+  "originalCriteriaHashEncoding": "SHA256 canonical JSON described in each criterion map",
+  "protectedArtifacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "inputBlob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "currentBlob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "inputBlob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "currentBlob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "inputBlob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "currentBlob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "inputBlob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "currentBlob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "inputBlob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "currentBlob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "inputBlob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+      "currentBlob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "inputBlob": "bbfad3882e0ab38ebab9b943eadad8b4c478ac07",
+      "currentBlob": "bbfad3882e0ab38ebab9b943eadad8b4c478ac07",
+      "unchanged": true
+    }
+  ],
+  "productPathsChangedFromInput": [
+    ".github/workflows/astra-interface-resume-check.yml",
+    "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+    "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+    "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts"
+  ],
+  "pendingFinalStaticReceipt": false,
+  "documentaryStatic": {
+    "commit": "1ad4268fa6202be57a404cdfc755ba21776b0a97",
+    "tree": "02793beb4b4fc8040f7fa51b808eae8bc9a65c04",
+    "run": 43617372378,
+    "job": 132515272484,
+    "productEquivalentToW2OutsideOwnReceiptDirectory": true
+  },
+  "postStaticPublicationPolicy": "Only own receipt files may change to append the observed result. Product/test/fixture/workflow/guide bytes remain equal to the checked documentary parent and tested W2.",
+  "selfReferencePolicy": "Containing documentary commit identifies these receipts; no recursive self-SHA is embedded."
+}

@@ -1,0 +1,110 @@
+{
+  "schema": "astra.interface.final-upstream-reconcile.v1",
+  "observedAt": "2026-11-14 12:34:50 UTC",
+  "testedProduct": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "run": 43594796100,
+    "staticRun": 43594797507
+  },
+  "scope": "Read-only GitHub MCP source reconciliation. No new foreign input or product mutation after W16.",
+  "prs": [
+    {
+      "pr": 32,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/32",
+      "head": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "updatedAt": "2026-11-14T12:31:33Z"
+    },
+    {
+      "pr": 33,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/33",
+      "head": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "updatedAt": "2026-11-14T11:56:45Z"
+    },
+    {
+      "pr": 34,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/34",
+      "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "updatedAt": "2026-11-14T12:06:42Z"
+    },
+    {
+      "pr": 35,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/35",
+      "head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "updatedAt": "2026-11-14T12:31:50Z"
+    },
+    {
+      "pr": 36,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/36",
+      "head": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "updatedAt": "2026-11-14T12:32:01Z"
+    }
+  ],
+  "sourceChecks": [
+    {
+      "key": "compose-state",
+      "ref": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "blob": "755639b2a16265fe164ba2e6343738c1362d168c"
+    },
+    {
+      "key": "compose-review-test",
+      "ref": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "blob": "77ef3a9e1a289953999abc976557257849bb9237"
+    },
+    {
+      "key": "compose-bcs",
+      "ref": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3"
+    },
+    {
+      "key": "finance-case-port-test",
+      "ref": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "blob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df"
+    }
+  ],
+  "postW16PublishedProductChanges": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "publishedBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "publishedHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "consumed": false,
+      "disposition": "Published later post-callback observation fences for the pending producer composition. Available to S0; not part of the executed W16 recipient scope."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "publishedBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "publishedHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "consumed": false,
+      "disposition": "Published later post-callback observation fences for the pending producer composition. Available to S0; not part of the executed W16 recipient scope."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "publishedBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "publishedHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "consumed": false,
+      "disposition": "Published later post-callback observation fences for the pending producer composition. Available to S0; not part of the executed W16 recipient scope."
+    }
+  ],
+  "retainedAndHeld": {
+    "retainedBcs": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+    "heldPublishedBcs": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+    "retainedHotTopicDraft": "5e0b80a470958dd201db4283bde96d594935e68d",
+    "latestPublishedHotTopicDraft": "d8a151c558227b3bd2612dbb6caba993efa85783"
+  },
+  "findingsScope": [
+    "Published hot-topic-draft adds request cloning and final read/list fences. Its register still checks exact case authorization/version before prior-receipt recovery; no runtime claim for case-advance replay is derived.",
+    "State-result union and WP07 compatibility sources remain unchanged at the latest Compose head; terminal W16 has nine foreign static locations, with owner-only patches already supplied.",
+    "Finance case-port test remains at the published replacement blob42cbc7e3440192c71df79e6adbe86f95aa75e6df. Its adoption requires preserving the retained real partial-domain execution and replay proof; the additive owner-only proposal preserves109 assertions.",
+    "Later Intelligence AI/Portfolio/Atlas and Finance fixture updates are published, not classified as absent. Native/global proof and their complete assembly remain separate from the UI recipient proof.",
+    "No foreign implementation is edited, rebased, overwritten or automatically accepted by this reconciliation."
+  ]
+}

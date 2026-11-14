@@ -47,4 +47,32 @@ test("contribution renders a persisted question and retains explicit stale state
   const stale: ContributionEnvelope = { ...base, kind: "QuestionProposal", state: "stale", reason: "Base changed" }
   expect(contribution(stale)).toContain("stale · Base changed")
   expect(contribution(stale)).not.toContain("Ready for review")
+  const compared: ContributionEnvelope = { ...base, kind: "ScenarioComparison", state: "ready", payload: {
+    baselineResultRef: "base", alternativeResultRef: "alternative", costCoverageRefs: ["coverage-base", "<coverage-alternative>"],
+    criterionResults: [], unresolvedConditions: ["Training is missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null,
+  } }
+  const html = contribution(compared)
+  expect(html).toContain("Known difference: 30000")
+  expect(html).toContain("coverage-base")
+  expect(html).toContain("&lt;coverage-alternative&gt;")
+  expect(html).toContain("Review the unresolved coverage")
+  expect(html).toContain("Training is missing")
+  expect(html).not.toContain("Total:")
+  const commercial = { ...base, kind: "CommercialComparison" as const, state: "ready" as const, payload: {
+    requestRef: "request", requestVersion: 1, currency: "USD", proposals: [{ proposalRef: "offer", eligible: true, score: null, convertedAmount: 0, evidenceRefs: [], issues: [],
+      components: { technical: 0, price: null, commercial: null, overall: null },
+      money: { originalAmount: 0, originalCurrency: "USD", baseCurrency: "USD", fxRate: null, fxSource: null },
+    }], ranking: [], conditions: [], sourceRefs: [],
+    weights: { technical: null, commercial: null, technicalCriteria: [], commercialCriteria: [] },
+    selection: { proposalRef: "offer", reason: "<human reason>" },
+  } }
+  const commercialHtml = contribution(commercial)
+  expect(commercialHtml).toContain("Technical: 0")
+  expect(commercialHtml).toContain("Original amount: 0")
+  expect(commercialHtml).toContain("&lt;human reason&gt;")
+  expect(commercialHtml).not.toContain("Price: 0")
+  const malformed = { ...commercial, payload: { ...commercial.payload, weights: { invalid: true } } }
+  // @ts-expect-error Deliberately malformed persisted metadata must remain safe at the render boundary.
+  expect(contribution(malformed)).toContain("Weights not supplied")
 })
+

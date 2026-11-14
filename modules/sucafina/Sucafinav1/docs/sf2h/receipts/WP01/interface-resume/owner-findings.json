@@ -1,0 +1,1033 @@
+{
+  "schema": "astra.interface-resume.owner-findings.v1",
+  "productHead": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+  "foreignSourcesChanged": false,
+  "legacyDefinitionPin": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+  "legacyCatalog": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/evidence-catalog.json",
+  "legacyFindings": {
+    "G01_GENERIC_DURABLE_OUTCOME": {
+      "owner": "astra-compose / owning domain producers",
+      "classification": "REAL_HOST_DEPENDENCY",
+      "description": "Consumer preserves a generic unknown attempt in memory, prevents automatic replay and false Saved, but ordinary documentHtml lacks actor/accessRevision and generic writes lack durable per-intent outcome lookup. This limits safe private draft and unknown-outcome recovery across reload.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ]
+    },
+    "G02_DASHBOARD_LOST_REPLY": {
+      "owner": "WP02",
+      "classification": "IMPLEMENTATION_SUPERSEDED",
+      "description": "The a037 consumer gap is implemented in903/W3/W4.903 exposed receipt-shape mismatch; W3 fixes real {draftRef,version} handling. W4 includes real authority/source purging and full BusinessContext fixture. Remaining producer dependencies are separate F01/F03/F04 findings.",
+      "criteria": [
+        "WP02.QLT.02",
+        "WP02.T02.CHK.02",
+        "WP02.T02.QLT.02",
+        "WP02.T02.SUC.02",
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP01.T05.CMP.01"
+      ]
+    },
+    "G03_FIRST_CYCLE_SELECTION": {
+      "owner": "WP01 + astra-compose",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "Case-bound selection with exact source references and period is implemented; its five real create/list/reload/replay cases and two destination cases retain their recorded W14 scopes. Responsible assignment is a separate recipient/question action, whose two directory/selection/logout counterproofs pass at W16. Full signals/destination composition still has its own boundary. The explicit Review rejected selection branch is implemented, but the ordinary real C08 namespace-version conflict is mapped by the published selection producer to 503 selection-unavailable. Only preview maps to 409 conflict/selection-not-committed. The exact first known 409 branch therefore has no suitable deterministic producer seam in the admitted real fixture; no synthetic response, new producer seam or timing race was used to claim proof.",
+      "criteria": [
+        "WP01.T04.CMP.02",
+        "WP01.T04.SUC.01",
+        "WP01.T03.CMP.01",
+        "WP01.T04.CMP.01"
+      ]
+    },
+    "G04_SAVED_VIEW_REFERENCE_RECOVERY": {
+      "owner": "WP01 + astra-compose",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "W10 fixes acknowledged removal before a delayed real follow-up list and preserves the zero-marker assertion. All three real personal-view authority component tests pass at W10, including replacement and late authorized response after revocation. W11 does not rerun them; installed-host/native acceptance remains separate.",
+      "criteria": [
+        "WP01.T04.CHK.02",
+        "WP01.T04.CMP.01",
+        "WP01.T04.DOD.01"
+      ]
+    },
+    "D01_C06_AND_ROUTINE_HOST": {
+      "owner": "astra-compose",
+      "classification": "PUBLISHED_INTEGRATION_DEPENDENCY",
+      "description": "W4 retains the older host-context; published compose supplies collaboration.work, routineRuns and current view authorization. Work producer is not absent. Routine execution still lacks the native adapter in the published host, distinct from status/discovery consumers.",
+      "criteria": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP01.T04.CHK.03",
+        "WP01.T04.INV.01",
+        "WP01.T04.CMP.01",
+        "WP01.T04.SUC.01",
+        "WP01.T05.DOD.01",
+        "WP01.T05.CMP.01"
+      ]
+    },
+    "P01_TWO_ACTORS": {
+      "owner": "WP01 / integration evidence",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "The real two-principal conflict component passed at W8, and four explicit case-edit conflict/rebase/removed-note/revocation cases passed at W9. These observations remain at their exact source/run pins; full installed-host and native/global acceptance remain separate.",
+      "criteria": [
+        "WP01.T03.CHK.02"
+      ]
+    },
+    "P02_STABLE_MEETING_NUMBER": {
+      "owner": "WP01/WP02",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "The unchanged first meeting-number browser test now passes at W12: actual capture, agenda1300 retained through authorized refresh after canonical domain2400, explicit update to2400, and the same historical capture identity/date/projection. This is scoped proof for the live financial agenda and record capture. It does not close the independent WholeReview C05 reopening failure.",
+      "criteria": [
+        "WP01.T03.CHK.03"
+      ]
+    },
+    "P03_C10_COMPLETE_JOURNEY": {
+      "owner": "WP11/WP12/WP13/WP14 + S0",
+      "classification": "NATIVE_OR_GLOBAL_ACCEPTANCE_PENDING",
+      "description": "Real confirmation of 40000, engine reevaluation, historical choice caveat and quote/domain receipt cycle are not replaced by renderer number fixtures. Contract entry test returns before actual choice; C12 host test seeds existing choice.",
+      "criteria": [
+        "WP01.CMP.02",
+        "WP01.CMP.20",
+        "WP01.DOD.03",
+        "WP01.DOD.20",
+        "WP01.INV.20",
+        "WP01.QLT.20",
+        "WP01.SUC.20",
+        "WP01.T05.CHK.01",
+        "WP01.T05.CHK.03",
+        "WP01.T05.CHK.20",
+        "WP01.T05.CMP.01",
+        "WP01.T05.CMP.20",
+        "WP01.T05.DOD.01",
+        "WP01.T05.DOD.20",
+        "WP01.T05.INV.20",
+        "WP01.T05.QLT.20",
+        "WP01.T05.SUC.20"
+      ]
+    },
+    "P04_NATIVE_AND_GLOBAL": {
+      "owner": "S0 + native owners",
+      "classification": "NATIVE_OR_GLOBAL_ACCEPTANCE_PENDING",
+      "description": "18 skill witnesses/5 profiles/independent reviewer, actual model inference, persisted outputRef consumed after reload and six AM proofs are still required. Real SessionV2 load and direct parity are useful component evidence, not the full gate.",
+      "criteria": [
+        "WP01.CMP.30",
+        "WP01.DOD.30",
+        "WP01.INV.30",
+        "WP01.QLT.30",
+        "WP01.SUC.30",
+        "WP01.T05.CHK.30",
+        "WP01.T05.CHK.31",
+        "WP01.T05.CMP.30",
+        "WP01.T05.DOD.30",
+        "WP01.T05.INV.30",
+        "WP01.T05.QLT.30",
+        "WP01.T05.SUC.30",
+        "WP02.CMP.10",
+        "WP02.DOD.10",
+        "WP02.INV.10",
+        "WP02.QLT.10",
+        "WP02.SUC.10"
+      ]
+    },
+    "P05_WP10_ACCEPTANCE": {
+      "owner": "S0",
+      "classification": "NATIVE_OR_GLOBAL_ACCEPTANCE_PENDING",
+      "description": "Canonical explicit composed WP10 acceptance and final epic are reserved to S0; local component assertions cannot close this scope.",
+      "criteria": [
+        "WP01.DOD.01",
+        "WP01.T04.DOD.01",
+        "WP02.DOD.02",
+        "WP02.T04.DOD.02"
+      ]
+    },
+    "WP02-F01-new-draft-outcome-lookup": {
+      "owner": "astra-compose",
+      "classification": "REAL_HOST_DEPENDENCY",
+      "description": "Lost initial save plus reload before receiving draftRef has no authorized operation-outcome lookup. UI never infers a private draft from title/target/position or persists its text in history.",
+      "criteria": [
+        "WP02.QLT.02",
+        "WP02.T02.QLT.02",
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ]
+    },
+    "WP02-F02-create-correlation-incarnation": {
+      "owner": "WP02 + astra-compose source provider",
+      "classification": "REAL_PRODUCER_ATOMICITY_DEPENDENCY",
+      "description": "UPDATE replay now requires the stored target incarnation. CREATE still records id/digest before source lifecycle finalization; binding actual incarnation atomically requires a provider seam. A first stale update also lacks expected physical incarnation.",
+      "criteria": [
+        "WP02.INV.02",
+        "WP02.T04.CHK.01",
+        "WP02.T04.DOD.01",
+        "WP02.T04.QLT.02",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02",
+        "WP02.T04.SUC.01",
+        "WP02.T04.SUC.02"
+      ]
+    },
+    "WP02-F03-dashboard-c12-historical-receipt": {
+      "owner": "astra-compose / C12 source owners",
+      "classification": "REAL_HOST_COMPOSITION_FAILURE",
+      "description": "Exact Operations apply4bdd is consumed at W10 and six host-method tests pass. The browser lost-apply reload case still fails at workbench-recovery386: after real commit/one receipt and opaque correlation reload, current authorized-options status never appears. The complete named recovery case remains FAIL; published historical/source continuity requires additive full composition. The exact held closure now has a concrete compatibility boundary: its case port requires verifyScenarioOperations in retained foreign callers, and the published Finance replacement does not preserve the stronger real partial-domain/replay proof. BCS b289 is retained; BCS4b024 remains held. Size alone is not a blocker.",
+      "criteria": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP01.T05.CHK.03",
+        "WP01.T05.DOD.01",
+        "WP01.T05.CMP.01",
+        "WP02.CMP.10"
+      ]
+    },
+    "WP02-F04-new-draft-source-continuity": {
+      "owner": "astra-compose source authority",
+      "classification": "REAL_HOST_ENDPOINT_DEPENDENCY",
+      "description": "The write-only authority counterproof remains failed at its recorded W9 SHA before the expected status/retention sequence. Private historical reissue already proves physical continuity under current access. The actual missing consumer seam is an admitted endpoint to reauthorize the original reference of a new unsaved draft across the changed scope; there is no complete published endpoint to intake. Keep fail-closed source identity and do not equate record IDs.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP02.QLT.02",
+        "WP02.T02.QLT.02",
+        "WP02.CMP.10"
+      ]
+    },
+    "C05_PRESERVED_MEETING_HISTORY": {
+      "owner": "astra-compose / WP07",
+      "classification": "REAL_HOST_DEPENDENCY",
+      "description": "A generic original-review reader is now published upstream. The inspected Dashboard readReview/discovery composition still validates current exact sources instead of composing that historical reader. W8c actually returns403 after a legitimate1300→2400 change; record capture history and C12 alone do not wire the whole-meeting route.",
+      "criteria": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP02.T03.CMP.01"
+      ]
+    },
+    "C12_DRAFT_REPLAY_CASE_ADVANCE": {
+      "owner": "astra-compose / hot-topic draft producer",
+      "classification": "PRECISE_PRODUCER_REPLAY_DEPENDENCY",
+      "description": "A committed Hot Topic draft registration can lose its response, then an otherwise legitimate case update advances the case version. The current producer checks the exact requested case version before consulting the prior idempotency transaction; recovery also calls readCurrent with that old version. This is a static producer-ordering finding. The lost-apply/discovery runtime failure belongs to a different journey and is not execution proof for this variant.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.SUC.01",
+        "WP02.QLT.02",
+        "WP02.T02.SUC.02"
+      ]
+    },
+    "WP01-F01-decision-edit-rebase": {
+      "owner": "WP01 interface",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "W9 has explicit current-base adoption, stable criterion IDs, structural review, a fresh read before POST, and removed-entry retention across repeated authorized comparisons. Four real two-principal component tests are recorded at exact W9. Full-host edit mounting/source/native proof remains separate.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ]
+    },
+    "WP01-F02-thread-lifecycle": {
+      "owner": "WP01 interface (implementation delegated to WP02 agent)",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "Bounded body reads, frozen attempts and revocation fences pass in all eighteen W10 tests: six real C03/C08 components and twelve declared transport contracts. The corrected replay test retains one reply/state and requires explicit current issuer/C06/C08 confirmation, while the no-selector/incomplete-message negative stays separate. Complete installed HTTP/host and native/recipient-distinct journeys remain pending.",
+      "criteria": [
+        "WP01.T03.CMP.01",
+        "WP01.T03.DOD.01",
+        "WP01.T03.SUC.01",
+        "WP01.T05.CMP.01"
+      ]
+    },
+    "D02_REVIEW_DIGEST_HOST_CLOSURE": {
+      "owner": "astra-compose",
+      "classification": "PUBLISHED_INTEGRATION_DEPENDENCY",
+      "description": "Latest inspected producer already accepts four review-proof fields and bindAdmittedApply. Root intentionally did not cherry-pick this isolated endpoint without additive host closure. Do not report it as absent from the published producer.",
+      "criteria": [
+        "WP01.CMP.02",
+        "WP01.T05.CHK.03",
+        "WP01.T05.INV.01",
+        "WP01.T05.CMP.01"
+      ]
+    },
+    "D03_BI_REFRESH_CONSUMER": {
+      "owner": "WP10 / astra-compose with WP01 seam",
+      "classification": "PUBLISHED_INTERFACE_CONTRACT_INTEGRATION_PENDING",
+      "description": "Shell publishes the authorized lifecycle event. The current new tests observe it without claiming it. A positive BI consumer must implement reauthorization, private-state purge and refresh coalescing; no native BI acceptance follows from event dispatch.",
+      "criteria": [
+        "WP01.T03.CHK.03",
+        "WP01.T03.CMP.01"
+      ]
+    },
+    "D04_DECISION_EDIT_HOST_MOUNT": {
+      "owner": "astra-compose/WP10",
+      "classification": "PUBLISHED_COMPONENT_HOST_COMPOSITION_PENDING",
+      "description": "Decision-edit mount was not located in the reviewed published host chain. The generic HTTP and renderer exist; the whole installed router is not proved by an edit-only fixture.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ]
+    },
+    "WP01-C03-01-initial-answer-selector": {
+      "owner": "astra-compose/C03 with WP01 consumer",
+      "classification": "PUBLISHED_CONSUMER_WITH_HOST_COMPOSITION_PENDING",
+      "description": "Collaboration PR33 published prepare-message. W9 consumes its exact answer-reuse issuer and implements first-selector UI consumption; the six real component tests use declared thin HTTP envelopes. Full shared HTTP/host intake and recipient-distinct production acceptance remain pending.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP01.T05.CMP.01"
+      ]
+    },
+    "WP01-C03-02-reply-correlation-ambiguity": {
+      "owner": "astra-compose/C03",
+      "classification": "PRECISE_PRODUCER_OUTCOME_DEPENDENCY",
+      "description": "The reply producer returns a current thread read after commit. Multiple new messages with identical author/body can make the exact mutation result ambiguous; W7 conserves uncertainty instead of inventing an acknowledgement.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ]
+    },
+    "WP01-F05-shared-apply-reauthorization": {
+      "owner": "WP01 with integration/operations",
+      "classification": "STATIC_INFERENCE_PENDING_REAL_COMPOSITION_COUNTERPROOF",
+      "description": "After a committed shared Apply loses its response, a later real revocation can purge the only browser correlation before case reconciliation. Recovery after reauthorization may need an authorized server outcome lookup. This is an inference, not an executed product failure.",
+      "criteria": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP01.T05.CMP.01"
+      ]
+    },
+    "D05_MY_WORK_PRESERVED_REVIEW_CONTEXT": {
+      "owner": "WP01 / Collaboration / astra-compose",
+      "classification": "PUBLISHED_COMPONENT_HOST_COMPOSITION_PENDING",
+      "description": "All eight readonly production renderer tests pass at W12 for optional context shapes, exact references/versions, escaping, passive UI, immutable input and accessor failure. The actual published context producer/host emission still requires composition. These tests do not exercise ACL/C05/C06/C08 or arbitrary records/responsibles selection.",
+      "criteria": [
+        "WP01.T04.INV.01",
+        "WP01.T04.SUC.01",
+        "WP02.T04.INV.02"
+      ]
+    },
+    "D06_DASHBOARD_CAPTURE_SCOPE_PAGE": {
+      "owner": "WP02 product/dashboard",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "The own WP02 observer preserves the persisted authorized scope page. W12 proves the new real Budget/Budget capture/replay, Budget/OPEX and forged reference negatives, current authorization, transaction fences and physical replacement. The unchanged financial meeting browser also completes. WholeReview C05 remains a distinct executed403 failure; no native/full installed-host acceptance.",
+      "criteria": [
+        "WP01.T03.CHK.03",
+        "WP02.DOD.02",
+        "WP02.INV.02",
+        "WP02.CMP.02",
+        "WP02.SUC.02",
+        "WP02.T03.INV.02"
+      ]
+    },
+    "D07_QUESTION_RECIPIENT_ROUTE": {
+      "owner": "WP01 question UI",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "The exact successor implements explicit stable label/ID associations without changing the conversation or work-destination scripts. Both real recipient directory/selection and logout/purge named counterproofs complete at this candidate. Full installed-host and complete work-cycle acceptance remain separate.",
+      "criteria": [
+        "WP01.T04.CMP.02",
+        "WP01.T04.SUC.01",
+        "WP01.T03.CMP.01"
+      ]
+    },
+    "D08_REVIEW_LATE_DELIVERY_COUNTERPROOF": {
+      "owner": "WP01 fixture/consumer boundary",
+      "classification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "description": "The same complete delayed-review response counterproof passed at W14/run43592240575, after the response body had begun and access was revoked. Its no-start/no-private-data and lifecycle assertions are proved only in that recorded UI/transport scope. The W13 header-delivery timeout is retained as an earlier incomplete observation, not an unresolved current application defect. Full installed-host/native acceptance remains separate.",
+      "criteria": [
+        "WP01.T03.CMP.01",
+        "WP01.T05.CMP.01",
+        "WP01.T05.INV.01"
+      ]
+    },
+    "D09_SHARED_STATIC_COMPATIBILITY": {
+      "owner": "Compose / Collaboration contract and retained foreign callers",
+      "classification": "REAL_SHARED_COMPOSITION_BLOCKER",
+      "description": "W16 has 14 type diagnostics at nine foreign locations: five host discriminant uses and four retained WP07 ReviewHost fixtures, with zero own locations. Exact published Dashboard ReviewHost and Operations document callers were already consumed at W14. Latest Compose f999 retains state blob 755639 and WP07 test blob 77ef3; additive proposals for the owner remain unapplied. Runtime state-provider or recipient PASS does not establish package static compatibility or full WP10 acceptance.",
+      "criteria": [
+        "WP01.DOD.01",
+        "WP02.DOD.02"
+      ]
+    }
+  },
+  "wp01Boundaries": {
+    "GENERIC-OUTCOME": {
+      "sourceFindingRefs": [
+        "G01_GENERIC_DURABLE_OUTCOME"
+      ],
+      "owner": "astra-compose / owning domain producers",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "REAL_HOST_DEPENDENCY",
+      "status": "OWNER_OUTCOME_PROTOCOL_PENDING",
+      "inheritedDescription": "Consumer preserves a generic unknown attempt in memory, prevents automatic replay and false Saved, but ordinary documentHtml lacks actor/accessRevision and generic writes lack durable per-intent outcome lookup. This limits safe private draft and unknown-outcome recovery across reload.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "O novo fence de revogação não fornece lookup durável da primeira intenção nem autorização de recuperação após reload."
+    },
+    "F01": {
+      "sourceFindingRefs": [
+        "WP02-F01-new-draft-outcome-lookup"
+      ],
+      "owner": "astra-compose",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "REAL_HOST_DEPENDENCY",
+      "status": "OWNER_ENDPOINT_PENDING",
+      "inheritedDescription": "Lost initial save plus reload before receiving draftRef has no authorized operation-outcome lookup. UI never infers a private draft from title/target/position or persists its text in history.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "A reconciliação atual conserva dashboard-http.ts c6c24f4 sem rota admitida de lookup da primeira intenção. Não inferir draftRef a partir de texto ou posição."
+    },
+    "F04": {
+      "sourceFindingRefs": [
+        "WP02-F04-new-draft-source-continuity"
+      ],
+      "owner": "astra-compose source authority",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "REAL_HOST_ENDPOINT_DEPENDENCY",
+      "status": "OWNER_ENDPOINT_PENDING",
+      "inheritedDescription": "The write-only authority counterproof remains failed at its recorded W9 SHA before the expected status/retention sequence. Private historical reissue already proves physical continuity under current access. The actual missing consumer seam is an admitted endpoint to reauthorize the original reference of a new unsaved draft across the changed scope; there is no complete published endpoint to intake. Keep fail-closed source identity and do not equate record IDs.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "A reconciliação atual conserva dashboard-http.ts c6c24f4 sem endpoint admitido para reautorizar a origem de um draft novo após mudança somente de escrita. Não equiparar recordId a continuidade física."
+    },
+    "C12": {
+      "sourceFindingRefs": [
+        "WP02-F03-dashboard-c12-historical-receipt"
+      ],
+      "owner": "astra-compose / C12 source owners",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "REAL_HOST_COMPOSITION_FAILURE",
+      "status": "PUBLISHED_PRODUCER_CLOSURE_PENDING_OWNER_RECONCILIATION",
+      "inheritedDescription": "Exact Operations apply4bdd is consumed at W10 and six host-method tests pass. The browser lost-apply reload case still fails at workbench-recovery386: after real commit/one receipt and opaque correlation reload, current authorized-options status never appears. The complete named recovery case remains FAIL; published historical/source continuity requires additive full composition. The exact held closure now has a concrete compatibility boundary: its case port requires verifyScenarioOperations in retained foreign callers, and the published Finance replacement does not preserve the stronger real partial-domain/replay proof. BCS b289 is retained; BCS4b024 remains held. Size alone is not a blocker.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP01.T05.CHK.03",
+        "WP01.T05.DOD.01",
+        "WP01.T05.CMP.01"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "Produtores de histórico/operation verifier e um positivo WP10 posterior existem. A interface conserva BCS/dashboard-decisions antigos; o FAIL original de apply perdido seguido de reload não foi convertido em PASS e a prova partial-domain/replay deve ser preservada."
+    },
+    "C05": {
+      "sourceFindingRefs": [
+        "C05_PRESERVED_MEETING_HISTORY"
+      ],
+      "owner": "astra-compose / WP07",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "REAL_HOST_DEPENDENCY",
+      "status": "PUBLISHED_SCOPED_PASS_OWNER_MOUNT_REQUIRED",
+      "inheritedDescription": "A generic original-review reader is now published upstream. The inspected Dashboard readReview/discovery composition still validates current exact sources instead of composing that historical reader. W8c actually returns403 after a legitimate1300→2400 change; record capture history and C12 alone do not wire the whole-meeting route.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.DOD.03",
+        "WP01.CMP.02"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead",
+        "patches/c05-owner-mount.json",
+        "EXTERNAL-C05-W22"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "Dois positivos externos WP10 W22 existem. O input retém BCS sem evidence:context após a construção real de BusinessContext. A proposta mínima é owner-only; não foi aplicada nem provada e não substitui o positivo próprio 1300→2400."
+    },
+    "DRAFT-CASE-ADVANCE": {
+      "sourceFindingRefs": [
+        "C12_DRAFT_REPLAY_CASE_ADVANCE"
+      ],
+      "owner": "astra-compose / hot-topic draft producer",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PRECISE_PRODUCER_REPLAY_DEPENDENCY",
+      "status": "OWNER_REPLAY_ORDERING_PENDING",
+      "inheritedDescription": "A committed Hot Topic draft registration can lose its response, then an otherwise legitimate case update advances the case version. The current producer checks the exact requested case version before consulting the prior idempotency transaction; recovery also calls readCurrent with that old version. This is a static producer-ordering finding. The lost-apply/discovery runtime failure belongs to a different journey and is not execution proof for this variant.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.SUC.01"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "O produtor d8a151c publicado mantém a validação da versão exata do caso antes do replay e em readCurrent. Proteções após callback não provam essa variante de recuperação."
+    },
+    "G03": {
+      "sourceFindingRefs": [
+        "G03_FIRST_CYCLE_SELECTION"
+      ],
+      "owner": "WP01 + astra-compose",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "COMPONENT_PROVED_HOST_INTEGRATION_PENDING",
+      "status": "OWNER_PRODUCER_FIX_PUBLISHED_INPUT_INTAKE_AND_BROWSER_PROOF_PENDING",
+      "inheritedDescription": "Case-bound selection with exact source references and period is implemented; its five real create/list/reload/replay cases and two destination cases retain their recorded W14 scopes. Responsible assignment is a separate recipient/question action, whose two directory/selection/logout counterproofs pass at W16. Full signals/destination composition still has its own boundary. The explicit Review rejected selection branch is implemented, but the ordinary real C08 namespace-version conflict is mapped by the published selection producer to 503 selection-unavailable. Only preview maps to 409 conflict/selection-not-committed. The exact first known 409 branch therefore has no suitable deterministic producer seam in the admitted real fixture; no synthetic response, new producer seam or timing race was used to claim proof.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.CMP.01",
+        "WP01.T04.CMP.01",
+        "WP01.T04.CMP.02",
+        "WP01.T04.SUC.01"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead",
+        "reconciliation.json#/finalPublishedDeltaRead"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "Retained input blob ec80e291 maps real CAS to503. Final owner pin20821df310ebc6ea08ccab27e829008d72a04de6 publishes blobcd9a67887f41986243809672572c972440c832ec mapping conflict/product-state-changed to conflict/selection-not-committed, plus real SQLite producer test f19984edc18de56e1f97a60f538a25983cd9e367. No intake or new browser409 proof is claimed."
+    },
+    "WORK-HOST": {
+      "sourceFindingRefs": [
+        "D01_C06_AND_ROUTINE_HOST"
+      ],
+      "owner": "astra-compose",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PUBLISHED_INTEGRATION_DEPENDENCY",
+      "status": "PUBLISHED_PRODUCERS_HOST_COMPOSITION_PENDING",
+      "inheritedDescription": "W4 retains the older host-context; published compose supplies collaboration.work, routineRuns and current view authorization. Work producer is not absent. Routine execution still lacks the native adapter in the published host, distinct from status/discovery consumers.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP01.T04.CHK.03",
+        "WP01.T04.INV.01",
+        "WP01.T04.CMP.01",
+        "WP01.T04.SUC.01",
+        "WP01.T05.DOD.01",
+        "WP01.T05.CMP.01"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "WorkSignals, destinos e work-http publicados em WP10 existem; dependem de workBridge/withCase e binding raiz. Os dois testes de destino usam 503 real por montagem indisponível, sem simular destino bem-sucedido."
+    },
+    "REVIEW-APPLY-HOST": {
+      "sourceFindingRefs": [
+        "D02_REVIEW_DIGEST_HOST_CLOSURE"
+      ],
+      "owner": "astra-compose",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PUBLISHED_INTEGRATION_DEPENDENCY",
+      "status": "INHERITED_OWNER_BOUNDARY_PENDING_CURRENT_COMPOSITION",
+      "inheritedDescription": "Latest inspected producer already accepts four review-proof fields and bindAdmittedApply. Root intentionally did not cherry-pick this isolated endpoint without additive host closure. Do not report it as absent from the published producer.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.CMP.02",
+        "WP01.T05.CHK.03",
+        "WP01.T05.INV.01",
+        "WP01.T05.CMP.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    },
+    "BI-COMPOSITION": {
+      "sourceFindingRefs": [
+        "D03_BI_REFRESH_CONSUMER"
+      ],
+      "owner": "WP10 / astra-compose with WP01 seam",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PUBLISHED_INTERFACE_CONTRACT_INTEGRATION_PENDING",
+      "status": "EXTERNAL_SCOPED_PASS_REATTACHED_NEW_HEAD_NOT_VALIDATED",
+      "inheritedDescription": "Shell publishes the authorized lifecycle event. The current new tests observe it without claiming it. A positive BI consumer must implement reauthorization, private-state purge and refresh coalescing; no native BI acceptance follows from event dispatch.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.CHK.03",
+        "WP01.T03.CMP.01"
+      ],
+      "currentEvidenceRefs": [
+        "reconciliation.json#/initialPinnedRead",
+        "EXTERNAL-BI-W17"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "BI W17 confirma o consumidor no seu próprio W/S. screen-shell/bi-entry do input coincidem em blobs primários, mas o novo shell-state é dependência transitiva alterada; host/driver externos também diferem. Não há equivalência transitiva ou do novo head."
+    },
+    "DECISION-EDIT-MOUNT": {
+      "sourceFindingRefs": [
+        "D04_DECISION_EDIT_HOST_MOUNT"
+      ],
+      "owner": "astra-compose/WP10",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PUBLISHED_COMPONENT_HOST_COMPOSITION_PENDING",
+      "status": "INHERITED_OWNER_BOUNDARY_PENDING_CURRENT_COMPOSITION",
+      "inheritedDescription": "Decision-edit mount was not located in the reviewed published host chain. The generic HTTP and renderer exist; the whole installed router is not proved by an edit-only fixture.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    },
+    "WORK-CONTEXT": {
+      "sourceFindingRefs": [
+        "D05_MY_WORK_PRESERVED_REVIEW_CONTEXT"
+      ],
+      "owner": "WP01 / Collaboration / astra-compose",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PUBLISHED_COMPONENT_HOST_COMPOSITION_PENDING",
+      "status": "INHERITED_OWNER_BOUNDARY_PENDING_CURRENT_COMPOSITION",
+      "inheritedDescription": "All eight readonly production renderer tests pass at W12 for optional context shapes, exact references/versions, escaping, passive UI, immutable input and accessor failure. The actual published context producer/host emission still requires composition. These tests do not exercise ACL/C05/C06/C08 or arbitrary records/responsibles selection.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T04.INV.01",
+        "WP01.T04.SUC.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    },
+    "SHARED-STATIC": {
+      "sourceFindingRefs": [
+        "D09_SHARED_STATIC_COMPATIBILITY"
+      ],
+      "owner": "Compose / Collaboration contract and retained foreign callers",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "REAL_SHARED_COMPOSITION_BLOCKER",
+      "status": "CANDIDATE_STATIC_FAIL_SUCCESSOR_STATIC_PENDING",
+      "inheritedDescription": "W16 has 14 type diagnostics at nine foreign locations: five host discriminant uses and four retained WP07 ReviewHost fixtures, with zero own locations. Exact published Dashboard ReviewHost and Operations document callers were already consumed at W14. Latest Compose f999 retains state blob 755639 and WP07 test blob 77ef3; additive proposals for the owner remain unapplied. Runtime state-provider or recipient PASS does not establish package static compatibility or full WP10 acceptance.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.DOD.01"
+      ],
+      "currentEvidenceRefs": [
+        "RESUME-STATIC"
+      ],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "Root reports run43615878780 at W b1a477c failed with 17 diagnostics: 14 foreign retained and 3 own ACK assertion types. The three own locations were corrected with expect<unknown> without removing assertions; a new candidate check is still pending. The W16 and W b1a477c failures remain literal."
+    },
+    "C03-HOST": {
+      "sourceFindingRefs": [
+        "WP01-C03-01-initial-answer-selector"
+      ],
+      "owner": "astra-compose/C03 with WP01 consumer",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PUBLISHED_CONSUMER_WITH_HOST_COMPOSITION_PENDING",
+      "status": "INHERITED_OWNER_BOUNDARY_PENDING_CURRENT_COMPOSITION",
+      "inheritedDescription": "Collaboration PR33 published prepare-message. W9 consumes its exact answer-reuse issuer and implements first-selector UI consumption; the six real component tests use declared thin HTTP envelopes. Full shared HTTP/host intake and recipient-distinct production acceptance remain pending.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP01.T05.CMP.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    },
+    "C03-REPLY-ACK": {
+      "sourceFindingRefs": [
+        "WP01-C03-02-reply-correlation-ambiguity"
+      ],
+      "owner": "astra-compose/C03",
+      "classification": "EXTERNAL",
+      "inheritedClassification": "PRECISE_PRODUCER_OUTCOME_DEPENDENCY",
+      "status": "INHERITED_OWNER_BOUNDARY_PENDING_CURRENT_COMPOSITION",
+      "inheritedDescription": "The reply producer returns a current thread read after commit. Multiple new messages with identical author/body can make the exact mutation result ambiguous; W7 conserves uncertainty instead of inventing an acknowledgement.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    },
+    "SHARED-APPLY-LOOKUP": {
+      "sourceFindingRefs": [
+        "WP01-F05-shared-apply-reauthorization"
+      ],
+      "owner": "WP01 with integration/operations",
+      "classification": "EXTERNAL_INFERENCE",
+      "inheritedClassification": "STATIC_INFERENCE_PENDING_REAL_COMPOSITION_COUNTERPROOF",
+      "status": "INHERITED_STATIC_INFERENCE_NOT_EXECUTED_FAILURE",
+      "inheritedDescription": "After a committed shared Apply loses its response, a later real revocation can purge the only browser correlation before case reconciliation. Recovery after reauthorization may need an authorized server outcome lookup. This is an inference, not an executed product failure.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP01.T05.CMP.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head.",
+      "currentAssessment": "O finding original é inferência de recuperação após revogação, não falha runtime demonstrada. O purge obrigatório não autoriza reter correlação privada nem criar lookup de servidor."
+    },
+    "C10-NATIVE-JOURNEY": {
+      "sourceFindingRefs": [
+        "P03_C10_COMPLETE_JOURNEY"
+      ],
+      "owner": "WP11/WP12/WP13/WP14 + S0",
+      "classification": "GLOBAL",
+      "inheritedClassification": "NATIVE_OR_GLOBAL_ACCEPTANCE_PENDING",
+      "status": "INHERITED_GLOBAL_PROOF_PENDING",
+      "inheritedDescription": "Real confirmation of 40000, engine reevaluation, historical choice caveat and quote/domain receipt cycle are not replaced by renderer number fixtures. Contract entry test returns before actual choice; C12 host test seeds existing choice.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.DOD.03",
+        "WP01.DOD.20",
+        "WP01.INV.20",
+        "WP01.QLT.20",
+        "WP01.CMP.02",
+        "WP01.CMP.20",
+        "WP01.SUC.20",
+        "WP01.T05.CHK.01",
+        "WP01.T05.CHK.03",
+        "WP01.T05.CHK.20",
+        "WP01.T05.DOD.01",
+        "WP01.T05.DOD.20",
+        "WP01.T05.INV.20",
+        "WP01.T05.QLT.20",
+        "WP01.T05.CMP.01",
+        "WP01.T05.CMP.20",
+        "WP01.T05.SUC.20"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    },
+    "NATIVE-AND-GLOBAL": {
+      "sourceFindingRefs": [
+        "P04_NATIVE_AND_GLOBAL"
+      ],
+      "owner": "S0 + native owners",
+      "classification": "GLOBAL",
+      "inheritedClassification": "NATIVE_OR_GLOBAL_ACCEPTANCE_PENDING",
+      "status": "INHERITED_GLOBAL_PROOF_PENDING",
+      "inheritedDescription": "18 skill witnesses/5 profiles/independent reviewer, actual model inference, persisted outputRef consumed after reload and six AM proofs are still required. Real SessionV2 load and direct parity are useful component evidence, not the full gate.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.DOD.30",
+        "WP01.INV.30",
+        "WP01.QLT.30",
+        "WP01.CMP.30",
+        "WP01.SUC.30",
+        "WP01.T05.CHK.30",
+        "WP01.T05.CHK.31",
+        "WP01.T05.DOD.30",
+        "WP01.T05.INV.30",
+        "WP01.T05.QLT.30",
+        "WP01.T05.CMP.30",
+        "WP01.T05.SUC.30"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    },
+    "WP10-ACCEPTANCE": {
+      "sourceFindingRefs": [
+        "P05_WP10_ACCEPTANCE"
+      ],
+      "owner": "S0",
+      "classification": "GLOBAL",
+      "inheritedClassification": "NATIVE_OR_GLOBAL_ACCEPTANCE_PENDING",
+      "status": "INHERITED_GLOBAL_PROOF_PENDING",
+      "inheritedDescription": "Canonical explicit composed WP10 acceptance and final epic are reserved to S0; local component assertions cannot close this scope.",
+      "newOwnRevocationDeltaClosesFinding": false,
+      "candidateClosureProved": false,
+      "criterionIds": [
+        "WP01.DOD.01",
+        "WP01.T04.DOD.01"
+      ],
+      "currentEvidenceRefs": [],
+      "reconciliationLimit": "Descrição original mantida como observação pinada; este overlay não declara ausente um produtor posterior nem valida o novo head."
+    }
+  },
+  "wp02Boundaries": {
+    "IR-EXT-FIRST-SAVE-LOOKUP": {
+      "originalFindingRef": "WP02-F01-new-draft-outcome-lookup",
+      "owner": "WP10 / Composition",
+      "status": "EXTERNAL_ENDPOINT_REQUIRED",
+      "boundary": "Primeiro save confirmado pelo host com ACK perdido e reload antes de draftRef requer lookup autorizado por intenção/correlação. Não inferir identidade por título, alvo, posição ou texto privado.",
+      "originalCriterionRefs": [
+        "WP02.QLT.02",
+        "WP02.T02.QLT.02",
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-CREATE-INCARNATION": {
+      "originalFindingRef": "WP02-F02-create-correlation-incarnation",
+      "owner": "WP10 / Composition source provider; WP02 consumes",
+      "status": "EXTERNAL_ATOMIC_SOURCE_PROTOCOL_REQUIRED",
+      "boundary": "CREATE salva digest/id antes da finalização do lifecycle. Host precisa reservar/finalizar a incarnation física no mesmo commit para o port próprio armazenar e verificar no replay. Preservar UPDATE já vinculado; não criar identidade na UI nem uma segunda transação.",
+      "originalCriterionRefs": [
+        "WP02.INV.02",
+        "WP02.T04.CHK.01",
+        "WP02.T04.DOD.01",
+        "WP02.T04.QLT.02",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02",
+        "WP02.T04.SUC.01",
+        "WP02.T04.SUC.02"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-C12-RELOAD": {
+      "originalFindingRef": "WP02-F03-dashboard-c12-historical-receipt",
+      "owner": "WP10 / Composition / Operations C12 / Finance",
+      "status": "EXTERNAL_COMPOSITION_AND_SAME_CONSUMER_PROOF_REQUIRED",
+      "boundary": "A closure publicada de evidence/readOriginal e verificadores existe, mas o input retém BCS e dashboard-decisions anteriores. Exige reconciliação de callers reais e preservação da contraprova partial-domain/replay; ACK completo na aplicação inicial não fecha descoberta/replay após reload.",
+      "originalCriterionRefs": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP01.T05.CHK.03",
+        "WP01.T05.DOD.01",
+        "WP01.T05.CMP.01",
+        "WP02.CMP.10"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-F04-WRITE-ONLY-REVOCATION": {
+      "originalFindingRef": "WP02-F04-new-draft-source-continuity",
+      "owner": "WP10 / Composition source authority",
+      "status": "EXTERNAL_REAUTHORIZATION_ENDPOINT_REQUIRED",
+      "boundary": "Sem endpoint admitido para reautorizar a referência original do draft não salvo sob leitura atual e continuidade física. dashboard-http permanece c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c em input/#29/#32. Preservar checks exatos de digest/incarnation; não equiparar record ID a continuidade.",
+      "originalCriterionRefs": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP02.QLT.02",
+        "WP02.T02.QLT.02",
+        "WP02.CMP.10"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-C05-WHOLE-REVIEW": {
+      "originalFindingRef": "C05_PRESERVED_MEETING_HISTORY",
+      "owner": "WP10 / Composition / Review",
+      "status": "PUBLISHED_OWNER_CLOSURE_PENDING_COMPATIBLE_MOUNT_AND_SAME_CONSUMER",
+      "boundary": "Dashboard histórico foi publicado em #29 com helpers, mas exige evidence: context na montagem BCS depois da declaração real de BusinessContext. O input BCS anterior não faz essa montagem; copiar somente quatro arquivos deixa fallback fresh-only. Requer delta mínimo ao owner e o positivo original preservado.",
+      "originalCriterionRefs": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP02.T03.CMP.01"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-DRAFT-CASE-ADVANCE": {
+      "originalFindingRef": "C12_DRAFT_REPLAY_CASE_ADVANCE",
+      "owner": "WP10 / Composition / draft producer",
+      "status": "STATIC_ORDERING_FINDING_SPECIFIC_COUNTERPROOF_MISSING",
+      "boundary": "register valida versão exata do caso antes do recibo anterior; readCurrent também exige a versão enviada. Versão publicada d8a151 adiciona fences mas mantém essa ordem. O cenário lost-register→legitimate-case-advance→exact-replay ainda precisa de contraprova própria; não usar o FAIL de lost-apply como evidência desta variante.",
+      "originalCriterionRefs": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.SUC.01",
+        "WP02.QLT.02",
+        "WP02.T02.SUC.02"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-WORK-REVIEW-CONTEXT": {
+      "originalFindingRef": "D05_MY_WORK_PRESERVED_REVIEW_CONTEXT",
+      "owner": "Collaboration / WP10 / Composition",
+      "status": "PUBLISHED_PRODUCER_HOST_COMPOSITION_PENDING",
+      "boundary": "Renderer de contexto readonly e provas anteriores ficam preservados; o produtor/mount real do host e ACL continuam responsabilidade de composição. ACK Dashboard não fecha C05/C06/G03.",
+      "originalCriterionRefs": [
+        "WP01.T04.INV.01",
+        "WP01.T04.SUC.01",
+        "WP02.T04.INV.02"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-SHARED-STATIC": {
+      "originalFindingRef": "D09_SHARED_STATIC_COMPATIBILITY",
+      "owner": "WP10 / Composition / Collaboration and retained callers",
+      "status": "INHERITED_STATIC_FAILURE_CURRENT_STATIC_CHECK_PENDING",
+      "boundary": "A falha estática W16 é histórica e mantida. A verificação atual bun typecheck/guards precisa de run próprio do root; não editar contratos/host/fixtures alheias para esconder incompatibilidade.",
+      "originalCriterionRefs": [
+        "WP01.DOD.01",
+        "WP02.DOD.02"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-GLOBAL-NATIVE": {
+      "originalFindingRef": "P04_NATIVE_AND_GLOBAL",
+      "owner": "S0 / WP10 / WP12 and native owners",
+      "status": "GLOBAL_NATIVE_ACCEPTANCE_PENDING",
+      "boundary": "5 perfis, 18 skills, 8 packs e C17; inferência real, outputRef persistido consumido após reload, 6 provas AM e revisão independente conforme mapa imutável. Paridade direta e ACK browser são parcelas, não o gate global.",
+      "originalCriterionRefs": [
+        "WP01.CMP.30",
+        "WP01.DOD.30",
+        "WP01.INV.30",
+        "WP01.QLT.30",
+        "WP01.SUC.30",
+        "WP01.T05.CHK.30",
+        "WP01.T05.CHK.31",
+        "WP01.T05.CMP.30",
+        "WP01.T05.DOD.30",
+        "WP01.T05.INV.30",
+        "WP01.T05.QLT.30",
+        "WP01.T05.SUC.30",
+        "WP02.CMP.10",
+        "WP02.DOD.10",
+        "WP02.INV.10",
+        "WP02.QLT.10",
+        "WP02.SUC.10"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-GLOBAL-WP10": {
+      "originalFindingRef": "P05_WP10_ACCEPTANCE",
+      "owner": "S0",
+      "status": "COMPOSED_WP10_ACCEPTANCE_PENDING",
+      "boundary": "Aceitação composta WP10 e epic final reservados a S0. Não disparar epic por grupo nem atribuir aceitação global a testes componentizados.",
+      "originalCriterionRefs": [
+        "WP01.DOD.01",
+        "WP01.T04.DOD.01",
+        "WP02.DOD.02",
+        "WP02.T04.DOD.02"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-GLOBAL-S0-FINAL": {
+      "owner": "S0",
+      "status": "FINAL_REVIEW_AND_REQUIRED_GLOBAL_PROOFS_PENDING",
+      "boundary": "Revisão de S0 e todas as provas obrigatórias no produto composto ainda são necessárias; nenhum dos 78 critérios é declarado DONE por esta sobreposição.",
+      "originalNextActionRef": "A_S0_FINAL",
+      "newProductExecutionCredit": false
+    }
+  },
+  "currentDispositions": {
+    "F04": {
+      "owner": "WP10/Composition + Dashboard source provider",
+      "status": "EXTERNAL_AUTHORIZED_SOURCE_CONTINUITY_REQUIRED",
+      "requirement": "Retain readable dirty draft when only write authority is withdrawn. Do not equate scope incarnation/digest with physical identity or weaken the original retention assertions.",
+      "publishedDelta": "dashboard-http unchanged at the reconciled pins; no admitted source reauthorization seam."
+    },
+    "C05": {
+      "owner": "WP10/Composition + Review",
+      "status": "PUBLISHED_PRODUCER_REQUIRES_COMPATIBLE_MOUNT_AND_ORIGINAL_CONSUMER_PROOF",
+      "patch": "patches/c05-owner-mount.patch",
+      "patchApplied": false,
+      "requiredConsumer": "wp01/meeting-number.test.ts original WholeReview 1300→2400 positive",
+      "externalProof": "EXTERNAL-C05-W22"
+    },
+    "C12": {
+      "owner": "WP10/Composition + C12 producers",
+      "status": "ORIGINAL_LOST_REPLY_RELOAD_CONSUMER_FAILS",
+      "latestObservedRun": 43616465145,
+      "failedObservations": [
+        "IR-R43616465145-308258a1e8d5"
+      ],
+      "separation": "New full-ACK positive and incomplete-ACK negative pass only if named logs say so; neither closes reload discovery/receipt recovery."
+    },
+    "FIRST-SAVE": {
+      "owner": "WP10/Composition",
+      "status": "AUTHORIZED_INTENT_OUTCOME_LOOKUP_REQUIRED",
+      "limit": "Reload before learning draftRef cannot recover by title/position or browser-persisted private text."
+    },
+    "HT-CREATE": {
+      "owner": "Composition/source lifecycle with Dashboard producer",
+      "status": "ATOMIC_PHYSICAL_INCARNATION_BINDING_REQUIRED",
+      "limit": "CREATE correlation id+digest is published before source lifecycle finalization; no second write or inferred physical identity."
+    },
+    "G03": {
+      "owner": "Collaboration case-selection producer + Composition",
+      "status": "PRODUCER_FIX_PUBLISHED_INTAKE_AND_UI_PROOF_PENDING",
+      "limit": "Retained input still maps product-state-changed to503. Owner20821df publishes mapping fix cd9a678 and real producer test f19984; preserve both works, compose the delta and then execute the real UI review branch. No new PASS inferred."
+    },
+    "SHARED-STATIC": {
+      "owner": "WP10/Composition host result union + Collaboration/WP07 retained callers",
+      "status": "FOREIGN_STATIC_BLOCKERS_REMAIN",
+      "latestCheck": {
+        "run": 43617372378,
+        "commit": "1ad4268fa6202be57a404cdfc755ba21776b0a97",
+        "counts": {
+          "total": 14,
+          "own": 0,
+          "foreign": 14,
+          "uniqueLocations": 9
+        },
+        "guards": {
+          "rules": 78,
+          "changedPaths": 880,
+          "gateFindings": 0,
+          "warnings": 42,
+          "errors": 0
+        }
+      },
+      "publishedFixes": "Later Collaboration restores SQLite fixtures; its pending validation does not fix the retained input automatically. No foreign source intake performed."
+    },
+    "BI": {
+      "owner": "Composition/WP10",
+      "status": "REATTACHED_EXTERNAL_SCOPED_PASS",
+      "proof": "EXTERNAL-BI-W17",
+      "limit": "New shellState and editor-dismissal changes need composition revalidation; no current-head BI acceptance."
+    },
+    "OPERATIONS": {
+      "owner": "Operations",
+      "status": "OWNERSHIP_PRESERVED",
+      "paths": [
+        "apps/cli/src/sucafina-product/import-http.ts",
+        "apps/cli/src/sucafina-product/document-http.ts"
+      ],
+      "limit": "No new defect asserted without a witness; no write to these services or paths."
+    },
+    "GLOBAL": {
+      "owner": "S0 with WP10/WP12/native owners",
+      "status": "NOT_DECLARED_DONE",
+      "required": [
+        "five native profiles",
+        "18 skill witnesses",
+        "actual model inference and persisted output consumed after reload",
+        "AM01–AM06",
+        "C/G7 and D/G8",
+        "eight final selections and integrated epic"
+      ]
+    }
+  }
+}

@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { domain } from "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
-import type { Actor } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { Actor, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ForecastCompareRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
@@ -35,9 +35,11 @@ import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../../m
 import { createPlannerCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/planner/capabilities.ts"
 import { createSfAtlasBusiness } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
 import type { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
+import { createSfDashboardServices } from "./dashboard-services.ts"
+import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
-export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader }) {
+export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites: WeakSet<object>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader }) {
   const host = input.authority.host
   const periods = new Map<string, { period: Period; expiresAt: number }>()
   const fences = (snapshots: NonNullable<ReturnType<NonNullable<typeof input.persistence.currentSnapshots>>>) => ({
@@ -82,14 +84,17 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }
   const procurementHost = { ...host, ...registry,
     resolveRequestSource: resolveProcurement,
-    isCurrentRequestSource: (snapshot, evidence) => registry.isCurrentRequestSource(snapshot, evidence) || individual.isCurrent(snapshot, evidence),
+    isCurrentRequestSource: (snapshot: Snapshot, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>) => registry.isCurrentRequestSource(snapshot, evidence) || individual.isCurrent(snapshot, evidence),
     resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent,
     readContractSource: contracts.readContractSource,
   }
   const procurement = createProcurementPort(procurementHost)
   const sourcingEvidence = createProcurementSourcingEvidence(procurementHost)
   const dashboardSources = createDashboardSourceHost({ host, scopedSources: input.persistence })
-  const dashboard = createDashboardPort({ host, sources: dashboardSources })
+  const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+    issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+  const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
+  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites: input.dashboardHostWrites })
   const evidence: { current?: BusinessContextService } = {}
   const context: BusinessContextService = {
     resolve: (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }),
@@ -103,6 +108,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     operationIdentity,
     authorizeCase,
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
+  const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
+    proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites: input.dashboardHostWrites })
   type CaseRef = { id: string; incarnation: string; version: number }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseRef>()
   const resolveCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
@@ -150,8 +157,6 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const baseCount = descriptors.length
   const initializeAtlas = (scanner: Awaited<ReturnType<typeof probeSfAtlasScanner>>, versions: { boundaryVersion: string; schemaVersion: string; manifestVersion: string; skillVersion: string }) => {
     const dashboardIssue = createDashboardSourceIssuer({ host, scopedSources: input.persistence })
-    const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
-      issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
     const featuresForCase = async (value: AuthorizedCaseProjection, call: TrustedDomainContext) => {
       if (!await host.revalidate(call)) return undefined
       const refreshed = await cases.read({ caseRef: encodeCaseRef(value.case) }, call)
@@ -182,10 +187,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       if (source.status !== "ok" || source.value.length > 500) return undefined
       const checked = await Promise.all(source.value.map(async (entry) => ({ ...entry, result: await cases.read({ caseRef: encodeCaseRef(entry.ref) }, call) })))
       const matches = checked.filter((entry) => entry.result.status === "ok" && (entry.outbox || entry.result.value.evidenceRefs.some((ref) => ref.refDigest === digest)))
-      return matches.length === 1 && await host.revalidate(call) ? matches[0]!.ref : undefined
+      return matches.length && await host.revalidate(call) ? matches.map((entry) => entry.ref) : undefined
     }
     const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords,
-      procurement, procurementResolve: resolveProcurement, planner: { sources: plannerSources, port: planner },
+      procurement, procurementResolve: { ...individual, resolve: resolveProcurement }, planner: { sources: plannerSources, port: planner },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
       caseForEvidence, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
         runtimeVersions: versions, featuresForCase,
@@ -222,6 +227,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     evidence.current = atlas.context
     descriptors.splice(baseCount)
     descriptors.push(...atlas.capabilities)
+    return atlas
   }
   const procurementSelections = { create: async (call: TrustedDomainContext, period: Period) => {
     if (!isSfPeriod(period)) return { status: "denied" as const, reason: "selection-authority-unavailable" }
@@ -261,7 +267,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     return { status: "ok" as const, value: { forecastComparison: result.value, selectedPeriod: wanted.period, currency: wanted.currency, sourceRefs: refs, registeredReasons: [] } }
     })
   } }
-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  return { dashboard, dashboardServices, dashboardDecisions, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
-    dispose: () => { periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
+    dispose: () => { dashboardServices.dispose(); periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
 }

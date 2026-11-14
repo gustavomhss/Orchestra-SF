@@ -1,0 +1,143 @@
+{
+  "schema": "astra-interface-static-receipt-v1",
+  "run_id": 43580186410,
+  "job_id": 132403043627,
+  "product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+  "product_tree": "81d2ef6f1106447c1ad4730e4e7a31c084c0662f",
+  "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "conclusion": "failure",
+  "checks": {
+    "sucafina_bun_typecheck": "failure",
+    "cli_bun_typecheck": "failure",
+    "guards": "success"
+  },
+  "diagnostics": [
+    {
+      "path": "test/product/wp01/meeting-number.test.ts",
+      "line": 76,
+      "column": 70,
+      "code": "TS2769",
+      "message": "No overload matches this call.",
+      "owner": "WP01"
+    },
+    {
+      "path": "test/product/wp01/meeting-number.test.ts",
+      "line": 139,
+      "column": 75,
+      "code": "TS2769",
+      "message": "No overload matches this call.",
+      "owner": "WP01"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-documents.ts",
+      "line": 24,
+      "column": 56,
+      "code": "TS2554",
+      "message": "Expected 3 arguments, but got 2.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-documents.ts",
+      "line": 127,
+      "column": 228,
+      "code": "TS2339",
+      "message": "Property 'reason' does not exist on type 'CostCoverageEntry'.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-documents.ts",
+      "line": 128,
+      "column": 153,
+      "code": "TS2339",
+      "message": "Property 'reason' does not exist on type 'CostCoverageEntry'.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-documents.ts",
+      "line": 128,
+      "column": 203,
+      "code": "TS2345",
+      "message": "Argument of type 'string' is not assignable to parameter of type 'never'.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 6,
+      "column": 41,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts' or its corresponding type declarations.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 27,
+      "column": 130,
+      "code": "TS7006",
+      "message": "Parameter 'match' implicitly has an 'any' type.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 28,
+      "column": 48,
+      "code": "TS7006",
+      "message": "Parameter 'match' implicitly has an 'any' type.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 28,
+      "column": 86,
+      "code": "TS7006",
+      "message": "Parameter 'ref' implicitly has an 'any' type.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 28,
+      "column": 91,
+      "code": "TS7006",
+      "message": "Parameter 'index' implicitly has an 'any' type.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 28,
+      "column": 98,
+      "code": "TS7006",
+      "message": "Parameter 'all' implicitly has an 'any' type.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 28,
+      "column": 121,
+      "code": "TS7006",
+      "message": "Parameter 'item' implicitly has an 'any' type.",
+      "owner": "astra-compose"
+    },
+    {
+      "path": "src/sucafina-product/analysis-verifier-memory.ts",
+      "line": 45,
+      "column": 54,
+      "code": "TS7006",
+      "message": "Parameter 'item' implicitly has an 'any' type.",
+      "owner": "astra-compose"
+    }
+  ],
+  "guard_summary": {
+    "rules": 78,
+    "changed_paths": 666,
+    "gate_findings": 0,
+    "warn_findings": 27,
+    "errors": 0
+  },
+  "log_sha256": "c080294a3e2edf1d9332267e3b4645a51fe2fb443ab230e6668ea24d49c78d9b",
+  "log_bytes": 54220,
+  "own_fix": {
+    "state": "UNPUBLISHED_NOT_RETESTED",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+    "sha256": "e2ce080179c8b6f2e8b332d8ced8cb3642fab15d2cef721842908b03381770fe",
+    "description": "Narrow captureId from unknown to string before same-ID matchers; assertions retained."
+  }
+}

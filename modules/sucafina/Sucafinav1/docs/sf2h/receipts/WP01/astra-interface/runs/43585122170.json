@@ -1,0 +1,2100 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43585122170,
+  "job_id": 132417843606,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43585122170",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43585122170/job/132417843606",
+  "conclusion": "failure",
+  "cleanup_job_id": 132418811756,
+  "cleanup_conclusion": "success",
+  "source": "GitHub MCP existing run/jobs/logs and exact snapshot .ci-run.json; no run initiated by auditor",
+  "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+  "product_tree": "de52a224e9468ce70ed442d5b6ccefe03cd6cfc1",
+  "snapshot_sha": "ffd772bc35e72a2c267b469c28ab5a6f83ceac34",
+  "snapshot_tree": "081b91929df4f27b9bcb46801b8a996083215051",
+  "snapshot_branch": "ci-run-linux-astra-interface-770ca62aa9-11295a026d-1",
+  "request_sha256": "11295a026dacff165e4a16bda206ef813f304faedfd5cf268e6d58979d502848",
+  "request_blob": "2fe4fb0864196f62a284ba4cc871b417e4e86831",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "./Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "envelope_proof": {
+    "onlyDelta": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "2fe4fb0864196f62a284ba4cc871b417e4e86831",
+    "productTree": "de52a224e9468ce70ed442d5b6ccefe03cd6cfc1",
+    "snapshotTree": "081b91929df4f27b9bcb46801b8a996083215051"
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "attempt": 1,
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43585122170.log",
+    "bytes": 120408,
+    "sha256": "e729a5eadaa20973a3fc94f5f5a9eb2a0b1b1ea4a872e763e875a7db5f59a7e6"
+  },
+  "summary": {
+    "pass": 66,
+    "fail": 10,
+    "observations": 76,
+    "files_observed": 9,
+    "files_selected": 9,
+    "expect_calls": 574,
+    "elapsed_seconds": 130.4,
+    "bun_summary_present": true,
+    "before_all_failures": 0,
+    "named_test_bodies_entered": 76,
+    "named_consumer_tests": 74,
+    "consumer_test_failures_before_intended_interaction": 8,
+    "failure_families": {
+      "decision_editor_form_locator_timeout": 3,
+      "thread_fixture_auth_navigation_response_failure": 5,
+      "thread_selector_button_count_assertion": 1,
+      "saved_view_delayed_response_body_timeout": 1
+    }
+  },
+  "omni": {
+    "nonce": "70c11885a1a6326bfb3b460888efb99a",
+    "status": "pass",
+    "spawns": 1,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 3,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "pass_observations": 8,
+      "fail_observations": 6,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "pass_observations": 16,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "pass_observations": 34,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "pass_observations": 3,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    }
+  ],
+  "observations": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "status": "pass",
+      "duration_ms": 4931.16,
+      "log_line": 862,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "Browser harness observation only; lifecycle and spawn boundaries are separate from business/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "name": "real decision CAS preserves a second operator's edits by criterion ID and requires explicit review after each newer version",
+      "status": "fail",
+      "duration_ms": 10966.81,
+      "log_line": 883,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:26:21.2128908Z WP01 browser launch complete {\n2026-11-14T10:26:21.2129326Z   pid: 4110,\n2026-11-14T10:26:21.2129574Z   launches: 1,\n2026-11-14T10:26:21.2129807Z }\n2026-11-14T10:26:21.2167917Z (pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [4931.16ms]\n2026-11-14T10:26:21.2185631Z \n2026-11-14T10:26:21.2186004Z Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:\n2026-11-14T10:26:21.2958050Z WP01 browser lease acquired {\n2026-11-14T10:26:21.2958378Z   pid: 4110,\n2026-11-14T10:26:21.2958548Z   lease: 1,\n2026-11-14T10:26:21.2958763Z   acquisitions: 1,\n2026-11-14T10:26:21.2958936Z }\n2026-11-14T10:26:32.2618681Z 164 | \n2026-11-14T10:26:32.2619544Z 165 | test(\"real decision CAS preserves a second operator's edits by criterion ID and requires explicit review after each newer version\", async () => {\n2026-11-14T10:26:32.2620409Z 166 |   const f = await fixture()\n2026-11-14T10:26:32.2620663Z 167 |   try {\n2026-11-14T10:26:32.2620984Z 168 |     const page = f.actors[1].page, editor = form(page)\n2026-11-14T10:26:32.2621584Z 169 |     await editor.getByLabel(\"Decision objective\", { exact: true }).fill(\"Second operator retained objective\")\n2026-11-14T10:26:32.2622087Z                                                                          ^\n2026-11-14T10:26:32.2622444Z TimeoutError: fill: Timeout 10000ms exceeded.\n2026-11-14T10:26:32.2622708Z Call log:\n2026-11-14T10:26:32.2623114Z   - waiting for locator('[data-decision-edit]').getByLabel('Decision objective', { exact: true })\n2026-11-14T10:26:32.2623521Z \n2026-11-14T10:26:32.2624016Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:169:68\n2026-11-14T10:26:32.2624985Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:26:32.2625694Z (fail) real decision CAS preserves a second operator's edits by criterion ID and requires explicit review after each newer version [10966.81ms]",
+      "test_body_entered": true,
+      "failure_family": "decision_editor_form_locator_timeout",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_EDITOR_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The named test entered its real fixture, but Decision objective was not found before the first fill. CAS/rebase/revocation assertions were not reached; fixture/route/bootstrap cause requires inspection."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "name": "real added and removed criteria require an explicit structural review and retain the removed draft for comparison",
+      "status": "fail",
+      "duration_ms": 10619.34,
+      "log_line": 897,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:26:32.2620409Z 166 |   const f = await fixture()\n2026-11-14T10:26:32.2620663Z 167 |   try {\n2026-11-14T10:26:32.2620984Z 168 |     const page = f.actors[1].page, editor = form(page)\n2026-11-14T10:26:32.2621584Z 169 |     await editor.getByLabel(\"Decision objective\", { exact: true }).fill(\"Second operator retained objective\")\n2026-11-14T10:26:32.2622087Z                                                                          ^\n2026-11-14T10:26:32.2622444Z TimeoutError: fill: Timeout 10000ms exceeded.\n2026-11-14T10:26:32.2622708Z Call log:\n2026-11-14T10:26:32.2623114Z   - waiting for locator('[data-decision-edit]').getByLabel('Decision objective', { exact: true })\n2026-11-14T10:26:32.2623521Z \n2026-11-14T10:26:32.2624016Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:169:68\n2026-11-14T10:26:32.2624985Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:26:32.2625694Z (fail) real decision CAS preserves a second operator's edits by criterion ID and requires explicit review after each newer version [10966.81ms]\n2026-11-14T10:26:42.8811932Z 225 | \n2026-11-14T10:26:42.8815421Z 226 | test(\"real added and removed criteria require an explicit structural review and retain the removed draft for comparison\", async () => {\n2026-11-14T10:26:42.8817313Z 227 |   const f = await fixture()\n2026-11-14T10:26:42.8817712Z 228 |   try {\n2026-11-14T10:26:42.8818178Z 229 |     const page = f.actors[1].page, editor = form(page)\n2026-11-14T10:26:42.8818950Z 230 |     await editor.getByLabel(\"Decision objective\", { exact: true }).fill(\"Structural reconciliation\")\n2026-11-14T10:26:42.8819592Z                                                                          ^\n2026-11-14T10:26:42.8820108Z TimeoutError: fill: Timeout 10000ms exceeded.\n2026-11-14T10:26:42.8820499Z Call log:\n2026-11-14T10:26:42.8821056Z   - waiting for locator('[data-decision-edit]').getByLabel('Decision objective', { exact: true })\n2026-11-14T10:26:42.8821508Z \n2026-11-14T10:26:42.8822129Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:230:68\n2026-11-14T10:26:42.8822955Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:26:42.8823831Z (fail) real added and removed criteria require an explicit structural review and retain the removed draft for comparison [10619.34ms]",
+      "test_body_entered": true,
+      "failure_family": "decision_editor_form_locator_timeout",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_EDITOR_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The named test entered its real fixture, but Decision objective was not found before the first fill. CAS/rebase/revocation assertions were not reached; fixture/route/bootstrap cause requires inspection."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "name": "real session revocation during decision reconciliation purges the retained draft and prevents another write",
+      "status": "fail",
+      "duration_ms": 10579.24,
+      "log_line": 913,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:26:42.8818178Z 229 |     const page = f.actors[1].page, editor = form(page)\n2026-11-14T10:26:42.8818950Z 230 |     await editor.getByLabel(\"Decision objective\", { exact: true }).fill(\"Structural reconciliation\")\n2026-11-14T10:26:42.8819592Z                                                                          ^\n2026-11-14T10:26:42.8820108Z TimeoutError: fill: Timeout 10000ms exceeded.\n2026-11-14T10:26:42.8820499Z Call log:\n2026-11-14T10:26:42.8821056Z   - waiting for locator('[data-decision-edit]').getByLabel('Decision objective', { exact: true })\n2026-11-14T10:26:42.8821508Z \n2026-11-14T10:26:42.8822129Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:230:68\n2026-11-14T10:26:42.8822955Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:26:42.8823831Z (fail) real added and removed criteria require an explicit structural review and retain the removed draft for comparison [10619.34ms]\n2026-11-14T10:26:53.4607653Z 263 | \n2026-11-14T10:26:53.4608875Z 264 | test(\"real session revocation during decision reconciliation purges the retained draft and prevents another write\", async () => {\n2026-11-14T10:26:53.4609730Z 265 |   const f = await fixture()\n2026-11-14T10:26:53.4610114Z 266 |   try {\n2026-11-14T10:26:53.4610943Z 267 |     const page = f.actors[1].page, editor = form(page)\n2026-11-14T10:26:53.4611639Z 268 |     await editor.getByLabel(\"Decision objective\", { exact: true }).fill(\"Private losing decision draft\")\n2026-11-14T10:26:53.4613073Z                                                                          ^\n2026-11-14T10:26:53.4613566Z TimeoutError: fill: Timeout 10000ms exceeded.\n2026-11-14T10:26:53.4613917Z WP01 browser lease released {\n2026-11-14T10:26:53.4614188Z   pid: 4110,\n2026-11-14T10:26:53.4614484Z Call log:\n2026-11-14T10:26:53.4615063Z   - waiting for locator('[data-decision-edit]').getByLabel('Decision objective', { exact: true })\n2026-11-14T10:26:53.4615517Z \n2026-11-14T10:26:53.4616396Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts:268:68\n2026-11-14T10:26:53.4617216Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:26:53.4618201Z (fail) real session revocation during decision reconciliation purges the retained draft and prevents another write [10579.24ms]",
+      "test_body_entered": true,
+      "failure_family": "decision_editor_form_locator_timeout",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_EDITOR_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The named test entered its real fixture, but Decision objective was not found before the first fill. CAS/rebase/revocation assertions were not reached; fixture/route/bootstrap cause requires inspection."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation read deadline includes an unfinished body and restores the unsent reply controls",
+      "status": "pass",
+      "duration_ms": 10676.88,
+      "log_line": 925,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation recovers a real C03 reply after body timeout with the same C08 effect and frozen request",
+      "status": "fail",
+      "duration_ms": 303.52,
+      "log_line": 940,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:26:53.4619197Z Sucafinav1/test/product/wp01/thread-recovery.test.ts:\n2026-11-14T10:26:53.4634276Z   lease: 1,\n2026-11-14T10:26:53.4656676Z   releases: 1,\n2026-11-14T10:26:53.4667879Z   contexts: 0,\n2026-11-14T10:26:53.4670860Z }\n2026-11-14T10:26:53.4681646Z WP01 browser lease acquired {\n2026-11-14T10:26:53.4682404Z   pid: 4110,\n2026-11-14T10:26:53.4683582Z   lease: 2,\n2026-11-14T10:26:53.4683891Z   acquisitions: 2,\n2026-11-14T10:26:53.4684196Z }\n2026-11-14T10:27:04.1451835Z (pass) conversation read deadline includes an unfinished body and restores the unsent reply controls [10676.88ms]\n2026-11-14T10:27:04.4422336Z 88 |     context = await bounded(browser.newContext(), \"open domain context\")\n2026-11-14T10:27:04.4423276Z 89 |     const page = await bounded(context.newPage(), \"open domain page\")\n2026-11-14T10:27:04.4423813Z 90 |     page.setDefaultTimeout(5_000)\n2026-11-14T10:27:04.4424194Z 91 |     const errors: string[] = []\n2026-11-14T10:27:04.4424691Z 92 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T10:27:04.4426619Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:04.4427195Z                     ^\n2026-11-14T10:27:04.4428159Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:46689/sucafina/auth/local?code=1f9844aae7c381f795c00929a9b5332ea7a9e376783be9cb9f8850dc5f367e0d\n2026-11-14T10:27:04.4428866Z Call log:\n2026-11-14T10:27:04.4429585Z   - navigating to \"http://127.0.0.1:46689/sucafina/auth/local?code=1f9844aae7c381f795c00929a9b5332ea7a9e376783be9cb9f8850dc5f367e0d\", waiting until \"load\"\n2026-11-14T10:27:04.4430198Z \n2026-11-14T10:27:04.4430783Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:04.4431888Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:95:5\n2026-11-14T10:27:04.4432606Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:04.4497760Z (fail) conversation recovers a real C03 reply after body timeout with the same C08 effect and frozen request [303.52ms]",
+      "test_body_entered": true,
+      "failure_family": "thread_fixture_auth_navigation_response_failure",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_CONVERSATION_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The real C03/C08 fixture was constructed, but auth/local navigation failed with ERR_HTTP_RESPONSE_CODE_FAILURE. The intended reply/retry/revocation behavior did not execute; do not infer a C03 product failure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation keeps a real committed reply uncertain when delivery replaces the producer result with an empty acknowledgement",
+      "status": "fail",
+      "duration_ms": 274.95,
+      "log_line": 955,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:27:04.4424691Z 92 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T10:27:04.4426619Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:04.4427195Z                     ^\n2026-11-14T10:27:04.4428159Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:46689/sucafina/auth/local?code=1f9844aae7c381f795c00929a9b5332ea7a9e376783be9cb9f8850dc5f367e0d\n2026-11-14T10:27:04.4428866Z Call log:\n2026-11-14T10:27:04.4429585Z   - navigating to \"http://127.0.0.1:46689/sucafina/auth/local?code=1f9844aae7c381f795c00929a9b5332ea7a9e376783be9cb9f8850dc5f367e0d\", waiting until \"load\"\n2026-11-14T10:27:04.4430198Z \n2026-11-14T10:27:04.4430783Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:04.4431888Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:95:5\n2026-11-14T10:27:04.4432606Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:04.4497760Z (fail) conversation recovers a real C03 reply after body timeout with the same C08 effect and frozen request [303.52ms]\n2026-11-14T10:27:04.7171923Z 88 |     context = await bounded(browser.newContext(), \"open domain context\")\n2026-11-14T10:27:04.7172783Z 89 |     const page = await bounded(context.newPage(), \"open domain page\")\n2026-11-14T10:27:04.7173553Z 90 |     page.setDefaultTimeout(5_000)\n2026-11-14T10:27:04.7174094Z 91 |     const errors: string[] = []\n2026-11-14T10:27:04.7174617Z 92 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T10:27:04.7175407Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:04.7207981Z                     ^\n2026-11-14T10:27:04.7211704Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:34541/sucafina/auth/local?code=75ae6791c47eeb2cb5a580eb5698f3b26d99f184f7d5a071b0fa80d1b426fd08\n2026-11-14T10:27:04.7215151Z Call log:\n2026-11-14T10:27:04.7216666Z   - navigating to \"http://127.0.0.1:34541/sucafina/auth/local?code=75ae6791c47eeb2cb5a580eb5698f3b26d99f184f7d5a071b0fa80d1b426fd08\", waiting until \"load\"\n2026-11-14T10:27:04.7227585Z \n2026-11-14T10:27:04.7228679Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:04.7229842Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:128:10\n2026-11-14T10:27:04.7230915Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:04.7251849Z (fail) conversation keeps a real committed reply uncertain when delivery replaces the producer result with an empty acknowledgement [274.95ms]",
+      "test_body_entered": true,
+      "failure_family": "thread_fixture_auth_navigation_response_failure",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_CONVERSATION_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The real C03/C08 fixture was constructed, but auth/local navigation failed with ERR_HTTP_RESPONSE_CODE_FAILURE. The intended reply/retry/revocation behavior did not execute; do not infer a C03 product failure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation without a published answer selector keeps confirmation disabled after a reply preflight failure",
+      "status": "pass",
+      "duration_ms": 345.15,
+      "log_line": 956,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation reviews a real first C08 conflict before issuing a new reply identity and storage version",
+      "status": "fail",
+      "duration_ms": 261.81,
+      "log_line": 971,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:27:04.7175407Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:04.7207981Z                     ^\n2026-11-14T10:27:04.7211704Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:34541/sucafina/auth/local?code=75ae6791c47eeb2cb5a580eb5698f3b26d99f184f7d5a071b0fa80d1b426fd08\n2026-11-14T10:27:04.7215151Z Call log:\n2026-11-14T10:27:04.7216666Z   - navigating to \"http://127.0.0.1:34541/sucafina/auth/local?code=75ae6791c47eeb2cb5a580eb5698f3b26d99f184f7d5a071b0fa80d1b426fd08\", waiting until \"load\"\n2026-11-14T10:27:04.7227585Z \n2026-11-14T10:27:04.7228679Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:04.7229842Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:128:10\n2026-11-14T10:27:04.7230915Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:04.7251849Z (fail) conversation keeps a real committed reply uncertain when delivery replaces the producer result with an empty acknowledgement [274.95ms]\n2026-11-14T10:27:05.0692684Z (pass) conversation without a published answer selector keeps confirmation disabled after a reply preflight failure [345.15ms]\n2026-11-14T10:27:05.3198167Z 88 |     context = await bounded(browser.newContext(), \"open domain context\")\n2026-11-14T10:27:05.3219418Z 89 |     const page = await bounded(context.newPage(), \"open domain page\")\n2026-11-14T10:27:05.3233590Z 90 |     page.setDefaultTimeout(5_000)\n2026-11-14T10:27:05.3234207Z 91 |     const errors: string[] = []\n2026-11-14T10:27:05.3234749Z 92 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T10:27:05.3235487Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:05.3236082Z                     ^\n2026-11-14T10:27:05.3237293Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:43291/sucafina/auth/local?code=56c38ead9faf978ac01f0a581143676c88819b35eef2fe9f240168f0ab16291d\n2026-11-14T10:27:05.3238068Z Call log:\n2026-11-14T10:27:05.3238913Z   - navigating to \"http://127.0.0.1:43291/sucafina/auth/local?code=56c38ead9faf978ac01f0a581143676c88819b35eef2fe9f240168f0ab16291d\", waiting until \"load\"\n2026-11-14T10:27:05.3239616Z \n2026-11-14T10:27:05.3240659Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:05.3243179Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:177:5\n2026-11-14T10:27:05.3244655Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:05.3318388Z (fail) conversation reviews a real first C08 conflict before issuing a new reply identity and storage version [261.81ms]",
+      "test_body_entered": true,
+      "failure_family": "thread_fixture_auth_navigation_response_failure",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_CONVERSATION_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The real C03/C08 fixture was constructed, but auth/local navigation failed with ERR_HTTP_RESPONSE_CODE_FAILURE. The intended reply/retry/revocation behavior did not execute; do not infer a C03 product failure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation preserves the same uncertain reply when a later real C08 conflict cannot establish the earlier outcome",
+      "status": "fail",
+      "duration_ms": 290.28,
+      "log_line": 986,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:27:05.3234749Z 92 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T10:27:05.3235487Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:05.3236082Z                     ^\n2026-11-14T10:27:05.3237293Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:43291/sucafina/auth/local?code=56c38ead9faf978ac01f0a581143676c88819b35eef2fe9f240168f0ab16291d\n2026-11-14T10:27:05.3238068Z Call log:\n2026-11-14T10:27:05.3238913Z   - navigating to \"http://127.0.0.1:43291/sucafina/auth/local?code=56c38ead9faf978ac01f0a581143676c88819b35eef2fe9f240168f0ab16291d\", waiting until \"load\"\n2026-11-14T10:27:05.3239616Z \n2026-11-14T10:27:05.3240659Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:05.3243179Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:177:5\n2026-11-14T10:27:05.3244655Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:05.3318388Z (fail) conversation reviews a real first C08 conflict before issuing a new reply identity and storage version [261.81ms]\n2026-11-14T10:27:05.6060938Z 88 |     context = await bounded(browser.newContext(), \"open domain context\")\n2026-11-14T10:27:05.6062033Z 89 |     const page = await bounded(context.newPage(), \"open domain page\")\n2026-11-14T10:27:05.6062618Z 90 |     page.setDefaultTimeout(5_000)\n2026-11-14T10:27:05.6063756Z 91 |     const errors: string[] = []\n2026-11-14T10:27:05.6070230Z 92 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T10:27:05.6071374Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:05.6071940Z                     ^\n2026-11-14T10:27:05.6073172Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:42173/sucafina/auth/local?code=c17e3831c8e55473173b38abe61d9a71789739a20c9d762feed918c09ae6dc0f\n2026-11-14T10:27:05.6074063Z Call log:\n2026-11-14T10:27:05.6074756Z   - navigating to \"http://127.0.0.1:42173/sucafina/auth/local?code=c17e3831c8e55473173b38abe61d9a71789739a20c9d762feed918c09ae6dc0f\", waiting until \"load\"\n2026-11-14T10:27:05.6075393Z \n2026-11-14T10:27:05.6075995Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:05.6077996Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:215:5\n2026-11-14T10:27:05.6079109Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:05.6227539Z (fail) conversation preserves the same uncertain reply when a later real C08 conflict cannot establish the earlier outcome [290.28ms]",
+      "test_body_entered": true,
+      "failure_family": "thread_fixture_auth_navigation_response_failure",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_CONVERSATION_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The real C03/C08 fixture was constructed, but auth/local navigation failed with ERR_HTTP_RESPONSE_CODE_FAILURE. The intended reply/retry/revocation behavior did not execute; do not infer a C03 product failure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation refuses a different prepared answer and does not attach or confirm an older recipient message",
+      "status": "fail",
+      "duration_ms": 210.08,
+      "log_line": 1002,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:27:05.6071374Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:05.6071940Z                     ^\n2026-11-14T10:27:05.6073172Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:42173/sucafina/auth/local?code=c17e3831c8e55473173b38abe61d9a71789739a20c9d762feed918c09ae6dc0f\n2026-11-14T10:27:05.6074063Z Call log:\n2026-11-14T10:27:05.6074756Z   - navigating to \"http://127.0.0.1:42173/sucafina/auth/local?code=c17e3831c8e55473173b38abe61d9a71789739a20c9d762feed918c09ae6dc0f\", waiting until \"load\"\n2026-11-14T10:27:05.6075393Z \n2026-11-14T10:27:05.6075995Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:05.6077996Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:215:5\n2026-11-14T10:27:05.6079109Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:05.6227539Z (fail) conversation preserves the same uncertain reply when a later real C08 conflict cannot establish the earlier outcome [290.28ms]\n2026-11-14T10:27:05.8195374Z 305 |     if (mode(request) === \"collaboration-answer-prepare\") return ok({ ...preparedAnswer, answerRef: \"different-producer-selector\" })\n2026-11-14T10:27:05.8231330Z 306 |     throw new Error(\"A mismatched selector must not reach mutation\")\n2026-11-14T10:27:05.8231989Z 307 |   }, async (page) => {\n2026-11-14T10:27:05.8235575Z 308 |     await page.getByRole(\"button\", { name: \"Open conversation\", exact: true }).click()\n2026-11-14T10:27:05.8236712Z 309 |     const confirm = page.getByRole(\"button\", { name: \"Confirm this answer and add to decision\", exact: true })\n2026-11-14T10:27:05.8237616Z 310 |     expect(await confirm.count()).toBe(2)\n2026-11-14T10:27:05.8238008Z                                         ^\n2026-11-14T10:27:05.8238379Z error: expect(received).toBe(expected)\n2026-11-14T10:27:05.8238606Z \n2026-11-14T10:27:05.8238837Z Expected: 2\n2026-11-14T10:27:05.8239075Z Received: 0\n2026-11-14T10:27:05.8239240Z \n2026-11-14T10:27:05.8239682Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:310:35)\n2026-11-14T10:27:05.8240501Z       at async browserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:70:11)\n2026-11-14T10:27:05.8241326Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:302:9)\n2026-11-14T10:27:05.8313697Z (fail) conversation refuses a different prepared answer and does not attach or confirm an older recipient message [210.08ms]",
+      "test_body_entered": true,
+      "failure_family": "thread_selector_button_count_assertion",
+      "browser_journey_reached": true,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_ASSERTION_AT_RENDER_STATE",
+      "product_failure_inferred": false,
+      "scope": "After Open conversation the assertion expected2 confirmation buttons and observed0. The mismatch/preparation/attach negative was not reached; root cause not yet established."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation purges an uncertain real reply on authenticated session revocation without another domain effect",
+      "status": "fail",
+      "duration_ms": 270.13,
+      "log_line": 1017,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:27:05.8237616Z 310 |     expect(await confirm.count()).toBe(2)\n2026-11-14T10:27:05.8238008Z                                         ^\n2026-11-14T10:27:05.8238379Z error: expect(received).toBe(expected)\n2026-11-14T10:27:05.8238606Z \n2026-11-14T10:27:05.8238837Z Expected: 2\n2026-11-14T10:27:05.8239075Z Received: 0\n2026-11-14T10:27:05.8239240Z \n2026-11-14T10:27:05.8239682Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:310:35)\n2026-11-14T10:27:05.8240501Z       at async browserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:70:11)\n2026-11-14T10:27:05.8241326Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:302:9)\n2026-11-14T10:27:05.8313697Z (fail) conversation refuses a different prepared answer and does not attach or confirm an older recipient message [210.08ms]\n2026-11-14T10:27:06.0950020Z 88 |     context = await bounded(browser.newContext(), \"open domain context\")\n2026-11-14T10:27:06.0950513Z 89 |     const page = await bounded(context.newPage(), \"open domain page\")\n2026-11-14T10:27:06.0950828Z 90 |     page.setDefaultTimeout(5_000)\n2026-11-14T10:27:06.0951431Z 91 |     const errors: string[] = []\n2026-11-14T10:27:06.0951742Z 92 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T10:27:06.0952474Z 93 |     await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)\n2026-11-14T10:27:06.0953248Z                     ^\n2026-11-14T10:27:06.0954909Z error: goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://127.0.0.1:35357/sucafina/auth/local?code=94e5fcca24c9d53eeac371f4dbf36e7829fd603f7b565c31a6370d981bef4ac9\n2026-11-14T10:27:06.0955796Z Call log:\n2026-11-14T10:27:06.0957079Z   - navigating to \"http://127.0.0.1:35357/sucafina/auth/local?code=94e5fcca24c9d53eeac371f4dbf36e7829fd603f7b565c31a6370d981bef4ac9\", waiting until \"load\"\n2026-11-14T10:27:06.0959717Z \n2026-11-14T10:27:06.0960285Z       at domainBrowserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:93:16)\n2026-11-14T10:27:06.0961078Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts:275:5\n2026-11-14T10:27:06.0961598Z       at processTicksAndRejections (native:7:39)\n2026-11-14T10:27:06.1015218Z (fail) conversation purges an uncertain real reply on authenticated session revocation without another domain effect [270.13ms]",
+      "test_body_entered": true,
+      "failure_family": "thread_fixture_auth_navigation_response_failure",
+      "browser_journey_reached": false,
+      "intended_domain_assertions_reached": false,
+      "proof_completion": "FAILED_BEFORE_CONVERSATION_INTERACTION",
+      "product_failure_inferred": false,
+      "scope": "The real C03/C08 fixture was constructed, but auth/local navigation failed with ERR_HTTP_RESPONSE_CODE_FAILURE. The intended reply/retry/revocation behavior did not execute; do not infer a C03 product failure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation and decision attachment keep producer observation and exact transport bodies independently",
+      "status": "pass",
+      "duration_ms": 418.62,
+      "log_line": 1018,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation treats stale product-state-changed according to its commit boundary",
+      "status": "pass",
+      "duration_ms": 349.65,
+      "log_line": 1019,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation treats stale answer-scope-changed according to its commit boundary",
+      "status": "pass",
+      "duration_ms": 331.6,
+      "log_line": 1020,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-thread-read and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 319.69,
+      "log_line": 1021,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-thread-reply and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 330.23,
+      "log_line": 1022,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-answer-confirm and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 337.61,
+      "log_line": 1023,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real UI consumer with explicit transport/contract fixture. Not an executed C03/C08-domain, first-selector issuer, native or full-host proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "decision edit replays its frozen request after uncertainty and confirmed",
+      "status": "pass",
+      "duration_ms": 395.24,
+      "log_line": 1037,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "decision edit replays its frozen request after uncertainty and conflict",
+      "status": "pass",
+      "duration_ms": 375.13,
+      "log_line": 1038,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "a definite edit conflict compares current values without discarding the user's draft or enabling a restricted field",
+      "status": "pass",
+      "duration_ms": 287.12,
+      "log_line": 1039,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "decision edit 401 scrubs its fields, source context and future submissions",
+      "status": "pass",
+      "duration_ms": 332.75,
+      "log_line": 1040,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "decision edit 403 scrubs its fields, source context and future submissions",
+      "status": "pass",
+      "duration_ms": 334.9,
+      "log_line": 1041,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "a delayed current-value read cannot restore an edit after access revocation",
+      "status": "pass",
+      "duration_ms": 317.83,
+      "log_line": 1042,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "prepared application retains its reviewed request after uncertainty and confirmed",
+      "status": "pass",
+      "duration_ms": 445.77,
+      "log_line": 1043,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "prepared application retains its reviewed request after uncertainty and conflict",
+      "status": "pass",
+      "duration_ms": 449.56,
+      "log_line": 1044,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "prepared application 401 clears its former review and blocks another write",
+      "status": "pass",
+      "duration_ms": 333.66,
+      "log_line": 1045,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "prepared application 403 clears its former review and blocks another write",
+      "status": "pass",
+      "duration_ms": 332.97,
+      "log_line": 1046,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "a late prepared-change review cannot repopulate the revoked entry",
+      "status": "pass",
+      "duration_ms": 296.88,
+      "log_line": 1047,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "a malformed edit acknowledgement cannot unlock the unconfirmed intention or report a saved decision",
+      "status": "pass",
+      "duration_ms": 303.71,
+      "log_line": 1048,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "an initial apply conflict after domain receipt observation remains unconfirmed and replays the same intention",
+      "status": "pass",
+      "duration_ms": 410.06,
+      "log_line": 1049,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "shared Apply refuses a missing review proof before enabling confirmation",
+      "status": "pass",
+      "duration_ms": 306.16,
+      "log_line": 1050,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "shared Apply refuses a malformed review proof before enabling confirmation",
+      "status": "pass",
+      "duration_ms": 298.96,
+      "log_line": 1051,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "name": "shared Apply refuses a stale review proof before enabling confirmation",
+      "status": "pass",
+      "duration_ms": 300.08,
+      "log_line": 1052,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "monthly apply freezes its draft and replays the exact admitted request after a lost response",
+      "status": "pass",
+      "duration_ms": 408.19,
+      "log_line": 1066,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "the live monthly grid exposes only the published draft contract and preserves the existing record form",
+      "status": "pass",
+      "duration_ms": 215.27,
+      "log_line": 1067,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "monthly apply times out while reading an unfinished response body and retries the identical request",
+      "status": "pass",
+      "duration_ms": 10727.55,
+      "log_line": 1068,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "scenario analysis retries the prepared input and admission key without preparing another run",
+      "status": "pass",
+      "duration_ms": 292.15,
+      "log_line": 1069,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "decision framing retries its exact prepared input and start key without preparing again",
+      "status": "pass",
+      "duration_ms": 300.28,
+      "log_line": 1070,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "scenario 401 revokes its options and configuration and prevents another start",
+      "status": "pass",
+      "duration_ms": 269.28,
+      "log_line": 1071,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "scenario 403 revokes its options and configuration and prevents another start",
+      "status": "pass",
+      "duration_ms": 280.04,
+      "log_line": 1072,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "forecast start recovers an uncertain admission without changing its model or payload",
+      "status": "pass",
+      "duration_ms": 317.04,
+      "log_line": 1073,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice freezes the comparison and reason and retries the exact serialized intention after a lost response",
+      "status": "pass",
+      "duration_ms": 433.64,
+      "log_line": 1074,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an unverifiable choice acknowledgement followed by a conflict remains frozen for reconciliation",
+      "status": "pass",
+      "duration_ms": 396.52,
+      "log_line": 1075,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice 401 removes the comparison, reason and context and blocks another submission",
+      "status": "pass",
+      "duration_ms": 335.76,
+      "log_line": 1076,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice 403 removes the comparison, reason and context and blocks another submission",
+      "status": "pass",
+      "duration_ms": 352.73,
+      "log_line": 1077,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a comparison read finishing after access revocation cannot restore private choice data",
+      "status": "pass",
+      "duration_ms": 327.27,
+      "log_line": 1078,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice deadline includes a stalled response body and preserves its exact request for retry",
+      "status": "pass",
+      "duration_ms": 10371.24,
+      "log_line": 1079,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an initially rejected choice preserves editable entries and uses a new intention after correction",
+      "status": "pass",
+      "duration_ms": 382.55,
+      "log_line": 1080,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a sensitivity conflict preserves its request and a known result is reread without evaluating again",
+      "status": "pass",
+      "duration_ms": 581.92,
+      "log_line": 1081,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "independent review freezes the original author and replays its prepared request after a lost start response",
+      "status": "pass",
+      "duration_ms": 349.94,
+      "log_line": 1082,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "independent review does not replace an uncertain author request after a conflict",
+      "status": "pass",
+      "duration_ms": 367.36,
+      "log_line": 1083,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a delayed review preparation cannot start or restore data after analysis access is revoked",
+      "status": "pass",
+      "duration_ms": 358.89,
+      "log_line": 1084,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an opened result without an available reviewer offers no fabricated review action",
+      "status": "pass",
+      "duration_ms": 243.73,
+      "log_line": 1085,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "history preserves a reason on transient failure, then removes restricted output on revocation",
+      "status": "pass",
+      "duration_ms": 293.97,
+      "log_line": 1086,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a stale analysis preserves the reason but disables acceptance and removes its old result",
+      "status": "pass",
+      "duration_ms": 269.48,
+      "log_line": 1087,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "conversation refresh asks before discarding an unsent reply and preserves it when reading fails",
+      "status": "pass",
+      "duration_ms": 414.12,
+      "log_line": 1088,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "reply retry preserves the exact thread mutation after an uncertain write",
+      "status": "pass",
+      "duration_ms": 348.11,
+      "log_line": 1089,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an unknown monthly write followed by a row conflict remains unresolved and locked",
+      "status": "pass",
+      "duration_ms": 401.53,
+      "log_line": 1090,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a definitive rejected analysis start unlocks input without treating it as an uncertain admission",
+      "status": "pass",
+      "duration_ms": 253.71,
+      "log_line": 1091,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a queued history refresh observes a new run after an older empty list finishes",
+      "status": "pass",
+      "duration_ms": 214.54,
+      "log_line": 1092,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an earlier authorized list cannot repopulate results after an output revocation",
+      "status": "pass",
+      "duration_ms": 822.12,
+      "log_line": 1093,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "answer confirmation preflight failure restores the reply and conversation controls",
+      "status": "pass",
+      "duration_ms": 309.8,
+      "log_line": 1094,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "question 401 clears the draft and context and fences an older recipient response",
+      "status": "pass",
+      "duration_ms": 398.76,
+      "log_line": 1095,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "question 403 clears the draft and context and fences an older recipient response",
+      "status": "pass",
+      "duration_ms": 372.29,
+      "log_line": 1096,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "transient question recipient and preflight failures preserve the selected recipient and editable draft",
+      "status": "pass",
+      "duration_ms": 323.94,
+      "log_line": 1097,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "question creation replays its frozen request after uncertainty and retries attachment without creating another thread",
+      "status": "pass",
+      "duration_ms": 456.67,
+      "log_line": 1098,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an initial definite question rejection permits correction with a new request identity",
+      "status": "pass",
+      "duration_ms": 333.1,
+      "log_line": 1099,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the preserved UI/transport contract assertions at exactW8. This does not replace full domain/host/native composition proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "a removed plan produces a sanitized personal placeholder and can be explicitly replaced with the authorized current page",
+      "status": "pass",
+      "duration_ms": 606.55,
+      "log_line": 1146,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for real sanitized unavailable-view replacement/removal and no automatic preferred navigation, at exactW8."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "an unavailable preferred destination is never opened automatically and its private preference can be removed",
+      "status": "pass",
+      "duration_ms": 449.57,
+      "log_line": 1172,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for real sanitized unavailable-view replacement/removal and no automatic preferred navigation, at exactW8."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "an earlier real saved-view response cannot restore private labels after the session is revoked",
+      "status": "fail",
+      "duration_ms": 5450.16,
+      "log_line": 1364,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T10:27:54.2580025Z   elapsedMs: 0,\n2026-11-14T10:27:54.2580284Z }\n2026-11-14T10:27:54.2580732Z WP01 saved views phase {\n2026-11-14T10:27:54.2581085Z   phase: \"remove saved views directory\",\n2026-11-14T10:27:54.2581417Z   state: \"started\",\n2026-11-14T10:27:54.2581674Z }\n2026-11-14T10:27:54.2581945Z WP01 saved views phase {\n2026-11-14T10:27:54.2582254Z   phase: \"remove saved views directory\",\n2026-11-14T10:27:54.2582562Z   state: \"completed\",\n2026-11-14T10:27:54.2582856Z   elapsedMs: 0,\n2026-11-14T10:27:54.2583122Z }\n2026-11-14T10:27:54.2583432Z WP01 browser lease released {\n2026-11-14T10:27:54.2583742Z   pid: 4110,\n2026-11-14T10:27:54.2584019Z   lease: 5,\n2026-11-14T10:27:54.2584290Z   releases: 5,\n2026-11-14T10:27:54.2584580Z   contexts: 0,\n2026-11-14T10:27:54.2584863Z }\n2026-11-14T10:27:54.2600618Z 27 |   console.info(\"WP01 saved views phase\", { phase, state: \"started\" })\n2026-11-14T10:27:54.2601165Z 28 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T10:27:54.2602479Z 29 |   try {\n2026-11-14T10:27:54.2602915Z 30 |     const value = await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T10:27:54.2603614Z 31 |       timer = setTimeout(() => reject(new Error(`Saved views timed out: ${phase}`)), 5_000)\n2026-11-14T10:27:54.2618128Z                                                ^\n2026-11-14T10:27:54.2618786Z error: Saved views timed out: read the delayed authorized response body\n2026-11-14T10:27:54.2619798Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:31:43)\n2026-11-14T10:27:54.2621047Z (fail) an earlier real saved-view response cannot restore private labels after the session is revoked [5450.16ms]",
+      "test_body_entered": true,
+      "failure_family": "saved_view_delayed_response_body_timeout",
+      "browser_journey_reached": true,
+      "proof_completion": "INCONCLUSIVE_RESPONSE_BODY_TIMEOUT",
+      "product_failure_inferred": false,
+      "scope": "The named5s phase read the delayed authorized response body timed out. The real revoked-read phase and cleanup occurred, but the final delayed-body/private-DOM proof did not finish. No privacy violation assertion failed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "name": "two authenticated principals preserve the losing draft and reconcile a real version conflict only after explicit review",
+      "status": "pass",
+      "duration_ms": 881.37,
+      "log_line": 1372,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for two encrypted authenticated principals and canonical version conflict with retained losing draft and explicit review. Does not prove the separate DecisionCase editor fixture."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "name": "the real 30-second refresh authorizes the page, offers the lifecycle event and replaces unclaimed content",
+      "status": "pass",
+      "duration_ms": 30363.62,
+      "log_line": 1386,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real authenticated shell refresh/dirty/uncertain boundary. Tests observe the unclaimed lifecycle event; no positive resident BI mounting claim."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "name": "dirty forms block the lifecycle handoff while real logout still purges the authorized page",
+      "status": "pass",
+      "duration_ms": 405.57,
+      "log_line": 1387,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real authenticated shell refresh/dirty/uncertain boundary. Tests observe the unclaimed lifecycle event; no positive resident BI mounting claim."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "name": "a committed save with lost delivery cannot hand its uncertain form to a page refresh or replay it",
+      "status": "pass",
+      "duration_ms": 444.33,
+      "log_line": 1388,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "PASS for the real authenticated shell refresh/dirty/uncertain boundary. Tests observe the unclaimed lifecycle event; no positive resident BI mounting claim."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "status": "pass",
+      "duration_ms": 63.62,
+      "log_line": 1426,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "scope": "Browser harness observation only; lifecycle and spawn boundaries are separate from business/native acceptance."
+    }
+  ],
+  "proof_records": {
+    "SF_BROWSER_DRIVER_PHASE": [
+      {
+        "log_line": 836,
+        "observed_at": "2026-11-14T10:26:16.2937443Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 837,
+        "observed_at": "2026-11-14T10:26:16.6234964Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-imported",
+          "elapsedMs": 330
+        }
+      },
+      {
+        "log_line": 838,
+        "observed_at": "2026-11-14T10:26:16.6318751Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-service",
+          "elapsedMs": 337
+        }
+      },
+      {
+        "log_line": 839,
+        "observed_at": "2026-11-14T10:26:16.6319488Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawn",
+          "elapsedMs": 337
+        }
+      },
+      {
+        "log_line": 840,
+        "observed_at": "2026-11-14T10:26:16.6419776Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawned",
+          "elapsedMs": 348,
+          "driverPid": 4095
+        }
+      },
+      {
+        "log_line": 841,
+        "observed_at": "2026-11-14T10:26:16.6635047Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-import",
+          "elapsedMs": 370,
+          "driverPid": 4095
+        }
+      },
+      {
+        "log_line": 842,
+        "observed_at": "2026-11-14T10:26:16.8950168Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-imported",
+          "elapsedMs": 601,
+          "driverPid": 4095
+        }
+      },
+      {
+        "log_line": 843,
+        "observed_at": "2026-11-14T10:26:16.9027123Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launch",
+          "elapsedMs": 608,
+          "driverPid": 4095
+        }
+      },
+      {
+        "log_line": 850,
+        "observed_at": "2026-11-14T10:26:21.1475133Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launched",
+          "elapsedMs": 4854,
+          "driverPid": 4095
+        }
+      },
+      {
+        "log_line": 851,
+        "observed_at": "2026-11-14T10:26:21.1476365Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-ready",
+          "elapsedMs": 4854,
+          "driverPid": 4095,
+          "browserPid": 4110
+        }
+      },
+      {
+        "log_line": 852,
+        "observed_at": "2026-11-14T10:26:21.1477452Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "pipe-verify",
+          "elapsedMs": 4854,
+          "driverPid": 4095,
+          "browserPid": 4110
+        }
+      },
+      {
+        "log_line": 853,
+        "observed_at": "2026-11-14T10:26:21.1478786Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connect",
+          "elapsedMs": 4854,
+          "driverPid": 4095,
+          "browserPid": 4110
+        }
+      },
+      {
+        "log_line": 854,
+        "observed_at": "2026-11-14T10:26:21.2007851Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connected",
+          "elapsedMs": 4906,
+          "driverPid": 4095,
+          "browserPid": 4110
+        }
+      },
+      {
+        "log_line": 1405,
+        "observed_at": "2026-11-14T10:28:26.4239940Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-closed",
+          "elapsedMs": 130130,
+          "driverPid": 4095
+        }
+      },
+      {
+        "log_line": 1406,
+        "observed_at": "2026-11-14T10:28:26.4348448Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-exited",
+          "elapsedMs": 130141,
+          "driverPid": 4095,
+          "exitCode": 0
+        }
+      }
+    ],
+    "SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC": [
+      {
+        "log_line": 844,
+        "observed_at": "2026-11-14T10:26:16.9028770Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 100814848,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 845,
+        "observed_at": "2026-11-14T10:26:17.9025082Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 1001,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 846,
+        "observed_at": "2026-11-14T10:26:18.9031861Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 2001,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 847,
+        "observed_at": "2026-11-14T10:26:19.9038888Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 3002,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 848,
+        "observed_at": "2026-11-14T10:26:20.9048729Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 4003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "R (running)",
+              "wait": "0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 849,
+        "observed_at": "2026-11-14T10:26:21.1472727Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 4246,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103714816,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "SF_WP02_BROWSER_DRIVER_PROOF": [
+      {
+        "log_line": 1425,
+        "observed_at": "2026-11-14T10:28:26.4397098Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4075
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4095
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4110,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 1396,
+            "framesFromBrowser": 4192,
+            "peakQueuedBytes": 24908,
+            "peakBufferedBytes": 1839,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ]
+  },
+  "limits": [
+    "76 named tests observed, including startup/finalizer; zero failing beforeAll hooks. Eight failures occur before the intended business/browser setup completes; distinguish those from the selector assertion and saved-view response-body proof timeout.",
+    "Full shared-browser physical cleanup passes at this exact W8. It does not prove the cause of prior launch stalls or convert previous failed runs to success.",
+    "Five intended real C03/C08 journeys fail at auth navigation. The other eight passing thread observations are transport/contract component scope, not native/whole-host acceptance.",
+    "All product observations belong only to W770ca62a / Sffd772bc and request9. Native/integration/S0 gates remain separate."
+  ],
+  "final_run_metadata": {
+    "id": 43585122170,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKJeAveg",
+    "head_branch": "ci-run-linux-astra-interface-770ca62aa9-11295a026d-1",
+    "head_sha": "ffd772bc35e72a2c267b469c28ab5a6f83ceac34",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "ci(sucafina): request W8 bounded driver and blocked recovery consumers",
+    "run_number": 416,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 416464764,
+    "check_suite_id": 118014549342,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbejcdXg",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43585122170",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43585122170",
+    "pull_requests": [],
+    "created_at": "2026-11-14T10:24:18Z",
+    "updated_at": "2026-11-14T10:28:32Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T10:24:18Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43585122170/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43585122170/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118014549342",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43585122170/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43585122170/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43585122170/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "ffd772bc35e72a2c267b469c28ab5a6f83ceac34",
+      "tree_id": "081b91929df4f27b9bcb46801b8a996083215051",
+      "message": "ci(sucafina): request W8 bounded driver and blocked recovery consumers",
+      "timestamp": "2026-11-14T10:24:07Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "final_job_metadata": [
+    {
+      "id": 132417843606,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43585122170,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132418811756,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43585122170,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "cleanup_job_log": {
+    "file": "product-43585122170.cleanup.log",
+    "bytes": 2322,
+    "sha256": "6918cdb37bcf57712abb0326ed4bd9f0b4690d2f48cd878d61baa94fa1268ff7"
+  },
+  "cleanup_scope": "Workflow ref cleanup succeeded independently of the physical browser proof.",
+  "physical_lifecycle": {
+    "status": "PASS",
+    "log_line": 1425,
+    "record": {
+      "consumer": "wp01-shared-pool",
+      "clientRuntime": {
+        "name": "bun",
+        "version": "1.3.14",
+        "pid": 4075
+      },
+      "driverRuntime": {
+        "name": "node",
+        "version": "24.22.2",
+        "pid": 4095
+      },
+      "playwrightVersion": "1.59.1",
+      "browserVersion": "157.0.8103.50",
+      "browserPid": 4110,
+      "transport": "playwright-unix-pipe-node-websocket",
+      "spawnBoundary": "AppProcess",
+      "browserStdioCount": 5,
+      "browserUsesPipe": true,
+      "browserPipeOwner": "node",
+      "bridge": {
+        "framing": "json-nul",
+        "acceptedClients": 1,
+        "framesToBrowser": 1396,
+        "framesFromBrowser": 4192,
+        "peakQueuedBytes": 24908,
+        "peakBufferedBytes": 1839,
+        "maxFrameBytes": 16777216,
+        "maxQueuedBytes": 33554432,
+        "directoryMode": 448,
+        "socketMode": 384
+      },
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    },
+    "pool": {
+      "launches": 1,
+      "acquisitions": 7,
+      "releases": 7,
+      "contexts": 0,
+      "activeLease": false,
+      "disconnected": true,
+      "driverClosed": true,
+      "processExited": true
+    },
+    "scope": "Proved at exactW8 only; this does not diagnose why prior independent launches stalled."
+  },
+  "startup_diagnostic": {
+    "driverBlob": "174a976308f00e604310b66fadf5fbf202808802",
+    "driverPid": 4095,
+    "browserPid": 4110,
+    "browserConnectedElapsedMs": 4906,
+    "observations": [
+      {
+        "log_line": 844,
+        "observed_at": "2026-11-14T10:26:16.9028770Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 100814848,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 845,
+        "observed_at": "2026-11-14T10:26:17.9025082Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 1001,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 846,
+        "observed_at": "2026-11-14T10:26:18.9031861Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 2001,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 847,
+        "observed_at": "2026-11-14T10:26:19.9038888Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 3002,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 848,
+        "observed_at": "2026-11-14T10:26:20.9048729Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 4003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101732352,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "R (running)",
+              "wait": "0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 849,
+        "observed_at": "2026-11-14T10:26:21.1472727Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4095,
+          "elapsedMs": 4246,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103714816,
+          "children": [
+            {
+              "pid": 4110,
+              "parent": 4095,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "finding": "A real Chrome child was visible at1001ms, then Browser.getVersion remained pending until readiness around4246ms. Recorded child waits varied disk-sleep/folio_wait_bit_common, futex sleep and running.",
+    "limit": "No stall occurred in this launch. These samples do not establish the root cause or fix of W6/W7 timeouts; protocol and child diagnostics only expose the bounded startup boundary."
+  }
+}

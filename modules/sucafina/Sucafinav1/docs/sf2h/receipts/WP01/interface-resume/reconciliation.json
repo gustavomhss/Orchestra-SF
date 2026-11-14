@@ -1,0 +1,821 @@
+{
+  "schema": "astra.interface-resume.reconciliation.v1",
+  "inputHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+  "preservedOrigins": [
+    {
+      "pr": 25,
+      "branch": "astra-wp01",
+      "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "ancestorOfInput": true,
+      "remoteHeadRechecked": true
+    },
+    {
+      "pr": 21,
+      "branch": "astra-wp02",
+      "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "ancestorOfInput": true,
+      "remoteHeadRechecked": true
+    }
+  ],
+  "initialPinnedRead": {
+    "schema": "sf.interface.resume.upstream-read-only.v1",
+    "observedAt": "2026-11-14T16:17:03Z",
+    "repository": "gustavomhss/Orchestra-SF",
+    "inputHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+    "rootWriterOnly": true,
+    "noProductStaticOrTestExecution": true,
+    "readFirst": [
+      "WP01/astra-interface/README.md",
+      "WP01/astra-interface/inputs/final-independent-metadata-audit.json"
+    ],
+    "heads": [
+      {
+        "pr": 25,
+        "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "branch": "astra-wp01",
+        "draft": true
+      },
+      {
+        "pr": 21,
+        "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "branch": "astra-wp02",
+        "draft": true
+      },
+      {
+        "pr": 31,
+        "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "branch": "astra-interface",
+        "draft": true
+      },
+      {
+        "pr": 29,
+        "head": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "branch": "astra-wp10",
+        "draft": true
+      },
+      {
+        "pr": 32,
+        "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "branch": "astra-compose",
+        "draft": true
+      }
+    ],
+    "stack": {
+      "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+    },
+    "BI": {
+      "disposition": "REATTACH_EXTERNAL_SCOPED_PASS_NO_OWN_SEAM_GAP_NO_WHOLE_HEAD_EQUIVALENCE",
+      "product": {
+        "W": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+      },
+      "snapshot": {
+        "S": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4",
+        "tree": "823a2081fbc1fab1f39e441cf0f9bd3fa34687e1",
+        "parents": [
+          "9048e0e65351a5bd80768458a79fed94a4993db7"
+        ],
+        "onlyChangedPath": ".ci-run.json"
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "requestSha256": "b7e57c0f9591b817e4d387c73e29d1875c1fbb684dd100687dd6b1a688475d2a",
+      "run": 43605201442,
+      "job": 132478265438,
+      "cleanupJob": 132478786112,
+      "conclusion": "success",
+      "attempt": 1,
+      "pass": 5,
+      "fail": 0,
+      "expects": 114,
+      "seconds": 16.02,
+      "Omni": {
+        "declaredTests": 4,
+        "spawns": 4,
+        "delegated": 0,
+        "verdict": "pass"
+      },
+      "test": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+        "blob": "a6e4dbe4bddc18866a8fe8082fa889540ac75972"
+      },
+      "primarySourceManifest": [
+        {
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "blob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+          "inputBlob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+          "inputAbsenceVerified": false,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/modules/sucafina/Sucafinav1/src/screen-shell.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/bi-entry.ts",
+          "blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
+          "inputBlob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
+          "inputAbsenceVerified": false,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/modules/sucafina/Sucafinav1/product/interface/bi-entry.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+          "inputBlob": null,
+          "inputAbsenceVerified": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/bi-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "blob": "5b3de578ce8204e8985076fe72240fdbc4d47286",
+          "inputBlob": null,
+          "inputAbsenceVerified": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/extended-http.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+          "blob": "e491194f76b2183d04666a7f82c53a9490822678",
+          "inputBlob": null,
+          "inputAbsenceVerified": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/extended-bi-browser.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-bi-navigation.ts",
+          "blob": "667a17266280c46b73b9b78d6e65fc0fdf924811",
+          "inputBlob": null,
+          "inputAbsenceVerified": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/extended-bi-navigation.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-bi-navigation-view.ts",
+          "blob": "2296b8a2ff874f22e074666f8fa5d4e6432fb5c9",
+          "inputBlob": null,
+          "inputAbsenceVerified": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/extended-bi-navigation-view.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+          "blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+          "inputBlob": "cd43fad88f3424ac160f32be743df17b80a74336",
+          "inputAbsenceVerified": false,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts"
+        }
+      ],
+      "proofs": [
+        "2026-11-14T14:32:07.0475792Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-contextual-controls\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4078},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":4099},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":4114,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":71,\"framesFromBrowser\":189,\"peakQueuedBytes\":2545,\"peakBufferedBytes\":913,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}",
+        "2026-11-14T14:32:07.0479358Z (pass) BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success [4333.16ms]",
+        "2026-11-14T14:32:09.4050846Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-contextual-controls\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4078},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":4236},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":4251,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":48,\"framesFromBrowser\":131,\"peakQueuedBytes\":2545,\"peakBufferedBytes\":868,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}",
+        "2026-11-14T14:32:09.4054577Z (pass) the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render [2357.29ms]",
+        "2026-11-14T14:32:11.8733518Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-contextual-controls\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4078},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":4374},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":4389,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":33,\"framesFromBrowser\":102,\"peakQueuedBytes\":2458,\"peakBufferedBytes\":912,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}",
+        "2026-11-14T14:32:11.8739236Z (pass) clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection [2468.05ms]",
+        "2026-11-14T14:32:17.6570019Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-contextual-controls\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4078},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":4514},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":4529,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":84,\"framesFromBrowser\":213,\"peakQueuedBytes\":3063,\"peakBufferedBytes\":1223,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}",
+        "2026-11-14T14:32:17.6573558Z (pass) BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization [5783.85ms]",
+        "2026-11-14T14:32:18.3094920Z (pass) BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly [652.69ms]",
+        "2026-11-14T14:32:18.3100715Z omni positive control [7b19b299b892fc9d0777b0a87e16f2b7]: pass (declared: 4 test(s) in Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts); 4 omni spawn(s), 0 delegated."
+      ],
+      "limits": [
+        "Shell and original WP01 bi-entry blobs match input9d65 exactly.",
+        "BI extended host/browser is different composition, not present in input9d65.",
+        "Test driver76188b differs from input9d65 cd43; no physical lifecycle proof transfer to the latter.",
+        "Source equality of two UI blobs does not prove transitive or whole-head equivalence.",
+        "Remaining viewport/reflow/six destinations/detail-refresh/keyboard/p95 and native/global gates are separate."
+      ]
+    },
+    "C05": {
+      "disposition": "PUBLISHED_PRODUCER_AND_SCOPED_PASS_EXIST_BUT_MINIMAL_PRODUCTION_WIRING_NOT_CLOSED_ON_INPUT",
+      "producerHead": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+          "currentBlob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+          "testedBlob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+          "inputBlob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/dashboard-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-history.ts",
+          "currentBlob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+          "testedBlob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+          "inputBlob": null,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-history.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+          "currentBlob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+          "testedBlob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+          "inputBlob": null,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-read-integrity.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+          "currentBlob": "012c83ed8b6382bebc0046526985f2f900f04035",
+          "testedBlob": "012c83ed8b6382bebc0046526985f2f900f04035",
+          "inputBlob": null,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-calculation-history.ts"
+        }
+      ],
+      "tested": {
+        "W": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+        "tree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+        "S": "12988ada266de298d0ec0ba9d8968845ae4c7782",
+        "snapshotTree": "3dda72fd38e3b226ce0572f31c524af704d2aeaa",
+        "run": 43595658990,
+        "job": 132449464415,
+        "cleanupJob": 132458606193,
+        "aggregate": "FAILURE: 105 pass /17 fail /1 error; 3628 expects;122 tests/22 files",
+        "scopedPass": [
+          "2026-11-14T13:08:47.7374035Z (pass) Dashboard C05 history retains its captured number after an edit and denies current ACL loss or a replacement source incarnation [15692.75ms]",
+          "2026-11-14T13:09:07.7317538Z (pass) Dashboard C05 history requires its own intact capture and receipt despite an authentic successor with the same captured source [19994.32ms]"
+        ],
+        "test": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+          "blob": "65830f907e4f0605ef4d746da436adebd73d91fb"
+        }
+      },
+      "closure": {
+        "newFiles": [
+          "review-history.ts",
+          "review-read-integrity.ts",
+          "review-calculation-history.ts"
+        ],
+        "requiredMount": "createSfDashboardServices({... evidence: context}) after actual BusinessContext declaration",
+        "inputMount": "business-services.ts:b289a4a line97 supplies no evidence; line98 onward declares context. Four-file exact intake alone falls back to fresh-only reviews and does not enable historical path.",
+        "currentMount": {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "c851f877970b18927bb2bcab96de5699fd8eaada",
+          "line": 160,
+          "testedBlob": "e4080b5212f6320c4bbcbb707f67c1ebb37a9361"
+        },
+        "transitive": "review-history imports review-calculation-history; both use existing contracts/real C08/source lifecycle; review-read-integrity uses actual C08 receipts and host. Generic calculation branch requires canonical schemas/state shape; no native inference implied.",
+        "safeAction": "Owner WP10/Compose to publish a minimal BCS mount delta compatible with retained interface BCS, or root to retain existing published proof as external and hand off exact dependency. Do not copy entire current BCS or edit out-of-ownership host path."
+      },
+      "preservation": [
+        "Keep existing meeting-number.test.ts blob53834c8c0802bf90a2336527460e2ecbf9aa8c97 and its original positive assertion (1300->2400 via actual command).",
+        "Published WP10 test is distinct:1200->1800 via actual store producer; its2 scoped PASS do not convert the interface test's W12 FAIL.",
+        "New historicalServices preserves fresh-only preserve/preview; only read/discovery/previous-review uses stored capture with current source incarnation and authority."
+      ]
+    },
+    "remainingExternal": [
+      {
+        "key": "F04/first-save",
+        "evidence": "dashboard-http.ts=c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c unchanged in input,#32,#29; no admitted draft-source reauthorization or first-intent lookup route"
+      },
+      {
+        "key": "G03-known-CAS",
+        "evidence": "case-selection.ts=ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0 in #32 and collab-resume input2784; proposal89c1336 remains unapplied in checked inputs"
+      },
+      {
+        "key": "draft-after-case-advance",
+        "evidence": "hot-topic-draft.ts=d8a151c558227b3bd2612dbb6caba993efa85783 in#29/#32 has post-callback fences but register allowed(current exact case version) precedes prior receipt branch (92 vs93); readCurrent also exact version"
+      },
+      {
+        "key": "C12",
+        "evidence": "Published #29 Dashboard evidence/readOriginal and operation verifier compositions exist; one dashboard-after-apply case passes in43595658990. Current input retains older BCS and old dashboard-decisions; safe selective closure still needs owner reconciliation and preserved partial-domain/replay proof."
+      },
+      {
+        "key": "work signals/destinations",
+        "evidence": "#29 WorkSignals b80bddf1a0ea4343362f1c18f291de6aaa6e475d, destinations506888f365643e0276d9098c6b924186212da5ee, work-httpb2dc424d96a67ddd581abbc460cfb938b35e0447 exist; depend on BCS workBridge/withCase and root binding. They are not absent, but no whole-BCS input intake approved."
+      }
+    ]
+  },
+  "laterPublishedDeltaRead": {
+    "schema": "sf-interface-upstream-prepublication-v1",
+    "observedHeadsAt": "2026-11-14T16:27:49Z",
+    "completedAt": "2026-11-14T16:30:30Z",
+    "previousSnapshot": {
+      "path": "/workspace/scratch/48348af13150/context/upstream-reconcile-readonly.json",
+      "sha256": "c252566013e169304ed893eddf96777210e72d6353816896fb4ed3a93929c14d",
+      "preserved": true
+    },
+    "repository": "gustavomhss/Orchestra-SF",
+    "remoteAccess": "GitHub MCP GET only",
+    "noIntake": true,
+    "heads": [
+      {
+        "ref": "pr31",
+        "previousHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "observedHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "changed": false,
+        "source": "https://github.com/gustavomhss/Orchestra-SF/pull/31"
+      },
+      {
+        "ref": "pr29",
+        "previousHead": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+        "observedHead": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "changed": true,
+        "source": "https://github.com/gustavomhss/Orchestra-SF/pull/29"
+      },
+      {
+        "ref": "pr32",
+        "previousHead": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "observedHead": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "changed": false,
+        "source": "https://github.com/gustavomhss/Orchestra-SF/pull/32"
+      },
+      {
+        "ref": "sf2-stack",
+        "previousHead": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "observedHead": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "changed": false,
+        "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+        "source": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches/sf2-stack"
+      },
+      {
+        "ref": "collab-resume",
+        "previousHead": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+        "observedHead": "ff557552936197b6734e57f0ecea0c44b19139b1",
+        "changed": true,
+        "tree": "0349fb1b18315a9c7c0cadb04b738ea499beda05",
+        "source": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches/collab-resume"
+      },
+      {
+        "ref": "finance-resume",
+        "previousHead": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "observedHead": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "changed": true,
+        "tree": "de5d3f65d6d262c05a6447aa21f26c63dfbbf1c1",
+        "source": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches/finance-resume"
+      },
+      {
+        "ref": "interface-resume",
+        "previousHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "observedHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "changed": false,
+        "tree": "cbf56c2c58b4a7a3cb89b7b2de3a18953ae6e7b0",
+        "source": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches/interface-resume"
+      }
+    ],
+    "deltas": {
+      "wp10": {
+        "base": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+        "head": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "changedFileCount": 28,
+        "tree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+        "soleParent": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+        "relevantFile": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+          "blob": "20c02e25b9c26b34b9cbecf407027bd80de48dae"
+        },
+        "otherChanges": "27 new receipt paths",
+        "compatibility": "One fixture-only explicit-type correction (Snapshot/BlobTransaction parameters) plus receipts. No Dashboard services, historical helper, BCS, HTTP, or collaboration producer path changed from previous W24; the earlier C05 4-file pins and owner-only mount proposal retain their exact bases.",
+        "source": "https://github.com/gustavomhss/Orchestra-SF/compare/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9...3d59829e5d9e438cbb443428a9479d7f63b5bf31"
+      },
+      "collaboration": {
+        "base": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+        "head": "ff557552936197b6734e57f0ecea0c44b19139b1",
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "changedFileCount": 7,
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/increment01.json",
+            "blob": "bcba62d3e7d856f11b134f9fc2ee9b905ff5c262",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/intake-verified.json",
+            "blob": "f5ac0008345a34c00bc3b9182a60372c7bf0b83e",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/routines/schedule.ts",
+            "blob": "c2f76fb6ebf2f05b8b89a08561bfac14cc52ad66",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts",
+            "blob": "8fc4478a9b2ddde3a57c9e8e3cb5d992eb99b8c1",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+            "blob": "565b2d8310332a9c1d6ad9faeeecea6724815baf",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+            "blob": "22621b560281260d6b10a9dbc3bd1382043ad845",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+            "blob": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+            "status": "modified"
+          }
+        ],
+        "incrementReceipt": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/increment01.json",
+          "blob": "bcba62d3e7d856f11b134f9fc2ee9b905ff5c262"
+        },
+        "change": "Routine schedule operations capture provider objects/methods for each invocation and refuse replacement before/after awaited calls, retaining method receivers and arguments. WP07 deltas are test fixtures; increment declares preserved assertions and restoration of the original SQLite case.",
+        "interfaceImpact": "No change to Dashboard agenda producer, Hot Topic draft/replay producer, case-selection CAS producer, Dashboard historical helpers or BCS mount. This does not close F04/first-save lookup/C05/C12/G03 or compose reviewContexts.",
+        "validation": "Increment receipt says IMPLEMENTED_PENDING_HOSTED_VALIDATION. No new run lookup or PASS attribution performed in this recheck.",
+        "source": "https://github.com/gustavomhss/Orchestra-SF/compare/2784daafbb0d3b58b6019822288a07fa38e5c5b0...ff557552936197b6734e57f0ecea0c44b19139b1"
+      },
+      "finance": {
+        "base": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "head": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "status": "ahead",
+        "aheadBy": 23,
+        "behindBy": 0,
+        "totalCommits": 23,
+        "changedFileCount": 181,
+        "selectedPublishedSources": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+            "blob": "caa3b783b41f95287bba8a4bab3c652c8375c320"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+            "blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "change": "23 commits, 181 paths: WP13 portfolio/planner/history/sensitivity closure and tests/receipts plus rate-identity qualification. No apps/cli host file, Dashboard historical helper, Dashboard HTTP or Hot Topic draft producer appears in the compare.",
+        "compatibility": "Owner publication retained as a distinct source; not an intake candidate for Interface. No runtime equivalence, Finance acceptance, or closure transfer inferred.",
+        "source": "https://github.com/gustavomhss/Orchestra-SF/compare/ec052c2c3bef96f492512f3d5f663919580f25c8...3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5"
+      }
+    },
+    "preservedDecisions": [
+      "BI W17 proof remains scoped to the original producer/UI pins; current shell-state mutation prevents calling the whole current Interface product equivalent.",
+      "C05 owner-only mounting patch remains un-applied and conditional on exact helpers; no BCS wholesale intake.",
+      "Previous source snapshot and findings remain historical, with these new advances recorded separately."
+    ]
+  },
+  "finalPublishedDeltaRead": {
+    "schema": "sf-interface-upstream-final-reconcile-v1",
+    "observedAt": "2026-11-14T16:40:45Z",
+    "repository": "gustavomhss/Orchestra-SF",
+    "scope": "Only the six requested upstream heads and changed path names since the 16:27:49 snapshot. No source intake, product edit, semantic acceptance, workflow/run qualification, or branch mutation.",
+    "remoteChannel": "GitHub MCP GET",
+    "previousSnapshots": [
+      {
+        "path": "/workspace/scratch/48348af13150/context/upstream-reconcile-prepublication-20261114T162749Z.json",
+        "observedAt": "2026-11-14T16:27:49Z",
+        "sha256": "06b81295a6d3288bc3c2a6a17d2b62dd2ec4b10b0cf4fbad100e22331580da5f",
+        "preserved": true
+      },
+      {
+        "path": "/workspace/scratch/48348af13150/context/upstream-reconcile-readonly.json",
+        "sha256": "c252566013e169304ed893eddf96777210e72d6353816896fb4ed3a93929c14d",
+        "preserved": true
+      }
+    ],
+    "refs": [
+      {
+        "ref": "pr31",
+        "branch": "astra-interface",
+        "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "base": "sf2-stack",
+        "baseHead": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "state": "open",
+        "draft": true,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31",
+        "updatedAt": "2026-11-14T13:06:01Z",
+        "previousHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "changed": false
+      },
+      {
+        "ref": "pr29",
+        "branch": "astra-wp10",
+        "head": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "base": "sf2-stack",
+        "baseHead": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "state": "open",
+        "draft": true,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/29",
+        "updatedAt": "2026-11-14T16:37:51Z",
+        "previousHead": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "changed": false
+      },
+      {
+        "ref": "pr32",
+        "branch": "astra-compose",
+        "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "base": "sf2-stack",
+        "baseHead": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "state": "open",
+        "draft": true,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/32",
+        "updatedAt": "2026-11-14T14:34:26Z",
+        "previousHead": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "changed": false
+      },
+      {
+        "ref": "sf2-stack",
+        "branch": "sf2-stack",
+        "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/tree/6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "previousHead": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "changed": false
+      },
+      {
+        "ref": "collab-resume",
+        "branch": "collab-resume",
+        "head": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/tree/20821df310ebc6ea08ccab27e829008d72a04de6",
+        "previousHead": "ff557552936197b6734e57f0ecea0c44b19139b1",
+        "changed": true
+      },
+      {
+        "ref": "finance-resume",
+        "branch": "finance-resume",
+        "head": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/tree/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "previousHead": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "changed": true
+      }
+    ],
+    "deltas": [
+      {
+        "ref": "collab-resume",
+        "base": "ff557552936197b6734e57f0ecea0c44b19139b1",
+        "head": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "changedPaths": 24,
+        "nonDocumentationPaths": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/review-source-fence.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+            "status": "modified"
+          }
+        ],
+        "documentationPaths": 1,
+        "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/ff557552936197b6734e57f0ecea0c44b19139b1...20821df310ebc6ea08ccab27e829008d72a04de6"
+      },
+      {
+        "ref": "finance-resume",
+        "base": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "head": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "status": "ahead",
+        "aheadBy": 5,
+        "behindBy": 0,
+        "totalCommits": 5,
+        "changedPaths": 215,
+        "nonDocumentationPaths": [
+          {
+            "path": ".github/workflows/astra-finance-resume-check.yml",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+            "status": "modified"
+          }
+        ],
+        "documentationPaths": 192,
+        "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5...88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+      }
+    ],
+    "implications": [
+      {
+        "topic": "Origin / WP10 / composition / stack",
+        "finding": "PR31, PR29 W25, PR32 W17, and sf2-stack heads are unchanged from 16:27:49. The previous C05 helper/mount proposal bases and BI external run identities have no newly observed upstream head change in these origins."
+      },
+      {
+        "topic": "G03 CAS source now advanced",
+        "finding": "collab-resume changed product/collaboration/case-selection.ts and added test/product/wp08/case-selection-cas.test.ts. The earlier statement that the owner producer was still unchanged is historical as of the preceding snapshot. Current state: a newer owner source and test are published, not consumed or qualified by Interface in this recheck. No assertion that the new implementation matches the old proposed patch or passes its positive has been made."
+      },
+      {
+        "topic": "Review / recipient / thread producer publication",
+        "finding": "collab-resume also changed answer-reuse, answer-work, authority, composition, dispatch, host, http-routes, recipient-actions, recipient-authority, thread-history, threads and work-port; added review-source-fence and reviews/review-answer-source; modified reviews/thread-context and associated WP07/WP08 tests. These are owner deltas to preserve for S0, not input absence or an implicit intake."
+      },
+      {
+        "topic": "Finance / case / lease publication",
+        "finding": "finance-resume advanced five commits with case-port and current-choice-preview changes, portfolio history/proof/reconciliation/campaign changes and new read-snapshot, plus case egress/lease/read-fence tests and own check workflow. Previous lease/egress findings must be presented as findings against their original pins and unresolved on the retained Interface input, with newer owner publication now separately available; this name-only review does not determine whether it resolves them."
+      },
+      {
+        "topic": "Retained Interface product",
+        "finding": "No upstream file was copied. The previous Interface retained inputs, known failures and mandatory proof gaps are not converted to PASS by these publications. Root's new browser terminal is outside this upstream-only review and must retain its separately verified receipt."
+      }
+    ],
+    "actions": {
+      "remoteReads": [
+        "Three PR metadata GETs",
+        "Three branch metadata GETs",
+        "Two compare GETs"
+      ],
+      "localReads": [
+        "SHA256 of the two previous snapshot files"
+      ],
+      "writtenArtifact": "/workspace/scratch/48348af13150/context/upstream-reconcile-final.json",
+      "sourceIntake": false,
+      "productWrites": false,
+      "branchMutations": false,
+      "tests": false,
+      "CI": false
+    }
+  },
+  "rootVerifiedCAS": {
+    "commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+    "producerBlob": "cd9a67887f41986243809672572c972440c832ec",
+    "testBlob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+    "mapping": "conflict/product-state-changed -> conflict/selection-not-committed",
+    "sourceRead": "Root read exact MCP compare hunk and complete added real SQLite producer test; no run or interface-consumer PASS inferred."
+  },
+  "intakeApplied": false,
+  "finalProductCaution": "BI historical primary blobs matched the input. Current screen-shell and shell-state differ; no external BI run is a run of this candidate. C05 patch is owner-only and was not applied."
+}

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -9,8 +10,10 @@ import { createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
-import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
-import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
+import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
+import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
+import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
 import { createDecisionCapabilities } from "../../../product/decisions/capabilities.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
@@ -23,6 +26,9 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-workbench-http-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
+  const now = () => "2026-11-13T08:00:00Z"
+  const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(now), createId: randomUUID }) }
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   const serverState: { handle?: (request: Request) => Promise<Response | undefined> } = {}
   const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 503 }) })
   const origin = server.url.origin
@@ -31,16 +37,23 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
   const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
   const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
-  const authority = createSfProductAuthority({ identity: () => ({ installationId: operator.installationId, projectId: "project", hostId: "host", location }), installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate: identity.authenticate, environment, grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }], createId: randomUUID, now: Date.now, commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
-  const evidence = createSfBusinessContext({ revalidate: authority.host.revalidate, resolveSource: async (ref, context) => ({ state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: new Date().toISOString() }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" } }) })
-  const cases = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), evidence, createId: randomUUID, now: () => "2026-11-13T08:00:00Z" })
+  const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
+  const authority = createSfProductAuthority({ identity: () => ({ installationId: operator.installationId, projectId: "project", hostId: "host", location }), installationId: operator.installationId, origin, policyVersion: "policy", persistence, proposalCoverageWrites, dashboardHostWrites, authenticate: identity.authenticate, environment, grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }], createId: randomUUID, now: Date.now, commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
+  const business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites }).catch(async (error: unknown) => {
+    const failures: unknown[] = [error]
+    try { await server.stop(true) } catch (failure) { failures.push(failure) }
+    try { await store.dispose() } catch (failure) { failures.push(failure) }
+    try { await rm(directory, { recursive: true, force: true }) } catch (failure) { failures.push(failure) }
+    throw failures.length === 1 ? error : new AggregateError(failures, "Business fixture setup and cleanup failed")
+  })
+  const cases = business.cases
   const descriptors = createDecisionCapabilities({ cases, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: authority.authority.receiptFor })
   const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors, authority: authority.authority,
     validateInput: (_descriptor, value) => operation === "sf_case_read" ? decodeSfOperationInput("sf_case_read", value).ok : operation === "sf_case_draft" && decodeSfOperationInput("sf_case_draft", value).ok,
     validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_case_read" ? decodeSfOperationOutput("sf_case_read", result.result).ok : operation === "sf_case_draft" && decodeSfOperationOutput("sf_case_draft", result.result).ok) })
   const services = { ...authority, dispatch } as SfHostServices
   const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const app = createModule("/sucafina", { persistence: store, authenticate: identity.authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
+  const app = createModule("/sucafina", { persistence, authenticate: identity.authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   serverState.handle = async (request) => await identity.handle(request) ?? await app(request)
   try {
     const enrollment = await identity.enroll()
@@ -68,8 +81,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
     const page = await read()
     expect(page?.status).toBe(200)
     expect(await page!.text()).toContain("Review renewal")
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await launchWp01Browser()
     try {
       const tab = await browser.newPage()
       await tab.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
@@ -83,7 +95,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
       await tab.getByLabel("Decision objective").fill("Compare renewals")
       await tab.getByLabel("Start", { exact: true }).fill("2027-01-01")
       await tab.getByLabel("End", { exact: true }).fill("2027-12-31")
-      await tab.getByLabel("Currency").fill("USD")
+      await tab.locator("[data-decision-create]").getByLabel("Currency", { exact: true }).fill("USD")
       await tab.getByLabel("Criteria, one per line").fill("Cost\nCoverage")
       await tab.getByRole("button", { name: "Create decision" }).click()
       await tab.getByRole("heading", { name: "Compare renewals" }).waitFor()
@@ -92,8 +104,8 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
         await tab.getByRole("link", { name: "Workbench", exact: true }).click()
         await tab.getByRole("heading", { name: "Workbench", exact: true }).waitFor()
       }
-    } finally { await browser.close() }
+    } finally { await closeWp01Browser(browser) }
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
     expect((await read())?.status).toBe(403)
-  } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+  } finally { business.dispose(); await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)

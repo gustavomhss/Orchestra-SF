@@ -1,0 +1,415 @@
+{
+  "schema": "astra.interface.independent-metadata-audit.v1",
+  "candidate": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "pr": 31,
+    "branch": "astra-interface",
+    "base": "sf2-stack",
+    "increment": "W16"
+  },
+  "reviewer": "ci_reconcile",
+  "verdict": "CORRECTED_METADATA_AND_CURRENT_HISTORICAL_SCOPE_RELATIONS_REVIEWED",
+  "catalog": {
+    "file": "interface-evidence-catalog-final.json",
+    "bytes": 1227202,
+    "sha256": "bd9cc6a28f0e1aaf8f1da40147ff70e1cbf2c8075b3f35a295ede65ccd1970ee"
+  },
+  "parcels": [
+    {
+      "file": "interface-criteria-final-WP01.compact.json",
+      "bytes": 181274,
+      "sha256": "8186b088f031bc58af394395a8ed71fa33981664cdbc316588b988677a3cc727"
+    },
+    {
+      "file": "interface-criteria-final-WP02.compact.json",
+      "bytes": 149232,
+      "sha256": "5da57592309873b63e639633c74e73171817fefe3f706284f4f009a56e3589fc"
+    }
+  ],
+  "readableMap": {
+    "file": "interface-criteria-final-complete.md",
+    "bytes": 156219,
+    "sha256": "63247ef72821726e52775115e6179fac9722950b75ca9a44c6fb380006d8c863"
+  },
+  "runIndex": {
+    "file": "interface-run-index-final.json",
+    "bytes": 36747,
+    "sha256": "90c9284cebfe1525ac60a156776acce97a906d5a66e898da9672cbabc5b93644"
+  },
+  "counts": {
+    "literalCriteria": 153,
+    "WP01": 75,
+    "WP02": 78,
+    "tasks": 9,
+    "generalClauses": 36,
+    "markdownRows": 153,
+    "typedReferencesVerified": 18507,
+    "historicalObservationObjectsUnchanged": 1272,
+    "newExecutionObservations": 0,
+    "tests": 435,
+    "runs": 31,
+    "candidateSourcesVerified": 185,
+    "explicitExternalSources": 1,
+    "exactPublishedArtifactsVerified": 45,
+    "preparedDocumentaryArtifactsVerified": 13,
+    "independentMcpSourceChecks": 5
+  },
+  "checks": [
+    "All criterion IDs/texts/families/task titles and153 Markdown rows remain canonical; all153 integrated acceptance statuses are NOT_DECLARED_DONE.",
+    "All1272 observations, their scope notes,435 test identity/execution records and186 source records are unchanged from frozen W16. Only the two recipient historical attempt annotations are moved out of candidate scope; there is no new execution credit.",
+    "All31 run identities, outcomes, counts and physical evidence are unchanged; the complete run index also matches each catalog record. The only run/candidateStatic changes are receipt publication-resolution fields.",
+    "G03 records the exact known-CAS mapping dependency and unexecuted UI branch; it does not retract the five prior selection scopes or give credit to a synthetic409/W17.",
+    "The one-condition owner-only proposal is unapplied and unexecuted, matching the independently reviewed patch/preimage/postimage/peer hashes.",
+    "The four new upstream source checks match independent GitHub MCP immutable-file reads at Composef999 and Financec449; later hot-topic-draftd8a151 remains published but unconsumed.",
+    "Draft-after-case-advance remains a static producer finding. Later post-callback fences do not become runtime evidence or a claim that W16 consumed them.",
+    "All13 new documentary artifacts exist in the prepared repository paths and match bytes/blob/SHA256; their bundle-relative paths resolve to those paths and do not invent W16 publication URLs.",
+    "Published artifact references still resolve by exact pins/hashes; new receipts resolve in their containing documentary commit while Actions URLs already exist.",
+    "Normal acquisition/lifecycle evidence remains distinct from unexercised cancellation, I/O cause/cure, standalone callers, native witnesses and S0 global gates.",
+    "The consolidated v3 narrative moves twelve obsolete current-note relationships to history, retains every old note verbatim, and distinguishes proved component rebasing/thread/selection/recipients from concrete residual host and native requirements.",
+    "All nine final delivery inventory artifacts match their exact bytes, SHA256 and Git blobs; new relative audit paths do not require access to transient analysis files."
+  ],
+  "latestNamedConsumerFailures": [
+    {
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "runRef": "R43586466170"
+    },
+    {
+      "name": "C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content",
+      "runRef": "R43589003673"
+    },
+    {
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "runRef": "R43587346579"
+    }
+  ],
+  "latestHarnessFailures": [],
+  "preservedExecutionDeltaPaths": [
+    "runs.R43594796100.receipt.blob_sha",
+    "runs.R43594796100.receipt.bundle_relative_path",
+    "runs.R43594796100.receipt.publication_phase_at_derivation",
+    "runs.R43594796100.receipt.relative_to",
+    "runs.R43594796100.receipt.resolution",
+    "runs.R43594797507.receipt.blob_sha",
+    "runs.R43594797507.receipt.bundle_relative_path",
+    "runs.R43594797507.receipt.publication_phase_at_derivation",
+    "runs.R43594797507.receipt.relative_to",
+    "runs.R43594797507.receipt.resolution",
+    "candidateStatic.receipt.blob_sha",
+    "candidateStatic.receipt.bundle_relative_path",
+    "candidateStatic.receipt.publication_phase_at_derivation",
+    "candidateStatic.receipt.relative_to",
+    "candidateStatic.receipt.resolution"
+  ],
+  "preparedDocumentaryArtifacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w16-preservation-addendum.json",
+      "sha256": "b2fd3d47fdf5e8adce89793191c5ba6a03ec7b056e320ea03cf37520ae96392d",
+      "bytes": 31333
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w16-preservation-addendum.md",
+      "sha256": "a9b5f6baeebfac61fe5d390526bae04c0df7226f5522bfd72a9a529249a8309d",
+      "bytes": 3191
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594796100.json",
+      "sha256": "5b3fc914f3537a0d245c078a17a6a51254c890c14deeab88ae9b0f3b38d523f1",
+      "bytes": 60120
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594796100.md",
+      "sha256": "0e6d09afe2583f7fa0cf436bad84c31e89360879ce1ca1d594a8b20e873e25b0",
+      "bytes": 5683
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594796100.request.json",
+      "sha256": "c32f762df6e6290db31ff676a439e956520be61ef8b6ca8b5b42659c97510039",
+      "bytes": 426
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43594797507.static.json",
+      "sha256": "5d059f58ef58f8402862d8a783e79f9adf7892110eaa6342d4c86d8ea32ea871",
+      "bytes": 40168
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w16-independent-metadata-audit.json",
+      "sha256": "ed21f2737bc7cfcdbb729a7971f721360249b2bfcffcacd1571027e54e7eedbb",
+      "bytes": 4625
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-upstream-reconcile.json",
+      "sha256": "e5ff308b57e8931cbcfbdd8351e1c0426401fba1da83c198a97075a523c4d0b3",
+      "bytes": 5332
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/selection-known-conflict-assessment.json",
+      "sha256": "789f9dbbaf126deb0ab99b50bc3c98d15cc197959d6a1b71dbe1c4c96fd7e290",
+      "bytes": 8401
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/selection-known-conflict-assessment.md",
+      "sha256": "41c44faee49e5b19fea864391f16d5fdc0d5ff5d09de39d496740f8a578cf718",
+      "bytes": 5124
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/case-selection-known-cas.owner-only.patch",
+      "sha256": "ea315fc86d2e58d79a534b6994a98de4e17d96098d56fff110167b454d8329f9",
+      "bytes": 1285
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/case-selection-known-cas.owner-only.json",
+      "sha256": "bb157c128251193df0847502ea810cc9b904842db394675165da6af504094cca",
+      "bytes": 5249
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/case-selection-known-cas.peer-read.json",
+      "sha256": "be1494ffa77053e38efab3f9616155db4ed30025d765d350e959d16e055ca389",
+      "bytes": 4364
+    }
+  ],
+  "sourceReconciliationPeer": {
+    "file": "ci-final-upstream-source-read.json",
+    "bytes": 4133,
+    "sha256": "ea3157b36c9a4378cfad49a23dcc2ce0228a2d83f3b0534a1d144264611c2f74"
+  },
+  "ownerOnlyPatchPeer": {
+    "file": "wp01-case-selection-known-cas-peer-read.json",
+    "bytes": 4364,
+    "sha256": "be1494ffa77053e38efab3f9616155db4ed30025d765d350e959d16e055ca389"
+  },
+  "limits": [
+    "Metadata and pinned source inspection only; no product, typecheck, guard, browser, Actions query, dispatch or test execution during this audit.",
+    "Five earlier source-only GitHub MCP reads independently checked the cited upstream blobs; they are not Actions results.",
+    "Prepared artifacts are not represented as remotely published until the parent creates the documentary commit.",
+    "A later documentary-head static run belongs to that exact new head and is intentionally outside this frozen31-run ledger. No product run may be relabeled to it.",
+    "This validates traceability and scope, not complete functional/native/global acceptance."
+  ],
+  "previousAuditPreserved": {
+    "file": "ci-independent-final-metadata-audit.json",
+    "bytes": 9125,
+    "sha256": "6240516a8b0cd0349960338d32bfe4ee6a1d64071a7705d78a5465fa63681a15",
+    "bundle_relative_path": "inputs/final-independent-metadata-audit-v1-superseded.json",
+    "relative_to": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/",
+    "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-independent-metadata-audit-v1-superseded.json",
+    "resolution": "RESOLVE_IN_CONTAINING_DOCUMENTARY_COMMIT_BY_PATH_AND_HASH",
+    "file_field_is_optional_local_provenance": true,
+    "publication_scope": "Destination supplied by root for the final documentary commit; no W16 publication URL is invented."
+  },
+  "publicationDestination": {
+    "bundle_relative_path": "inputs/final-independent-metadata-audit.json",
+    "relative_to": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/",
+    "resolution": "THIS_AUDIT_RESOLVES_IN_ITS_CONTAINING_DOCUMENTARY_COMMIT"
+  },
+  "rejectedNarrativeBaseline": {
+    "file": "ci-final-narrative-before-correction.json",
+    "bytes": 17087,
+    "sha256": "cc95246d7177888b1ddb12d2eca1c437d169b85450c16555da32ceb07080fe21",
+    "resolution": "OPTIONAL_LOCAL_PROVENANCE_RELEVANT_BEFORE_AFTER_TEXTS_ARE_INLINE_IN_THIS_ADDENDUM"
+  },
+  "priorAuditCorrection": {
+    "rejectedCatalogSha256": "8e6a4ed609e490fe75ebb1b98652eb795f9b2b02206112810a060d28e05fd4b1",
+    "priorAuditLimitation": "The prior audit checked counts, exact objects, sources and typed references but missed contradictory current narrative inherited from W15 and earlier increments. Its verdict does not authorize publication of that uncorrected catalog.",
+    "scopeOfCorrection": "This addendum reviews the corrected current/historical relationships independently, while preserving the earlier audit, frozen W16 catalog, receipts and all1272 execution observation objects.",
+    "newProductOrStaticExecution": false,
+    "rejectedCurrentLimit": "W16 hook observation is stored once with sourceRef and affectedTestRefs. The two blocked named attempts point to that same actual Bun event; no extra Bun observations or synthetic test titles are created.",
+    "priorAuditDoesNotApproveCorrectedNarrative": true
+  },
+  "testAnnotationDelta": {
+    "T-fa55a222dab6": {
+      "before": {
+        "candidateAttemptScopeRef": "N-3b9c096f2de9"
+      },
+      "after": {
+        "historicalAttemptScopes": [
+          {
+            "scopeRef": "N-3b9c096f2de9",
+            "attemptRef": "O-9ee821ae4b66",
+            "runRef": "R43593121437",
+            "scope": "W15 beforeAll prevented this named body from executing. This is historical and does not describe the passing W16 named observation."
+          }
+        ]
+      }
+    },
+    "T-c1e1b7846143": {
+      "before": {
+        "candidateAttemptScopeRef": "N-3b9c096f2de9"
+      },
+      "after": {
+        "historicalAttemptScopes": [
+          {
+            "scopeRef": "N-3b9c096f2de9",
+            "attemptRef": "O-9ee821ae4b66",
+            "runRef": "R43593121437",
+            "scope": "W15 beforeAll prevented this named body from executing. This is historical and does not describe the passing W16 named observation."
+          }
+        ]
+      }
+    }
+  },
+  "reviewedContextNotes": {},
+  "currentComponentScopeNotes": {
+    "decision_consumers": {
+      "scopeRef": "N-0661ab0bfe6a",
+      "scope": "Explicit case-base adoption and bounded thread/revocation/frozen-request consumers have named PASS observations at their recorded W4/W8/W9/W13/W14 SHAs. The W7 beforeAll blockage is historical. Real domain fixtures and UI transport fixtures remain distinct; consult each exact named observation. Full installed-host/source/native acceptance is not inferred."
+    },
+    "review_digest_consumer": {
+      "scopeRef": "N-1c45c804b590",
+      "scope": "Sixteen shared decision-mutation browser cases have their latest named PASS at W8/run43585122170, including the missing/malformed/stale review-proof negatives. These are shared UI contract/transport observations. The W6 skipped bodies remain historical; neither those transport PASS nor producer availability prove complete installed endpoint admission and host closure."
+    },
+    "browser_harness": {
+      "scopeRef": "N-7ab7294aa6e3",
+      "scope": "Current W16 normal lifecycle passed: one Node-owned Chromium, one lease/release, zero contexts, Node/Chrome exit0, EOF/bridge/WS1000 and socket/directory cleanup. The new failed-startup cancellation receipt path was not exercised. No standalone default15 runtime proof or W15 I/O cause/cure is inferred. W12 two-lease evidence remains historical."
+    },
+    "personal_context": {
+      "scopeRef": "N-7305e00136c2",
+      "scope": "Three real unavailable-view authority tests pass at W10, including removal before delayed relist and late response after revocation. Eighteen W10c view recovery cases are explicit UI transport contracts. W11 product is not executed; installed host/native acceptance remains distinct."
+    }
+  },
+  "semanticReview": {
+    "currentLimitNotesReviewed": 24,
+    "componentScopesReviewed": 22,
+    "findingsReviewed": 29,
+    "nextActionsReviewed": 33,
+    "allFrozenHistoricalNotesUnchanged": true,
+    "allOriginalCriterionLimitNotesRetainedInCurrentOrHistoricalRelations": true,
+    "obsoleteCurrentNotesMovedToHistory": [
+      "N-2cce0146c2b1",
+      "N-34a1806953c1",
+      "N-39b559af02d3",
+      "N-3a65c66eac9b",
+      "N-4dbe620c2e3f",
+      "N-67559815594b",
+      "N-6bae1bf7b56b",
+      "N-8421af450b79",
+      "N-9dadf3437aee",
+      "N-aa1be3a9a98e",
+      "N-ce2e8221ca73",
+      "N-d0e71eb33454"
+    ],
+    "w16RecipientCurrentToHistoricalBindingsVerified": true,
+    "threeCurrentComponentScopesHaveHistoricalPointers": true,
+    "w14DelayedReviewPassCurrentNarrativeVerified": true,
+    "actionsFromOldSelectionsAreHistoricalAndUnreferencedByCurrentCriteria": true,
+    "newCurrentContextNotes": {
+      "N-7e20c8177030": "Explicit conflict rebasing has four real two-principal PASS cases at W9. Bounded thread lifecycle has eighteen PASS cases at W10, with six real-domain cases and twelve transport contracts distinguished. Generic durable outcome lookup, C05/C12 composition and native/global acceptance remain separate; these completed components are not described as still missing in W6.",
+      "N-2bb8cb82235f": "Case/source/period selection has five real component PASS cases at W14 and its separate authorized recipient-directory/logout consumer has two PASS cases at W16. No responsibleIds field is invented. Complete WorkSignals/destination/installed-host composition and the exact known-CAS409 review counterproof remain the concrete G03 boundaries.",
+      "N-84156c7916fb": "Shared three-surface navigation, direct entry, detail/return and periods remain implemented with their exact recorded browser evidence. W16 selected only the recipient consumer and harness; no unselected navigation case receives a new W16 PASS.",
+      "N-900dea84c2ab": "The catalog retains a published historical workspace-services source at compose ff7 as an explicitly external source absent from the W16 tree. It is provenance, not a claim that current producers are absent or an instruction to intake an obsolete module. Current retained/held BCS and concrete composition requirements are pinned separately."
+    },
+    "lateDeliveryNarrative": {
+      "current": "The same complete delayed-review response counterproof passed at W14/run43592240575, after the response body had begun and access was revoked. Its no-start/no-private-data and lifecycle assertions are proved only in that recorded UI/transport scope. The W13 header-delivery timeout is retained as an earlier incomplete observation, not an unresolved current application defect. Full installed-host/native acceptance remains separate.",
+      "historical": "W13 reached revoked analysis status, then timed out waiting for a released review response header. The final late-delivery/no-start/no-private-data assertions did not complete; the raw log alone did not establish an application defect. A later complete execution of this same named counterproof may supersede that observation only for its transport/lifecycle scope.",
+      "currentProof": "PASS_SCOPED",
+      "latestObservationRef": "O-99506616e526"
+    }
+  },
+  "currentLimits": [
+    "153 exact literal criteria, 9 tasks, 36 general clauses; all NOT_DECLARED_DONE.",
+    "Exactly 1132 W12 observations retained unchanged, with each later observation attached to its own W/S/run/request.",
+    "W13: 81 PASS / 3 FAIL observations. Two OWN fixture setup failures did not enter consumer assertions; one late-delivery counterproof remained incomplete. No application defect is inferred solely from those delivery/setup logs.",
+    "W13 static failed at 13 unique locations; later source repairs are credited only at their actual static receipt.",
+    "C05 whole-review reopening, C12 reload, and write-scope retention remain independent from record capture, passive renderer, thread transport and configured-selection proofs.",
+    "WorkSignals/workDestination composition and installed-host acceptance are not established by a correctly rendered unavailable response or a configured case selection.",
+    "Retained BCS is b289a4a376f937c2cf4b56a00a6c1247152c5798; published BCS4b02413 is held unless an explicit later input manifest records otherwise.",
+    "Source blobs and publication URLs are exact; source equality alone is not transitive dependency or whole-head equivalence.",
+    "Analysis files are optional provenance only. Evidence resolves through published repository paths, immutable GitHub URLs, Actions URLs and inline typed references.",
+    "Resident/native witnesses, five profiles, model execution, persisted/reopened native outputs, AM01–06, WP10 acceptance and final epic remain with S0. No local product/typecheck/guard or auditor CI operation is performed.",
+    "W15 hook observation is stored once with sourceRef and affectedTestRefs. The two blocked named attempts point to that same actual Bun event; no extra Bun observations or synthetic test titles are created.",
+    "W16 has exactly four named passing Bun observations, no hook failure and no blocked recipient body. The single W15 hook event remains historical and links its two unexecuted named attempts without creating synthetic observations."
+  ],
+  "correctedNextActions": {
+    "A_G02_DASHBOARD_LOST_REPLY": {
+      "owner": "WP02",
+      "findingRef": "G02_DASHBOARD_LOST_REPLY",
+      "action": "Preserve the four completed real recovery counterproofs at their W10 SHA. Continue only the distinct F01 first-save outcome lookup, F03 lost-apply/reload composition and F04 authorized draft-source continuity boundaries through their owners and exact compatible inputs. Do not infer a missing own implementation or rerun work solely from the historical pre-execution patch scope.",
+      "historicalActionTextW16": "Resolve or verify the precisely described finding at its owner boundary and run the relevant preserved assertion."
+    },
+    "A_W6D_VIEWS_TIMEOUT": {
+      "owner": "WP01 test/consumer owner",
+      "proofBlockerRef": "W6D_VIEWS_TIMEOUT",
+      "action": "Diagnose/fix the named timeout and cleanup while retaining assertions; run the approved W7 targeted selection and require physical lifecycle proof.",
+      "lifecycleStatus": "HISTORICAL_SUPERSEDED_NOT_CURRENT_WORK",
+      "historicalInstructionOnly": true,
+      "currentDisposition": "Preserved original diagnostic instruction from the W6d/W7 epoch. Later view/delivery and W16 normal-lifecycle observations supersede that diagnostic work. Do not execute an old W7 selection from this historical instruction; current residual boundaries are stated separately."
+    },
+    "A_W6D_SHARED_POOL_CLEANUP": {
+      "owner": "WP01 test/consumer owner",
+      "proofBlockerRef": "W6D_SHARED_POOL_CLEANUP",
+      "action": "Diagnose/fix the named timeout and cleanup while retaining assertions; run the approved W7 targeted selection and require physical lifecycle proof.",
+      "lifecycleStatus": "HISTORICAL_SUPERSEDED_NOT_CURRENT_WORK",
+      "historicalInstructionOnly": true,
+      "currentDisposition": "Preserved original diagnostic instruction from the W6d/W7 epoch. Later view/delivery and W16 normal-lifecycle observations supersede that diagnostic work. Do not execute an old W7 selection from this historical instruction; current residual boundaries are stated separately."
+    },
+    "A_W7_SHARED_POOL_STARTUP": {
+      "owner": "WP01 harness / root",
+      "proofBlockerRef": "W7_SHARED_POOL_STARTUP",
+      "action": "Diagnose the bounded launch at an actually observable process/protocol boundary; preserve timeout, assertions and physical cleanup. Only after a published material diagnostic/fix execute the affected approved selection.",
+      "lifecycleStatus": "HISTORICAL_SUPERSEDED_NOT_CURRENT_WORK",
+      "historicalInstructionOnly": true,
+      "currentDisposition": "Preserved original diagnostic instruction from the W6d/W7 epoch. Later view/delivery and W16 normal-lifecycle observations supersede that diagnostic work. Do not execute an old W7 selection from this historical instruction; current residual boundaries are stated separately."
+    }
+  },
+  "finalDeliveryFilesVerified": [
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/README.md",
+      "bytes": 26018,
+      "sha256": "d932997669db16004a4ad4e6e938e680bc77974cf18752e524cedfae04393656",
+      "blob_sha": "54cf6b4c35d19f8ee39b0ca5ab1a697e476342eb"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/evidence-catalog.json",
+      "bytes": 1227202,
+      "sha256": "bd9cc6a28f0e1aaf8f1da40147ff70e1cbf2c8075b3f35a295ede65ccd1970ee",
+      "blob_sha": "4d8c0956619de59c622abcf27c23d12cd316bcd2"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/WP01.json",
+      "bytes": 181274,
+      "sha256": "8186b088f031bc58af394395a8ed71fa33981664cdbc316588b988677a3cc727",
+      "blob_sha": "1ba016f1c65d25082e92a5da4e934a4bcc2d58a8"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/criteria/WP02.json",
+      "bytes": 149232,
+      "sha256": "5da57592309873b63e639633c74e73171817fefe3f706284f4f009a56e3589fc",
+      "blob_sha": "37d6e626bab524cdf37c3665c1f5d52d4ea06c37"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/complete.md",
+      "bytes": 156219,
+      "sha256": "63247ef72821726e52775115e6179fac9722950b75ca9a44c6fb380006d8c863",
+      "blob_sha": "cd3fd7184f3abc19791fb5ce9423a4a9c875063f"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/audit.json",
+      "bytes": 2040,
+      "sha256": "7c56fde7672331f0a62846108a561437f7903c6a77c7e04636632aab4a0cabed",
+      "blob_sha": "1846c1f5103d8cdea6dd259028b9d5a5752e0f13"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/run-index.json",
+      "bytes": 36747,
+      "sha256": "90c9284cebfe1525ac60a156776acce97a906d5a66e898da9672cbabc5b93644",
+      "blob_sha": "a713743295c74a30e810d2315be596781af75c55"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/editorial-corrections.json",
+      "bytes": 6532,
+      "sha256": "59253a73db91e0a675ab46c28e87a55df50ed3bff7051545d45c34245205062f",
+      "blob_sha": "690043d8652dce436f663d481ee618bf8763bf80"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/editorial-corrections.md",
+      "bytes": 2300,
+      "sha256": "786333f4d121402f1cd35837d5f0b51a37227c8c2f034e7e80c48d9701a9d5d3",
+      "blob_sha": "41d229c8a479814ffede5adc16091b32ee9412fb"
+    }
+  ],
+  "finalDeliveryInventory": {
+    "file": "interface-final-delivery-inventory-v3.json",
+    "bytes": 5552,
+    "sha256": "4391bba9aba3b2da77a607c99dc5c52f633f06f43e61ee26b94b6af71ca2fb29",
+    "resolution": "OPTIONAL_LOCAL_PROVENANCE_ALL_NINE_FINAL_DESTINATIONS_AND_HASHES_ARE_INLINE"
+  }
+}
