@@ -3,6 +3,7 @@ import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { SfOperationInputMap } from "../contracts/operations.ts"
 import type { SfOperationOutputMap } from "../contracts/outputs.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
 import type { DecisionCasePort, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { CollaborationCapabilityHost } from "./capabilities.ts"
@@ -20,6 +21,7 @@ export function createCollaborationDispatch(input: {
   answerReuse?: Pick<ReturnType<typeof createAnswerReusePort>, "read">
   createReceipt: CollaborationCapabilityHost["createReceipt"]
   requiredAuthority: CollaborationCapabilityHost["requiredAuthority"]
+  recordQuestionPreparation?: CollaborationCapabilityHost["recordQuestionPreparation"]
 }): CollaborationCapabilityHost {
   const mayAssign = async (recipientRef: string | undefined, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => !recipientRef ||
     (!!await input.collaboration.authority.recipient(recipientRef, context) && await input.collaboration.authority.recipientSources(recipientRef, refs, context))
@@ -57,7 +59,7 @@ export function createCollaborationDispatch(input: {
       if (!await mayAssign(parsed.value.recipientRef, parsed.value.sourceRefs, context)) return { status: "needs-input", reason: "recipient-unavailable" }
       const again = await input.cases.read({ caseRef: parsed.value.caseRef }, context)
       if (again.status !== "ok") return again
-      if (digestSfValue(again.value) !== digestSfValue(current.value) || !await input.collaboration.authority.sources(parsed.value.sourceRefs, context) || !await mayAssign(parsed.value.recipientRef, parsed.value.sourceRefs, context)) return { status: "stale", reason: "case-or-source-changed" }
+      if (caseDigest(again.value) !== caseDigest(current.value) || !await input.collaboration.authority.sources(parsed.value.sourceRefs, context) || !await mayAssign(parsed.value.recipientRef, parsed.value.sourceRefs, context)) return { status: "stale", reason: "case-or-source-changed" }
       return { status: "ok", value: { caseRef: parsed.value.caseRef, question: parsed.value.question.text, ...(parsed.value.question.criterionRef ? { criterionRef: parsed.value.question.criterionRef } : {}), ...(parsed.value.recipientRef ? { recipientRef: parsed.value.recipientRef } : {}), evidenceRefs: parsed.value.sourceRefs, expectedCaseVersion: current.value.case.version } }
     }
     const parsed = decodeSfOperationInput("sf_handoff_prepare", payload)
@@ -72,9 +74,14 @@ export function createCollaborationDispatch(input: {
     if (topic.status !== "ok") return topic
     const again = await input.cases.read({ caseRef: parsed.value.caseRef }, context)
     if (again.status !== "ok") return again
-    if (digestSfValue(again.value) !== digestSfValue(current.value) || !await input.collaboration.authority.sources(parsed.value.sourceRefs, context) || !await mayAssign(parsed.value.recipientRef, parsed.value.sourceRefs, context)) return { status: "stale", reason: "case-or-source-changed" }
+    if (caseDigest(again.value) !== caseDigest(current.value) || !await input.collaboration.authority.sources(parsed.value.sourceRefs, context) || !await mayAssign(parsed.value.recipientRef, parsed.value.sourceRefs, context)) return { status: "stale", reason: "case-or-source-changed" }
     return { status: "ok", value: { ...parsed.value, domainApplied: false } }
   }
-  return { createReceipt: input.createReceipt, requiredAuthority: input.requiredAuthority, execute: async <K extends Operation>(operation: K, value: SfOperationInputMap[K], context: TrustedDomainContext) => await run(operation, value, context) as PortResult<SfOperationOutputMap[K]> }
+  return { createReceipt: input.createReceipt, requiredAuthority: input.requiredAuthority, recordQuestionPreparation: input.recordQuestionPreparation, execute: async <K extends Operation>(operation: K, value: SfOperationInputMap[K], context: TrustedDomainContext) => await run(operation, value, context) as PortResult<SfOperationOutputMap[K]> }
+}
+
+function caseDigest(value: AuthorizedCaseProjection) {
+  const { checkedAt: _checkedAt, ...stable } = value
+  return digestSfValue(stable)
 }
 

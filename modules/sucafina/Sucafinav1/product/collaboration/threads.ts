@@ -60,7 +60,7 @@ export function createThreadPort(input: {
       if (saved.status === "preview") return { status: "conflict", reason: "thread-not-committed" }
       if ("reason" in saved) return saved
       if (!saved.value || !await input.host.revalidate(context) || !await input.authorize(saved.value, context, "read")) return { status: "unavailable", reason: "thread-access-unavailable" }
-      return { status: "ok", value: saved.value }
+      return { status: "ok", value: publicThreadProjection(saved.value) }
     },
     reply: (id: string, body: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "reply", body }, mutation, context),
     resolve: (id: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "resolve" }, mutation, context),
@@ -74,7 +74,7 @@ export function createThreadPort(input: {
       if (!isThread(read.value) || read.value.id !== id || !await input.authorize(read.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
       const again = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
       if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(read.value) || !await input.authorize(again.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
-      return { status: "ok", value: read.value }
+      return { status: "ok", value: publicThreadProjection(read.value) }
     },
   }
 
@@ -105,7 +105,23 @@ export function createThreadPort(input: {
     if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
     if ("reason" in saved) return saved
     if (!saved.value || !await input.host.revalidate(context) || !await input.authorize(saved.value, context, "read")) return { status: "unavailable", reason: "thread-access-unavailable" }
-    return { status: "ok", value: saved.value }
+    return { status: "ok", value: publicThreadProjection(saved.value) }
+  }
+}
+
+/** Case provenance and stored revisions have separate, currently authorized readers. */
+function publicThreadProjection(thread: CollaborationThread): CollaborationThread {
+  return {
+    id: thread.id,
+    kind: thread.kind,
+    sourceRef: thread.sourceRef,
+    sourceIncarnation: thread.sourceIncarnation,
+    observedVersion: thread.observedVersion,
+    period: thread.period,
+    ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}),
+    state: thread.state,
+    messages: thread.messages.map(({ id, incarnation, version, authorRef, body, createdAt }) => ({ id, incarnation, version, authorRef, body, createdAt })),
+    evidenceRefs: thread.evidenceRefs,
   }
 }
 

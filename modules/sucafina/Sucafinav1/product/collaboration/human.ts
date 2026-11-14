@@ -6,7 +6,7 @@ import type { createSfUiAuthority } from "../integration/ui-authority.ts"
 export const collaborationHumanActions = [
   "collaboration.thread.create", "collaboration.thread.reply", "collaboration.thread.resolve", "collaboration.thread.edit",
   "collaboration.relation.confirm", "collaboration.handoff.confirm", "collaboration.confirmation.confirm",
-  "collaboration.selection.create", "collaboration.answer.confirm",
+  "collaboration.selection.create", "collaboration.answer.confirm", "collaboration.question.confirm",
 ] as const
 export type CollaborationHumanAction = typeof collaborationHumanActions[number]
 

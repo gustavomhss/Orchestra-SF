@@ -29,6 +29,8 @@ export function createCollaborationHttpRoutes(host: Host) {
     return kind === "reply" ? port.reply(payload.id as string, payload.body as string, mutation, context) : port.resolve(payload.id as string, mutation, context)
   }
   const routes = new Map<string, Route>([
+    ["question-consume", { keys: ["proposal", "sourceRef", "period", "mutation"], action: "collaboration.question.confirm", invoke: (p, c) => host.questions.consume(p as Parameters<Host["questions"]["consume"]>[0], c) }],
+    ["question-output", { keys: ["outputRef", "caseRef"], read: "collaboration.question.output", invoke: (p, c) => host.questions.readOutput(p.outputRef as string, p.caseRef as Parameters<Host["questions"]["readOutput"]>[1], c) }],
     ["thread-create", { keys: ["draft", "mutation"], action: "collaboration.thread.create", invoke: (p, c) => host.threads.create(p.draft as Parameters<Host["threads"]["create"]>[0], p.mutation as Parameters<Host["threads"]["create"]>[1], c) }],
     ["thread-read", { keys: ["id"], read: "collaboration.thread.read", invoke: (p, c) => threadRead(p.id as string, c) }],
     ["thread-reply", { keys: ["id", "body", "mutation"], action: "collaboration.thread.reply", invoke: (p, c) => threadChange(p, c, "reply") }],

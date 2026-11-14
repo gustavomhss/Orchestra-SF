@@ -24,6 +24,9 @@ import { createWorkSelectionPort } from "./selection.ts"
 import { createCaseWorkSelection } from "./case-selection.ts"
 import type { WorkSelectionPort } from "./selection.ts"
 import { createQuestionSource } from "./question-source.ts"
+import { createQuestionPreparations } from "./question-preparations.ts"
+import { createQuestionConsumer } from "./question-consumer.ts"
+import type { createSfContributionReader } from "../ai/contribution-reader.ts"
 import { createCollaborationSourceFence } from "./source-fence.ts"
 import type { CollaborationHumanAuthority } from "./human.ts"
 import { createConfirmationPort } from "./confirmation.ts"
@@ -60,6 +63,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   workSignals?: WorkSignals
   workDestination?: { origin: string; mount: string; resolveDestination: (destination: NonNullable<WorkPresentationItem["destination"]>, context: TrustedDomainContext) => Promise<PortResult<{ href: string }>> }
   cases: Pick<DecisionCasePort, "read">
+  readQuestionContribution?: ReturnType<typeof createSfContributionReader>
   /** Identical private case authority supplied to the canonical case producer; required for work after source changes. */
   workCaseAuthority?: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   authority: SfDomainValidation
@@ -199,12 +203,14 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     authorizeConfirmation: (context, questionId, answerRef, mutation) => input.human.authorize(context, "collaboration.answer.confirm", { questionId, answerRef, mutation }),
   }) : undefined
 
-  const dispatch = createCollaborationDispatch({ collaboration, threadReads, answerReuse, cases: input.cases, requiredAuthority: input.requiredAuthority, createReceipt: async (context, operation, digest, resultDigest) => {
+  const questionPreparations = createQuestionPreparations({ host: input.host, state: input.state, cases: input.cases, now: () => Date.parse(input.now()) })
+  const questions = createQuestionConsumer({ host: input.host, state: input.state, cases: input.cases, human: input.human, authority, preparations: questionPreparations, readContribution: input.readQuestionContribution, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, createId: input.createId, now: input.now })
+  const dispatch = createCollaborationDispatch({ collaboration, threadReads, answerReuse, cases: input.cases, recordQuestionPreparation: questionPreparations.record, requiredAuthority: input.requiredAuthority, createReceipt: async (context, operation, digest, resultDigest) => {
     if (!await input.authority.revalidateDomainContext(context)) return undefined
     return input.authority.receiptFor(context, operation, digest, resultDigest)
   } })
 
   const cycle = createCollaborationCycleView({ cases: input.cases, work: collaboration.work, host: input.host, resolveCase: caseSelection?.resolveCase })
-  return { ...collaboration, cycle, caseSelection, confirmation, answerReuse, threadHistory, listRecipients, storageVersion, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
+  return { ...collaboration, questions, cycle, caseSelection, confirmation, answerReuse, threadHistory, listRecipients, storageVersion, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }
 
