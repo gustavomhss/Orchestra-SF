@@ -1,0 +1,163 @@
+{
+  "schema": "sf2-mission52-authority-v1",
+  "mission": 52,
+  "actor": "S4-A",
+  "state": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+  "lease_epoch": "decisions-installed-browser52",
+  "recorded_at_utc": "2026-11-14 23:37:35 UTC",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp11",
+  "pr": 40,
+  "authority_source": {
+    "commit": "f2383d1248a130e05a9e6667516023ecea70389e",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-installed-journeys.json",
+    "direct_user_instruction": "Execute mission52, same astra-wp11/PR40; qualify five original installed Decisions journeys on current corrected composition."
+  },
+  "predecessor": {
+    "mission": 44,
+    "head": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+    "tree": "c82b671766ba4bb8d0c3ef4ee8b2b695a88e1c7c",
+    "handoff_blob": "85ad6d7eef836b04424c6c94474977dff88a41ce",
+    "release_blob": "2b8bdfe3706e103fb81fc75dd5e991e92ffe2a7a",
+    "explicit_authority_ended": true,
+    "pending_work": false
+  },
+  "reconciliation": {
+    "source_head_unchanged": true,
+    "control_head": "f2383d1248a130e05a9e6667516023ecea70389e",
+    "source_comments_reviewed": true,
+    "source_receipts_reviewed": true,
+    "competing_WP11_claim_observed": false,
+    "limit": "Bounded repository evidence plus explicit predecessor terminal; no inference of external process liveness from stale status or silence."
+  },
+  "target": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "candidate": "C18",
+    "commit": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "tree": "8563e04f8751ed786ccdbc086ed6566c410af3fe",
+    "parent": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "sole_writer": 47,
+    "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+    "authority_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "epoch": "S0-C-e9-browser47"
+  },
+  "installed": {
+    "Procurement37": {
+      "release": "ab2a967125b3c767067797a27b919466020fbd82",
+      "C15": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364",
+      "manifest_blob": "15ad5a0640c312e03d32e7c1cb74187c9d3a3eba",
+      "all_24_postimages_verified": true
+    },
+    "Decisions44": {
+      "C16": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c",
+      "manifest_blob": "3622b492cbeab93ef1c388222dd8558a0c8e7314",
+      "all_4_postimages_verified": true,
+      "spec": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "cookie_helper": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+      "installation_fixture": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+      "cookie_contract": "a8865d50f22248d172f106030516e67ec8ee833e"
+    },
+    "C18_delta": "Portfolio43 README/tests and inert receipts only; no Decisions, Procurement, cookie, fixture, workflow or runtime change after C17."
+  },
+  "read_complete": {
+    "pinned_START_WORKFLOW_COMMON": true,
+    "actor_pack": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+    "full_pack_via_root_and_bounded_readers": true,
+    "criteria": 83,
+    "criteria_original_statuses_and_proof_bindings_preserved": true,
+    "appendices": [
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md"
+    ],
+    "AGENTS": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/app-shell/e2e/AGENTS.md"
+    ],
+    "Playwright_official": [
+      "best-practices",
+      "actionability",
+      "test-assertions",
+      "locators",
+      "network",
+      "browser-contexts"
+    ],
+    "predecessor_handoff_release_and_manifest": true,
+    "real_nominal_spec_and_helpers": true,
+    "actual_test_ci_workflow_and_request_location_uploader": true
+  },
+  "execution": {
+    "first_action": "Original exact five-case spec on C18, no product overlay; .ci-run.json envelope only.",
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "packages/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/decisions.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "one_run_per_WP": true,
+    "dedup": {
+      "latest_100_runs_reviewed": true,
+      "WP11_in_flight": 0,
+      "queue_count": 0,
+      "prior_nominal": 43649103661,
+      "prior_nominal_is_old_cookie_fixture": true
+    },
+    "tests": "NOT_RUN_AT_ACK",
+    "local_product_tests": 0,
+    "local_servers": 0,
+    "epic": 0,
+    "budget_changes": 0,
+    "skips": 0
+  },
+  "write_scope": [
+    "modules/sucafina/Sucafinav1/ui/decision-choice.ts",
+    "modules/sucafina/Sucafinav1/ui/decision-alternatives.ts",
+    "modules/sucafina/Sucafinav1/ui/decision-edit.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+    "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+    "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "packages/app-shell/e2e/sucafina/decisions-support/",
+    "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/"
+  ],
+  "path_discrepancy": {
+    "listed_prefix": "modules/sucafina/Sucafinav1/ui/",
+    "installed_prefix": "modules/sucafina/Sucafinav1/product/ui/",
+    "files": [
+      "decision-choice.ts",
+      "decision-alternatives.ts",
+      "decision-edit.ts"
+    ],
+    "handling": "No parallel ui directory and no expanded live-write grant. If a defect requires these actual paths, supply complete minimal patch for47 unless current explicit authority resolves them. Exact authorized E2E/HTTP/coverage-read paths remain available."
+  },
+  "helpers": {
+    "composition_audit": "/root/composition_audit",
+    "financial_contract": "/root/financial_contract",
+    "pack_criteria": "/root/pack_criteria",
+    "scope": "Read-only supporting audits; no writer/dispatcher/controller authority, no campaign FINAL review."
+  },
+  "preserved_boundaries": [
+    "A47 sole integrator; no sf2-stack writes",
+    "Shared/Procurement/C12/CurrentChoice46 read only",
+    "Reports48 paths and45 workflows unchanged",
+    "Financial fifth remains mandatory; human choice is not approval",
+    "All five original identities, assertions, 180000ms budgets; production UI commands only",
+    "No native/provider/restart/AM or GLOBAL_RELEASE claim"
+  ],
+  "publication": {
+    "expected_parent": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+    "CAS": true,
+    "force": false
+  }
+}
