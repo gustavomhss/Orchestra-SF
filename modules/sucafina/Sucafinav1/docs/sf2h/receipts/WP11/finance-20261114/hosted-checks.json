@@ -660,6 +660,226 @@
         ]
       },
       "productTests": false
+    },
+    {
+      "runId": 43594795813,
+      "jobId": 132446899658,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43594795813",
+      "source": {
+        "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+        "productTree": "7adcfb7d4687aa192b68eeddd3cce4fd0bf92d18",
+        "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+      },
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "conclusion": "failure",
+        "diagnostics": 135,
+        "attribution": {
+          "WP03": 0,
+          "WP05": 0,
+          "WP11": 4,
+          "external": 131
+        }
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "directory": ".",
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 1029,
+        "warnings": 13,
+        "errors": 0
+      },
+      "rawMcpLogSha256": "6516abf3fe7a66525628075edc02a4a2b9ce5c6463e841a51c0f610df8d58eb9",
+      "artifact": {
+        "id": 14113892940,
+        "sha256": "b58064e79d12a6e3f398082ae0e1bdb69a3ab91f29cd1d47f75d8986aa0b4707",
+        "downloadedAndHashVerified": true,
+        "members": [
+          {
+            "name": "guards.log",
+            "sha256": "3e647bd9c578c997691b3fc3cdf9534b67df8fd1878e3b987e8b37ebe8a073e6"
+          },
+          {
+            "name": "source.json",
+            "sha256": "d8c84b0120bb480344d6d102707f66e4f21a5a90fa39580a1d81431425b943cf"
+          },
+          {
+            "name": "typecheck.log",
+            "sha256": "af731da2010906e5c9ca7504407115103cc6cfff7d2d58c2a133c477b7ccf58e"
+          }
+        ]
+      },
+      "productTests": false
+    },
+    {
+      "runId": 43595368852,
+      "jobId": 132448599923,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43595368852",
+      "source": {
+        "productSha": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+        "productTree": "82ea6bff11f9647d14cac30587ccd2feb80c6950",
+        "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+      },
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "conclusion": "failure",
+        "diagnostics": 131,
+        "attribution": {
+          "WP03": 0,
+          "WP05": 0,
+          "WP11": 0,
+          "external": 131
+        }
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "directory": ".",
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 1033,
+        "warnings": 13,
+        "errors": 0
+      },
+      "rawMcpLogSha256": "fe08f52e1b93bee87bb8600407b9466fdfafdd71d4d7e38d25b4fba794dc7603",
+      "artifact": {
+        "id": 14114141034,
+        "sha256": "ffa9aa6f5cfb0cd40925708cf7a4297bf659cd0affd16af3389c2d81a02fef54",
+        "downloadedAndHashVerified": true,
+        "members": [
+          {
+            "name": "guards.log",
+            "sha256": "73e8188fc3de531737f3529c7358602374695a9e69c2ee5a213157890d8c8f86"
+          },
+          {
+            "name": "source.json",
+            "sha256": "6713d764ec0652bba943aa6f69b06087d611ee2f0fe4ac0524824485e7e376e7"
+          },
+          {
+            "name": "typecheck.log",
+            "sha256": "9d3b98c754286f19770057ade1cc4a169ed04b15bdf243eb77a8eeeab6654563"
+          }
+        ]
+      },
+      "productTests": false
+    },
+    {
+      "runId": 43597458293,
+      "jobId": 132454932935,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43597458293",
+      "source": {
+        "productSha": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "productTree": "485a3ac2ac1322d03d7421a17eb1791153f11c1b",
+        "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+      },
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "conclusion": "failure",
+        "diagnostics": 131,
+        "attribution": {
+          "WP03": 0,
+          "WP05": 0,
+          "WP11": 0,
+          "external": 131
+        }
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "directory": ".",
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 1073,
+        "warnings": 13,
+        "errors": 0
+      },
+      "rawMcpLogSha256": "7af3a3f4dff6da29e75715144c3852caaa4f0f4b679fe8a0b697deb9cd5a8ff5",
+      "artifact": {
+        "id": 14114968279,
+        "sha256": "d4f868bc905d413b529335542313100b2937a696c7013218f5dc0cfa309487e9",
+        "downloadedAndHashVerified": true,
+        "members": [
+          {
+            "name": "guards.log",
+            "sha256": "72467277238a3fdd1a0ef90f64177c462c93ab8d5f88a4dd478919f5ee9348f6"
+          },
+          {
+            "name": "source.json",
+            "sha256": "be7a3f245b796ca53fe5b72b48576319b97187e2f5d3381d09c3d6b1bac444cb"
+          },
+          {
+            "name": "typecheck.log",
+            "sha256": "9d3b98c754286f19770057ade1cc4a169ed04b15bdf243eb77a8eeeab6654563"
+          }
+        ]
+      },
+      "productTests": false
+    },
+    {
+      "runId": 43599389386,
+      "jobId": 132460676353,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599389386",
+      "source": {
+        "productSha": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+        "productTree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+        "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+      },
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "conclusion": "failure",
+        "diagnostics": 131,
+        "attribution": {
+          "WP03": 0,
+          "WP05": 0,
+          "WP11": 0,
+          "external": 131
+        }
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "directory": ".",
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 1083,
+        "warnings": 13,
+        "errors": 0
+      },
+      "rawMcpLogSha256": "b691fddbff7c1c7761ef7ceb5e5db9cb73142b91da5595934ec65a299bff6abd",
+      "artifact": {
+        "id": 14115925874,
+        "sha256": "52948c721f838bfbabf5555423d0474c19c519dc374af6e4d9028595a3cdaff1",
+        "downloadedAndHashVerified": true,
+        "members": [
+          {
+            "name": "guards.log",
+            "sha256": "8b619d9b5649d2e01945e5d798b2b1f5c3331bee1851dcfd78a70c96cde7b38d"
+          },
+          {
+            "name": "source.json",
+            "sha256": "cd1ff48235310bc34807bc39b669982e94e0011642fda02fe7269038a80d6158"
+          },
+          {
+            "name": "typecheck.log",
+            "sha256": "9d3b98c754286f19770057ade1cc4a169ed04b15bdf243eb77a8eeeab6654563"
+          }
+        ]
+      },
+      "productTests": false
     }
   ],
   "acceptance": "NOT_ACCEPTED",

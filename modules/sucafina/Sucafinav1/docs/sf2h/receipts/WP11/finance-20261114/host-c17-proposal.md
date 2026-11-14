@@ -1,3 +1,25 @@
+<!-- FINANCE-DELIVERY-CODE-W33 -->
+# Observação de entrega — snapshot Finance W33
+
+Pin publicado: `87e5164a1c87ac9f013d381d5e601ca5b4b6c677`, tree `052583ce35edbadd4b7ec68ffe021bb59e05a20f`. W33 corrige quatro arquivos de fixture/teste e conserva o código de produção de W32. PR40 `dc9d4327d07db58d026e7672cf619717394f5ffd` foi consumida no corte **2026-11-14 12:47:36 UTC**, completando **48 commits de origem**. O [intake por arquivo](intake-reconciliation-pr40-dc9.json) e a [proveniência individual](source-provenance.md) explicam as adoções e merges preservados.
+
+A [validação final por W/S](final-validation.md) e o [ledger integral de Actions](product-tests.json) registram as conclusões posteriores. O package permanece vermelho enquanto houver diagnósticos externos; nenhuma seleção concede aceite integral dos 303 critérios, prova nativa ou C/D. As dependências Compose/Interface continuam no [corte externo 12:19:40 UTC](external-reconciliation.md), distinto do intake WP11.
+
+## Observações anteriores preservadas nos respectivos cortes
+
+<!-- FINANCE-FINAL-CODE-OBSERVATION-W31 -->
+# Observação final de código e evidência delimitada
+
+Esta atualização registra Finance W31 `c449efc092e507fca2b4f61d1e7ce057faf05c89`, tree `82ea6bff11f9647d14cac30587ccd2feb80c6950`. O corte remoto de 12:19:40 UTC inclui PR40 `d7775d6`, consumida em W30, Compose `00304ac` e Interface `5fe39f1`. O [handoff consolidado](group-handoff.md), a [validação final](final-validation.md) e o [registro de pins de integração](integration-pins-final.md) prevalecem sobre as observações históricas abaixo.
+
+S19 passou 21 casos/448 assertions em nove arquivos WP11; S20 passou o BI de mesmo caso/86 assertions; S21 passou os três casos/9 assertions da guarda posterior. Check14 tem zero diagnósticos próprios, 131 externos e guards com 78 regras/13 avisos/zero erros. O package continua failure. A origem é preservada em 45 commits, e os mapas conservam 303 critérios e 14 tarefas sem aceite integral.
+
+Compose já implementa seleção inversa e seis destinos BI protegidos; o antigo TS2345 foi corrigido estaticamente no head observado, ainda sem qualificação dos novos consumidores. C17 record-only com captura Atlas prévia existe; a nova concessão privada de leitura de stale-analysis é um delta externo separado. Mensal HTTP/UI, N/A humano, replay WP13, closure Procurement, provas instaladas/nativas e aceite C/D permanecem delimitados. Não reaplicar patches históricos superados nem rebaixar as cercas Finance mais recentes.
+
+## Registro anterior integral preservado
+
+O texto que segue conserva seus pins e resultados de então. Menções anteriores a “atual”, “pendente” ou TS2345 não substituem a observação delimitada acima.
+
 <!-- FINANCE-CURRENT-RECONCILIATION -->
 # Reconciliação atual e escopo do registro histórico
 

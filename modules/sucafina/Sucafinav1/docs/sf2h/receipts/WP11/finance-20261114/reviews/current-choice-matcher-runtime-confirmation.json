@@ -1,0 +1,110 @@
+{
+  "schema": "sf-finance-current-choice-runtime-confirmation-v1",
+  "findingStatus": "SCOPED_FAILURE_RESOLVED_WITH_RUNTIME_CAUSE",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+    "sha256": "d8aa020d994c2ed6aa489a9b4968c44cfd3c0be4f3d76caaefc8b0b7470b6f4d"
+  },
+  "actions": {
+    "selection": 19,
+    "runId": 43594791351,
+    "jobId": 132446885026,
+    "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+    "productTree": "7adcfb7d4687aa192b68eeddd3cce4fd0bf92d18",
+    "snapshotSha": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+    "snapshotTree": "4ccdd3979631b2df4344ca7fcfaf4828062509fa",
+    "conclusion": "success",
+    "branch": "ci-run-linux-astra-wp11-bd168e1-e10e1d8-a1",
+    "artifacts": [],
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43594791351",
+    "scope": {
+      "files": 9,
+      "tests": 21,
+      "pass": 21,
+      "fail": 0,
+      "expectCalls": 448,
+      "durationSeconds": 407.8
+    },
+    "currentChoice": {
+      "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+      "conclusion": "pass",
+      "durationMs": 52028.22,
+      "expectCallsInFile": 41,
+      "unchangedTimeoutMs": 180000
+    }
+  },
+  "logs": {
+    "rawSha256": "ccf1eccb4f0a88c94996930d7f8420ba28d309147e8e654d62fcff62fd1e9e5c",
+    "ansiCleanSha256": "2ba78edece95bcc4a6c1cc4de75fac7571e15ccbe5ee2cc30be46d0d1d1ce613"
+  },
+  "runtimeCause": {
+    "testRunner": "Bun 1.3.14 (0d9b296a)",
+    "witnessAt": "2026-11-14T12:28:18.8381335Z",
+    "tag": "WP11_CURRENT_CHOICE_MATCHER",
+    "beforeDigest": "1f6a8ffc54a20f5fa4f58b77e12031467560ae24db0af2a0ae970d633f20372f",
+    "afterError": "SF_CANONICAL_UNSUPPORTED",
+    "componentRefsAreArray": false,
+    "interpretation": "The asymmetric toMatchObject/arrayContaining assertion mutated the observed training entry. Before the fix, assessment and source entries shared this object, contaminating canonical coverage data. Classification held separate clones. The isolated copy now carries the matcher mutation while the added canonical assessment digest invariant passes."
+  },
+  "change": {
+    "kind": "test-fixture-observation-isolation",
+    "productionFilesChanged": 0,
+    "baselineVersionChanged": false,
+    "coverageGuardsChanged": false,
+    "sourceFencesChanged": false,
+    "oldAssertionsPreserved": 40,
+    "newAssertions": 1,
+    "assertionsOrTimeoutsWeakened": false,
+    "localProductTestsExecuted": false
+  },
+  "scopedEvidence": [
+    "The canonical current result is resimulated and persisted under the current source, then separately promoted through the human gate.",
+    "The original durable ChoiceRecord remains byte-identical across current-result promotion and real store reopen.",
+    "Source revocation and a concurrent case update are refused before promotion; the refreshed case proceeds from version3 to4.",
+    "Planner snapshots remain unchanged by this decision lifecycle; promotion is not domain application.",
+    "Exact preview retry and persisted promotion retry survive the real store reopen."
+  ],
+  "priorFailures": [
+    {
+      "selection": 12,
+      "runId": 43587138878,
+      "reason": "choice-preview-coverage-unavailable"
+    },
+    {
+      "selection": 14,
+      "runId": 43589528126,
+      "reason": "choice-preview-unavailable during coverage observation"
+    },
+    {
+      "selection": 17,
+      "runId": 43591635600,
+      "reason": "coverage-entries:start reached before observation failed"
+    },
+    {
+      "selection": 18,
+      "runId": 43593276333,
+      "reason": "DataCloneError and original choice-preview-coverage-unavailable"
+    }
+  ],
+  "limits": {
+    "nativeProof": false,
+    "omni": {
+      "verdict": "not-applicable",
+      "nonce": "bd50743eae7370c82a975444ed25bdba",
+      "spawns": 0
+    },
+    "installedUiWitness": false,
+    "crossWpAcceptance": false,
+    "CDGatesSatisfied": false,
+    "statement": "This resolves the observed current-choice fixture failure on the pinned test scope. It does not establish full WP acceptance, native/C/D proof, production mounting, or the S0 integration epic."
+  },
+  "currentResultOracle": {
+    "historicalKnownSubtotal": 210000,
+    "currentKnownSubtotal": 250000,
+    "currentTotal": null,
+    "currentComparisonStatus": "conditioned",
+    "currentCoverageState": "complete",
+    "reason": "The reviewed current scenario still contains hypothetical operations. Coverage completeness does not assert applied domain changes or turn its total into a final applied amount."
+  }
+}

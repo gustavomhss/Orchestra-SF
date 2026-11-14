@@ -1,3 +1,83 @@
+<!-- W32-FINANCE-SUPPLEMENT -->
+# Complemento Finance W33
+
+Produto `87e5164a1c87ac9f013d381d5e601ca5b4b6c677`, tree `052583ce35edbadd4b7ec68ffe021bb59e05a20f`; PR40 `dc9d4327d07db58d026e7672cf619717394f5ffd` consumida no corte **2026-11-14 12:47:36 UTC**. São **48 commits de origem**. O [intake delimitado](intake-reconciliation-pr40-dc9.json) e a [proveniência individual](source-provenance.md) registram os três ancestrais adicionais. Planner port agora usa o blob `8389709232225424b5905638d0951d8cdbb71dd7`; current-choice-preview usa `38f82f4b931682e255a18d52856e192f2ee43390`. Os outros pins de produção abaixo permanecem preservados. W33 altera somente quatro arquivos de teste/fixture; preserva todos os blobs de produção de W32 e registra a correção dos históricos em [s22-grouped-scope-changes.json](s22-grouped-scope-changes.json).
+
+A observação externa de Compose/Interface continua no corte **12:19:40 UTC**, sem nova execução atribuída. O registro integral abaixo é mantido nesse recorte; seus 48 pins de fonte não devem ser confundidos com os 48 commits de origem. O complemento JSON registra separadamente os dois novos pins próprios. [Validação final delimitada](final-validation.md) contém as conclusões Actions por W/S.
+
+## Registro externo anterior integralmente preservado
+
+# Reconciliação externa atual — corte final delimitado
+
+**Corte de heads: 2026-11-14 12:19:40 UTC.** A fonte atual desta reconciliação é o [relatório independente congelado](reviews/final-heads-observation.md), com [compares, commits e metadados](reviews/final-heads-observation.json). As leituras anteriores continuam em [latest-external-refresh](reviews/latest-external-refresh.md). Esta atualização apenas reconcilia esses recibos e o manifest publicado pelo coordenador; não fez novas consultas remotas, importou código ou executou produto, Bun, CI ou nativo.
+
+| Origem | Head observado/consumido | Tree | Disposição |
+| --- | --- | --- | --- |
+| Finance W30 | `bd168e193e7bb4a43893c24c5370c9c3fa205fc1` | `7adcfb7d4687aa192b68eeddd3cce4fd0bf92d18` | Publicado no grupo; qualificação de produto fica no ledger W/S. |
+| PR40 / WP11 | `d7775d6f1eb17af1590ccfb98547259eb017cd1b` | `e6831add3e891e020d34540234bd685a7dd05e01` | Consumido como parent adicional W30. |
+| astra-compose | `00304ac25cc82ffd87ebd3096bd2f5cfec5222e1` | `884138976f1e5ab04d924c3f29f4ba6584acb070` | Inspecionado; ownership externo, sem intake autoral nesta consolidação. |
+| astra-interface | `5fe39f1259d2f8631cef6172aaa7e6c92f436801` | `68a8d13d3d60164670a7e95310b2cf1afb294e43` | Inspecionado; ownership externo, sem aceite do novo fluxo. |
+
+PR22 `90c467cea436daa24987ad68a588a7d80f91064e`, PR24 `0881fee21f07bf8a9a1153d7d55727837cdf497a` e sf2-stack `6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0` não mudaram no corte. W30 conserva os quatro commits novos de PR40 e seus33recibos históricos, totalizando **45 commits de origem**. São5adoções exatas,2merges aditivos e4blobs já idênticos; o [intake d777](intake-reconciliation-pr40-final-d777.md) mantém cada disposição e as assertions Finance adicionais. Esses recibos não transferem resultados antigos ao candidato.
+
+O [registro final de pins](integration-pins-final.md), com [JSON completo](integration-pins-final.json), traz os blobs próprios que devem ser preservados, as dependências externas e a proveniência de cada observação. O [JSON central](external-reconciliation.json) conserva integralmente esta edição anterior e seu Markdown sob `historicalInspections`. O texto histórico integral também está identificado ao final desta página; seus “em andamento”, heads e findings descrevem apenas aquela observação.
+
+## Mudanças externas desde o último recibo
+
+**Compose00304:** um commit/16paths após ed10. O novo `analysis-stale-commit.ts` (`299979047340dd76d7cc2db667b826da675a1e2e`) acrescenta uma concessão privada de leitura de cálculo histórico para settlement de análise stale, mantendo caso ativo, snapshot, autoridade original e observações finais. Existe teste novo (`727997f3fb0554c44056a7e2930888a28e6184ca`), cuja execução neste head não é qualificada aqui. Essa via é distinta da closure C17 record-only com captura Atlas prévia.
+
+O erro TS2345 anteriormente visto no teste BI tem **correção estática**: o owner verifica `current.kind === "ui"` antes de `ui.finish`, blob `a4b2f5b3f2d66c5c78bfc8d837edad6225d9ed80`. A exigência atual é executar/verificar esse candidato; não continuamos tratando o mesmo narrowing como código ausente. Não há novo check positivo nem aprovação dos consumidores inferidos da alteração.
+
+**Interface5fe39:** dois commits/46paths após4bd1, com seleção de trabalho do caso, recuperação e rótulos de perguntas. O compare delimitado não muda produtores Planner, Analytics, Decisions nem os três arquivos mensais. A proposta [WP11 de callers sem operações](https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/patches/wp11-empty-operation-callers.additive.patch) tem blob `5d7413a5547beaad313fb2db1552f4f8b487b1f1` e permanece **não aplicada e não testada**: os guards vazios delimitam fixtures, não autorizam operações reais. É necessário conciliá-la com o contrato composto; este grupo não a aplicou por proximidade de namespace.
+
+## Fences Finance a preservar
+
+Compose00304 consumiu quatro blobs Finance W23. Em particular, já incorpora `mutations.ts` `3e7575cddfd52d9f5751c0ee6179c747bb318c98` e `hot-topic-draft.ts` `5e0b80a470958dd201db4283bde96d594935e68d`. O primeiro já contém a aquisição/reavaliação canônica de proof; o segundo ainda antecede a leitura conjunta final de caso/draft/ativo de W25. Preservar os blobs Finance W30 evita regredir essa proteção e as cercas de persistência/retry:
+
+| Fonte Finance | Blob W30 | Blob Compose00304 |
+| --- | --- | --- |
+| `decisions/apply.ts` | `964a53310c340f4496d7410d66f8b852270b75f1` | `229e64c2d8109b413a7667bbe1b208ffa3ab0a73` |
+| `decisions/result-store.ts` | `bc32bfb39e8b6012230ee0d136bed142340e5d89` | `d7d8eb3ca267551797b191ccfb1d037149757898` |
+| `decisions/scenario-request-store.ts` | `368a7f2e207c4f551ac3c6f77424797c97f794f3` | `0d677d2d0b3a9df7127f13b25fe3968757f0dceb` |
+| `decisions/mutations.ts` | `e0840d775274ea73c6b938711764c69593dadca0` | `3e7575cddfd52d9f5751c0ee6179c747bb318c98` |
+| `decisions/hot-topic-draft.ts` | `d8a151c558227b3bd2612dbb6caba993efa85783` | `5e0b80a470958dd201db4283bde96d594935e68d` |
+| `analytics/decision-view.ts` | `bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8` | Não pinado por esta observação |
+
+Os resultados limitados anteriores (nove casos de recibos/retry S12, promoção e Hot Topic S14/S18 e consumo BI) continuam vinculados ao seu produto exato em [product-tests.json](product-tests.json). Os testes novos/adaptados de W30 e seu typecheck/guards pertencem ao ledger do coordenador; esta reconciliação externa não cria outro veredicto. ChoiceRecord histórico, promoção, AlternativeDraft e simulação não equivalem a aplicação de domínio persistida.
+
+## Pendências que continuam delimitadas
+
+| Frente | Estado de fonte e próximo fechamento |
+| --- | --- |
+| Mensal / Interface | Permanecem `host-context`920fda, `planner-http`2befb1 e `planner-monthly`3adef2. Consumir o [delta de três arquivos](../../WP03/finance-20261114/monthly-consumer-proposal.diff.txt): before/after canônicos, annual/spread/reset, rebase explícito e key/body preservados em resposta incerta. Executar consumidores montados afetados. |
+| BI / Compose | `advantageComparisonRef`, opções inversas persistidas e seis destinos protegidos já existem. Executar os testes novos de seleção/navegação após o narrowing corrigido; os planos canônicos BI09/BI10 e os destinos instalados continuam sem prova. Não recalcular finanças ou escolher um par “mais recente” no BI. |
+| C17 / Compose | A closure record-only/prior-capture e os escopos por chamada permanecem. Sem captura protegida prévia, a primeira captura depois do avanço do caso não fica autorizada por esse caminho; mixed/nested ancestry, material drift e substituição continuam sem qualificação. A nova concessão stale-analysis exige prova própria e não amplia automaticamente essa closure. |
+| N/A e shared / Compose | `portfolio-coverage`d8a668 ainda recusa baseline N/A. A rota humana canônica de aplicabilidade e a composição da prova permanecem necessárias; não remover categoria ou substituir ausência por0. |
+| WP13 / Compose | `parameterOperation`, certificado de subtotal conhecido, fronteira e vizinho IEEE e validator comum já estão implementados e não mudam no compare. Demonstrar persistência/reabertura/replay de55000/15000, fontes alteradas e os cenários treinamento omitido/40000/zero/null no composto exato. |
+| Procurement / Compose | Closure canônica de4blobs já publicada: projeções3e8830, source-projectionab9814, confirmation-fieldsa1e45e, monetary5ed7b1. Consumir pelo owner e executar aplicação/receipt/recuperação cross-domain; nenhuma fórmula ou autorização duplicada em Finance. |
+| Revisão preservada / Interface | C05 após mudança financeira canônica e C12 aplicado/persistido/reaberto sem novo efeito continuam sem fechamento demonstrado. Os novos fluxos e a proposta de guard não recebem aceite pelos runs anteriores. |
+| S0 / bundle | Compor os pins atuais, fechar diagnósticos externos, provar runtime instalado/nativo, revisões independentes finais e C/G7/D/G8. Epic somente do bundle final. |
+
+## Metadados CI externos no corte
+
+A observação final leu metadados/jobs; não extraiu novas contagens de casos dos logs. Não atribuir estes resultados ao head posterior00304 ou5fe39 quando o SHA executado é outro.
+
+| Run | SHA executado | Conclusão observada |
+| --- | --- | --- |
+| [43589763353](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589763353) | `564d04391d009b89718b10e67175d710d9e6b9c9` | completed / failure |
+| [43590725536](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590725536) | `2af8d573e7d2c808e5222d44242eb1ee8f66d467` | completed / failure |
+| [43590727281](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590727281) | `4bd1f807e449d040e3db61c4d2b1e177b205ac69` | completed / failure |
+| [43592240575](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592240575) | `ff98cac1845c831aab7bff01507864314a3254a4` | completed / failure |
+| [43592242039](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592242039) | `edefb5b66706aea866ee45c7e8e76332c27c342a` | completed / failure |
+
+As execuções cccd/ed10 detalhadas na edição histórica conservam seus W/S, contagens e limites. O check cccd positivo não aprova as posteriores alterações Interface. Os cinco runs reobservados acima terminaram failure; nenhum resultado em andamento é tratado como PASS. A presença dos pins não constitui prova nativa, C/D, READY ou DONE.
+
+---
+
+# Documento histórico integral preservado — observação anterior de 11:39:51 UTC
+
+O conteúdo abaixo permanece integralmente como registro temporal; a disposição atual é a seção anterior e o JSON central v4.
+
 # Reconciliação externa atual — WP03/WP05/WP11
 
 A inspeção externa fica fixada em **Compose `ed10a3806a4ffdf6ad5891e2065d93a4c91412cf`**, tree `57ce597f3ebe8ddb543f9d71d34d20f789c76e33`, e **Interface `cccd00c568aea65bb0c1b5cb4a82c2a236c7e775`**, tree `b33c50679fa6c2a36a0e309064e1fa57ee4b0a0e`. O avanço observado **Interface `4bd1f807e449d040e3db61c4d2b1e177b205ac69`**, tree `2459923b94c080688a31a1138e73ddf30c5be744`, foi examinado somente quanto aos namespaces pertinentes e aos três arquivos mensais. Seu intake amplo de Collaboration não recebe aceitação nesta revisão.
